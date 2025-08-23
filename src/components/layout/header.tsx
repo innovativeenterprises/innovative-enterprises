@@ -7,6 +7,16 @@ import { Menu, Rocket } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
+import React from 'react';
 
 const navLinks = [
   { href: '/#services', label: 'Services' },
@@ -15,6 +25,40 @@ const navLinks = [
   { href: '/tender-assistant', label: 'Tender Assistant' },
   { href: '/faq', label: 'FAQ' },
 ];
+
+const partnershipLinks: { title: string; href: string; description: string }[] = [
+  {
+    title: "Be our Partner",
+    href: "/partner",
+    description:
+      "Join us in a strategic partnership to drive mutual growth and success.",
+  },
+  {
+    title: "Become a Service Provider",
+    href: "/service-provider",
+    description:
+      "Offer your services to our clients and be part of our trusted network.",
+  },
+  {
+    title: "Become our Agent",
+    href: "/agent",
+    description:
+      "Represent Innovative Enterprises and earn commissions by bringing in new business.",
+  },
+  {
+    title: "Let's be your CTO",
+    href: "/cto",
+    description:
+      "Leverage our expertise to lead your technology strategy and execution.",
+  },
+  {
+    title: "Invest with us",
+    href: "/invest",
+    description:
+      "Explore investment opportunities and be part of our innovation journey.",
+  },
+]
+
 
 export default function Header() {
   const pathname = usePathname();
@@ -57,6 +101,26 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex items-center gap-1">
           {renderNavLinks(false)}
+           <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base">Partnerships</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                    {partnershipLinks.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </nav>
         <div className="md:hidden">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -74,6 +138,17 @@ export default function Header() {
                 </Link>
                 <nav className="flex flex-col gap-2">
                   {renderNavLinks(true)}
+                   {partnershipLinks.map((link) => (
+                    <Button
+                      key={link.href}
+                      asChild
+                      variant="ghost"
+                      className="justify-start text-base"
+                      onClick={handleLinkClick}
+                    >
+                      <Link href={link.href}>{link.title}</Link>
+                    </Button>
+                  ))}
                 </nav>
               </div>
             </SheetContent>
@@ -83,3 +158,29 @@ export default function Header() {
     </header>
   );
 }
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
