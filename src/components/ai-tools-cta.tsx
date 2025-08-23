@@ -1,0 +1,57 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { FileText, MessageSquareQuote } from "lucide-react";
+import Link from "next/link";
+
+export default function AiToolsCta() {
+    return (
+        <section className="py-16 md:py-24 bg-white">
+            <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold text-primary">Accelerate with AI</h2>
+                    <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+                        Leverage our powerful AI tools to streamline your workflows and get instant answers.
+                    </p>
+                </div>
+                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <Card className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                        <CardHeader>
+                            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
+                                <FileText className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <CardTitle>Tender Response Assistant</CardTitle>
+                            <CardDescription className="mt-2">
+                                Generate draft responses to government tenders in minutes. Upload documents and let our AI do the heavy lifting.
+                            </CardDescription>
+                        </CardContent>
+                        <CardFooter className="justify-center">
+                            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                <Link href="/tender-assistant">Try the Assistant</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                    <Card className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                        <CardHeader>
+                             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
+                                <MessageSquareQuote className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <CardTitle>AI-Powered FAQ</CardTitle>
+                            <CardDescription className="mt-2">
+                                Get instant, accurate answers to your questions about our services, products, and capabilities.
+                            </CardDescription>
+                        </CardContent>
+                        <CardFooter className="justify-center">
+                            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                <Link href="/faq">Ask our AI</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </div>
+        </section>
+    )
+}
