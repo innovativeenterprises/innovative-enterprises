@@ -14,7 +14,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import React from 'react';
 
@@ -80,7 +79,7 @@ export default function Header() {
           asChild
           variant="ghost"
           className={cn(
-            'justify-start text-base',
+            'justify-start text-base font-medium',
             isActive && 'bg-primary/10 text-primary',
             isMobile ? 'w-full' : ''
           )}
@@ -94,10 +93,12 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <Rocket className="h-6 w-6 text-accent" />
-          <span className="hidden sm:inline">INNOVATIVE ENTERPRISES</span>
+          <div className="bg-primary p-2 rounded-lg">
+            <Rocket className="h-6 w-6 text-primary-foreground" />
+          </div>
+          <span className="hidden sm:inline">INNOVATIVE</span>
           <span className="sm:hidden">IE</span>
         </Link>
         <nav className="hidden md:flex items-center gap-1">
@@ -105,7 +106,7 @@ export default function Header() {
            <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base">Partnerships</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-base font-medium">Partnerships</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {partnershipLinks.map((component) => (
@@ -123,37 +124,43 @@ export default function Header() {
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
-        <div className="md:hidden">
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Open navigation menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col gap-4 py-8">
-                <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary mb-4 px-2" onClick={handleLinkClick}>
-                  <Rocket className="h-6 w-6 text-accent" />
-                  <span>INNOVATIVE ENTERPRISES</span>
-                </Link>
-                <nav className="flex flex-col gap-2">
-                  {renderNavLinks(true)}
-                   {partnershipLinks.map((link) => (
-                    <Button
-                      key={link.href}
-                      asChild
-                      variant="ghost"
-                      className="justify-start text-base"
-                      onClick={handleLinkClick}
-                    >
-                      <Link href={link.href}>{link.title}</Link>
-                    </Button>
-                  ))}
-                </nav>
-              </div>
-            </SheetContent>
-          </Sheet>
+        <div className="flex items-center gap-2">
+            <Button variant="outline" className="hidden md:flex">Contact Us</Button>
+            <div className="md:hidden">
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                    <Menu className="h-6 w-6" />
+                    <span className="sr-only">Open navigation menu</span>
+                </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                <div className="flex flex-col gap-4 py-8">
+                    <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary mb-4 px-2" onClick={handleLinkClick}>
+                        <div className="bg-primary p-2 rounded-lg">
+                            <Rocket className="h-6 w-6 text-primary-foreground" />
+                        </div>
+                    <span>INNOVATIVE ENTERPRISES</span>
+                    </Link>
+                    <nav className="flex flex-col gap-2">
+                    {renderNavLinks(true)}
+                    {partnershipLinks.map((link) => (
+                        <Button
+                        key={link.href}
+                        asChild
+                        variant="ghost"
+                        className="justify-start text-base"
+                        onClick={handleLinkClick}
+                        >
+                        <Link href={link.href}>{link.title}</Link>
+                        </Button>
+                    ))}
+                    </nav>
+                    <Button className="mt-4">Contact Us</Button>
+                </div>
+                </SheetContent>
+            </Sheet>
+            </div>
         </div>
       </div>
     </header>
