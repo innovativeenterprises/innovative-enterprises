@@ -22,6 +22,7 @@ const navLinks = [
   { href: '/#services', label: 'Services' },
   { href: '/#products', label: 'Products' },
   { href: '/#testimonials', label: 'Clients' },
+  { href: '/automation', label: 'Automation' },
   { href: '/tender-assistant', label: 'Tender Assistant' },
   { href: '/faq', label: 'FAQ' },
 ];
@@ -70,7 +71,7 @@ export default function Header() {
 
   const renderNavLinks = (isMobile: boolean) => (
     navLinks.map((link) => {
-      const isToolPage = ['/tender-assistant', '/faq'].includes(link.href);
+      const isToolPage = ['/tender-assistant', '/faq', '/automation'].includes(link.href);
       const isActive = isToolPage ? pathname === link.href : false;
 
       return (
