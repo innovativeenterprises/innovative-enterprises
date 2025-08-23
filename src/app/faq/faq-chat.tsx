@@ -29,7 +29,7 @@ export default function FaqChat() {
       { sender: 'bot', text: "Hello! I'm the virtual assistant for Innovative Enterprises. How can I help you today?" }
   ]);
   const { toast } = useToast();
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -39,9 +39,9 @@ export default function FaqChat() {
   });
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTo({
-            top: scrollAreaRef.current.scrollHeight,
+    if (scrollViewportRef.current) {
+        scrollViewportRef.current.scrollTo({
+            top: scrollViewportRef.current.scrollHeight,
             behavior: 'smooth'
         });
     }
@@ -77,8 +77,8 @@ export default function FaqChat() {
             <h2 className="text-xl font-semibold text-primary">Chat with our AI Assistant</h2>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden">
-            <ScrollArea className="h-full pr-4" viewportRef={scrollAreaRef}>
-                <div className="space-y-4">
+            <ScrollArea className="h-full pr-4">
+                <div className="space-y-4" ref={scrollViewportRef}>
                     {messages.map((message, index) => (
                         <div key={index} className={`flex items-start gap-3 ${message.sender === 'user' ? 'justify-end' : ''}`}>
                             {message.sender === 'bot' && (
