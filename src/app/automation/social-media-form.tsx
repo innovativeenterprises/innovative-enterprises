@@ -11,10 +11,25 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, ThumbsUp, Twitter, Linkedin, Facebook } from 'lucide-react';
+import { Loader2, Sparkles, Copy, ThumbsUp, Twitter, Linkedin, Facebook, Instagram } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 
+function WhatsAppIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 24 24"
+        {...props}>
+        <path
+          fill="currentColor"
+          d="M19.05 4.94A9.96 9.96 0 0 0 12 2a10 10 0 0 0-10 10c0 2.45.88 4.7 2.37 6.44L2.05 22l3.58-2.05A9.96 9.96 0 0 0 12 22a10 10 0 0 0 10-10c0-2.76-1.12-5.26-2.95-7.06m-7.07 15.28c-1.97 0-3.8-1.02-5.14-2.61L6 16.88l-2.52 1.45l.95-2.8l-.33-.56A8.14 8.14 0 0 1 4 12a8 8 0 0 1 8-8c2.15 0 4.14.84 5.66 2.34c1.52 1.52 2.34 3.51 2.34 5.66c0 4.42-3.58 8-8 8m4.49-6.19c-.25-.12-1.47-.72-1.69-.81c-.23-.08-.39-.12-.56.12c-.17.25-.64.81-.78.97c-.14.17-.29.18-.54.06c-.25-.12-1.07-.39-2.04-1.26c-.76-.66-1.27-1.47-1.42-1.72c-.14-.25-.01-.38.11-.5c.11-.11.25-.29.37-.43s.17-.25.25-.42c.08-.17.04-.31-.02-.43c-.06-.12-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.42h-.48c-.17 0-.43.06-.66.31c-.22.25-.86.85-.86 2.07c0 1.22.88 2.4 1 2.56c.14.17 1.76 2.67 4.25 3.73c.59.26 1.05.41 1.41.52c.59.18 1.13.16 1.56.1c.48-.07 1.47-.6 1.67-1.18c.21-.58.21-1.07.14-1.18c-.05-.12-.19-.18-.42-.31"
+        />
+      </svg>
+    );
+}
 
 export default function SocialMediaForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +67,8 @@ export default function SocialMediaForm() {
       Twitter: <Twitter className="h-4 w-4" />,
       LinkedIn: <Linkedin className="h-4 w-4" />,
       Facebook: <Facebook className="h-4 w-4" />,
+      Instagram: <Instagram className="h-4 w-4" />,
+      WhatsApp: <WhatsAppIcon className="h-4 w-4" />,
   }
 
   return (
@@ -97,6 +114,8 @@ export default function SocialMediaForm() {
                             <SelectItem value="Twitter">Twitter</SelectItem>
                             <SelectItem value="LinkedIn">LinkedIn</SelectItem>
                             <SelectItem value="Facebook">Facebook</SelectItem>
+                            <SelectItem value="Instagram">Instagram</SelectItem>
+                            <SelectItem value="WhatsApp">WhatsApp</SelectItem>
                         </SelectContent>
                         </Select>
                         <FormMessage />
@@ -191,27 +210,29 @@ export default function SocialMediaForm() {
                   <Copy className="h-5 w-5" />
               </Button>
             </div>
-             <div className="space-y-2">
-                <h4 className="text-sm font-semibold flex items-center gap-2">
-                    <ThumbsUp className="h-4 w-4 text-primary" />
-                    Suggested Hashtags
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                    {response.suggestedHashtags.map(tag => (
-                        <Badge 
-                            key={tag} 
-                            variant="secondary" 
-                            className="cursor-pointer hover:bg-primary/20"
-                            onClick={() => {
-                                navigator.clipboard.writeText(tag);
-                                toast({ title: "Copied!", description: `${tag} copied to clipboard.` });
-                            }}
-                        >
-                            {tag}
-                        </Badge>
-                    ))}
+             {response.suggestedHashtags.length > 0 && (
+                <div className="space-y-2">
+                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                        <ThumbsUp className="h-4 w-4 text-primary" />
+                        Suggested Hashtags
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                        {response.suggestedHashtags.map(tag => (
+                            <Badge 
+                                key={tag} 
+                                variant="secondary" 
+                                className="cursor-pointer hover:bg-primary/20"
+                                onClick={() => {
+                                    navigator.clipboard.writeText(tag);
+                                    toast({ title: "Copied!", description: `${tag} copied to clipboard.` });
+                                }}
+                            >
+                                {tag}
+                            </Badge>
+                        ))}
+                    </div>
                 </div>
-             </div>
+             )}
           </CardContent>
         </Card>
       )}

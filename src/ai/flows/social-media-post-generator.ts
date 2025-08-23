@@ -32,7 +32,7 @@ Topic: {{{topic}}}
 Tone: {{{tone}}}
 
 Based on the above, create a post content that is engaging and appropriate for the specified platform and tone.
-Also, provide a list of relevant hashtags to maximize reach.
+Also, provide a list of relevant hashtags to maximize reach. For WhatsApp, hashtags are not needed.
 `,
 });
 

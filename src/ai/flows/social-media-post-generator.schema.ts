@@ -16,7 +16,7 @@ import {z} from 'zod';
 
 export const GenerateSocialMediaPostInputSchema = z.object({
   topic: z.string().describe('The topic for the social media post.'),
-  platform: z.enum(['Twitter', 'LinkedIn', 'Facebook']).describe('The target social media platform.'),
+  platform: z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp']).describe('The target social media platform.'),
   tone: z.enum(['Professional', 'Casual', 'Witty', 'Enthusiastic']).describe('The desired tone of the post.'),
 });
 export type GenerateSocialMediaPostInput = z.infer<typeof GenerateSocialMediaPostInputSchema>;
