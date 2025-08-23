@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { FileText, MessageSquareQuote, Bot } from "lucide-react";
+import { FileText, MessageSquareQuote, Bot, Scale } from "lucide-react";
 import Link from "next/link";
 
 export default function AiToolsCta() {
@@ -13,7 +13,7 @@ export default function AiToolsCta() {
                         Leverage our powerful AI tools and agents to streamline your workflows, get instant answers, and automate your business processes.
                     </p>
                 </div>
-                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                     <Card className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                         <CardHeader>
                             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
@@ -23,7 +23,7 @@ export default function AiToolsCta() {
                         <CardContent>
                             <CardTitle>Automation Agents</CardTitle>
                             <CardDescription className="mt-2">
-                                Automate tasks like social media marketing, branding, and more with our intelligent AI agents.
+                                Automate tasks like social media marketing with our intelligent AI agents.
                             </CardDescription>
                         </CardContent>
                         <CardFooter className="justify-center">
@@ -41,7 +41,7 @@ export default function AiToolsCta() {
                         <CardContent>
                             <CardTitle>Tender Response Assistant</CardTitle>
                             <CardDescription className="mt-2">
-                                Generate draft responses to government tenders in minutes. Upload documents and let our AI do the heavy lifting.
+                                Generate draft responses to government tenders in minutes.
                             </CardDescription>
                         </CardContent>
                         <CardFooter className="justify-center">
@@ -59,12 +59,30 @@ export default function AiToolsCta() {
                         <CardContent>
                             <CardTitle>AI-Powered FAQ</CardTitle>
                             <CardDescription className="mt-2">
-                                Get instant, accurate answers to your questions about our services, products, and capabilities.
+                                Get instant, accurate answers to your questions about our services.
                             </CardDescription>
                         </CardContent>
                         <CardFooter className="justify-center">
                             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
                                 <Link href="/faq">Ask our AI</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                    <Card className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                        <CardHeader>
+                             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
+                                <Scale className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <CardTitle>AI Legal Agent</CardTitle>
+                            <CardDescription className="mt-2">
+                                Get preliminary legal analysis and insights from our AI agent.
+                            </CardDescription>
+                        </CardContent>
+                        <CardFooter className="justify-center">
+                            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                <Link href="/legal-agent">Consult the Agent</Link>
                             </Button>
                         </CardFooter>
                     </Card>
