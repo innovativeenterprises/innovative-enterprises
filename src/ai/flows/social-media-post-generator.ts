@@ -3,26 +3,19 @@
 /**
  * @fileOverview An AI agent that generates social media posts.
  *
+ * This file contains the server-side logic for the social media post generation flow.
+ * It is intended to be used as a Next.js Server Action.
+ *
  * - generateSocialMediaPost - A function that generates a social media post.
- * - GenerateSocialMediaPostInput - The input type for the generateSocialMediaPost function.
- * - GenerateSocialMediaPostOutput - The return type for the generateSocialMediaPost function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-export const GenerateSocialMediaPostInputSchema = z.object({
-  topic: z.string().describe('The topic for the social media post.'),
-  platform: z.enum(['Twitter', 'LinkedIn', 'Facebook']).describe('The target social media platform.'),
-  tone: z.enum(['Professional', 'Casual', 'Witty', 'Enthusiastic']).describe('The desired tone of the post.'),
-});
-export type GenerateSocialMediaPostInput = z.infer<typeof GenerateSocialMediaPostInputSchema>;
-
-export const GenerateSocialMediaPostOutputSchema = z.object({
-  postContent: z.string().describe('The generated social media post content.'),
-  suggestedHashtags: z.array(z.string()).describe('A list of suggested hashtags.'),
-});
-export type GenerateSocialMediaPostOutput = z.infer<typeof GenerateSocialMediaPostOutputSchema>;
+import {
+    GenerateSocialMediaPostInput,
+    GenerateSocialMediaPostInputSchema,
+    GenerateSocialMediaPostOutput,
+    GenerateSocialMediaPostOutputSchema
+} from './social-media-post-generator.schema';
 
 export async function generateSocialMediaPost(input: GenerateSocialMediaPostInput): Promise<GenerateSocialMediaPostOutput> {
   return socialMediaPostGeneratorFlow(input);

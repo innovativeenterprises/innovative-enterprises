@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { generateSocialMediaPost, GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GenerateSocialMediaPostInput } from '@/ai/flows/social-media-post-generator';
+import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
+import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GenerateSocialMediaPostInput } from '@/ai/flows/social-media-post-generator.schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -112,7 +113,7 @@ export default function SocialMediaForm() {
                         <FormControl>
                             <SelectTrigger>
                             <SelectValue placeholder="Select a tone" />
-                            </SelectTrigger>
+                            </Trigger>
                         </FormControl>
                         <SelectContent>
                             <SelectItem value="Professional">Professional</SelectItem>
@@ -165,7 +166,7 @@ export default function SocialMediaForm() {
                     </CardDescription>
                 </div>
                  <div className="flex items-center gap-2 text-muted-foreground">
-                    {platformIcons[form.getValues('platform')]}
+                    {platformIcons[form.getValues('platform') as keyof typeof platformIcons]}
                     <span className="text-sm font-medium">{form.getValues('platform')}</span>
                 </div>
             </div>
