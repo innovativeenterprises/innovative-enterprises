@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface Agent {
@@ -13,6 +13,12 @@ interface AgentCategory {
     category: string;
     agents: Agent[];
 }
+
+const leadershipTeam: Agent[] = [
+    { name: "JUMAA SALIM ALHADID", role: "CEO and Cofounder", description: "Leads the company's vision and strategic direction.", icon: User },
+    { name: "ANWAR AHMED SHARIF", role: "Cofounder and CTO", description: "Drives technological innovation and engineering.", icon: User },
+    { name: "ABDULJABBAR AL SADIG AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User },
+];
 
 const agentCategories: AgentCategory[] = [
     {
@@ -64,6 +70,28 @@ const agentCategories: AgentCategory[] = [
 export default function AgentList() {
     return (
         <div className="space-y-12">
+             <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Our Leadership</h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {leadershipTeam.map((member) => (
+                        <Card key={member.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
+                            <CardHeader className="flex flex-row items-center gap-4">
+                                <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
+                                    <member.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-lg">{member.name}</CardTitle>
+                                    <p className="text-sm text-muted-foreground">{member.role}</p>
+                                </div>
+                            </CardHeader>
+                            <CardDescription className="px-6 pb-6 text-sm">
+                                {member.description}
+                            </CardDescription>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+
             {agentCategories.map((category) => (
                 <div key={category.category}>
                     <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">{category.category}</h2>
