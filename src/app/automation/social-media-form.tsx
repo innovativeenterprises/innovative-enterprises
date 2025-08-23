@@ -113,7 +113,7 @@ export default function SocialMediaForm() {
                         <FormControl>
                             <SelectTrigger>
                             <SelectValue placeholder="Select a tone" />
-                            </Trigger>
+                            </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                             <SelectItem value="Professional">Professional</SelectItem>
