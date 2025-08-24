@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,7 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, LanguagesIcon } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
@@ -37,6 +38,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -61,6 +64,11 @@ const GenerationSchema = z.object({
 });
 type GenerationValues = z.infer<typeof GenerationSchema>;
 
+interface Selection {
+    cv: boolean;
+    coverLetter: boolean;
+    languages: string[];
+}
 
 const SuggestionSection = ({ title, data }: { title: string; data: { isCompliant: boolean; suggestions: string[] } }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -210,29 +218,94 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
     )
 }
 
-const GatedActions = ({ onUnlock, onDownload, onCopy, onEmail, onSave, unlocked }: { 
-    onUnlock: () => void, 
+const SelectionMatrix = ({ 
+    requestedLanguages, 
+    selections, 
+    onSelectionChange,
+    price,
+    onUnlock,
+}: {
+    requestedLanguages: string[],
+    selections: Selection,
+    onSelectionChange: (newSelection: Selection) => void,
+    price: number,
+    onUnlock: () => void,
+}) => {
+    
+    const handleDocTypeChange = (type: 'cv' | 'coverLetter', checked: boolean) => {
+        onSelectionChange({ ...selections, [type]: checked });
+    }
+
+    const handleLanguageChange = (language: string, checked: boolean) => {
+        const newLanguages = checked 
+            ? [...selections.languages, language]
+            : selections.languages.filter(l => l !== language);
+        onSelectionChange({ ...selections, languages: newLanguages });
+    }
+
+    return (
+        <div className="space-y-6 p-6 border-t">
+            <div className="text-center">
+                <h3 className="font-semibold text-lg text-primary">Customize Your Package</h3>
+                <p className="text-muted-foreground text-sm">Select the documents and languages you want to generate.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-base flex items-center gap-2"><FileText /> Document Types</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <div className="flex items-center space-x-2">
+                            <Checkbox id="cv" checked={selections.cv} onCheckedChange={(c) => handleDocTypeChange('cv', !!c)} />
+                            <Label htmlFor="cv" className="font-medium">Enhanced CV</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Checkbox id="coverLetter" checked={selections.coverLetter} onCheckedChange={(c) => handleDocTypeChange('coverLetter', !!c)} />
+                            <Label htmlFor="coverLetter" className="font-medium">Tailored Cover Letter</Label>
+                        </div>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="text-base flex items-center gap-2"><LanguagesIcon /> Languages</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        {requestedLanguages.map(lang => (
+                            <div key={lang} className="flex items-center space-x-2">
+                                <Checkbox 
+                                    id={`lang-${lang}`}
+                                    checked={selections.languages.includes(lang)}
+                                    onCheckedChange={(c) => handleLanguageChange(lang, !!c)}
+                                />
+                                <Label htmlFor={`lang-${lang}`} className="font-medium capitalize">{lang}</Label>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            </div>
+
+            <Card className="bg-muted/50">
+                <CardContent className="p-4 flex flex-col items-center justify-center gap-4">
+                    <div className="text-center">
+                        <p className="text-muted-foreground">Total Price</p>
+                        <p className="text-4xl font-bold text-primary">${price.toFixed(2)}</p>
+                    </div>
+                     <Button onClick={onUnlock} className="w-full max-w-xs bg-accent hover:bg-accent/90" size="lg" disabled={price === 0}>
+                        <Lock className="mr-2 h-4 w-4" /> Unlock & Download for ${price.toFixed(2)}
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
+
+const FinalActions = ({ onDownload, onCopy, onEmail, onSave }: { 
     onDownload: () => void, 
     onCopy: () => void, 
     onEmail: () => void, 
     onSave: () => void, 
-    unlocked: boolean,
 }) => {
-    if (!unlocked) {
-        return (
-            <div className="flex flex-col items-center gap-4 w-full p-6 border-t">
-                 <Lock className="w-8 h-8 text-primary" />
-                <div className="text-center">
-                    <h3 className="font-semibold text-lg">Your Documents are Ready!</h3>
-                    <p className="text-muted-foreground text-sm">Pay the service charge to unlock, download, and share your new CV and cover letter.</p>
-                </div>
-                <Button onClick={onUnlock} className="w-full max-w-xs bg-accent hover:bg-accent/90">
-                    Unlock & Download Now
-                </Button>
-            </div>
-        )
-    }
-
     return (
          <div className="flex justify-between items-center w-full">
             <Button variant="outline" onClick={onSave} disabled><Briefcase className="mr-2 h-4 w-4"/> Save to E-Briefcase</Button>
@@ -256,6 +329,13 @@ export default function CvForm() {
   const [targetPosition, setTargetPosition] = useState('');
   const [socialPost, setSocialPost] = useState<GenerateSocialMediaPostOutput | null>(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [requestedLanguages, setRequestedLanguages] = useState<string[]>([]);
+
+  const [selections, setSelections] = useState<Selection>({
+      cv: true,
+      coverLetter: true,
+      languages: [],
+  });
 
   const { toast } = useToast();
 
@@ -267,12 +347,33 @@ export default function CvForm() {
     resolver: zodResolver(GenerationSchema),
   });
 
+  const price = useMemo(() => {
+    const CV_PRICE = 10;
+    const COVER_LETTER_PRICE = 5;
+    const LANG_MULTIPLIER = 1; // Price is per language
+
+    let total = 0;
+    const numLanguages = selections.languages.length;
+
+    if (numLanguages === 0) return 0;
+
+    if (selections.cv) {
+        total += CV_PRICE;
+    }
+    if (selections.coverLetter) {
+        total += COVER_LETTER_PRICE;
+    }
+
+    return total * numLanguages * LANG_MULTIPLIER;
+  }, [selections]);
+
   const handleAnalysis: SubmitHandler<UploadValues> = async (data) => {
     setIsLoading(true);
     setAnalysis(null);
     setGeneratedCv(null);
     setIsUnlocked(false);
     setSocialPost(null);
+    setRequestedLanguages([]);
     try {
         const file = data.cvDocument[0];
         const uri = await fileToDataURI(file);
@@ -297,12 +398,18 @@ export default function CvForm() {
     setIsUnlocked(false);
     setSocialPost(null);
     setTargetPosition(data.targetPosition);
+
+    const languages = data.languages.split(',').map(l => l.trim().toLowerCase()).filter(Boolean);
+    setRequestedLanguages(languages);
+    setSelections({ cv: true, coverLetter: true, languages: languages.slice(0,1) });
+
+
     try {
         const result = await generateEnhancedCv({ 
             cvDataUri,
             targetPosition: data.targetPosition,
             jobAdvertisement: data.jobAdvertisement,
-            languages: data.languages.split(',').map(l => l.trim()),
+            languages: languages,
         });
         setGeneratedCv(result);
     } catch (error) {
@@ -350,6 +457,14 @@ export default function CvForm() {
   };
   
   const handleUnlock = () => {
+    if (price <= 0) {
+        toast({
+            title: 'No items selected',
+            description: 'Please select at least one document and language.',
+            variant: 'destructive',
+        });
+        return;
+    }
     setIsUnlocked(true);
     toast({
         title: 'Success!',
@@ -504,7 +619,7 @@ export default function CvForm() {
          <Card>
             <CardHeader>
                 <div className="flex flex-col items-center text-center space-y-4">
-                    <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full animate-bounce">
+                    <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
                         <Smile className="h-12 w-12 text-green-500" />
                     </div>
                     <CardTitle className="text-2xl">Congratulations! Your ATS Score has Improved!</CardTitle>
@@ -535,17 +650,17 @@ export default function CvForm() {
 
                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="cv">Enhanced CV</TabsTrigger>
-                        <TabsTrigger value="letter">Cover Letter</TabsTrigger>
+                        <TabsTrigger value="cv" disabled={!isUnlocked}>Enhanced CV</TabsTrigger>
+                        <TabsTrigger value="letter" disabled={!isUnlocked}>Cover Letter</TabsTrigger>
                     </TabsList>
                     <TabsContent value="cv">
                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                            {generatedCv.newCvContent}
+                            {isUnlocked ? generatedCv.newCvContent : "Unlock to view your enhanced CV."}
                         </div>
                     </TabsContent>
                     <TabsContent value="letter">
                          <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                            {generatedCv.newCoverLetterContent}
+                             {isUnlocked ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
                         </div>
                     </TabsContent>
                 </Tabs>
@@ -568,19 +683,30 @@ export default function CvForm() {
                     </div>
                 )}
             </CardContent>
-            <CardFooter className="flex-col gap-4">
-                {isUnlocked && <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />}
-                <GatedActions 
-                    unlocked={isUnlocked}
-                    onUnlock={handleUnlock}
-                    onDownload={handleDownload}
-                    onCopy={handleCopy}
-                    onEmail={handleEmail}
-                    onSave={() => {}}
-                />
+            <CardFooter className="flex-col gap-4 p-0">
+                 {!isUnlocked ? (
+                    <SelectionMatrix 
+                        requestedLanguages={requestedLanguages}
+                        selections={selections}
+                        onSelectionChange={setSelections}
+                        price={price}
+                        onUnlock={handleUnlock}
+                    />
+                 ) : (
+                    <div className="p-6 w-full space-y-4">
+                        <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
+                        <FinalActions 
+                            onDownload={handleDownload}
+                            onCopy={handleCopy}
+                            onEmail={handleEmail}
+                            onSave={() => {}}
+                        />
+                    </div>
+                 )}
             </CardFooter>
          </Card>
       )}
     </div>
   );
 }
+
