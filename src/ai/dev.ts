@@ -1,3 +1,4 @@
+'use server';
 import { config } from 'dotenv';
 config();
 
@@ -6,3 +7,4 @@ import '@/ai/flows/ai-powered-faq.ts';
 import '@/ai/flows/social-media-post-generator.ts';
 import '@/ai/flows/legal-agent.ts';
 import '@/ai/flows/cv-enhancement.ts';
+import '@/ai/flows/letter-of-interest.ts';

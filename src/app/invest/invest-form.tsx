@@ -1,0 +1,209 @@
+'use client';
+
+import { useState } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { generateLetterOfInterest } from '@/ai/flows/letter-of-interest';
+import { type GenerateLetterOfInterestOutput } from '@/ai/flows/letter-of-interest.schema';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Sparkles, Copy, Mail, Download } from 'lucide-react';
+
+const FormSchema = z.object({
+  fullName: z.string().min(3, 'Full name is required.'),
+  organizationName: z.string().optional(),
+  email: z.string().email('Please enter a valid email address.'),
+  investmentRange: z.string().optional(),
+  areaOfInterest: z.string().min(10, 'Please describe your area of interest.'),
+});
+
+type FormValues = z.infer<typeof FormSchema>;
+
+
+export default function InvestForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState<GenerateLetterOfInterestOutput | null>(null);
+  const { toast } = useToast();
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      fullName: '',
+      organizationName: '',
+      email: '',
+      investmentRange: '',
+      areaOfInterest: '',
+    },
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    setIsLoading(true);
+    setResponse(null);
+    try {
+      const result = await generateLetterOfInterest(data);
+      setResponse(result);
+      toast({
+        title: 'Letter of Interest Generated!',
+        description: 'Thank you for your inquiry. Please see the generated letter below.',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'Failed to generate the letter. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopy = () => {
+    if (!response) return;
+    navigator.clipboard.writeText(response.letterContent);
+    toast({ title: 'Copied!', description: 'Letter content copied to clipboard.'});
+  };
+
+  const handleDownload = () => {
+    if (!response) return;
+    const element = document.createElement("a");
+    const file = new Blob([response.letterContent], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "Letter-of-Interest-Innovative-Enterprises.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    toast({ title: 'Downloaded!', description: `Your Letter of Interest has been downloaded.`});
+  };
+
+  const handleEmail = () => {
+    if (!response) return;
+    const subject = "Following up on my interest in Innovative Enterprises";
+    const body = encodeURIComponent("Dear Innovative Enterprises Team,\n\nPlease find the automatically generated Letter of Interest based on my recent inquiry. I look forward to discussing potential investment opportunities.\n\n---\n\n" + response.letterContent);
+    window.location.href = `mailto:invest@innovative.om?subject=${subject}&body=${body}`;
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto">
+        {!response ? (
+            <Card>
+                <CardHeader>
+                <CardTitle>Investor Relations Inquiry</CardTitle>
+                <CardDescription>Please fill out the form to get in touch with our investment team. An AI-generated Letter of Interest will be created based on your input.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="fullName"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Full Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g., Jane Doe" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email Address</FormLabel>
+                                        <FormControl>
+                                            <Input type="email" placeholder="e.g., jane.doe@example.com" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="organizationName"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Organization (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g., Future Ventures Inc." {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="investmentRange"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Investment Range (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g., $50,000 - $100,000" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                            </div>
+                             <FormField
+                                control={form.control}
+                                name="areaOfInterest"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Area of Interest</FormLabel>
+                                    <FormControl>
+                                        <Textarea placeholder="Please provide a brief introduction and your area of interest (e.g., 'Interested in early-stage AI projects and cybersecurity ventures')." rows={6} {...field}/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
+                                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</> : <><Sparkles className="mr-2 h-4 w-4" /> Submit Inquiry & Generate Letter</>}
+                            </Button>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
+        ) : (
+             <Card>
+                <CardHeader>
+                    <CardTitle>Your Generated Letter of Interest</CardTitle>
+                    <CardDescription>
+                        Thank you for your interest. Here is the letter generated by our AI. You can copy, download, or email it. Our team will be in touch shortly.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                     <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+                        {response.letterContent}
+                    </div>
+                </CardContent>
+                <CardContent>
+                    <div className="flex flex-wrap gap-2 justify-end">
+                        <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                        <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                        <Button onClick={handleEmail}><Mail className="mr-2 h-4 w-4"/> Email to Us</Button>
+                    </div>
+                </CardContent>
+            </Card>
+        )}
+
+        {isLoading && !response && (
+            <Card className="mt-8">
+                <CardContent className="p-6 text-center">
+                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+                    <p className="mt-4 text-muted-foreground">Our AI is drafting your Letter of Interest...</p>
+                </CardContent>
+            </Card>
+        )}
+    </div>
+  );
+}

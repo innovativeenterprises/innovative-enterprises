@@ -1,9 +1,8 @@
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Download, TrendingUp, Users, Target } from "lucide-react";
+import InvestForm from "./invest-form";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const investmentReasons = [
     {
@@ -91,22 +90,9 @@ export default function InvestPage() {
                 </div>
             </div>
 
-            <div className="max-w-3xl mx-auto">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Investor Relations Inquiry</CardTitle>
-                        <CardDescription>Please fill out the form to get in touch with our investment team.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <form className="space-y-4">
-                            <Input placeholder="Full Name / Organization Name" />
-                            <Input type="email" placeholder="Email Address" />
-                            <Input placeholder="Investment Range (Optional)" />
-                            <Textarea placeholder="Please provide a brief introduction and your area of interest." rows={6} />
-                            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Submit Inquiry</Button>
-                        </form>
-                    </CardContent>
-                </Card>
+            <div>
+                <h2 className="text-3xl font-bold text-center text-primary mb-10">Get in Touch</h2>
+                <InvestForm />
             </div>
         </div>
       </div>
