@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -94,7 +94,7 @@ export default function StaffTable() {
                 prev.map(category => ({
                     ...category,
                     agents: category.agents.map(agent => 
-                        agent.name === name ? { ...agent, enabled: !agent.enabled } : agent
+                        agent.name === name ? { ...member, enabled: !agent.enabled } : agent
                     )
                 }))
             );
@@ -105,12 +105,13 @@ export default function StaffTable() {
         <Card>
             <CardHeader>
                 <CardTitle>Staff Management</CardTitle>
+                <CardDescription>Enable or disable human and AI staff members across the organization.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Name</TableHead>
+                            <TableHead className="w-[250px]">Name</TableHead>
                             <TableHead>Role</TableHead>
                             <TableHead>Type</TableHead>
                             <TableHead className="text-right">Status</TableHead>
@@ -121,7 +122,9 @@ export default function StaffTable() {
                             <TableRow key={member.name}>
                                 <TableCell className="font-medium">{member.name}</TableCell>
                                 <TableCell>{member.role}</TableCell>
-                                <TableCell><Badge variant="secondary">Leadership</Badge></TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary">Leadership</Badge>
+                                </TableCell>
                                 <TableCell className="text-right">
                                     <Switch
                                         checked={member.enabled}
@@ -136,7 +139,9 @@ export default function StaffTable() {
                                 <TableRow key={agent.name}>
                                     <TableCell className="font-medium">{agent.name}</TableCell>
                                     <TableCell>{agent.role}</TableCell>
-                                    <TableCell><Badge>AI Agent</Badge></TableCell>
+                                    <TableCell>
+                                        <Badge variant="default" className="bg-primary/20 text-primary hover:bg-primary/30">AI Agent</Badge>
+                                    </TableCell>
                                     <TableCell className="text-right">
                                         <Switch
                                             checked={agent.enabled}
