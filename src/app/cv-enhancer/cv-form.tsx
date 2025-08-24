@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
@@ -445,11 +445,27 @@ export default function CvForm() {
          </Card>
       )}
 
-      {generatedCv && (
+      {generatedCv && analysis && (
          <Card>
             <CardHeader>
-                <CardTitle>Step 3: Your New Documents are Ready!</CardTitle>
-                <CardDescription>Your CV and Cover Letter have been optimized. You can now download, copy, email them, or generate a social media post.</CardDescription>
+                <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full animate-bounce">
+                        <Smile className="h-12 w-12 text-green-500" />
+                    </div>
+                    <CardTitle className="text-2xl">Congratulations! Your ATS Score has Improved!</CardTitle>
+                    <div className="flex items-center gap-4 text-2xl font-bold">
+                        <div className="flex flex-col items-center p-4 rounded-lg bg-muted">
+                            <span className="text-sm font-medium text-muted-foreground">Original Score</span>
+                            <span>{analysis.overallScore}</span>
+                        </div>
+                        <ArrowRight className="h-8 w-8 text-primary" />
+                        <div className="flex flex-col items-center p-4 rounded-lg bg-primary text-primary-foreground">
+                            <span className="text-sm font-medium">New Score</span>
+                            <span>{generatedCv.newOverallScore}</span>
+                        </div>
+                    </div>
+                     <CardDescription>Your CV and Cover Letter are now highly optimized. You can download, copy, or email them.</CardDescription>
+                </div>
             </CardHeader>
             <CardContent>
                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

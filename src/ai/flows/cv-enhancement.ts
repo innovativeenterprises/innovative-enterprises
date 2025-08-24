@@ -91,6 +91,8 @@ Second, write a compelling and professional cover letter. The cover letter shoul
 - Highlight the most relevant skills and experiences from the rewritten CV.
 - Maintain a professional tone.
 - The output should be a complete cover letter in Markdown format.
+
+Finally, after generating the new CV, estimate a new, improved "newOverallScore" for the enhanced CV you just created, on the same 0-100 scale.
 `,
 });
 

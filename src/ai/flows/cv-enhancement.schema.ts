@@ -51,5 +51,6 @@ export type CvGenerationInput = z.infer<typeof CvGenerationInputSchema>;
 export const CvGenerationOutputSchema = z.object({
     newCvContent: z.string().describe("The full content of the newly generated, enhanced CV in Markdown format."),
     newCoverLetterContent: z.string().describe("The full content of the newly generated, tailored cover letter in Markdown format."),
+    newOverallScore: z.number().min(0).max(100).describe("The new, improved ATS score after enhancement."),
 });
 export type CvGenerationOutput = z.infer<typeof CvGenerationOutputSchema>;
