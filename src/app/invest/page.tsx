@@ -1,8 +1,9 @@
 
-import { Download, TrendingUp, Users, Target } from "lucide-react";
+import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck } from "lucide-react";
 import InvestForm from "./invest-form";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const investmentReasons = [
     {
@@ -21,6 +22,51 @@ const investmentReasons = [
         description: "Our team consists of seasoned professionals with a proven track record of delivering innovative projects and driving growth."
     }
 ]
+
+const currentProjects = [
+    { name: "PanoSpace", description: "Immersive platform for virtual tours.", status: "Live" },
+    { name: "ameen", description: "Secure digital identity and authentication solution.", status: "Live" },
+    { name: "APPI", description: "Intuitive API management and integration platform.", status: "Live" },
+    { name: "KHIDMAAI", description: "AI-powered customer service automation tool.", status: "Live" },
+    { name: "VMALL", description: "A comprehensive virtual mall and e-commerce ecosystem.", status: "Live" },
+];
+
+const pipelineProjects = [
+    { name: "EduVerse", description: "An AI-driven platform for personalized education and skill development.", status: "In Development" },
+    { name: "Agri-Tech Solutions", description: "IoT and AI-based solutions for optimizing agriculture in arid regions.", status: "Prototyping" },
+    { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
+];
+
+const comingProjects = [
+    { name: "Fintech Super-App", description: "An integrated financial services application for the Omani market.", status: "Research Phase" },
+    { name: "Smart City OS", description: "An operating system for managing urban infrastructure and services.", status: "Concept Phase" },
+];
+
+const ProjectCard = ({ name, description, status }: { name: string, description: string, status: string }) => {
+    const getStatusColor = () => {
+        switch (status) {
+            case 'Live': return 'bg-green-500';
+            case 'In Development': return 'bg-blue-500';
+            case 'Prototyping': return 'bg-yellow-500';
+            case 'Research Phase': return 'bg-purple-500';
+            case 'Concept Phase': return 'bg-gray-500';
+            default: return 'bg-gray-500';
+        }
+    }
+    return (
+        <Card className="h-full">
+            <CardHeader>
+                <div className="flex justify-between items-start">
+                    <CardTitle className="text-xl">{name}</CardTitle>
+                     <Badge variant="default" className={`${getStatusColor()} text-white`}>{status}</Badge>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <p className="text-muted-foreground">{description}</p>
+            </CardContent>
+        </Card>
+    )
+}
 
 export default function InvestPage() {
   return (
@@ -51,6 +97,33 @@ export default function InvestPage() {
                         </Card>
                      ))}
                  </div>
+            </div>
+            
+            <div>
+                <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
+                    <PackageCheck className="w-8 h-8" /> Current Projects
+                </h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {currentProjects.map(p => <ProjectCard key={p.name} {...p} />)}
+                </div>
+            </div>
+            
+            <div>
+                <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
+                    <Building2 className="w-8 h-8" /> On Pipeline Projects
+                </h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {pipelineProjects.map(p => <ProjectCard key={p.name} {...p} />)}
+                </div>
+            </div>
+
+            <div>
+                 <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
+                    <Lightbulb className="w-8 h-8" /> Coming Projects
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                    {comingProjects.map(p => <ProjectCard key={p.name} {...p} />)}
+                </div>
             </div>
 
             <div>
