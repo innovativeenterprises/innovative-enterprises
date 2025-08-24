@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -12,8 +13,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Mail, Download, Briefcase, Calendar, CheckCircle, Bot } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Mail, Download, Briefcase, Calendar, CheckCircle, Bot, FileUp, ShieldCheck } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const FormSchema = z.object({
   fullName: z.string().min(3, 'Full name is required.'),
@@ -29,11 +31,19 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
+const kycSchema = z.object({
+    identityDocument: z.any().refine(file => file?.length == 1, 'Identity document is required.'),
+    incomeProof: z.any().refine(file => file?.length == 1, 'Proof of income is required.'),
+});
+type KycValues = z.infer<typeof kycSchema>;
+
 
 export default function InvestForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isSynced, setIsSynced] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
   const [response, setResponse] = useState<GenerateLetterOfInterestOutput | null>(null);
   const { toast } = useToast();
 
@@ -52,11 +62,17 @@ export default function InvestForm() {
     },
   });
 
+  const kycForm = useForm<KycValues>({
+    resolver: zodResolver(kycSchema),
+  });
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
     setIsSynced(false);
     setIsSyncing(false);
+    setIsUploaded(false);
+    setIsUploading(false);
     try {
       const result = await generateLetterOfInterest(data);
       setResponse(result);
@@ -117,6 +133,19 @@ export default function InvestForm() {
         });
     }, 1500);
   }
+
+  const handleKycSubmit: SubmitHandler<KycValues> = async (data) => {
+    setIsUploading(true);
+    // Simulate file upload
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    console.log("Uploaded KYC Documents:", data);
+    setIsUploading(false);
+    setIsUploaded(true);
+    toast({
+        title: 'Documents Securely Uploaded!',
+        description: 'Your documents have been forwarded to Lexi (Legal Agent) for pre-verification.',
+    });
+  };
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -280,35 +309,106 @@ export default function InvestForm() {
                     </div>
                 </CardContent>
                 <CardFooter className="flex-col gap-4 items-start">
-                    <p className="text-sm text-muted-foreground">Next Steps:</p>
-                     <div className="flex justify-between items-center w-full">
-                         <Button variant="outline" onClick={handleSyncToCrm} disabled={isSyncing || isSynced}>
-                            {isSyncing ? (
-                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Syncing...</>
-                            ) : isSynced ? (
-                                <><CheckCircle className="mr-2 h-4 w-4 text-green-500" /> Synced to CRM</>
-                            ) : (
-                                <><Briefcase className="mr-2 h-4 w-4"/> Sync to CRM (Remi)</>
-                            )}
-                         </Button>
-                        <div className="flex gap-2">
-                            <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
-                            <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                            <Button onClick={handleEmail}><Mail className="mr-2 h-4 w-4"/> Email to Us (Sami)</Button>
+                    <div className="space-y-4 w-full">
+                        <p className="text-sm text-muted-foreground">Next Steps:</p>
+                        <div className="flex justify-between items-center w-full">
+                            <Button variant="outline" onClick={handleSyncToCrm} disabled={isSyncing || isSynced}>
+                                {isSyncing ? (
+                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Syncing...</>
+                                ) : isSynced ? (
+                                    <><CheckCircle className="mr-2 h-4 w-4 text-green-500" /> Synced to CRM</>
+                                ) : (
+                                    <><Briefcase className="mr-2 h-4 w-4"/> Sync to CRM (Remi)</>
+                                )}
+                            </Button>
+                            <div className="flex gap-2">
+                                <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                                <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                                <Button onClick={handleEmail}><Mail className="mr-2 h-4 w-4"/> Email to Us (Sami)</Button>
+                            </div>
                         </div>
-                    </div>
-                    {isSynced && (
+                        {isSynced && (
+                            <Card className="w-full bg-muted/50">
+                                <CardHeader>
+                                    <CardTitle className="text-lg flex items-center gap-2"><Calendar className="h-5 w-5"/> Schedule a Meeting</CardTitle>
+                                    <CardDescription>Aida, our assistant agent, can help you book a meeting with our team.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="flex flex-col sm:flex-row gap-4">
+                                <Button className="w-full" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Calendly</a></Button>
+                                <Button className="w-full" variant="outline" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Google Calendar</a></Button>
+                                </CardContent>
+                            </Card>
+                        )}
+                        
                         <Card className="w-full bg-muted/50">
                             <CardHeader>
-                                <CardTitle className="text-lg flex items-center gap-2"><Calendar className="h-5 w-5"/> Schedule a Meeting</CardTitle>
-                                <CardDescription>Aida, our assistant agent, can help you book a meeting with our team.</CardDescription>
+                                <CardTitle className="text-lg flex items-center gap-2">
+                                    <FileUp className="h-5 w-5" /> Optional: Expedite Your Application
+                                </CardTitle>
+                                <CardDescription>
+                                    To speed up the due diligence process, you can optionally upload verification documents now.
+                                </CardDescription>
                             </CardHeader>
-                            <CardContent className="flex flex-col sm:flex-row gap-4">
-                               <Button className="w-full" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Calendly</a></Button>
-                               <Button className="w-full" variant="outline" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Google Calendar</a></Button>
+                             {!isUploaded ? (
+                            <CardContent>
+                                <Form {...kycForm}>
+                                    <form onSubmit={kycForm.handleSubmit(handleKycSubmit)} className="space-y-4">
+                                        <FormField
+                                            control={kycForm.control}
+                                            name="identityDocument"
+                                            render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Commercial Registration (CR) or Passport</FormLabel>
+                                                <FormControl>
+                                                    <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={kycForm.control}
+                                            name="incomeProof"
+                                            render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Proof of Income Source</FormLabel>
+                                                <FormControl>
+                                                    <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                            )}
+                                        />
+                                        <Alert variant="default" className="mt-4">
+                                            <ShieldCheck className="h-4 w-4"/>
+                                            <AlertTitle>Secure Upload</AlertTitle>
+                                            <AlertDescription>
+                                                Your documents are encrypted and will be handled with strict confidentiality by our legal team for verification purposes only.
+                                            </AlertDescription>
+                                        </Alert>
+                                        <Button type="submit" className="w-full" disabled={isUploading}>
+                                            {isUploading ? (
+                                                <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Securely Uploading...</>
+                                            ) : (
+                                                <><FileUp className="mr-2 h-4 w-4" /> Upload Documents (to Lexi)</>
+                                            )}
+                                        </Button>
+                                    </form>
+                                </Form>
                             </CardContent>
+                            ) : (
+                               <CardContent>
+                                    <div className="flex items-center justify-center p-6 bg-green-100 dark:bg-green-900/50 rounded-md">
+                                        <CheckCircle className="h-8 w-8 text-green-600 mr-4" />
+                                        <div>
+                                            <p className="font-semibold text-green-800 dark:text-green-200">Documents Submitted Successfully!</p>
+                                            <p className="text-sm text-green-700 dark:text-green-300">Our legal agent, Lexi, will begin the pre-verification process.</p>
+                                        </div>
+                                    </div>
+                               </CardContent>
+                            )}
                         </Card>
-                    )}
+                    </div>
                 </CardFooter>
             </Card>
         )}
