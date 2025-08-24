@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Linkedin, Twitter, Instagram, Facebook, Mail } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Linkedin, Twitter, Instagram, Facebook, Mail, Github, Globe } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from 'next/link';
 
@@ -14,6 +14,8 @@ interface Agent {
         instagram?: string;
         facebook?: string;
         email?: string;
+        github?: string;
+        website?: string;
     }
 }
 
@@ -31,7 +33,8 @@ const leadershipTeam: Agent[] = [
         socials: {
             linkedin: "#",
             twitter: "#",
-            email: "mailto:jumaa@innovative.om"
+            email: "mailto:jumaa@innovative.om",
+            website: "#"
         }
     },
     { 
@@ -42,7 +45,8 @@ const leadershipTeam: Agent[] = [
         socials: {
             linkedin: "#",
             twitter: "#",
-            email: "mailto:anwar@innovative.om"
+            email: "mailto:anwar@innovative.om",
+            github: "#",
         }
     },
     { 
@@ -138,16 +142,16 @@ export function LeadershipTeam() {
                                         <span className="sr-only">Twitter</span>
                                     </Link>
                                 )}
-                                {member.socials?.facebook && (
-                                    <Link href={member.socials.facebook} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                                        <Facebook className="w-5 h-5" />
-                                        <span className="sr-only">Facebook</span>
+                                {member.socials?.github && (
+                                    <Link href={member.socials.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                                        <Github className="w-5 h-5" />
+                                        <span className="sr-only">GitHub</span>
                                     </Link>
                                 )}
-                                 {member.socials?.instagram && (
-                                    <Link href={member.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                                        <Instagram className="w-5 h-5" />
-                                        <span className="sr-only">Instagram</span>
+                                {member.socials?.website && (
+                                    <Link href={member.socials.website} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                                        <Globe className="w-5 h-5" />
+                                        <span className="sr-only">Website</span>
                                     </Link>
                                 )}
                                 {member.socials?.email && (
