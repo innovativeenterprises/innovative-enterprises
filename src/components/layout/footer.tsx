@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Rocket } from 'lucide-react';
+import { Lightbulb } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="container mx-auto py-8 px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <Rocket className="h-6 w-6 text-accent" />
+            <Lightbulb className="h-6 w-6 text-accent" />
             <span className="font-bold text-lg text-primary">INNOVATIVE ENTERPRISES</span>
           </div>
           <p className="text-sm text-muted-foreground">

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Rocket } from 'lucide-react';
+import { Menu, Lightbulb } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -99,7 +99,7 @@ export default function Header() {
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
           <div className="bg-primary p-2 rounded-lg">
-            <Rocket className="h-6 w-6 text-primary-foreground" />
+            <Lightbulb className="h-6 w-6 text-primary-foreground" />
           </div>
           <span className="hidden sm:inline">INNOVATIVE</span>
           <span className="sm:hidden">IE</span>
@@ -141,7 +141,7 @@ export default function Header() {
                 <div className="flex flex-col gap-4 py-8">
                     <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary mb-4 px-2" onClick={handleLinkClick}>
                         <div className="bg-primary p-2 rounded-lg">
-                            <Rocket className="h-6 w-6 text-primary-foreground" />
+                            <Lightbulb className="h-6 w-6 text-primary-foreground" />
                         </div>
                     <span>INNOVATIVE ENTERPRISES</span>
                     </Link>
