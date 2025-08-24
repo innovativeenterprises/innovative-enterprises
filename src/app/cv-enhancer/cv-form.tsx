@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -105,7 +106,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
             platform: "LinkedIn" as const,
             tone: "Professional" as const,
         }
-    })
+    });
 
     const handleSocialPost: SubmitHandler<any> = async (data) => {
         setIsLoading(true);
@@ -178,7 +179,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a tone" />
-                                            </SelectTrigger>
+                                            </Trigger>
                                         </FormControl>
                                         <SelectContent>
                                             <SelectItem value="Professional">Professional</SelectItem>
@@ -202,6 +203,43 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
     )
 }
 
+const GatedActions = ({ onUnlock, onDownload, onCopy, onEmail, onSave, unlocked, activeTabContent, activeTabName }: { 
+    onUnlock: () => void, 
+    onDownload: () => void, 
+    onCopy: () => void, 
+    onEmail: () => void, 
+    onSave: () => void, 
+    unlocked: boolean,
+    activeTabContent: string,
+    activeTabName: string,
+}) => {
+    if (!unlocked) {
+        return (
+            <div className="flex flex-col items-center gap-4 w-full p-6 border-t">
+                 <Lock className="w-8 h-8 text-primary" />
+                <div className="text-center">
+                    <h3 className="font-semibold text-lg">Your Documents are Ready!</h3>
+                    <p className="text-muted-foreground text-sm">Pay the service charge to unlock, download, and share your new CV and cover letter.</p>
+                </div>
+                <Button onClick={onUnlock} className="w-full max-w-xs bg-accent hover:bg-accent/90">
+                    Unlock & Download Now
+                </Button>
+            </div>
+        )
+    }
+
+    return (
+         <div className="flex justify-between items-center w-full">
+            <Button variant="outline" disabled><Briefcase className="mr-2"/> Save to E-Briefcase</Button>
+            <div className="flex gap-2">
+                <Button variant="outline" onClick={onDownload}><Download className="mr-2"/> Download</Button>
+                <Button variant="outline" onClick={onCopy}><Copy className="mr-2"/> Copy</Button>
+                <Button onClick={onEmail}><Mail className="mr-2"/> Email</Button>
+            </div>
+        </div>
+    )
+}
+
 export default function CvForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -212,6 +250,7 @@ export default function CvForm() {
   const [activeTab, setActiveTab] = useState('cv');
   const [targetPosition, setTargetPosition] = useState('');
   const [socialPost, setSocialPost] = useState<GenerateSocialMediaPostOutput | null>(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   const { toast } = useToast();
 
@@ -227,6 +266,8 @@ export default function CvForm() {
     setIsLoading(true);
     setAnalysis(null);
     setGeneratedCv(null);
+    setIsUnlocked(false);
+    setSocialPost(null);
     try {
         const file = data.cvDocument[0];
         const uri = await fileToDataURI(file);
@@ -249,6 +290,8 @@ export default function CvForm() {
     if (!cvDataUri) return;
     setIsGenerating(true);
     setGeneratedCv(null);
+    setIsUnlocked(false);
+    setSocialPost(null);
     setTargetPosition(data.targetPosition);
     try {
         const result = await generateEnhancedCv({ 
@@ -288,10 +331,11 @@ export default function CvForm() {
     toast({ title: 'Downloaded!', description: `Your new ${activeTab === 'cv' ? 'CV' : 'cover letter'} has been downloaded.`});
   };
 
-  const handleCopy = (content: string, type: string) => {
+  const handleCopy = () => {
+    const content = getContentToShare();
     if (!content) return;
     navigator.clipboard.writeText(content);
-    toast({ title: 'Copied!', description: `${type} content copied to clipboard.`});
+    toast({ title: 'Copied!', description: `${activeTab === 'cv' ? 'CV' : 'Cover letter'} content copied to clipboard.`});
   };
 
   const handleEmail = () => {
@@ -301,6 +345,14 @@ export default function CvForm() {
     const body = encodeURIComponent(content);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   };
+  
+  const handleUnlock = () => {
+    setIsUnlocked(true);
+    toast({
+        title: 'Success!',
+        description: 'Your documents have been unlocked.',
+    });
+  }
 
   const handleGeneratedSocialPost = (output: GenerateSocialMediaPostOutput) => {
     setSocialPost(output);
@@ -464,10 +516,20 @@ export default function CvForm() {
                             <span>{generatedCv.newOverallScore}</span>
                         </div>
                     </div>
-                     <CardDescription>Your CV and Cover Letter are now highly optimized. You can download, copy, or email them.</CardDescription>
+                     <CardDescription>Your CV and Cover Letter are now highly optimized and ready for the next step.</CardDescription>
                 </div>
             </CardHeader>
             <CardContent>
+                 {analysis.overallScore < 100 && generatedCv.newOverallScore < 100 && !isUnlocked && (
+                    <Alert variant="default" className="mb-6">
+                        <Sparkles className="h-4 w-4" />
+                        <AlertTitle>Want an even higher score?</AlertTitle>
+                        <AlertDescription>
+                            Your score improved, but we can do even better! The AI couldn't find some key details in your original CV. Consider adding more quantifiable achievements, specific skills mentioned in the job ad, or more detailed project descriptions to your CV and try again. Or, proceed with the currently enhanced version.
+                        </AlertDescription>
+                    </Alert>
+                 )}
+
                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="cv">Enhanced CV</TabsTrigger>
@@ -493,20 +555,28 @@ export default function CvForm() {
                             <p className="font-semibold">{socialPost.suggestedHashtags.join(' ')}</p>
                         </div>
                         <div className="flex justify-end mt-2">
-                            <Button variant="ghost" onClick={() => handleCopy(socialPost.postContent + '\n\n' + socialPost.suggestedHashtags.join(' '), 'Social post')}>
+                            <Button variant="ghost" onClick={() => { 
+                                navigator.clipboard.writeText(socialPost.postContent + '\n\n' + socialPost.suggestedHashtags.join(' '));
+                                toast({ title: 'Copied!', description: 'Social post content copied to clipboard.'});
+                            }}>
                                 <Copy className="mr-2 h-4 w-4" /> Copy Post
                             </Button>
                         </div>
                     </div>
                 )}
             </CardContent>
-            <CardFooter className="flex justify-between items-center">
-                <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
-                <div className="flex gap-2">
-                    <Button variant="outline" onClick={handleDownload}><Download className="mr-2"/> Download</Button>
-                    <Button variant="outline" onClick={() => handleCopy(getContentToShare(), activeTab === 'cv' ? 'CV' : 'Cover letter')}><Copy className="mr-2"/> Copy</Button>
-                    <Button onClick={handleEmail}><Mail className="mr-2"/> Email</Button>
-                </div>
+            <CardFooter className="flex-col gap-4">
+                {isUnlocked && <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />}
+                <GatedActions 
+                    unlocked={isUnlocked}
+                    onUnlock={handleUnlock}
+                    onDownload={handleDownload}
+                    onCopy={handleCopy}
+                    onEmail={handleEmail}
+                    onSave={() => {}}
+                    activeTabContent={getContentToShare()}
+                    activeTabName={activeTab}
+                />
             </CardFooter>
          </Card>
       )}
