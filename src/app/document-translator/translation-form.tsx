@@ -103,6 +103,8 @@ export default function TranslationForm() {
     navigator.clipboard.writeText(response.translatedContent + "\n\n" + response.verificationStatement);
     toast({ title: 'Copied!', description: 'Translated content copied to clipboard.'});
   };
+  
+  const targetLanguage = form.watch("targetLanguage");
 
   return (
     <div className="space-y-8">
@@ -211,7 +213,10 @@ export default function TranslationForm() {
           <CardContent className="space-y-6">
             <div>
               <h3 className="text-lg font-semibold mb-2">Translated Content</h3>
-              <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+              <div 
+                className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto"
+                dir={targetLanguage === 'Arabic' ? 'rtl' : 'ltr'}
+              >
                 {response.translatedContent}
               </div>
             </div>
