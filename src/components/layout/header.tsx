@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, BrainCircuit } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, BrainCircuit, Image as ImageIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -65,6 +65,11 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     title: "Social Media Post Generator",
     href: "/social-media-post-generator",
     description: "Craft compelling social media posts for any topic or platform.",
+  },
+  {
+    title: "AI Image Generator",
+    href: "/image-generator",
+    description: "Create stunning visuals from text descriptions in seconds.",
   }
 ];
 
