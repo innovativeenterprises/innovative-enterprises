@@ -36,6 +36,11 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     href: "/faq",
     description: "Get instant, accurate answers to your questions about our services.",
   },
+   {
+    title: "Document Translator",
+    href: "/document-translator",
+    description: "Translate legal, financial, and official documents with high accuracy.",
+  },
   {
     title: "AI Legal Agent",
     href: "/legal-agent",

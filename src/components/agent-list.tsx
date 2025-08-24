@@ -118,7 +118,7 @@ const agentCategories: AgentCategory[] = [
         agents: [
             { name: "Lina", role: "Content Creator Agent", description: "Designs posts, videos, brochures.", icon: Palette },
             { name: "Noor", role: "Copywriting Agent", description: "Catchy ad copy, website text.", icon: PenSquare },
-            { name: "Voxi", role: "Voice & Translation Agent", description: "Voiceovers, Arabic-English translation.", icon: Languages },
+            { name: "Voxi", role: "Voice & Translation Agent", description: "Voiceovers, Arabic-English translation.", icon: Languages, href: "/document-translator" },
             { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Photo editing, 360° virtual tours.", icon: Camera },
         ]
     },
