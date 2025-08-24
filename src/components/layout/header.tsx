@@ -59,6 +59,12 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
 ];
 
 const partnershipLinks: { title: string; href: string; description: string }[] = [
+   {
+    title: "Submit a Work Order",
+    href: "/submit-work",
+    description:
+      "Have a project or task? Submit it here for analysis and routing to our talent network.",
+  },
   {
     title: "Be our Partner",
     href: "/partner",
