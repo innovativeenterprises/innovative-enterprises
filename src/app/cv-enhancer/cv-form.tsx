@@ -6,17 +6,36 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { analyzeCv, generateEnhancedCv } from '@/ai/flows/cv-enhancement';
 import { type CvAnalysisOutput, type CvGenerationOutput } from '@/ai/flows/cv-enhancement.schema';
+import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
+import { type GenerateSocialMediaPostOutput, GenerateSocialMediaPostInputSchema } from '@/ai/flows/social-media-post-generator.schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose
+} from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -76,6 +95,113 @@ const SuggestionSection = ({ title, data }: { title: string; data: { isCompliant
     )
 }
 
+const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: string, onGenerate: (output: GenerateSocialMediaPostOutput) => void }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const socialForm = useForm({
+        resolver: zodResolver(GenerateSocialMediaPostInputSchema),
+        defaultValues: {
+            topic: `I just enhanced my CV for a ${targetPosition} role using Innovative Enterprises' AI tool!`,
+            platform: "LinkedIn" as const,
+            tone: "Professional" as const,
+        }
+    })
+
+    const handleSocialPost: SubmitHandler<any> = async (data) => {
+        setIsLoading(true);
+        try {
+            const result = await generateSocialMediaPost(data);
+            onGenerate(result);
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="outline"><Megaphone className="mr-2" /> Generate Social Post</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Generate Social Media Post</DialogTitle>
+                    <DialogDescription>
+                        Create a social media post to announce your new and improved CV.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...socialForm}>
+                    <form onSubmit={socialForm.handleSubmit(handleSocialPost)} className="space-y-4">
+                        <FormField
+                            control={socialForm.control}
+                            name="topic"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Post Topic</FormLabel>
+                                    <FormControl>
+                                        <Textarea {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={socialForm.control}
+                            name="platform"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Platform</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a platform" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                                            <SelectItem value="Twitter">Twitter</SelectItem>
+                                            <SelectItem value="Facebook">Facebook</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={socialForm.control}
+                            name="tone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Tone</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a tone" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="Professional">Professional</SelectItem>
+                                            <SelectItem value="Enthusiastic">Enthusiastic</SelectItem>
+                                            <SelectItem value="Casual">Casual</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <DialogFooter>
+                            <Button type="submit" disabled={isLoading}>
+                                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Generating...</> : 'Generate'}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function CvForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -84,6 +210,9 @@ export default function CvForm() {
   const [analysis, setAnalysis] = useState<CvAnalysisOutput | null>(null);
   const [generatedCv, setGeneratedCv] = useState<CvGenerationOutput | null>(null);
   const [activeTab, setActiveTab] = useState('cv');
+  const [targetPosition, setTargetPosition] = useState('');
+  const [socialPost, setSocialPost] = useState<GenerateSocialMediaPostOutput | null>(null);
+
   const { toast } = useToast();
 
   const uploadForm = useForm<UploadValues>({
@@ -120,6 +249,7 @@ export default function CvForm() {
     if (!cvDataUri) return;
     setIsGenerating(true);
     setGeneratedCv(null);
+    setTargetPosition(data.targetPosition);
     try {
         const result = await generateEnhancedCv({ 
             cvDataUri,
@@ -158,11 +288,10 @@ export default function CvForm() {
     toast({ title: 'Downloaded!', description: `Your new ${activeTab === 'cv' ? 'CV' : 'cover letter'} has been downloaded.`});
   };
 
-  const handleCopy = () => {
-    const content = getContentToShare();
+  const handleCopy = (content: string, type: string) => {
     if (!content) return;
     navigator.clipboard.writeText(content);
-    toast({ title: 'Copied!', description: `${activeTab === 'cv' ? 'CV' : 'Cover letter'} content copied to clipboard.`});
+    toast({ title: 'Copied!', description: `${type} content copied to clipboard.`});
   };
 
   const handleEmail = () => {
@@ -172,6 +301,10 @@ export default function CvForm() {
     const body = encodeURIComponent(content);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   };
+
+  const handleGeneratedSocialPost = (output: GenerateSocialMediaPostOutput) => {
+    setSocialPost(output);
+  }
 
   return (
     <div className="space-y-8">
@@ -316,7 +449,7 @@ export default function CvForm() {
          <Card>
             <CardHeader>
                 <CardTitle>Step 3: Your New Documents are Ready!</CardTitle>
-                <CardDescription>Your CV and Cover Letter have been optimized. You can now download, copy, or email them.</CardDescription>
+                <CardDescription>Your CV and Cover Letter have been optimized. You can now download, copy, email them, or generate a social media post.</CardDescription>
             </CardHeader>
             <CardContent>
                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -335,16 +468,32 @@ export default function CvForm() {
                         </div>
                     </TabsContent>
                 </Tabs>
+
+                {socialPost && (
+                    <div className="mt-6">
+                        <h4 className="font-semibold text-lg">Your Generated Social Media Post:</h4>
+                        <div className="mt-2 prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
+                            <p>{socialPost.postContent}</p>
+                            <p className="font-semibold">{socialPost.suggestedHashtags.join(' ')}</p>
+                        </div>
+                        <div className="flex justify-end mt-2">
+                            <Button variant="ghost" onClick={() => handleCopy(socialPost.postContent + '\n\n' + socialPost.suggestedHashtags.join(' '), 'Social post')}>
+                                <Copy className="mr-2 h-4 w-4" /> Copy Post
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-                <Button variant="outline" onClick={handleDownload}><Download className="mr-2"/> Download</Button>
-                <Button variant="outline" onClick={handleCopy}><Copy className="mr-2"/> Copy</Button>
-                <Button onClick={handleEmail}><Mail className="mr-2"/> Email</Button>
+            <CardFooter className="flex justify-between items-center">
+                <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
+                <div className="flex gap-2">
+                    <Button variant="outline" onClick={handleDownload}><Download className="mr-2"/> Download</Button>
+                    <Button variant="outline" onClick={() => handleCopy(getContentToShare(), activeTab === 'cv' ? 'CV' : 'Cover letter')}><Copy className="mr-2"/> Copy</Button>
+                    <Button onClick={handleEmail}><Mail className="mr-2"/> Email</Button>
+                </div>
             </CardFooter>
          </Card>
       )}
     </div>
   );
 }
-
-    
