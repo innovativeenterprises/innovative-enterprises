@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -65,7 +66,10 @@ export default function TrainingForm() {
     setIsLoading(true);
     setResponse(null);
 
-    if ((!data.knowledgeDocuments || data.knowledgeDocuments.length === 0) && (!data.qaPairs || data.qaPairs.length === 0 || data.qaPairs.every(p => !p.question && !p.answer)))) {
+    const noDocuments = !data.knowledgeDocuments || data.knowledgeDocuments.length === 0;
+    const noQaPairs = !data.qaPairs || data.qaPairs.length === 0 || data.qaPairs.every(p => !p.question && !p.answer);
+
+    if (noDocuments && noQaPairs) {
         toast({
             title: 'No Training Data',
             description: 'Please upload at least one knowledge document or provide at least one Q&A pair.',
