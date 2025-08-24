@@ -42,12 +42,14 @@ export const CvGenerationInputSchema = z.object({
       "The user's original CV document, as a data URI."
     ),
     targetPosition: z.string().describe("The target job position the user is applying for."),
-    languages: z.array(z.string()).describe("The languages the new CV should be written in."),
+    jobAdvertisement: z.string().optional().describe("The full text of the job advertisement/description."),
+    languages: z.array(z.string()).describe("The languages the new CV and cover letter should be written in."),
 });
 export type CvGenerationInput = z.infer<typeof CvGenerationInputSchema>;
 
 
 export const CvGenerationOutputSchema = z.object({
     newCvContent: z.string().describe("The full content of the newly generated, enhanced CV in Markdown format."),
+    newCoverLetterContent: z.string().describe("The full content of the newly generated, tailored cover letter in Markdown format."),
 });
 export type CvGenerationOutput = z.infer<typeof CvGenerationOutputSchema>;

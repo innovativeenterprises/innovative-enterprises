@@ -10,11 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -34,6 +36,7 @@ type UploadValues = z.infer<typeof UploadSchema>;
 // Step 2: Generation Details
 const GenerationSchema = z.object({
     targetPosition: z.string().min(3, "Target position is required."),
+    jobAdvertisement: z.string().optional(),
     languages: z.string().min(2, "Language is required."),
 });
 type GenerationValues = z.infer<typeof GenerationSchema>;
@@ -80,6 +83,7 @@ export default function CvForm() {
   const [cvDataUri, setCvDataUri] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<CvAnalysisOutput | null>(null);
   const [generatedCv, setGeneratedCv] = useState<CvGenerationOutput | null>(null);
+  const [activeTab, setActiveTab] = useState('cv');
   const { toast } = useToast();
 
   const uploadForm = useForm<UploadValues>({
@@ -120,6 +124,7 @@ export default function CvForm() {
         const result = await generateEnhancedCv({ 
             cvDataUri,
             targetPosition: data.targetPosition,
+            jobAdvertisement: data.jobAdvertisement,
             languages: data.languages.split(',').map(l => l.trim()),
         });
         setGeneratedCv(result);
@@ -135,28 +140,36 @@ export default function CvForm() {
     }
   };
 
+  const getContentToShare = () => {
+      if (!generatedCv) return "";
+      return activeTab === 'cv' ? generatedCv.newCvContent : generatedCv.newCoverLetterContent;
+  }
+
   const handleDownload = () => {
-    if (!generatedCv) return;
+    const content = getContentToShare();
+    if (!content) return;
     const element = document.createElement("a");
-    const file = new Blob([generatedCv.newCvContent], {type: 'text/plain'});
+    const file = new Blob([content], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = "enhanced-cv.txt";
+    element.download = activeTab === 'cv' ? "enhanced-cv.txt" : "cover-letter.txt";
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-    toast({ title: 'Downloaded!', description: 'Your new CV has been downloaded.'});
+    toast({ title: 'Downloaded!', description: `Your new ${activeTab === 'cv' ? 'CV' : 'cover letter'} has been downloaded.`});
   };
 
   const handleCopy = () => {
-    if (!generatedCv) return;
-    navigator.clipboard.writeText(generatedCv.newCvContent);
-    toast({ title: 'Copied!', description: 'CV content copied to clipboard.'});
+    const content = getContentToShare();
+    if (!content) return;
+    navigator.clipboard.writeText(content);
+    toast({ title: 'Copied!', description: `${activeTab === 'cv' ? 'CV' : 'Cover letter'} content copied to clipboard.`});
   };
 
   const handleEmail = () => {
-    if (!generatedCv) return;
-    const subject = "My Newly Enhanced CV";
-    const body = encodeURIComponent(generatedCv.newCvContent);
+    const content = getContentToShare();
+    if (!content) return;
+    const subject = activeTab === 'cv' ? "My Newly Enhanced CV" : "My New Cover Letter";
+    const body = encodeURIComponent(content);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   };
 
@@ -246,6 +259,19 @@ export default function CvForm() {
                         />
                          <FormField
                             control={generationForm.control}
+                            name="jobAdvertisement"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Job Advertisement (Optional)</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="Paste the job description here for a more tailored result." rows={6} {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={generationForm.control}
                             name="languages"
                             render={({ field }) => (
                             <FormItem>
@@ -266,7 +292,7 @@ export default function CvForm() {
                             ) : (
                             <>
                                 <Bot className="mr-2 h-4 w-4" />
-                                Create Enhanced CV
+                                Create Enhanced Documents
                             </>
                             )}
                         </Button>
@@ -281,7 +307,7 @@ export default function CvForm() {
          <Card>
             <CardContent className="p-6 text-center">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-accent" />
-                <p className="mt-4 text-muted-foreground">Our AI is crafting your new CV... This is the exciting part!</p>
+                <p className="mt-4 text-muted-foreground">Our AI is crafting your new documents... This is the exciting part!</p>
             </CardContent>
          </Card>
       )}
@@ -289,13 +315,26 @@ export default function CvForm() {
       {generatedCv && (
          <Card>
             <CardHeader>
-                <CardTitle>Step 3: Your New High-Score CV is Ready!</CardTitle>
-                <CardDescription>This CV has been optimized for the position you selected. You can now download, copy, or email it.</CardDescription>
+                <CardTitle>Step 3: Your New Documents are Ready!</CardTitle>
+                <CardDescription>Your CV and Cover Letter have been optimized. You can now download, copy, or email them.</CardDescription>
             </CardHeader>
             <CardContent>
-                 <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                    {generatedCv.newCvContent}
-                 </div>
+                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="cv">Enhanced CV</TabsTrigger>
+                        <TabsTrigger value="letter">Cover Letter</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="cv">
+                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+                            {generatedCv.newCvContent}
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="letter">
+                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+                            {generatedCv.newCoverLetterContent}
+                        </div>
+                    </TabsContent>
+                </Tabs>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
                 <Button variant="outline" onClick={handleDownload}><Download className="mr-2"/> Download</Button>

@@ -69,17 +69,28 @@ const generationPrompt = ai.definePrompt({
   name: 'cvGenerationPrompt',
   input: { schema: CvGenerationInputSchema },
   output: { schema: CvGenerationOutputSchema },
-  prompt: `You are an expert CV writer and ATS specialist. Your task is to rewrite and enhance the provided CV to be highly optimized for the target position and language(s).
+  prompt: `You are an expert CV writer and ATS specialist. Your task is to rewrite and enhance the provided CV and generate a matching cover letter, both highly optimized for the target position and language(s).
 
 Original CV Document: {{media url=cvDataUri}}
 Target Position: {{{targetPosition}}}
+{{#if jobAdvertisement}}
+Job Advertisement:
+{{{jobAdvertisement}}}
+{{/if}}
 Languages: {{{languages}}}
 
-Rewrite the entire CV. Use the information from the original CV but tailor the language, keywords, and structure to perfectly match the target position. 
-- The output should be a complete CV in Markdown format.
+First, rewrite the entire CV. Use the information from the original CV but tailor the language, keywords, and structure to perfectly match the target position and the provided job advertisement. 
+- The CV output should be a complete CV in Markdown format.
 - If multiple languages are requested, generate the CV in the first language listed.
 - Incorporate strong action verbs and quantify achievements where possible.
 - Ensure the formatting is clean, professional, and easily parsable by any ATS.
+
+Second, write a compelling and professional cover letter. The cover letter should:
+- Be tailored to the {{{targetPosition}}}.
+- Reference key requirements from the job advertisement if provided.
+- Highlight the most relevant skills and experiences from the rewritten CV.
+- Maintain a professional tone.
+- The output should be a complete cover letter in Markdown format.
 `,
 });
 
