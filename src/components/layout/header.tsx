@@ -27,6 +27,11 @@ const navLinks = [
 
 const aiToolsLinks: { title: string; href: string; description: string }[] = [
   {
+    title: "CFO Dashboard",
+    href: "/cfo",
+    description: "Manage all financial operations with Finley, your AI finance agent.",
+  },
+  {
     title: "Tender Response Assistant",
     href: "/tender-assistant",
     description: "Generate draft responses to government tenders in minutes.",

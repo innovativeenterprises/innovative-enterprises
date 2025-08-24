@@ -89,7 +89,7 @@ const agentCategories: AgentCategory[] = [
         category: "Core Business Operations Agents",
         agents: [
             { name: "Aida", role: "Admin / Executive Assistant", description: "Schedules, reminders, engages with website visitors.", icon: Briefcase, href: "/faq" },
-            { name: "Finley", role: "Finance & Accounting Agent", description: "Bookkeeping, invoices, expense tracking, tax reminders.", icon: DollarSign },
+            { name: "Finley", role: "Finance & Accounting Agent", description: "Bookkeeping, invoices, expense tracking, tax reminders.", icon: DollarSign, href: "/cfo" },
             { name: "Hira", role: "HR & Recruitment Agent", description: "CV screening, ATS checks, onboarding automation.", icon: Users, href: "/cv-enhancer" },
             { name: "Lexi", role: "Legal & Contracts Agent", description: "Draft agreements, compliance checks.", icon: Scale, href: "/legal-agent"},
             { name: "Talia", role: "Talent & Competition Agent", description: "Posts opportunities, manages submissions.", icon: Trophy, href: "/opportunities" },
