@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -48,7 +49,7 @@ Your task is to draft a formal and welcoming "Letter of Interest" addressed to a
 **Instructions:**
 1.  **Format:** The letter must be in professional Markdown format.
 2.  **Tone:** Professional, encouraging, and personalized.
-3.  **Sender:** The letter should be from "Jumaa Salim Alhadid, CEO, Innovative Enterprises".
+3.  **Sender:** The letter should be from "Jumaa Salim Al Hadidi, CEO, Innovative Enterprises".
 4.  **Content:**
     -   Start with a formal salutation to {{{fullName}}}.
     -   Thank them for their interest in Innovative Enterprises.

@@ -28,8 +28,8 @@ interface AgentCategory {
 
 const leadershipTeam: Agent[] = [
     { 
-        name: "JUMAA SALIM ALHADID", 
-        role: "CEO and Cofounder", 
+        name: "JUMAA SALIM AL HADIDI", 
+        role: "CEO and Co-Founder", 
         description: "Leads the company's vision and strategic direction.", 
         icon: User,
         socials: {
@@ -41,7 +41,7 @@ const leadershipTeam: Agent[] = [
     },
     { 
         name: "ANWAR AHMED SHARIF", 
-        role: "Cofounder and CTO", 
+        role: "CTO and Co-Founder", 
         description: "Drives technological innovation and engineering.", 
         icon: User,
         socials: {
