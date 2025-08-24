@@ -11,20 +11,26 @@ export default function ServiceCatalog() {
   useEffect(() => {
     try {
       const storedServices = localStorage.getItem('services_status');
-      const enabledServices = storedServices 
-        ? JSON.parse(storedServices).filter((s: Service) => s.enabled)
-        : initialServices.filter(s => s.enabled);
-      
-      // If no services are enabled in storage, show the default enabled ones.
+      const serviceStatuses = storedServices ? JSON.parse(storedServices) : initialServices;
+
+      const enabledServices = initialServices
+        .map(initialService => {
+          const stored = serviceStatuses.find((s: Service) => s.title === initialService.title);
+          return {
+            ...initialService,
+            enabled: stored ? stored.enabled : initialService.enabled,
+          };
+        })
+        .filter(service => service.enabled);
+
       if (enabledServices.length > 0) {
         setServices(enabledServices);
       } else {
-        // Fallback to default if storage exists but all are disabled.
-        const stored = JSON.parse(storedServices || '[]');
-        if (stored.length > 0) {
+        const hasStoredData = !!storedServices;
+        if (hasStoredData) {
             setServices([]);
         } else {
-            setServices(initialServices.filter(s => s.enabled));
+             setServices(initialServices.filter(s => s.enabled));
         }
       }
     } catch (error) {
