@@ -67,54 +67,75 @@ const agentCategories: AgentCategory[] = [
     },
 ];
 
+export function LeadershipTeam() {
+    return (
+        <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-10">Our Leadership</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                {leadershipTeam.map((member) => (
+                    <Card key={member.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center">
+                        <CardHeader className="flex flex-col items-center gap-4 pt-8">
+                             <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
+                                <member.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-xl">{member.name}</CardTitle>
+                                <p className="text-base text-muted-foreground">{member.role}</p>
+                            </div>
+                        </CardHeader>
+                        <CardDescription className="px-6 pb-8 text-sm">
+                            {member.description}
+                        </CardDescription>
+                    </Card>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+export function DigitalWorkforce() {
+    return (
+         <div>
+            <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Digital Workforce</h2>
+                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+                    A dedicated team of AI agents handling specialized tasks to drive efficiency and innovation.
+                </p>
+            </div>
+            <div className="space-y-12">
+                {agentCategories.map((category) => (
+                    <div key={category.category}>
+                        <h3 className="text-2xl md:text-3xl font-bold text-center text-primary/80 mb-8">{category.category}</h3>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {category.agents.map((agent) => (
+                                <Card key={agent.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
+                                    <CardHeader className="flex flex-row items-center gap-4">
+                                        <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
+                                            <agent.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
+                                        </div>
+                                        <div>
+                                            <CardTitle className="text-lg">{agent.name}</CardTitle>
+                                            <p className="text-sm text-muted-foreground">{agent.role}</p>
+                                        </div>
+                                    </CardHeader>
+                                    <CardDescription className="px-6 pb-6 text-sm">
+                                        {agent.description}
+                                    </CardDescription>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
 export default function AgentList() {
     return (
         <div className="space-y-12">
-             <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Our Leadership</h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {leadershipTeam.map((member) => (
-                        <Card key={member.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
-                            <CardHeader className="flex flex-row items-center gap-4">
-                                <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
-                                    <member.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
-                                </div>
-                                <div>
-                                    <CardTitle className="text-lg">{member.name}</CardTitle>
-                                    <p className="text-sm text-muted-foreground">{member.role}</p>
-                                </div>
-                            </CardHeader>
-                            <CardDescription className="px-6 pb-6 text-sm">
-                                {member.description}
-                            </CardDescription>
-                        </Card>
-                    ))}
-                </div>
-            </div>
-
-            {agentCategories.map((category) => (
-                <div key={category.category}>
-                    <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">{category.category}</h2>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {category.agents.map((agent) => (
-                            <Card key={agent.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
-                                <CardHeader className="flex flex-row items-center gap-4">
-                                    <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
-                                        <agent.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
-                                    </div>
-                                    <div>
-                                        <CardTitle className="text-lg">{agent.name}</CardTitle>
-                                        <p className="text-sm text-muted-foreground">{agent.role}</p>
-                                    </div>
-                                </CardHeader>
-                                <CardDescription className="px-6 pb-6 text-sm">
-                                    {agent.description}
-                                </CardDescription>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            ))}
+            <LeadershipTeam />
+            <DigitalWorkforce />
         </div>
     );
 }

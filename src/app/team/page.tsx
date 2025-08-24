@@ -1,4 +1,7 @@
-import AgentList from "@/components/agent-list";
+import { LeadershipTeam, DigitalWorkforce } from "@/components/agent-list";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function TeamPage() {
   return (
@@ -9,9 +12,15 @@ export default function TeamPage() {
           <p className="mt-4 text-lg text-muted-foreground">
             Meet the leaders driving our vision and the AI-powered digital workforce that brings it to life.
           </p>
+           <Button asChild className="mt-6">
+                <Link href="/admin">
+                    Manage Your Team <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+            </Button>
         </div>
-        <div className="max-w-7xl mx-auto mt-12">
-            <AgentList />
+        <div className="space-y-20 mt-20">
+            <LeadershipTeam />
+            <DigitalWorkforce />
         </div>
       </div>
     </div>
