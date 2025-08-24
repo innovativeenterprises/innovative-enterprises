@@ -114,7 +114,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
             const result = await generateSocialMediaPost(data);
             onGenerate(result);
         } catch (error) {
-            // console.error(error)
+            console.error(error);
         } finally {
             setIsLoading(false);
         }
@@ -179,7 +179,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a tone" />
-                                            </Trigger>
+                                            </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
                                             <SelectItem value="Professional">Professional</SelectItem>
