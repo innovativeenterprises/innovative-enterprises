@@ -1,47 +1,42 @@
+
+'use client';
+
+import { useState, useEffect } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-
-interface Service {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-}
-
-const services: Service[] = [
-  {
-    icon: Cloud,
-    title: "Cloud Computing",
-    description: "Scalable and secure cloud infrastructure solutions to power your business.",
-  },
-  {
-    icon: Bot,
-    title: "Artificial Intelligence",
-    description: "Leverage AI to automate processes, gain insights, and create intelligent products.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Cybersecurity",
-    description: "Protect your digital assets with our comprehensive cybersecurity services.",
-  },
-  {
-    icon: ShoppingCart,
-    title: "E-Commerce Solutions",
-    description: "Build powerful online stores and digital marketplaces with our expertise.",
-  },
-  {
-    icon: Megaphone,
-    title: "Digital Marketing",
-    description: "Enhance your online presence and reach your target audience effectively.",
-  },
-  {
-    icon: BarChart,
-    title: "Data Analytics",
-    description: "Turn your data into actionable insights with our advanced analytics capabilities.",
-  }
-];
+import { type Service, initialServices } from "@/lib/services";
 
 export default function ServiceCatalog() {
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    try {
+      const storedServices = localStorage.getItem('services_status');
+      const enabledServices = storedServices 
+        ? JSON.parse(storedServices).filter((s: Service) => s.enabled)
+        : initialServices.filter(s => s.enabled);
+      
+      // If no services are enabled in storage, show the default enabled ones.
+      if (enabledServices.length > 0) {
+        setServices(enabledServices);
+      } else {
+        // Fallback to default if storage exists but all are disabled.
+        const stored = JSON.parse(storedServices || '[]');
+        if (stored.length > 0) {
+            setServices([]);
+        } else {
+            setServices(initialServices.filter(s => s.enabled));
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load services from localStorage", error);
+      setServices(initialServices.filter(s => s.enabled));
+    }
+  }, []);
+
+  if (services.length === 0) {
+    return null; // Or a placeholder message
+  }
+  
   return (
     <section id="services" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">

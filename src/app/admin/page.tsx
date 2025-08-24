@@ -2,6 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StaffTable from "./staff-table";
 import { Users, Bot, Zap, CheckCircle } from "lucide-react";
+import ServiceTable from "./service-table";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users },
@@ -38,6 +39,7 @@ export default function AdminPage() {
             </div>
 
             <StaffTable />
+            <ServiceTable />
         </div>
       </div>
     </div>
