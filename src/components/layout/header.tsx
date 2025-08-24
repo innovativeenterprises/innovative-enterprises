@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -21,12 +21,40 @@ const navLinks = [
   { href: '/#services', label: 'Services' },
   { href: '/#products', label: 'Products' },
   { href: '/#testimonials', label: 'Clients' },
-  { href: '/automation', label: 'Automation' },
   { href: '/team', label: 'Our Team' },
-  { href: '/tender-assistant', label: 'Tender Assistant' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/legal-agent', label: 'Legal Agent'},
-  { href: '/cv-enhancer', label: 'CV Enhancer'},
+];
+
+const aiToolsLinks: { title: string; href: string; description: string }[] = [
+  {
+    title: "Tender Response Assistant",
+    href: "/tender-assistant",
+    description: "Generate draft responses to government tenders in minutes.",
+  },
+  {
+    title: "AI-Powered FAQ",
+    href: "/faq",
+    description: "Get instant, accurate answers to your questions about our services.",
+  },
+  {
+    title: "AI Legal Agent",
+    href: "/legal-agent",
+    description: "Get preliminary legal analysis and insights from our AI agent.",
+  },
+  {
+    title: "CV ATS Enhancer",
+    href: "/cv-enhancer",
+    description: "Optimize your CV for Applicant Tracking Systems.",
+  },
+  {
+    title: "Automation Agents",
+    href: "/automation",
+    description: "Automate tasks with our suite of intelligent AI agents.",
+  },
+  {
+    title: "Social Media Post Generator",
+    href: "/social-media-post-generator",
+    description: "Craft compelling social media posts for any topic or platform.",
+  }
 ];
 
 const partnershipLinks: { title: string; href: string; description: string }[] = [
@@ -72,26 +100,21 @@ export default function Header() {
   };
 
   const renderNavLinks = (isMobile: boolean) => (
-    navLinks.map((link) => {
-      const isToolPage = ['/tender-assistant', '/faq', '/automation', '/legal-agent', '/team', '/cv-enhancer'].includes(link.href);
-      const isActive = isToolPage ? pathname === link.href : false;
-
-      return (
+    navLinks.map((link) => (
         <Button
           key={link.href}
           asChild
           variant="ghost"
           className={cn(
             'justify-start text-base font-medium',
-            isActive && 'bg-primary/10 text-primary',
             isMobile ? 'w-full' : ''
           )}
           onClick={handleLinkClick}
         >
           <Link href={link.href}>{link.label}</Link>
         </Button>
-      );
-    })
+      )
+    )
   );
 
   return (
@@ -109,6 +132,25 @@ export default function Header() {
            <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">
+                  <Sparkles className="mr-2 h-4 w-4" /> AI Tools
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                    {aiToolsLinks.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        onClick={handleLinkClick}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-base font-medium">Partnerships</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
@@ -117,6 +159,7 @@ export default function Header() {
                         key={component.title}
                         title={component.title}
                         href={component.href}
+                        onClick={handleLinkClick}
                       >
                         {component.description}
                       </ListItem>
@@ -146,18 +189,31 @@ export default function Header() {
                     <span>INNOVATIVE ENTERPRISES</span>
                     </Link>
                     <nav className="flex flex-col gap-2">
-                    {renderNavLinks(true)}
-                    {partnershipLinks.map((link) => (
-                        <Button
-                        key={link.href}
-                        asChild
-                        variant="ghost"
-                        className="justify-start text-base"
-                        onClick={handleLinkClick}
-                        >
-                        <Link href={link.href}>{link.title}</Link>
-                        </Button>
-                    ))}
+                      {renderNavLinks(true)}
+                       <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">AI Tools</p>
+                      {aiToolsLinks.map((link) => (
+                          <Button
+                          key={link.href}
+                          asChild
+                          variant="ghost"
+                          className={cn("justify-start text-base", pathname === link.href && 'bg-primary/10 text-primary')}
+                          onClick={handleLinkClick}
+                          >
+                          <Link href={link.href}>{link.title}</Link>
+                          </Button>
+                      ))}
+                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Partnerships</p>
+                      {partnershipLinks.map((link) => (
+                          <Button
+                          key={link.href}
+                          asChild
+                          variant="ghost"
+                          className="justify-start text-base"
+                          onClick={handleLinkClick}
+                          >
+                          <Link href={link.href}>{link.title}</Link>
+                          </Button>
+                      ))}
                     </nav>
                     <Button className="mt-4">Contact Us</Button>
                 </div>
