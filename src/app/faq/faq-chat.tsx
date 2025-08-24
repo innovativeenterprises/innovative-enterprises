@@ -11,7 +11,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Send, User, Bot } from 'lucide-react';
+import { Loader2, Send, User, Bot, Calendar } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const FormSchema = z.object({
@@ -22,6 +22,7 @@ type FormValues = z.infer<typeof FormSchema>;
 interface Message {
     sender: 'user' | 'bot';
     text: string;
+    meetingUrl?: string;
 }
 
 export default function FaqChat() {
@@ -56,7 +57,11 @@ export default function FaqChat() {
 
     try {
       const result = await answerQuestion({ question: data.question });
-      const botMessage: Message = { sender: 'bot', text: result.answer };
+      const botMessage: Message = { 
+        sender: 'bot', 
+        text: result.answer,
+        meetingUrl: result.meetingUrl,
+      };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       toast({
@@ -88,6 +93,17 @@ export default function FaqChat() {
                             )}
                              <div className={`rounded-lg p-3 max-w-[80%] ${message.sender === 'user' ? 'bg-accent text-accent-foreground' : 'bg-muted'}`}>
                                 <p className="text-sm" style={{whiteSpace: 'pre-wrap'}}>{message.text}</p>
+                                {message.meetingUrl && (
+                                    <Button 
+                                        asChild 
+                                        className="mt-3" 
+                                        size="sm"
+                                    >
+                                        <a href={message.meetingUrl} target="_blank" rel="noopener noreferrer">
+                                            <Calendar className="mr-2 h-4 w-4" /> Book a Meeting
+                                        </a>
+                                    </Button>
+                                )}
                             </div>
                              {message.sender === 'user' && (
                                 <div className="bg-accent text-accent-foreground rounded-full p-2 self-start">
@@ -118,7 +134,7 @@ export default function FaqChat() {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder="Ask about our services..." {...field} autoComplete="off" disabled={isLoading}/>
+                      <Input placeholder="Ask about our services or book a meeting..." {...field} autoComplete="off" disabled={isLoading}/>
                     </FormControl>
                   </FormItem>
                 )}
