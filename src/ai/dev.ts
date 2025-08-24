@@ -11,3 +11,4 @@ import '@/ai/flows/letter-of-interest.ts';
 import '@/ai/flows/work-order-analysis.ts';
 import '@/ai/flows/train-agent.ts';
 import '@/ai/flows/image-generator.ts';
+import '@/ai/flows/partnership-inquiry.ts';
