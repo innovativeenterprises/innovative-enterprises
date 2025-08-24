@@ -1,3 +1,4 @@
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Linkedin, Twitter, Instagram, Facebook, Mail, Github, Globe } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -8,6 +9,7 @@ interface Agent {
     name: string;
     description: string;
     icon: LucideIcon;
+    href?: string;
     socials?: {
         linkedin?: string;
         twitter?: string;
@@ -68,16 +70,16 @@ const agentCategories: AgentCategory[] = [
         agents: [
             { name: "Aida", role: "Admin / Executive Assistant", description: "Schedules, reminders, document prep.", icon: Briefcase },
             { name: "Finley", role: "Finance & Accounting Agent", description: "Bookkeeping, invoices, expense tracking, tax reminders.", icon: DollarSign },
-            { name: "Hira", role: "HR & Recruitment Agent", description: "CV screening, ATS checks, onboarding automation.", icon: Users },
-            { name: "Lexi", role: "Legal & Contracts Agent", description: "Draft agreements, compliance checks.", icon: Scale },
+            { name: "Hira", role: "HR & Recruitment Agent", description: "CV screening, ATS checks, onboarding automation.", icon: Users, href: "/cv-enhancer" },
+            { name: "Lexi", role: "Legal & Contracts Agent", description: "Draft agreements, compliance checks.", icon: Scale, href: "/legal-agent"},
         ]
     },
     {
         category: "Customer & Sales Agents",
         agents: [
-            { name: "Caro", role: "Customer Support Agent", description: "Handles WhatsApp, email, chatbot queries 24/7.", icon: Headset },
+            { name: "Caro", role: "Customer Support Agent", description: "Handles WhatsApp, email, chatbot queries 24/7.", icon: Headset, href: "/faq" },
             { name: "Sami", role: "Sales Agent", description: "Follows up leads, pitches services, books meetings.", icon: TrendingUp },
-            { name: "Mira", role: "Marketing Agent", description: "Creates ads, social posts, SEO, blog content.", icon: Megaphone },
+            { name: "Mira", role: "Marketing Agent", description: "Creates ads, social posts, SEO, blog content.", icon: Megaphone, href: "/social-media-post-generator" },
             { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, sends follow-ups.", icon: Contact },
         ]
     },
@@ -169,6 +171,23 @@ export function LeadershipTeam() {
     )
 }
 
+const AgentCard = ({ agent }: { agent: Agent }) => (
+    <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full">
+        <CardHeader className="flex flex-row items-center gap-4">
+            <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
+                <agent.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
+            </div>
+            <div>
+                <CardTitle className="text-lg">{agent.name}</CardTitle>
+                <p className="text-sm text-muted-foreground">{agent.role}</p>
+            </div>
+        </CardHeader>
+        <CardDescription className="px-6 pb-6 text-sm">
+            {agent.description}
+        </CardDescription>
+    </Card>
+);
+
 export function DigitalWorkforce() {
     return (
          <div>
@@ -184,20 +203,13 @@ export function DigitalWorkforce() {
                         <h3 className="text-2xl md:text-3xl font-bold text-center text-primary/80 mb-8">{category.category}</h3>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {category.agents.map((agent) => (
-                                <Card key={agent.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
-                                    <CardHeader className="flex flex-row items-center gap-4">
-                                        <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
-                                            <agent.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
-                                        </div>
-                                        <div>
-                                            <CardTitle className="text-lg">{agent.name}</CardTitle>
-                                            <p className="text-sm text-muted-foreground">{agent.role}</p>
-                                        </div>
-                                    </CardHeader>
-                                    <CardDescription className="px-6 pb-6 text-sm">
-                                        {agent.description}
-                                    </CardDescription>
-                                </Card>
+                                agent.href ? (
+                                    <Link href={agent.href} key={agent.name} className="flex">
+                                        <AgentCard agent={agent} />
+                                    </Link>
+                                ) : (
+                                    <AgentCard key={agent.name} agent={agent} />
+                                )
                             ))}
                         </div>
                     </div>
