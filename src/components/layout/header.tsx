@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -68,7 +69,7 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
     title: "Become a Service Provider",
     href: "/service-provider",
     description:
-      "Offer your services to our clients and be part of our trusted network.",
+      "Offer your services to our clients. We welcome freelancers, outsourcers, and subcontractors.",
   },
   {
     title: "Become our Agent",
