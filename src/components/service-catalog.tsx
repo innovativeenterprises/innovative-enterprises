@@ -4,6 +4,23 @@
 import { useState, useEffect } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Service, initialServices } from "@/lib/services";
+import Link from "next/link";
+
+const ServiceCard = ({ service }: { service: Service }) => (
+    <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
+      <CardHeader>
+        <div className="flex items-center gap-4">
+           <div className="bg-primary/10 p-4 rounded-full transition-colors duration-300 group-hover:bg-accent">
+             <service.icon className="w-8 h-8 text-primary transition-colors duration-300 group-hover:text-accent-foreground" />
+           </div>
+           <CardTitle className="text-xl text-foreground">{service.title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardDescription className="px-6 pb-6 text-base text-muted-foreground">
+        {service.description}
+      </CardDescription>
+    </Card>
+);
 
 export default function ServiceCatalog() {
   const [services, setServices] = useState<Service[]>([]);
@@ -54,19 +71,13 @@ export default function ServiceCatalog() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
-            <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                   <div className="bg-primary/10 p-4 rounded-full transition-colors duration-300 group-hover:bg-accent">
-                     <service.icon className="w-8 h-8 text-primary transition-colors duration-300 group-hover:text-accent-foreground" />
-                   </div>
-                   <CardTitle className="text-xl text-foreground">{service.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardDescription className="px-6 pb-6 text-base text-muted-foreground">
-                {service.description}
-              </CardDescription>
-            </Card>
+            service.href ? (
+                <Link key={service.title} href={service.href} className="flex">
+                    <ServiceCard service={service} />
+                </Link>
+            ) : (
+                <ServiceCard key={service.title} service={service} />
+            )
           ))}
         </div>
       </div>

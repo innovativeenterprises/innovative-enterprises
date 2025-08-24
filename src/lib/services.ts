@@ -7,6 +7,7 @@ export interface Service {
   title: string;
   description: string;
   enabled: boolean;
+  href?: string;
 }
 
 export const initialServices: Service[] = [
@@ -21,6 +22,7 @@ export const initialServices: Service[] = [
     title: "Artificial Intelligence",
     description: "Leverage AI to automate processes, gain insights, and create intelligent products.",
     enabled: true,
+    href: "/automation",
   },
   {
     icon: ShieldCheck,
@@ -39,6 +41,7 @@ export const initialServices: Service[] = [
     title: "Digital Marketing",
     description: "Enhance your online presence and reach your target audience effectively.",
     enabled: false,
+    href: "/social-media-post-generator",
   },
   {
     icon: BarChart,
