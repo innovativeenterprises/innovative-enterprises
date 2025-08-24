@@ -98,6 +98,7 @@ const SuggestionSection = ({ title, data }: { title: string; data: { isCompliant
 
 const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: string, onGenerate: (output: GenerateSocialMediaPostOutput) => void }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
 
     const socialForm = useForm({
         resolver: zodResolver(GenerateSocialMediaPostInputSchema),
