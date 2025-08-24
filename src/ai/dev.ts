@@ -10,3 +10,4 @@ import '@/ai/flows/cv-enhancement.ts';
 import '@/ai/flows/letter-of-interest.ts';
 import '@/ai/flows/work-order-analysis.ts';
 import '@/ai/flows/train-agent.ts';
+import '@/ai/flows/image-generator.ts';

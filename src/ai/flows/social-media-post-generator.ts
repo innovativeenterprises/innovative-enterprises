@@ -16,22 +16,23 @@ import {
     GenerateSocialMediaPostOutput,
     GenerateSocialMediaPostOutputSchema
 } from './social-media-post-generator.schema';
+import { generateImage } from './image-generator';
 
 export async function generateSocialMediaPost(input: GenerateSocialMediaPostInput): Promise<GenerateSocialMediaPostOutput> {
   return socialMediaPostGeneratorFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'socialMediaPostGeneratorPrompt',
+const textGenerationPrompt = ai.definePrompt({
+  name: 'socialMediaTextGeneratorPrompt',
   input: {schema: GenerateSocialMediaPostInputSchema},
-  output: {schema: GenerateSocialMediaPostOutputSchema},
-  prompt: `You are an expert social media manager. Your task is to generate a compelling social media post.
+  output: {schema: GenerateSocialMediaPostOutputSchema.pick({ postContent: true, suggestedHashtags: true })},
+  prompt: `You are an expert social media manager. Your task is to generate compelling social media post content.
 
 Platform: {{{platform}}}
 Topic: {{{topic}}}
 Tone: {{{tone}}}
 
-Based on the above, create a post content that is engaging and appropriate for the specified platform and tone.
+Based on the above, create post content that is engaging and appropriate for the specified platform and tone.
 Also, provide a list of relevant hashtags to maximize reach. For WhatsApp, hashtags are not needed.
 `,
 });
@@ -42,8 +43,25 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     inputSchema: GenerateSocialMediaPostInputSchema,
     outputSchema: GenerateSocialMediaPostOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  async (input) => {
+    const textPromise = textGenerationPrompt(input);
+    let imagePromise: Promise<string | undefined> | undefined;
+
+    if (input.generateImage) {
+        imagePromise = generateImage({ prompt: `A visually appealing image for a social media post about: ${input.topic}` });
+    }
+    
+    const [textResult, imageUrl] = await Promise.all([textPromise, imagePromise]);
+    
+    const output = textResult.output;
+    if (!output) {
+      throw new Error('Failed to generate text content.');
+    }
+    
+    return {
+      postContent: output.postContent,
+      suggestedHashtags: output.suggestedHashtags,
+      imageUrl,
+    };
   }
 );
