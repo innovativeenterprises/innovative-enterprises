@@ -56,7 +56,7 @@ export default function InvestPage() {
 
             <div>
                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Pitch Decks & Downloads</h2>
-                <div className="max-w-2xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="max-w-4xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* These links would point to the actual PDF files */}
                     <Button asChild variant="outline" size="lg">
                         <a href="/pitch-deck-company.pdf" download>
@@ -71,6 +71,21 @@ export default function InvestPage() {
                      <Button asChild variant="outline" size="lg">
                         <a href="/pitch-deck-ameen.pdf" download>
                              <Download className="mr-2 h-5 w-5" /> Ameen Project
+                        </a>
+                    </Button>
+                    <Button asChild variant="outline" size="lg">
+                        <a href="/pitch-deck-appi.pdf" download>
+                             <Download className="mr-2 h-5 w-5" /> APPI Project
+                        </a>
+                    </Button>
+                     <Button asChild variant="outline" size="lg">
+                        <a href="/pitch-deck-khidmaai.pdf" download>
+                             <Download className="mr-2 h-5 w-5" /> KHIDMAAI Project
+                        </a>
+                    </Button>
+                     <Button asChild variant="outline" size="lg">
+                        <a href="/pitch-deck-vmall.pdf" download>
+                             <Download className="mr-2 h-5 w-5" /> VMALL Project
                         </a>
                     </Button>
                 </div>
