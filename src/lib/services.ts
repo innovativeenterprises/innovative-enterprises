@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {
@@ -31,22 +31,38 @@ export const initialServices: Service[] = [
     enabled: true,
   },
   {
-    icon: ShoppingCart,
-    title: "E-Commerce Solutions",
-    description: "Build powerful online stores and digital marketplaces with our expertise.",
+    icon: Briefcase,
+    title: "CV ATS Enhancer",
+    description: "Get a step-by-step CV enhancement. Optimize your CV for your target job position.",
     enabled: true,
+    href: "/cv-enhancer",
+  },
+   {
+    icon: FileText,
+    title: "Tender Response Assistant",
+    description: "Save time preparing proposals. Upload tender documents to generate a compelling draft response.",
+    enabled: true,
+    href: "/tender-assistant",
+  },
+  {
+    icon: Languages,
+    title: "Verified Document Translator",
+    description: "Translate legal, financial, and official documents with high accuracy and a formal verification statement.",
+    enabled: true,
+    href: "/document-translator",
+  },
+   {
+    icon: Scale,
+    title: "AI Legal Agent",
+    description: "Get preliminary legal analysis and insights for your business questions from our AI agent.",
+    enabled: true,
+    href: "/legal-agent",
   },
   {
     icon: Megaphone,
     title: "Digital Marketing",
     description: "Enhance your online presence and reach your target audience effectively.",
-    enabled: false,
+    enabled: true,
     href: "/social-media-post-generator",
   },
-  {
-    icon: BarChart,
-    title: "Data Analytics",
-    description: "Turn your data into actionable insights with our advanced analytics capabilities.",
-    enabled: false,
-  }
 ];
