@@ -1,5 +1,4 @@
 
-
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Linkedin, Twitter, Instagram, Facebook, Mail, Github, Globe, Trophy } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -128,7 +127,7 @@ const agentCategories: AgentCategory[] = [
         agents: [
             { name: "Rami", role: "Strategy & Research Agent", description: "Market research, competitor tracking.", icon: Target },
             { name: "Navi", role: "Innovation Agent", description: "Suggests new services/products.", icon: Rocket },
-            { name: "Paz", role: "Partnership Agent", description: "Finds collaborators, drafts proposals.", icon: Handshake },
+            { name: "Paz", role: "Partnership Agent", description: "Finds collaborators, drafts proposals.", icon: Handshake, href: "/service-provider" },
         ]
     },
 ];

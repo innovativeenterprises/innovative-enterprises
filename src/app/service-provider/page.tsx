@@ -1,8 +1,5 @@
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import ProviderForm from "./provider-form";
 
 export default function ServiceProviderPage() {
   return (
@@ -15,22 +12,7 @@ export default function ServiceProviderPage() {
           </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Service Provider & Freelancer Application</CardTitle>
-                    <CardDescription>Tell us about your expertise.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form className="space-y-4">
-                        <Input placeholder="Your Name / Company Name" />
-                        <Input type="email" placeholder="Email Address" />
-                        <Input placeholder="Service(s) Offered (e.g., Web Development, Graphic Design)" />
-                        <Input placeholder="Portfolio Link (e.g., Behance, Dribbble, Website)" />
-                        <Textarea placeholder="Briefly describe your services and experience. Feel free to include a link to your portfolio." rows={6} />
-                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Submit Application</Button>
-                    </form>
-                </CardContent>
-            </Card>
+            <ProviderForm />
         </div>
       </div>
     </div>
