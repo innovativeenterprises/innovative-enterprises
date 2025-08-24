@@ -52,7 +52,7 @@ const leadershipTeam: Agent[] = [
         }
     },
     { 
-        name: "ABDULJABBAR AL SADIG AL FAKI", 
+        name: "ABDULJABBAR AL FAKI", 
         role: "Projects Manager", 
         description: "Oversees all project execution and delivery.", 
         icon: User,
