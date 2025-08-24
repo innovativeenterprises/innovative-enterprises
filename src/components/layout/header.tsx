@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, BrainCircuit } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -47,9 +47,9 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     description: "Optimize your CV for Applicant Tracking Systems.",
   },
   {
-    title: "Automation Agents",
-    href: "/automation",
-    description: "Automate tasks with our suite of intelligent AI agents.",
+    title: "AI Training Center",
+    href: "/training-center",
+    description: "Fine-tune your agents with custom data for better performance.",
   },
   {
     title: "Social Media Post Generator",
@@ -130,6 +130,21 @@ export default function Header() {
     )
   );
 
+  const aiToolsMenuContent = (
+      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+        {aiToolsLinks.map((component) => (
+          <ListItem
+            key={component.title}
+            title={component.title}
+            href={component.href}
+            onClick={handleLinkClick}
+          >
+            {component.description}
+          </ListItem>
+        ))}
+      </ul>
+  );
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
@@ -149,18 +164,7 @@ export default function Header() {
                   <Sparkles className="mr-2 h-4 w-4" /> AI Tools
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {aiToolsLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
+                  {aiToolsMenuContent}
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
