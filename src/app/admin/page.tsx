@@ -4,6 +4,7 @@ import StaffTable from "./staff-table";
 import { Users, Bot, Zap, CheckCircle } from "lucide-react";
 import ServiceTable from "./service-table";
 import OpportunityTable from "./opportunity-table";
+import ProviderTable from "./provider-table";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users },
@@ -42,6 +43,7 @@ export default function AdminPage() {
             <StaffTable />
             <ServiceTable />
             <OpportunityTable />
+            <ProviderTable />
         </div>
       </div>
     </div>

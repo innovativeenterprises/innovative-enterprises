@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, CheckCircle, Handshake } from 'lucide-react';
 import Link from 'next/link';
+import type { Provider } from '@/lib/providers';
 
 const FormSchema = z.object({
   name: z.string().min(2, 'Name is required.'),
@@ -42,10 +43,26 @@ export default function ProviderForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
+    
     // Simulate API call to submit the form data
     console.log(data);
     await new Promise(resolve => setTimeout(resolve, 1500));
     
+    try {
+        const stored = localStorage.getItem('providers_data');
+        const existingProviders: Provider[] = stored ? JSON.parse(stored) : [];
+        const newProvider: Provider = {
+            ...data,
+            id: (Math.random() + 1).toString(36).substring(7),
+            status: "Pending Review",
+            notes: data.details, // Use details field for notes
+        };
+        const updatedProviders = [newProvider, ...existingProviders];
+        localStorage.setItem('providers_data', JSON.stringify(updatedProviders));
+    } catch(error) {
+        console.error("Failed to save new provider to localStorage", error);
+    }
+
     setIsLoading(false);
     setIsSubmitted(true);
 
