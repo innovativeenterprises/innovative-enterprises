@@ -13,9 +13,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Checkbox, Stamp } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
