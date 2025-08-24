@@ -11,7 +11,7 @@ import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator'
 import { type GenerateSocialMediaPostOutput, GenerateSocialMediaPostInputSchema } from '@/ai/flows/social-media-post-generator.schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -84,22 +84,24 @@ const SuggestionSection = ({ title, data }: { title: string; data: { isCompliant
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <div className="border rounded-lg p-4">
-                <CollapsibleTrigger className="flex justify-between items-center w-full">
-                    <div className="flex items-center gap-2">
-                        {data.isCompliant ? (
-                            <CheckCircle className="h-5 w-5 text-green-500" />
-                        ) : (
-                            <XCircle className="h-5 w-5 text-destructive" />
-                        )}
-                        <h4 className="font-semibold">{title}</h4>
-                        <Badge variant={data.isCompliant ? "default" : "destructive"}>
-                            {data.isCompliant ? "Compliant" : "Needs Improvement"}
-                        </Badge>
-                    </div>
-                    <Button variant="ghost" size="sm">
-                        {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                        <span className="sr-only">Toggle</span>
-                    </Button>
+                <CollapsibleTrigger asChild>
+                  <div className="flex justify-between items-center w-full cursor-pointer">
+                      <div className="flex items-center gap-2">
+                          {data.isCompliant ? (
+                              <CheckCircle className="h-5 w-5 text-green-500" />
+                          ) : (
+                              <XCircle className="h-5 w-5 text-destructive" />
+                          )}
+                          <h4 className="font-semibold">{title}</h4>
+                          <Badge variant={data.isCompliant ? "default" : "destructive"}>
+                              {data.isCompliant ? "Compliant" : "Needs Improvement"}
+                          </Badge>
+                      </div>
+                      <div className="p-1 rounded-md hover:bg-accent">
+                          {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          <span className="sr-only">Toggle</span>
+                      </div>
+                  </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                     <ul className="list-disc pl-8 mt-2 space-y-1 text-sm text-muted-foreground">
@@ -610,7 +612,7 @@ export default function CvForm() {
                                                 checked={field.value?.includes(item.id)}
                                                 onCheckedChange={(checked) => {
                                                 return checked
-                                                    ? field.onChange([...field.value, item.id])
+                                                    ? field.onChange([...(field.value || []), item.id])
                                                     : field.onChange(
                                                         field.value?.filter(
                                                         (value) => value !== item.id
@@ -755,3 +757,4 @@ export default function CvForm() {
   );
 }
 
+    
