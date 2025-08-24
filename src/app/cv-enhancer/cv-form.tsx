@@ -11,11 +11,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Share2, Mail, Bot } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -136,6 +135,30 @@ export default function CvForm() {
     }
   };
 
+  const handleDownload = () => {
+    if (!generatedCv) return;
+    const element = document.createElement("a");
+    const file = new Blob([generatedCv.newCvContent], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "enhanced-cv.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    toast({ title: 'Downloaded!', description: 'Your new CV has been downloaded.'});
+  };
+
+  const handleCopy = () => {
+    if (!generatedCv) return;
+    navigator.clipboard.writeText(generatedCv.newCvContent);
+    toast({ title: 'Copied!', description: 'CV content copied to clipboard.'});
+  };
+
+  const handleEmail = () => {
+    if (!generatedCv) return;
+    const subject = "My Newly Enhanced CV";
+    const body = encodeURIComponent(generatedCv.newCvContent);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
 
   return (
     <div className="space-y-8">
@@ -267,17 +290,17 @@ export default function CvForm() {
          <Card>
             <CardHeader>
                 <CardTitle>Step 3: Your New High-Score CV is Ready!</CardTitle>
-                <CardDescription>This CV has been optimized for the position you selected. You can now download, share, or save it.</CardDescription>
+                <CardDescription>This CV has been optimized for the position you selected. You can now download, copy, or email it.</CardDescription>
             </CardHeader>
             <CardContent>
-                 <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
+                 <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
                     {generatedCv.newCvContent}
                  </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
-                <Button variant="outline"><Download className="mr-2"/> Download</Button>
-                <Button variant="outline"><Share2 className="mr-2"/> Share</Button>
-                <Button><Mail className="mr-2"/> Email</Button>
+                <Button variant="outline" onClick={handleDownload}><Download className="mr-2"/> Download</Button>
+                <Button variant="outline" onClick={handleCopy}><Copy className="mr-2"/> Copy</Button>
+                <Button onClick={handleEmail}><Mail className="mr-2"/> Email</Button>
             </CardFooter>
          </Card>
       )}
