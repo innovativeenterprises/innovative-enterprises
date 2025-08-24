@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,11 +9,11 @@ import { translateDocument } from '@/ai/flows/document-translation';
 import { type DocumentTranslationOutput } from '@/ai/flows/document-translation.schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Checkbox, Stamp } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -30,7 +31,18 @@ const FormSchema = z.object({
   sourceLanguage: z.string().min(1, "Source language is required."),
   targetLanguage: z.string().min(1, "Target language is required."),
   documentType: z.enum(['Contract', 'Invoice', 'Medical Report', 'Certificate', 'Other']),
+  requestSealedCopy: z.boolean().default(false),
+  translationOffice: z.string().optional(),
+}).refine(data => {
+    if (data.requestSealedCopy && !data.translationOffice) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Please select a translation office.",
+    path: ["translationOffice"],
 });
+
 
 type FormValues = z.infer<typeof FormSchema>;
 
@@ -40,10 +52,19 @@ const languageOptions = [
 const documentTypeOptions: FormValues['documentType'][] = [
     'Contract', 'Invoice', 'Medical Report', 'Certificate', 'Other'
 ];
+const translationOffices = [
+    "Al-Mutarjim Al-Awal Translation Services",
+    "Global Horizons Certified Translators",
+    "Muscat Legal & Business Translation",
+];
+
+const BASE_PRICE = 25; // Base price for AI translation
+const SEALED_COPY_PRICE = 50; // Extra charge for sealed physical copy
 
 export default function TranslationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<DocumentTranslationOutput | null>(null);
+  const [submittedData, setSubmittedData] = useState<FormValues | null>(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -52,12 +73,20 @@ export default function TranslationForm() {
       sourceLanguage: 'English',
       targetLanguage: 'Arabic',
       documentType: 'Contract',
+      requestSealedCopy: false,
     },
   });
+
+  const requestSealedCopy = form.watch("requestSealedCopy");
+  const price = useMemo(() => {
+    return BASE_PRICE + (requestSealedCopy ? SEALED_COPY_PRICE : 0);
+  }, [requestSealedCopy]);
+
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
+    setSubmittedData(null);
     try {
       const file = data.documentFile[0];
       const documentDataUri = await fileToDataURI(file);
@@ -70,6 +99,8 @@ export default function TranslationForm() {
       });
 
       setResponse(result);
+      setSubmittedData(data);
+
       toast({
         title: 'Translation Complete!',
         description: 'Your document has been successfully translated.',
@@ -193,11 +224,59 @@ export default function TranslationForm() {
                   />
                 </div>
 
+                <FormField
+                  control={form.control}
+                  name="requestSealedCopy"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          Request Sealed Physical Copy from an Approved Office
+                        </FormLabel>
+                        <FormDescription>
+                          An official, sealed document will be delivered to your address within 2 business days for an additional fee.
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                
+                {requestSealedCopy && (
+                  <FormField
+                    control={form.control}
+                    name="translationOffice"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Select Approved Translation Office</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select an office..." />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {translationOffices.map(office => (
+                              <SelectItem key={office} value={office}>{office}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
                 <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
                   {isLoading ? (
                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Translating...</>
                   ) : (
-                     <><Sparkles className="mr-2 h-4 w-4" /> Translate Document</>
+                     <><Sparkles className="mr-2 h-4 w-4" /> {`Translate Document ($${price.toFixed(2)})`}</>
                   )}
                 </Button>
               </form>
@@ -211,6 +290,15 @@ export default function TranslationForm() {
             <CardDescription>Your document has been translated by Voxi. You can copy or download the result.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+             {submittedData?.requestSealedCopy && (
+              <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800">
+                <Stamp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                <AlertTitle>Physical Document Delivery</AlertTitle>
+                <AlertDescription className="text-blue-800 dark:text-blue-200">
+                  Your sealed, physical copy will be prepared and delivered by <strong>{submittedData.translationOffice}</strong> within 2 business days.
+                </AlertDescription>
+              </Alert>
+            )}
             <div>
               <h3 className="text-lg font-semibold mb-2">Translated Content</h3>
               <div 
@@ -230,10 +318,12 @@ export default function TranslationForm() {
               </Alert>
             </div>
           </CardContent>
-           <CardFooter className="flex justify-end gap-2">
+           <CardFooter className="flex justify-between items-center">
+             <Button onClick={() => { setResponse(null); setSubmittedData(null); form.reset();}}>Translate Another</Button>
+            <div className="flex gap-2">
                 <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
                 <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy All</Button>
-                <Button onClick={() => setResponse(null)}>Translate Another</Button>
+            </div>
             </CardFooter>
         </Card>
       )}
