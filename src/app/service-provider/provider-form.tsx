@@ -110,7 +110,7 @@ export default function ProviderForm() {
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Your Name / Company Name</FormLabel>
+                                    <FormLabel>Your Name or Company Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="e.g., John Doe or Creative Solutions LLC" {...field} />
                                     </FormControl>
