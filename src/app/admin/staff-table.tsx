@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -25,6 +26,8 @@ const initialLeadershipTeam: Agent[] = [
     { name: "JUMAA SALIM ALHADID", role: "CEO and Cofounder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true },
     { name: "ANWAR AHMED SHARIF", role: "Cofounder and CTO", description: "Drives technological innovation and engineering.", icon: User, enabled: true },
     { name: "ABDULJABBAR AL SADIG AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true },
+    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true },
+    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true },
 ];
 
 const initialAgentCategories: AgentCategory[] = [

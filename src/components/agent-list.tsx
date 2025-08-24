@@ -62,6 +62,26 @@ const leadershipTeam: Agent[] = [
             email: "mailto:abduljabbar@innovative.om"
         }
     },
+    {
+        name: "HUDA AL SALMI",
+        role: "Public Relations Officer (PRO)",
+        description: "Manages government relations and public engagement.",
+        icon: User,
+        socials: {
+            linkedin: "#",
+            email: "mailto:huda@innovative.om"
+        }
+    },
+    {
+        name: "Legal Counsel Office",
+        role: "Advocate & Legal Representative",
+        description: "Provides expert legal guidance and representation.",
+        icon: User,
+        socials: {
+            website: "#",
+            email: "mailto:legal@innovative.om"
+        }
+    }
 ];
 
 const agentCategories: AgentCategory[] = [
