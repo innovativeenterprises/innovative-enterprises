@@ -114,7 +114,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
             const result = await generateSocialMediaPost(data);
             onGenerate(result);
         } catch (error) {
-            console.error(error)
+            // console.error(error)
         } finally {
             setIsLoading(false);
         }
