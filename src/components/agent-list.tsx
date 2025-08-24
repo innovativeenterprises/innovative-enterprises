@@ -1,4 +1,5 @@
 
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Linkedin, Twitter, Instagram, Facebook, Mail, Github, Globe, Trophy } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -193,7 +194,7 @@ export function LeadershipTeam() {
 }
 
 const AgentCard = ({ agent }: { agent: Agent }) => (
-    <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full">
+    <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
         <CardHeader className="flex flex-row items-center gap-4">
             <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
                 <agent.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
@@ -203,9 +204,9 @@ const AgentCard = ({ agent }: { agent: Agent }) => (
                 <p className="text-sm text-muted-foreground">{agent.role}</p>
             </div>
         </CardHeader>
-        <CardDescription className="px-6 pb-6 text-sm">
-            {agent.description}
-        </CardDescription>
+        <CardContent className="px-6 pb-6 text-sm flex-grow">
+            <CardDescription>{agent.description}</CardDescription>
+        </CardContent>
     </Card>
 );
 
