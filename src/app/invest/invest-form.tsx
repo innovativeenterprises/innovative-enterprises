@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Mail, Download, Briefcase } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Mail, Download, Briefcase, Calendar, CheckCircle, Bot } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const FormSchema = z.object({
@@ -32,6 +32,8 @@ type FormValues = z.infer<typeof FormSchema>;
 
 export default function InvestForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [isSynced, setIsSynced] = useState(false);
   const [response, setResponse] = useState<GenerateLetterOfInterestOutput | null>(null);
   const { toast } = useToast();
 
@@ -53,6 +55,8 @@ export default function InvestForm() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
+    setIsSynced(false);
+    setIsSyncing(false);
     try {
       const result = await generateLetterOfInterest(data);
       setResponse(result);
@@ -95,7 +99,24 @@ export default function InvestForm() {
     const subject = "Following up on my interest in Innovative Enterprises";
     const body = encodeURIComponent("Dear Innovative Enterprises Team,\n\nPlease find the automatically generated Letter of Interest based on my recent inquiry. I look forward to discussing potential investment opportunities.\n\n---\n\n" + response.letterContent);
     window.location.href = `mailto:invest@innovative.om?subject=${subject}&body=${body}`;
+    toast({
+        title: 'Forwarded to Sales Agent',
+        description: 'Your inquiry has been sent to Sami for follow-up.',
+    });
   };
+  
+  const handleSyncToCrm = () => {
+    setIsSyncing(true);
+    // Simulate API call
+    setTimeout(() => {
+        setIsSyncing(false);
+        setIsSynced(true);
+        toast({
+            title: 'Successfully Synced!',
+            description: 'Investor details sent to Remi (CRM Agent).',
+        });
+    }, 1500);
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -261,13 +282,33 @@ export default function InvestForm() {
                 <CardFooter className="flex-col gap-4 items-start">
                     <p className="text-sm text-muted-foreground">Next Steps:</p>
                      <div className="flex justify-between items-center w-full">
-                        <Button variant="outline" disabled><Briefcase className="mr-2 h-4 w-4"/> Save to E-Briefcase / CRM</Button>
+                         <Button variant="outline" onClick={handleSyncToCrm} disabled={isSyncing || isSynced}>
+                            {isSyncing ? (
+                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Syncing...</>
+                            ) : isSynced ? (
+                                <><CheckCircle className="mr-2 h-4 w-4 text-green-500" /> Synced to CRM</>
+                            ) : (
+                                <><Briefcase className="mr-2 h-4 w-4"/> Sync to CRM (Remi)</>
+                            )}
+                         </Button>
                         <div className="flex gap-2">
                             <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
                             <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                            <Button onClick={handleEmail}><Mail className="mr-2 h-4 w-4"/> Email to Us</Button>
+                            <Button onClick={handleEmail}><Mail className="mr-2 h-4 w-4"/> Email to Us (Sami)</Button>
                         </div>
                     </div>
+                    {isSynced && (
+                        <Card className="w-full bg-muted/50">
+                            <CardHeader>
+                                <CardTitle className="text-lg flex items-center gap-2"><Calendar className="h-5 w-5"/> Schedule a Meeting</CardTitle>
+                                <CardDescription>Aida, our assistant agent, can help you book a meeting with our team.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex flex-col sm:flex-row gap-4">
+                               <Button className="w-full" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Calendly</a></Button>
+                               <Button className="w-full" variant="outline" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Google Calendar</a></Button>
+                            </CardContent>
+                        </Card>
+                    )}
                 </CardFooter>
             </Card>
         )}
