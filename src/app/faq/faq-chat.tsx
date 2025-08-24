@@ -58,14 +58,13 @@ export default function FaqChat() {
       const botMessage: Message = { sender: 'bot', text: result.answer };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error(error);
-      const errorMessage: Message = { sender: 'bot', text: "I'm sorry, but I encountered an error. Please try asking again." };
-      setMessages(prev => [...prev, errorMessage]);
       toast({
         title: 'Error',
         description: 'Failed to get an answer. Please try again.',
         variant: 'destructive',
       });
+      const errorMessage: Message = { sender: 'bot', text: "I'm sorry, but I encountered an error. Please try asking again." };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -77,8 +76,8 @@ export default function FaqChat() {
             <h2 className="text-xl font-semibold text-primary">Chat with our AI Assistant</h2>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden">
-            <ScrollArea className="h-full pr-4">
-                <div className="space-y-4" ref={scrollViewportRef}>
+            <ScrollArea className="h-full pr-4" viewportRef={scrollViewportRef}>
+                <div className="space-y-4">
                     {messages.map((message, index) => (
                         <div key={index} className={`flex items-start gap-3 ${message.sender === 'user' ? 'justify-end' : ''}`}>
                             {message.sender === 'bot' && (
