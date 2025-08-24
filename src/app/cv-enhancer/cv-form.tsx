@@ -15,7 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, LanguagesIcon } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, Languages } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
@@ -60,7 +60,7 @@ type UploadValues = z.infer<typeof UploadSchema>;
 const GenerationSchema = z.object({
     targetPosition: z.string().min(3, "Target position is required."),
     jobAdvertisement: z.string().optional(),
-    languages: z.string().min(2, "Language is required."),
+    languages: z.string().min(2, "At least one language is required."),
 });
 type GenerationValues = z.infer<typeof GenerationSchema>;
 
@@ -268,7 +268,7 @@ const SelectionMatrix = ({
                 </Card>
                  <Card>
                     <CardHeader>
-                        <CardTitle className="text-base flex items-center gap-2"><LanguagesIcon /> Languages</CardTitle>
+                        <CardTitle className="text-base flex items-center gap-2"><Languages /> Languages</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                         {requestedLanguages.map(lang => (
@@ -578,7 +578,7 @@ export default function CvForm() {
                             name="languages"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Languages (comma-separated)</FormLabel>
+                                <FormLabel>Languages for CV & Cover Letter (comma-separated)</FormLabel>
                                 <FormControl>
                                     <Input placeholder="e.g., English, Arabic" {...field} />
                                 </FormControl>
