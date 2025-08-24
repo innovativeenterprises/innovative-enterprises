@@ -15,7 +15,7 @@ export const GenerateLetterOfInterestInputSchema = z.object({
   phone: z.string().optional().describe("The investor's phone number."),
   country: z.string().optional().describe("The investor's country of residence."),
   investorType: z.enum(['Angel', 'Venture Capital', 'Corporate', 'Individual', 'Other']).optional().describe("The type of investor."),
-  website: z.string().url().optional().describe("The investor's company website or LinkedIn profile."),
+  website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 export type GenerateLetterOfInterestInput = z.infer<typeof GenerateLetterOfInterestInputSchema>;
 
