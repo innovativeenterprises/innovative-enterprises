@@ -66,7 +66,7 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
       "Join us in a strategic partnership to drive mutual growth and success.",
   },
   {
-    title: "Become a Service Provider",
+    title: "Work With Us",
     href: "/service-provider",
     description:
       "Offer your services to our clients. We welcome freelancers, outsourcers, and subcontractors.",
@@ -89,6 +89,12 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
     description:
       "Explore investment opportunities and be part of our innovation journey.",
   },
+  {
+    title: "Competitions & Tasks",
+    href: "/opportunities",
+    description:
+        "View open competitions and tasks for our network of freelancers and partners.",
+  }
 ]
 
 
