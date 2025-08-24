@@ -50,6 +50,13 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
+const availableLanguages = [
+    { id: 'english', label: 'English' },
+    { id: 'arabic', label: 'Arabic' },
+    { id: 'french', label: 'French' },
+    { id: 'spanish', label: 'Spanish' },
+] as const;
+
 // Step 1: Initial CV Upload
 const UploadSchema = z.object({
   cvDocument: z.any().refine(file => file?.length == 1, 'CV document is required.'),
@@ -60,7 +67,9 @@ type UploadValues = z.infer<typeof UploadSchema>;
 const GenerationSchema = z.object({
     targetPosition: z.string().min(3, "Target position is required."),
     jobAdvertisement: z.string().optional(),
-    languages: z.string().min(2, "At least one language is required."),
+    languages: z.array(z.string()).refine(value => value.some(item => item), {
+        message: "You have to select at least one language.",
+    }),
 });
 type GenerationValues = z.infer<typeof GenerationSchema>;
 
@@ -345,6 +354,9 @@ export default function CvForm() {
 
   const generationForm = useForm<GenerationValues>({
     resolver: zodResolver(GenerationSchema),
+    defaultValues: {
+      languages: ["english"],
+    },
   });
 
   const price = useMemo(() => {
@@ -399,7 +411,7 @@ export default function CvForm() {
     setSocialPost(null);
     setTargetPosition(data.targetPosition);
 
-    const languages = data.languages.split(',').map(l => l.trim().toLowerCase()).filter(Boolean);
+    const languages = data.languages.map(l => l.trim().toLowerCase()).filter(Boolean);
     setRequestedLanguages(languages);
     setSelections({ cv: true, coverLetter: true, languages: languages.slice(0,1) });
 
@@ -576,12 +588,45 @@ export default function CvForm() {
                          <FormField
                             control={generationForm.control}
                             name="languages"
-                            render={({ field }) => (
+                            render={() => (
                             <FormItem>
-                                <FormLabel>Languages for CV & Cover Letter (comma-separated)</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="e.g., English, Arabic" {...field} />
-                                </FormControl>
+                                <div className="mb-4">
+                                     <FormLabel>Languages for CV & Cover Letter</FormLabel>
+                                     <FormDescription>Select all languages you require.</FormDescription>
+                                </div>
+                                {availableLanguages.map((item) => (
+                                    <FormField
+                                    key={item.id}
+                                    control={generationForm.control}
+                                    name="languages"
+                                    render={({ field }) => {
+                                        return (
+                                        <FormItem
+                                            key={item.id}
+                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                            <FormControl>
+                                            <Checkbox
+                                                checked={field.value?.includes(item.id)}
+                                                onCheckedChange={(checked) => {
+                                                return checked
+                                                    ? field.onChange([...field.value, item.id])
+                                                    : field.onChange(
+                                                        field.value?.filter(
+                                                        (value) => value !== item.id
+                                                        )
+                                                    )
+                                                }}
+                                            />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                                {item.label}
+                                            </FormLabel>
+                                        </FormItem>
+                                        )
+                                    }}
+                                    />
+                                ))}
                                 <FormMessage />
                             </FormItem>
                             )}
