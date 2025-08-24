@@ -25,6 +25,7 @@ export default function ServiceProviderPage() {
                         <Input placeholder="Your Name / Company Name" />
                         <Input type="email" placeholder="Email Address" />
                         <Input placeholder="Service(s) Offered (e.g., Web Development, Graphic Design)" />
+                        <Input placeholder="Portfolio Link (e.g., Behance, Dribbble, Website)" />
                         <Textarea placeholder="Briefly describe your services and experience. Feel free to include a link to your portfolio." rows={6} />
                         <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Submit Application</Button>
                     </form>
