@@ -3,6 +3,7 @@ import ServiceCatalog from '@/components/service-catalog';
 import ProductShowcase from '@/components/product-showcase';
 import ClientTestimonials from '@/components/client-testimonials';
 import AiToolsCta from '@/components/ai-tools-cta';
+import ChatWidget from '@/components/chat-widget';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <ProductShowcase />
       <ClientTestimonials />
       <AiToolsCta />
+      <ChatWidget />
     </div>
   );
 }

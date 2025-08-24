@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -6,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -71,9 +72,9 @@ export default function FaqChat() {
   };
 
   return (
-    <Card className="flex flex-col h-[600px]">
+    <Card className="flex flex-col h-[600px] w-full">
         <CardHeader>
-            <h2 className="text-xl font-semibold text-primary">Chat with our AI Assistant</h2>
+            <CardTitle className="text-xl font-semibold text-primary">Chat with our AI Assistant</CardTitle>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden">
             <ScrollArea className="h-full pr-4" viewportRef={scrollViewportRef}>
