@@ -7,17 +7,22 @@ import { z } from 'zod';
 import { generateLetterOfInterest } from '@/ai/flows/letter-of-interest';
 import { type GenerateLetterOfInterestOutput } from '@/ai/flows/letter-of-interest.schema';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Mail, Download } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Mail, Download, Briefcase } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const FormSchema = z.object({
   fullName: z.string().min(3, 'Full name is required.'),
   organizationName: z.string().optional(),
   email: z.string().email('Please enter a valid email address.'),
+  phone: z.string().optional(),
+  country: z.string().optional(),
+  investorType: z.enum(['Angel', 'Venture Capital', 'Corporate', 'Individual', 'Other']).optional(),
+  website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   investmentRange: z.string().optional(),
   areaOfInterest: z.string().min(10, 'Please describe your area of interest.'),
 });
@@ -36,6 +41,10 @@ export default function InvestForm() {
       fullName: '',
       organizationName: '',
       email: '',
+      phone: '',
+      country: '',
+      investorType: undefined,
+      website: '',
       investmentRange: '',
       areaOfInterest: '',
     },
@@ -126,6 +135,32 @@ export default function InvestForm() {
                                     </FormItem>
                                     )}
                                 />
+                                 <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone Number (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="+1 234 567 890" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="country"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Country (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g., Oman" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
                                 <FormField
                                     control={form.control}
                                     name="organizationName"
@@ -135,6 +170,43 @@ export default function InvestForm() {
                                         <FormControl>
                                             <Input placeholder="e.g., Future Ventures Inc." {...field} />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                 <FormField
+                                    control={form.control}
+                                    name="website"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Website / LinkedIn (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="https://example.com" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="investorType"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Investor Type (Optional)</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select investor type" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="Individual">Individual</SelectItem>
+                                                <SelectItem value="Angel">Angel Investor</SelectItem>
+                                                <SelectItem value="Venture Capital">Venture Capital</SelectItem>
+                                                <SelectItem value="Corporate">Corporate</SelectItem>
+                                                <SelectItem value="Other">Other</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                     )}
@@ -186,13 +258,17 @@ export default function InvestForm() {
                         {response.letterContent}
                     </div>
                 </CardContent>
-                <CardContent>
-                    <div className="flex flex-wrap gap-2 justify-end">
-                        <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
-                        <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                        <Button onClick={handleEmail}><Mail className="mr-2 h-4 w-4"/> Email to Us</Button>
+                <CardFooter className="flex-col gap-4 items-start">
+                    <p className="text-sm text-muted-foreground">Next Steps:</p>
+                     <div className="flex justify-between items-center w-full">
+                        <Button variant="outline" disabled><Briefcase className="mr-2 h-4 w-4"/> Save to E-Briefcase / CRM</Button>
+                        <div className="flex gap-2">
+                            <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                            <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                            <Button onClick={handleEmail}><Mail className="mr-2 h-4 w-4"/> Email to Us</Button>
+                        </div>
                     </div>
-                </CardContent>
+                </CardFooter>
             </Card>
         )}
 

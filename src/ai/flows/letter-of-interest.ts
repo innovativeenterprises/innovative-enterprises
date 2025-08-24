@@ -31,6 +31,15 @@ Your task is to draft a formal and welcoming "Letter of Interest" addressed to a
 {{#if organizationName}}
 -   **Organization:** {{{organizationName}}}
 {{/if}}
+{{#if investorType}}
+-   **Investor Type:** {{{investorType}}}
+{{/if}}
+{{#if country}}
+-   **Country:** {{{country}}}
+{{/if}}
+{{#if website}}
+-   **Website:** {{{website}}}
+{{/if}}
 {{#if investmentRange}}
 -   **Indicated Investment Range:** {{{investmentRange}}}
 {{/if}}
@@ -43,7 +52,7 @@ Your task is to draft a formal and welcoming "Letter of Interest" addressed to a
 4.  **Content:**
     -   Start with a formal salutation to {{{fullName}}}.
     -   Thank them for their interest in Innovative Enterprises.
-    -   Acknowledge their specific area of interest ({{{areaOfInterest}}}) and briefly connect it to one of our relevant projects (PanoSpace, ameen, APPI, KHIDMAAI, VMALL) or service areas (AI, Cloud, Cybersecurity).
+    -   Acknowledge their specific area of interest ({{{areaOfInterest}}}) and briefly connect it to one of our relevant projects (PanoSpace, ameen, APPI, KHIDMAAI, VMALL) or service areas (AI, Cloud, Cybersecurity). If they mentioned a specific investor type, subtly tailor the language to them.
     -   Express enthusiasm about the possibility of a partnership.
     -   Mention that our team will review their inquiry and be in touch shortly to schedule a preliminary discussion.
     -   Conclude with a professional closing.
