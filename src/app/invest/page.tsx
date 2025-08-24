@@ -45,23 +45,23 @@ const comingProjects = [
 const ProjectCard = ({ name, description, status }: { name: string, description: string, status: string }) => {
     const getStatusColor = () => {
         switch (status) {
-            case 'Live': return 'bg-green-500';
-            case 'In Development': return 'bg-blue-500';
-            case 'Prototyping': return 'bg-yellow-500';
-            case 'Research Phase': return 'bg-purple-500';
-            case 'Concept Phase': return 'bg-gray-500';
-            default: return 'bg-gray-500';
+            case 'Live': return 'bg-green-500 hover:bg-green-600';
+            case 'In Development': return 'bg-blue-500 hover:bg-blue-600';
+            case 'Prototyping': return 'bg-yellow-500 hover:bg-yellow-600';
+            case 'Research Phase': return 'bg-purple-500 hover:bg-purple-600';
+            case 'Concept Phase': return 'bg-gray-500 hover:bg-gray-600';
+            default: return 'bg-gray-500 hover:bg-gray-600';
         }
     }
     return (
-        <Card className="h-full">
+        <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <CardTitle className="text-xl">{name}</CardTitle>
                      <Badge variant="default" className={`${getStatusColor()} text-white`}>{status}</Badge>
                 </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
                 <p className="text-muted-foreground">{description}</p>
             </CardContent>
         </Card>
@@ -79,7 +79,7 @@ export default function InvestPage() {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto mt-16 space-y-16">
+        <div className="max-w-5xl mx-auto mt-16 space-y-20">
             <div>
                  <h2 className="text-3xl font-bold text-center text-primary mb-10">Why Invest in Innovative Enterprises?</h2>
                  <div className="grid md:grid-cols-3 gap-8">
