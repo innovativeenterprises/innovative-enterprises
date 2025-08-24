@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Brush, Code, Megaphone, Calendar, DollarSign, ArrowRight, Bot, VrHeadset } from "lucide-react";
+import { Trophy, Brush, Code, Megaphone, Calendar, DollarSign, ArrowRight, Bot, Headset } from "lucide-react";
 
 const opportunities = [
     {
@@ -55,7 +55,7 @@ const opportunities = [
         prize: "10,000 OMR Grand Prize",
         deadline: "2024-10-30",
         description: "Design and build a proof-of-concept virtual reality experience showcasing the beauty of Oman's landmarks. The most immersive and innovative project will win the grand prize and a potential development contract.",
-        icon: VrHeadset,
+        icon: Headset,
         badgeVariant: "default" as const
     },
 ];
