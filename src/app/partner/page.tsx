@@ -10,7 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { handlePartnershipInquiry, PartnershipInquiryInputSchema, type PartnershipInquiryInput, type PartnershipInquiryOutput } from '@/ai/flows/partnership-inquiry';
+import { handlePartnershipInquiry } from '@/ai/flows/partnership-inquiry';
+import { PartnershipInquiryInputSchema, type PartnershipInquiryInput } from '@/ai/flows/partnership-inquiry.schema';
 import { Loader2, CheckCircle, Handshake } from 'lucide-react';
 import Link from 'next/link';
 
