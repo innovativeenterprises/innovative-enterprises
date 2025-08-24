@@ -1,12 +1,20 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Linkedin, Twitter, Instagram, Facebook, Mail } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Link from 'next/link';
 
 interface Agent {
     role: string;
     name: string;
     description: string;
     icon: LucideIcon;
+    socials?: {
+        linkedin?: string;
+        twitter?: string;
+        instagram?: string;
+        facebook?: string;
+        email?: string;
+    }
 }
 
 interface AgentCategory {
@@ -15,9 +23,39 @@ interface AgentCategory {
 }
 
 const leadershipTeam: Agent[] = [
-    { name: "JUMAA SALIM ALHADID", role: "CEO and Cofounder", description: "Leads the company's vision and strategic direction.", icon: User },
-    { name: "ANWAR AHMED SHARIF", role: "Cofounder and CTO", description: "Drives technological innovation and engineering.", icon: User },
-    { name: "ABDULJABBAR AL SADIG AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User },
+    { 
+        name: "JUMAA SALIM ALHADID", 
+        role: "CEO and Cofounder", 
+        description: "Leads the company's vision and strategic direction.", 
+        icon: User,
+        socials: {
+            linkedin: "#",
+            twitter: "#",
+            email: "mailto:jumaa@innovative.om"
+        }
+    },
+    { 
+        name: "ANWAR AHMED SHARIF", 
+        role: "Cofounder and CTO", 
+        description: "Drives technological innovation and engineering.", 
+        icon: User,
+        socials: {
+            linkedin: "#",
+            twitter: "#",
+            email: "mailto:anwar@innovative.om"
+        }
+    },
+    { 
+        name: "ABDULJABBAR AL SADIG AL FAKI", 
+        role: "Projects Manager", 
+        description: "Oversees all project execution and delivery.", 
+        icon: User,
+        socials: {
+            linkedin: "#",
+            twitter: "#",
+            email: "mailto:abduljabbar@innovative.om"
+        }
+    },
 ];
 
 const agentCategories: AgentCategory[] = [
@@ -73,7 +111,7 @@ export function LeadershipTeam() {
             <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-10">Our Leadership</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 {leadershipTeam.map((member) => (
-                    <Card key={member.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center">
+                    <Card key={member.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col">
                         <CardHeader className="flex flex-col items-center gap-4 pt-8">
                              <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
                                 <member.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
@@ -83,9 +121,43 @@ export function LeadershipTeam() {
                                 <p className="text-base text-muted-foreground">{member.role}</p>
                             </div>
                         </CardHeader>
-                        <CardDescription className="px-6 pb-8 text-sm">
+                        <CardContent className="px-6 pb-6 text-sm flex-grow">
                             {member.description}
-                        </CardDescription>
+                        </CardContent>
+                        <CardFooter className="justify-center pt-0 pb-6">
+                            <div className="flex gap-4">
+                                {member.socials?.linkedin && (
+                                    <Link href={member.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                                        <Linkedin className="w-5 h-5" />
+                                        <span className="sr-only">LinkedIn</span>
+                                    </Link>
+                                )}
+                                {member.socials?.twitter && (
+                                    <Link href={member.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                                        <Twitter className="w-5 h-5" />
+                                        <span className="sr-only">Twitter</span>
+                                    </Link>
+                                )}
+                                {member.socials?.facebook && (
+                                    <Link href={member.socials.facebook} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                                        <Facebook className="w-5 h-5" />
+                                        <span className="sr-only">Facebook</span>
+                                    </Link>
+                                )}
+                                 {member.socials?.instagram && (
+                                    <Link href={member.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                                        <Instagram className="w-5 h-5" />
+                                        <span className="sr-only">Instagram</span>
+                                    </Link>
+                                )}
+                                {member.socials?.email && (
+                                    <Link href={member.socials.email} className="text-muted-foreground hover:text-primary transition-colors">
+                                        <Mail className="w-5 h-5" />
+                                        <span className="sr-only">Email</span>
+                                    </Link>
+                                )}
+                            </div>
+                        </CardFooter>
                     </Card>
                 ))}
             </div>
