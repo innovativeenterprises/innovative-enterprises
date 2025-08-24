@@ -217,7 +217,7 @@ export default function CvForm() {
          </Card>
       )}
 
-      {analysis && (
+      {analysis && !generatedCv && (
         <Card>
           <CardHeader>
             <CardTitle>Step 2: Review Analysis & Enhance</CardTitle>
@@ -346,3 +346,5 @@ export default function CvForm() {
     </div>
   );
 }
+
+    
