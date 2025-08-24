@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,7 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, PlusCircle, Trash2 } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, PlusCircle, Trash2, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Agent {
@@ -25,6 +25,7 @@ interface Agent {
     description: string;
     icon: LucideIcon;
     enabled: boolean;
+    type: 'Leadership' | 'AI Agent';
 }
 
 interface AgentCategory {
@@ -33,91 +34,107 @@ interface AgentCategory {
 }
 
 const initialLeadershipTeam: Agent[] = [
-    { name: "JUMAA SALIM ALHADID", role: "CEO and Cofounder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true },
-    { name: "ANWAR AHMED SHARIF", role: "Cofounder and CTO", description: "Drives technological innovation and engineering.", icon: User, enabled: true },
-    { name: "ABDULJABBAR AL SADIG AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true },
-    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true },
-    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true },
+    { name: "JUMAA SALIM ALHADID", role: "CEO and Cofounder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true, type: 'Leadership' },
+    { name: "ANWAR AHMED SHARIF", role: "Cofounder and CTO", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership' },
+    { name: "ABDULJABBAR AL SADIG AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Leadership' },
+    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Leadership' },
+    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Leadership' },
 ];
 
 const initialAgentCategories: AgentCategory[] = [
     {
         category: "Core Business Operations Agents",
         agents: [
-            { name: "Aida", role: "Admin / Executive Assistant", description: "Schedules, reminders, document prep.", icon: Briefcase, enabled: true },
-            { name: "Finley", role: "Finance & Accounting Agent", description: "Bookkeeping, invoices, expense tracking, tax reminders.", icon: DollarSign, enabled: true },
-            { name: "Hira", role: "HR & Recruitment Agent", description: "CV screening, ATS checks, onboarding automation.", icon: Users, enabled: true },
-            { name: "Lexi", role: "Legal & Contracts Agent", description: "Draft agreements, compliance checks.", icon: Scale, enabled: true },
-            { name: "Talia", role: "Talent & Competition Agent", description: "Posts opportunities, manages submissions.", icon: Trophy, enabled: true },
+            { name: "Aida", role: "Admin / Executive Assistant", description: "Schedules, reminders, document prep.", icon: Briefcase, enabled: true, type: 'AI Agent' },
+            { name: "Finley", role: "Finance & Accounting Agent", description: "Bookkeeping, invoices, expense tracking, tax reminders.", icon: DollarSign, enabled: true, type: 'AI Agent' },
+            { name: "Hira", role: "HR & Recruitment Agent", description: "CV screening, ATS checks, onboarding automation.", icon: Users, enabled: true, type: 'AI Agent' },
+            { name: "Lexi", role: "Legal & Contracts Agent", description: "Draft agreements, compliance checks.", icon: Scale, enabled: true, type: 'AI Agent' },
+            { name: "Talia", role: "Talent & Competition Agent", description: "Posts opportunities, manages submissions.", icon: Trophy, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Customer & Sales Agents",
         agents: [
-            { name: "Caro", role: "Customer Support Agent", description: "Handles WhatsApp, email, chatbot queries 24/7.", icon: Headset, enabled: true },
-            { name: "Sami", role: "Sales Agent", description: "Follows up leads, pitches services, books meetings.", icon: TrendingUp, enabled: true },
-            { name: "Mira", role: "Marketing Agent", description: "Creates ads, social posts, SEO, blog content.", icon: Megaphone, enabled: true },
-            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, sends follow-ups.", icon: Contact, enabled: true },
+            { name: "Caro", role: "Customer Support Agent", description: "Handles WhatsApp, email, chatbot queries 24/7.", icon: Headset, enabled: true, type: 'AI Agent' },
+            { name: "Sami", role: "Sales Agent", description: "Follows up leads, pitches services, books meetings.", icon: TrendingUp, enabled: true, type: 'AI Agent' },
+            { name: "Mira", role: "Marketing Agent", description: "Creates ads, social posts, SEO, blog content.", icon: Megaphone, enabled: true, type: 'AI Agent' },
+            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, sends follow-ups.", icon: Contact, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Tech & Data Agents",
         agents: [
-            { name: "Tariq Tech", role: "IT Support Agent", description: "Troubleshoots software, automates processes.", icon: Cpu, enabled: true },
-            { name: "Dana", role: "Data Analyst Agent", description: "Dashboards, trends, KPI monitoring.", icon: Database, enabled: true },
-            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes your AI tools on your business data.", icon: BrainCircuit, enabled: true },
-            { name: "AutoNabil", role: "Automation Agent", description: "Connects all tools (Zapier/Make style).", icon: Bot, enabled: true },
+            { name: "Tariq Tech", role: "IT Support Agent", description: "Troubleshoots software, automates processes.", icon: Cpu, enabled: true, type: 'AI Agent' },
+            { name: "Dana", role: "Data Analyst Agent", description: "Dashboards, trends, KPI monitoring.", icon: Database, enabled: true, type: 'AI Agent' },
+            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes your AI tools on your business data.", icon: BrainCircuit, enabled: true, type: 'AI Agent' },
+            { name: "AutoNabil", role: "Automation Agent", description: "Connects all tools (Zapier/Make style).", icon: Bot, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Creative & Media Agents",
         agents: [
-            { name: "Lina", role: "Content Creator Agent", description: "Designs posts, videos, brochures.", icon: Palette, enabled: true },
-            { name: "Noor", role: "Copywriting Agent", description: "Catchy ad copy, website text.", icon: PenSquare, enabled: true },
-            { name: "Voxi", role: "Voice & Translation Agent", description: "Voiceovers, Arabic-English translation.", icon: Languages, enabled: true },
-            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Photo editing, 360° virtual tours.", icon: Camera, enabled: true },
+            { name: "Lina", role: "Content Creator Agent", description: "Designs posts, videos, brochures.", icon: Palette, enabled: true, type: 'AI Agent' },
+            { name: "Noor", role: "Copywriting Agent", description: "Catchy ad copy, website text.", icon: PenSquare, enabled: true, type: 'AI Agent' },
+            { name: "Voxi", role: "Voice & Translation Agent", description: "Voiceovers, Arabic-English translation.", icon: Languages, enabled: true, type: 'AI Agent' },
+            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Photo editing, 360° virtual tours.", icon: Camera, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Special Growth Agents",
         agents: [
-            { name: "Rami", role: "Strategy & Research Agent", description: "Market research, competitor tracking.", icon: Target, enabled: true },
-            { name: "Navi", role: "Innovation Agent", description: "Suggests new services/products.", icon: Rocket, enabled: true },
-            { name: "Paz", role: "Partnership Agent", description: "Finds collaborators, drafts proposals.", icon: Handshake, enabled: true },
+            { name: "Rami", role: "Strategy & Research Agent", description: "Market research, competitor tracking.", icon: Target, enabled: true, type: 'AI Agent' },
+            { name: "Navi", role: "Innovation Agent", description: "Suggests new services/products.", icon: Rocket, enabled: true, type: 'AI Agent' },
+            { name: "Paz", role: "Partnership Agent", description: "Finds collaborators, drafts proposals.", icon: Handshake, enabled: true, type: 'AI Agent' },
         ]
     },
 ];
 
-const NewStaffSchema = z.object({
+const StaffSchema = z.object({
   name: z.string().min(3, "Name is required"),
   role: z.string().min(3, "Role is required"),
   type: z.enum(["Leadership", "AI Agent"]),
 });
-type NewStaffValues = z.infer<typeof NewStaffSchema>;
+type StaffValues = z.infer<typeof StaffSchema>;
 
 
-const AddStaffDialog = ({ onAddStaff }: { onAddStaff: (values: NewStaffValues) => void }) => {
+const AddEditStaffDialog = ({ 
+    staffMember,
+    onSave,
+    children
+}: { 
+    staffMember?: Agent,
+    onSave: (values: StaffValues, name?: string) => void,
+    children: React.ReactNode 
+}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<NewStaffValues>({
-        resolver: zodResolver(NewStaffSchema),
-        defaultValues: { name: "", role: "", type: "AI Agent" },
+    const form = useForm<StaffValues>({
+        resolver: zodResolver(StaffSchema),
+        defaultValues: staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type } : { name: "", role: "", type: "AI Agent" },
     });
 
-    const onSubmit: SubmitHandler<NewStaffValues> = (data) => {
-        onAddStaff(data);
+    useEffect(() => {
+        if(staffMember) {
+            form.reset({ name: staffMember.name, role: staffMember.role, type: staffMember.type });
+        } else {
+            form.reset({ name: "", role: "", type: "AI Agent" });
+        }
+    }, [staffMember, form, isOpen]);
+
+    const onSubmit: SubmitHandler<StaffValues> = (data) => {
+        onSave(data, staffMember?.name);
         form.reset();
         setIsOpen(false);
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button><PlusCircle /> Add New Staff</Button>
-            </DialogTrigger>
+            <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Add New Staff Member</DialogTitle>
-                    <DialogDescription>Enter the details for the new staff member.</DialogDescription>
+                    <DialogTitle>{staffMember ? "Edit" : "Add New"} Staff Member</DialogTitle>
+                    <DialogDescription>
+                        {staffMember ? "Update the details for this staff member." : "Enter the details for the new staff member."}
+                    </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -150,7 +167,7 @@ const AddStaffDialog = ({ onAddStaff }: { onAddStaff: (values: NewStaffValues) =
                         )} />
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Add Staff</Button>
+                            <Button type="submit">Save Staff</Button>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -184,25 +201,45 @@ export default function StaffTable() {
         toast({ title: "Staff status updated." });
     };
 
-    const handleAddStaff = (values: NewStaffValues) => {
-        const newStaffMember: Agent = {
-            ...values,
-            description: "Newly added staff member.",
-            icon: values.type === 'Leadership' ? User : Bot,
-            enabled: true,
-        };
+    const handleSave = (values: StaffValues, originalName?: string) => {
+        if (originalName) {
+            // Update
+            const updateStaff = (staff: Agent) => (staff.name === originalName ? { ...staff, ...values } : staff);
+            
+            setLeadership(prev => prev.map(updateStaff));
+            setAgentCategories(prev => prev.map(cat => ({
+                ...cat,
+                agents: cat.agents.map(updateStaff)
+            })));
+            
+            toast({ title: "Staff member updated successfully." });
 
-        if (values.type === 'Leadership') {
-            setLeadership(prev => [...prev, newStaffMember]);
         } else {
-            // For simplicity, adding to the first agent category
-            setAgentCategories(prev => {
-                const newCategories = [...prev];
-                newCategories[0].agents.push(newStaffMember);
-                return newCategories;
-            });
+            // Create
+            const newStaffMember: Agent = {
+                description: "Newly added staff member.",
+                icon: values.type === 'Leadership' ? User : Bot,
+                enabled: true,
+                ...values,
+            };
+
+            if (values.type === 'Leadership') {
+                setLeadership(prev => [...prev, newStaffMember]);
+            } else {
+                // For simplicity, adding to the first agent category
+                setAgentCategories(prev => {
+                    const newCategories = [...prev];
+                    if (newCategories.length > 0) {
+                        newCategories[0].agents.push(newStaffMember);
+                    } else {
+                        // Handle case where there are no agent categories
+                        return [{ category: "General Agents", agents: [newStaffMember] }];
+                    }
+                    return newCategories;
+                });
+            }
+            toast({ title: "Staff member added successfully." });
         }
-        toast({ title: "Staff member added successfully." });
     };
 
     const handleDelete = (name: string, type: 'leadership' | 'agent') => {
@@ -213,7 +250,7 @@ export default function StaffTable() {
                 prev.map(category => ({
                     ...category,
                     agents: category.agents.filter(agent => agent.name !== name)
-                })).filter(category => category.agents.length > 0) // Optional: remove empty categories
+                })).filter(category => category.agents.length > 0)
             );
         }
         toast({ title: "Staff member removed.", variant: "destructive" });
@@ -227,7 +264,9 @@ export default function StaffTable() {
                     <CardTitle>Staff Management</CardTitle>
                     <CardDescription>Enable, disable, add, or remove staff members.</CardDescription>
                 </div>
-                <AddStaffDialog onAddStaff={handleAddStaff} />
+                <AddEditStaffDialog onSave={handleSave}>
+                     <Button><PlusCircle /> Add New Staff</Button>
+                </AddEditStaffDialog>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -256,18 +295,23 @@ export default function StaffTable() {
                                     />
                                 </TableCell>
                                 <TableCell className="text-right">
-                                     <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {member.name}.</AlertDialogDescription></AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleDelete(member.name, 'leadership')}>Delete</AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
+                                     <div className="flex justify-end gap-2">
+                                        <AddEditStaffDialog staffMember={member} onSave={handleSave}>
+                                            <Button variant="ghost" size="icon"><Edit /></Button>
+                                        </AddEditStaffDialog>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {member.name}.</AlertDialogDescription></AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(member.name, 'leadership')}>Delete</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -287,18 +331,23 @@ export default function StaffTable() {
                                         />
                                     </TableCell>
                                      <TableCell className="text-right">
-                                         <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {agent.name}.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(agent.name, 'agent')}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
+                                         <div className="flex justify-end gap-2">
+                                            <AddEditStaffDialog staffMember={agent} onSave={handleSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </AddEditStaffDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {agent.name}.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => handleDelete(agent.name, 'agent')}>Delete</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -309,5 +358,3 @@ export default function StaffTable() {
         </Card>
     );
 }
-
-    
