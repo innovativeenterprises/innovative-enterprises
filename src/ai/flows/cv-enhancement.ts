@@ -6,25 +6,34 @@
  * This file contains the server-side logic for the CV enhancement flow.
  * It is intended to be used as a Next.js Server Action.
  *
- * - enhanceCv - A function that analyzes a CV and provides ATS recommendations.
+ * - analyzeCv - A function that analyzes a CV and provides ATS recommendations.
+ * - generateEnhancedCv - A function that generates a new CV based on user input.
  */
 
 import { ai } from '@/ai/genkit';
 import {
-  CvEnhancementInput,
-  CvEnhancementInputSchema,
-  CvEnhancementOutput,
-  CvEnhancementOutputSchema,
+  CvAnalysisInput,
+  CvAnalysisInputSchema,
+  CvAnalysisOutput,
+  CvAnalysisOutputSchema,
+  CvGenerationInput,
+  CvGenerationInputSchema,
+  CvGenerationOutput,
+  CvGenerationOutputSchema,
 } from './cv-enhancement.schema';
 
-export async function enhanceCv(input: CvEnhancementInput): Promise<CvEnhancementOutput> {
-  return cvEnhancementFlow(input);
+export async function analyzeCv(input: CvAnalysisInput): Promise<CvAnalysisOutput> {
+  return cvAnalysisFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'cvEnhancementPrompt',
-  input: { schema: CvEnhancementInputSchema },
-  output: { schema: CvEnhancementOutputSchema },
+export async function generateEnhancedCv(input: CvGenerationInput): Promise<CvGenerationOutput> {
+  return cvGenerationFlow(input);
+}
+
+const analysisPrompt = ai.definePrompt({
+  name: 'cvAnalysisPrompt',
+  input: { schema: CvAnalysisInputSchema },
+  output: { schema: CvAnalysisOutputSchema },
   prompt: `You are an expert HR professional specializing in optimizing resumes for Applicant Tracking Systems (ATS).
 Your task is to analyze the provided CV and give detailed, actionable feedback to improve its ATS compatibility.
 
@@ -43,14 +52,45 @@ For each section (Contact Info, Work Experience, etc.), determine if it is compl
 `,
 });
 
-const cvEnhancementFlow = ai.defineFlow(
+const cvAnalysisFlow = ai.defineFlow(
   {
-    name: 'cvEnhancementFlow',
-    inputSchema: CvEnhancementInputSchema,
-    outputSchema: CvEnhancementOutputSchema,
+    name: 'cvAnalysisFlow',
+    inputSchema: CvAnalysisInputSchema,
+    outputSchema: CvAnalysisOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const { output } = await analysisPrompt(input);
+    return output!;
+  }
+);
+
+
+const generationPrompt = ai.definePrompt({
+  name: 'cvGenerationPrompt',
+  input: { schema: CvGenerationInputSchema },
+  output: { schema: CvGenerationOutputSchema },
+  prompt: `You are an expert CV writer and ATS specialist. Your task is to rewrite and enhance the provided CV to be highly optimized for the target position and language(s).
+
+Original CV Document: {{media url=cvDataUri}}
+Target Position: {{{targetPosition}}}
+Languages: {{{languages}}}
+
+Rewrite the entire CV. Use the information from the original CV but tailor the language, keywords, and structure to perfectly match the target position. 
+- The output should be a complete CV in Markdown format.
+- If multiple languages are requested, generate the CV in the first language listed.
+- Incorporate strong action verbs and quantify achievements where possible.
+- Ensure the formatting is clean, professional, and easily parsable by any ATS.
+`,
+});
+
+const cvGenerationFlow = ai.defineFlow(
+  {
+    name: 'cvGenerationFlow',
+    inputSchema: CvGenerationInputSchema,
+    outputSchema: CvGenerationOutputSchema,
+  },
+  async (input) => {
+    const { output } = await generationPrompt(input);
     return output!;
   }
 );

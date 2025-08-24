@@ -9,21 +9,21 @@
 
 import { z } from 'zod';
 
-export const CvEnhancementInputSchema = z.object({
+export const CvAnalysisInputSchema = z.object({
   cvDataUri: z
     .string()
     .describe(
       "The user's CV document, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
-export type CvEnhancementInput = z.infer<typeof CvEnhancementInputSchema>;
+export type CvAnalysisInput = z.infer<typeof CvAnalysisInputSchema>;
 
 const SuggestionSchema = z.object({
     isCompliant: z.boolean().describe("Whether this section is ATS-compliant."),
     suggestions: z.array(z.string()).describe("A list of specific suggestions for improvement for this section."),
 });
 
-export const CvEnhancementOutputSchema = z.object({
+export const CvAnalysisOutputSchema = z.object({
     overallScore: z.number().min(0).max(100).describe("An overall ATS compatibility score from 0 to 100."),
     summary: z.string().describe("A brief summary of the CV's strengths and weaknesses."),
     contactInfo: SuggestionSchema,
@@ -32,4 +32,22 @@ export const CvEnhancementOutputSchema = z.object({
     education: SuggestionSchema,
     formatting: SuggestionSchema.describe("Suggestions related to the overall formatting, parsing, and file type."),
 });
-export type CvEnhancementOutput = z.infer<typeof CvEnhancementOutputSchema>;
+export type CvAnalysisOutput = z.infer<typeof CvAnalysisOutputSchema>;
+
+
+export const CvGenerationInputSchema = z.object({
+    cvDataUri: z
+    .string()
+    .describe(
+      "The user's original CV document, as a data URI."
+    ),
+    targetPosition: z.string().describe("The target job position the user is applying for."),
+    languages: z.array(z.string()).describe("The languages the new CV should be written in."),
+});
+export type CvGenerationInput = z.infer<typeof CvGenerationInputSchema>;
+
+
+export const CvGenerationOutputSchema = z.object({
+    newCvContent: z.string().describe("The full content of the newly generated, enhanced CV in Markdown format."),
+});
+export type CvGenerationOutput = z.infer<typeof CvGenerationOutputSchema>;

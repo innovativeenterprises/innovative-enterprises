@@ -7,7 +7,7 @@ export default function CvEnhancerPage() {
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-primary">CV ATS Enhancer</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Upload your CV and our AI agent will analyze it for Applicant Tracking System (ATS) compatibility, providing you with actionable feedback to improve your job application success rate.
+            Get a step-by-step CV enhancement. Upload your CV for an initial ATS analysis, then let our AI rebuild it for your target job position.
           </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">

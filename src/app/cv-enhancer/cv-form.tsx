@@ -4,23 +4,18 @@ import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { enhanceCv } from '@/ai/flows/cv-enhancement';
-import { type CvEnhancementOutput } from '@/ai/flows/cv-enhancement.schema';
+import { analyzeCv, generateEnhancedCv } from '@/ai/flows/cv-enhancement';
+import { type CvAnalysisOutput, type CvGenerationOutput } from '@/ai/flows/cv-enhancement.schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Share2, Mail, Bot } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
-
-const FormSchema = z.object({
-  cvDocument: z.any().refine(file => file?.length == 1, 'CV document is required.'),
-});
-
-type FormValues = z.infer<typeof FormSchema>;
+import { Textarea } from '@/components/ui/textarea';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -30,6 +25,20 @@ const fileToDataURI = (file: File): Promise<string> => {
         reader.readAsDataURL(file);
     });
 };
+
+// Step 1: Initial CV Upload
+const UploadSchema = z.object({
+  cvDocument: z.any().refine(file => file?.length == 1, 'CV document is required.'),
+});
+type UploadValues = z.infer<typeof UploadSchema>;
+
+// Step 2: Generation Details
+const GenerationSchema = z.object({
+    targetPosition: z.string().min(3, "Target position is required."),
+    languages: z.string().min(2, "Language is required."),
+});
+type GenerationValues = z.infer<typeof GenerationSchema>;
+
 
 const SuggestionSection = ({ title, data }: { title: string; data: { isCompliant: boolean; suggestions: string[] } }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -67,28 +76,36 @@ const SuggestionSection = ({ title, data }: { title: string; data: { isCompliant
 
 export default function CvForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [response, setResponse] = useState<CvEnhancementOutput | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  
+  const [cvDataUri, setCvDataUri] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<CvAnalysisOutput | null>(null);
+  const [generatedCv, setGeneratedCv] = useState<CvGenerationOutput | null>(null);
   const { toast } = useToast();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const uploadForm = useForm<UploadValues>({
+    resolver: zodResolver(UploadSchema),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const generationForm = useForm<GenerationValues>({
+    resolver: zodResolver(GenerationSchema),
+  });
+
+  const handleAnalysis: SubmitHandler<UploadValues> = async (data) => {
     setIsLoading(true);
-    setResponse(null);
+    setAnalysis(null);
+    setGeneratedCv(null);
     try {
         const file = data.cvDocument[0];
-        const cvDataUri = await fileToDataURI(file);
-      
-        const result = await enhanceCv({ cvDataUri });
-
-        setResponse(result);
+        const uri = await fileToDataURI(file);
+        setCvDataUri(uri);
+        const result = await analyzeCv({ cvDataUri: uri });
+        setAnalysis(result);
     } catch (error) {
       console.error(error);
       toast({
         title: 'Error',
-        description: 'Failed to enhance CV. Please try again.',
+        description: 'Failed to analyze CV. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -96,40 +113,58 @@ export default function CvForm() {
     }
   };
 
+  const handleGeneration: SubmitHandler<GenerationValues> = async (data) => {
+    if (!cvDataUri) return;
+    setIsGenerating(true);
+    setGeneratedCv(null);
+    try {
+        const result = await generateEnhancedCv({ 
+            cvDataUri,
+            targetPosition: data.targetPosition,
+            languages: data.languages.split(',').map(l => l.trim()),
+        });
+        setGeneratedCv(result);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'Failed to generate enhanced CV. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+
   return (
-    <>
+    <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Upload Your CV</CardTitle>
+          <CardTitle>Step 1: Upload Your CV</CardTitle>
           <CardDescription>Our AI will analyze your CV for ATS compatibility.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Form {...uploadForm}>
+            <form onSubmit={uploadForm.handleSubmit(handleAnalysis)} className="space-y-6">
               <FormField
-                control={form.control}
+                control={uploadForm.control}
                 name="cvDocument"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>CV Document</FormLabel>
+                    <FormLabel>CV Document (Word, PDF, or Image)</FormLabel>
                     <FormControl>
-                        <Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} />
+                        <Input type="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Analyzing...
-                  </>
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</>
                 ) : (
-                   <>
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Enhance My CV
-                   </>
+                   <><Sparkles className="mr-2 h-4 w-4" />Analyze My CV</>
                 )}
               </Button>
             </form>
@@ -138,7 +173,7 @@ export default function CvForm() {
       </Card>
 
       {isLoading && (
-         <Card className="mt-8">
+         <Card>
             <CardContent className="p-6 text-center">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
                 <p className="mt-4 text-muted-foreground">Our AI is analyzing your CV... This may take a moment.</p>
@@ -146,36 +181,106 @@ export default function CvForm() {
          </Card>
       )}
 
-      {response && (
-        <Card className="mt-8">
+      {analysis && (
+        <Card>
           <CardHeader>
-            <CardTitle>CV Enhancement Report</CardTitle>
-            <CardDescription>{response.summary}</CardDescription>
+            <CardTitle>Step 2: Review Analysis & Enhance</CardTitle>
+            <CardDescription>{analysis.summary}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-semibold">Overall ATS Score</h3>
-                <span className="font-bold text-lg text-primary">{response.overallScore}/100</span>
+                <span className="font-bold text-lg text-primary">{analysis.overallScore}/100</span>
               </div>
-              <Progress value={response.overallScore} className="w-full" />
+              <Progress value={analysis.overallScore} className="w-full" />
             </div>
 
             <div className="space-y-4 pt-4">
-                <SuggestionSection title="Contact Information" data={response.contactInfo} />
-                <SuggestionSection title="Work Experience" data={response.workExperience} />
-                <SuggestionSection title="Skills Section" data={response.skills} />
-                <SuggestionSection title="Education" data={response.education} />
-                <SuggestionSection title="Formatting & Parsing" data={response.formatting} />
+                <SuggestionSection title="Contact Information" data={analysis.contactInfo} />
+                <SuggestionSection title="Work Experience" data={analysis.workExperience} />
+                <SuggestionSection title="Skills Section" data={analysis.skills} />
+                <SuggestionSection title="Education" data={analysis.education} />
+                <SuggestionSection title="Formatting & Parsing" data={analysis.formatting} />
+            </div>
+            
+            <div className="pt-6 border-t">
+                <h3 className="text-lg font-semibold mb-4 text-primary">Let's Rebuild Your CV!</h3>
+                 <Form {...generationForm}>
+                    <form onSubmit={generationForm.handleSubmit(handleGeneration)} className="space-y-6">
+                        <FormField
+                            control={generationForm.control}
+                            name="targetPosition"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>What position are you applying for?</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g., Senior Software Engineer" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={generationForm.control}
+                            name="languages"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Languages (comma-separated)</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g., English, Arabic" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <Button type="submit" disabled={isGenerating} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                            {isGenerating ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Generating...
+                            </>
+                            ) : (
+                            <>
+                                <Bot className="mr-2 h-4 w-4" />
+                                Create Enhanced CV
+                            </>
+                            )}
+                        </Button>
+                    </form>
+                 </Form>
             </div>
           </CardContent>
-          <CardFooter>
-            <p className="text-xs text-muted-foreground">
-              This report is AI-generated. Use these suggestions to improve your CV before applying for jobs.
-            </p>
-          </CardFooter>
         </Card>
       )}
-    </>
+
+      {isGenerating && (
+         <Card>
+            <CardContent className="p-6 text-center">
+                <Loader2 className="mx-auto h-8 w-8 animate-spin text-accent" />
+                <p className="mt-4 text-muted-foreground">Our AI is crafting your new CV... This is the exciting part!</p>
+            </CardContent>
+         </Card>
+      )}
+
+      {generatedCv && (
+         <Card>
+            <CardHeader>
+                <CardTitle>Step 3: Your New High-Score CV is Ready!</CardTitle>
+                <CardDescription>This CV has been optimized for the position you selected. You can now download, share, or save it.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
+                    {generatedCv.newCvContent}
+                 </div>
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+                <Button variant="outline"><Download className="mr-2"/> Download</Button>
+                <Button variant="outline"><Share2 className="mr-2"/> Share</Button>
+                <Button><Mail className="mr-2"/> Email</Button>
+            </CardFooter>
+         </Card>
+      )}
+    </div>
   );
 }
