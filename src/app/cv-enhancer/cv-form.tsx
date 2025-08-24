@@ -203,15 +203,13 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
     )
 }
 
-const GatedActions = ({ onUnlock, onDownload, onCopy, onEmail, onSave, unlocked, activeTabContent, activeTabName }: { 
+const GatedActions = ({ onUnlock, onDownload, onCopy, onEmail, onSave, unlocked }: { 
     onUnlock: () => void, 
     onDownload: () => void, 
     onCopy: () => void, 
     onEmail: () => void, 
     onSave: () => void, 
     unlocked: boolean,
-    activeTabContent: string,
-    activeTabName: string,
 }) => {
     if (!unlocked) {
         return (
@@ -230,7 +228,7 @@ const GatedActions = ({ onUnlock, onDownload, onCopy, onEmail, onSave, unlocked,
 
     return (
          <div className="flex justify-between items-center w-full">
-            <Button variant="outline" disabled><Briefcase className="mr-2"/> Save to E-Briefcase</Button>
+            <Button variant="outline" onClick={onSave} disabled><Briefcase className="mr-2"/> Save to E-Briefcase</Button>
             <div className="flex gap-2">
                 <Button variant="outline" onClick={onDownload}><Download className="mr-2"/> Download</Button>
                 <Button variant="outline" onClick={onCopy}><Copy className="mr-2"/> Copy</Button>
@@ -574,8 +572,6 @@ export default function CvForm() {
                     onCopy={handleCopy}
                     onEmail={handleEmail}
                     onSave={() => {}}
-                    activeTabContent={getContentToShare()}
-                    activeTabName={activeTab}
                 />
             </CardFooter>
          </Card>
