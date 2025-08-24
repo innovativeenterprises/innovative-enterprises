@@ -114,7 +114,11 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
             const result = await generateSocialMediaPost(data);
             onGenerate(result);
         } catch (error) {
-            console.error(error);
+             toast({
+                title: 'Error generating social post',
+                description: 'Please try again.',
+                variant: 'destructive',
+            });
         } finally {
             setIsLoading(false);
         }
@@ -123,7 +127,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline"><Megaphone className="mr-2" /> Generate Social Post</Button>
+                <Button variant="outline"><Megaphone className="mr-2 h-4 w-4" /> Generate Social Post</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -192,9 +196,11 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
                             )}
                         />
                         <DialogFooter>
-                            <Button type="submit" disabled={isLoading}>
-                                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Generating...</> : 'Generate'}
-                            </Button>
+                            <DialogClose asChild>
+                                <Button type="submit" disabled={isLoading}>
+                                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Generating...</> : 'Generate'}
+                                </Button>
+                            </DialogClose>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -228,11 +234,11 @@ const GatedActions = ({ onUnlock, onDownload, onCopy, onEmail, onSave, unlocked 
 
     return (
          <div className="flex justify-between items-center w-full">
-            <Button variant="outline" onClick={onSave} disabled><Briefcase className="mr-2"/> Save to E-Briefcase</Button>
+            <Button variant="outline" onClick={onSave} disabled><Briefcase className="mr-2 h-4 w-4"/> Save to E-Briefcase</Button>
             <div className="flex gap-2">
-                <Button variant="outline" onClick={onDownload}><Download className="mr-2"/> Download</Button>
-                <Button variant="outline" onClick={onCopy}><Copy className="mr-2"/> Copy</Button>
-                <Button onClick={onEmail}><Mail className="mr-2"/> Email</Button>
+                <Button variant="outline" onClick={onDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                <Button variant="outline" onClick={onCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                <Button onClick={onEmail}><Mail className="mr-2 h-4 w-4"/> Email</Button>
             </div>
         </div>
     )
@@ -273,7 +279,6 @@ export default function CvForm() {
         const result = await analyzeCv({ cvDataUri: uri });
         setAnalysis(result);
     } catch (error) {
-      console.error(error);
       toast({
         title: 'Error',
         description: 'Failed to analyze CV. Please try again.',
@@ -300,7 +305,6 @@ export default function CvForm() {
         });
         setGeneratedCv(result);
     } catch (error) {
-      console.error(error);
       toast({
         title: 'Error',
         description: 'Failed to generate enhanced CV. Please try again.',
