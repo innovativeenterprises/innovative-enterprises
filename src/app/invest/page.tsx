@@ -28,7 +28,7 @@ const combinedProjects = [
     { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live" },
     { name: "ameen", description: "A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App using AI image recognition.", status: "Live" },
     { name: "APPI – عـبِّـي", description: "An intuitive API management and integration platform, evolving into an AI-Powered Smart Home Utility Management App.", status: "In Development" },
-    { name: "KHIDMA – خدمة", description: "A digital marketplace using AI-matching for on-demand services where providers bid competitively on customer requests.", status: "In Development" },
+    { name: "KHIDMA", description: "A digital marketplace using AI-matching for on-demand services where providers bid competitively on customer requests.", status: "In Development" },
     { name: "V MALL", description: "A comprehensive virtual mall and e-commerce ecosystem, expanding into a Smart VR/AR Shopping & Virtual Tour Marketplace.", status: "In Development" },
     { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
 ];
@@ -37,6 +37,7 @@ const combinedProjects = [
 const comingProjects = [
     { name: "Fintech Super-App", description: "An integrated financial services application for the Omani market.", status: "Research Phase" },
     { name: "Smart City OS", description: "An operating system for managing urban infrastructure and services.", status: "Concept Phase" },
+    { name: "AIPOS MATCH CUP GAME", description: "An Augmented Reality (AR) social game.", status: "Research Phase" },
 ];
 
 const ProjectCard = ({ name, description, status }: { name: string, description: string, status: string }) => {
@@ -109,7 +110,7 @@ export default function InvestPage() {
                  <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
                     <Lightbulb className="w-8 h-8" /> Coming Soon
                 </h2>
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {comingProjects.map(p => <ProjectCard key={p.name} {...p} />)}
                 </div>
             </div>
