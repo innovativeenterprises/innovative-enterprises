@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle } from "lucide-react";
 
 export interface Agent {
     role: string;
@@ -41,6 +41,7 @@ export const initialAgentCategories: AgentCategory[] = [
             { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1920&auto=format&fit=crop', aiHint: 'finance robot', href: "/cfo" },
             { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?q=80&w=1920&auto=format&fit=crop', aiHint: 'human resources robot', href: "/cv-enhancer" },
             { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616805-669c3fa0de40?q=80&w=1920&auto=format&fit=crop', aiHint: 'robot trophy', href: "/opportunities" },
+            { name: "Waleed", role: "WhatsApp Comms Agent", description: "Manages all WhatsApp communications, including OTP logins, notifications, and customer interactions via the Business API.", icon: MessageCircle, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1614149290174-a732a3c7a02c?q=80&w=1920&auto=format&fit=crop', aiHint: 'whatsapp robot' },
         ]
     },
     {

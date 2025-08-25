@@ -19,5 +19,6 @@ import '@/ai/flows/identity-analysis.ts';
 import '@/ai/flows/meeting-analysis.ts';
 import '@/ai/flows/generate-agreement.ts';
 import '@/ai/flows/interview-coach.ts';
+import '@/ai/flows/whatsapp-agent.ts';
 
     
