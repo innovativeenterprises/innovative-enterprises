@@ -65,7 +65,7 @@ export default function SocialMediaForm() {
       <Card>
         <CardHeader>
           <CardTitle>Generate Content</CardTitle>
-          <CardDescription>Fill in the details below to generate marketing copy, a social post, or a tender response draft.</CardDescription>
+          <CardDescription>Fill in the details below to generate marketing copy or a social post.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -78,7 +78,7 @@ export default function SocialMediaForm() {
                     <FormLabel>Topic / Prompt</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="e.g., Announce a new partnership with a major tech company. / Write a draft response for Tender #123, focusing on our AI capabilities."
+                        placeholder="e.g., Announce a new partnership with a major tech company."
                         rows={6}
                         {...field}
                       />
@@ -101,7 +101,6 @@ export default function SocialMediaForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Tender Response">Tender Response</SelectItem>
                           <SelectItem value="LinkedIn">LinkedIn Post</SelectItem>
                           <SelectItem value="Twitter">Twitter Post</SelectItem>
                           <SelectItem value="Facebook">Facebook Post</SelectItem>
@@ -151,7 +150,7 @@ export default function SocialMediaForm() {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel>
-                          Generate an image for the post (for social media)
+                          Generate an image for the post
                         </FormLabel>
                         <FormMessage />
                       </div>

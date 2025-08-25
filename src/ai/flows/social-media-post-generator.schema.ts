@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Schemas and types for the social media post generator flow.
  *
@@ -16,7 +17,7 @@ import {z} from 'zod';
 
 export const GenerateSocialMediaPostInputSchema = z.object({
   topic: z.string().describe('The topic for the social media post.'),
-  platform: z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp']).describe('The target social media platform.'),
+  platform: z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp', 'Tender Response']).describe('The target social media platform or content type.'),
   tone: z.enum(['Professional', 'Casual', 'Witty', 'Enthusiastic']).describe('The desired tone of the post.'),
   generateImage: z.boolean().optional().describe('Whether to generate a suggested image for the post.'),
 });

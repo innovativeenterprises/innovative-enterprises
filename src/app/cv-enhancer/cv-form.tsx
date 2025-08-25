@@ -125,6 +125,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
             topic: `I just enhanced my CV for a ${targetPosition} role using Innovative Enterprises' AI tool!`,
             platform: "LinkedIn" as const,
             tone: "Professional" as const,
+            generateImage: true,
         }
     });
 
@@ -215,12 +216,28 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={socialForm.control}
+                            name="generateImage"
+                            render={({ field }) => (
+                                <FormItem className="flex items-center space-x-2">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <FormLabel>Generate an image for the post</FormLabel>
+                                </FormItem>
+                            )}
+                        />
                         <DialogFooter>
-                            <DialogClose asChild>
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Generating...</> : 'Generate'}
-                                </Button>
-                            </DialogClose>
+                             <DialogClose asChild>
+                                 <Button type="button" variant="ghost">Cancel</Button>
+                             </DialogClose>
+                             <Button type="submit" disabled={isLoading}>
+                                 {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Generating...</> : 'Generate'}
+                             </Button>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -300,10 +317,10 @@ const SelectionMatrix = ({
                 <CardContent className="p-4 flex flex-col items-center justify-center gap-4">
                     <div className="text-center">
                         <p className="text-muted-foreground">Total Price</p>
-                        <p className="text-4xl font-bold text-primary">${price.toFixed(2)}</p>
+                        <p className="text-4xl font-bold text-primary">OMR {price.toFixed(2)}</p>
                     </div>
                      <Button onClick={onUnlock} className="w-full max-w-xs bg-accent hover:bg-accent/90" size="lg" disabled={price === 0}>
-                        <Lock className="mr-2 h-4 w-4" /> Unlock & Download for ${price.toFixed(2)}
+                        <Lock className="mr-2 h-4 w-4" /> Unlock & Download for OMR {price.toFixed(2)}
                     </Button>
                 </CardContent>
             </Card>
@@ -362,8 +379,8 @@ export default function CvForm() {
   });
 
   const price = useMemo(() => {
-    const CV_PRICE = 10;
-    const COVER_LETTER_PRICE = 5;
+    const CV_PRICE = 4;
+    const COVER_LETTER_PRICE = 2;
     const LANG_MULTIPLIER = 1; // Price is per language
 
     let total = 0;
@@ -479,11 +496,19 @@ export default function CvForm() {
         });
         return;
     }
-    setIsUnlocked(true);
+    // Simulate payment
     toast({
-        title: 'Success!',
-        description: 'Your documents have been unlocked.',
+        title: 'Payment processing...',
+        description: `Processing payment of OMR ${price.toFixed(2)}`,
     });
+
+    setTimeout(() => {
+        setIsUnlocked(true);
+        toast({
+            title: 'Success!',
+            description: 'Your documents have been unlocked.',
+        });
+    }, 1500)
   }
 
   const handleGeneratedSocialPost = (output: GenerateSocialMediaPostOutput) => {
@@ -715,6 +740,11 @@ export default function CvForm() {
                 {socialPost && (
                     <div className="mt-6">
                         <h4 className="font-semibold text-lg">Your Generated Social Media Post:</h4>
+                         {socialPost.imageUrl && (
+                            <div className="relative aspect-video w-full my-4 rounded-md overflow-hidden border">
+                                <img src={socialPost.imageUrl} alt="Social media post" className="object-cover"/>
+                            </div>
+                        )}
                         <div className="mt-2 prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
                             <p>{socialPost.postContent}</p>
                             <p className="font-semibold">{socialPost.suggestedHashtags.join(' ')}</p>
