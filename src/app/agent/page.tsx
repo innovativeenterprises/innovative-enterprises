@@ -11,7 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User, Edit, Camera, ScanLine, FileSignature, Download, Briefcase, Mail } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User, Edit, Camera, ScanLine, FileSignature, Download, Briefcase, Mail, CreditCard } from 'lucide-react';
 import Link from 'next/link';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
@@ -55,7 +55,16 @@ const ManualEntrySchema = z.object({
 });
 type ManualEntryValues = z.infer<typeof ManualEntrySchema>;
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitting' | 'generating_agreements' | 'submitted';
+const PaymentSchema = z.object({
+    cardholderName: z.string().min(3, 'Cardholder name is required.'),
+    cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
+    expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
+    cvc: z.string().length(3, 'CVC must be 3 digits.'),
+});
+type PaymentValues = z.infer<typeof PaymentSchema>;
+
+
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted';
 type ApplicantType = 'individual' | 'company';
 
 export default function AgentPage() {
@@ -72,6 +81,7 @@ export default function AgentPage() {
   const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema) });
   const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema) });
   const manualEntryForm = useForm<ManualEntryValues>({ resolver: zodResolver(ManualEntrySchema) });
+  const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
 
   const startManualEntry = () => {
     manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
@@ -159,19 +169,21 @@ export default function AgentPage() {
   
   const onIdFrontCaptured = (imageUri: string) => {
     individualUploadForm.setValue('idDocumentFrontUri', imageUri);
-    // setPageState('capture_id_back');
-    // For simplicity, let's assume back is optional and move on
      setPageState('upload');
      toast({ title: 'Front of ID Captured!', description: "You can now optionally scan the back or add other documents."})
   }
 
-  const onSubmit: SubmitHandler<ManualEntryValues> = async (data) => {
+  const handleProceedToPayment: SubmitHandler<ManualEntryValues> = async (data) => {
+    console.log("Verified Application Data:", data, analysisResult, repAnalysisResult);
+    setPageState('payment');
+  };
+
+  const handleFinalSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
     setPageState('submitting');
-    // Here you would typically send the data to your backend.
-    // For this prototype, we'll just simulate a successful submission.
-    console.log("Submitting Agent Application:", data, analysisResult, repAnalysisResult);
-    
-    // Generate agreements
+    console.log("Processing payment with details:", paymentData);
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
+    toast({ title: 'Payment Successful!', description: "Your payment has been processed."});
+
     setPageState('generating_agreements');
     try {
         const agreementData = await generateAgreement({
@@ -388,7 +400,7 @@ export default function AgentPage() {
        </CardHeader>
        <CardContent>
            <Form {...manualEntryForm}>
-               <form onSubmit={manualEntryForm.handleSubmit(onSubmit)} className="space-y-6">
+               <form onSubmit={manualEntryForm.handleSubmit(handleProceedToPayment)} className="space-y-6">
                    
                     {analysisResult && (
                         <div className="space-y-4">
@@ -431,12 +443,47 @@ export default function AgentPage() {
 
                    <div className="flex gap-2 pt-4">
                         <Button variant="outline" type="button" className="w-full" onClick={() => setPageState('upload')}>&larr; Back to Upload</Button>
-                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><Handshake className="mr-2 h-4 w-4" /> Apply Now</Button>
+                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment</Button>
                    </div>
                </form>
            </Form>
        </CardContent>
    </>
+  );
+  
+  const PaymentScreen = () => (
+    <>
+      <CardHeader>
+        <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}>&larr; Back to Review</Button>
+        <CardTitle className="text-center pt-8">Final Step: Registration Fee</CardTitle>
+        <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
+            <span className="text-muted-foreground">Registration Fee</span>
+            <span className="text-xl font-bold text-primary">OMR 10.00</span>
+        </div>
+         <Form {...paymentForm}>
+          <form onSubmit={paymentForm.handleSubmit(handleFinalSubmit)} className="space-y-4">
+            <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
+            )}/>
+            <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+            )}/>
+             <div className="grid grid-cols-2 gap-4">
+                <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                    <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                )}/>
+                <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                    <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                )}/>
+            </div>
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">Pay OMR 10.00 & Finalize Registration</Button>
+          </form>
+        </Form>
+      </CardContent>
+    </>
   );
 
   const SubmittedScreen = () => (
@@ -446,7 +493,7 @@ export default function AgentPage() {
             <CheckCircle className="h-12 w-12 text-green-500" />
         </div>
         <CardTitle className="text-2xl">Application Submitted!</CardTitle>
-        <CardDescription>Thank you! Your application has been received. Please review and sign the agreements below to finalize the process.</CardDescription>
+        <CardDescription>Thank you! Your registration is complete. Please review and sign the agreements below to finalize the process.</CardDescription>
     </CardHeader>
     <CardContent className="space-y-6">
         {recordNumber && (
@@ -496,11 +543,11 @@ export default function AgentPage() {
         case 'upload': return <UploadScreen />;
         case 'analyzing': return <LoadingScreen title="Analyzing Documents..." description="Our AI is reading your documents. This may take a moment." />;
         case 'review': return <ReviewScreen />;
-        case 'submitting': return <LoadingScreen title="Submitting Application..." description="Please wait while we process your application." />;
+        case 'payment': return <PaymentScreen />;
+        case 'submitting': return <LoadingScreen title="Finalizing Registration..." description="Processing payment and preparing your account." />;
         case 'generating_agreements': return <LoadingScreen title="Generating Agreements..." description="Your legal documents are being drafted by our AI." />;
         case 'submitted': return <SubmittedScreen />;
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        // case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };
@@ -524,3 +571,5 @@ export default function AgentPage() {
     </div>
   );
 }
+
+    

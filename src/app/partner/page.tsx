@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -16,7 +16,7 @@ import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.sc
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
-import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard } from 'lucide-react';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -48,7 +48,15 @@ const IndividualUploadSchema = z.object({
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitting' | 'generating_agreements' | 'submitted';
+const PaymentSchema = z.object({
+    cardholderName: z.string().min(3, 'Cardholder name is required.'),
+    cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
+    expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
+    cvc: z.string().length(3, 'CVC must be 3 digits.'),
+});
+type PaymentValues = z.infer<typeof PaymentSchema>;
+
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted';
 type ApplicantType = 'individual' | 'company';
 
 export default function PartnerPage() {
@@ -64,6 +72,7 @@ export default function PartnerPage() {
   const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema) });
   const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema) });
   const inquiryForm = useForm<z.infer<typeof PartnershipInquiryInputSchema>>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
+  const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
 
   const startManualEntry = () => {
     inquiryForm.reset({ companyName: '', contactName: '', email: '', partnershipDetails: '', undertaking: false });
@@ -154,12 +163,23 @@ export default function PartnerPage() {
      toast({ title: 'Front of ID Captured!', description: "You can now optionally scan the back or add other documents."})
   }
 
-  const onSubmit: SubmitHandler<z.infer<typeof PartnershipInquiryInputSchema>> = async (data) => {
+  const handleProceedToPayment: SubmitHandler<z.infer<typeof PartnershipInquiryInputSchema>> = async (data) => {
+    console.log("Verified Partnership Data:", data);
+    setPageState('payment');
+  };
+
+  const handleFinalSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
     setPageState('submitting');
+    console.log("Processing payment with details:", paymentData);
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
+    toast({ title: 'Payment Successful!', description: "Your payment has been processed."});
+    
+    setPageState('generating_agreements');
     try {
-      await handlePartnershipInquiry(data);
+      // In a real app, you would save the inquiry data to a DB here.
+      // We will still call the AI flow to simulate routing it to the Partnerships agent.
+      await handlePartnershipInquiry(inquiryForm.getValues());
       
-      setPageState('generating_agreements');
       const agreementData = await generateAgreement({
           applicantType,
           companyData: analysisResult && 'companyInfo' in analysisResult ? analysisResult : undefined,
@@ -372,7 +392,7 @@ export default function PartnerPage() {
        </CardHeader>
        <CardContent>
            <Form {...inquiryForm}>
-               <form onSubmit={inquiryForm.handleSubmit(onSubmit)} className="space-y-6">
+               <form onSubmit={inquiryForm.handleSubmit(handleProceedToPayment)} className="space-y-6">
                     {analysisResult && (
                         <div className="space-y-4">
                             <h3 className="font-semibold text-lg text-primary">Extracted Information</h3>
@@ -412,13 +432,49 @@ export default function PartnerPage() {
 
                    <div className="flex gap-2 pt-2">
                         <Button variant="outline" className="w-full" type="button" onClick={() => setPageState('upload')}>Upload New Document</Button>
-                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"><Handshake className="mr-2 h-4 w-4" /> Submit Inquiry</Button>
+                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"><CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment</Button>
                    </div>
                </form>
            </Form>
        </CardContent>
    </>
   );
+
+  const PaymentScreen = () => (
+    <>
+      <CardHeader>
+        <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}>&larr; Back to Review</Button>
+        <CardTitle className="text-center pt-8">Final Step: Registration Fee</CardTitle>
+        <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
+            <span className="text-muted-foreground">Registration Fee</span>
+            <span className="text-xl font-bold text-primary">OMR 10.00</span>
+        </div>
+         <Form {...paymentForm}>
+          <form onSubmit={paymentForm.handleSubmit(handleFinalSubmit)} className="space-y-4">
+            <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
+            )}/>
+            <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+            )}/>
+             <div className="grid grid-cols-2 gap-4">
+                <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                    <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                )}/>
+                <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                    <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                )}/>
+            </div>
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">Pay OMR 10.00 & Finalize Registration</Button>
+          </form>
+        </Form>
+      </CardContent>
+    </>
+  );
+
 
   const SubmittedScreen = () => (
     <>
@@ -463,7 +519,7 @@ export default function PartnerPage() {
         <Button onClick={handleESign} className="w-full" size="lg">
             <FileSignature className="mr-2 h-5 w-5" /> E-Sign Both Agreements
         </Button>
-        <Button variant="secondary" asChild><Link href="#">Submit Another Inquiry</Link></Button>
+        <Button variant="secondary" asChild><Link href="#" onClick={() => setPageState('selection')}>Submit Another Inquiry</Link></Button>
     </CardFooter>
     </>
   );
@@ -474,7 +530,8 @@ export default function PartnerPage() {
         case 'upload': return <UploadScreen />;
         case 'analyzing': return <LoadingScreen title="Analyzing Documents..." description="Our AI is reading your documents. This may take a moment." />;
         case 'review': return <ReviewScreen />;
-        case 'submitting': return <LoadingScreen title="Submitting Inquiry..." description="Please wait while we process your partnership inquiry." />;
+        case 'payment': return <PaymentScreen />;
+        case 'submitting': return <LoadingScreen title="Finalizing Registration..." description="Processing payment and routing to our partnerships team." />;
         case 'generating_agreements': return <LoadingScreen title="Generating Agreements..." description="Your legal documents are being drafted by our AI." />;
         case 'submitted': return <SubmittedScreen />;
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
@@ -500,3 +557,5 @@ export default function PartnerPage() {
     </div>
   );
 }
+
+    
