@@ -36,7 +36,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-192536-407-api_integration.png',
     aiHint: 'api integration',
     enabled: true,
-    stage: 'Development',
+    stage: 'Development Phase',
   },
   {
     id: 'prod_4',
@@ -45,7 +45,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-190300-848-service_marketplace.png',
     aiHint: 'service marketplace',
     enabled: true,
-    stage: 'Development',
+    stage: 'Development Phase',
   },
   {
     id: 'prod_5',
@@ -54,7 +54,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-192538-422-online_shopping.png',
     aiHint: 'online shopping',
     enabled: true,
-    stage: 'Development',
+    stage: 'Development Phase',
   },
   {
     id: 'prod_6',
@@ -63,7 +63,7 @@ export const initialProducts: Product[] = [
     image: 'https://placehold.co/600x400.png',
     aiHint: 'career development',
     enabled: true,
-    stage: 'Development',
+    stage: 'Development Phase',
   },
    {
     id: 'prod_7',
