@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Schemas and types for the Partnership Inquiry flow.
  *
@@ -12,6 +13,7 @@ export const PartnershipInquiryInputSchema = z.object({
   contactName: z.string().min(2, 'Contact name is required.'),
   email: z.string().email('A valid email is required.'),
   partnershipDetails: z.string().min(20, 'Please provide more details about the potential partnership.'),
+  undertaking: z.boolean().refine(val => val === true),
 });
 export type PartnershipInquiryInput = z.infer<typeof PartnershipInquiryInputSchema>;
 

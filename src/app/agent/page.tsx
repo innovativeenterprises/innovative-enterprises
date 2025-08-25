@@ -3,19 +3,20 @@
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User, Edit } from 'lucide-react';
 import Link from 'next/link';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -44,6 +45,7 @@ const ManualEntrySchema = z.object({
   email: z.string().email("A valid email is required"),
   phone: z.string().optional(),
   interest: z.string().min(10, "Please tell us why you are interested."),
+  undertaking: z.boolean().refine(val => val === true, "You must confirm the validity of the information."),
 });
 type ManualEntryValues = z.infer<typeof ManualEntrySchema>;
 
@@ -55,8 +57,8 @@ export default function AgentPage() {
   const [pageState, setPageState] = useState<PageState>('selection');
   const [applicantType, setApplicantType] = useState<ApplicantType>('individual');
   
-  const [crAnalysisResult, setCrAnalysisResult] = useState<CrAnalysisOutput | null>(null);
-  const [identityAnalysisResult, setIdentityAnalysisResult] = useState<IdentityAnalysisOutput | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | IdentityAnalysisOutput | null>(null);
+  const [recordNumber, setRecordNumber] = useState<string | null>(null);
   
   const { toast } = useToast();
 
@@ -66,17 +68,17 @@ export default function AgentPage() {
 
   const handleCompanyCrAnalysis: SubmitHandler<CompanyUploadValues> = async (data) => {
     setPageState('analyzing');
-    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '' });
     try {
         const file = data.crDocument[0];
         const documentDataUri = await fileToDataURI(file);
         const result = await analyzeCrDocument({ documentDataUri });
-        setCrAnalysisResult(result);
+        setAnalysisResult(result);
         manualEntryForm.reset({
             name: result.companyInfo?.companyNameEnglish || result.companyInfo?.companyNameArabic || '',
             email: result.companyInfo?.contactEmail || '',
             phone: result.companyInfo?.contactMobile || '',
             interest: result.summary || 'Interest based on company activities.',
+            undertaking: false,
         });
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review the extracted details.' });
@@ -88,7 +90,7 @@ export default function AgentPage() {
 
   const handleIndividualAnalysis: SubmitHandler<IndividualUploadValues> = async (data) => {
     setPageState('analyzing');
-    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '' });
+    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
     try {
         const idFile = data.idDocument[0];
         const idDocumentUri = await fileToDataURI(idFile);
@@ -109,12 +111,13 @@ export default function AgentPage() {
         }
 
         const result = await analyzeIdentity({ idDocumentUri, cvDocumentUri, passportDocumentUri, photoUri });
-        setIdentityAnalysisResult(result);
+        setAnalysisResult(result);
         manualEntryForm.reset({
             name: result.personalDetails?.fullName || '',
             email: result.personalDetails?.email || '',
             phone: result.personalDetails?.phone || '',
             interest: result.professionalSummary || '',
+            undertaking: false,
         });
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review the extracted details.' });
@@ -129,7 +132,9 @@ export default function AgentPage() {
     setIsLoading(true);
     // Here you would typically send the data to your backend.
     // For this prototype, we'll just simulate a successful submission.
-    console.log("Submitting Agent Application:", data);
+    console.log("Submitting Agent Application:", data, analysisResult);
+    const newRecordNumber = `AGENT-${Date.now()}`;
+    setRecordNumber(newRecordNumber);
     await new Promise(resolve => setTimeout(resolve, 1000));
     setPageState('submitted');
     toast({ title: 'Application Submitted!', description: "Thank you for your interest. We will review your application and be in touch." });
@@ -137,8 +142,67 @@ export default function AgentPage() {
   };
 
   const startManualEntry = () => {
-    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '' });
+    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
+    setAnalysisResult(null);
     setPageState('review');
+  }
+  
+  const renderAnalysisResult = () => {
+    if (!analysisResult) return null;
+
+    const renderObject = (obj: any, title: string) => {
+        if (!obj || Object.keys(obj).length === 0) return null;
+        return (
+            <Card className="bg-muted/50">
+                <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                    {Object.entries(obj).map(([key, value]) => (
+                         <div key={key} className="flex justify-between border-b pb-1">
+                            <span className="font-medium text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+                            <span className="text-right">{String(value) || "-"}</span>
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+        )
+    };
+    
+    if (applicantType === 'individual' && 'personalDetails' in analysisResult) {
+        const data = analysisResult as IdentityAnalysisOutput;
+        return (
+            <div className="space-y-4">
+                {renderObject(data.personalDetails, "Personal Details")}
+                {renderObject(data.passportDetails, "Passport Details")}
+                {renderObject(data.idCardDetails, "ID Card Details")}
+            </div>
+        )
+    }
+
+    if (applicantType === 'company' && 'companyInfo' in analysisResult) {
+        const data = analysisResult as CrAnalysisOutput;
+        return (
+            <div className="space-y-4">
+                {renderObject(data.companyInfo, "Company Information")}
+                {data.boardMembers && data.boardMembers.length > 0 && (
+                     <Card className="bg-muted/50">
+                        <CardHeader><CardTitle className="text-base">Board Members</CardTitle></CardHeader>
+                        <CardContent className="space-y-2">
+                             {data.boardMembers.map((member, i) => <p key={i} className="text-sm">{member.name} ({member.designation})</p>)}
+                        </CardContent>
+                    </Card>
+                )}
+                 {data.authorizedSignatories && data.authorizedSignatories.length > 0 && (
+                     <Card className="bg-muted/50">
+                        <CardHeader><CardTitle className="text-base">Authorized Signatories</CardTitle></CardHeader>
+                        <CardContent className="space-y-2">
+                             {data.authorizedSignatories.map((sig, i) => <p key={i} className="text-sm">{sig.name} ({sig.designation})</p>)}
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+        )
+    }
+    return null;
   }
 
   const SelectionScreen = () => (
@@ -176,7 +240,7 @@ export default function AgentPage() {
                         <FormField control={companyUploadForm.control} name="crDocument" render={({ field }) => (
                             <FormItem><FormLabel>Commercial Record (PDF, PNG, or JPG)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <Button type="submit" className="w-full bg-accent"><Wand2 className="mr-2 h-4 w-4" /> Analyze Document</Button>
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><Wand2 className="mr-2 h-4 w-4" /> Analyze Document</Button>
                     </form>
                 </Form>
             ) : (
@@ -194,7 +258,7 @@ export default function AgentPage() {
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
                             <FormItem><FormLabel>CV / Resume (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <Button type="submit" className="w-full bg-accent"><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
                 </Form>
             )}
@@ -227,16 +291,50 @@ export default function AgentPage() {
        </CardHeader>
        <CardContent>
            <Form {...manualEntryForm}>
-               <form onSubmit={manualEntryForm.handleSubmit(onSubmit)} className="space-y-4">
-                   <FormField control={manualEntryForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>{applicantType === 'company' ? 'Company Name' : 'Full Name'}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                   <div className="grid grid-cols-2 gap-4">
-                        <FormField control={manualEntryForm.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                        <FormField control={manualEntryForm.control} name="phone" render={({ field }) => (<FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                   </div>
-                   <FormField control={manualEntryForm.control} name="interest" render={({ field }) => (<FormItem><FormLabel>Why are you interested in becoming an agent?</FormLabel><FormControl><Textarea rows={6} {...field} /></FormControl><FormMessage /></FormItem>)} />
+               <form onSubmit={manualEntryForm.handleSubmit(onSubmit)} className="space-y-6">
+                   
+                    {analysisResult && (
+                        <div className="space-y-4">
+                            <h3 className="font-semibold text-lg text-primary">Extracted Information</h3>
+                            <p className="text-sm text-muted-foreground">Review the details below. For any corrections, please edit the form fields.</p>
+                            {renderAnalysisResult()}
+                        </div>
+                    )}
+
+                    <div>
+                        <h3 className="font-semibold text-lg text-primary mt-6 mb-4">Confirm Your Details</h3>
+                        <div className="space-y-4">
+                            <FormField control={manualEntryForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>{applicantType === 'company' ? 'Company Name' : 'Full Name'}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            <div className="grid grid-cols-2 gap-4">
+                                <FormField control={manualEntryForm.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={manualEntryForm.control} name="phone" render={({ field }) => (<FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            </div>
+                            <FormField control={manualEntryForm.control} name="interest" render={({ field }) => (<FormItem><FormLabel>Why are you interested in becoming an agent?</FormLabel><FormControl><Textarea rows={6} {...field} /></FormControl><FormMessage /></FormItem>)} />
+                        </div>
+                    </div>
+
+                    <FormField
+                        control={manualEntryForm.control}
+                        name="undertaking"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                            <FormControl>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>Information Validity Undertaking</FormLabel>
+                                <FormDescription>
+                                I hereby declare that the information provided is true and correct to the best of my knowledge.
+                                </FormDescription>
+                                <FormMessage />
+                            </div>
+                            </FormItem>
+                        )}
+                    />
+
                    <div className="flex gap-2 pt-4">
                         <Button variant="outline" className="w-full" onClick={() => setPageState('upload')}>&larr; Back to Upload</Button>
-                       <Button type="submit" className="w-full bg-accent" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>) : (<><Handshake className="mr-2 h-4 w-4" /> Apply Now</>)}</Button>
+                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>) : (<><Handshake className="mr-2 h-4 w-4" /> Apply Now</>)}</Button>
                    </div>
                </form>
            </Form>
@@ -252,7 +350,13 @@ export default function AgentPage() {
            </div>
            <div className="space-y-2">
                <CardTitle className="text-2xl">Thank You for Your Application!</CardTitle>
-               <CardDescription>Your application has been received. Our team will review your information and get in touch shortly to discuss the next steps.</CardDescription>
+               <CardDescription>Your application has been received. A confirmation has been sent to your email and mobile. Our team will review your information and get in touch shortly.</CardDescription>
+                {recordNumber && (
+                    <Alert>
+                        <AlertTitle>Your Record Number</AlertTitle>
+                        <AlertDescription className="font-mono text-sm">{recordNumber}</AlertDescription>
+                    </Alert>
+                )}
            </div>
            <Button asChild onClick={() => setPageState('selection')}><Link href="/opportunities">View Opportunities</Link></Button>
        </div>

@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -25,7 +26,6 @@ const prompt = ai.definePrompt({
   output: { schema: PartnershipInquiryOutputSchema },
   prompt: `You are an AI assistant processing a new partnership inquiry. 
 The inquiry is from {{contactName}} at {{companyName}}.
-The details are: {{partnershipDetails}}.
 
 Acknowledge receipt of this inquiry and confirm that it has been routed to Paz, our Partnership Agent, for review.
 Generate a concise confirmation message for the user.
@@ -42,7 +42,7 @@ const partnershipInquiryFlow = ai.defineFlow(
     // In a real application, this flow would save the inquiry to a database,
     // send a notification to the internal team (Paz), and then respond.
     // For this prototype, we'll just simulate the confirmation.
-    console.log('Received partnership inquiry:', input);
+    console.log('Received verified partnership inquiry:', input);
     
     // Here, you would add logic to save the partner to your database or CRM.
     // For instance, you might call a function like `saveProvider(input)`.
@@ -51,5 +51,3 @@ const partnershipInquiryFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    

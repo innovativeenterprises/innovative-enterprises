@@ -17,6 +17,8 @@ import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User } from 'lucide-react';
 import Link from 'next/link';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -40,6 +42,14 @@ const IndividualUploadSchema = z.object({
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
 
+const InquirySchema = z.object({
+  companyName: z.string().min(2, 'Name is required.'),
+  contactName: z.string().min(2, 'Contact name is required.'),
+  email: z.string().email('A valid email is required.'),
+  partnershipDetails: z.string().min(20, 'Please provide more details about the potential partnership.'),
+  undertaking: z.boolean().refine(val => val === true, "You must confirm the validity of the information."),
+});
+type InquiryValues = z.infer<typeof InquirySchema>;
 
 type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitted';
 type ApplicantType = 'individual' | 'company';
@@ -50,11 +60,12 @@ export default function PartnerPage() {
   const [applicantType, setApplicantType] = useState<ApplicantType>('company');
   
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | IdentityAnalysisOutput | null>(null);
+  const [recordNumber, setRecordNumber] = useState<string | null>(null);
   const { toast } = useToast();
 
   const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema) });
   const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema) });
-  const inquiryForm = useForm<PartnershipInquiryInput>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
+  const inquiryForm = useForm<InquiryValues>({ resolver: zodResolver(InquirySchema) });
 
   const handleCrAnalysis: SubmitHandler<CompanyUploadValues> = async (data) => {
     setPageState('analyzing');
@@ -68,6 +79,7 @@ export default function PartnerPage() {
             contactName: result.authorizedSignatories?.[0]?.name || result.boardMembers?.[0]?.name || '',
             email: result.companyInfo?.contactEmail || '',
             partnershipDetails: result.summary || '',
+            undertaking: false,
         });
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review and confirm the extracted details.' });
@@ -105,6 +117,7 @@ export default function PartnerPage() {
             contactName: result.personalDetails?.fullName || '',
             email: result.personalDetails?.email || '',
             partnershipDetails: result.professionalSummary || '',
+            undertaking: false,
         });
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review and confirm the extracted details.' });
@@ -114,10 +127,12 @@ export default function PartnerPage() {
     }
   }
 
-  const onSubmit: SubmitHandler<PartnershipInquiryInput> = async (data) => {
+  const onSubmit: SubmitHandler<InquiryValues> = async (data) => {
     setIsLoading(true);
     try {
       const result = await handlePartnershipInquiry(data);
+      const newRecordNumber = `PARTNER-${Date.now()}`;
+      setRecordNumber(newRecordNumber);
       setPageState('submitted');
       toast({ title: 'Inquiry Submitted!', description: result.confirmationMessage });
     } catch (error) {
@@ -126,6 +141,64 @@ export default function PartnerPage() {
       setIsLoading(false);
     }
   };
+
+  const renderAnalysisResult = () => {
+    if (!analysisResult) return null;
+
+    const renderObject = (obj: any, title: string) => {
+        if (!obj || Object.keys(obj).length === 0) return null;
+        return (
+            <Card className="bg-muted/50">
+                <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                    {Object.entries(obj).map(([key, value]) => (
+                         <div key={key} className="flex justify-between border-b pb-1">
+                            <span className="font-medium text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+                            <span className="text-right">{String(value) || "-"}</span>
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+        )
+    };
+    
+    if (applicantType === 'individual' && 'personalDetails' in analysisResult) {
+        const data = analysisResult as IdentityAnalysisOutput;
+        return (
+            <div className="space-y-4">
+                {renderObject(data.personalDetails, "Personal Details")}
+                {renderObject(data.passportDetails, "Passport Details")}
+                {renderObject(data.idCardDetails, "ID Card Details")}
+            </div>
+        )
+    }
+
+    if (applicantType === 'company' && 'companyInfo' in analysisResult) {
+        const data = analysisResult as CrAnalysisOutput;
+        return (
+            <div className="space-y-4">
+                {renderObject(data.companyInfo, "Company Information")}
+                {data.boardMembers && data.boardMembers.length > 0 && (
+                     <Card className="bg-muted/50">
+                        <CardHeader><CardTitle className="text-base">Board Members</CardTitle></CardHeader>
+                        <CardContent className="space-y-2">
+                             {data.boardMembers.map((member, i) => <p key={i} className="text-sm">{member.name} ({member.designation})</p>)}
+                        </CardContent>
+                    </Card>
+                )}
+                 {data.authorizedSignatories && data.authorizedSignatories.length > 0 && (
+                     <Card className="bg-muted/50">
+                        <CardHeader><CardTitle className="text-base">Authorized Signatories</CardTitle></CardHeader>
+                        <CardContent className="space-y-2">
+                             {data.authorizedSignatories.map((sig, i) => <p key={i} className="text-sm">{sig.name} ({sig.designation})</p>)}
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+        )
+    }
+    return null;
+  }
 
   const SelectionScreen = () => (
      <>
@@ -208,12 +281,42 @@ export default function PartnerPage() {
        </CardHeader>
        <CardContent>
            <Form {...inquiryForm}>
-               <form onSubmit={inquiryForm.handleSubmit(onSubmit)} className="space-y-4">
-                    <FormField control={inquiryForm.control} name="companyName" render={({ field }) => (<FormItem><FormLabel>{applicantType === 'company' ? 'Company Name' : 'Full Name'}</FormLabel><FormControl><Input placeholder="Your Company Inc. / John Doe" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                    <FormField control={inquiryForm.control} name="contactName" render={({ field }) => (<FormItem><FormLabel>Contact Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                    <FormField control={inquiryForm.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="john.doe@example.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                    <FormField control={inquiryForm.control} name="partnershipDetails" render={({ field }) => (<FormItem><FormLabel>{applicantType === 'company' ? 'Company Activities' : 'Professional Summary'} / Partnership Details</FormLabel><FormControl><Textarea placeholder="Describe your company's mission, or your own skills, and how you envision a partnership with us." rows={6} {...field} /></FormControl><FormMessage /></FormItem>)} />
-                   <div className="flex gap-2">
+               <form onSubmit={inquiryForm.handleSubmit(onSubmit)} className="space-y-6">
+                    {analysisResult && (
+                        <div className="space-y-4">
+                            <h3 className="font-semibold text-lg text-primary">Extracted Information</h3>
+                            <p className="text-sm text-muted-foreground">Review the details below. For any corrections, please edit the form fields.</p>
+                            {renderAnalysisResult()}
+                        </div>
+                    )}
+
+                     <div>
+                        <h3 className="font-semibold text-lg text-primary mt-6 mb-4">Confirm Your Details</h3>
+                        <div className="space-y-4">
+                            <FormField control={inquiryForm.control} name="companyName" render={({ field }) => (<FormItem><FormLabel>{applicantType === 'company' ? 'Company Name' : 'Full Name'}</FormLabel><FormControl><Input placeholder="Your Company Inc. / John Doe" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={inquiryForm.control} name="contactName" render={({ field }) => (<FormItem><FormLabel>Contact Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={inquiryForm.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="john.doe@example.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={inquiryForm.control} name="partnershipDetails" render={({ field }) => (<FormItem><FormLabel>{applicantType === 'company' ? 'Company Activities' : 'Professional Summary'} / Partnership Details</FormLabel><FormControl><Textarea placeholder="Describe your company's mission, or your own skills, and how you envision a partnership with us." rows={6} {...field} /></FormControl><FormMessage /></FormItem>)} />
+                        </div>
+                    </div>
+
+                     <FormField
+                        control={inquiryForm.control}
+                        name="undertaking"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                            <FormControl>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>Information Validity Undertaking</FormLabel>
+                                <FormMessage />
+                            </div>
+                            </FormItem>
+                        )}
+                    />
+
+                   <div className="flex gap-2 pt-2">
                         <Button variant="outline" className="w-full" onClick={() => setPageState('upload')}>Upload New Document</Button>
                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>) : (<><Handshake className="mr-2 h-4 w-4" /> Submit Inquiry</>)}</Button>
                    </div>
@@ -232,6 +335,12 @@ export default function PartnerPage() {
            <div className="space-y-2">
                <CardTitle className="text-2xl">Thank You for Your Interest!</CardTitle>
                <CardDescription>Your partnership inquiry has been received. Our partnership agent, Paz, will review your information and get in touch to discuss potential collaboration.</CardDescription>
+                {recordNumber && (
+                    <Alert>
+                        <AlertTitle>Your Record Number</AlertTitle>
+                        <AlertDescription className="font-mono text-sm">{recordNumber}</AlertDescription>
+                    </Alert>
+                )}
            </div>
            <Button asChild onClick={() => setPageState('selection')}><Link href="#">Submit Another Inquiry</Link></Button>
        </div>
