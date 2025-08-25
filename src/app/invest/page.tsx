@@ -28,7 +28,7 @@ const currentProjects = [
     { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live" },
     { name: "ameen", description: "Secure digital identity and authentication solution.", status: "Live" },
     { name: "APPI", description: "Intuitive API management and integration platform.", status: "Live" },
-    { name: "KHIDMAAI", description: "AI-powered customer service automation tool.", status: "Live" },
+    { name: "KHIDMA", description: "AI-powered customer service automation tool.", status: "Live" },
     { name: "VMALL", description: "A comprehensive virtual mall and e-commerce ecosystem.", status: "Live" },
 ];
 
@@ -154,8 +154,8 @@ export default function InvestPage() {
                         </a>
                     </Button>
                      <Button asChild variant="outline" size="lg">
-                        <a href="/pitch-deck-khidmaai.pdf" download>
-                             <Download className="mr-2 h-5 w-5" /> KHIDMAAI Project
+                        <a href="/pitch-deck-khidma.pdf" download>
+                             <Download className="mr-2 h-5 w-5" /> KHIDMA Project
                         </a>
                     </Button>
                      <Button asChild variant="outline" size="lg">

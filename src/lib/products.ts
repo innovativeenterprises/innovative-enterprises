@@ -31,7 +31,7 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'prod_4',
-    name: 'KHIDMAAI',
+    name: 'KHIDMA',
     description: 'A digital marketplace using AI-matching for on-demand services where providers bid competitively on customer requests.',
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-190300-848-service_marketplace.png',
     aiHint: 'service marketplace',

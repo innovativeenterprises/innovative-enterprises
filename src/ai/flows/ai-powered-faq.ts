@@ -61,7 +61,7 @@ const prompt = ai.definePrompt({
 
   Question: {{{question}}}
 
-  Context: Innovative Enterprises is an Omani SME focused on emerging technology and digital transformation solutions. They offer services in areas like cloud computing, AI, and cybersecurity. They also have products like PANOSPACE, ameen, APPI, KHIDMAAI, and VMALL. As an Omani SME, Innovative Enterprises can provide unique benefits to government partners seeking to support local businesses and innovation.
+  Context: Innovative Enterprises is an Omani SME focused on emerging technology and digital transformation solutions. They offer services in areas like cloud computing, AI, and cybersecurity. They also have products like PANOSPACE, ameen, APPI, KHIDMA, and VMALL. As an Omani SME, Innovative Enterprises can provide unique benefits to government partners seeking to support local businesses and innovation.
   `,
 });
 

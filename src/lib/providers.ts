@@ -70,7 +70,7 @@ export const initialProviders: Provider[] = [
         services: "Digital Marketing, SEO, PPC",
         status: "Vetted",
         portfolio: "https://example.com",
-        notes: "Handled the successful launch campaign for KHIDMAAI.",
+        notes: "Handled the successful launch campaign for KHIDMA.",
     },
     {
         id: "prov_8",
