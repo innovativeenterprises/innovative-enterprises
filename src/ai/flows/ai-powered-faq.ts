@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -72,8 +73,8 @@ const answerQuestionFlow = ai.defineFlow(
   },
   async input => {
     const response = await prompt(input);
+    
     const toolRequest = response.toolRequest();
-
     if (toolRequest) {
         const toolResponse = await toolRequest.run();
         const toolOutput = toolResponse.output() as { bookingUrl: string };
@@ -83,6 +84,13 @@ const answerQuestionFlow = ai.defineFlow(
         }
     }
 
-    return response.output()!;
+    const output = response.output();
+    if (output) {
+      return output;
+    }
+    
+    return {
+        answer: response.text,
+    };
   }
 );
