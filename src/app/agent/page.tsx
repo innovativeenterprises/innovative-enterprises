@@ -29,6 +29,7 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 const CompanyUploadSchema = z.object({
   crDocument: z.any().refine(file => file?.length == 1, 'Commercial Record is required.'),
+  repIdDocument: z.any().refine(file => file?.length == 1, 'Representative ID is required.'),
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
@@ -58,6 +59,7 @@ export default function AgentPage() {
   const [applicantType, setApplicantType] = useState<ApplicantType>('individual');
   
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | IdentityAnalysisOutput | null>(null);
+  const [repAnalysisResult, setRepAnalysisResult] = useState<IdentityAnalysisOutput | null>(null);
   const [recordNumber, setRecordNumber] = useState<string | null>(null);
   
   const { toast } = useToast();
@@ -68,17 +70,26 @@ export default function AgentPage() {
 
   const handleCompanyCrAnalysis: SubmitHandler<CompanyUploadValues> = async (data) => {
     setPageState('analyzing');
-    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
+    manualEntryForm.reset();
+    setAnalysisResult(null);
+    setRepAnalysisResult(null);
     try {
-        const file = data.crDocument[0];
-        const documentDataUri = await fileToDataURI(file);
-        const result = await analyzeCrDocument({ documentDataUri });
-        setAnalysisResult(result);
+        const crFile = data.crDocument[0];
+        const repIdFile = data.repIdDocument[0];
+
+        const crPromise = fileToDataURI(crFile).then(uri => analyzeCrDocument({ documentDataUri: uri }));
+        const repIdPromise = fileToDataURI(repIdFile).then(uri => analyzeIdentity({ idDocumentUri: uri }));
+
+        const [crResult, repResult] = await Promise.all([crPromise, repIdPromise]);
+        
+        setAnalysisResult(crResult);
+        setRepAnalysisResult(repResult);
+
         manualEntryForm.reset({
-            name: result.companyInfo?.companyNameEnglish || result.companyInfo?.companyNameArabic || '',
-            email: result.companyInfo?.contactEmail || '',
-            phone: result.companyInfo?.contactMobile || '',
-            interest: result.summary || 'Interest based on company activities.',
+            name: crResult.companyInfo?.companyNameEnglish || crResult.companyInfo?.companyNameArabic || '',
+            email:  repResult.personalDetails?.email || crResult.companyInfo?.contactEmail || '',
+            phone: crResult.companyInfo?.contactMobile || '',
+            interest: crResult.summary || 'Interest based on company activities.',
             undertaking: false,
         });
         setPageState('review');
@@ -91,7 +102,9 @@ export default function AgentPage() {
 
   const handleIndividualAnalysis: SubmitHandler<IndividualUploadValues> = async (data) => {
     setPageState('analyzing');
-    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
+    manualEntryForm.reset();
+    setAnalysisResult(null);
+    setRepAnalysisResult(null);
     try {
         const idFile = data.idDocument[0];
         const idDocumentUri = await fileToDataURI(idFile);
@@ -133,7 +146,7 @@ export default function AgentPage() {
     setIsLoading(true);
     // Here you would typically send the data to your backend.
     // For this prototype, we'll just simulate a successful submission.
-    console.log("Submitting Agent Application:", data, analysisResult);
+    console.log("Submitting Agent Application:", data, analysisResult, repAnalysisResult);
     const newRecordNumber = `AGENT-${Date.now()}`;
     setRecordNumber(newRecordNumber);
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -145,6 +158,7 @@ export default function AgentPage() {
   const startManualEntry = () => {
     manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
     setAnalysisResult(null);
+    setRepAnalysisResult(null);
     setPageState('review');
   }
   
@@ -180,25 +194,28 @@ export default function AgentPage() {
     }
 
     if (applicantType === 'company' && 'companyInfo' in analysisResult) {
-        const data = analysisResult as CrAnalysisOutput;
+        const companyData = analysisResult as CrAnalysisOutput;
+        const repData = repAnalysisResult;
         return (
-            <div className="space-y-4">
-                {renderObject(data.companyInfo, "Company Information")}
-                {data.boardMembers && data.boardMembers.length > 0 && (
-                     <Card className="bg-muted/50">
-                        <CardHeader><CardTitle className="text-base">Board Members</CardTitle></CardHeader>
-                        <CardContent className="space-y-2">
-                             {data.boardMembers.map((member, i) => <p key={i} className="text-sm">{member.name} ({member.designation})</p>)}
-                        </CardContent>
-                    </Card>
-                )}
-                 {data.authorizedSignatories && data.authorizedSignatories.length > 0 && (
-                     <Card className="bg-muted/50">
-                        <CardHeader><CardTitle className="text-base">Authorized Signatories</CardTitle></CardHeader>
-                        <CardContent className="space-y-2">
-                             {data.authorizedSignatories.map((sig, i) => <p key={i} className="text-sm">{sig.name} ({sig.designation})</p>)}
-                        </CardContent>
-                    </Card>
+            <div className="space-y-6">
+                <div className="space-y-4">
+                    <h3 className="font-semibold text-lg text-primary">Company Information</h3>
+                    {renderObject(companyData.companyInfo, "Company Details")}
+                    {companyData.authorizedSignatories && companyData.authorizedSignatories.length > 0 && (
+                        <Card className="bg-muted/50">
+                            <CardHeader><CardTitle className="text-base">Authorized Signatories</CardTitle></CardHeader>
+                            <CardContent className="space-y-2">
+                                {companyData.authorizedSignatories.map((sig, i) => <p key={i} className="text-sm">{sig.name} ({sig.designation})</p>)}
+                            </CardContent>
+                        </Card>
+                    )}
+                </div>
+                {repData && (
+                     <div className="space-y-4">
+                        <h3 className="font-semibold text-lg text-primary">Representative Information</h3>
+                        {renderObject(repData.personalDetails, "Personal Details")}
+                        {renderObject(repData.idCardDetails, "ID Card Details")}
+                    </div>
                 )}
             </div>
         )
@@ -237,11 +254,22 @@ export default function AgentPage() {
         <CardContent>
             {applicantType === 'company' ? (
                 <Form {...companyUploadForm}>
-                    <form onSubmit={companyUploadForm.handleSubmit(handleCompanyCrAnalysis)} className="space-y-4">
+                    <form onSubmit={companyUploadForm.handleSubmit(handleCompanyCrAnalysis)} className="space-y-6">
                         <FormField control={companyUploadForm.control} name="crDocument" render={({ field }) => (
-                            <FormItem><FormLabel>Commercial Record (PDF, PNG, or JPG)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            <FormItem>
+                                <FormLabel>1. Company Commercial Record (CR)</FormLabel>
+                                <FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
                         )} />
-                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><Wand2 className="mr-2 h-4 w-4" /> Analyze Document</Button>
+                        <FormField control={companyUploadForm.control} name="repIdDocument" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>2. Representative's ID Card</FormLabel>
+                                <FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
                 </Form>
             ) : (
@@ -334,7 +362,7 @@ export default function AgentPage() {
                     />
 
                    <div className="flex gap-2 pt-4">
-                        <Button variant="outline" className="w-full" onClick={() => setPageState('upload')}>&larr; Back to Upload</Button>
+                        <Button variant="outline" type="button" className="w-full" onClick={() => setPageState('upload')}>&larr; Back to Upload</Button>
                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>) : (<><Handshake className="mr-2 h-4 w-4" /> Apply Now</>)}</Button>
                    </div>
                </form>
@@ -387,5 +415,3 @@ export default function AgentPage() {
     </div>
   );
 }
-
-    

@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -31,6 +31,7 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 const CompanyUploadSchema = z.object({
   crDocument: z.any().refine(file => file?.length == 1, 'Commercial Record is required.'),
+  repIdDocument: z.any().refine(file => file?.length == 1, 'Representative ID is required.'),
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
@@ -60,6 +61,7 @@ export default function PartnerPage() {
   const [applicantType, setApplicantType] = useState<ApplicantType>('company');
   
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | IdentityAnalysisOutput | null>(null);
+  const [repAnalysisResult, setRepAnalysisResult] = useState<IdentityAnalysisOutput | null>(null);
   const [recordNumber, setRecordNumber] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -69,28 +71,41 @@ export default function PartnerPage() {
 
   const handleCrAnalysis: SubmitHandler<CompanyUploadValues> = async (data) => {
     setPageState('analyzing');
+    inquiryForm.reset();
+    setAnalysisResult(null);
+    setRepAnalysisResult(null);
     try {
-        const file = data.crDocument[0];
-        const documentDataUri = await fileToDataURI(file);
-        const result = await analyzeCrDocument({ documentDataUri });
-        setAnalysisResult(result);
+        const crFile = data.crDocument[0];
+        const repIdFile = data.repIdDocument[0];
+
+        const crPromise = fileToDataURI(crFile).then(uri => analyzeCrDocument({ documentDataUri: uri }));
+        const repIdPromise = fileToDataURI(repIdFile).then(uri => analyzeIdentity({ idDocumentUri: uri }));
+
+        const [crResult, repResult] = await Promise.all([crPromise, repIdPromise]);
+        
+        setAnalysisResult(crResult);
+        setRepAnalysisResult(repResult);
+        
         inquiryForm.reset({
-            companyName: result.companyInfo?.companyNameEnglish || result.companyInfo?.companyNameArabic || '',
-            contactName: result.authorizedSignatories?.[0]?.name || result.boardMembers?.[0]?.name || '',
-            email: result.companyInfo?.contactEmail || '',
-            partnershipDetails: result.summary || '',
+            companyName: crResult.companyInfo?.companyNameEnglish || crResult.companyInfo?.companyNameArabic || '',
+            contactName: repResult.personalDetails?.fullName || crResult.authorizedSignatories?.[0]?.name || '',
+            email: repResult.personalDetails?.email || crResult.companyInfo?.contactEmail || '',
+            partnershipDetails: crResult.summary || '',
             undertaking: false,
         });
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review and confirm the extracted details.' });
     } catch(e) {
-        toast({ title: 'Analysis Failed', description: 'We could not analyze the document. Please check the file and try again.', variant: 'destructive' })
+        toast({ title: 'Analysis Failed', description: 'We could not analyze the documents. Please check the files and try again.', variant: 'destructive' })
         setPageState('upload');
     }
   }
 
   const handleIndividualAnalysis: SubmitHandler<IndividualUploadValues> = async (data) => {
     setPageState('analyzing');
+    inquiryForm.reset();
+    setAnalysisResult(null);
+    setRepAnalysisResult(null);
     try {
         const idFile = data.idDocument[0];
         const idDocumentUri = await fileToDataURI(idFile);
@@ -174,25 +189,28 @@ export default function PartnerPage() {
     }
 
     if (applicantType === 'company' && 'companyInfo' in analysisResult) {
-        const data = analysisResult as CrAnalysisOutput;
+        const companyData = analysisResult as CrAnalysisOutput;
+        const repData = repAnalysisResult;
         return (
-            <div className="space-y-4">
-                {renderObject(data.companyInfo, "Company Information")}
-                {data.boardMembers && data.boardMembers.length > 0 && (
-                     <Card className="bg-muted/50">
-                        <CardHeader><CardTitle className="text-base">Board Members</CardTitle></CardHeader>
-                        <CardContent className="space-y-2">
-                             {data.boardMembers.map((member, i) => <p key={i} className="text-sm">{member.name} ({member.designation})</p>)}
-                        </CardContent>
-                    </Card>
-                )}
-                 {data.authorizedSignatories && data.authorizedSignatories.length > 0 && (
-                     <Card className="bg-muted/50">
-                        <CardHeader><CardTitle className="text-base">Authorized Signatories</CardTitle></CardHeader>
-                        <CardContent className="space-y-2">
-                             {data.authorizedSignatories.map((sig, i) => <p key={i} className="text-sm">{sig.name} ({sig.designation})</p>)}
-                        </CardContent>
-                    </Card>
+            <div className="space-y-6">
+                <div className="space-y-4">
+                    <h3 className="font-semibold text-lg text-primary">Company Information</h3>
+                    {renderObject(companyData.companyInfo, "Company Details")}
+                    {companyData.authorizedSignatories && companyData.authorizedSignatories.length > 0 && (
+                        <Card className="bg-muted/50">
+                            <CardHeader><CardTitle className="text-base">Authorized Signatories</CardTitle></CardHeader>
+                            <CardContent className="space-y-2">
+                                {companyData.authorizedSignatories.map((sig, i) => <p key={i} className="text-sm">{sig.name} ({sig.designation})</p>)}
+                            </CardContent>
+                        </Card>
+                    )}
+                </div>
+                {repData && (
+                     <div className="space-y-4">
+                        <h3 className="font-semibold text-lg text-primary">Representative Information</h3>
+                        {renderObject(repData.personalDetails, "Personal Details")}
+                        {renderObject(repData.idCardDetails, "ID Card Details")}
+                    </div>
                 )}
             </div>
         )
@@ -231,11 +249,22 @@ export default function PartnerPage() {
         <CardContent>
              {applicantType === 'company' ? (
                 <Form {...companyUploadForm}>
-                    <form onSubmit={companyUploadForm.handleSubmit(handleCrAnalysis)} className="space-y-4">
+                    <form onSubmit={companyUploadForm.handleSubmit(handleCrAnalysis)} className="space-y-6">
                         <FormField control={companyUploadForm.control} name="crDocument" render={({ field }) => (
-                            <FormItem><FormLabel>Commercial Record (PDF, PNG, or JPG)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            <FormItem>
+                                <FormLabel>1. Company Commercial Record (CR)</FormLabel>
+                                <FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
                         )} />
-                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"><Wand2 className="mr-2 h-4 w-4" /> Analyze Document</Button>
+                        <FormField control={companyUploadForm.control} name="repIdDocument" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>2. Representative's ID Card</FormLabel>
+                                <FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
                 </Form>
             ) : (
@@ -266,7 +295,7 @@ export default function PartnerPage() {
        <div className="flex flex-col items-center gap-6">
            <Loader2 className="h-12 w-12 text-primary animate-spin" />
            <div className="space-y-2">
-               <CardTitle className="text-2xl">Analyzing Document...</CardTitle>
+               <CardTitle className="text-2xl">Analyzing Documents...</CardTitle>
                <CardDescription>Our AI is reading your documents. This may take a moment.</CardDescription>
            </div>
        </div>
@@ -285,7 +314,7 @@ export default function PartnerPage() {
                     {analysisResult && (
                         <div className="space-y-4">
                             <h3 className="font-semibold text-lg text-primary">Extracted Information</h3>
-                            <p className="text-sm text-muted-foreground">Review the details below. For any corrections, please edit the form fields.</p>
+                            <p className="text-sm text-muted-foreground">Review the details below. You can edit any field in the form below if there's a mistake.</p>
                             {renderAnalysisResult()}
                         </div>
                     )}
@@ -310,6 +339,9 @@ export default function PartnerPage() {
                             </FormControl>
                             <div className="space-y-1 leading-none">
                                 <FormLabel>Information Validity Undertaking</FormLabel>
+                                <FormDescription>
+                                    I hereby declare that all the information provided is true and correct to the best of my knowledge.
+                                </FormDescription>
                                 <FormMessage />
                             </div>
                             </FormItem>
@@ -317,7 +349,7 @@ export default function PartnerPage() {
                     />
 
                    <div className="flex gap-2 pt-2">
-                        <Button variant="outline" className="w-full" onClick={() => setPageState('upload')}>Upload New Document</Button>
+                        <Button variant="outline" className="w-full" type="button" onClick={() => setPageState('upload')}>Upload New Document</Button>
                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>) : (<><Handshake className="mr-2 h-4 w-4" /> Submit Inquiry</>)}</Button>
                    </div>
                </form>
@@ -334,7 +366,7 @@ export default function PartnerPage() {
            </div>
            <div className="space-y-2">
                <CardTitle className="text-2xl">Thank You for Your Interest!</CardTitle>
-               <CardDescription>Your partnership inquiry has been received. Our partnership agent, Paz, will review your information and get in touch to discuss potential collaboration.</CardDescription>
+               <CardDescription>Your partnership inquiry has been received. A confirmation has been sent to your email. Our partnership agent, Paz, will review your information and get in touch to discuss potential collaboration.</CardDescription>
                 {recordNumber && (
                     <Alert>
                         <AlertTitle>Your Record Number</AlertTitle>
