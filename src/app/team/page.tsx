@@ -1,9 +1,28 @@
+
+'use client';
+
+import { useState } from 'react';
 import { LeadershipTeam, DigitalWorkforce } from "@/components/agent-list";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import type { Agent, AgentCategory } from '@/lib/agents';
+import { initialLeadershipTeam, initialAgentCategories } from '@/lib/agents';
 
 export default function TeamPage() {
+    // In a real app, this state would be lifted to a shared context
+    // or fetched from an API that the Admin dashboard writes to.
+    // For this prototype, we manage it here to simulate dynamic content.
+    const [leadership, setLeadership] = useState<Agent[]>(initialLeadershipTeam);
+    const [agentCategories, setAgentCategories] = useState<AgentCategory[]>(initialAgentCategories);
+
+    const enabledLeadership = leadership.filter(member => member.enabled);
+    const enabledAgentCategories = agentCategories.map(category => ({
+        ...category,
+        agents: category.agents.filter(agent => agent.enabled)
+    })).filter(category => category.agents.length > 0);
+
+
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
@@ -13,14 +32,14 @@ export default function TeamPage() {
             Meet the leaders driving our vision and the AI-powered digital workforce that brings it to life.
           </p>
            <Button asChild className="mt-6">
-                <Link href="/admin">
+                <Link href="/admin/people">
                     Manage Your Team <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
             </Button>
         </div>
         <div className="space-y-20 mt-20">
-            <LeadershipTeam />
-            <DigitalWorkforce />
+            <LeadershipTeam team={enabledLeadership} />
+            <DigitalWorkforce categories={enabledAgentCategories} />
         </div>
       </div>
     </div>

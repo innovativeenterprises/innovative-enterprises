@@ -2,194 +2,9 @@
 'use client';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Linkedin, Twitter, Instagram, Facebook, Mail, Github, Globe, Trophy, WalletCards, NotebookText } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
 import Link from 'next/link';
-
-interface Agent {
-    role: string;
-    name: string;
-    description: string;
-    icon: LucideIcon;
-    href?: string;
-    socials?: {
-        linkedin?: string;
-        twitter?: string;
-        instagram?: string;
-        facebook?: string;
-        email?: string;
-        github?: string;
-        website?: string;
-    }
-}
-
-interface AgentCategory {
-    category: string;
-    agents: Agent[];
-}
-
-const leadershipTeam: Agent[] = [
-    { 
-        name: "JUMAA SALIM AL HADIDI", 
-        role: "CEO and Co-Founder", 
-        description: "Leads the company's vision and strategic direction.", 
-        icon: User,
-        socials: {
-            linkedin: "#",
-            twitter: "#",
-            email: "mailto:jumaa@innovative.om",
-            website: "#"
-        }
-    },
-    { 
-        name: "ANWAR AHMED SHARIF", 
-        role: "CTO and Co-Founder", 
-        description: "Drives technological innovation and engineering.", 
-        icon: User,
-        socials: {
-            linkedin: "#",
-            twitter: "#",
-            email: "mailto:anwar@innovative.om",
-            github: "#",
-        }
-    },
-    { 
-        name: "ABDULJABBAR AL FAKI", 
-        role: "Projects Manager", 
-        description: "Oversees all project execution and delivery.", 
-        icon: User,
-        socials: {
-            linkedin: "#",
-            twitter: "#",
-            email: "mailto:abduljabbar@innovative.om"
-        }
-    },
-    {
-        name: "HUDA AL SALMI",
-        role: "Public Relations Officer (PRO)",
-        description: "Manages government relations and public engagement.",
-        icon: User,
-        socials: {
-            linkedin: "#",
-            email: "mailto:huda@innovative.om"
-        }
-    },
-    {
-        name: "Legal Counsel Office",
-        role: "Advocate & Legal Representative",
-        description: "Provides expert legal guidance and representation.",
-        icon: User,
-        socials: {
-            website: "#",
-            email: "mailto:legal@innovative.om"
-        }
-    }
-];
-
-const agentCategories: AgentCategory[] = [
-    {
-        category: "Core Business Operations Agents",
-        agents: [
-            { name: "Aida", role: "Admin & Legal Assistant", description: "Engages with visitors, books meetings, generates minutes, and drafts initial legal agreements.", icon: NotebookText, href: "/faq" },
-            { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, href: "/cfo" },
-            { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, href: "/cv-enhancer" },
-            { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, href: "/opportunities" },
-        ]
-    },
-    {
-        category: "Customer & Sales Agents",
-        agents: [
-            { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, href: "/invest" },
-            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, tender responses, and relevant imagery.", icon: Megaphone, href: "/social-media-post-generator" },
-            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact },
-        ]
-    },
-    {
-        category: "Tech & Data Agents",
-        agents: [
-            { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu },
-            { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database },
-            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, href: "/training-center" },
-            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot },
-        ]
-    },
-    {
-        category: "Creative & Media Agents",
-        agents: [
-            { name: "Lina", role: "Image Generation Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, href: "/image-generator" },
-            { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, href: "/document-translator" },
-            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera },
-        ]
-    },
-    {
-        category: "Special Growth Agents",
-        agents: [
-            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Target },
-            { name: "Navi", role: "Innovation Agent", description: "Analyzes market gaps and internal capabilities to suggest new products and service offerings.", icon: Rocket },
-            { name: "Paz", role: "Partnership Agent", description: "Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.", icon: Handshake, href: "/service-provider" },
-        ]
-    },
-];
-
-export function LeadershipTeam() {
-    return (
-        <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-10">Our Leadership</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {leadershipTeam.map((member) => (
-                    <Card key={member.name} className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col">
-                        <CardHeader className="flex flex-col items-center gap-4 pt-8">
-                             <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
-                                <member.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
-                            </div>
-                            <div>
-                                <CardTitle className="text-xl">{member.name}</CardTitle>
-                                <p className="text-base text-muted-foreground">{member.role}</p>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="px-6 pb-6 text-sm flex-grow">
-                            {member.description}
-                        </CardContent>
-                        <CardFooter className="justify-center pt-0 pb-6">
-                            <div className="flex gap-4">
-                                {member.socials?.linkedin && (
-                                    <Link href={member.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                                        <Linkedin className="w-5 h-5" />
-                                        <span className="sr-only">LinkedIn</span>
-                                    </Link>
-                                )}
-                                {member.socials?.twitter && (
-                                    <Link href={member.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                                        <Twitter className="w-5 h-5" />
-                                        <span className="sr-only">Twitter</span>
-                                    </Link>
-                                )}
-                                {member.socials?.github && (
-                                    <Link href={member.socials.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                                        <Github className="w-5 h-5" />
-                                        <span className="sr-only">GitHub</span>
-                                    </Link>
-                                )}
-                                {member.socials?.website && (
-                                    <Link href={member.socials.website} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                                        <Globe className="w-5 h-5" />
-                                        <span className="sr-only">Website</span>
-                                    </Link>
-                                )}
-                                {member.socials?.email && (
-                                    <Link href={member.socials.email} className="text-muted-foreground hover:text-primary transition-colors">
-                                        <Mail className="w-5 h-5" />
-                                        <span className="sr-only">Email</span>
-                                    </Link>
-                                )}
-                            </div>
-                        </CardFooter>
-                    </Card>
-                ))}
-            </div>
-        </div>
-    )
-}
+import type { Agent, AgentCategory } from '@/lib/agents';
 
 const AgentCard = ({ agent }: { agent: Agent }) => (
     <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
@@ -208,7 +23,70 @@ const AgentCard = ({ agent }: { agent: Agent }) => (
     </Card>
 );
 
-export function DigitalWorkforce() {
+const LeadershipCard = ({ member }: { member: Agent }) => (
+    <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col">
+        <CardHeader className="flex flex-col items-center gap-4 pt-8">
+                <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
+                <member.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
+            </div>
+            <div>
+                <CardTitle className="text-xl">{member.name}</CardTitle>
+                <p className="text-base text-muted-foreground">{member.role}</p>
+            </div>
+        </CardHeader>
+        <CardContent className="px-6 pb-6 text-sm flex-grow">
+            {member.description}
+        </CardContent>
+        <CardFooter className="justify-center pt-0 pb-6">
+            <div className="flex gap-4">
+                {member.socials?.linkedin && (
+                    <Link href={member.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Linkedin className="w-5 h-5" />
+                        <span className="sr-only">LinkedIn</span>
+                    </Link>
+                )}
+                {member.socials?.twitter && (
+                    <Link href={member.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Twitter className="w-5 h-5" />
+                        <span className="sr-only">Twitter</span>
+                    </Link>
+                )}
+                {member.socials?.github && (
+                    <Link href={member.socials.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Github className="w-5 h-5" />
+                        <span className="sr-only">GitHub</span>
+                    </Link>
+                )}
+                {member.socials?.website && (
+                    <Link href={member.socials.website} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Globe className="w-5 h-5" />
+                        <span className="sr-only">Website</span>
+                    </Link>
+                )}
+                {member.socials?.email && (
+                    <Link href={member.socials.email} className="text-muted-foreground hover:text-primary transition-colors">
+                        <Mail className="w-5 h-5" />
+                        <span className="sr-only">Email</span>
+                    </Link>
+                )}
+            </div>
+        </CardFooter>
+    </Card>
+);
+
+export function LeadershipTeam({ team }: { team: Agent[] }) {
+    return (
+        <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-10">Our Leadership</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                {team.map((member) => <LeadershipCard key={member.name} member={member} />)}
+            </div>
+        </div>
+    )
+}
+
+
+export function DigitalWorkforce({ categories }: { categories: AgentCategory[] }) {
     return (
          <div>
             <div className="text-center mb-12">
@@ -218,7 +96,7 @@ export function DigitalWorkforce() {
                 </p>
             </div>
             <div className="space-y-12">
-                {agentCategories.map((category) => (
+                {categories.map((category) => (
                     <div key={category.category}>
                         <h3 className="text-2xl md:text-3xl font-bold text-center text-primary/80 mb-8">{category.category}</h3>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -237,13 +115,4 @@ export function DigitalWorkforce() {
             </div>
         </div>
     )
-}
-
-export default function AgentList() {
-    return (
-        <div className="space-y-12">
-            <LeadershipTeam />
-            <DigitalWorkforce />
-        </div>
-    );
 }

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -22,6 +21,8 @@ import { useToast } from "@/hooks/use-toast";
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { Agent, AgentCategory } from "@/lib/agents";
+import { initialLeadershipTeam, initialAgentCategories } from "@/lib/agents";
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -33,81 +34,13 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
-interface Agent {
-    role: string;
-    name: string;
-    description: string;
-    icon: LucideIcon;
-    enabled: boolean;
-    type: 'Leadership' | 'AI Agent';
-    photo: string;
-    aiHint: string;
-}
-
-interface AgentCategory {
-    category: string;
-    agents: Agent[];
-}
-
-const initialLeadershipTeam: Agent[] = [
-    { name: "JUMAA SALIM AL HADIDI", role: "CEO and Co-Founder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1920&auto=format&fit=crop', aiHint: 'oman business man' },
-    { name: "ANWAR AHMED SHARIF", role: "CTO and Co-Founder", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=1920&auto=format&fit=crop', aiHint: 'technology expert' },
-    { name: "ABDULJABBAR AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1920&auto=format&fit=crop', aiHint: 'project manager' },
-    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1542596594-649ed6e6b343?q=80&w=1920&auto=format&fit=crop', aiHint: 'business woman' },
-    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=1920&auto=format&fit=crop', aiHint: 'lawyer office' },
-];
-
-const initialAgentCategories: AgentCategory[] = [
-    {
-        category: "Core Business Operations Agents",
-        agents: [
-            { name: "Aida", role: "Admin & Legal Assistant", description: "Engages with visitors, books meetings, generates minutes, and drafts initial legal agreements.", icon: NotebookText, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1589254065909-b7086229d092?q=80&w=1920&auto=format&fit=crop', aiHint: 'robot assistant' },
-            { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1920&auto=format&fit=crop', aiHint: 'finance robot' },
-            { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?q=80&w=1920&auto=format&fit=crop', aiHint: 'human resources robot' },
-            { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616805-669c3fa0de40?q=80&w=1920&auto=format&fit=crop', aiHint: 'robot trophy' },
-        ]
-    },
-    {
-        category: "Customer & Sales Agents",
-        agents: [
-            { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1920&auto=format&fit=crop', aiHint: 'sales bot' },
-            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, tender responses, and relevant imagery.", icon: Megaphone, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1612428978260-2b9c7df20150?q=80&w=1920&auto=format&fit=crop', aiHint: 'marketing bot' },
-            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=1920&auto=format&fit=crop', aiHint: 'crm bot' },
-        ]
-    },
-    {
-        category: "Tech & Data Agents",
-        agents: [
-            { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1614149290184-7376551e15a9?q=80&w=1920&auto=format&fit=crop', aiHint: 'it support' },
-            { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698323-b1e79e63d68c?q=80&w=1920&auto=format&fit=crop', aiHint: 'data analytics' },
-            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1620712943543-bcc4622f4273?q=80&w=1920&auto=format&fit=crop', aiHint: 'ai brain' },
-            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617371-5def988c7c25?q=80&w=1920&auto=format&fit=crop', aiHint: 'automation robot' },
-        ]
-    },
-    {
-        category: "Creative & Media Agents",
-        agents: [
-            { name: "Lina", role: "Image Generation Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617263-4ec3d5cd3a48?q=80&w=1920&auto=format&fit=crop', aiHint: 'creative robot' },
-            { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698418-4a5e35ca3babc?q=80&w=1920&auto=format&fit=crop', aiHint: 'translation bot' },
-            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698298-65d597b69c4d?q=80&w=1920&auto=format&fit=crop', aiHint: 'camera robot' },
-        ]
-    },
-    {
-        category: "Special Growth Agents",
-        agents: [
-            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Target, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616895-c1864e4e9411?q=80&w=1920&auto=format&fit=crop', aiHint: 'strategy bot' },
-            { name: "Navi", role: "Innovation Agent", description: "Analyzes market gaps and internal capabilities to suggest new products and service offerings.", icon: Rocket, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617243-caff45c4e094?q=80&w=1920&auto=format&fit=crop', aiHint: 'innovation bot' },
-            { name: "Paz", role: "Partnership Agent", description: "Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.", icon: Handshake, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162618033-95b778794c8e?q=80&w=1920&auto=format&fit=crop', aiHint: 'partnership bot' },
-        ]
-    },
-];
-
 const StaffSchema = z.object({
   name: z.string().min(3, "Name is required"),
   role: z.string().min(3, "Role is required"),
   type: z.enum(["Leadership", "AI Agent"]),
   photo: z.string().min(1, "A photo is required."),
   aiHint: z.string().min(2, "AI hint is required"),
+  description: z.string().min(10, "A description is required."),
 });
 type StaffValues = z.infer<typeof StaffSchema>;
 
@@ -123,10 +56,12 @@ const AddEditStaffDialog = ({
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm({
+        resolver: zodResolver(StaffSchema),
         defaultValues: {
             name: staffMember?.name || "",
             role: staffMember?.role || "",
             type: staffMember?.type || "AI Agent",
+            description: staffMember?.description || "",
             aiHint: staffMember?.aiHint || "person portrait",
             photoFile: undefined,
             photoUrl: staffMember?.photo.startsWith('http') ? staffMember.photo : "",
@@ -141,6 +76,7 @@ const AddEditStaffDialog = ({
                 name: staffMember?.name || "",
                 role: staffMember?.role || "",
                 type: staffMember?.type || "AI Agent",
+                description: staffMember?.description || "",
                 aiHint: staffMember?.aiHint || "person portrait",
                 photoFile: undefined,
                 photoUrl: isUrl ? staffMember.photo : "",
@@ -168,7 +104,7 @@ const AddEditStaffDialog = ({
             return;
         }
         
-        onSave({ name: data.name, role: data.role, type: data.type, aiHint: data.aiHint, photo: photoValue }, staffMember?.name);
+        onSave({ name: data.name, role: data.role, type: data.type, description: data.description, aiHint: data.aiHint, photo: photoValue }, staffMember?.name);
         form.reset();
         setIsOpen(false);
     };
@@ -196,6 +132,13 @@ const AddEditStaffDialog = ({
                             <FormItem>
                                 <FormLabel>Role</FormLabel>
                                 <FormControl><Input placeholder="e.g., Chief Innovation Officer" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                         <FormField control={form.control} name="description" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl><Textarea placeholder="Describe their role and responsibilities." {...field} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
@@ -255,9 +198,22 @@ const AddEditStaffDialog = ({
     )
 }
 
-export default function StaffTable() {
+// Make this component the source of truth for team data
+export const useStaffData = () => {
     const [leadership, setLeadership] = useState<Agent[]>(initialLeadershipTeam);
     const [agentCategories, setAgentCategories] = useState<AgentCategory[]>(initialAgentCategories);
+
+    return {
+        leadership,
+        setLeadership,
+        agentCategories,
+        setAgentCategories
+    }
+}
+
+
+export default function StaffTable() {
+    const { leadership, setLeadership, agentCategories, setAgentCategories } = useStaffData();
     const { toast } = useToast();
 
     const handleToggle = (name: string, type: 'leadership' | 'agent') => {
@@ -281,44 +237,58 @@ export default function StaffTable() {
     };
 
     const handleSave = (values: StaffValues, originalName?: string) => {
-        if (originalName) {
-            // Update
-            const updateStaff = (staff: Agent) => (staff.name === originalName ? { ...staff, ...values, description: staff.description, icon: staff.icon } : staff);
-            
-            setLeadership(prev => prev.map(updateStaff));
-            setAgentCategories(prev => prev.map(cat => ({
-                ...cat,
-                agents: cat.agents.map(updateStaff)
-            })));
-            
-            toast({ title: "Staff member updated successfully." });
-
-        } else {
-            // Create
-            const newStaffMember: Agent = {
-                description: "Newly added staff member.",
-                icon: values.type === 'Leadership' ? User : Bot,
-                enabled: true,
+        const updateStaff = (staffList: Agent[]) => {
+            if (originalName) { // Update existing
+                return staffList.map(staff => staff.name === originalName ? { ...staff, ...values } : staff);
+            }
+            // Add new
+            const newStaff: Agent = {
                 ...values,
+                icon: values.type === 'Leadership' ? User : Bot, // Default icon
+                enabled: true,
             };
+             return [...staffList, newStaff];
+        };
 
-            if (values.type === 'Leadership') {
-                setLeadership(prev => [...prev, newStaffMember]);
+        if (values.type === 'Leadership') {
+             if (originalName) {
+                setLeadership(prev => prev.map(staff => staff.name === originalName ? { ...staff, ...values } : staff));
             } else {
-                // For simplicity, adding to the first agent category
-                setAgentCategories(prev => {
-                    const newCategories = [...prev];
-                    if (newCategories.length > 0) {
-                        newCategories[0].agents.push(newStaffMember);
-                    } else {
-                        // Handle case where there are no agent categories
-                        return [{ category: "General Agents", agents: [newStaffMember] }];
+                 const newStaff: Agent = { ...values, icon: User, enabled: true };
+                 setLeadership(prev => [...prev, newStaff]);
+            }
+        } else { // AI Agent
+             if (originalName) {
+                let found = false;
+                setAgentCategories(prev => prev.map(cat => {
+                    if (found) return cat;
+                    const agentIndex = cat.agents.findIndex(a => a.name === originalName);
+                    if (agentIndex > -1) {
+                        found = true;
+                        const updatedAgents = [...cat.agents];
+                        updatedAgents[agentIndex] = { ...updatedAgents[agentIndex], ...values };
+                        return { ...cat, agents: updatedAgents };
                     }
-                    return newCategories;
+                    return cat;
+                }));
+            } else {
+                 const newStaff: Agent = { ...values, icon: Bot, enabled: true };
+                 setAgentCategories(prev => {
+                    const newCats = [...prev];
+                    // For simplicity, add to "Core Business Operations Agents"
+                    const targetCat = newCats.find(c => c.category === "Core Business Operations Agents");
+                    if (targetCat) {
+                        targetCat.agents.push(newStaff);
+                    } else {
+                        // Fallback: create a new category
+                        newCats.push({ category: 'General Agents', agents: [newStaff] });
+                    }
+                    return newCats;
                 });
             }
-            toast({ title: "Staff member added successfully." });
         }
+
+        toast({ title: originalName ? "Staff member updated." : "Staff member added." });
     };
 
     const handleDelete = (name: string, type: 'leadership' | 'agent') => {

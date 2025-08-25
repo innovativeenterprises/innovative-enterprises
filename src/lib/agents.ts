@@ -1,0 +1,79 @@
+import type { LucideIcon } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText } from "lucide-react";
+
+export interface Agent {
+    role: string;
+    name: string;
+    description: string;
+    icon: LucideIcon;
+    enabled: boolean;
+    type: 'Leadership' | 'AI Agent';
+    photo: string;
+    aiHint: string;
+    href?: string;
+    socials?: {
+        linkedin?: string;
+        twitter?: string;
+        email?: string;
+        github?: string;
+        website?: string;
+    }
+}
+
+export interface AgentCategory {
+    category: string;
+    agents: Agent[];
+}
+
+export const initialLeadershipTeam: Agent[] = [
+    { name: "JUMAA SALIM AL HADIDI", role: "CEO and Co-Founder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1920&auto=format&fit=crop', aiHint: 'oman business man', socials: { linkedin: "#", twitter: "#", email: "mailto:jumaa@innovative.om", website: "#" } },
+    { name: "ANWAR AHMED SHARIF", role: "CTO and Co-Founder", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=1920&auto=format&fit=crop', aiHint: 'technology expert', socials: { linkedin: "#", twitter: "#", email: "mailto:anwar@innovative.om", github: "#" } },
+    { name: "ABDULJABBAR AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1920&auto=format&fit=crop', aiHint: 'project manager', socials: { linkedin: "#", twitter: "#", email: "mailto:abduljabbar@innovative.om" } },
+    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1542596594-649ed6e6b343?q=80&w=1920&auto=format&fit=crop', aiHint: 'business woman', socials: { linkedin: "#", email: "mailto:huda@innovative.om" } },
+    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=1920&auto=format&fit=crop', aiHint: 'lawyer office', socials: { website: "#", email: "mailto:legal@innovative.om" } },
+];
+
+export const initialAgentCategories: AgentCategory[] = [
+    {
+        category: "Core Business Operations Agents",
+        agents: [
+            { name: "Aida", role: "Admin & Legal Assistant", description: "Engages with visitors, books meetings, generates minutes, and drafts initial legal agreements.", icon: NotebookText, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1589254065909-b7086229d092?q=80&w=1920&auto=format&fit=crop', aiHint: 'robot assistant', href: "/faq" },
+            { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1920&auto=format&fit=crop', aiHint: 'finance robot', href: "/cfo" },
+            { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?q=80&w=1920&auto=format&fit=crop', aiHint: 'human resources robot', href: "/cv-enhancer" },
+            { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616805-669c3fa0de40?q=80&w=1920&auto=format&fit=crop', aiHint: 'robot trophy', href: "/opportunities" },
+        ]
+    },
+    {
+        category: "Customer & Sales Agents",
+        agents: [
+            { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1920&auto=format&fit=crop', aiHint: 'sales bot', href: "/invest" },
+            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, tender responses, and relevant imagery.", icon: Megaphone, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1612428978260-2b9c7df20150?q=80&w=1920&auto=format&fit=crop', aiHint: 'marketing bot', href: "/social-media-post-generator" },
+            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=1920&auto=format&fit=crop', aiHint: 'crm bot' },
+        ]
+    },
+    {
+        category: "Tech & Data Agents",
+        agents: [
+            { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1614149290184-7376551e15a9?q=80&w=1920&auto=format&fit=crop', aiHint: 'it support' },
+            { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698323-b1e79e63d68c?q=80&w=1920&auto=format&fit=crop', aiHint: 'data analytics' },
+            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1620712943543-bcc4622f4273?q=80&w=1920&auto=format&fit=crop', aiHint: 'ai brain', href: "/training-center" },
+            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617371-5def988c7c25?q=80&w=1920&auto=format&fit=crop', aiHint: 'automation robot' },
+        ]
+    },
+    {
+        category: "Creative & Media Agents",
+        agents: [
+            { name: "Lina", role: "Image Generation Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617263-4ec3d5cd3a48?q=80&w=1920&auto=format&fit=crop', aiHint: 'creative robot', href: "/image-generator" },
+            { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698418-4a5e35ca3babc?q=80&w=1920&auto=format&fit=crop', aiHint: 'translation bot', href: "/document-translator" },
+            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698298-65d597b69c4d?q=80&w=1920&auto=format&fit=crop', aiHint: 'camera robot' },
+        ]
+    },
+    {
+        category: "Special Growth Agents",
+        agents: [
+            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Target, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616895-c1864e4e9411?q=80&w=1920&auto=format&fit=crop', aiHint: 'strategy bot' },
+            { name: "Navi", role: "Innovation Agent", description: "Analyzes market gaps and internal capabilities to suggest new products and service offerings.", icon: Rocket, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617243-caff45c4e094?q=80&w=1920&auto=format&fit=crop', aiHint: 'innovation bot' },
+            { name: "Paz", role: "Partnership Agent", description: "Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.", icon: Handshake, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162618033-95b778794c8e?q=80&w=1920&auto=format&fit=crop', aiHint: 'partnership bot', href: "/service-provider" },
+        ]
+    },
+];
