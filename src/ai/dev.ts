@@ -15,5 +15,6 @@ import '@/ai/flows/partnership-inquiry.ts';
 import '@/ai/flows/document-translation.ts';
 import '@/ai/flows/cr-analysis.ts';
 import '@/ai/flows/identity-analysis.ts';
+import '@/ai/flows/meeting-analysis.ts';
 
     

@@ -32,14 +32,14 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     description: "Manage all financial operations with Finley, your AI finance agent.",
   },
   {
+    title: "Online Meeting Agent",
+    href: "/meeting-agent",
+    description: "Generate minutes and action items from a meeting transcript automatically.",
+  },
+  {
     title: "Tender Response Assistant",
     href: "/tender-assistant",
     description: "Generate draft responses to government tenders in minutes.",
-  },
-  {
-    title: "AI-Powered FAQ",
-    href: "/faq",
-    description: "Get instant, accurate answers to your questions about our services.",
   },
    {
     title: "Document Translator",
