@@ -1,385 +1,123 @@
+
 'use client';
 
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import React from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Sparkles } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { handlePartnershipInquiry } from '@/ai/flows/partnership-inquiry';
+import type { PartnershipInquiryInput } from '@/ai/flows/partnership-inquiry.schema';
+import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.schema';
 
-const navLinks = [
-  { href: '/#products', label: 'Products' },
-  { href: '/#testimonials', label: 'Clients' },
-  { href: '/team', label: 'Our Team' },
-];
+export default function ProviderForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
 
-const serviceLinks: { title: string; href: string; description: string }[] = [
-  {
-    title: "E-commerce Services",
-    href: "/ecommerce",
-    description: "End-to-end solutions to build, manage, and scale your online business.",
-  },
-  {
-    title: "IT Infrastructure Rentals",
-    href: "/infra-rent",
-    description: "On-demand rental of IT equipment like servers, workstations, and networking gear.",
-  },
-   {
-    title: "Domestic Workforce Platform (RAAHA)",
-    href: "/raaha",
-    description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
-  },
-   {
-    title: "CFO as a Service",
-    href: "/cfo",
-    description: "Access a financial command center to monitor cash flow, manage expenses, and oversee payroll.",
-  },
-   {
-    title: "CV & Outsourcing Services",
-    href: "/cv-enhancer",
-    description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
-  },
-];
+  const form = useForm<PartnershipInquiryInput>({
+    resolver: zodResolver(PartnershipInquiryInputSchema),
+    defaultValues: {
+      companyName: '',
+      contactName: '',
+      email: '',
+      partnershipDetails: '',
+      undertaking: false,
+    },
+  });
 
-
-const aiToolsLinks: { title: string; href: string; description: string }[] = [
-  {
-    title: "Online Meeting Agent",
-    href: "/meeting-agent",
-    description: "Generate minutes and action items from a meeting transcript automatically.",
-  },
-  {
-    title: "Tender Assistant",
-    href: "/tender-assistant",
-    description: "Generate draft responses for government and corporate tenders based on your documents.",
-  },
-  {
-    title: "Marketing & Content Agent",
-    href: "/social-media-post-generator",
-    description: "Generate social media posts, marketing copy, and other creative content.",
-  },
-   {
-    title: "Verified Document Translator",
-    href: "/document-translator",
-    description: "Translate legal, financial, and official documents with high accuracy.",
-  },
-  {
-    title: "AI Admin & Legal Assistant",
-    href: "/legal-agent",
-    description: "Get preliminary analysis, draft agreements, or ask general questions from our AI agent, Aida.",
-  },
-  {
-    title: "AI Training Center",
-    href: "/training-center",
-    description: "Fine-tune your agents with custom data for better performance.",
-  },
-  {
-    title: "AI Image Generator",
-    href: "/image-generator",
-    description: "Create stunning visuals from text descriptions in seconds.",
-  },
-  {
-    title: "AI Interview Coach",
-    href: "/interview-coach",
-    description: "Practice for your next job interview with AI-generated, role-specific questions.",
-  }
-];
-
-const partnershipLinks: { title: string; href: string; description: string }[] = [
-   {
-    title: "Submit a Work Order",
-    href: "/submit-work",
-    description:
-      "Have a project or task? Submit it here for analysis and routing to our talent network.",
-  },
-   {
-    title: "Competitions & Opportunities",
-    href: "/opportunities",
-    description:
-        "View open competitions and tasks for our network of freelancers and partners.",
-  },
-  {
-    title: "Become a Partner",
-    href: "/partner",
-    description:
-      "Join our network of freelancers, subcontractors, and service providers.",
-  },
-  {
-    title: "Become an Agent",
-    href: "/agent",
-    description:
-      "Represent Innovative Enterprises and earn commissions by bringing in new business.",
-  },
-  {
-    title: "Become our Fractional CTO",
-    href: "/cto",
-    description:
-      "Leverage our expertise to lead your technology strategy and execution.",
-  },
-  {
-    title: "Invest With Us",
-    href: "/invest",
-    description:
-      "Explore investment opportunities and be part of our innovation journey.",
-  },
-]
-
-
-export default function Header() {
-  const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const handleLinkClick = () => {
-    setIsMobileMenuOpen(false);
+  const onSubmit: SubmitHandler<PartnershipInquiryInput> = async (data) => {
+    setIsLoading(true);
+    try {
+      const result = await handlePartnershipInquiry(data);
+      toast({
+        title: "Inquiry Submitted!",
+        description: result.confirmationMessage,
+      });
+      setIsSubmitted(true);
+      form.reset();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'Failed to submit inquiry. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const renderNavLinks = () => (
-    navLinks.map((link) => (
-        <NavigationMenuItem key={link.href}>
-          <NavigationMenuLink asChild>
-            <Link
-              href={link.href}
-              className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
-            >
-              {link.label}
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      )
-    )
-  );
-  
-   const mobileNavLinks = (
-        <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-                <Button
-                key={link.href}
-                asChild
-                variant="ghost"
-                className="justify-start text-base"
-                onClick={handleLinkClick}
-                >
-                <Link href={link.href}>{link.label}</Link>
-                </Button>
-            ))}
-        </div>
-    );
+  if (isSubmitted) {
+      return (
+        <Card className="text-center">
+            <CardHeader>
+                <CardTitle>Thank You!</CardTitle>
+                <CardDescription>Your partnership inquiry has been submitted successfully. Our team will review it and get back to you shortly.</CardDescription>
+            </CardHeader>
+        </Card>
+      );
+  }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <div className="bg-primary p-2 rounded-lg">
-            <Lightbulb className="h-6 w-6 text-primary-foreground" />
-          </div>
-          <span className="hidden sm:inline">INNOVATIVE</span>
-          <span className="sm:hidden">IE</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-1">
-           <NavigationMenu>
-            <NavigationMenuList>
-              {renderNavLinks()}
-               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base font-medium">Services</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {serviceLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base font-medium">
-                  <Sparkles className="mr-2 h-4 w-4" /> AI Tools
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {aiToolsLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base font-medium">Opportunities & Network</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {partnershipLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </nav>
-        <div className="flex items-center gap-2">
-             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon">
-                        <User className="h-5 w-5" />
-                        <span className="sr-only">My Account</span>
+    <Card>
+        <CardHeader>
+          <CardTitle>Join Our Network</CardTitle>
+          <CardDescription>Fill out the form below to apply as a service provider.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField control={form.control} name="companyName" render={({ field }) => (
+                        <FormItem><FormLabel>Company / Your Name</FormLabel><FormControl><Input placeholder="Your Company Inc. / John Doe" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="contactName" render={({ field }) => (
+                        <FormItem><FormLabel>Contact Person</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                     <FormField control={form.control} name="email" render={({ field }) => (
+                        <FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="john.doe@example.com" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="partnershipDetails" render={({ field }) => (
+                        <FormItem><FormLabel>Services Offered / Partnership Details</FormLabel><FormControl><Textarea placeholder="Briefly describe your services (e.g., 'React development, UI/UX design') and how you'd like to partner with us." rows={6} {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField
+                        control={form.control}
+                        name="undertaking"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                            <FormControl>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>Undertaking</FormLabel>
+                                <p className="text-sm text-muted-foreground">
+                                    I confirm that I have the authority to submit this application and that the information provided is accurate.
+                                </p>
+                                <FormMessage />
+                            </div>
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Submitting...
+                        </>
+                    ) : (
+                        "Submit Inquiry"
+                    )}
                     </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                        <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4" /> E-Briefcase</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/admin">Admin Dashboard</Link>
-                    </DropdownMenuItem>
-                     <DropdownMenuSeparator />
-                     <DropdownMenuItem>Log Out</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-            <div className="md:hidden">
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                    <Menu className="h-6 w-6" />
-                    <span className="sr-only">Open navigation menu</span>
-                </Button>
-                </SheetTrigger>
-                <SheetContent side="right">
-                <div className="flex flex-col gap-4 py-8">
-                    <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary mb-4 px-2" onClick={handleLinkClick}>
-                        <div className="bg-primary p-2 rounded-lg">
-                            <Lightbulb className="h-6 w-6 text-primary-foreground" />
-                        </div>
-                    <span>INNOVATIVE ENTERPRISES</span>
-                    </Link>
-                    <nav className="flex flex-col gap-2">
-                      {mobileNavLinks}
-                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Services</p>
-                      {serviceLinks.map((link) => (
-                          <Button
-                          key={link.href}
-                          asChild
-                          variant="ghost"
-                          className={cn("justify-start text-base", pathname === link.href && 'bg-primary/10 text-primary')}
-                          onClick={handleLinkClick}
-                          >
-                          <Link href={link.href}>{link.title}</Link>
-                          </Button>
-                      ))}
-                       <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">AI Tools</p>
-                      {aiToolsLinks.map((link) => (
-                          <Button
-                          key={link.href}
-                          asChild
-                          variant="ghost"
-                          className={cn("justify-start text-base", pathname === link.href && 'bg-primary/10 text-primary')}
-                          onClick={handleLinkClick}
-                          >
-                          <Link href={link.href}>{link.title}</Link>
-                          </Button>
-                      ))}
-                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Opportunities & Network</p>
-                      {partnershipLinks.map((link) => (
-                          <Button
-                          key={link.href}
-                          asChild
-                          variant="ghost"
-                          className="justify-start text-base"
-                          onClick={handleLinkClick}
-                          >
-                          <Link href={link.href}>{link.title}</Link>
-                          </Button>
-                      ))}
-                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">My Account</p>
-                        <Button
-                          asChild
-                          variant="ghost"
-                          className="justify-start text-base"
-                          onClick={handleLinkClick}
-                          >
-                          <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4"/> E-Briefcase</Link>
-                        </Button>
-                         <Button
-                          asChild
-                          variant="ghost"
-                          className="justify-start text-base"
-                          onClick={handleLinkClick}
-                          >
-                          <Link href="/admin">Admin Dashboard</Link>
-                        </Button>
-                    </nav>
-                    <Button className="mt-4">Log Out</Button>
-                </div>
-                </SheetContent>
-            </Sheet>
-            </div>
-        </div>
-      </div>
-    </header>
+                </form>
+            </Form>
+        </CardContent>
+    </Card>
   );
 }
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  )
-})
-ListItem.displayName = "ListItem"
