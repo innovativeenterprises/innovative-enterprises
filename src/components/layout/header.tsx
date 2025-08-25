@@ -129,11 +129,14 @@ export default function Header() {
   const renderNavLinks = (isMobile: boolean) => (
     navLinks.map((link) => (
         <NavigationMenuItem key={link.href}>
-          <Link href={link.href}>
-            <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}>
+          <NavigationMenuLink asChild>
+            <Link
+              href={link.href}
+              className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
+            >
               {link.label}
-            </NavigationMenuLink>
-          </Link>
+            </Link>
+          </NavigationMenuLink>
         </NavigationMenuItem>
       )
     )
