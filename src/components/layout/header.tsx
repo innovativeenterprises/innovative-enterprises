@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, User, Briefcase } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -78,6 +78,11 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
     href: "/submit-work",
     description:
       "Have a project or task? Submit it here for analysis and routing to our talent network.",
+  },
+  {
+    title: "E-commerce Services",
+    href: "/ecommerce",
+    description: "End-to-end solutions to build, manage, and scale your online business.",
   },
   {
     title: "Be our Partner",

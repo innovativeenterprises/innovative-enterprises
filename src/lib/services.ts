@@ -31,6 +31,19 @@ export const initialServices: Service[] = [
     enabled: true,
   },
   {
+    icon: ShoppingCart,
+    title: "E-commerce Solutions",
+    description: "End-to-end services for building, managing, and scaling your online store, from development to marketing.",
+    enabled: true,
+    href: "/ecommerce",
+  },
+  {
+    icon: BarChart,
+    title: "Data Analytics & BI",
+    description: "Turn your data into actionable insights with our business intelligence and data visualization services.",
+    enabled: true,
+  },
+  {
     icon: Briefcase,
     title: "CV ATS Enhancer",
     description: "Get a step-by-step CV enhancement. Optimize your CV for your target job position.",
