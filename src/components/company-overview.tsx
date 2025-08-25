@@ -30,23 +30,6 @@ export default function CompanyOverview() {
                     </Link>
                 </Button>
             </div>
-            <div className="flex items-center gap-4 pt-4">
-                <div className="flex -space-x-2">
-                    <Image src="https://placehold.co/40x40.png" alt="Client 1" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait"/>
-                    <Image src="https://placehold.co/40x40.png" alt="Client 2" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait"/>
-                    <Image src="https://placehold.co/40x40.png" alt="Client 3" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait"/>
-                </div>
-                <div>
-                    <div className="flex text-yellow-400">
-                        <Star className="w-5 h-5 fill-current" />
-                        <Star className="w-5 h-5 fill-current" />
-                        <Star className="w-5 h-5 fill-current" />
-                        <Star className="w-5 h-5 fill-current" />
-                        <Star className="w-5 h-5 fill-current" />
-                    </div>
-                    <p className="text-sm text-muted-foreground">Trusted by 100+ organizations</p>
-                </div>
-            </div>
           </div>
           <div className="relative h-80 md:h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl group">
              <Image
