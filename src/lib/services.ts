@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {
@@ -64,5 +64,12 @@ export const initialServices: Service[] = [
     description: "Enhance your online presence and reach your target audience effectively.",
     enabled: true,
     href: "/social-media-post-generator",
+  },
+  {
+    icon: WalletCards,
+    title: "CFO as a Service",
+    description: "Access a financial command center to monitor cash flow, manage expenses, and oversee payroll.",
+    enabled: true,
+    href: "/cfo",
   },
 ];
