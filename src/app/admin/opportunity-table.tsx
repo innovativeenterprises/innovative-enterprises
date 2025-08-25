@@ -155,7 +155,7 @@ export default function OpportunityTable() {
             const newOpp: Opportunity = {
                 ...values,
                 id: (Math.random() + 1).toString(36).substring(7), // simple unique id
-                icon: Trophy, // default icon for new opps
+                iconName: 'Trophy', // default icon for new opps
                 badgeVariant: 'outline',
             };
             setOpportunities(prev => [newOpp, ...prev]);

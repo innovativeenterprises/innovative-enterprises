@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight } from "lucide-react";
 import type { Opportunity } from "@/lib/opportunities";
-import { initialOpportunities } from "@/lib/opportunities";
+import { initialOpportunities, opportunityIconMap } from "@/lib/opportunities";
 
 const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
     const getStatusColor = () => {
@@ -18,7 +18,7 @@ const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
             default: return '';
         }
     }
-    const Icon = opp.icon;
+    const Icon = opportunityIconMap[opp.iconName] || Trophy; // Fallback to Trophy icon
     return (
          <Card key={opp.title} className={`flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-l-4 ${getStatusColor()}`}>
             <CardHeader>
