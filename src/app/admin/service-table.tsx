@@ -70,14 +70,17 @@ export default function ServiceTable() {
                     </TableHeader>
                     <TableBody>
                         {services.map(service => (
-                            <TableRow key={service.title}>
+                            <TableRow key={service.title} onClick={() => handleToggle(service.title)} className="cursor-pointer">
                                 <TableCell className="font-medium">{service.title}</TableCell>
                                 <TableCell>{service.description}</TableCell>
                                 <TableCell className="text-center">
                                     <div className="flex flex-col items-center gap-1">
                                         <Switch
                                             checked={service.enabled}
-                                            onCheckedChange={() => handleToggle(service.title)}
+                                            onCheckedChange={(e) => {
+                                                e.stopPropagation(); // prevent row click from firing as well
+                                                handleToggle(service.title)
+                                            }}
                                             aria-label={`Enable/disable ${service.title}`}
                                         />
                                         <Badge variant={service.enabled ? "default" : "secondary"}>

@@ -18,6 +18,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { LucideIcon } from "lucide-react";
 import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, PlusCircle, Trash2, Edit, NotebookText, WalletCards } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 
 interface Agent {
     role: string;
@@ -26,6 +29,8 @@ interface Agent {
     icon: LucideIcon;
     enabled: boolean;
     type: 'Leadership' | 'AI Agent';
+    photo: string;
+    aiHint: string;
 }
 
 interface AgentCategory {
@@ -34,54 +39,54 @@ interface AgentCategory {
 }
 
 const initialLeadershipTeam: Agent[] = [
-    { name: "JUMAA SALIM AL HADIDI", role: "CEO and Co-Founder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true, type: 'Leadership' },
-    { name: "ANWAR AHMED SHARIF", role: "CTO and Co-Founder", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership' },
-    { name: "ABDULJABBAR AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Leadership' },
-    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Leadership' },
-    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Leadership' },
+    { name: "JUMAA SALIM AL HADIDI", role: "CEO and Co-Founder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true, type: 'Leadership', photo: 'https://placehold.co/40x40.png', aiHint: 'oman business man' },
+    { name: "ANWAR AHMED SHARIF", role: "CTO and Co-Founder", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership', photo: 'https://placehold.co/40x40.png', aiHint: 'technology expert' },
+    { name: "ABDULJABBAR AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Leadership', photo: 'https://placehold.co/40x40.png', aiHint: 'project manager' },
+    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Leadership', photo: 'https://placehold.co/40x40.png', aiHint: 'business woman' },
+    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Leadership', photo: 'https://placehold.co/40x40.png', aiHint: 'lawyer office' },
 ];
 
 const initialAgentCategories: AgentCategory[] = [
     {
         category: "Core Business Operations Agents",
         agents: [
-            { name: "Aida", role: "Admin & Legal Assistant", description: "Engages with visitors, books meetings, generates minutes, and drafts initial legal agreements.", icon: NotebookText, enabled: true, type: 'AI Agent' },
-            { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, enabled: true, type: 'AI Agent' },
-            { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, enabled: true, type: 'AI Agent' },
-            { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent' },
+            { name: "Aida", role: "Admin & Legal Assistant", description: "Engages with visitors, books meetings, generates minutes, and drafts initial legal agreements.", icon: NotebookText, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'robot assistant' },
+            { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'finance robot' },
+            { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'human resources robot' },
+            { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'robot trophy' },
         ]
     },
     {
         category: "Customer & Sales Agents",
         agents: [
-            { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, enabled: true, type: 'AI Agent' },
-            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, tender responses, and relevant imagery.", icon: Megaphone, enabled: true, type: 'AI Agent' },
-            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact, enabled: true, type: 'AI Agent' },
+            { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'sales bot' },
+            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, tender responses, and relevant imagery.", icon: Megaphone, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'marketing bot' },
+            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'crm bot' },
         ]
     },
     {
         category: "Tech & Data Agents",
         agents: [
-            { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu, enabled: true, type: 'AI Agent' },
-            { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database, enabled: true, type: 'AI Agent' },
-            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, enabled: true, type: 'AI Agent' },
-            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent' },
+            { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'it support' },
+            { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'data analytics' },
+            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'ai brain' },
+            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'automation robot' },
         ]
     },
     {
         category: "Creative & Media Agents",
         agents: [
-            { name: "Lina", role: "Image Generation Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, enabled: true, type: 'AI Agent' },
-            { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, enabled: true, type: 'AI Agent' },
-            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera, enabled: true, type: 'AI Agent' },
+            { name: "Lina", role: "Image Generation Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'creative robot' },
+            { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'translation bot' },
+            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'camera robot' },
         ]
     },
     {
         category: "Special Growth Agents",
         agents: [
-            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Target, enabled: true, type: 'AI Agent' },
-            { name: "Navi", role: "Innovation Agent", description: "Analyzes market gaps and internal capabilities to suggest new products and service offerings.", icon: Rocket, enabled: true, type: 'AI Agent' },
-            { name: "Paz", role: "Partnership Agent", description: "Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.", icon: Handshake, enabled: true, type: 'AI Agent' },
+            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Target, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'strategy bot' },
+            { name: "Navi", role: "Innovation Agent", description: "Analyzes market gaps and internal capabilities to suggest new products and service offerings.", icon: Rocket, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'innovation bot' },
+            { name: "Paz", role: "Partnership Agent", description: "Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.", icon: Handshake, enabled: true, type: 'AI Agent', photo: 'https://placehold.co/40x40.png', aiHint: 'partnership bot' },
         ]
     },
 ];
@@ -90,6 +95,8 @@ const StaffSchema = z.object({
   name: z.string().min(3, "Name is required"),
   role: z.string().min(3, "Role is required"),
   type: z.enum(["Leadership", "AI Agent"]),
+  photo: z.string().url("A valid photo URL is required."),
+  aiHint: z.string().min(2, "AI hint is required"),
 });
 type StaffValues = z.infer<typeof StaffSchema>;
 
@@ -106,14 +113,14 @@ const AddEditStaffDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<StaffValues>({
         resolver: zodResolver(StaffSchema),
-        defaultValues: staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type } : { name: "", role: "", type: "AI Agent" },
+        defaultValues: staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type, photo: staffMember.photo, aiHint: staffMember.aiHint } : { name: "", role: "", type: "AI Agent", photo: "https://placehold.co/40x40.png", aiHint: "person portrait" },
     });
 
     useEffect(() => {
         if(staffMember) {
-            form.reset({ name: staffMember.name, role: staffMember.role, type: staffMember.type });
+            form.reset({ name: staffMember.name, role: staffMember.role, type: staffMember.type, photo: staffMember.photo, aiHint: staffMember.aiHint });
         } else {
-            form.reset({ name: "", role: "", type: "AI Agent" });
+            form.reset({ name: "", role: "", type: "AI Agent", photo: "https://placehold.co/40x40.png", aiHint: "person portrait" });
         }
     }, [staffMember, form, isOpen]);
 
@@ -162,6 +169,14 @@ const AddEditStaffDialog = ({
                                 <FormMessage />
                             </FormItem>
                         )} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="photo" render={({ field }) => (
+                                <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="aiHint" render={({ field }) => (
+                                <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit">Save Staff</Button>
@@ -269,7 +284,7 @@ export default function StaffTable() {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[250px]">Name</TableHead>
+                            <TableHead className="w-[300px]">Name</TableHead>
                             <TableHead>Role</TableHead>
                             <TableHead>Type</TableHead>
                             <TableHead className="text-center">Status</TableHead>
@@ -279,7 +294,13 @@ export default function StaffTable() {
                     <TableBody>
                         {leadership.map(member => (
                             <TableRow key={member.name}>
-                                <TableCell className="font-medium">{member.name}</TableCell>
+                                <TableCell className="font-medium flex items-center gap-3">
+                                    <Avatar>
+                                        <AvatarImage src={member.photo} alt={member.name} />
+                                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    {member.name}
+                                </TableCell>
                                 <TableCell>{member.role}</TableCell>
                                 <TableCell>
                                     <Badge variant="secondary">Leadership</Badge>
@@ -315,7 +336,13 @@ export default function StaffTable() {
                          {agentCategories.flatMap(category => 
                             category.agents.map(agent => (
                                 <TableRow key={agent.name}>
-                                    <TableCell className="font-medium">{agent.name}</TableCell>
+                                    <TableCell className="font-medium flex items-center gap-3">
+                                        <Avatar>
+                                            <AvatarImage src={agent.photo} alt={agent.name} />
+                                            <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                        {agent.name}
+                                    </TableCell>
                                     <TableCell>{agent.role}</TableCell>
                                     <TableCell>
                                         <Badge variant="default" className="bg-primary/20 text-primary hover:bg-primary/30">AI Agent</Badge>

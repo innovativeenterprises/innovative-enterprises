@@ -166,7 +166,11 @@ export default function ProductTable() {
                         {products.map(p => (
                             <TableRow key={p.id}>
                                 <TableCell>
-                                    <Image src={p.image} alt={p.name} width={60} height={45} className="rounded-md object-cover" />
+                                    <AddEditProductDialog product={p} onSave={handleSave}>
+                                        <div className="p-1 -m-1 rounded-md hover:bg-muted cursor-pointer w-fit">
+                                            <Image src={p.image} alt={p.name} width={60} height={45} className="rounded-md object-cover" />
+                                        </div>
+                                    </AddEditProductDialog>
                                 </TableCell>
                                 <TableCell className="font-medium">{p.name}</TableCell>
                                 <TableCell className="text-muted-foreground max-w-sm truncate">{p.description}</TableCell>
