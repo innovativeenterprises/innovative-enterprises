@@ -18,12 +18,15 @@ import type { Product } from "@/lib/products";
 import { initialProducts } from "@/lib/products";
 import type { ProjectStage } from "@/lib/stages";
 import { useProjectStagesData } from "./stage-table";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, GripVertical } from "lucide-react";
 import Image from 'next/image';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -199,6 +202,65 @@ const AddEditProductDialog = ({
     )
 }
 
+const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleToggle }: { product: Product, stages: ProjectStage[], handleSave: (values: ProductValues, id?: string) => void, handleDelete: (id: string) => void, handleToggle: (id: string) => void }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: product.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    return (
+        <TableRow ref={setNodeRef} style={style}>
+            <TableCell>
+                <Button variant="ghost" size="icon" {...attributes} {...listeners} className="cursor-grab">
+                    <GripVertical className="h-4 w-4" />
+                </Button>
+            </TableCell>
+            <TableCell>
+                <AddEditProductDialog product={product} onSave={handleSave} stages={stages}>
+                    <div className="p-1 -m-1 rounded-md hover:bg-muted cursor-pointer w-fit">
+                        <Image src={product.image} alt={product.name} width={60} height={45} className="rounded-md object-cover" />
+                    </div>
+                </AddEditProductDialog>
+            </TableCell>
+            <TableCell className="font-medium">{product.name}</TableCell>
+            <TableCell><Badge variant="outline">{product.stage}</Badge></TableCell>
+            <TableCell className="text-center">
+                <div className="flex flex-col items-center gap-1">
+                    <Switch
+                        checked={product.enabled}
+                        onCheckedChange={() => handleToggle(product.id)}
+                        aria-label={`Enable/disable ${product.name}`}
+                    />
+                    <Badge variant={product.enabled ? "default" : "secondary"}>
+                        {product.enabled ? "Enabled" : "Disabled"}
+                    </Badge>
+                </div>
+            </TableCell>
+            <TableCell className="text-right">
+                <div className="flex justify-end gap-2">
+                    <AddEditProductDialog product={product} onSave={handleSave} stages={stages}>
+                        <Button variant="ghost" size="icon"><Edit /></Button>
+                    </AddEditProductDialog>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the product "{product.name}".</AlertDialogDescription></AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(product.id)}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
+            </TableCell>
+        </TableRow>
+    );
+};
+
 export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (products: Product[]) => void }) {
     const { toast } = useToast();
     const { stages } = useProjectStagesData();
@@ -230,6 +292,18 @@ export default function ProductTable({ products, setProducts }: { products: Prod
         setProducts(prev => prev.filter(p => p.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
+    
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (active.id !== over?.id) {
+            setProducts((items) => {
+                const oldIndex = items.findIndex(item => item.id === active.id);
+                const newIndex = items.findIndex(item => item.id === over?.id);
+                return arrayMove(items, oldIndex, newIndex);
+            });
+            toast({ title: "Product order updated." });
+        }
+    };
 
     return (
         <Card>
@@ -246,6 +320,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                 <Table>
                     <TableHeader>
                         <TableRow>
+                            <TableHead className="w-[50px]">Order</TableHead>
                             <TableHead>Image</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Stage</TableHead>
@@ -253,52 +328,22 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
-                        {products.map(p => (
-                            <TableRow key={p.id}>
-                                <TableCell>
-                                    <AddEditProductDialog product={p} onSave={handleSave} stages={stages}>
-                                        <div className="p-1 -m-1 rounded-md hover:bg-muted cursor-pointer w-fit">
-                                            <Image src={p.image} alt={p.name} width={60} height={45} className="rounded-md object-cover" />
-                                        </div>
-                                    </AddEditProductDialog>
-                                </TableCell>
-                                <TableCell className="font-medium">{p.name}</TableCell>
-                                <TableCell><Badge variant="outline">{p.stage}</Badge></TableCell>
-                                <TableCell className="text-center">
-                                    <div className="flex flex-col items-center gap-1">
-                                        <Switch
-                                            checked={p.enabled}
-                                            onCheckedChange={() => handleToggle(p.id)}
-                                            aria-label={`Enable/disable ${p.name}`}
-                                        />
-                                        <Badge variant={p.enabled ? "default" : "secondary"}>
-                                            {p.enabled ? "Enabled" : "Disabled"}
-                                        </Badge>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditProductDialog product={p} onSave={handleSave} stages={stages}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditProductDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the product "{p.name}".</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(p.id)}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
+                    <DndContext sensors={[]} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                        <SortableContext items={products} strategy={verticalListSortingStrategy}>
+                            <TableBody>
+                                {products.map(p => (
+                                    <SortableProductRow
+                                        key={p.id}
+                                        product={p}
+                                        stages={stages}
+                                        handleSave={handleSave}
+                                        handleDelete={handleDelete}
+                                        handleToggle={handleToggle}
+                                    />
+                                ))}
+                            </TableBody>
+                        </SortableContext>
+                    </DndContext>
                 </Table>
             </CardContent>
         </Card>
