@@ -35,6 +35,11 @@ const navLinks = [
 
 const serviceLinks: { title: string; href: string; description: string }[] = [
   {
+    title: "Sanad Hub Platform",
+    href: "/sanad-hub",
+    description: "A digital gateway connecting users with Sanad Service Centres across Oman for task delegation and service bidding.",
+  },
+  {
     title: "E-commerce Services",
     href: "/ecommerce",
     description: "End-to-end solutions to build, manage, and scale your online business.",
