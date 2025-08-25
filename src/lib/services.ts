@@ -1,6 +1,8 @@
 
+
 import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 
 export interface Service {
   icon: LucideIcon;
@@ -84,5 +86,12 @@ export const initialServices: Service[] = [
     description: "Access a financial command center to monitor cash flow, manage expenses, and oversee payroll.",
     enabled: true,
     href: "/cfo",
+  },
+   {
+    icon: HomeWorkforceIcon,
+    title: "Domestic Workforce Platform (RAAHA)",
+    description: "An AI-powered white-label platform to connect domestic work agencies with clients, simplifying recruitment.",
+    enabled: true,
+    href: "/raaha",
   },
 ];
