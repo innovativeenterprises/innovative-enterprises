@@ -14,6 +14,7 @@ import { Loader2, Sparkles, Wand2, Bot, Users, Target, Shield, ListChecks, Miles
 import { Badge } from '@/components/ui/badge';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import type { ProjectInceptionInput, ProjectInceptionOutput } from '@/ai/flows/project-inception.schema';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
@@ -46,15 +47,34 @@ const PlanDisplay = ({ plan }: { plan: ProjectInceptionOutput }) => (
                 </Section>
             </div>
              <Section icon={<ListChecks />} title="Core Features (MVP)">
-                <ul className="list-disc pl-5 space-y-1">
-                    {plan.coreFeatures.map((feature, i) => <li key={i}>{feature}</li>)}
-                </ul>
+                <Accordion type="single" collapsible className="w-full">
+                    {plan.coreFeatures.map((feature, i) => (
+                        <AccordionItem value={`item-${i}`} key={i}>
+                            <AccordionTrigger className="font-medium text-sm text-foreground">{feature.title}</AccordionTrigger>
+                            <AccordionContent className="space-y-2 pl-2">
+                                <p className="text-muted-foreground">{feature.description}</p>
+                                <p className="text-xs font-semibold text-foreground">Acceptance Criteria: <span className="font-normal text-muted-foreground">{feature.acceptanceCriteria}</span></p>
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
             </Section>
             <div className="grid md:grid-cols-2 gap-6">
                  <Section icon={<Shield />} title="Potential Risks">
-                    <ul className="list-disc pl-5 space-y-1">
-                        {plan.risks.map((risk, i) => <li key={i}>{risk}</li>)}
-                    </ul>
+                    <div className="space-y-2">
+                        {plan.risks.map((risk, i) => {
+                            const likelihoodColor = risk.likelihood === 'High' ? 'bg-destructive/80' : risk.likelihood === 'Medium' ? 'bg-yellow-500 text-black' : 'bg-green-500';
+                            return (
+                                <div key={i} className="p-3 border rounded-md">
+                                    <div className="flex justify-between items-center">
+                                        <p className="font-semibold text-foreground text-sm">{risk.risk}</p>
+                                        <Badge variant="default" className={likelihoodColor}>{risk.likelihood}</Badge>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground mt-1"><strong>Mitigation:</strong> {risk.mitigation}</p>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </Section>
                 <Section icon={<Users />} title="Recommended Agents">
                     <div className="flex flex-wrap gap-2">
