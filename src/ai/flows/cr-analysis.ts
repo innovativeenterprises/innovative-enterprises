@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -30,11 +31,11 @@ const prompt = ai.definePrompt({
 
     **Company Information:**
     -   **Company Name (English/Arabic):** Find the official, full legal name of the business in both English and Arabic.
-    -   **Legal Type:** The legal structure (e.g., LLC, SAOC, Sole Proprietorship).
+    -   **Legal Type:** The legal structure (e.g., LLC, SAOC).
     -   **Registration Number:** The CR number.
     -   **Tax Identification Number:** The TIN, if present.
     -   **Headquarters Address:** The primary registered address.
-    -   **Contact Mobile & Email:** The official mobile number and email.
+    -   **Contact Mobile & Email:** The official contact mobile number and email.
     -   **Establishment, Registration, Expiry Dates:** Key dates related to the CR.
     -   **Status:** The current legal status (e.g., Active, Inactive).
 

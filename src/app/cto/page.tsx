@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Send, UploadCloud, FileCheck2, Building } from 'lucide-react';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
