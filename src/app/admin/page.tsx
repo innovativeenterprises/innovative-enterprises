@@ -8,6 +8,7 @@ import ProviderTable from "./provider-table";
 import ProductTable from "./product-table";
 import ClientTable from "./client-table";
 import PricingTable from "./pricing-table";
+import SettingsTable from "./settings-table";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users },
@@ -43,6 +44,7 @@ export default function AdminPage() {
                 ))}
             </div>
 
+            <SettingsTable />
             <StaffTable />
             <ServiceTable />
             <ProductTable />

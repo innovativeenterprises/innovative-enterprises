@@ -12,13 +12,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp, FileText, AlignLeft, CreditCard } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp, FileText, AlignLeft, CreditCard, Users, Send } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Pricing } from '@/lib/pricing';
 import { initialPricing } from '@/lib/pricing';
+import type { AppSettings } from '@/lib/settings';
+import { initialSettings } from '@/lib/settings';
+import { translationOffices } from '@/lib/offices';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -57,6 +60,7 @@ const documentTypeEnum = z.enum([
     // Financial & Trade
     'Bank Statements, Loan Forms, Insurance Policies',
     'Trading Contracts, Customs Declarations, Tax Reports',
+    'Invoices',
     'Other',
 ]);
 
@@ -67,6 +71,8 @@ const FormSchema = z.object({
   targetLanguage: z.string().min(1, "Target language is required."),
   documentType: documentTypeEnum,
   requestSealedCopy: z.boolean().default(false),
+  assignedOffice: z.string().optional(),
+  tenderOffices: z.array(z.string()).optional(),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
@@ -94,19 +100,19 @@ export default function TranslationForm() {
   const [response, setResponse] = useState<DocumentTranslationOutput | null>(null);
   const [submittedData, setSubmittedData] = useState<FormValues | null>(null);
   const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+  const [settings, setSettings] = useState<AppSettings>(initialSettings);
   const { toast } = useToast();
 
   useEffect(() => {
     try {
-        const stored = localStorage.getItem('translation_pricing');
-        if (stored) {
-            setPricing(JSON.parse(stored));
-        } else {
-            setPricing(initialPricing);
-        }
+        const storedPricing = localStorage.getItem('translation_pricing');
+        setPricing(storedPricing ? JSON.parse(storedPricing) : initialPricing);
+        const storedSettings = localStorage.getItem('app_settings');
+        setSettings(storedSettings ? JSON.parse(storedSettings) : initialSettings);
     } catch (error) {
-        console.error("Failed to parse pricing from localStorage", error);
+        console.error("Failed to parse data from localStorage", error);
         setPricing(initialPricing);
+        setSettings(initialSettings);
     }
   }, []);
 
@@ -136,6 +142,8 @@ export default function TranslationForm() {
       documentType: 'Complex Legal Contracts, Immigration Docs',
       requestSealedCopy: false,
       numberOfPages: 1,
+      assignedOffice: '',
+      tenderOffices: [],
     },
   });
   
@@ -171,6 +179,14 @@ export default function TranslationForm() {
 
 
   const handleProceedToPayment: SubmitHandler<FormValues> = async (data) => {
+    if (settings.translationAssignmentMode === 'tender' && (!data.tenderOffices || data.tenderOffices.length === 0)) {
+        form.setError('tenderOffices', { type: 'manual', message: 'Please select at least one office for the tender.' });
+        return;
+    }
+     if (settings.translationAssignmentMode === 'direct' && !data.assignedOffice) {
+        form.setError('assignedOffice', { type: 'manual', message: 'Please select an office to assign the task to.' });
+        return;
+    }
     setSubmittedData(data);
     setPageState('payment');
   };
@@ -189,6 +205,13 @@ export default function TranslationForm() {
       const file = submittedData.documentFiles[0];
       const documentDataUri = await fileToDataURI(file);
 
+      // Log assignment/tender details
+      if (settings.translationAssignmentMode === 'direct') {
+          console.log(`Assigning task directly to: ${submittedData.assignedOffice}`);
+      } else {
+          console.log(`Sending tender to: ${submittedData.tenderOffices?.join(', ')}`);
+      }
+
       const result = await translateDocument({
           documentDataUri,
           sourceLanguage: submittedData.sourceLanguage,
@@ -206,7 +229,10 @@ export default function TranslationForm() {
       
       if (submittedData.documentFiles.length > 1) {
           const remainingFiles = Array.from(submittedData.documentFiles).slice(1);
-          form.setValue('documentFiles', remainingFiles);
+          form.reset({
+              ...form.getValues(),
+              documentFiles: remainingFiles,
+          });
           toast({
             title: 'Next file is ready',
             description: `${remainingFiles.length} file(s) remaining in your queue. Go back to the form to process the next one.`,
@@ -280,10 +306,11 @@ export default function TranslationForm() {
                       name="documentFiles"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Document to Translate</FormLabel>
+                          <FormLabel>Document(s) to Translate</FormLabel>
                           <FormControl>
                             <Input type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
                           </FormControl>
+                           <FormDescription>You can select multiple files.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -297,6 +324,7 @@ export default function TranslationForm() {
                            <FormControl>
                             <Input type="number" min="1" {...field} />
                            </FormControl>
+                            <FormDescription>Total pages for the current file.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -392,6 +420,94 @@ export default function TranslationForm() {
                     </FormItem>
                   )}
                 />
+
+                {/* Assignment / Tender Section */}
+                <Card className="bg-muted/50">
+                    <CardHeader>
+                        <CardTitle className="text-lg">
+                            {settings.translationAssignmentMode === 'direct' ? "Direct Assignment" : "Send Tender to Partners"}
+                        </CardTitle>
+                        <CardDescription>
+                            {settings.translationAssignmentMode === 'direct' 
+                                ? "Assign this translation task directly to a preferred office."
+                                : "Select one or more partner offices to send this translation job out to tender."
+                            }
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {settings.translationAssignmentMode === 'direct' ? (
+                            <FormField
+                              control={form.control}
+                              name="assignedOffice"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Select Translation Office</FormLabel>
+                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Choose an office..." />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {translationOffices.map(office => (
+                                        <SelectItem key={office} value={office}>{office}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                        ) : (
+                             <FormField
+                                control={form.control}
+                                name="tenderOffices"
+                                render={() => (
+                                <FormItem>
+                                    <FormLabel>Select Partner Offices for Tender</FormLabel>
+                                    <div className="grid grid-cols-2 gap-4 pt-2">
+                                        {translationOffices.map((office) => (
+                                            <FormField
+                                            key={office}
+                                            control={form.control}
+                                            name="tenderOffices"
+                                            render={({ field }) => {
+                                                return (
+                                                <FormItem
+                                                    key={office}
+                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                >
+                                                    <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value?.includes(office)}
+                                                        onCheckedChange={(checked) => {
+                                                        return checked
+                                                            ? field.onChange([...(field.value || []), office])
+                                                            : field.onChange(
+                                                                field.value?.filter(
+                                                                (value) => value !== office
+                                                                )
+                                                            )
+                                                        }}
+                                                    />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal">
+                                                        {office}
+                                                    </FormLabel>
+                                                </FormItem>
+                                                )
+                                            }}
+                                            />
+                                        ))}
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                        )}
+                    </CardContent>
+                </Card>
+
 
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
                     <CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment ({finalPrice.toFixed(2)} OMR)
@@ -489,6 +605,17 @@ export default function TranslationForm() {
                 </AlertDescription>
             </Alert>
             )}
+
+             <Alert variant="default" className="bg-green-50 border-green-200 dark:bg-green-900/30 dark:border-green-800">
+                <Send className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <AlertTitle>Task Routed</AlertTitle>
+                <AlertDescription className="text-green-800 dark:text-green-200">
+                {settings.translationAssignmentMode === 'direct' 
+                    ? `This task has been assigned to ${submittedData?.assignedOffice}.`
+                    : `This task has been sent out for tender to ${submittedData?.tenderOffices?.length} partner(s).`
+                }
+                </AlertDescription>
+            </Alert>
 
             <Tabs defaultValue="formatted" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
