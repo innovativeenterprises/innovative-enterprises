@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, BrainCircuit, Image as ImageIcon, Briefcase, WalletCards } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, User, AdminPanelSettings, Briefcase } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -17,6 +17,14 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import React from 'react';
 
 const navLinks = [
@@ -200,18 +208,30 @@ export default function Header() {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-                 <NavigationMenuItem>
-                    <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "text-base font-medium")}>
-                        <Link href="/briefcase">
-                           <Briefcase className="mr-2 h-4 w-4" /> E-Briefcase
-                        </Link>
-                    </NavigationMenuLink>
-                </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
         <div className="flex items-center gap-2">
-            <Button variant="outline" className="hidden md:flex">Contact Us</Button>
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                        <User className="h-5 w-5" />
+                        <span className="sr-only">My Account</span>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                        <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4" /> E-Briefcase</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/admin">Admin Dashboard</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuSeparator />
+                     <DropdownMenuItem>Log Out</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
             <div className="md:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild>
@@ -263,8 +283,16 @@ export default function Header() {
                           >
                           <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4"/> E-Briefcase</Link>
                         </Button>
+                         <Button
+                          asChild
+                          variant="ghost"
+                          className="justify-start text-base"
+                          onClick={handleLinkClick}
+                          >
+                          <Link href="/admin">Admin Dashboard</Link>
+                        </Button>
                     </nav>
-                    <Button className="mt-4">Contact Us</Button>
+                    <Button className="mt-4">Log Out</Button>
                 </div>
                 </SheetContent>
             </Sheet>

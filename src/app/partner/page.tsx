@@ -35,7 +35,8 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 const CompanyUploadSchema = z.object({
   crDocument: z.any().refine(file => file?.length == 1, 'Commercial Record is required.'),
-  repIdDocument: z.any().refine(file => file?.length == 1, 'Representative ID is required.'),
+  repIdDocumentFrontUri: z.string().min(1, 'Front of Representative ID is required.'),
+  repIdDocumentBackUri: z.string().optional(),
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
@@ -57,7 +58,7 @@ const PaymentSchema = z.object({
 });
 type PaymentValues = z.infer<typeof PaymentSchema>;
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted' | 'capture_id_front' | 'capture_id_back';
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted' | 'capture_id_front' | 'capture_id_back' | 'capture_rep_id_front' | 'capture_rep_id_back';
 type ApplicantType = 'individual' | 'company';
 
 const REGISTRATION_FEE = 10;
@@ -92,10 +93,12 @@ export default function PartnerPage() {
     setRepAnalysisResult(null);
     try {
         const crFile = data.crDocument[0];
-        const repIdFile = data.repIdDocument[0];
 
         const crPromise = fileToDataURI(crFile).then(uri => analyzeCrDocument({ documentDataUri: uri }));
-        const repIdPromise = fileToDataURI(repIdFile).then(uri => analyzeIdentity({ idDocumentFrontUri: uri }));
+        const repIdPromise = analyzeIdentity({ 
+            idDocumentFrontUri: data.repIdDocumentFrontUri,
+            idDocumentBackUri: data.repIdDocumentBackUri,
+        });
 
         const [crResult, repResult] = await Promise.all([crPromise, repIdPromise]);
         
@@ -172,6 +175,19 @@ export default function PartnerPage() {
     setPageState('upload');
     toast({ title: 'Back of ID Captured!', description: "You can now proceed with the analysis."});
   }
+
+  const onRepIdFrontCaptured = (imageUri: string) => {
+    companyUploadForm.setValue('repIdDocumentFrontUri', imageUri);
+    setPageState('upload');
+    toast({ title: "Representative's ID Front Captured!", description: "Please scan the back of the ID card now."})
+  }
+  
+  const onRepIdBackCaptured = (imageUri: string) => {
+    companyUploadForm.setValue('repIdDocumentBackUri', imageUri);
+    setPageState('upload');
+    toast({ title: "Representative's ID Back Captured!", description: "You can now proceed with the analysis."});
+  }
+
 
   const handleProceedToPayment: SubmitHandler<z.infer<typeof PartnershipInquiryInputSchema>> = async (data) => {
     console.log("Verified Partnership Data:", data);
@@ -373,14 +389,28 @@ export default function PartnerPage() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <FormField control={companyUploadForm.control} name="repIdDocument" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>2. Representative's ID Card</FormLabel>
-                                <FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
+                         <div>
+                          <FormLabel>2. Representative's ID Card</FormLabel>
+                          <div className="grid grid-cols-2 gap-4 mt-2">
+                              <Button type="button" onClick={() => setPageState('capture_rep_id_front')} disabled={!!companyUploadForm.getValues('repIdDocumentFrontUri')}>
+                                <Camera className="mr-2 h-4 w-4" /> Scan Front of ID
+                              </Button>
+                              <Button type="button" variant="outline" onClick={() => setPageState('capture_rep_id_back')} disabled={!companyUploadForm.getValues('repIdDocumentFrontUri') || !!companyUploadForm.getValues('repIdDocumentBackUri')}>
+                                <Camera className="mr-2 h-4 w-4" /> Scan Back of ID
+                              </Button>
+                          </div>
+                          {(companyUploadForm.getValues('repIdDocumentFrontUri') || companyUploadForm.getValues('repIdDocumentBackUri')) && (
+                            <Alert variant="default" className="text-green-800 bg-green-50 border-green-200 dark:text-green-200 dark:bg-green-900/30 dark:border-green-800 mt-2">
+                               <ScanLine className="h-4 w-4 text-green-600 dark:text-green-400" />
+                               <AlertTitle>ID Scanned</AlertTitle>
+                               <AlertDescription>
+                                {companyUploadForm.getValues('repIdDocumentFrontUri') && "Front captured. "}
+                                {companyUploadForm.getValues('repIdDocumentBackUri') && "Back captured."}
+                               </AlertDescription>
+                           </Alert>
+                          )}
+                        </div>
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!companyUploadForm.getValues('repIdDocumentFrontUri')}><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
                 </Form>
             ) : (
@@ -617,6 +647,8 @@ export default function PartnerPage() {
         case 'submitted': return <SubmittedScreen />;
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };
