@@ -39,9 +39,8 @@ type FormValues = z.infer<typeof FormSchema>;
 
 const availableAgents = [
     { id: 'Aida_FAQ', name: 'Aida - FAQ Bot' },
-    { id: 'Lexi_Legal', name: 'Lexi - Legal & Contracts Agent' },
     { id: 'Hira_HR', name: 'Hira - HR & Recruitment Agent' },
-    { id: 'Noor_Copywriting', name: 'Noor - Copywriting Agent' },
+    { id: 'Mira_Marketing', name: 'Mira - Marketing & Content Agent' },
 ];
 
 export default function TrainingForm() {

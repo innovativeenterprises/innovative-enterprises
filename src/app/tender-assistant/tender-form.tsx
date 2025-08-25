@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -14,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Copy } from 'lucide-react';
 
 const FormSchema = z.object({
-  tenderDocuments: z.any().refine(file => file?.length == 1, 'Tender document is required.'),
+  tenderDocuments: z.any().refine(files => files?.length > 0, 'At least one tender document is required.'),
   projectRequirements: z.string().min(10, 'Project requirements must be at least 10 characters.'),
 });
 
@@ -46,8 +47,8 @@ export default function TenderForm() {
     setIsLoading(true);
     setResponse(null);
     try {
-        const file = data.tenderDocuments[0];
-        const tenderDocuments = await fileToDataURI(file);
+        const files = Array.from(data.tenderDocuments as FileList);
+        const tenderDocuments = await Promise.all(files.map(file => fileToDataURI(file)));
       
         const result = await generateTenderResponse({
             tenderDocuments,
@@ -82,9 +83,9 @@ export default function TenderForm() {
                 name="tenderDocuments"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tender Document</FormLabel>
+                    <FormLabel>Tender Documents</FormLabel>
                     <FormControl>
-                        <Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} />
+                        <Input type="file" multiple accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

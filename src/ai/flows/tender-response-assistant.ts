@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -13,9 +14,9 @@ import {z} from 'genkit';
 
 const GenerateTenderResponseInputSchema = z.object({
   tenderDocuments: z
-    .string()
+    .array(z.string())
     .describe(
-      'Tender documents as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' 
+      'A list of tender documents as data URIs. Each must include a MIME type and use Base64 encoding.' 
     ),
   projectRequirements: z.string().describe('The specific requirements for the project.'),
 });
@@ -40,7 +41,11 @@ const prompt = ai.definePrompt({
 
   Based on the provided tender documents and project requirements, generate a draft response that addresses all the requirements and showcases the strengths of our company.
 
-Tender Documents: {{media url=tenderDocuments}}
+Tender Documents:
+{{#each tenderDocuments}}
+- Document: {{media url=this}}
+{{/each}}
+
 Project Requirements: {{{projectRequirements}}}`,
 });
 
