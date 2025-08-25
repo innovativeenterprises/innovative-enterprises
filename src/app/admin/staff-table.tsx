@@ -16,7 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, PlusCircle, Trash2, Edit } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, PlusCircle, Trash2, Edit, NotebookText, WalletCards } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Agent {
@@ -45,46 +45,45 @@ const initialAgentCategories: AgentCategory[] = [
     {
         category: "Core Business Operations Agents",
         agents: [
-            { name: "Aida", role: "Admin / Executive Assistant", description: "Schedules, reminders, document prep.", icon: Briefcase, enabled: true, type: 'AI Agent' },
-            { name: "Finley", role: "Finance & Accounting Agent", description: "Bookkeeping, invoices, expense tracking, tax reminders.", icon: DollarSign, enabled: true, type: 'AI Agent' },
-            { name: "Hira", role: "HR & Recruitment Agent", description: "CV screening, ATS checks, onboarding automation.", icon: Users, enabled: true, type: 'AI Agent' },
-            { name: "Lexi", role: "Legal & Contracts Agent", description: "Draft agreements, compliance checks.", icon: Scale, enabled: true, type: 'AI Agent' },
-            { name: "Talia", role: "Talent & Competition Agent", description: "Posts opportunities, manages submissions.", icon: Trophy, enabled: true, type: 'AI Agent' },
+            { name: "Aida", role: "Admin / Executive Assistant", description: "Engages with website visitors, books meetings, and generates meeting minutes.", icon: NotebookText, enabled: true, type: 'AI Agent' },
+            { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, enabled: true, type: 'AI Agent' },
+            { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, enabled: true, type: 'AI Agent' },
+            { name: "Lexi", role: "Legal & Contracts Agent", description: "Provides preliminary legal analysis and drafts NDAs, service agreements, and performs KYC pre-verification.", icon: Scale, enabled: true, type: 'AI Agent' },
+            { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Customer & Sales Agents",
         agents: [
-            { name: "Caro", role: "Customer Support Agent", description: "Handles WhatsApp, email, chatbot queries 24/7.", icon: Headset, enabled: true, type: 'AI Agent' },
-            { name: "Sami", role: "Sales Agent", description: "Follows up leads, pitches services, books meetings.", icon: TrendingUp, enabled: true, type: 'AI Agent' },
-            { name: "Mira", role: "Marketing Agent", description: "Creates ads, social posts, SEO, blog content.", icon: Megaphone, enabled: true, type: 'AI Agent' },
-            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, sends follow-ups.", icon: Contact, enabled: true, type: 'AI Agent' },
+            { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, enabled: true, type: 'AI Agent' },
+            { name: "Mira", role: "Marketing Agent", description: "Generates social media posts, suggests hashtags, and creates relevant imagery for marketing campaigns.", icon: Megaphone, enabled: true, type: 'AI Agent' },
+            { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Tech & Data Agents",
         agents: [
-            { name: "Tariq Tech", role: "IT Support Agent", description: "Troubleshoots software, automates processes.", icon: Cpu, enabled: true, type: 'AI Agent' },
-            { name: "Dana", role: "Data Analyst Agent", description: "Dashboards, trends, KPI monitoring.", icon: Database, enabled: true, type: 'AI Agent' },
-            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes your AI tools on your business data.", icon: BrainCircuit, enabled: true, type: 'AI Agent' },
-            { name: "AutoNabil", role: "Automation Agent", description: "Connects all tools (Zapier/Make style).", icon: Bot, enabled: true, type: 'AI Agent' },
+            { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu, enabled: true, type: 'AI Agent' },
+            { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database, enabled: true, type: 'AI Agent' },
+            { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, enabled: true, type: 'AI Agent' },
+            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Creative & Media Agents",
         agents: [
-            { name: "Lina", role: "Content Creator Agent", description: "Designs posts, videos, brochures.", icon: Palette, enabled: true, type: 'AI Agent' },
-            { name: "Noor", role: "Copywriting Agent", description: "Catchy ad copy, website text.", icon: PenSquare, enabled: true, type: 'AI Agent' },
-            { name: "Voxi", role: "Voice & Translation Agent", description: "Voiceovers, Arabic-English translation.", icon: Languages, enabled: true, type: 'AI Agent' },
-            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Photo editing, 360° virtual tours.", icon: Camera, enabled: true, type: 'AI Agent' },
+            { name: "Lina", role: "Content Creator Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, enabled: true, type: 'AI Agent' },
+            { name: "Noor", role: "Copywriting Agent", description: "Generates compelling copy for websites, advertisements, and official documents like tender responses.", icon: PenSquare, enabled: true, type: 'AI Agent' },
+            { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, enabled: true, type: 'AI Agent' },
+            { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera, enabled: true, type: 'AI Agent' },
         ]
     },
     {
         category: "Special Growth Agents",
         agents: [
-            { name: "Rami", role: "Strategy & Research Agent", description: "Market research, competitor tracking.", icon: Target, enabled: true, type: 'AI Agent' },
-            { name: "Navi", role: "Innovation Agent", description: "Suggests new services/products.", icon: Rocket, enabled: true, type: 'AI Agent' },
-            { name: "Paz", role: "Partnership Agent", description: "Finds collaborators, drafts proposals.", icon: Handshake, enabled: true, type: 'AI Agent' },
+            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Target, enabled: true, type: 'AI Agent' },
+            { name: "Navi", role: "Innovation Agent", description: "Analyzes market gaps and internal capabilities to suggest new products and service offerings.", icon: Rocket, enabled: true, type: 'AI Agent' },
+            { name: "Paz", role: "Partnership Agent", description: "Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.", icon: Handshake, enabled: true, type: 'AI Agent' },
         ]
     },
 ];
