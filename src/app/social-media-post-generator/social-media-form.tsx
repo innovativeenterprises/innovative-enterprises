@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -10,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download, FileText } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
@@ -40,7 +41,7 @@ export default function SocialMediaForm() {
       console.error(error);
       toast({
         title: 'Error',
-        description: 'Failed to generate social media post. Please try again.',
+        description: 'Failed to generate content. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -63,8 +64,8 @@ export default function SocialMediaForm() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Generate a Post</CardTitle>
-          <CardDescription>Fill in the details below to get started.</CardDescription>
+          <CardTitle>Generate Content</CardTitle>
+          <CardDescription>Fill in the details below to generate marketing copy, a social post, or a tender response draft.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -74,11 +75,11 @@ export default function SocialMediaForm() {
                 name="topic"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Topic</FormLabel>
+                    <FormLabel>Topic / Prompt</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="e.g., The future of AI in the workplace"
-                        rows={4}
+                        placeholder="e.g., Announce a new partnership with a major tech company. / Write a draft response for Tender #123, focusing on our AI capabilities."
+                        rows={6}
                         {...field}
                       />
                     </FormControl>
@@ -92,7 +93,7 @@ export default function SocialMediaForm() {
                   name="platform"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Platform</FormLabel>
+                      <FormLabel>Content Type / Platform</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -100,11 +101,12 @@ export default function SocialMediaForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                          <SelectItem value="Twitter">Twitter</SelectItem>
-                          <SelectItem value="Facebook">Facebook</SelectItem>
-                          <SelectItem value="Instagram">Instagram</SelectItem>
-                          <SelectItem value="WhatsApp">WhatsApp</SelectItem>
+                          <SelectItem value="Tender Response">Tender Response</SelectItem>
+                          <SelectItem value="LinkedIn">LinkedIn Post</SelectItem>
+                          <SelectItem value="Twitter">Twitter Post</SelectItem>
+                          <SelectItem value="Facebook">Facebook Post</SelectItem>
+                          <SelectItem value="Instagram">Instagram Post</SelectItem>
+                          <SelectItem value="WhatsApp">WhatsApp Message</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -149,7 +151,7 @@ export default function SocialMediaForm() {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel>
-                          Generate an image for the post
+                          Generate an image for the post (for social media)
                         </FormLabel>
                         <FormMessage />
                       </div>
@@ -166,7 +168,7 @@ export default function SocialMediaForm() {
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Generate Post
+                    Generate Content
                   </>
                 )}
               </Button>
@@ -179,7 +181,7 @@ export default function SocialMediaForm() {
          <Card>
             <CardContent className="p-6 text-center">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                <p className="mt-4 text-muted-foreground">Our AI is crafting your post... This may take a moment, especially if an image is being generated.</p>
+                <p className="mt-4 text-muted-foreground">Mira is crafting your content... This may take a moment.</p>
             </CardContent>
          </Card>
       )}
@@ -187,21 +189,23 @@ export default function SocialMediaForm() {
       {response && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Megaphone className="h-6 w-6" /> Generated Post</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Megaphone className="h-6 w-6" /> Generated Content</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="relative">
-                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
+                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
                     <p>{response.postContent}</p>
-                    <p className="font-semibold">{response.suggestedHashtags.join(' ')}</p>
+                    {response.suggestedHashtags && response.suggestedHashtags.length > 0 && (
+                      <p className="font-semibold">{response.suggestedHashtags.join(' ')}</p>
+                    )}
                 </div>
               <Button
                   variant="ghost"
                   size="icon"
                   className="absolute top-2 right-2 text-muted-foreground"
                   onClick={() => {
-                    navigator.clipboard.writeText(response.postContent + '\n\n' + response.suggestedHashtags.join(' '));
-                    toast({ title: "Copied!", description: "The post content has been copied to your clipboard." });
+                    navigator.clipboard.writeText(response.postContent + '\n\n' + (response.suggestedHashtags?.join(' ') || ''));
+                    toast({ title: "Copied!", description: "The content has been copied to your clipboard." });
                   }}
                 >
                   <Copy className="h-5 w-5" />

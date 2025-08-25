@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {
@@ -38,11 +38,11 @@ export const initialServices: Service[] = [
     href: "/cv-enhancer",
   },
    {
-    icon: FileText,
-    title: "Tender Response Assistant",
-    description: "Save time preparing proposals. Upload tender documents to generate a compelling draft response.",
+    icon: Megaphone,
+    title: "Marketing & Content Agent",
+    description: "Generate social media posts, tender responses, and other marketing copy.",
     enabled: true,
-    href: "/tender-assistant",
+    href: "/social-media-post-generator",
   },
   {
     icon: Languages,
@@ -52,18 +52,11 @@ export const initialServices: Service[] = [
     href: "/document-translator",
   },
    {
-    icon: Scale,
-    title: "AI Legal Agent",
-    description: "Get preliminary legal analysis and insights for your business questions from our AI agent.",
+    icon: NotebookText,
+    title: "AI Admin & Legal Assistant",
+    description: "Get preliminary legal analysis, draft agreements, or ask general questions from our AI agent, Aida.",
     enabled: true,
     href: "/legal-agent",
-  },
-  {
-    icon: Megaphone,
-    title: "Digital Marketing",
-    description: "Enhance your online presence and reach your target audience effectively.",
-    enabled: true,
-    href: "/social-media-post-generator",
   },
   {
     icon: WalletCards,

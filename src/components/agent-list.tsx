@@ -90,10 +90,9 @@ const agentCategories: AgentCategory[] = [
     {
         category: "Core Business Operations Agents",
         agents: [
-            { name: "Aida", role: "Admin / Executive Assistant", description: "Engages with website visitors, books meetings, and generates meeting minutes.", icon: NotebookText, href: "/faq" },
+            { name: "Aida", role: "Admin & Legal Assistant", description: "Engages with visitors, books meetings, generates minutes, and drafts initial legal agreements.", icon: NotebookText, href: "/faq" },
             { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, href: "/cfo" },
             { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, href: "/cv-enhancer" },
-            { name: "Lexi", role: "Legal & Contracts Agent", description: "Provides preliminary legal analysis and drafts NDAs, service agreements, and performs KYC pre-verification.", icon: Scale, href: "/legal-agent"},
             { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, href: "/opportunities" },
         ]
     },
@@ -101,7 +100,7 @@ const agentCategories: AgentCategory[] = [
         category: "Customer & Sales Agents",
         agents: [
             { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, href: "/invest" },
-            { name: "Mira", role: "Marketing Agent", description: "Generates social media posts, suggests hashtags, and creates relevant imagery for marketing campaigns.", icon: Megaphone, href: "/social-media-post-generator" },
+            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, tender responses, and relevant imagery.", icon: Megaphone, href: "/social-media-post-generator" },
             { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact },
         ]
     },
@@ -117,8 +116,7 @@ const agentCategories: AgentCategory[] = [
     {
         category: "Creative & Media Agents",
         agents: [
-            { name: "Lina", role: "Content Creator Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, href: "/image-generator" },
-            { name: "Noor", role: "Copywriting Agent", description: "Generates compelling copy for websites, advertisements, and official documents like tender responses.", icon: PenSquare, href:"/tender-assistant" },
+            { name: "Lina", role: "Image Generation Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, href: "/image-generator" },
             { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, href: "/document-translator" },
             { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera },
         ]

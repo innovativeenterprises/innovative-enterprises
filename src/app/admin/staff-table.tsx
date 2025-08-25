@@ -45,10 +45,9 @@ const initialAgentCategories: AgentCategory[] = [
     {
         category: "Core Business Operations Agents",
         agents: [
-            { name: "Aida", role: "Admin / Executive Assistant", description: "Engages with website visitors, books meetings, and generates meeting minutes.", icon: NotebookText, enabled: true, type: 'AI Agent' },
+            { name: "Aida", role: "Admin & Legal Assistant", description: "Engages with visitors, books meetings, generates minutes, and drafts initial legal agreements.", icon: NotebookText, enabled: true, type: 'AI Agent' },
             { name: "Finley", role: "Finance & Accounting Agent", description: "Monitors cash flow, tracks transactions, and manages financial data.", icon: WalletCards, enabled: true, type: 'AI Agent' },
             { name: "Hira", role: "HR & Recruitment Agent", description: "Analyzes CVs for ATS compliance, enhances resumes, and automates onboarding document checks.", icon: Users, enabled: true, type: 'AI Agent' },
-            { name: "Lexi", role: "Legal & Contracts Agent", description: "Provides preliminary legal analysis and drafts NDAs, service agreements, and performs KYC pre-verification.", icon: Scale, enabled: true, type: 'AI Agent' },
             { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent' },
         ]
     },
@@ -56,7 +55,7 @@ const initialAgentCategories: AgentCategory[] = [
         category: "Customer & Sales Agents",
         agents: [
             { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, enabled: true, type: 'AI Agent' },
-            { name: "Mira", role: "Marketing Agent", description: "Generates social media posts, suggests hashtags, and creates relevant imagery for marketing campaigns.", icon: Megaphone, enabled: true, type: 'AI Agent' },
+            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, tender responses, and relevant imagery.", icon: Megaphone, enabled: true, type: 'AI Agent' },
             { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact, enabled: true, type: 'AI Agent' },
         ]
     },
@@ -72,8 +71,7 @@ const initialAgentCategories: AgentCategory[] = [
     {
         category: "Creative & Media Agents",
         agents: [
-            { name: "Lina", role: "Content Creator Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, enabled: true, type: 'AI Agent' },
-            { name: "Noor", role: "Copywriting Agent", description: "Generates compelling copy for websites, advertisements, and official documents like tender responses.", icon: PenSquare, enabled: true, type: 'AI Agent' },
+            { name: "Lina", role: "Image Generation Agent", description: "Generates high-quality images from text prompts for use in marketing, design, and social media.", icon: Palette, enabled: true, type: 'AI Agent' },
             { name: "Voxi", role: "Voice & Translation Agent", description: "Provides high-fidelity, verified translations for official documents between multiple languages.", icon: Languages, enabled: true, type: 'AI Agent' },
             { name: "Vista", role: "Virtual Tour / Visual Agent", description: "Creates immersive 360° virtual tours and assists with advanced photo and video editing tasks.", icon: Camera, enabled: true, type: 'AI Agent' },
         ]

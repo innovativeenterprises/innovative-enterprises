@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, User, AdminPanelSettings, Briefcase } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, User, Briefcase } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -46,19 +46,14 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     description: "Generate minutes and action items from a meeting transcript automatically.",
   },
   {
-    title: "Tender Response Assistant",
-    href: "/tender-assistant",
-    description: "Generate draft responses to government tenders in minutes.",
+    title: "Tender & Marketing Content",
+    href: "/social-media-post-generator",
+    description: "Generate social media posts, tender responses, and other marketing copy.",
   },
    {
     title: "Document Translator",
     href: "/document-translator",
     description: "Translate legal, financial, and official documents with high accuracy.",
-  },
-  {
-    title: "AI Legal Agent",
-    href: "/legal-agent",
-    description: "Get preliminary legal analysis and insights from our AI agent.",
   },
   {
     title: "CV ATS Enhancer",
@@ -69,11 +64,6 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     title: "AI Training Center",
     href: "/training-center",
     description: "Fine-tune your agents with custom data for better performance.",
-  },
-  {
-    title: "Social Media Post Generator",
-    href: "/social-media-post-generator",
-    description: "Craft compelling social media posts for any topic or platform.",
   },
   {
     title: "AI Image Generator",
@@ -138,18 +128,13 @@ export default function Header() {
 
   const renderNavLinks = (isMobile: boolean) => (
     navLinks.map((link) => (
-        <Button
-          key={link.href}
-          asChild
-          variant="ghost"
-          className={cn(
-            'justify-start text-base font-medium',
-            isMobile ? 'w-full' : ''
-          )}
-          onClick={handleLinkClick}
-        >
-          <Link href={link.href}>{link.label}</Link>
-        </Button>
+        <NavigationMenuItem key={link.href}>
+          <Link href={link.href} legacyBehavior passHref>
+            <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}>
+              {link.label}
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
       )
     )
   );
@@ -168,6 +153,22 @@ export default function Header() {
         ))}
       </ul>
   );
+  
+   const mobileNavLinks = (
+        <div className="flex flex-col gap-2">
+            {navLinks.map((link) => (
+                <Button
+                key={link.href}
+                asChild
+                variant="ghost"
+                className="justify-start text-base"
+                onClick={handleLinkClick}
+                >
+                <Link href={link.href}>{link.label}</Link>
+                </Button>
+            ))}
+        </div>
+    );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -180,9 +181,9 @@ export default function Header() {
           <span className="sm:hidden">IE</span>
         </Link>
         <nav className="hidden md:flex items-center gap-1">
-          {renderNavLinks(false)}
            <NavigationMenu>
             <NavigationMenuList>
+              {renderNavLinks(false)}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-base font-medium">
                   <Sparkles className="mr-2 h-4 w-4" /> AI Tools
@@ -249,7 +250,7 @@ export default function Header() {
                     <span>INNOVATIVE ENTERPRISES</span>
                     </Link>
                     <nav className="flex flex-col gap-2">
-                      {renderNavLinks(true)}
+                      {mobileNavLinks}
                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">AI Tools</p>
                       {aiToolsLinks.map((link) => (
                           <Button
