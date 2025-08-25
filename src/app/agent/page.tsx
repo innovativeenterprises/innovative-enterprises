@@ -11,13 +11,16 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User, Edit, Camera, ScanLine } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User, Edit, Camera, ScanLine, FileSignature, Download, Briefcase, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
+import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CameraCapture } from '@/components/camera-capture';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -52,16 +55,16 @@ const ManualEntrySchema = z.object({
 });
 type ManualEntryValues = z.infer<typeof ManualEntrySchema>;
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitted' | 'capture_id_front' | 'capture_id_back';
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitting' | 'generating_agreements' | 'submitted';
 type ApplicantType = 'individual' | 'company';
 
 export default function AgentPage() {
-  const [isLoading, setIsLoading] = useState(false);
   const [pageState, setPageState] = useState<PageState>('selection');
   const [applicantType, setApplicantType] = useState<ApplicantType>('individual');
   
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | IdentityAnalysisOutput | null>(null);
   const [repAnalysisResult, setRepAnalysisResult] = useState<IdentityAnalysisOutput | null>(null);
+  const [agreement, setAgreement] = useState<AgreementGenerationOutput | null>(null);
   const [recordNumber, setRecordNumber] = useState<string | null>(null);
   
   const { toast } = useToast();
@@ -156,26 +159,60 @@ export default function AgentPage() {
   
   const onIdFrontCaptured = (imageUri: string) => {
     individualUploadForm.setValue('idDocumentFrontUri', imageUri);
-    setPageState('capture_id_back');
-  }
-
-  const onIdBackCaptured = (imageUri: string) => {
-    individualUploadForm.setValue('idDocumentBackUri', imageUri);
-    setPageState('upload');
+    // setPageState('capture_id_back');
+    // For simplicity, let's assume back is optional and move on
+     setPageState('upload');
+     toast({ title: 'Front of ID Captured!', description: "You can now optionally scan the back or add other documents."})
   }
 
   const onSubmit: SubmitHandler<ManualEntryValues> = async (data) => {
-    setIsLoading(true);
+    setPageState('submitting');
     // Here you would typically send the data to your backend.
     // For this prototype, we'll just simulate a successful submission.
     console.log("Submitting Agent Application:", data, analysisResult, repAnalysisResult);
-    const newRecordNumber = `AGENT-${Date.now()}`;
-    setRecordNumber(newRecordNumber);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setPageState('submitted');
-    toast({ title: 'Application Submitted!', description: "Thank you for your interest. We will review your application and be in touch." });
-    setIsLoading(false);
+    
+    // Generate agreements
+    setPageState('generating_agreements');
+    try {
+        const agreementData = await generateAgreement({
+            applicantType,
+            companyData: analysisResult && 'companyInfo' in analysisResult ? analysisResult : undefined,
+            individualData: analysisResult && 'personalDetails' in analysisResult && applicantType === 'individual' ? analysisResult : undefined,
+            representativeData: repAnalysisResult ? repAnalysisResult : undefined,
+        });
+        setAgreement(agreementData);
+
+        const newRecordNumber = `AGENT-${Date.now()}`;
+        setRecordNumber(newRecordNumber);
+        setPageState('submitted');
+        toast({ title: 'Application Submitted & Agreements Generated!', description: "Please review and sign the generated agreements." });
+
+    } catch(e) {
+        console.error("Agreement generation failed:", e);
+        toast({ title: 'Submission Failed', description: 'Could not generate agreements. Please contact support.', variant: 'destructive' });
+        setPageState('review'); // Go back to review page on failure
+    }
   };
+
+   const handleDownloadAgreement = (type: 'nda' | 'service') => {
+    if (!agreement) return;
+    const content = type === 'nda' ? agreement.ndaContent : agreement.serviceAgreementContent;
+    const filename = type === 'nda' ? 'NDA.txt' : 'Service-Agreement.txt';
+    
+    const element = document.createElement("a");
+    const file = new Blob([content], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    toast({ title: 'Downloaded!', description: `Your ${filename} has been downloaded.`});
+  };
+
+  const handleESign = () => {
+    toast({ title: 'Thank You!', description: "Your agreements have been electronically signed and saved."});
+    // Here you would typically integrate with an e-signature service API
+  }
   
   const renderAnalysisResult = () => {
     if (!analysisResult) return null;
@@ -290,9 +327,14 @@ export default function AgentPage() {
             ) : (
                  <Form {...individualUploadForm}>
                     <form onSubmit={individualUploadForm.handleSubmit(handleIndividualAnalysis)} className="space-y-6">
-                        <Button type="button" className="w-full" onClick={() => setPageState('capture_id_front')}>
-                           <Camera className="mr-2 h-4 w-4" /> Scan ID Card
-                        </Button>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Button type="button" onClick={() => setPageState('capture_id_front')}>
+                               <Camera className="mr-2 h-4 w-4" /> Scan Front of ID
+                            </Button>
+                             <Button type="button" variant="outline" onClick={() => alert("Please scan the back of the ID card.")}>
+                               <Camera className="mr-2 h-4 w-4" /> Scan Back of ID
+                            </Button>
+                        </div>
 
                          {individualUploadForm.getValues('idDocumentFrontUri') && (
                             <Alert variant="default" className="text-green-800 bg-green-50 border-green-200 dark:text-green-200 dark:bg-green-900/30 dark:border-green-800">
@@ -326,17 +368,17 @@ export default function AgentPage() {
     </>
   );
 
-  const AnalyzingScreen = () => (
-    <CardContent className="p-10 text-center">
+  const LoadingScreen = ({title, description}: {title: string, description: string}) => (
+     <CardContent className="p-10 text-center">
        <div className="flex flex-col items-center gap-6">
            <Loader2 className="h-12 w-12 text-primary animate-spin" />
            <div className="space-y-2">
-               <CardTitle className="text-2xl">Analyzing Documents...</CardTitle>
-               <CardDescription>Our AI is reading your documents. This may take a moment.</CardDescription>
+               <CardTitle className="text-2xl">{title}</CardTitle>
+               <CardDescription>{description}</CardDescription>
            </div>
        </div>
    </CardContent>
-  );
+  )
 
   const ReviewScreen = () => (
     <>
@@ -389,7 +431,7 @@ export default function AgentPage() {
 
                    <div className="flex gap-2 pt-4">
                         <Button variant="outline" type="button" className="w-full" onClick={() => setPageState('upload')}>&larr; Back to Upload</Button>
-                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>) : (<><Handshake className="mr-2 h-4 w-4" /> Apply Now</>)}</Button>
+                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><Handshake className="mr-2 h-4 w-4" /> Apply Now</Button>
                    </div>
                </form>
            </Form>
@@ -398,35 +440,67 @@ export default function AgentPage() {
   );
 
   const SubmittedScreen = () => (
-    <CardContent className="p-10 text-center">
-       <div className="flex flex-col items-center gap-6">
-           <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
-               <CheckCircle className="h-12 w-12 text-green-500" />
-           </div>
-           <div className="space-y-2">
-               <CardTitle className="text-2xl">Thank You for Your Application!</CardTitle>
-               <CardDescription>Your application has been received. A confirmation has been sent to your email and mobile. Our team will review your information and get in touch shortly.</CardDescription>
-                {recordNumber && (
-                    <Alert>
-                        <AlertTitle>Your Record Number</AlertTitle>
-                        <AlertDescription className="font-mono text-sm">{recordNumber}</AlertDescription>
-                    </Alert>
-                )}
-           </div>
-           <Button asChild onClick={() => setPageState('selection')}><Link href="/opportunities">View Opportunities</Link></Button>
-       </div>
-   </CardContent>
+    <>
+    <CardHeader className="text-center">
+        <div className="mx-auto bg-green-100 dark:bg-green-900/50 p-4 rounded-full w-fit mb-4">
+            <CheckCircle className="h-12 w-12 text-green-500" />
+        </div>
+        <CardTitle className="text-2xl">Application Submitted!</CardTitle>
+        <CardDescription>Thank you! Your application has been received. Please review and sign the agreements below to finalize the process.</CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-6">
+        {recordNumber && (
+            <Alert>
+                <AlertTitle>Your Record Number</AlertTitle>
+                <AlertDescription className="font-mono text-sm">{recordNumber}</AlertDescription>
+            </Alert>
+        )}
+        <Tabs defaultValue="nda" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="nda">Non-Disclosure Agreement</TabsTrigger>
+                <TabsTrigger value="service">Service Agreement</TabsTrigger>
+            </TabsList>
+            <TabsContent value="nda">
+                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
+                    {agreement?.ndaContent}
+                </div>
+                <Button onClick={() => handleDownloadAgreement('nda')} variant="outline" className="w-full mt-2">
+                    <Download className="mr-2 h-4 w-4" /> Download NDA
+                </Button>
+            </TabsContent>
+            <TabsContent value="service">
+                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
+                    {agreement?.serviceAgreementContent}
+                </div>
+                <Button onClick={() => handleDownloadAgreement('service')} variant="outline" className="w-full mt-2">
+                    <Download className="mr-2 h-4 w-4" /> Download Service Agreement
+                </Button>
+            </TabsContent>
+        </Tabs>
+    </CardContent>
+    <CardFooter className="flex-col gap-4">
+        <Button onClick={handleESign} className="w-full" size="lg">
+            <FileSignature className="mr-2 h-5 w-5" /> E-Sign Both Agreements
+        </Button>
+        <div className="flex justify-center gap-4 w-full">
+             <Button variant="secondary" disabled><Briefcase className="mr-2 h-4 w-4"/> Save to E-Briefcase</Button>
+             <Button variant="secondary" asChild><Link href="/opportunities">View Opportunities</Link></Button>
+        </div>
+    </CardFooter>
+    </>
   );
 
   const renderContent = () => {
     switch (pageState) {
         case 'selection': return <SelectionScreen />;
         case 'upload': return <UploadScreen />;
-        case 'analyzing': return <AnalyzingScreen />;
+        case 'analyzing': return <LoadingScreen title="Analyzing Documents..." description="Our AI is reading your documents. This may take a moment." />;
         case 'review': return <ReviewScreen />;
+        case 'submitting': return <LoadingScreen title="Submitting Application..." description="Please wait while we process your application." />;
+        case 'generating_agreements': return <LoadingScreen title="Generating Agreements..." description="Your legal documents are being drafted by our AI." />;
         case 'submitted': return <SubmittedScreen />;
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        // case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };

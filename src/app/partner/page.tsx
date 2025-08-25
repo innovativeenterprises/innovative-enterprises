@@ -15,11 +15,14 @@ import { handlePartnershipInquiry } from '@/ai/flows/partnership-inquiry';
 import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.schema';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
-import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine } from 'lucide-react';
+import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
+import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase } from 'lucide-react';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CameraCapture } from '@/components/camera-capture';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -45,16 +48,16 @@ const IndividualUploadSchema = z.object({
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitted' | 'capture_id_front' | 'capture_id_back';
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitting' | 'generating_agreements' | 'submitted';
 type ApplicantType = 'individual' | 'company';
 
 export default function PartnerPage() {
-  const [isLoading, setIsLoading] = useState(false);
   const [pageState, setPageState] = useState<PageState>('selection');
   const [applicantType, setApplicantType] = useState<ApplicantType>('company');
   
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | IdentityAnalysisOutput | null>(null);
   const [repAnalysisResult, setRepAnalysisResult] = useState<IdentityAnalysisOutput | null>(null);
+  const [agreement, setAgreement] = useState<AgreementGenerationOutput | null>(null);
   const [recordNumber, setRecordNumber] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -147,28 +150,53 @@ export default function PartnerPage() {
   
   const onIdFrontCaptured = (imageUri: string) => {
     individualUploadForm.setValue('idDocumentFrontUri', imageUri);
-    setPageState('capture_id_back');
-  }
-
-  const onIdBackCaptured = (imageUri: string) => {
-    individualUploadForm.setValue('idDocumentBackUri', imageUri);
-    setPageState('upload');
+     setPageState('upload');
+     toast({ title: 'Front of ID Captured!', description: "You can now optionally scan the back or add other documents."})
   }
 
   const onSubmit: SubmitHandler<z.infer<typeof PartnershipInquiryInputSchema>> = async (data) => {
-    setIsLoading(true);
+    setPageState('submitting');
     try {
-      const result = await handlePartnershipInquiry(data);
+      await handlePartnershipInquiry(data);
+      
+      setPageState('generating_agreements');
+      const agreementData = await generateAgreement({
+          applicantType,
+          companyData: analysisResult && 'companyInfo' in analysisResult ? analysisResult : undefined,
+          individualData: analysisResult && 'personalDetails' in analysisResult && applicantType === 'individual' ? analysisResult : undefined,
+          representativeData: repAnalysisResult ? repAnalysisResult : undefined,
+      });
+      setAgreement(agreementData);
+      
       const newRecordNumber = `PARTNER-${Date.now()}`;
       setRecordNumber(newRecordNumber);
       setPageState('submitted');
-      toast({ title: 'Inquiry Submitted!', description: result.confirmationMessage });
+      toast({ title: 'Inquiry Submitted & Agreements Generated!', description: "Please review the generated agreements below." });
+
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to submit inquiry. Please try again.', variant: 'destructive' });
-    } finally {
-      setIsLoading(false);
+      setPageState('review');
     }
   };
+
+   const handleDownloadAgreement = (type: 'nda' | 'service') => {
+    if (!agreement) return;
+    const content = type === 'nda' ? agreement.ndaContent : agreement.serviceAgreementContent;
+    const filename = type === 'nda' ? 'NDA.txt' : 'Service-Agreement.txt';
+    
+    const element = document.createElement("a");
+    const file = new Blob([content], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    toast({ title: 'Downloaded!', description: `Your ${filename} has been downloaded.`});
+  };
+
+  const handleESign = () => {
+    toast({ title: 'Thank You!', description: "Your agreements have been electronically signed and saved."});
+  }
 
   const renderAnalysisResult = () => {
     if (!analysisResult) return null;
@@ -283,16 +311,21 @@ export default function PartnerPage() {
             ) : (
                 <Form {...individualUploadForm}>
                     <form onSubmit={individualUploadForm.handleSubmit(handleIndividualAnalysis)} className="space-y-6">
-                         <Button type="button" className="w-full" onClick={() => setPageState('capture_id_front')}>
-                           <Camera className="mr-2 h-4 w-4" /> Scan ID Card
-                        </Button>
+                         <div className="grid grid-cols-2 gap-4">
+                            <Button type="button" onClick={() => setPageState('capture_id_front')}>
+                               <Camera className="mr-2 h-4 w-4" /> Scan Front of ID
+                            </Button>
+                             <Button type="button" variant="outline" onClick={() => alert("Please scan the back of the ID card.")}>
+                               <Camera className="mr-2 h-4 w-4" /> Scan Back of ID
+                            </Button>
+                        </div>
 
                          {individualUploadForm.getValues('idDocumentFrontUri') && (
                             <Alert variant="default" className="text-green-800 bg-green-50 border-green-200 dark:text-green-200 dark:bg-green-900/30 dark:border-green-800">
                                <ScanLine className="h-4 w-4 text-green-600 dark:text-green-400" />
                                <AlertTitle>ID Scanned Successfully</AlertTitle>
                                <AlertDescription>
-                                Front and back of ID card captured.
+                                Front of ID card captured.
                                </AlertDescription>
                            </Alert>
                          )}
@@ -319,17 +352,17 @@ export default function PartnerPage() {
     </>
   );
 
-  const AnalyzingScreen = () => (
-    <CardContent className="p-10 text-center">
+  const LoadingScreen = ({title, description}: {title: string, description: string}) => (
+     <CardContent className="p-10 text-center">
        <div className="flex flex-col items-center gap-6">
            <Loader2 className="h-12 w-12 text-primary animate-spin" />
            <div className="space-y-2">
-               <CardTitle className="text-2xl">Analyzing Documents...</CardTitle>
-               <CardDescription>Our AI is reading your documents. This may take a moment.</CardDescription>
+               <CardTitle className="text-2xl">{title}</CardTitle>
+               <CardDescription>{description}</CardDescription>
            </div>
        </div>
    </CardContent>
-  );
+  )
 
   const ReviewScreen = () => (
     <>
@@ -379,7 +412,7 @@ export default function PartnerPage() {
 
                    <div className="flex gap-2 pt-2">
                         <Button variant="outline" className="w-full" type="button" onClick={() => setPageState('upload')}>Upload New Document</Button>
-                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>) : (<><Handshake className="mr-2 h-4 w-4" /> Submit Inquiry</>)}</Button>
+                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"><Handshake className="mr-2 h-4 w-4" /> Submit Inquiry</Button>
                    </div>
                </form>
            </Form>
@@ -388,35 +421,63 @@ export default function PartnerPage() {
   );
 
   const SubmittedScreen = () => (
-    <CardContent className="p-10 text-center">
-       <div className="flex flex-col items-center gap-6">
-           <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
-               <CheckCircle className="h-12 w-12 text-green-500" />
-           </div>
-           <div className="space-y-2">
-               <CardTitle className="text-2xl">Thank You for Your Interest!</CardTitle>
-               <CardDescription>Your partnership inquiry has been received. A confirmation has been sent to your email. Our partnership agent, Paz, will review your information and get in touch to discuss potential collaboration.</CardDescription>
-                {recordNumber && (
-                    <Alert>
-                        <AlertTitle>Your Record Number</AlertTitle>
-                        <AlertDescription className="font-mono text-sm">{recordNumber}</AlertDescription>
-                    </Alert>
-                )}
-           </div>
-           <Button asChild onClick={() => setPageState('selection')}><Link href="#">Submit Another Inquiry</Link></Button>
-       </div>
-   </CardContent>
+    <>
+    <CardHeader className="text-center">
+        <div className="mx-auto bg-green-100 dark:bg-green-900/50 p-4 rounded-full w-fit mb-4">
+            <CheckCircle className="h-12 w-12 text-green-500" />
+        </div>
+        <CardTitle className="text-2xl">Partnership Inquiry Submitted!</CardTitle>
+        <CardDescription>Thank you! Our Partnership Agent will review your application. Please review and sign the agreements below to finalize the process.</CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-6">
+        {recordNumber && (
+            <Alert>
+                <AlertTitle>Your Record Number</AlertTitle>
+                <AlertDescription className="font-mono text-sm">{recordNumber}</AlertDescription>
+            </Alert>
+        )}
+        <Tabs defaultValue="nda" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="nda">Non-Disclosure Agreement</TabsTrigger>
+                <TabsTrigger value="service">Service Agreement</TabsTrigger>
+            </TabsList>
+            <TabsContent value="nda">
+                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
+                    {agreement?.ndaContent}
+                </div>
+                <Button onClick={() => handleDownloadAgreement('nda')} variant="outline" className="w-full mt-2">
+                    <Download className="mr-2 h-4 w-4" /> Download NDA
+                </Button>
+            </TabsContent>
+            <TabsContent value="service">
+                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
+                    {agreement?.serviceAgreementContent}
+                </div>
+                <Button onClick={() => handleDownloadAgreement('service')} variant="outline" className="w-full mt-2">
+                    <Download className="mr-2 h-4 w-4" /> Download Service Agreement
+                </Button>
+            </TabsContent>
+        </Tabs>
+    </CardContent>
+    <CardFooter className="flex-col gap-4">
+        <Button onClick={handleESign} className="w-full" size="lg">
+            <FileSignature className="mr-2 h-5 w-5" /> E-Sign Both Agreements
+        </Button>
+        <Button variant="secondary" asChild><Link href="#">Submit Another Inquiry</Link></Button>
+    </CardFooter>
+    </>
   );
   
   const renderContent = () => {
     switch (pageState) {
         case 'selection': return <SelectionScreen />;
         case 'upload': return <UploadScreen />;
-        case 'analyzing': return <AnalyzingScreen />;
+        case 'analyzing': return <LoadingScreen title="Analyzing Documents..." description="Our AI is reading your documents. This may take a moment." />;
         case 'review': return <ReviewScreen />;
+        case 'submitting': return <LoadingScreen title="Submitting Inquiry..." description="Please wait while we process your partnership inquiry." />;
+        case 'generating_agreements': return <LoadingScreen title="Generating Agreements..." description="Your legal documents are being drafted by our AI." />;
         case 'submitted': return <SubmittedScreen />;
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };

@@ -16,5 +16,6 @@ import '@/ai/flows/document-translation.ts';
 import '@/ai/flows/cr-analysis.ts';
 import '@/ai/flows/identity-analysis.ts';
 import '@/ai/flows/meeting-analysis.ts';
+import '@/ai/flows/generate-agreement.ts';
 
     
