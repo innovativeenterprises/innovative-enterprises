@@ -15,7 +15,7 @@ export const DocumentTranslationInputSchema = z.object({
     ),
   sourceLanguage: z.string().min(1, 'Source language is required.'),
   targetLanguage: z.string().min(1, 'Target language is required.'),
-  documentType: z.enum(['Contract', 'Invoice', 'Medical Report', 'Certificate', 'Other'])
+  documentType: z.enum(['Contracts & Agreements', 'Court Documents', 'Certificates', 'Power of Attorney', 'Immigration Documents', 'Government Forms & Regulations', 'Notarized Documents', 'Medical Reports & Diagnoses', 'Patient Records & Case Files', 'Prescriptions & Test Results', 'Clinical Trial Documentation', 'Hospital Discharge Summaries', 'Medical Device Instructions', 'Insurance Claim Forms', 'Business Contracts & MOUs', 'Company Registration & Licenses', 'Financial Statements & Audit Reports', 'Import/Export Documents', 'Invoices', 'Product Catalogs & Price Lists', 'Policies & Procedures Manuals', 'Shareholder Agreements', 'Diplomas & Transcripts', 'Certificates of Training', 'Research Papers & Journals', 'Thesis & Dissertations', 'Course Materials & Exams', 'Recommendation Letters', 'User Manuals & Product Guides', 'Engineering Drawings & Specifications', 'Safety Data Sheets (SDS/MSDS)', 'Patents & Intellectual Property Documents', 'IT/Software Documentation', 'Brochures & Flyers', 'Company Profiles', 'Websites & Online Content', 'Press Releases', 'Presentations & Proposals', 'Advertising & Branding Materials', 'Bank Statements & Letters', 'Loan Agreements', 'Insurance Policies', 'Trading & Brokerage Agreements', 'Tax Forms & Reports', 'Customs Declarations', 'Other'])
     .describe('The type of document, which informs the translation tone and format.'),
 });
 export type DocumentTranslationInput = z.infer<typeof DocumentTranslationInputSchema>;

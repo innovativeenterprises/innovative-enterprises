@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -48,6 +49,7 @@ const documentTypeEnum = z.enum([
     'Company Registration & Licenses',
     'Financial Statements & Audit Reports',
     'Import/Export Documents',
+    'Invoices',
     'Product Catalogs & Price Lists',
     'Policies & Procedures Manuals',
     'Shareholder Agreements',
