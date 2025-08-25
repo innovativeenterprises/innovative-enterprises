@@ -43,8 +43,13 @@ const partnershipInquiryFlow = ai.defineFlow(
     // send a notification to the internal team (Paz), and then respond.
     // For this prototype, we'll just simulate the confirmation.
     console.log('Received partnership inquiry:', input);
+    
+    // Here, you would add logic to save the partner to your database or CRM.
+    // For instance, you might call a function like `saveProvider(input)`.
 
     const { output } = await prompt(input);
     return output!;
   }
 );
+
+    

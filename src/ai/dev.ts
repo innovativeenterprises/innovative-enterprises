@@ -13,3 +13,6 @@ import '@/ai/flows/train-agent.ts';
 import '@/ai/flows/image-generator.ts';
 import '@/ai/flows/partnership-inquiry.ts';
 import '@/ai/flows/document-translation.ts';
+import '@/ai/flows/cr-analysis.ts';
+
+    
