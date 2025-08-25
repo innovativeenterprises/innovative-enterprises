@@ -25,7 +25,10 @@ const prompt = ai.definePrompt({
 
 **Instructions:**
 1.  **Analyze the Documents:** You will be provided with one or more of the following documents.
-    -   Identity Document (ID Card, Resident Card, Driving License): {{media url=idDocumentUri}}
+    -   Identity Document (Front): {{media url=idDocumentFrontUri}}
+    {{#if idDocumentBackUri}}
+    -   Identity Document (Back): {{media url=idDocumentBackUri}}
+    {{/if}}
     {{#if passportDocumentUri}}
     -   Passport: {{media url=passportDocumentUri}}
     {{/if}}

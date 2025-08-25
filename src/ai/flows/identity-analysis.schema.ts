@@ -8,10 +8,16 @@
 import { z } from 'zod';
 
 export const IdentityAnalysisInputSchema = z.object({
-  idDocumentUri: z
+  idDocumentFrontUri: z
     .string()
     .describe(
-      "The user's identity document (ID card or Resident Card), as a data URI."
+      "The user's identity document (ID card or Resident Card) front side, as a data URI."
+    ),
+  idDocumentBackUri: z
+    .string()
+    .optional()
+    .describe(
+        "The user's identity document (ID card or Resident Card) back side, as a data URI."
     ),
   passportDocumentUri: z
     .string()

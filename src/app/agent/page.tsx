@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,12 +11,13 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User, Edit } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, FileCheck, Wand2, UserCheck, Building, User, Edit, Camera, ScanLine } from 'lucide-react';
 import Link from 'next/link';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CameraCapture } from '@/components/camera-capture';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -34,7 +35,8 @@ const CompanyUploadSchema = z.object({
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
 const IndividualUploadSchema = z.object({
-    idDocument: z.any().refine(file => file?.length == 1, 'ID Document is required.'),
+    idDocumentFrontUri: z.string().min(1, 'Front of ID is required.'),
+    idDocumentBackUri: z.string().optional(),
     passportDocument: z.any().optional(),
     personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
@@ -50,7 +52,7 @@ const ManualEntrySchema = z.object({
 });
 type ManualEntryValues = z.infer<typeof ManualEntrySchema>;
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitted';
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitted' | 'capture_id_front' | 'capture_id_back';
 type ApplicantType = 'individual' | 'company';
 
 export default function AgentPage() {
@@ -78,7 +80,7 @@ export default function AgentPage() {
         const repIdFile = data.repIdDocument[0];
 
         const crPromise = fileToDataURI(crFile).then(uri => analyzeCrDocument({ documentDataUri: uri }));
-        const repIdPromise = fileToDataURI(repIdFile).then(uri => analyzeIdentity({ idDocumentUri: uri }));
+        const repIdPromise = fileToDataURI(repIdFile).then(uri => analyzeIdentity({ idDocumentFrontUri: uri }));
 
         const [crResult, repResult] = await Promise.all([crPromise, repIdPromise]);
         
@@ -106,9 +108,6 @@ export default function AgentPage() {
     setAnalysisResult(null);
     setRepAnalysisResult(null);
     try {
-        const idFile = data.idDocument[0];
-        const idDocumentUri = await fileToDataURI(idFile);
-        
         let cvDocumentUri: string | undefined;
         if (data.cvDocument && data.cvDocument.length > 0) {
             cvDocumentUri = await fileToDataURI(data.cvDocument[0]);
@@ -124,7 +123,13 @@ export default function AgentPage() {
             photoUri = await fileToDataURI(data.personalPhoto[0]);
         }
 
-        const result = await analyzeIdentity({ idDocumentUri, cvDocumentUri, passportDocumentUri, photoUri });
+        const result = await analyzeIdentity({ 
+            idDocumentFrontUri: data.idDocumentFrontUri, 
+            idDocumentBackUri: data.idDocumentBackUri, 
+            cvDocumentUri, 
+            passportDocumentUri, 
+            photoUri 
+        });
         setAnalysisResult(result);
         manualEntryForm.reset({
             name: result.personalDetails?.fullName || '',
@@ -140,6 +145,16 @@ export default function AgentPage() {
         toast({ title: 'Analysis Failed', description: 'Could not analyze documents. Please try again or fill manually.', variant: 'destructive' });
         setPageState('upload');
     }
+  }
+  
+  const onIdFrontCaptured = (imageUri: string) => {
+    individualUploadForm.setValue('idDocumentFrontUri', imageUri);
+    setPageState('capture_id_back');
+  }
+
+  const onIdBackCaptured = (imageUri: string) => {
+    individualUploadForm.setValue('idDocumentBackUri', imageUri);
+    setPageState('upload');
   }
 
   const onSubmit: SubmitHandler<ManualEntryValues> = async (data) => {
@@ -275,9 +290,20 @@ export default function AgentPage() {
             ) : (
                  <Form {...individualUploadForm}>
                     <form onSubmit={individualUploadForm.handleSubmit(handleIndividualAnalysis)} className="space-y-6">
-                        <FormField control={individualUploadForm.control} name="idDocument" render={({ field }) => (
-                            <FormItem><FormLabel>ID Card (Required)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
-                        )} />
+                        <Button type="button" className="w-full" onClick={() => setPageState('capture_id_front')}>
+                           <Camera className="mr-2 h-4 w-4" /> Scan ID Card
+                        </Button>
+
+                         {individualUploadForm.getValues('idDocumentFrontUri') && (
+                            <Alert variant="default" className="text-green-800 bg-green-50 border-green-200 dark:text-green-200 dark:bg-green-900/30 dark:border-green-800">
+                               <ScanLine className="h-4 w-4 text-green-600 dark:text-green-400" />
+                               <AlertTitle>ID Scanned Successfully</AlertTitle>
+                               <AlertDescription>
+                                Front and back of ID card captured.
+                               </AlertDescription>
+                           </Alert>
+                         )}
+
                          <FormField control={individualUploadForm.control} name="passportDocument" render={({ field }) => (
                             <FormItem><FormLabel>Passport (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
@@ -287,7 +313,7 @@ export default function AgentPage() {
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
                             <FormItem><FormLabel>CV / Resume (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90"><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={!individualUploadForm.getValues('idDocumentFrontUri')}><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
                 </Form>
             )}
@@ -392,6 +418,19 @@ export default function AgentPage() {
    </CardContent>
   );
 
+  const renderContent = () => {
+    switch (pageState) {
+        case 'selection': return <SelectionScreen />;
+        case 'upload': return <UploadScreen />;
+        case 'analyzing': return <AnalyzingScreen />;
+        case 'review': return <ReviewScreen />;
+        case 'submitted': return <SubmittedScreen />;
+        case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        default: return <SelectionScreen />;
+    }
+  };
+
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -404,11 +443,7 @@ export default function AgentPage() {
         </div>
         <div className="max-w-3xl mx-auto mt-12">
             <Card>
-                {pageState === 'selection' && <SelectionScreen />}
-                {pageState === 'upload' && <UploadScreen />}
-                {pageState === 'analyzing' && <AnalyzingScreen />}
-                {pageState === 'review' && <ReviewScreen />}
-                {pageState === 'submitted' && <SubmittedScreen />}
+                {renderContent()}
             </Card>
         </div>
       </div>
