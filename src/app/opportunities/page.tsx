@@ -18,12 +18,13 @@ const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
             default: return '';
         }
     }
+    const Icon = opp.icon;
     return (
          <Card key={opp.title} className={`flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-l-4 ${getStatusColor()}`}>
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
-                        <opp.icon className="w-7 h-7 text-primary group-hover:text-accent-foreground" />
+                        <Icon className="w-7 h-7 text-primary group-hover:text-accent-foreground" />
                     </div>
                     <Badge variant={opp.badgeVariant}>{opp.type}</Badge>
                 </div>
