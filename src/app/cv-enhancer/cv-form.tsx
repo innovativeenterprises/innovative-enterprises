@@ -756,5 +756,3 @@ export default function CvForm() {
     </div>
   );
 }
-
-    
