@@ -1,5 +1,5 @@
 
-import { DollarSign, WalletCards } from "lucide-react";
+import { WalletCards } from "lucide-react";
 import CfoDashboard from "./cfo-dashboard";
 
 export default function CfoPage() {
