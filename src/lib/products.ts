@@ -43,4 +43,11 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-192538-422-online_shopping.png',
     aiHint: 'online shopping',
   },
+  {
+    id: 'prod_6',
+    name: 'AI Outsourcing Services',
+    description: 'Leverage our GENIUS platform for provision of skilled labor, domestic workers, consultants, and specialists. Our AI-powered tools streamline the recruitment and management process.',
+    image: 'https://images.unsplash.com/photo-1542744095-291d1f67b221?q=80&w=1920&auto=format&fit=crop',
+    aiHint: 'outsourcing hr',
+  },
 ];
