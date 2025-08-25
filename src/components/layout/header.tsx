@@ -201,11 +201,11 @@ export default function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
                  <NavigationMenuItem>
-                    <Link href="/briefcase" legacyBehavior={false}>
-                        <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "text-base font-medium")}>
+                    <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "text-base font-medium")}>
+                        <Link href="/briefcase">
                            <Briefcase className="mr-2 h-4 w-4" /> E-Briefcase
-                        </NavigationMenuLink>
-                    </Link>
+                        </Link>
+                    </NavigationMenuLink>
                 </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
