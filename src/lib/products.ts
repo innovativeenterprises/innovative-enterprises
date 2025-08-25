@@ -50,4 +50,32 @@ export const initialProducts: Product[] = [
     image: 'https://images.unsplash.com/photo-1542744095-291d1f67b221?q=80&w=1920&auto=format&fit=crop',
     aiHint: 'outsourcing hr',
   },
+   {
+    id: 'prod_7',
+    name: 'RAAHA - Domestic Workforce Platform',
+    description: 'An AI-powered, white-label platform designed to empower home workforce agencies, streamline recruitment, and build trust with clients.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'home workforce',
+  },
+  {
+    id: 'prod_8',
+    name: 'Voxi - Verified Document Translator',
+    description: 'Translate legal, financial, and official documents with high accuracy. This service is managed by Voxi, our AI Translation Agent.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'document translation',
+  },
+  {
+    id: 'prod_9',
+    name: 'GENIUS - AI Career Platform',
+    description: 'An end-to-end solution for career development—from document parsing to interview preparation—all within a seamless mobile and web experience.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'career development',
+  },
+  {
+    id: 'prod_10',
+    name: 'InfraRent - IT Infrastructure Rentals',
+    description: 'On-demand rental of IT equipment and services, such as servers, networking devices, storage systems, and workstations.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'server room',
+  },
 ];
