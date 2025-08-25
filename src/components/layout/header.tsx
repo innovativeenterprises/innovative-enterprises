@@ -97,6 +97,11 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     title: "AI Image Generator",
     href: "/image-generator",
     description: "Create stunning visuals from text descriptions in seconds.",
+  },
+  {
+    title: "AI Interview Coach",
+    href: "/interview-coach",
+    description: "Practice for your next job interview with AI-generated, role-specific questions.",
   }
 ];
 

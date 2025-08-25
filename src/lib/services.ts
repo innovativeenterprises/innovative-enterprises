@@ -1,6 +1,6 @@
 
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 
@@ -54,7 +54,7 @@ export const initialServices: Service[] = [
   },
   {
     icon: Briefcase,
-    title: "CV ATS Enhancer",
+    title: "CV & Outsourcing Services",
     description: "Get a step-by-step CV enhancement. Optimize your CV for your target job position.",
     enabled: true,
     href: "/cv-enhancer",
@@ -100,5 +100,12 @@ export const initialServices: Service[] = [
     description: "An AI-powered white-label platform to connect domestic work agencies with clients, simplifying recruitment.",
     enabled: true,
     href: "/raaha",
+  },
+  {
+    icon: Mic,
+    title: "AI Interview Coach",
+    description: "Practice for your next job interview with AI-generated, role-specific questions.",
+    enabled: true,
+    href: "/interview-coach",
   },
 ];
