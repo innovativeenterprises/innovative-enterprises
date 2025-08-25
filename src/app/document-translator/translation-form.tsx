@@ -151,12 +151,17 @@ export default function TranslationForm() {
 
   const watchAllFields = form.watch();
 
+  const pricePerPage = useMemo(() => {
+    const { documentType } = watchAllFields;
+    return pricingMap[documentType] || 0;
+  }, [watchAllFields, pricingMap]);
+
   const basePrice = useMemo(() => {
-      const { documentType, numberOfPages, requestSealedCopy } = watchAllFields;
-      if (!documentType || !numberOfPages || numberOfPages < 1) {
+      const { numberOfPages, requestSealedCopy } = watchAllFields;
+      if (!pricePerPage || !numberOfPages || numberOfPages < 1) {
           return 0;
       }
-      const pricePerPage = pricingMap[documentType] || 5.0; // Fallback price
+      
       let total = pricePerPage * numberOfPages;
 
       if (requestSealedCopy) {
@@ -169,7 +174,7 @@ export default function TranslationForm() {
       
       return Math.max(total, MINIMUM_CHARGE);
 
-  }, [watchAllFields, pricingMap]);
+  }, [watchAllFields, pricePerPage]);
 
   const [finalPrice, setFinalPrice] = useState(basePrice);
   
@@ -449,9 +454,13 @@ export default function TranslationForm() {
                                       </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                      {translationOffices.map(office => (
-                                        <SelectItem key={office} value={office}>{office}</SelectItem>
-                                      ))}
+                                      {translationOffices.map(office => {
+                                        const stampCostText = watchAllFields.requestSealedCopy ? ` + OMR ${PRICE_PER_STAMPED_PAGE.toFixed(2)}/stamped` : '';
+                                        const label = `${office} (OMR ${pricePerPage.toFixed(2)}/page${stampCostText})`;
+                                        return (
+                                            <SelectItem key={office} value={office}>{label}</SelectItem>
+                                        )
+                                      })}
                                     </SelectContent>
                                   </Select>
                                   <FormMessage />
