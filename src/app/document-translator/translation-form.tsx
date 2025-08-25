@@ -82,6 +82,7 @@ const documentTypeEnum = z.enum([
 
 const FormSchema = z.object({
   documentFiles: z.any().refine(files => files?.length > 0, 'At least one document file is required.'),
+  numberOfPages: z.coerce.number().min(1, "Please enter at least 1 page."),
   sourceLanguage: z.string().min(1, "Source language is required."),
   targetLanguage: z.string().min(1, "Target language is required."),
   documentType: documentTypeEnum,
@@ -111,7 +112,7 @@ const translationOffices = [
     "Muscat Legal & Business Translation",
 ];
 
-const BASE_PRICE = 25; // Base price for AI translation
+const PRICE_PER_PAGE = 10;
 const SEALED_COPY_PRICE = 50; // Extra charge for sealed physical copy
 
 export default function TranslationForm() {
@@ -127,13 +128,16 @@ export default function TranslationForm() {
       targetLanguage: 'Arabic',
       documentType: 'Contracts & Agreements',
       requestSealedCopy: false,
+      numberOfPages: 1,
     },
   });
 
   const requestSealedCopy = form.watch("requestSealedCopy");
+  const numberOfPages = form.watch("numberOfPages");
   const price = useMemo(() => {
-    return BASE_PRICE + (requestSealedCopy ? SEALED_COPY_PRICE : 0);
-  }, [requestSealedCopy]);
+    const pages = numberOfPages > 0 ? numberOfPages : 0;
+    return (PRICE_PER_PAGE * pages) + (requestSealedCopy ? SEALED_COPY_PRICE : 0);
+  }, [requestSealedCopy, numberOfPages]);
 
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -214,19 +218,34 @@ export default function TranslationForm() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="documentFiles"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Document to Translate</FormLabel>
-                      <FormControl>
-                        <Input type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="documentFiles"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Document to Translate</FormLabel>
+                          <FormControl>
+                            <Input type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="numberOfPages"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Number of Pages</FormLabel>
+                           <FormControl>
+                            <Input type="number" min="1" {...field} />
+                           </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                </div>
                 
                 <FormField
                   control={form.control}
