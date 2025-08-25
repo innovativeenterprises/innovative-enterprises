@@ -64,6 +64,7 @@ export default function AgentPage() {
 
   const handleCompanyCrAnalysis: SubmitHandler<CompanyUploadValues> = async (data) => {
     setPageState('analyzing');
+    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '' });
     try {
         const file = data.crDocument[0];
         const documentDataUri = await fileToDataURI(file);
@@ -85,6 +86,7 @@ export default function AgentPage() {
 
   const handleIndividualAnalysis: SubmitHandler<IndividualUploadValues> = async (data) => {
     setPageState('analyzing');
+    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '' });
     try {
         const idFile = data.idDocument[0];
         const idDocumentUri = await fileToDataURI(idFile);
@@ -261,3 +263,5 @@ export default function AgentPage() {
     </div>
   );
 }
+
+    
