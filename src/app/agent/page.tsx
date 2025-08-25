@@ -70,6 +70,13 @@ export default function AgentPage() {
   const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema) });
   const manualEntryForm = useForm<ManualEntryValues>({ resolver: zodResolver(ManualEntrySchema) });
 
+  const startManualEntry = () => {
+    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
+    setAnalysisResult(null);
+    setRepAnalysisResult(null);
+    setPageState('review');
+  }
+
   const handleCompanyCrAnalysis: SubmitHandler<CompanyUploadValues> = async (data) => {
     setPageState('analyzing');
     manualEntryForm.reset();
@@ -97,8 +104,8 @@ export default function AgentPage() {
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review the extracted details.' });
     } catch(e) {
-        toast({ title: 'Analysis Failed', description: 'Could not analyze document. Please try again or fill manually.', variant: 'destructive' });
-        setPageState('upload');
+        toast({ title: 'Analysis Failed', description: 'Could not analyze document. Please fill the form manually.', variant: 'destructive' });
+        startManualEntry();
     }
   }
 
@@ -142,8 +149,8 @@ export default function AgentPage() {
         toast({ title: 'Analysis Complete!', description: 'Please review the extracted details.' });
     } catch(e) {
         console.error(e);
-        toast({ title: 'Analysis Failed', description: 'Could not analyze documents. Please try again or fill manually.', variant: 'destructive' });
-        setPageState('upload');
+        toast({ title: 'Analysis Failed', description: 'Could not analyze documents. Please fill the form manually.', variant: 'destructive' });
+        startManualEntry();
     }
   }
   
@@ -169,13 +176,6 @@ export default function AgentPage() {
     toast({ title: 'Application Submitted!', description: "Thank you for your interest. We will review your application and be in touch." });
     setIsLoading(false);
   };
-
-  const startManualEntry = () => {
-    manualEntryForm.reset({ name: '', email: '', phone: '', interest: '', undertaking: false });
-    setAnalysisResult(null);
-    setRepAnalysisResult(null);
-    setPageState('review');
-  }
   
   const renderAnalysisResult = () => {
     if (!analysisResult) return null;

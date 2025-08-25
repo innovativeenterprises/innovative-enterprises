@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { handlePartnershipInquiry } from '@/ai/flows/partnership-inquiry';
-import { PartnershipInquiryInputSchema, type PartnershipInquiryInput } from '@/ai/flows/partnership-inquiry.schema';
+import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.schema';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine } from 'lucide-react';
@@ -45,15 +45,6 @@ const IndividualUploadSchema = z.object({
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
 
-const InquirySchema = z.object({
-  companyName: z.string().min(2, 'Name is required.'),
-  contactName: z.string().min(2, 'Contact name is required.'),
-  email: z.string().email('A valid email is required.'),
-  partnershipDetails: z.string().min(20, 'Please provide more details about the potential partnership.'),
-  undertaking: z.boolean().refine(val => val === true, "You must confirm the validity of the information."),
-});
-type InquiryValues = z.infer<typeof InquirySchema>;
-
 type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'submitted' | 'capture_id_front' | 'capture_id_back';
 type ApplicantType = 'individual' | 'company';
 
@@ -69,7 +60,14 @@ export default function PartnerPage() {
 
   const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema) });
   const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema) });
-  const inquiryForm = useForm<InquiryValues>({ resolver: zodResolver(InquirySchema) });
+  const inquiryForm = useForm<z.infer<typeof PartnershipInquiryInputSchema>>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
+
+  const startManualEntry = () => {
+    inquiryForm.reset({ companyName: '', contactName: '', email: '', partnershipDetails: '', undertaking: false });
+    setAnalysisResult(null);
+    setRepAnalysisResult(null);
+    setPageState('review');
+  }
 
   const handleCrAnalysis: SubmitHandler<CompanyUploadValues> = async (data) => {
     setPageState('analyzing');
@@ -98,8 +96,8 @@ export default function PartnerPage() {
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review and confirm the extracted details.' });
     } catch(e) {
-        toast({ title: 'Analysis Failed', description: 'We could not analyze the documents. Please check the files and try again.', variant: 'destructive' })
-        setPageState('upload');
+        toast({ title: 'Analysis Failed', description: 'Could not analyze documents. Please fill the form manually.', variant: 'destructive' })
+        startManualEntry();
     }
   }
 
@@ -142,8 +140,8 @@ export default function PartnerPage() {
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review and confirm the extracted details.' });
     } catch(e) {
-        toast({ title: 'Analysis Failed', description: 'Could not analyze documents. Please try again.', variant: 'destructive' });
-        setPageState('upload');
+        toast({ title: 'Analysis Failed', description: 'Could not analyze documents. Please fill the form manually.', variant: 'destructive' });
+        startManualEntry();
     }
   }
   
@@ -157,7 +155,7 @@ export default function PartnerPage() {
     setPageState('upload');
   }
 
-  const onSubmit: SubmitHandler<InquiryValues> = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof PartnershipInquiryInputSchema>> = async (data) => {
     setIsLoading(true);
     try {
       const result = await handlePartnershipInquiry(data);
@@ -312,6 +310,11 @@ export default function PartnerPage() {
                     </form>
                 </Form>
             )}
+             <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+            </div>
+            <Button variant="secondary" className="w-full" onClick={startManualEntry}>Fill Application Manually</Button>
         </CardContent>
     </>
   );
