@@ -63,7 +63,11 @@ export default function BriefcasePage() {
     }
 
     if (isLoading) {
-        return <div>Loading...</div>; // Or a proper skeleton loader
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+                <p>Loading your E-Briefcase...</p>
+            </div>
+        );
     }
 
     return (
