@@ -37,7 +37,10 @@ const combinedProjects = [
 const comingProjects = [
     { name: "Fintech Super-App", description: "An integrated financial services application for the Omani market.", status: "Research Phase" },
     { name: "Smart City OS", description: "An operating system for managing urban infrastructure and services.", status: "Concept Phase" },
-    { name: "AIPOS MATCH CUP GAME", description: "An Augmented Reality (AR) social game.", status: "Research Phase" },
+    { name: "We Match - MATCH CUP GAME", description: "An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions.", status: "Research Phase" },
+    { name: "AI-POS", description: "A smart, AI-driven Point-of-Sale system for small groceries, featuring inventory management, sales analytics, and customer insights to optimize stock.", status: "Research Phase" },
+    { name: "AlumniConnect", description: "A comprehensive digital platform for universities, colleges, and schools to engage their alumni network, fostering connections and professional opportunities.", status: "Research Phase" },
+    { name: "Hadeeya", description: "A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.", status: "Research Phase" },
 ];
 
 const ProjectCard = ({ name, description, status }: { name: string, description: string, status: string }) => {
