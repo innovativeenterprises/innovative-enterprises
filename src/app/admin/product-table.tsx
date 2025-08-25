@@ -14,13 +14,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import type { Product } from "@/lib/products";
+import type { Product, ProductStage } from "@/lib/products";
 import { initialProducts } from "@/lib/products";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -31,12 +33,15 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
+const ProductStages: ProductStage[] = ['Idea', 'Planning', 'Validation', 'Design', 'Development', 'Testing', 'Launch', 'Post-Launch', 'Ready'];
+
 const ProductSchema = z.object({
   name: z.string().min(3, "Name is required"),
   description: z.string().min(10, "Description is required"),
   image: z.string().min(1, "An image is required"),
   aiHint: z.string().min(2, "AI hint is required"),
   enabled: z.boolean(),
+  stage: z.enum(ProductStages),
 });
 type ProductValues = z.infer<typeof ProductSchema>;
 
@@ -57,11 +62,13 @@ const AddEditProductDialog = ({
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm({
+        resolver: zodResolver(ProductSchema),
         defaultValues: {
             name: product?.name || "",
             description: product?.description || "",
             aiHint: product?.aiHint || "",
             enabled: product?.enabled ?? true,
+            stage: product?.stage || 'Idea',
             imageFile: undefined,
             imageUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') ? product.image : "",
             useUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') || false,
@@ -76,6 +83,7 @@ const AddEditProductDialog = ({
                 description: product?.description || "",
                 aiHint: product?.aiHint || "",
                 enabled: product?.enabled ?? true,
+                stage: product?.stage || 'Idea',
                 imageFile: undefined,
                 imageUrl: isUrl ? product.image : "",
                 useUrl: isUrl,
@@ -102,7 +110,14 @@ const AddEditProductDialog = ({
             return;
         }
 
-        onSave({ name: data.name, description: data.description, aiHint: data.aiHint, image: imageValue, enabled: data.enabled }, product?.id);
+        onSave({ 
+            name: data.name, 
+            description: data.description, 
+            aiHint: data.aiHint, 
+            image: imageValue, 
+            enabled: data.enabled,
+            stage: data.stage,
+        }, product?.id);
         form.reset();
         setIsOpen(false);
     };
@@ -126,6 +141,19 @@ const AddEditProductDialog = ({
                             <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea rows={4} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                         
+                        <FormField control={form.control} name="stage" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Project Stage</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                    <SelectContent>
+                                        {ProductStages.map(stage => <SelectItem key={stage} value={stage}>{stage}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+
                         <FormField control={form.control} name="useUrl" render={({ field }) => (
                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
                                 <FormControl>
@@ -217,7 +245,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                         <TableRow>
                             <TableHead>Image</TableHead>
                             <TableHead>Name</TableHead>
-                            <TableHead>Description</TableHead>
+                            <TableHead>Stage</TableHead>
                             <TableHead className="text-center">Status</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
@@ -233,7 +261,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                     </AddEditProductDialog>
                                 </TableCell>
                                 <TableCell className="font-medium">{p.name}</TableCell>
-                                <TableCell className="text-muted-foreground max-w-sm truncate">{p.description}</TableCell>
+                                <TableCell><Badge variant="outline">{p.stage}</Badge></TableCell>
                                 <TableCell className="text-center">
                                     <div className="flex flex-col items-center gap-1">
                                         <Switch

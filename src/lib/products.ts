@@ -1,4 +1,16 @@
 
+
+export type ProductStage = 
+  | 'Idea' 
+  | 'Planning' 
+  | 'Validation' 
+  | 'Design' 
+  | 'Development' 
+  | 'Testing' 
+  | 'Launch' 
+  | 'Post-Launch' 
+  | 'Ready';
+
 export interface Product {
   id: string;
   name: string;
@@ -6,6 +18,7 @@ export interface Product {
   image: string;
   aiHint: string;
   enabled: boolean;
+  stage: ProductStage;
 }
 
 export const initialProducts: Product[] = [
@@ -16,6 +29,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-192535-643-virtual_reality.png',
     aiHint: 'virtual reality',
     enabled: true,
+    stage: 'Ready',
   },
   {
     id: 'prod_2',
@@ -24,6 +38,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-185127-249-secure_child.png',
     aiHint: 'community safety app',
     enabled: true,
+    stage: 'Ready',
   },
   {
     id: 'prod_3',
@@ -32,6 +47,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-192536-407-api_integration.png',
     aiHint: 'api integration',
     enabled: true,
+    stage: 'Development',
   },
   {
     id: 'prod_4',
@@ -40,6 +56,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-190300-848-service_marketplace.png',
     aiHint: 'service marketplace',
     enabled: true,
+    stage: 'Development',
   },
   {
     id: 'prod_5',
@@ -48,6 +65,7 @@ export const initialProducts: Product[] = [
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-192538-422-online_shopping.png',
     aiHint: 'online shopping',
     enabled: true,
+    stage: 'Development',
   },
   {
     id: 'prod_6',
@@ -56,6 +74,7 @@ export const initialProducts: Product[] = [
     image: 'https://images.unsplash.com/photo-1542744095-291d1f67b221?q=80&w=1920&auto=format&fit=crop',
     aiHint: 'outsourcing hr',
     enabled: true,
+    stage: 'Ready',
   },
    {
     id: 'prod_7',
@@ -64,6 +83,7 @@ export const initialProducts: Product[] = [
     image: 'https://placehold.co/600x400.png',
     aiHint: 'home workforce',
     enabled: true,
+    stage: 'Ready',
   },
   {
     id: 'prod_8',
@@ -72,6 +92,7 @@ export const initialProducts: Product[] = [
     image: 'https://placehold.co/600x400.png',
     aiHint: 'document translation',
     enabled: true,
+    stage: 'Ready',
   },
   {
     id: 'prod_9',
@@ -80,6 +101,7 @@ export const initialProducts: Product[] = [
     image: 'https://placehold.co/600x400.png',
     aiHint: 'career development',
     enabled: true,
+    stage: 'Ready',
   },
   {
     id: 'prod_10',
@@ -88,5 +110,42 @@ export const initialProducts: Product[] = [
     image: 'https://placehold.co/600x400.png',
     aiHint: 'server room',
     enabled: true,
+    stage: 'Ready',
+  },
+   {
+    id: 'prod_11',
+    name: 'AI-POS',
+    description: 'A smart, AI-driven Point-of-Sale system for small groceries, featuring inventory management, sales analytics, and customer insights to optimize stock.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'point of sale',
+    enabled: true,
+    stage: 'Research Phase',
+  },
+  {
+    id: 'prod_12',
+    name: 'We Match - MATCH CUP GAME',
+    description: 'An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'augmented reality game',
+    enabled: true,
+    stage: 'Research Phase',
+  },
+  {
+    id: 'prod_13',
+    name: 'AlumniConnect',
+    description: 'A comprehensive digital platform for universities, colleges, and schools to engage their alumni network, fostering connections and professional opportunities.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'university alumni',
+    enabled: true,
+    stage: 'Research Phase',
+  },
+  {
+    id: 'prod_14',
+    name: 'Hadeeya',
+    description: 'A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'gift card',
+    enabled: true,
+    stage: 'Research Phase',
   },
 ];

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import type { Product } from '@/lib/products';
 import { initialProducts } from '@/lib/products';
+import { Badge } from '@/components/ui/badge';
 
 export default function ProductShowcase({ products: managedProducts }: { products: Product[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -42,6 +43,7 @@ export default function ProductShowcase({ products: managedProducts }: { product
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     data-ai-hint={product.aiHint}
                   />
+                   <Badge variant="default" className="absolute top-2 right-2">{product.stage}</Badge>
                 </div>
               </CardHeader>
               <CardContent className="p-6 flex-grow">
