@@ -16,7 +16,7 @@ import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.sc
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
-import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -53,11 +53,14 @@ const PaymentSchema = z.object({
     cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
     expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
     cvc: z.string().length(3, 'CVC must be 3 digits.'),
+    coupon: z.string().optional(),
 });
 type PaymentValues = z.infer<typeof PaymentSchema>;
 
 type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted';
 type ApplicantType = 'individual' | 'company';
+
+const REGISTRATION_FEE = 10;
 
 export default function PartnerPage() {
   const [pageState, setPageState] = useState<PageState>('selection');
@@ -67,6 +70,7 @@ export default function PartnerPage() {
   const [repAnalysisResult, setRepAnalysisResult] = useState<IdentityAnalysisOutput | null>(null);
   const [agreement, setAgreement] = useState<AgreementGenerationOutput | null>(null);
   const [recordNumber, setRecordNumber] = useState<string | null>(null);
+  const [finalPrice, setFinalPrice] = useState(REGISTRATION_FEE);
   const { toast } = useToast();
 
   const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema) });
@@ -171,8 +175,10 @@ export default function PartnerPage() {
   const handleFinalSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
     setPageState('submitting');
     console.log("Processing payment with details:", paymentData);
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
-    toast({ title: 'Payment Successful!', description: "Your payment has been processed."});
+    if (finalPrice > 0) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
+        toast({ title: 'Payment Successful!', description: "Your payment has been processed."});
+    }
     
     setPageState('generating_agreements');
     try {
@@ -216,6 +222,49 @@ export default function PartnerPage() {
 
   const handleESign = () => {
     toast({ title: 'Thank You!', description: "Your agreements have been electronically signed and saved."});
+  }
+
+  const handleSaveToBriefcase = () => {
+    if (!agreement || !recordNumber) return;
+    const briefcaseData = {
+        recordNumber,
+        applicantName: inquiryForm.getValues('companyName') || inquiryForm.getValues('contactName'),
+        agreements: agreement,
+        date: new Date().toISOString(),
+    };
+    try {
+        localStorage.setItem('user_briefcase', JSON.stringify(briefcaseData));
+        toast({
+            title: 'Saved to E-Briefcase!',
+            description: (
+                <p>You can view your documents anytime from the <Link href="/briefcase" className="font-bold underline">E-Briefcase page</Link>.</p>
+            )
+        })
+    } catch (e) {
+        toast({
+            title: 'Failed to Save',
+            description: 'Could not save documents to your E-Briefcase.',
+            variant: 'destructive',
+        });
+    }
+  }
+
+  const handleApplyCoupon = () => {
+    const coupon = paymentForm.getValues('coupon')?.toUpperCase();
+    if (!coupon) {
+      toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
+      return;
+    }
+    // Dummy coupon logic
+    if (coupon === 'FREE100') {
+      setFinalPrice(0);
+      toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
+    } else if (coupon === 'AGENT50') {
+      setFinalPrice(REGISTRATION_FEE / 2);
+      toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
+    } else {
+      toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
+    }
   }
 
   const renderAnalysisResult = () => {
@@ -448,27 +497,49 @@ export default function PartnerPage() {
         <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
-            <span className="text-muted-foreground">Registration Fee</span>
-            <span className="text-xl font-bold text-primary">OMR 10.00</span>
-        </div>
          <Form {...paymentForm}>
           <form onSubmit={paymentForm.handleSubmit(handleFinalSubmit)} className="space-y-4">
-            <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
-                <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
-            )}/>
-            <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
-                <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
-            )}/>
-             <div className="grid grid-cols-2 gap-4">
-                <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
-                    <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
-                )}/>
-                <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
-                    <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
-                )}/>
+            <Card className="bg-muted/50">
+                <CardContent className="p-4">
+                     <FormField control={paymentForm.control} name="coupon" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Coupon Code</FormLabel>
+                            <div className="flex gap-2">
+                                <FormControl>
+                                    <Input placeholder="Enter coupon code..." {...field} />
+                                </FormControl>
+                                <Button type="button" variant="secondary" onClick={handleApplyCoupon}>Apply</Button>
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}/>
+                </CardContent>
+            </Card>
+            <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
+                <span className="text-muted-foreground">Registration Fee</span>
+                <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
             </div>
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">Pay OMR 10.00 & Finalize Registration</Button>
+            {finalPrice > 0 && (
+                <>
+                    <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                        <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
+                    )}/>
+                    <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                        <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+                    )}/>
+                     <div className="grid grid-cols-2 gap-4">
+                        <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                            <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                        <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                            <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                    </div>
+                </>
+            )}
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
+                {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Finalize` : `Complete Free Registration`}
+            </Button>
           </form>
         </Form>
       </CardContent>
@@ -519,7 +590,10 @@ export default function PartnerPage() {
         <Button onClick={handleESign} className="w-full" size="lg">
             <FileSignature className="mr-2 h-5 w-5" /> E-Sign Both Agreements
         </Button>
-        <Button variant="secondary" asChild><Link href="#" onClick={() => setPageState('selection')}>Submit Another Inquiry</Link></Button>
+         <div className="flex justify-center gap-4 w-full">
+            <Button variant="secondary" onClick={handleSaveToBriefcase}><Briefcase className="mr-2 h-4 w-4"/> Save to E-Briefcase</Button>
+            <Button variant="secondary" asChild><Link href="#" onClick={() => setPageState('selection')}>Submit Another Inquiry</Link></Button>
+        </div>
     </CardFooter>
     </>
   );
@@ -557,5 +631,3 @@ export default function PartnerPage() {
     </div>
   );
 }
-
-    

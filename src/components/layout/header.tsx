@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, BrainCircuit, Image as ImageIcon } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, BrainCircuit, Image as ImageIcon, Briefcase } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -15,6 +15,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import React from 'react';
 
@@ -199,6 +200,13 @@ export default function Header() {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
+                 <NavigationMenuItem>
+                    <Link href="/briefcase" legacyBehavior passHref>
+                        <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "text-base font-medium")}>
+                           <Briefcase className="mr-2 h-4 w-4" /> E-Briefcase
+                        </NavigationMenuLink>
+                    </Link>
+                </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
@@ -246,6 +254,15 @@ export default function Header() {
                           <Link href={link.href}>{link.title}</Link>
                           </Button>
                       ))}
+                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">My Account</p>
+                        <Button
+                          asChild
+                          variant="ghost"
+                          className="justify-start text-base"
+                          onClick={handleLinkClick}
+                          >
+                          <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4"/> E-Briefcase</Link>
+                        </Button>
                     </nav>
                     <Button className="mt-4">Contact Us</Button>
                 </div>
