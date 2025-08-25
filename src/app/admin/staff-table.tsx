@@ -314,10 +314,12 @@ export default function StaffTable() {
                         {leadership.map(member => (
                             <TableRow key={member.name}>
                                 <TableCell className="font-medium flex items-center gap-3">
-                                    <Avatar>
-                                        <AvatarImage src={member.photo} alt={member.name} />
-                                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
+                                    <AddEditStaffDialog staffMember={member} onSave={handleSave}>
+                                        <Avatar className="cursor-pointer">
+                                            <AvatarImage src={member.photo} alt={member.name} />
+                                            <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                    </AddEditStaffDialog>
                                     {member.name}
                                 </TableCell>
                                 <TableCell>{member.role}</TableCell>
@@ -356,10 +358,12 @@ export default function StaffTable() {
                             category.agents.map(agent => (
                                 <TableRow key={agent.name}>
                                     <TableCell className="font-medium flex items-center gap-3">
-                                        <Avatar>
-                                            <AvatarImage src={agent.photo} alt={agent.name} />
-                                            <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
-                                        </Avatar>
+                                        <AddEditStaffDialog staffMember={agent} onSave={handleSave}>
+                                            <Avatar className="cursor-pointer">
+                                                <AvatarImage src={agent.photo} alt={agent.name} />
+                                                <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
+                                            </Avatar>
+                                        </AddEditStaffDialog>
                                         {agent.name}
                                     </TableCell>
                                     <TableCell>{agent.role}</TableCell>
