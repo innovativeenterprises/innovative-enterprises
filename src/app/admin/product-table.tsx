@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -24,7 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { DndContext, closestCenter, type DragEndEvent, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -269,6 +268,14 @@ export default function ProductTable({ products, setProducts }: { products: Prod
     useEffect(() => {
         setIsMounted(true);
     }, []);
+    
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+          activationConstraint: {
+            distance: 8,
+          },
+        })
+    );
 
     const handleSave = (values: ProductValues, id?: string) => {
         if (id) {
@@ -322,19 +329,19 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                 </AddEditProductDialog>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[50px]">Order</TableHead>
-                            <TableHead>Image</TableHead>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Stage</TableHead>
-                            <TableHead className="text-center">Status</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    {isMounted ? (
-                        <DndContext sensors={[]} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[50px]">Order</TableHead>
+                                <TableHead>Image</TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Stage</TableHead>
+                                <TableHead className="text-center">Status</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        {isMounted ? (
                             <SortableContext items={products} strategy={verticalListSortingStrategy}>
                                 <TableBody>
                                     {products.map(p => (
@@ -349,34 +356,34 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                     ))}
                                 </TableBody>
                             </SortableContext>
-                        </DndContext>
-                    ) : (
-                         <TableBody>
-                            {products.map(p => (
-                                <TableRow key={p.id}>
-                                    <TableCell><GripVertical className="h-4 w-4 text-muted-foreground" /></TableCell>
-                                    <TableCell><Image src={p.image} alt={p.name} width={60} height={45} className="rounded-md object-cover" /></TableCell>
-                                    <TableCell className="font-medium">{p.name}</TableCell>
-                                    <TableCell><Badge variant="outline">{p.stage}</Badge></TableCell>
-                                    <TableCell className="text-center">
-                                        <div className="flex flex-col items-center gap-1">
-                                            <Switch checked={p.enabled} disabled/>
-                                            <Badge variant={p.enabled ? "default" : "secondary"}>
-                                                {p.enabled ? "Enabled" : "Disabled"}
-                                            </Badge>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" disabled><Edit /></Button>
-                                            <Button variant="ghost" size="icon" disabled><Trash2 className="text-destructive" /></Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    )}
-                </Table>
+                        ) : (
+                            <TableBody>
+                                {products.map(p => (
+                                    <TableRow key={p.id}>
+                                        <TableCell><GripVertical className="h-4 w-4 text-muted-foreground" /></TableCell>
+                                        <TableCell><Image src={p.image} alt={p.name} width={60} height={45} className="rounded-md object-cover" /></TableCell>
+                                        <TableCell className="font-medium">{p.name}</TableCell>
+                                        <TableCell><Badge variant="outline">{p.stage}</Badge></TableCell>
+                                        <TableCell className="text-center">
+                                            <div className="flex flex-col items-center gap-1">
+                                                <Switch checked={p.enabled} disabled/>
+                                                <Badge variant={p.enabled ? "default" : "secondary"}>
+                                                    {p.enabled ? "Enabled" : "Disabled"}
+                                                </Badge>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex justify-end gap-2">
+                                                <Button variant="ghost" size="icon" disabled><Edit /></Button>
+                                                <Button variant="ghost" size="icon" disabled><Trash2 className="text-destructive" /></Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        )}
+                    </Table>
+                </DndContext>
             </CardContent>
         </Card>
     );

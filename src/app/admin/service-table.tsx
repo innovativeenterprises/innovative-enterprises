@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -9,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Service } from "@/lib/services";
 import { initialServices } from "@/lib/services";
 import { Badge } from "@/components/ui/badge";
-import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { DndContext, closestCenter, type DragEndEvent, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from "@/components/ui/button";
@@ -64,6 +63,14 @@ export default function ServiceTable({ services, setServices }: { services: Serv
     useEffect(() => {
         setIsMounted(true);
     }, []);
+    
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+          activationConstraint: {
+            distance: 8,
+          },
+        })
+    );
 
     const handleToggle = (title: string) => {
         setServices(
@@ -93,17 +100,17 @@ export default function ServiceTable({ services, setServices }: { services: Serv
                 <CardDescription>Enable or disable public-facing services from the homepage.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[50px]">Order</TableHead>
-                            <TableHead className="w-[250px]">Service</TableHead>
-                            <TableHead>Description</TableHead>
-                            <TableHead className="text-center">Status</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    {isMounted ? (
-                        <DndContext sensors={[]} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[50px]">Order</TableHead>
+                                <TableHead className="w-[250px]">Service</TableHead>
+                                <TableHead>Description</TableHead>
+                                <TableHead className="text-center">Status</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        {isMounted ? (
                             <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
                                 <TableBody>
                                     {services.map(service => (
@@ -115,27 +122,27 @@ export default function ServiceTable({ services, setServices }: { services: Serv
                                     ))}
                                 </TableBody>
                             </SortableContext>
-                        </DndContext>
-                    ) : (
-                         <TableBody>
-                            {services.map(service => (
-                                <TableRow key={service.title}>
-                                    <TableCell><GripVertical className="h-4 w-4 text-muted-foreground" /></TableCell>
-                                    <TableCell className="font-medium">{service.title}</TableCell>
-                                    <TableCell>{service.description}</TableCell>
-                                    <TableCell className="text-center">
-                                         <div className="flex flex-col items-center gap-1">
-                                            <Switch checked={service.enabled} disabled />
-                                            <Badge variant={service.enabled ? "default" : "secondary"}>
-                                                {service.enabled ? "Enabled" : "Disabled"}
-                                            </Badge>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    )}
-                </Table>
+                        ) : (
+                            <TableBody>
+                                {services.map(service => (
+                                    <TableRow key={service.title}>
+                                        <TableCell><GripVertical className="h-4 w-4 text-muted-foreground" /></TableCell>
+                                        <TableCell className="font-medium">{service.title}</TableCell>
+                                        <TableCell>{service.description}</TableCell>
+                                        <TableCell className="text-center">
+                                            <div className="flex flex-col items-center gap-1">
+                                                <Switch checked={service.enabled} disabled />
+                                                <Badge variant={service.enabled ? "default" : "secondary"}>
+                                                    {service.enabled ? "Enabled" : "Disabled"}
+                                                </Badge>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        )}
+                    </Table>
+                </DndContext>
             </CardContent>
         </Card>
     );
