@@ -334,8 +334,8 @@ export default function InvestForm() {
                                     <CardDescription>Aida, our assistant agent, can help you book a meeting with our team.</CardDescription>
                                 </CardHeader>
                                 <CardContent className="flex flex-col sm:flex-row gap-4">
-                                <Button className="w-full" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Calendly</a></Button>
-                                <Button className="w-full" variant="outline" asChild><a href="#" target="_blank" rel="noopener noreferrer">Book via Google Calendar</a></Button>
+                                <Button className="w-full" asChild><a href="https://calendly.com" target="_blank" rel="noopener noreferrer">Book via Calendly</a></Button>
+                                <Button className="w-full" variant="outline" asChild><a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer">Book via Google Calendar</a></Button>
                                 </CardContent>
                             </Card>
                         )}
