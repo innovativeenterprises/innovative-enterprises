@@ -1,66 +1,52 @@
 
+'use client';
+
+import { useState, useEffect } from 'react';
 import TranslationForm from "./translation-form";
 import { Languages, FileText, Banknote, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Pricing, PricingGroup } from '@/lib/pricing';
+import { initialPricing } from '@/lib/pricing';
 
-const documentTypeGroups = {
-    "Legal & Official Documents": {
-        icon: ShieldCheck,
-        items: {
-            "Certificates (Birth, Marriage, Death, etc.)": 4.0,
-            "Court Documents, Power of Attorney, Notarized Docs": 6.0,
-            "Complex Legal Contracts, Immigration Docs": 8.0,
-        }
-    },
-    "Medical & Healthcare Documents": {
-        icon: FileText,
-        items: {
-            "Prescriptions, Test Results, Basic Reports": 4.0,
-            "Patient Records, Discharge Summaries": 6.0,
-            "Clinical Trials, Research, Device Instructions": 8.0,
-        }
-    },
-    "Business & Commercial Documents": {
-        icon: Banknote,
-        items: {
-            "Company Licenses, Simple Agreements": 5.0,
-            "Financial Statements, Policies, MOUs": 7.0,
-            "Import/Export, Detailed Trading Contracts": 8.0,
-        }
-    },
-    "Educational & Academic Documents": {
-        icon: ShieldCheck,
-        items: {
-            "Certificates, Diplomas, Transcripts": 4.0,
-            "Recommendation Letters, Course Material": 5.0,
-            "Thesis, Dissertations, Research Papers": 7.0,
-        }
-    },
-    "Technical & Industrial Documents": {
-        icon: FileText,
-        items: {
-            "User Manuals, Product Guides": 6.0,
-            "Patents, Engineering Specs, Safety Data Sheets": 8.0,
-        }
-    },
-    "Media & Marketing Documents": {
-        icon: Banknote,
-        items: {
-            "Flyers, Brochures, Simple Ads": 4.0,
-            "Websites, Presentations, Proposals": 6.0,
-            "Branding, Creative Copy with Localization": 7.0,
-        }
-    },
-    "Financial & Trade Documents": {
-        icon: ShieldCheck,
-        items: {
-            "Bank Statements, Loan Forms, Insurance Policies": 5.0,
-            "Trading Contracts, Customs Declarations, Tax Reports": 7.0,
-        }
-    },
+const iconMap: { [key: string]: React.ElementType } = {
+    "Legal & Official Documents": ShieldCheck,
+    "Medical & Healthcare Documents": FileText,
+    "Business & Commercial Documents": Banknote,
+    "Educational & Academic Documents": ShieldCheck,
+    "Technical & Industrial Documents": FileText,
+    "Media & Marketing Documents": Banknote,
+    "Financial & Trade Documents": ShieldCheck,
 };
 
-const PriceList = () => (
+const PriceList = () => {
+    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem('translation_pricing');
+            if (stored) {
+                setPricing(JSON.parse(stored));
+            }
+        } catch (error) {
+            console.error("Failed to parse pricing from localStorage", error);
+        }
+    }, []);
+
+    const documentTypeGroups = pricing.reduce((acc, item) => {
+        const group = item.group;
+        if (!acc[group]) {
+            acc[group] = {
+                group,
+                icon: iconMap[group] || FileText,
+                items: {}
+            };
+        }
+        acc[group].items[item.type] = item.price;
+        return acc;
+    }, {} as { [key: string]: PricingGroup });
+
+
+    return (
     <div className="max-w-4xl mx-auto mt-20">
         <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Pricing</h2>
@@ -69,7 +55,7 @@ const PriceList = () => (
             </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Object.entries(documentTypeGroups).map(([group, { icon: Icon, items }]) => (
+            {Object.values(documentTypeGroups).map(({ group, icon: Icon, items }) => (
                  <Card key={group}>
                     <CardHeader>
                         <div className="flex items-center gap-3">
@@ -106,7 +92,8 @@ const PriceList = () => (
             </Card>
         </div>
     </div>
-)
+    )
+}
 
 
 export default function DocumentTranslatorPage() {

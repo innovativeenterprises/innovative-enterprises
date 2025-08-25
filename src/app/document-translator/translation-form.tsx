@@ -17,6 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGr
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { Pricing } from '@/lib/pricing';
+import { initialPricing } from '@/lib/pricing';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -58,74 +60,6 @@ const documentTypeEnum = z.enum([
     'Other',
 ]);
 
-const documentPricing: Record<z.infer<typeof documentTypeEnum>, number> = {
-    // Legal
-    'Certificates (Birth, Marriage, Death, etc.)': 4.0,
-    'Court Documents, Power of Attorney, Notarized Docs': 6.0,
-    'Complex Legal Contracts, Immigration Docs': 8.0,
-    // Medical
-    'Prescriptions, Test Results, Basic Reports': 4.0,
-    'Patient Records, Discharge Summaries': 6.0,
-    'Clinical Trials, Research, Device Instructions': 8.0,
-    // Business
-    'Company Licenses, Simple Agreements': 5.0,
-    'Financial Statements, Policies, MOUs': 7.0,
-    'Import/Export, Detailed Trading Contracts': 8.0,
-    // Educational
-    'Certificates, Diplomas, Transcripts': 4.0,
-    'Recommendation Letters, Course Material': 5.0,
-    'Thesis, Dissertations, Research Papers': 7.0,
-    // Technical
-    'User Manuals, Product Guides': 6.0,
-    'Patents, Engineering Specs, Safety Data Sheets': 8.0,
-    // Media & Marketing
-    'Flyers, Brochures, Simple Ads': 4.0,
-    'Websites, Presentations, Proposals': 6.0,
-    'Branding, Creative Copy with Localization': 7.0,
-    // Financial & Trade
-    'Bank Statements, Loan Forms, Insurance Policies': 5.0,
-    'Trading Contracts, Customs Declarations, Tax Reports': 7.0,
-    // Other
-    'Other': 5.0,
-};
-
-const documentTypeGroups = {
-    "Legal & Official Documents": [
-        "Certificates (Birth, Marriage, Death, etc.)",
-        "Court Documents, Power of Attorney, Notarized Docs",
-        "Complex Legal Contracts, Immigration Docs",
-    ],
-    "Medical & Healthcare Documents": [
-        "Prescriptions, Test Results, Basic Reports",
-        "Patient Records, Discharge Summaries",
-        "Clinical Trials, Research, Device Instructions",
-    ],
-    "Business & Commercial Documents": [
-        "Company Licenses, Simple Agreements",
-        "Financial Statements, Policies, MOUs",
-        "Import/Export, Detailed Trading Contracts",
-    ],
-    "Educational & Academic Documents": [
-        "Certificates, Diplomas, Transcripts",
-        "Recommendation Letters, Course Material",
-        "Thesis, Dissertations, Research Papers",
-    ],
-    "Technical & Industrial Documents": [
-        "User Manuals, Product Guides",
-        "Patents, Engineering Specs, Safety Data Sheets",
-    ],
-    "Media & Marketing Documents": [
-        "Flyers, Brochures, Simple Ads",
-        "Websites, Presentations, Proposals",
-        "Branding, Creative Copy with Localization",
-    ],
-    "Financial & Trade Documents": [
-        "Bank Statements, Loan Forms, Insurance Policies",
-        "Trading Contracts, Customs Declarations, Tax Reports",
-    ],
-};
-
-
 const FormSchema = z.object({
   documentFiles: z.any().refine(files => files?.length > 0, 'At least one document file is required.'),
   numberOfPages: z.coerce.number().min(1, "Please enter at least 1 page."),
@@ -159,7 +93,40 @@ export default function TranslationForm() {
   const [pageState, setPageState] = useState<PageState>('form');
   const [response, setResponse] = useState<DocumentTranslationOutput | null>(null);
   const [submittedData, setSubmittedData] = useState<FormValues | null>(null);
+  const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
   const { toast } = useToast();
+
+  useEffect(() => {
+    try {
+        const stored = localStorage.getItem('translation_pricing');
+        if (stored) {
+            setPricing(JSON.parse(stored));
+        } else {
+            setPricing(initialPricing);
+        }
+    } catch (error) {
+        console.error("Failed to parse pricing from localStorage", error);
+        setPricing(initialPricing);
+    }
+  }, []);
+
+  const pricingMap = useMemo(() => {
+      return pricing.reduce((acc, item) => {
+          acc[item.type] = item.price;
+          return acc;
+      }, {} as Record<string, number>);
+  }, [pricing]);
+
+  const documentTypeGroups = useMemo(() => {
+      return pricing.reduce((acc, item) => {
+          if (!acc[item.group]) {
+              acc[item.group] = [];
+          }
+          acc[item.group].push(item.type);
+          return acc;
+      }, {} as Record<string, string[]>);
+  }, [pricing]);
+
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -181,7 +148,7 @@ export default function TranslationForm() {
       if (!documentType || !numberOfPages || numberOfPages < 1) {
           return 0;
       }
-      const pricePerPage = documentPricing[documentType];
+      const pricePerPage = pricingMap[documentType] || 5.0; // Fallback price
       let total = pricePerPage * numberOfPages;
 
       if (requestSealedCopy) {
@@ -194,7 +161,7 @@ export default function TranslationForm() {
       
       return Math.max(total, MINIMUM_CHARGE);
 
-  }, [watchAllFields]);
+  }, [watchAllFields, pricingMap]);
 
   const [finalPrice, setFinalPrice] = useState(basePrice);
   
@@ -357,10 +324,6 @@ export default function TranslationForm() {
                                     ))}
                                 </SelectGroup>
                             ))}
-                            <SelectGroup>
-                                <SelectLabel>Other</SelectLabel>
-                                <SelectItem value="Other">Other</SelectItem>
-                            </SelectGroup>
                         </SelectContent>
                       </Select>
                       <FormMessage />

@@ -7,6 +7,7 @@ import OpportunityTable from "./opportunity-table";
 import ProviderTable from "./provider-table";
 import ProductTable from "./product-table";
 import ClientTable from "./client-table";
+import PricingTable from "./pricing-table";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users },
@@ -48,6 +49,7 @@ export default function AdminPage() {
             <ClientTable />
             <OpportunityTable />
             <ProviderTable />
+            <PricingTable />
         </div>
       </div>
     </div>
