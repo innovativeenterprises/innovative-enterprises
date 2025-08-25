@@ -26,7 +26,7 @@ const prompt = ai.definePrompt({
 **Instructions:**
 1.  **Analyze the Document:** The document provided is a Commercial Record (CR) or a similar business registration document from Oman.
     -   Document: {{media url=documentDataUri}}
-2.  **Extract Information:** Carefully read the document and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Dates should be in YYYY-MM-DD format if possible.
+2.  **Extract Information:** Carefully read the document and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Dates should be in YYYY-MM-DD format if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
 
     **Company Information:**
     -   **Company Name (English/Arabic):** Find the official, full legal name of the business in both English and Arabic.
