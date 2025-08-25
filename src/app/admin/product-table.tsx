@@ -117,32 +117,8 @@ const AddEditProductDialog = ({
 }
 
 export default function ProductTable() {
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<Product[]>(initialProducts);
     const { toast } = useToast();
-
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('products_data');
-            if (stored) {
-                setProducts(JSON.parse(stored));
-            } else {
-                setProducts(initialProducts);
-            }
-        } catch (error) {
-            console.error("Failed to parse products from localStorage", error);
-            setProducts(initialProducts);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (products.length > 0) {
-            try {
-                localStorage.setItem('products_data', JSON.stringify(products));
-            } catch (error) {
-                console.error("Failed to save products to localStorage", error);
-            }
-        }
-    }, [products]);
 
     const handleSave = (values: ProductValues, id?: string) => {
         if (id) {

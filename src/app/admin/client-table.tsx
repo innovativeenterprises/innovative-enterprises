@@ -47,19 +47,21 @@ type TestimonialValues = z.infer<typeof TestimonialSchema>;
 // Add/Edit Dialogs
 const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<ClientValues>({
-        resolver: zodResolver(ClientSchema),
-        defaultValues: client || { name: "", logo: "", aiHint: "" },
+    const form = useForm<Omit<ClientValues, 'logo'> & { logo: any }>({
+        resolver: zodResolver(ClientSchema.omit({ logo: true })),
+        defaultValues: client || { name: "", aiHint: "" },
     });
-    useEffect(() => { form.reset(client || { name: "", logo: "", aiHint: "" }) }, [client, form, isOpen]);
+    useEffect(() => { 
+        if(isOpen) {
+            form.reset(client || { name: "", logo: "", aiHint: "" });
+        }
+    }, [client, form, isOpen]);
     
     const onSubmit: SubmitHandler<any> = async (data) => {
         let logoDataUri = client?.logo || "";
-        if (data.logo && typeof data.logo !== 'string') {
+        if (data.logo && data.logo[0]) {
             const file = data.logo[0];
-            if(file) {
-               logoDataUri = await fileToDataURI(file);
-            }
+            logoDataUri = await fileToDataURI(file);
         }
         
         onSave({ ...data, logo: logoDataUri }, client?.id);
@@ -142,38 +144,9 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 // Main Component
 export default function ClientTable() {
-    const [clients, setClients] = useState<Client[]>([]);
-    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+    const [clients, setClients] = useState<Client[]>(initialClients);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
     const { toast } = useToast();
-
-    // Clients Effect
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('clients_data');
-            setClients(stored ? JSON.parse(stored) : initialClients);
-        } catch (error) { setClients(initialClients); }
-    }, []);
-
-    useEffect(() => {
-        if (clients.length > 0) {
-            localStorage.setItem('clients_data', JSON.stringify(clients));
-        }
-    }, [clients]);
-
-    // Testimonials Effect
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('testimonials_data');
-            setTestimonials(stored ? JSON.parse(stored) : initialTestimonials);
-        } catch (error) { setTestimonials(initialTestimonials); }
-    }, []);
-
-    useEffect(() => {
-        if (testimonials.length > 0) {
-            localStorage.setItem('testimonials_data', JSON.stringify(testimonials));
-        }
-    }, [testimonials]);
-
 
     // Handlers
     const handleSaveClient = (values: ClientValues, id?: string) => {
@@ -267,7 +240,7 @@ export default function ClientTable() {
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
                                 {testimonials.map(t => (
-                                    <TableRow key={t.id} className="cursor-pointer">
+                                    <TableRow key={t.id}>
                                         <TableCell className="italic max-w-md truncate">
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
                                                 <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>

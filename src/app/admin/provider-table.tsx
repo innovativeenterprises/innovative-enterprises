@@ -122,34 +122,10 @@ const AddEditProviderDialog = ({
 }
 
 export default function ProviderTable() {
-    const [providers, setProviders] = useState<Provider[]>([]);
+    const [providers, setProviders] = useState<Provider[]>(initialProviders);
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
-
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('providers_data');
-            if (stored) {
-                setProviders(JSON.parse(stored));
-            } else {
-                setProviders(initialProviders);
-            }
-        } catch (error) {
-            console.error("Failed to parse providers from localStorage", error);
-            setProviders(initialProviders);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (providers.length > 0) {
-            try {
-                localStorage.setItem('providers_data', JSON.stringify(providers));
-            } catch (error) {
-                console.error("Failed to save providers to localStorage", error);
-            }
-        }
-    }, [providers]);
 
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);

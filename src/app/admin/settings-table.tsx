@@ -14,28 +14,6 @@ export default function SettingsTable() {
     const [settings, setSettings] = useState<AppSettings>(initialSettings);
     const { toast } = useToast();
 
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('app_settings');
-            if (stored) {
-                setSettings(JSON.parse(stored));
-            } else {
-                setSettings(initialSettings);
-            }
-        } catch (error) {
-            console.error("Failed to parse settings from localStorage", error);
-            setSettings(initialSettings);
-        }
-    }, []);
-
-    useEffect(() => {
-        try {
-            localStorage.setItem('app_settings', JSON.stringify(settings));
-        } catch (error) {
-            console.error("Failed to save settings to localStorage", error);
-        }
-    }, [settings]);
-
     const handleModeChange = (value: 'direct' | 'tender') => {
         setSettings(prev => ({...prev, translationAssignmentMode: value }));
         toast({ title: "Setting updated.", description: `Translation assignment mode set to ${value === 'direct' ? 'Direct Assignment' : 'Tender'}.`});

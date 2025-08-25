@@ -23,43 +23,8 @@ const ServiceCard = ({ service }: { service: Service }) => (
 );
 
 export default function ServiceCatalog() {
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<Service[]>(initialServices.filter(s => s.enabled));
 
-  useEffect(() => {
-    try {
-      const storedServices = localStorage.getItem('services_status');
-      const serviceStatuses = storedServices ? JSON.parse(storedServices) : initialServices;
-
-      const enabledServices = initialServices
-        .map(initialService => {
-          const stored = serviceStatuses.find((s: Service) => s.title === initialService.title);
-          return {
-            ...initialService,
-            enabled: stored ? stored.enabled : initialService.enabled,
-          };
-        })
-        .filter(service => service.enabled);
-
-      if (enabledServices.length > 0) {
-        setServices(enabledServices);
-      } else {
-        const hasStoredData = !!storedServices;
-        if (hasStoredData) {
-            setServices([]);
-        } else {
-             setServices(initialServices.filter(s => s.enabled));
-        }
-      }
-    } catch (error) {
-      console.error("Failed to load services from localStorage", error);
-      setServices(initialServices.filter(s => s.enabled));
-    }
-  }, []);
-
-  if (services.length === 0) {
-    return null; // Or a placeholder message
-  }
-  
   return (
     <section id="services" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">

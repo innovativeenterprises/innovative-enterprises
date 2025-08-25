@@ -9,17 +9,7 @@ import type { Product } from '@/lib/products';
 import { initialProducts } from '@/lib/products';
 
 export default function ProductShowcase() {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('products_data');
-      setProducts(stored ? JSON.parse(stored) : initialProducts);
-    } catch (error) {
-      console.error("Failed to parse products from localStorage", error);
-      setProducts(initialProducts);
-    }
-  }, []);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
 
   return (
     <section id="products" className="py-16 md:py-24 bg-white">

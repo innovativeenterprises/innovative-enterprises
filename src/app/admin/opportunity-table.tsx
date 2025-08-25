@@ -123,34 +123,10 @@ const AddEditOpportunityDialog = ({
 }
 
 export default function OpportunityTable() {
-    const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+    const [opportunities, setOpportunities] = useState<Opportunity[]>(initialOpportunities);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
-
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('opportunities_data');
-            if (stored) {
-                setOpportunities(JSON.parse(stored));
-            } else {
-                setOpportunities(initialOpportunities);
-            }
-        } catch (error) {
-            console.error("Failed to parse opportunities from localStorage", error);
-            setOpportunities(initialOpportunities);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (opportunities.length > 0) {
-            try {
-                localStorage.setItem('opportunities_data', JSON.stringify(opportunities));
-            } catch (error) {
-                console.error("Failed to save opportunities to localStorage", error);
-            }
-        }
-    }, [opportunities]);
     
     const handleOpenDialog = (opp?: Opportunity) => {
         setSelectedOpp(opp);

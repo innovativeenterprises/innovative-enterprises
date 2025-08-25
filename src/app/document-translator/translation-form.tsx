@@ -103,19 +103,6 @@ export default function TranslationForm() {
   const [settings, setSettings] = useState<AppSettings>(initialSettings);
   const { toast } = useToast();
 
-  useEffect(() => {
-    try {
-        const storedPricing = localStorage.getItem('translation_pricing');
-        setPricing(storedPricing ? JSON.parse(storedPricing) : initialPricing);
-        const storedSettings = localStorage.getItem('app_settings');
-        setSettings(storedSettings ? JSON.parse(storedSettings) : initialSettings);
-    } catch (error) {
-        console.error("Failed to parse data from localStorage", error);
-        setPricing(initialPricing);
-        setSettings(initialSettings);
-    }
-  }, []);
-
   const pricingMap = useMemo(() => {
       return pricing.reduce((acc, item) => {
           acc[item.type] = item.price;

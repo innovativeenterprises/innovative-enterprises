@@ -11,38 +11,8 @@ import { initialServices } from "@/lib/services";
 import { Badge } from "@/components/ui/badge";
 
 export default function ServiceTable() {
-    const [services, setServices] = useState<Service[]>([]);
+    const [services, setServices] = useState<Service[]>(initialServices);
     const { toast } = useToast();
-
-    useEffect(() => {
-        try {
-            const storedServices = localStorage.getItem('services_status');
-            if (storedServices) {
-                const parsedServices: Service[] = JSON.parse(storedServices);
-                // Ensure all initial services are present
-                const allServices = initialServices.map(initialService => {
-                    const found = parsedServices.find(s => s.title === initialService.title);
-                    return found || initialService;
-                });
-                setServices(allServices);
-            } else {
-                setServices(initialServices);
-            }
-        } catch (error) {
-            console.error("Failed to parse services from localStorage", error);
-            setServices(initialServices);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (services.length > 0) {
-            try {
-                localStorage.setItem('services_status', JSON.stringify(services));
-            } catch (error) {
-                console.error("Failed to save services to localStorage", error);
-            }
-        }
-    }, [services]);
 
     const handleToggle = (title: string) => {
         setServices(prev =>

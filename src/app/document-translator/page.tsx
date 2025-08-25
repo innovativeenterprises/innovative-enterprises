@@ -21,17 +21,6 @@ const iconMap: { [key: string]: React.ElementType } = {
 const PriceList = () => {
     const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
 
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('translation_pricing');
-            if (stored) {
-                setPricing(JSON.parse(stored));
-            }
-        } catch (error) {
-            console.error("Failed to parse pricing from localStorage", error);
-        }
-    }, []);
-
     const documentTypeGroups = pricing.reduce((acc, item) => {
         const group = item.group;
         if (!acc[group]) {

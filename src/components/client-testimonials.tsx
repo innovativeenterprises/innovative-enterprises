@@ -8,22 +8,8 @@ import type { Client, Testimonial } from '@/lib/clients';
 import { initialClients, initialTestimonials } from '@/lib/clients';
 
 export default function ClientTestimonials() {
-  const [clients, setClients] = useState<Client[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-
-  useEffect(() => {
-    try {
-      const storedClients = localStorage.getItem('clients_data');
-      setClients(storedClients ? JSON.parse(storedClients) : initialClients);
-
-      const storedTestimonials = localStorage.getItem('testimonials_data');
-      setTestimonials(storedTestimonials ? JSON.parse(storedTestimonials) : initialTestimonials);
-    } catch (error) {
-      console.error("Failed to parse data from localStorage", error);
-      setClients(initialClients);
-      setTestimonials(initialTestimonials);
-    }
-  }, []);
+  const [clients, setClients] = useState<Client[]>(initialClients);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
 
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-background">

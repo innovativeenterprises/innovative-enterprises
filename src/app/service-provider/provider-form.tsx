@@ -48,21 +48,6 @@ export default function ProviderForm() {
     console.log(data);
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    try {
-        const stored = localStorage.getItem('providers_data');
-        const existingProviders: Provider[] = stored ? JSON.parse(stored) : [];
-        const newProvider: Provider = {
-            ...data,
-            id: (Math.random() + 1).toString(36).substring(7),
-            status: "Pending Review",
-            notes: data.details, // Use details field for notes
-        };
-        const updatedProviders = [newProvider, ...existingProviders];
-        localStorage.setItem('providers_data', JSON.stringify(updatedProviders));
-    } catch(error) {
-        console.error("Failed to save new provider to localStorage", error);
-    }
-
     setIsLoading(false);
     setIsSubmitted(true);
 

@@ -53,23 +53,11 @@ const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
 }
 
 export default function OpportunitiesPage() {
-    const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+    const [opportunities, setOpportunities] = useState<Opportunity[]>(initialOpportunities);
 
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('opportunities_data');
-            // Only show open or in-progress opportunities on the public page
-            const publicOpportunities = stored 
-                ? JSON.parse(stored)
-                : initialOpportunities;
-            
-            setOpportunities(publicOpportunities.sort((a,b) => (a.status === 'Closed' ? 1 : -1)));
-
-        } catch (error) {
-            console.error("Failed to load opportunities from localStorage", error);
-            setOpportunities(initialOpportunities);
-        }
-    }, []);
+    const publicOpportunities = opportunities
+        .filter(opp => opp.status !== 'Closed')
+        .sort((a,b) => (a.status === 'In Progress' ? -1 : 1));
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -85,7 +73,7 @@ export default function OpportunitiesPage() {
             </div>
 
             <div className="max-w-5xl mx-auto mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {opportunities.map((opp) => (
+                {publicOpportunities.map((opp) => (
                     <OpportunityCard key={opp.id} opp={opp} />
                 ))}
             </div>

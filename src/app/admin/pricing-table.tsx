@@ -74,32 +74,8 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable() {
-    const [pricing, setPricing] = useState<Pricing[]>([]);
+    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
     const { toast } = useToast();
-
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('translation_pricing');
-            if (stored) {
-                setPricing(JSON.parse(stored));
-            } else {
-                setPricing(initialPricing);
-            }
-        } catch (error) {
-            console.error("Failed to parse pricing from localStorage", error);
-            setPricing(initialPricing);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (pricing.length > 0) {
-            try {
-                localStorage.setItem('translation_pricing', JSON.stringify(pricing));
-            } catch (error) {
-                console.error("Failed to save pricing to localStorage", error);
-            }
-        }
-    }, [pricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
