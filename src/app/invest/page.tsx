@@ -27,9 +27,9 @@ const investmentReasons = [
 const combinedProjects = [
     { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live" },
     { name: "ameen", description: "A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App using AI image recognition.", status: "Live" },
-    { name: "APPI – عـبِّـي", description: "An intuitive API management and integration platform, evolving into an AI-Powered Smart Home Utility Management App.", status: "In Development" },
-    { name: "KHIDMA", description: "A digital marketplace using AI-matching for on-demand services where providers bid competitively on customer requests.", status: "In Development" },
-    { name: "V MALL", description: "A comprehensive virtual mall and e-commerce ecosystem, expanding into a Smart VR/AR Shopping & Virtual Tour Marketplace.", status: "In Development" },
+    { name: "APPI – عـبِّـي", description: "An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption (electricity, water, gas). It empowers users with predictive analytics, automated notifications, and convenient service booking options, ultimately leading to significant cost savings and enhanced convenience.", status: "In Development" },
+    { name: "KHIDMA", description: "A revolutionary AI/Deep-tech powered mobile application that transforms the traditional service industry. It acts as a dynamic marketplace connecting service seekers with qualified providers through an innovative auction/tender system.", status: "In Development" },
+    { name: "VMALL", description: "A revolutionary Web & Mobile application that leverages Virtual Reality (VR) and Augmented Reality (AR) technology to create immersive shopping experiences. It empowers businesses across various sectors, including retail, real estate, hospitality, and event management, to showcase their offerings in a captivating and interactive manner.", status: "In Development" },
     { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
 ];
 
