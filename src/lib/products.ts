@@ -11,7 +11,7 @@ export const initialProducts: Product[] = [
   {
     id: 'prod_1',
     name: 'PanoSpace',
-    description: 'An immersive platform for virtual tours and panoramic experiences.',
+    description: 'An immersive 360° virtual tour platform that allows users to explore properties, venues, and spaces as if they were physically there. Ideal for real estate, hospitality, and events, PanoSpace increases engagement and sales by providing interactive, customizable, and shareable virtual experiences on any device, including VR headsets.',
     image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-192535-643-virtual_reality.png',
     aiHint: 'virtual reality',
   },
