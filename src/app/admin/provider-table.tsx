@@ -35,13 +35,16 @@ type ProviderValues = z.infer<typeof ProviderSchema>;
 const AddEditProviderDialog = ({ 
     provider, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     provider?: Provider, 
     onSave: (values: ProviderValues, id?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<ProviderValues>({
         resolver: zodResolver(ProviderSchema),
         defaultValues: provider || { 
@@ -55,17 +58,19 @@ const AddEditProviderDialog = ({
     });
 
     useEffect(() => {
-        form.reset(provider || { name: "", email: "", services: "", status: "Pending Review", portfolio: "", notes: "" });
-    }, [provider, form]);
+         if (isOpen) {
+            form.reset(provider || { name: "", email: "", services: "", status: "Pending Review", portfolio: "", notes: "" });
+         }
+    }, [provider, form, isOpen]);
 
     const onSubmit: SubmitHandler<ProviderValues> = (data) => {
         onSave(data, provider?.id);
         form.reset();
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -118,6 +123,8 @@ const AddEditProviderDialog = ({
 
 export default function ProviderTable() {
     const [providers, setProviders] = useState<Provider[]>([]);
+    const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -143,6 +150,11 @@ export default function ProviderTable() {
             }
         }
     }, [providers]);
+
+    const handleOpenDialog = (provider?: Provider) => {
+        setSelectedProvider(provider);
+        setIsDialogOpen(true);
+    }
 
     const handleSave = (values: ProviderValues, id?: string) => {
         if (id) {
@@ -182,11 +194,17 @@ export default function ProviderTable() {
                     <CardTitle>Provider Management</CardTitle>
                     <CardDescription>Manage freelancers, subcontractors, and service providers.</CardDescription>
                 </div>
-                <AddEditProviderDialog onSave={handleSave}>
-                    <Button><PlusCircle /> Add Provider</Button>
-                </AddEditProviderDialog>
+                 <Button onClick={() => handleOpenDialog()}><PlusCircle /> Add Provider</Button>
             </CardHeader>
             <CardContent>
+                <AddEditProviderDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    provider={selectedProvider}
+                    onSave={handleSave}
+                >
+                    <div />
+                </AddEditProviderDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -198,7 +216,7 @@ export default function ProviderTable() {
                     </TableHeader>
                     <TableBody>
                         {providers.map(p => (
-                            <TableRow key={p.id}>
+                            <TableRow key={p.id} onClick={() => handleOpenDialog(p)} className="cursor-pointer">
                                 <TableCell className="font-medium">
                                     {p.name}
                                     <p className="text-sm text-muted-foreground">{p.email}</p>
@@ -206,15 +224,12 @@ export default function ProviderTable() {
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
+                                    <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                                         {p.portfolio && (
                                             <Button asChild variant="ghost" size="icon">
                                                 <a href={p.portfolio} target="_blank" rel="noopener noreferrer"><LinkIcon /></a>
                                             </Button>
                                         )}
-                                        <AddEditProviderDialog provider={p} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditProviderDialog>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>

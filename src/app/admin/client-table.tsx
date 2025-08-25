@@ -36,7 +36,7 @@ const TestimonialSchema = z.object({
 type TestimonialValues = z.infer<typeof TestimonialSchema>;
 
 // Add/Edit Dialogs
-const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, c: React.ReactNode }) => {
+const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<ClientValues>({
         resolver: zodResolver(ClientSchema),
@@ -76,7 +76,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     );
 };
 
-const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimonial?: Testimonial, onSave: (v: TestimonialValues, id?: string) => void, c: React.ReactNode }) => {
+const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimonial?: Testimonial, onSave: (v: TestimonialValues, id?: string) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<TestimonialValues>({
         resolver: zodResolver(TestimonialSchema),
@@ -199,12 +199,12 @@ export default function ClientTable() {
                             <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
                         </TabsList>
                         <TabsContent value="clients" className="m-0 p-0">
-                            <AddEditClientDialog onSave={handleSaveClient} c={undefined}>
+                            <AddEditClientDialog onSave={handleSaveClient}>
                                 <Button><PlusCircle /> Add Client</Button>
                             </AddEditClientDialog>
                         </TabsContent>
                          <TabsContent value="testimonials" className="m-0 p-0">
-                            <AddEditTestimonialDialog onSave={handleSaveTestimonial} c={undefined}>
+                            <AddEditTestimonialDialog onSave={handleSaveTestimonial}>
                                 <Button><PlusCircle /> Add Testimonial</Button>
                             </AddEditTestimonialDialog>
                         </TabsContent>
@@ -215,11 +215,16 @@ export default function ClientTable() {
                             <TableBody>
                                 {clients.map(client => (
                                     <TableRow key={client.id}>
-                                        <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain" /></TableCell>
+                                        <TableCell>
+                                            <AddEditClientDialog client={client} onSave={handleSaveClient}>
+                                                <div className="p-2 rounded-md hover:bg-muted cursor-pointer">
+                                                    <Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain" />
+                                                </div>
+                                            </AddEditClientDialog>
+                                        </TableCell>
                                         <TableCell>{client.name}</TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
-                                                <AddEditClientDialog client={client} onSave={handleSaveClient} c={undefined}><Button variant="ghost" size="icon"><Edit /></Button></AddEditClientDialog>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                     <AlertDialogContent>
@@ -240,11 +245,14 @@ export default function ClientTable() {
                             <TableBody>
                                 {testimonials.map(t => (
                                     <TableRow key={t.id}>
-                                        <TableCell className="italic max-w-md truncate">"{t.quote}"</TableCell>
+                                        <TableCell className="italic max-w-md truncate">
+                                            <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
+                                                <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>
+                                            </AddEditTestimonialDialog>
+                                        </TableCell>
                                         <TableCell>{t.author}, <span className="text-muted-foreground">{t.company}</span></TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
-                                                <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial} c={undefined}><Button variant="ghost" size="icon"><Edit /></Button></AddEditTestimonialDialog>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                     <AlertDialogContent>

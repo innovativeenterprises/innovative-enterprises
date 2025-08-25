@@ -34,13 +34,16 @@ type OpportunityValues = z.infer<typeof OpportunitySchema>;
 const AddEditOpportunityDialog = ({ 
     opportunity, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     opportunity?: Opportunity, 
     onSave: (values: OpportunityValues, id?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<OpportunityValues>({
         resolver: zodResolver(OpportunitySchema),
         defaultValues: opportunity || { 
@@ -54,17 +57,19 @@ const AddEditOpportunityDialog = ({
     });
 
     useEffect(() => {
-        form.reset(opportunity || { title: "", type: "", prize: "", deadline: "", description: "", status: "Open" });
-    }, [opportunity, form]);
+        if(isOpen) {
+            form.reset(opportunity || { title: "", type: "", prize: "", deadline: "", description: "", status: "Open" });
+        }
+    }, [opportunity, form, isOpen]);
 
     const onSubmit: SubmitHandler<OpportunityValues> = (data) => {
         onSave(data, opportunity?.id);
         form.reset();
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -119,6 +124,8 @@ const AddEditOpportunityDialog = ({
 
 export default function OpportunityTable() {
     const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+    const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -144,6 +151,11 @@ export default function OpportunityTable() {
             }
         }
     }, [opportunities]);
+    
+    const handleOpenDialog = (opp?: Opportunity) => {
+        setSelectedOpp(opp);
+        setIsDialogOpen(true);
+    }
 
     const handleSave = (values: OpportunityValues, id?: string) => {
         if (id) {
@@ -185,11 +197,17 @@ export default function OpportunityTable() {
                     <CardTitle>Opportunity Management</CardTitle>
                     <CardDescription>Manage open projects, tasks, and competitions.</CardDescription>
                 </div>
-                <AddEditOpportunityDialog onSave={handleSave}>
-                    <Button><PlusCircle /> Add Opportunity</Button>
-                </AddEditOpportunityDialog>
+                 <Button onClick={() => handleOpenDialog()}><PlusCircle /> Add Opportunity</Button>
             </CardHeader>
             <CardContent>
+                <AddEditOpportunityDialog 
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    opportunity={selectedOpp}
+                    onSave={handleSave}
+                >
+                    <div />
+                </AddEditOpportunityDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -202,16 +220,13 @@ export default function OpportunityTable() {
                     </TableHeader>
                     <TableBody>
                         {opportunities.map(opp => (
-                            <TableRow key={opp.id}>
+                            <TableRow key={opp.id} onClick={() => handleOpenDialog(opp)} className="cursor-pointer">
                                 <TableCell className="font-medium">{opp.title}</TableCell>
                                 <TableCell>{opp.type}</TableCell>
                                 <TableCell>{opp.deadline}</TableCell>
                                 <TableCell>{getStatusBadge(opp.status)}</TableCell>
                                 <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditOpportunityDialog opportunity={opp} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditOpportunityDialog>
+                                    <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
