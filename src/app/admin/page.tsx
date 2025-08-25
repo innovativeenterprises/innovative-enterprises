@@ -1,5 +1,5 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import StaffTable from "./staff-table";
 import { Users, Bot, Zap, CheckCircle } from "lucide-react";
 import ServiceTable from "./service-table";
@@ -9,6 +9,7 @@ import ProductTable from "./product-table";
 import ClientTable from "./client-table";
 import PricingTable from "./pricing-table";
 import SettingsTable from "./settings-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users },
@@ -44,14 +45,28 @@ export default function AdminPage() {
                 ))}
             </div>
 
-            <SettingsTable />
-            <StaffTable />
-            <ServiceTable />
-            <ProductTable />
-            <ClientTable />
-            <OpportunityTable />
-            <ProviderTable />
-            <PricingTable />
+            <Tabs defaultValue="site">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="site">Site & Content</TabsTrigger>
+                <TabsTrigger value="network">People & Network</TabsTrigger>
+                <TabsTrigger value="operations">Operations & Settings</TabsTrigger>
+              </TabsList>
+              <TabsContent value="site" className="space-y-8 mt-8">
+                <ServiceTable />
+                <ProductTable />
+                <ClientTable />
+              </TabsContent>
+              <TabsContent value="network" className="space-y-8 mt-8">
+                <StaffTable />
+                <ProviderTable />
+              </TabsContent>
+              <TabsContent value="operations" className="space-y-8 mt-8">
+                <OpportunityTable />
+                <PricingTable />
+                <SettingsTable />
+              </TabsContent>
+            </Tabs>
+
         </div>
       </div>
     </div>
