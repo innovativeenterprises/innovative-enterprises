@@ -34,6 +34,8 @@ type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
 const IndividualUploadSchema = z.object({
     idDocument: z.any().refine(file => file?.length == 1, 'ID Document is required.'),
+    passportDocument: z.any().optional(),
+    personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
@@ -86,12 +88,22 @@ export default function PartnerPage() {
             cvDocumentUri = await fileToDataURI(data.cvDocument[0]);
         }
 
-        const result = await analyzeIdentity({ idDocumentUri, cvDocumentUri });
+        let passportDocumentUri: string | undefined;
+        if (data.passportDocument && data.passportDocument.length > 0) {
+            passportDocumentUri = await fileToDataURI(data.passportDocument[0]);
+        }
+
+        let photoUri: string | undefined;
+        if (data.personalPhoto && data.personalPhoto.length > 0) {
+            photoUri = await fileToDataURI(data.personalPhoto[0]);
+        }
+
+        const result = await analyzeIdentity({ idDocumentUri, cvDocumentUri, passportDocumentUri, photoUri });
         setAnalysisResult(result);
         inquiryForm.reset({
-            companyName: result.fullName || '', // Use fullName for companyName field for individuals
-            contactName: result.fullName || '',
-            email: result.email || '',
+            companyName: result.personalDetails?.fullName || '', // Use fullName for companyName field for individuals
+            contactName: result.personalDetails?.fullName || '',
+            email: result.personalDetails?.email || '',
             partnershipDetails: result.professionalSummary || '',
         });
         setPageState('review');
@@ -157,7 +169,13 @@ export default function PartnerPage() {
                 <Form {...individualUploadForm}>
                     <form onSubmit={individualUploadForm.handleSubmit(handleIndividualAnalysis)} className="space-y-6">
                         <FormField control={individualUploadForm.control} name="idDocument" render={({ field }) => (
-                            <FormItem><FormLabel>ID Card or Passport (PDF, PNG, JPG)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>ID Card (Required)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={individualUploadForm.control} name="passportDocument" render={({ field }) => (
+                            <FormItem><FormLabel>Passport (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={individualUploadForm.control} name="personalPhoto" render={({ field }) => (
+                            <FormItem><FormLabel>Personal Photo (Optional)</FormLabel><FormControl><Input type="file" accept=".png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
                             <FormItem><FormLabel>CV / Resume (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>

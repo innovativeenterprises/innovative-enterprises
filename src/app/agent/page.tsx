@@ -33,6 +33,8 @@ type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
 const IndividualUploadSchema = z.object({
     idDocument: z.any().refine(file => file?.length == 1, 'ID Document is required.'),
+    passportDocument: z.any().optional(),
+    personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
@@ -95,18 +97,29 @@ export default function AgentPage() {
         if (data.cvDocument && data.cvDocument.length > 0) {
             cvDocumentUri = await fileToDataURI(data.cvDocument[0]);
         }
+        
+        let passportDocumentUri: string | undefined;
+        if (data.passportDocument && data.passportDocument.length > 0) {
+            passportDocumentUri = await fileToDataURI(data.passportDocument[0]);
+        }
 
-        const result = await analyzeIdentity({ idDocumentUri, cvDocumentUri });
+        let photoUri: string | undefined;
+        if (data.personalPhoto && data.personalPhoto.length > 0) {
+            photoUri = await fileToDataURI(data.personalPhoto[0]);
+        }
+
+        const result = await analyzeIdentity({ idDocumentUri, cvDocumentUri, passportDocumentUri, photoUri });
         setIdentityAnalysisResult(result);
         manualEntryForm.reset({
-            name: result.fullName || '',
-            email: result.email || '',
-            phone: result.phone || '',
+            name: result.personalDetails?.fullName || '',
+            email: result.personalDetails?.email || '',
+            phone: result.personalDetails?.phone || '',
             interest: result.professionalSummary || '',
         });
         setPageState('review');
         toast({ title: 'Analysis Complete!', description: 'Please review the extracted details.' });
     } catch(e) {
+        console.error(e);
         toast({ title: 'Analysis Failed', description: 'Could not analyze documents. Please try again or fill manually.', variant: 'destructive' });
         setPageState('upload');
     }
@@ -170,7 +183,13 @@ export default function AgentPage() {
                  <Form {...individualUploadForm}>
                     <form onSubmit={individualUploadForm.handleSubmit(handleIndividualAnalysis)} className="space-y-6">
                         <FormField control={individualUploadForm.control} name="idDocument" render={({ field }) => (
-                            <FormItem><FormLabel>ID Card or Passport (PDF, PNG, JPG)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>ID Card (Required)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={individualUploadForm.control} name="passportDocument" render={({ field }) => (
+                            <FormItem><FormLabel>Passport (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={individualUploadForm.control} name="personalPhoto" render={({ field }) => (
+                            <FormItem><FormLabel>Personal Photo (Optional)</FormLabel><FormControl><Input type="file" accept=".png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
                             <FormItem><FormLabel>CV / Resume (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
@@ -263,5 +282,3 @@ export default function AgentPage() {
     </div>
   );
 }
-
-    

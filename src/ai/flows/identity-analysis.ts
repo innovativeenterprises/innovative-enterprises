@@ -21,22 +21,38 @@ const prompt = ai.definePrompt({
   name: 'identityAnalysisPrompt',
   input: { schema: IdentityAnalysisInputSchema },
   output: { schema: IdentityAnalysisOutputSchema },
-  prompt: `You are an expert HR and compliance officer. Your task is to analyze the provided identity document and CV to extract key information for an application form.
+  prompt: `You are an expert HR and compliance officer specializing in document verification. Your task is to analyze the provided identity documents and optional CV to extract key information with high accuracy.
 
 **Instructions:**
-1.  **Analyze the Documents:**
-    -   Identity Document (Passport or National ID): {{media url=idDocumentUri}}
+1.  **Analyze the Documents:** You will be provided with one or more of the following documents.
+    -   Identity Document (ID Card, Resident Card, Driving License): {{media url=idDocumentUri}}
+    {{#if passportDocumentUri}}
+    -   Passport: {{media url=passportDocumentUri}}
+    {{/if}}
     {{#if cvDocumentUri}}
     -   Curriculum Vitae (CV): {{media url=cvDocumentUri}}
     {{/if}}
+    {{#if photoUri}}
+    -   Personal Photo: {{media url=photoUri}} (Note: You are only to acknowledge its presence, not analyze the photo itself).
+    {{/if}}
 
-2.  **Extract Information:** Carefully read the documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty.
-    -   **Full Name:** Extract the full legal name from the identity document.
-    -   **Email:** Find the primary contact email, preferably from the CV.
-    -   **Phone:** Find the primary contact phone number, preferably from the CV.
-    -   **Professional Summary:** If a CV is provided, write a concise, one-paragraph summary of the individual's professional background, key skills, and experience. If no CV is provided, leave this field empty.
+2.  **Extract Information:** Carefully read the documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Format dates as YYYY-MM-DD if possible.
 
-3.  **Return Structured Data:** Populate all extracted information into the specified output format.
+    **Personal Details:**
+    -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID.
+    -   **Email & Phone:** Find the primary contact email and phone number. These are almost always found only in the CV.
+    -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document.
+
+    **Passport Details:** (Only if passport is provided)
+    -   Extract all passport-specific fields: Type, Country Code, Passport Number, Surname, Given Names, Issue Date, Expiry Date, Issuing Authority.
+
+    **ID Document Details:**
+    -   Extract all ID-specific fields from the provided ID card, resident card, or driving license: Civil Number, Document Type, Document Number, License Number, Class, Expiry Date, Issuing Country, Issuing Authority.
+
+    **Professional Summary:**
+    -   If a CV is provided, write a concise, one-paragraph summary of the individual's professional background, key skills, and experience. If no CV is provided, leave this field empty.
+
+3.  **Return Structured Data:** Populate all extracted information into the specified JSON output format.
 `,
 });
 
