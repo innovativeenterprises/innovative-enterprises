@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -38,6 +37,12 @@ const ProductSchema = z.object({
 });
 type ProductValues = z.infer<typeof ProductSchema>;
 
+// This component is now the source of truth for products data
+export const useProductsData = () => {
+    const [products, setProducts] = useState<Product[]>(initialProducts);
+    return { products, setProducts };
+};
+
 const AddEditProductDialog = ({ 
     product, 
     onSave,
@@ -54,14 +59,14 @@ const AddEditProductDialog = ({
             description: product?.description || "",
             aiHint: product?.aiHint || "",
             imageFile: undefined,
-            imageUrl: product?.image.startsWith('http') ? product.image : "",
-            useUrl: product?.image.startsWith('http') || false,
+            imageUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') ? product.image : "",
+            useUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') || false,
         },
     });
 
     useEffect(() => {
         if(isOpen) {
-           const isUrl = product?.image?.startsWith('http') ?? false;
+           const isUrl = product?.image?.startsWith('http') || product?.image.startsWith('data:') || false;
            form.reset({ 
                 name: product?.name || "",
                 description: product?.description || "",
@@ -159,8 +164,7 @@ const AddEditProductDialog = ({
     )
 }
 
-export default function ProductTable() {
-    const [products, setProducts] = useState<Product[]>(initialProducts);
+export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (products: Product[]) => void }) {
     const { toast } = useToast();
 
     const handleSave = (values: ProductValues, id?: string) => {

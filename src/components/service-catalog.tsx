@@ -22,8 +22,18 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog() {
-  const [services, setServices] = useState<Service[]>(initialServices.filter(s => s.enabled));
+export default function ServiceCatalog({ services: managedServices }: { services: Service[] }) {
+  const [services, setServices] = useState<Service[]>(initialServices);
+
+  useEffect(() => {
+    // In a real app, you'd fetch this from a database.
+    // Here, we simulate getting it from the admin page's state management.
+    if (managedServices) {
+      setServices(managedServices);
+    }
+  }, [managedServices]);
+
+  const enabledServices = services.filter(s => s.enabled);
 
   return (
     <section id="services" className="py-16 md:py-24 bg-white">
@@ -35,7 +45,7 @@ export default function ServiceCatalog() {
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
+          {enabledServices.map((service) => (
             service.href ? (
                 <Link key={service.title} href={service.href} className="flex">
                     <ServiceCard service={service} />

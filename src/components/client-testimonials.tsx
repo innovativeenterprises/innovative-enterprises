@@ -7,9 +7,23 @@ import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients';
 import { initialClients, initialTestimonials } from '@/lib/clients';
 
-export default function ClientTestimonials() {
+export default function ClientTestimonials({ 
+    clients: managedClients, 
+    testimonials: managedTestimonials 
+}: { 
+    clients: Client[], 
+    testimonials: Testimonial[] 
+}) {
   const [clients, setClients] = useState<Client[]>(initialClients);
   const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
+
+  useEffect(() => {
+    if (managedClients) setClients(managedClients);
+  }, [managedClients]);
+
+  useEffect(() => {
+    if (managedTestimonials) setTestimonials(managedTestimonials);
+  }, [managedTestimonials]);
 
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-background">

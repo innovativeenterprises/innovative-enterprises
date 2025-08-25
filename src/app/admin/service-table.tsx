@@ -10,13 +10,18 @@ import type { Service } from "@/lib/services";
 import { initialServices } from "@/lib/services";
 import { Badge } from "@/components/ui/badge";
 
-export default function ServiceTable() {
+// This component is now the source of truth for services data
+export const useServicesData = () => {
     const [services, setServices] = useState<Service[]>(initialServices);
+    return { services, setServices };
+};
+
+export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (services: Service[]) => void }) {
     const { toast } = useToast();
 
     const handleToggle = (title: string) => {
-        setServices(prev =>
-            prev.map(service =>
+        setServices(
+            services.map(service =>
                 service.title === title ? { ...service, enabled: !service.enabled } : service
             )
         );

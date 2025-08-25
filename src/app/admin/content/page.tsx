@@ -1,10 +1,18 @@
 
+'use client';
+
+import { useServicesData } from "../service-table";
 import ServiceTable from "../service-table";
+import { useProductsData } from "../product-table";
 import ProductTable from "../product-table";
+import { useClientsData } from "../client-table";
 import ClientTable from "../client-table";
 
-
 export default function AdminContentPage() {
+  const serviceData = useServicesData();
+  const productData = useProductsData();
+  const clientData = useClientsData();
+
   return (
     <div className="space-y-8">
         <div>
@@ -13,9 +21,9 @@ export default function AdminContentPage() {
                 Manage your public-facing services, products, and client testimonials.
             </p>
         </div>
-        <ServiceTable />
-        <ProductTable />
-        <ClientTable />
+        <ServiceTable {...serviceData} />
+        <ProductTable {...productData} />
+        <ClientTable {...clientData} />
     </div>
   );
 }

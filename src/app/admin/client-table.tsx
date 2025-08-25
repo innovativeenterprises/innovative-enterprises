@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -45,6 +44,15 @@ const TestimonialSchema = z.object({
   company: z.string().min(2, "Company/Title is required"),
 });
 type TestimonialValues = z.infer<typeof TestimonialSchema>;
+
+
+// This component is now the source of truth for clients & testimonials data
+export const useClientsData = () => {
+    const [clients, setClients] = useState<Client[]>(initialClients);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
+    return { clients, setClients, testimonials, setTestimonials };
+};
+
 
 // Add/Edit Dialogs
 const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, children: React.ReactNode }) => {
@@ -192,9 +200,17 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 
 // Main Component
-export default function ClientTable() {
-    const [clients, setClients] = useState<Client[]>(initialClients);
-    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
+export default function ClientTable({ 
+    clients, 
+    setClients, 
+    testimonials, 
+    setTestimonials 
+}: { 
+    clients: Client[], 
+    setClients: (clients: Client[]) => void, 
+    testimonials: Testimonial[], 
+    setTestimonials: (testimonials: Testimonial[]) => void 
+}) {
     const { toast } = useToast();
 
     // Handlers

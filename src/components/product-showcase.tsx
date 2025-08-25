@@ -8,8 +8,16 @@ import Image from 'next/image';
 import type { Product } from '@/lib/products';
 import { initialProducts } from '@/lib/products';
 
-export default function ProductShowcase() {
+export default function ProductShowcase({ products: managedProducts }: { products: Product[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
+
+  useEffect(() => {
+    // In a real app, you'd fetch this from a database.
+    // Here, we simulate getting it from the admin page's state management.
+    if (managedProducts) {
+        setProducts(managedProducts);
+    }
+  }, [managedProducts]);
 
   return (
     <section id="products" className="py-16 md:py-24 bg-white">
