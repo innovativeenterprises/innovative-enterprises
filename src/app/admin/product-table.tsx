@@ -167,7 +167,7 @@ export default function ProductTable() {
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                    <CardTitle>Product Management</CardTitle>
+                    <CardTitle>Digital Product Management</CardTitle>
                     <CardDescription>Manage the products showcased on your homepage.</CardDescription>
                 </div>
                 <AddEditProductDialog onSave={handleSave}>
