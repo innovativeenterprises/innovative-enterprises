@@ -122,13 +122,7 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
     title: "Become a Partner",
     href: "/partner",
     description:
-      "Join us in a strategic partnership to drive mutual growth and success.",
-  },
-  {
-    title: "Become a Freelancer",
-    href: "/service-provider",
-    description:
-      "Offer your services to our clients. We welcome freelancers, outsourcers, and subcontractors.",
+      "Join our network of freelancers, subcontractors, and service providers.",
   },
   {
     title: "Become an Agent",

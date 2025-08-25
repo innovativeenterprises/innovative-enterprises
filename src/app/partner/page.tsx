@@ -659,7 +659,7 @@ export default function PartnerPage() {
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-primary">Be Our Partner</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Join us in a strategic partnership to drive mutual growth and success. Upload your documents to get started quickly.
+            Join our network of trusted freelancers, subcontractors, and service providers. Upload your documents to get started quickly.
           </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">
