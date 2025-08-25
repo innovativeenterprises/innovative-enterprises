@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -28,37 +28,65 @@ import {
 import React from 'react';
 
 const navLinks = [
-  { href: '/#services', label: 'Services' },
   { href: '/#products', label: 'Products' },
   { href: '/#testimonials', label: 'Clients' },
   { href: '/team', label: 'Our Team' },
 ];
 
-const aiToolsLinks: { title: string; href: string; description: string }[] = [
+const serviceLinks: { title: string; href: string; description: string }[] = [
   {
-    title: "CFO Dashboard",
-    href: "/cfo",
-    description: "Manage all financial operations with Finley, your AI finance agent.",
+    title: "E-commerce Services",
+    href: "/ecommerce",
+    description: "End-to-end solutions to build, manage, and scale your online business.",
   },
+  {
+    title: "IT Infrastructure Rentals",
+    href: "/infra-rent",
+    description: "On-demand rental of IT equipment like servers, workstations, and networking gear.",
+  },
+   {
+    title: "Domestic Workforce Platform (RAAHA)",
+    href: "/raaha",
+    description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
+  },
+   {
+    title: "CFO as a Service",
+    href: "/cfo",
+    description: "Access a financial command center to monitor cash flow, manage expenses, and oversee payroll.",
+  },
+   {
+    title: "CV & Outsourcing Services",
+    href: "/cv-enhancer",
+    description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
+  },
+];
+
+
+const aiToolsLinks: { title: string; href: string; description: string }[] = [
   {
     title: "Online Meeting Agent",
     href: "/meeting-agent",
     description: "Generate minutes and action items from a meeting transcript automatically.",
   },
   {
-    title: "Tender & Marketing Content",
+    title: "Tender Assistant",
+    href: "/tender-assistant",
+    description: "Generate draft responses for government and corporate tenders based on your documents.",
+  },
+  {
+    title: "Marketing & Content Agent",
     href: "/social-media-post-generator",
-    description: "Generate social media posts, tender responses, and other marketing copy.",
+    description: "Generate social media posts, marketing copy, and other creative content.",
   },
    {
-    title: "Document Translator",
+    title: "Verified Document Translator",
     href: "/document-translator",
     description: "Translate legal, financial, and official documents with high accuracy.",
   },
   {
-    title: "CV ATS Enhancer",
-    href: "/cv-enhancer",
-    description: "Optimize your CV for Applicant Tracking Systems.",
+    title: "AI Admin & Legal Assistant",
+    href: "/legal-agent",
+    description: "Get preliminary analysis, draft agreements, or ask general questions from our AI agent, Aida.",
   },
   {
     title: "AI Training Center",
@@ -79,52 +107,42 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
     description:
       "Have a project or task? Submit it here for analysis and routing to our talent network.",
   },
-  {
-    title: "E-commerce Services",
-    href: "/ecommerce",
-    description: "End-to-end solutions to build, manage, and scale your online business.",
+   {
+    title: "Competitions & Opportunities",
+    href: "/opportunities",
+    description:
+        "View open competitions and tasks for our network of freelancers and partners.",
   },
   {
-    title: "IT Infrastructure Rentals",
-    href: "/infra-rent",
-    description: "On-demand rental of IT equipment like servers, workstations, and networking gear.",
-  },
-  {
-    title: "Be our Partner",
+    title: "Become a Partner",
     href: "/partner",
     description:
       "Join us in a strategic partnership to drive mutual growth and success.",
   },
   {
-    title: "Work With Us",
+    title: "Become a Freelancer",
     href: "/service-provider",
     description:
       "Offer your services to our clients. We welcome freelancers, outsourcers, and subcontractors.",
   },
   {
-    title: "Become our Agent",
+    title: "Become an Agent",
     href: "/agent",
     description:
       "Represent Innovative Enterprises and earn commissions by bringing in new business.",
   },
   {
-    title: "Let's be your CTO",
+    title: "Become our Fractional CTO",
     href: "/cto",
     description:
       "Leverage our expertise to lead your technology strategy and execution.",
   },
   {
-    title: "Invest with us",
+    title: "Invest With Us",
     href: "/invest",
     description:
       "Explore investment opportunities and be part of our innovation journey.",
   },
-  {
-    title: "Competitions & Tasks",
-    href: "/opportunities",
-    description:
-        "View open competitions and tasks for our network of freelancers and partners.",
-  }
 ]
 
 
@@ -136,7 +154,7 @@ export default function Header() {
     setIsMobileMenuOpen(false);
   };
 
-  const renderNavLinks = (isMobile: boolean) => (
+  const renderNavLinks = () => (
     navLinks.map((link) => (
         <NavigationMenuItem key={link.href}>
           <NavigationMenuLink asChild>
@@ -150,21 +168,6 @@ export default function Header() {
         </NavigationMenuItem>
       )
     )
-  );
-
-  const aiToolsMenuContent = (
-      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-        {aiToolsLinks.map((component) => (
-          <ListItem
-            key={component.title}
-            title={component.title}
-            href={component.href}
-            onClick={handleLinkClick}
-          >
-            {component.description}
-          </ListItem>
-        ))}
-      </ul>
   );
   
    const mobileNavLinks = (
@@ -196,17 +199,45 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
             <NavigationMenuList>
-              {renderNavLinks(false)}
+              {renderNavLinks()}
+               <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">Services</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                    {serviceLinks.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        onClick={handleLinkClick}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-base font-medium">
                   <Sparkles className="mr-2 h-4 w-4" /> AI Tools
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  {aiToolsMenuContent}
+                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                    {aiToolsLinks.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        onClick={handleLinkClick}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base font-medium">Partnerships</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-base font-medium">Opportunities & Network</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {partnershipLinks.map((component) => (
@@ -264,6 +295,18 @@ export default function Header() {
                     </Link>
                     <nav className="flex flex-col gap-2">
                       {mobileNavLinks}
+                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Services</p>
+                      {serviceLinks.map((link) => (
+                          <Button
+                          key={link.href}
+                          asChild
+                          variant="ghost"
+                          className={cn("justify-start text-base", pathname === link.href && 'bg-primary/10 text-primary')}
+                          onClick={handleLinkClick}
+                          >
+                          <Link href={link.href}>{link.title}</Link>
+                          </Button>
+                      ))}
                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">AI Tools</p>
                       {aiToolsLinks.map((link) => (
                           <Button
@@ -276,7 +319,7 @@ export default function Header() {
                           <Link href={link.href}>{link.title}</Link>
                           </Button>
                       ))}
-                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Partnerships</p>
+                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Opportunities & Network</p>
                       {partnershipLinks.map((link) => (
                           <Button
                           key={link.href}

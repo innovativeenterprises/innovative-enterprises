@@ -12,7 +12,7 @@ export default function SocialMediaPostGeneratorPage() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary">Marketing & Content Agent</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Craft the perfect social media post, generate marketing copy, or get help drafting a tender response. This service is powered by Mira, our Marketing & Content Agent.
+            Craft the perfect social media post or generate engaging marketing copy. This service is powered by Mira, our Marketing & Content Agent. For tender responses, please use our dedicated Tender Assistant.
           </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">
