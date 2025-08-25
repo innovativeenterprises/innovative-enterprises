@@ -25,7 +25,7 @@ const investmentReasons = [
 ]
 
 const currentProjects = [
-    { name: "PanoSpace", description: "Immersive platform for virtual tours.", status: "Live" },
+    { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live" },
     { name: "ameen", description: "Secure digital identity and authentication solution.", status: "Live" },
     { name: "APPI", description: "Intuitive API management and integration platform.", status: "Live" },
     { name: "KHIDMAAI", description: "AI-powered customer service automation tool.", status: "Live" },
@@ -140,7 +140,7 @@ export default function InvestPage() {
                     </Button>
                     <Button asChild variant="outline" size="lg">
                         <a href="/pitch-deck-panospace.pdf" download>
-                             <Download className="mr-2 h-5 w-5" /> PanoSpace Project
+                             <Download className="mr-2 h-5 w-5" /> PANOSPACE Project
                         </a>
                     </Button>
                      <Button asChild variant="outline" size="lg">
