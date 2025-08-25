@@ -19,7 +19,7 @@ export const initialProducts: Product[] = [
     id: 'prod_2',
     name: 'ameen',
     description: 'A secure digital identity and authentication solution.',
-    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-155823-345-secure_child.png',
+    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-163806-258-secure_child.png',
     aiHint: 'secure child',
   },
   {
@@ -33,7 +33,7 @@ export const initialProducts: Product[] = [
     id: 'prod_4',
     name: 'KHIDMAAI',
     description: 'AI-powered customer service and support automation tool.',
-    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-163234-367-service_marketplace.png',
+    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-164049-577-service_marketplace.png',
     aiHint: 'service marketplace',
   },
   {
