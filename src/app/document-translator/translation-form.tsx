@@ -79,7 +79,7 @@ const documentTypeEnum = z.enum([
 
 
 const FormSchema = z.object({
-  documentFile: z.any().refine(file => file?.length == 1, 'Document file is required.'),
+  documentFiles: z.any().refine(files => files?.length > 0, 'At least one document file is required.'),
   sourceLanguage: z.string().min(1, "Source language is required."),
   targetLanguage: z.string().min(1, "Target language is required."),
   documentType: documentTypeEnum,
@@ -139,7 +139,7 @@ export default function TranslationForm() {
     setResponse(null);
     setSubmittedData(null);
     try {
-      const file = data.documentFile[0];
+      const file = data.documentFiles[0];
       const documentDataUri = await fileToDataURI(file);
 
       const result = await translateDocument({
@@ -156,6 +156,19 @@ export default function TranslationForm() {
         title: 'Translation Complete!',
         description: 'Your document has been successfully translated.',
       });
+      
+      if (data.documentFiles.length > 1) {
+          const remainingFiles = Array.from(data.documentFiles).slice(1);
+          form.setValue('documentFiles', remainingFiles);
+           toast({
+            title: 'Next file is ready',
+            description: `${remainingFiles.length} file(s) remaining in your queue. Click "Translate Document" again to process the next one.`,
+            duration: 9000,
+          });
+      } else {
+        form.reset();
+      }
+
     } catch (error) {
       console.error(error);
       toast({
@@ -201,12 +214,12 @@ export default function TranslationForm() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="documentFile"
+                  name="documentFiles"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Document to Translate</FormLabel>
                       <FormControl>
-                        <Input type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                        <Input type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -392,7 +405,7 @@ export default function TranslationForm() {
 
           </CardContent>
            <CardFooter>
-             <Button onClick={() => { setResponse(null); setSubmittedData(null); form.reset();}} className="w-full">Translate Another Document</Button>
+             <Button onClick={() => { setResponse(null); setSubmittedData(null); }} className="w-full">Translate Another Document</Button>
             </CardFooter>
         </Card>
       )}
