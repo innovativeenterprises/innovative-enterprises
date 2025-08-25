@@ -2,7 +2,6 @@
 
 /**
  * @fileOverview An AI agent that provides high-quality document translation.
- *
  * - translateDocument - A function that translates a document.
  */
 
@@ -22,18 +21,45 @@ const prompt = ai.definePrompt({
   name: 'documentTranslationPrompt',
   input: { schema: DocumentTranslationInputSchema },
   output: { schema: DocumentTranslationOutputSchema },
-  prompt: `You are an expert, certified translator specializing in {{documentType}} documents. Your task is to perform a high-fidelity translation of the provided document.
+  prompt: `You are a professional translator for legal, medical, and commercial documents. Your task is to perform a high-fidelity translation of the provided document.
 
-**Instructions:**
-1.  **Analyze the Document:** The document provided is a {{documentType}}.
-    -   Document: {{media url=documentDataUri}}
-2.  **Translate:** Translate the document from {{sourceLanguage}} to {{targetLanguage}}.
-    -   Pay meticulous attention to detail, especially for legal, financial, or medical terminology.
-    -   Preserve the original formatting, layout, and structure of the document as closely as possible. The output should be a plain text or markdown representation that mirrors the original's layout (e.g., using line breaks to separate sections).
-    -   Ensure the tone is formal and appropriate for a verified document.
-3.  **Generate Verification Statement:** After the translation, generate a formal "Statement of Translation Accuracy". It should state that the translation was performed from {{sourceLanguage}} to {{targetLanguage}} and is a true and accurate version of the original to the best of your ability. The statement should be signed by "Voxi, AI Translation Agent, Innovative Enterprises".
+**Document Details:**
+-   **Document Type:** {{documentType}}
+-   **Source Language:** {{sourceLanguage}}
+-   **Target Language:** {{targetLanguage}}
+-   **Document to Translate:** {{media url=documentDataUri}}
 
-Return the full translated content in the 'translatedContent' field and the formal statement in the 'verificationStatement' field.
+**Your Instructions:**
+
+1.  **Extract & Repair Content:**
+    *   Accurately read the text, even from scanned or low-quality images.
+    *   Reconstruct broken Arabic scripts, misaligned letters, or OCR errors.
+    *   Ensure all numbers, dates, monetary amounts, and proper nouns (names, places) remain exact.
+
+2.  **Translate with Precision:**
+    *   Translate the text from {{sourceLanguage}} to {{targetLanguage}}.
+    *   Use formal, professional, and context-accurate terminology (legal terms for contracts, medical jargon for reports, etc.).
+    *   Avoid machine-like phrasing. The output must be a human-grade translation.
+
+3.  **Preserve Original Formatting:**
+    *   Replicate the structure, layout, and formatting of the source document as closely as possible. This includes tables, bullet points, numbering, headers, footers, etc.
+    *   If a formatting element cannot be replicated perfectly in text (like signatures, stamps, or official seals), use clear placeholders (e.g., [Signature Here], [Official Stamp]).
+
+4.  **Quality Assurance:**
+    *   Double-check spelling and grammar in the {{targetLanguage}}.
+    *   Ensure no meaning is lost or added during translation.
+    *   If any part of the document is unreadable, mark it clearly as [Illegible Text].
+
+5.  **Provide Two Outputs:**
+    *   **formattedTranslatedText:** The full translated content, preserving the original formatting as instructed above.
+    *   **cleanTranslatedText:** The polished, translated text, ready for legal or official use but stripped of complex formatting like tables or columns. Paragraphs and line breaks should be maintained.
+
+6.  **Generate Verification Statement:**
+    *   After the translation, generate a formal "Statement of Translation Accuracy".
+    *   It should state that the translation from {{sourceLanguage}} to {{targetLanguage}} is a true and accurate version of the original to the best of your ability.
+    *   Sign it "Voxi, AI Translation Agent, Innovative Enterprises".
+
+Return the complete response in the specified structured JSON format.
 `,
 });
 

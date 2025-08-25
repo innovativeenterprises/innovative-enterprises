@@ -13,10 +13,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp, FileText, AlignLeft } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -118,10 +120,10 @@ export default function TranslationForm() {
     }
   };
 
-  const handleDownload = () => {
-    if (!response) return;
+  const handleDownload = (content: string) => {
+    if (!content) return;
     const element = document.createElement("a");
-    const file = new Blob([response.translatedContent + "\n\n" + response.verificationStatement], {type: 'text/plain'});
+    const file = new Blob([content], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
     element.download = `translated-document.txt`;
     document.body.appendChild(element);
@@ -130,9 +132,9 @@ export default function TranslationForm() {
     toast({ title: 'Downloaded!', description: `Your translated document has been downloaded.`});
   };
 
-  const handleCopy = () => {
-    if (!response) return;
-    navigator.clipboard.writeText(response.translatedContent + "\n\n" + response.verificationStatement);
+  const handleCopy = (content: string) => {
+    if (!content) return;
+    navigator.clipboard.writeText(content);
     toast({ title: 'Copied!', description: 'Translated content copied to clipboard.'});
   };
   
@@ -288,7 +290,7 @@ export default function TranslationForm() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><FileCheck2 /> Translation Complete</CardTitle>
-            <CardDescription>Your document has been translated by Voxi. You can copy or download the result.</CardDescription>
+            <CardDescription>Your document has been translated by Voxi. You can copy or download the results.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
              {submittedData?.requestSealedCopy && (
@@ -300,31 +302,49 @@ export default function TranslationForm() {
                 </AlertDescription>
               </Alert>
             )}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Translated Content</h3>
-              <div 
-                className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto"
-                dir={targetLanguage === 'Arabic' ? 'rtl' : 'ltr'}
-              >
-                {response.translatedContent}
-              </div>
-            </div>
-            <div>
-              <Alert>
+
+            <Tabs defaultValue="formatted" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="formatted"><FileText className="mr-2 h-4 w-4"/> Formatted Version</TabsTrigger>
+                    <TabsTrigger value="clean"><AlignLeft className="mr-2 h-4 w-4"/> Clean Text Version</TabsTrigger>
+                </TabsList>
+                <TabsContent value="formatted">
+                     <div 
+                        className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto"
+                        dir={targetLanguage === 'Arabic' ? 'rtl' : 'ltr'}
+                      >
+                        {response.formattedTranslatedText}
+                     </div>
+                     <div className="flex justify-end gap-2 mt-2">
+                        <Button variant="outline" size="sm" onClick={() => handleDownload(response.formattedTranslatedText)}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                        <Button variant="outline" size="sm" onClick={() => handleCopy(response.formattedTranslatedText)}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                     </div>
+                </TabsContent>
+                <TabsContent value="clean">
+                     <div 
+                        className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto"
+                        dir={targetLanguage === 'Arabic' ? 'rtl' : 'ltr'}
+                      >
+                        {response.cleanTranslatedText}
+                      </div>
+                      <div className="flex justify-end gap-2 mt-2">
+                        <Button variant="outline" size="sm" onClick={() => handleDownload(response.cleanTranslatedText)}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                        <Button variant="outline" size="sm" onClick={() => handleCopy(response.cleanTranslatedText)}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                     </div>
+                </TabsContent>
+            </Tabs>
+            
+            <Alert>
                 <ShieldCheck className="h-4 w-4" />
                 <AlertTitle>Statement of Translation Accuracy</AlertTitle>
                 <AlertDescription>
                   {response.verificationStatement}
                 </AlertDescription>
-              </Alert>
-            </div>
+            </Alert>
+
           </CardContent>
-           <CardFooter className="flex justify-between items-center">
-             <Button onClick={() => { setResponse(null); setSubmittedData(null); form.reset();}}>Translate Another</Button>
-            <div className="flex gap-2">
-                <Button variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
-                <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy All</Button>
-            </div>
+           <CardFooter>
+             <Button onClick={() => { setResponse(null); setSubmittedData(null); form.reset();}} className="w-full">Translate Another Document</Button>
             </CardFooter>
         </Card>
       )}

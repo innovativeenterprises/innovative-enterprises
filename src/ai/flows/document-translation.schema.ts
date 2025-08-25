@@ -22,7 +22,8 @@ export type DocumentTranslationInput = z.infer<typeof DocumentTranslationInputSc
 
 
 export const DocumentTranslationOutputSchema = z.object({
-  translatedContent: z.string().describe("The full content of the translated document, preserving original formatting as much as possible."),
+  cleanTranslatedText: z.string().describe("The polished, ready-for-use translated text, stripped of complex formatting."),
+  formattedTranslatedText: z.string().describe("The translated text, preserving the original document's structure, layout, and formatting as closely as possible."),
   verificationStatement: z.string().describe("A statement certifying the accuracy of the translation to the best of the AI's ability."),
 });
 export type DocumentTranslationOutput = z.infer<typeof DocumentTranslationOutputSchema>;
