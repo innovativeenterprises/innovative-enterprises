@@ -170,7 +170,7 @@ export default function TranslationForm() {
                   name="documentType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Document Type</FormLabel>
+                      <FormLabel>Document Type / Purpose</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
