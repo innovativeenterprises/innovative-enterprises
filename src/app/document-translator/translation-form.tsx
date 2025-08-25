@@ -29,11 +29,60 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
+const documentTypeEnum = z.enum([
+    'Contracts & Agreements',
+    'Court Documents',
+    'Certificates',
+    'Power of Attorney',
+    'Immigration Documents',
+    'Government Forms & Regulations',
+    'Notarized Documents',
+    'Medical Reports & Diagnoses',
+    'Patient Records & Case Files',
+    'Prescriptions & Test Results',
+    'Clinical Trial Documentation',
+    'Hospital Discharge Summaries',
+    'Medical Device Instructions',
+    'Insurance Claim Forms',
+    'Business Contracts & MOUs',
+    'Company Registration & Licenses',
+    'Financial Statements & Audit Reports',
+    'Import/Export Documents',
+    'Product Catalogs & Price Lists',
+    'Policies & Procedures Manuals',
+    'Shareholder Agreements',
+    'Diplomas & Transcripts',
+    'Certificates of Training',
+    'Research Papers & Journals',
+    'Thesis & Dissertations',
+    'Course Materials & Exams',
+    'Recommendation Letters',
+    'User Manuals & Product Guides',
+    'Engineering Drawings & Specifications',
+    'Safety Data Sheets (SDS/MSDS)',
+    'Patents & Intellectual Property Documents',
+    'IT/Software Documentation',
+    'Brochures & Flyers',
+    'Company Profiles',
+    'Websites & Online Content',
+    'Press Releases',
+    'Presentations & Proposals',
+    'Advertising & Branding Materials',
+    'Bank Statements & Letters',
+    'Loan Agreements',
+    'Insurance Policies',
+    'Trading & Brokerage Agreements',
+    'Tax Forms & Reports',
+    'Customs Declarations',
+    'Other'
+]);
+
+
 const FormSchema = z.object({
   documentFile: z.any().refine(file => file?.length == 1, 'Document file is required.'),
   sourceLanguage: z.string().min(1, "Source language is required."),
   targetLanguage: z.string().min(1, "Target language is required."),
-  documentType: z.enum(['Contract', 'Invoice', 'Medical Report', 'Certificate', 'Other']),
+  documentType: documentTypeEnum,
   requestSealedCopy: z.boolean().default(false),
   translationOffice: z.string().optional(),
 }).refine(data => {
@@ -52,9 +101,8 @@ type FormValues = z.infer<typeof FormSchema>;
 const languageOptions = [
     "English", "Arabic", "French", "Spanish", "German", "Chinese", "Russian", "Japanese", "Portuguese", "Italian"
 ];
-const documentTypeOptions: FormValues['documentType'][] = [
-    'Contract', 'Invoice', 'Medical Report', 'Certificate', 'Other'
-];
+const documentTypeOptions: z.infer<typeof documentTypeEnum>[] = documentTypeEnum.getValues();
+
 const translationOffices = [
     "Al-Mutarjim Al-Awal Translation Services",
     "Global Horizons Certified Translators",
@@ -75,7 +123,7 @@ export default function TranslationForm() {
     defaultValues: {
       sourceLanguage: 'English',
       targetLanguage: 'Arabic',
-      documentType: 'Contract',
+      documentType: 'Contracts & Agreements',
       requestSealedCopy: false,
     },
   });
