@@ -1,18 +1,49 @@
 
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Bot, Zap, CheckCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Users, Bot, Zap, CheckCircle, FolderKanban, Network } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { useProductsData } from "./product-table";
+import { useProvidersData } from "./provider-table";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users, href: "/admin/people" },
-    { title: "Active AI Agents", value: "21", icon: Bot, href: "/admin/people" },
+    { title: "Active Projects", value: "14", icon: FolderKanban, href: "/admin/projects" },
     { title: "Active Opportunities", value: "5", icon: Zap, href: "/admin/operations" },
-    { title: "System Status", value: "All Systems Normal", icon: CheckCircle, color: "text-green-500", href: "#" },
+    { title: "Provider Network", value: "36", icon: Network, href: "/admin/people" },
 ];
 
 export default function AdminDashboardPage() {
+  const { products } = useProductsData();
+  const { providers } = useProvidersData();
+
+  const projectStatusData = products.reduce((acc, product) => {
+    const stage = product.stage || 'Uncategorized';
+    const existing = acc.find(item => item.stage === stage);
+    if (existing) {
+      existing.count++;
+    } else {
+      acc.push({ stage, count: 1 });
+    }
+    return acc;
+  }, [] as { stage: string, count: number }[]);
+
+  const networkGrowthData = [
+      { month: 'Feb', count: 12 },
+      { month: 'Mar', count: 15 },
+      { month: 'Apr', count: 20 },
+      { month: 'May', count: 22 },
+      { month: 'Jun', count: 28 },
+      { month: 'Jul', count: 36 },
+  ];
+
+  const chartConfig = {
+      count: { label: "Count" },
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -22,14 +53,13 @@ export default function AdminDashboardPage() {
           </p>
       </div>
 
-      {/* Overview Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {overviewStats.map((stat, index) => (
               <Link href={stat.href} key={index}>
                 <Card className="hover:bg-muted/50 transition-colors">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                        <stat.icon className={`h-4 w-4 text-muted-foreground ${stat.color ?? ''}`} />
+                        <stat.icon className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stat.value}</div>
@@ -37,6 +67,43 @@ export default function AdminDashboardPage() {
                 </Card>
               </Link>
           ))}
+      </div>
+
+      <div className="grid gap-8 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Project Status Overview</CardTitle>
+            <CardDescription>Number of products in each development stage.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <BarChart data={projectStatusData} accessibilityLayer>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="stage" tickLine={false} tickMargin={10} axisLine={false} />
+                    <YAxis />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="count" fill="var(--color-primary)" radius={4} />
+                </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Provider Network Growth</CardTitle>
+            <CardDescription>Growth of the freelancer and partner network over time.</CardDescription>
+          </CardHeader>
+          <CardContent>
+             <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <LineChart data={networkGrowthData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Line type="monotone" dataKey="count" stroke="var(--color-primary)" strokeWidth={2} dot={false} />
+                </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
