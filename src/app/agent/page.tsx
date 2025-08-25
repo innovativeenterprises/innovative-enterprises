@@ -251,7 +251,6 @@ export default function AgentPage() {
 
   const handleESign = () => {
     toast({ title: 'Thank You!', description: "Your agreements have been electronically signed and saved."});
-    // Here you would typically integrate with an e-signature service API
   }
 
   const handleSaveToBriefcase = () => {
