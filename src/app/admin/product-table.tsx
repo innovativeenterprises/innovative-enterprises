@@ -19,6 +19,8 @@ import { initialProducts } from "@/lib/products";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -34,6 +36,7 @@ const ProductSchema = z.object({
   description: z.string().min(10, "Description is required"),
   image: z.string().min(1, "An image is required"),
   aiHint: z.string().min(2, "AI hint is required"),
+  enabled: z.boolean(),
 });
 type ProductValues = z.infer<typeof ProductSchema>;
 
@@ -58,6 +61,7 @@ const AddEditProductDialog = ({
             name: product?.name || "",
             description: product?.description || "",
             aiHint: product?.aiHint || "",
+            enabled: product?.enabled ?? true,
             imageFile: undefined,
             imageUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') ? product.image : "",
             useUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') || false,
@@ -71,6 +75,7 @@ const AddEditProductDialog = ({
                 name: product?.name || "",
                 description: product?.description || "",
                 aiHint: product?.aiHint || "",
+                enabled: product?.enabled ?? true,
                 imageFile: undefined,
                 imageUrl: isUrl ? product.image : "",
                 useUrl: isUrl,
@@ -97,7 +102,7 @@ const AddEditProductDialog = ({
             return;
         }
 
-        onSave({ name: data.name, description: data.description, aiHint: data.aiHint, image: imageValue }, product?.id);
+        onSave({ name: data.name, description: data.description, aiHint: data.aiHint, image: imageValue, enabled: data.enabled }, product?.id);
         form.reset();
         setIsOpen(false);
     };
@@ -180,6 +185,15 @@ export default function ProductTable({ products, setProducts }: { products: Prod
             toast({ title: "Product added successfully." });
         }
     };
+    
+    const handleToggle = (id: string) => {
+        setProducts(
+            products.map(p =>
+                p.id === id ? { ...p, enabled: !p.enabled } : p
+            )
+        );
+        toast({ title: "Product status updated." });
+    };
 
     const handleDelete = (id: string) => {
         setProducts(prev => prev.filter(p => p.id !== id));
@@ -204,6 +218,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                             <TableHead>Image</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
+                            <TableHead className="text-center">Status</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -219,6 +234,18 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                 </TableCell>
                                 <TableCell className="font-medium">{p.name}</TableCell>
                                 <TableCell className="text-muted-foreground max-w-sm truncate">{p.description}</TableCell>
+                                <TableCell className="text-center">
+                                    <div className="flex flex-col items-center gap-1">
+                                        <Switch
+                                            checked={p.enabled}
+                                            onCheckedChange={() => handleToggle(p.id)}
+                                            aria-label={`Enable/disable ${p.name}`}
+                                        />
+                                        <Badge variant={p.enabled ? "default" : "secondary"}>
+                                            {p.enabled ? "Enabled" : "Disabled"}
+                                        </Badge>
+                                    </div>
+                                </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <AddEditProductDialog product={p} onSave={handleSave}>

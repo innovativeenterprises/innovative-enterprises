@@ -18,6 +18,8 @@ export default function ProductShowcase({ products: managedProducts }: { product
         setProducts(managedProducts);
     }
   }, [managedProducts]);
+  
+  const enabledProducts = products.filter(p => p.enabled);
 
   return (
     <section id="products" className="py-16 md:py-24 bg-white">
@@ -29,7 +31,7 @@ export default function ProductShowcase({ products: managedProducts }: { product
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
+          {enabledProducts.map((product) => (
             <Card key={product.name} className="overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
               <CardHeader className="p-0">
                 <div className="relative h-48 w-full">
