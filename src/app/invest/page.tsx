@@ -24,21 +24,15 @@ const investmentReasons = [
     }
 ]
 
-const currentProjects = [
+const combinedProjects = [
     { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live" },
-    { name: "ameen", description: "Secure digital identity and authentication solution.", status: "Live" },
-    { name: "APPI", description: "Intuitive API management and integration platform.", status: "Live" },
-    { name: "KHIDMA", description: "AI-powered customer service automation tool.", status: "Live" },
-    { name: "VMALL", description: "A comprehensive virtual mall and e-commerce ecosystem.", status: "Live" },
-];
-
-const pipelineProjects = [
-    { name: "APPI – عـبِّـي", description: "AI-Powered Smart Home Utility Management App enabling real-time monitoring and optimization of electricity, water, and gas consumption.", status: "In Development" },
-    { name: "ameen", description: "Smart Lost & Found Solution App using AI image recognition and smart matching to connect lost items with their owners.", status: "In Development" },
+    { name: "ameen", description: "A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App using AI image recognition.", status: "Live" },
+    { name: "APPI – عـبِّـي", description: "An intuitive API management and integration platform, evolving into an AI-Powered Smart Home Utility Management App.", status: "In Development" },
     { name: "KHIDMA – خدمة", description: "A digital marketplace using AI-matching for on-demand services where providers bid competitively on customer requests.", status: "In Development" },
-    { name: "V MALL", description: "A Smart VR/AR Shopping & Virtual Tour Marketplace for immersive e-commerce, real estate tours, and virtual events.", status: "In Development" },
+    { name: "V MALL", description: "A comprehensive virtual mall and e-commerce ecosystem, expanding into a Smart VR/AR Shopping & Virtual Tour Marketplace.", status: "In Development" },
     { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
 ];
+
 
 const comingProjects = [
     { name: "Fintech Super-App", description: "An integrated financial services application for the Omani market.", status: "Research Phase" },
@@ -104,25 +98,16 @@ export default function InvestPage() {
             
             <div>
                 <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
-                    <PackageCheck className="w-8 h-8" /> Current Projects
+                    <PackageCheck className="w-8 h-8" /> Our Project Portfolio
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {currentProjects.map(p => <ProjectCard key={p.name} {...p} />)}
-                </div>
-            </div>
-            
-            <div>
-                <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
-                    <Building2 className="w-8 h-8" /> On Pipeline Projects
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {pipelineProjects.map(p => <ProjectCard key={p.name} {...p} />)}
+                    {combinedProjects.map(p => <ProjectCard key={p.name} {...p} />)}
                 </div>
             </div>
 
             <div>
                  <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
-                    <Lightbulb className="w-8 h-8" /> Coming Projects
+                    <Lightbulb className="w-8 h-8" /> Coming Soon
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
                     {comingProjects.map(p => <ProjectCard key={p.name} {...p} />)}
