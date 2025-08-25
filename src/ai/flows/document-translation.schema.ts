@@ -15,7 +15,35 @@ export const DocumentTranslationInputSchema = z.object({
     ),
   sourceLanguage: z.string().min(1, 'Source language is required.'),
   targetLanguage: z.string().min(1, 'Target language is required.'),
-  documentType: z.enum(['Contracts & Agreements', 'Court Documents', 'Certificates', 'Power of Attorney', 'Immigration Documents', 'Government Forms & Regulations', 'Notarized Documents', 'Medical Reports & Diagnoses', 'Patient Records & Case Files', 'Prescriptions & Test Results', 'Clinical Trial Documentation', 'Hospital Discharge Summaries', 'Medical Device Instructions', 'Insurance Claim Forms', 'Business Contracts & MOUs', 'Company Registration & Licenses', 'Financial Statements & Audit Reports', 'Import/Export Documents', 'Invoices', 'Product Catalogs & Price Lists', 'Policies & Procedures Manuals', 'Shareholder Agreements', 'Diplomas & Transcripts', 'Certificates of Training', 'Research Papers & Journals', 'Thesis & Dissertations', 'Course Materials & Exams', 'Recommendation Letters', 'User Manuals & Product Guides', 'Engineering Drawings & Specifications', 'Safety Data Sheets (SDS/MSDS)', 'Patents & Intellectual Property Documents', 'IT/Software Documentation', 'Brochures & Flyers', 'Company Profiles', 'Websites & Online Content', 'Press Releases', 'Presentations & Proposals', 'Advertising & Branding Materials', 'Bank Statements & Letters', 'Loan Agreements', 'Insurance Policies', 'Trading & Brokerage Agreements', 'Tax Forms & Reports', 'Customs Declarations', 'Other'])
+  documentType: z.enum([
+        // Legal
+        'Certificates (Birth, Marriage, Death, etc.)',
+        'Court Documents, Power of Attorney, Notarized Docs',
+        'Complex Legal Contracts, Immigration Docs',
+        // Medical
+        'Prescriptions, Test Results, Basic Reports',
+        'Patient Records, Discharge Summaries',
+        'Clinical Trials, Research, Device Instructions',
+        // Business
+        'Company Licenses, Simple Agreements',
+        'Financial Statements, Policies, MOUs',
+        'Import/Export, Detailed Trading Contracts',
+        // Educational
+        'Certificates, Diplomas, Transcripts',
+        'Recommendation Letters, Course Material',
+        'Thesis, Dissertations, Research Papers',
+        // Technical
+        'User Manuals, Product Guides',
+        'Patents, Engineering Specs, Safety Data Sheets',
+        // Media & Marketing
+        'Flyers, Brochures, Simple Ads',
+        'Websites, Presentations, Proposals',
+        'Branding, Creative Copy with Localization',
+        // Financial & Trade
+        'Bank Statements, Loan Forms, Insurance Policies',
+        'Trading Contracts, Customs Declarations, Tax Reports',
+        'Other',
+    ])
     .describe('The type of document, which informs the translation tone and format.'),
 });
 export type DocumentTranslationInput = z.infer<typeof DocumentTranslationInputSchema>;

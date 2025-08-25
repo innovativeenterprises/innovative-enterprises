@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -12,10 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp, FileText, AlignLeft, CreditCard } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -31,53 +29,101 @@ const fileToDataURI = (file: File): Promise<string> => {
 };
 
 const documentTypeEnum = z.enum([
-    'Contracts & Agreements',
-    'Court Documents',
-    'Certificates',
-    'Power of Attorney',
-    'Immigration Documents',
-    'Government Forms & Regulations',
-    'Notarized Documents',
-    'Medical Reports & Diagnoses',
-    'Patient Records & Case Files',
-    'Prescriptions & Test Results',
-    'Clinical Trial Documentation',
-    'Hospital Discharge Summaries',
-    'Medical Device Instructions',
-    'Insurance Claim Forms',
-    'Business Contracts & MOUs',
-    'Company Registration & Licenses',
-    'Financial Statements & Audit Reports',
-    'Import/Export Documents',
-    'Invoices',
-    'Product Catalogs & Price Lists',
-    'Policies & Procedures Manuals',
-    'Shareholder Agreements',
-    'Diplomas & Transcripts',
-    'Certificates of Training',
-    'Research Papers & Journals',
-    'Thesis & Dissertations',
-    'Course Materials & Exams',
-    'Recommendation Letters',
-    'User Manuals & Product Guides',
-    'Engineering Drawings & Specifications',
-    'Safety Data Sheets (SDS/MSDS)',
-    'Patents & Intellectual Property Documents',
-    'IT/Software Documentation',
-    'Brochures & Flyers',
-    'Company Profiles',
-    'Websites & Online Content',
-    'Press Releases',
-    'Presentations & Proposals',
-    'Advertising & Branding Materials',
-    'Bank Statements & Letters',
-    'Loan Agreements',
-    'Insurance Policies',
-    'Trading & Brokerage Agreements',
-    'Tax Forms & Reports',
-    'Customs Declarations',
-    'Other'
+    // Legal
+    'Certificates (Birth, Marriage, Death, etc.)',
+    'Court Documents, Power of Attorney, Notarized Docs',
+    'Complex Legal Contracts, Immigration Docs',
+    // Medical
+    'Prescriptions, Test Results, Basic Reports',
+    'Patient Records, Discharge Summaries',
+    'Clinical Trials, Research, Device Instructions',
+    // Business
+    'Company Licenses, Simple Agreements',
+    'Financial Statements, Policies, MOUs',
+    'Import/Export, Detailed Trading Contracts',
+    // Educational
+    'Certificates, Diplomas, Transcripts',
+    'Recommendation Letters, Course Material',
+    'Thesis, Dissertations, Research Papers',
+    // Technical
+    'User Manuals, Product Guides',
+    'Patents, Engineering Specs, Safety Data Sheets',
+    // Media & Marketing
+    'Flyers, Brochures, Simple Ads',
+    'Websites, Presentations, Proposals',
+    'Branding, Creative Copy with Localization',
+    // Financial & Trade
+    'Bank Statements, Loan Forms, Insurance Policies',
+    'Trading Contracts, Customs Declarations, Tax Reports',
+    'Other',
 ]);
+
+const documentPricing: Record<z.infer<typeof documentTypeEnum>, number> = {
+    // Legal
+    'Certificates (Birth, Marriage, Death, etc.)': 4.0,
+    'Court Documents, Power of Attorney, Notarized Docs': 6.0,
+    'Complex Legal Contracts, Immigration Docs': 8.0,
+    // Medical
+    'Prescriptions, Test Results, Basic Reports': 4.0,
+    'Patient Records, Discharge Summaries': 6.0,
+    'Clinical Trials, Research, Device Instructions': 8.0,
+    // Business
+    'Company Licenses, Simple Agreements': 5.0,
+    'Financial Statements, Policies, MOUs': 7.0,
+    'Import/Export, Detailed Trading Contracts': 8.0,
+    // Educational
+    'Certificates, Diplomas, Transcripts': 4.0,
+    'Recommendation Letters, Course Material': 5.0,
+    'Thesis, Dissertations, Research Papers': 7.0,
+    // Technical
+    'User Manuals, Product Guides': 6.0,
+    'Patents, Engineering Specs, Safety Data Sheets': 8.0,
+    // Media & Marketing
+    'Flyers, Brochures, Simple Ads': 4.0,
+    'Websites, Presentations, Proposals': 6.0,
+    'Branding, Creative Copy with Localization': 7.0,
+    // Financial & Trade
+    'Bank Statements, Loan Forms, Insurance Policies': 5.0,
+    'Trading Contracts, Customs Declarations, Tax Reports': 7.0,
+    // Other
+    'Other': 5.0,
+};
+
+const documentTypeGroups = {
+    "Legal & Official Documents": [
+        "Certificates (Birth, Marriage, Death, etc.)",
+        "Court Documents, Power of Attorney, Notarized Docs",
+        "Complex Legal Contracts, Immigration Docs",
+    ],
+    "Medical & Healthcare Documents": [
+        "Prescriptions, Test Results, Basic Reports",
+        "Patient Records, Discharge Summaries",
+        "Clinical Trials, Research, Device Instructions",
+    ],
+    "Business & Commercial Documents": [
+        "Company Licenses, Simple Agreements",
+        "Financial Statements, Policies, MOUs",
+        "Import/Export, Detailed Trading Contracts",
+    ],
+    "Educational & Academic Documents": [
+        "Certificates, Diplomas, Transcripts",
+        "Recommendation Letters, Course Material",
+        "Thesis, Dissertations, Research Papers",
+    ],
+    "Technical & Industrial Documents": [
+        "User Manuals, Product Guides",
+        "Patents, Engineering Specs, Safety Data Sheets",
+    ],
+    "Media & Marketing Documents": [
+        "Flyers, Brochures, Simple Ads",
+        "Websites, Presentations, Proposals",
+        "Branding, Creative Copy with Localization",
+    ],
+    "Financial & Trade Documents": [
+        "Bank Statements, Loan Forms, Insurance Policies",
+        "Trading Contracts, Customs Declarations, Tax Reports",
+    ],
+};
 
 
 const FormSchema = z.object({
@@ -87,15 +133,6 @@ const FormSchema = z.object({
   targetLanguage: z.string().min(1, "Target language is required."),
   documentType: documentTypeEnum,
   requestSealedCopy: z.boolean().default(false),
-  translationOffice: z.string().optional(),
-}).refine(data => {
-    if (data.requestSealedCopy && !data.translationOffice) {
-        return false;
-    }
-    return true;
-}, {
-    message: "Please select a translation office.",
-    path: ["translationOffice"],
 });
 type FormValues = z.infer<typeof FormSchema>;
 
@@ -112,16 +149,9 @@ type PaymentValues = z.infer<typeof PaymentSchema>;
 const languageOptions = [
     "English", "Arabic", "French", "Spanish", "German", "Chinese", "Russian", "Japanese", "Portuguese", "Italian"
 ];
-const documentTypeOptions: z.infer<typeof documentTypeEnum>[] = documentTypeEnum.options;
 
-const translationOffices = [
-    "Al-Mutarjim Al-Awal Translation Services",
-    "Global Horizons Certified Translators",
-    "Muscat Legal & Business Translation",
-];
-
-const PRICE_PER_PAGE = 10;
-const SEALED_COPY_PRICE = 50; // Extra charge for sealed physical copy
+const PRICE_PER_STAMPED_PAGE = 2.5;
+const MINIMUM_CHARGE = 3.0;
 
 type PageState = 'form' | 'payment' | 'translating' | 'result';
 
@@ -136,7 +166,7 @@ export default function TranslationForm() {
     defaultValues: {
       sourceLanguage: 'English',
       targetLanguage: 'Arabic',
-      documentType: 'Contracts & Agreements',
+      documentType: 'Complex Legal Contracts, Immigration Docs',
       requestSealedCopy: false,
       numberOfPages: 1,
     },
@@ -144,14 +174,27 @@ export default function TranslationForm() {
   
   const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
 
+  const watchAllFields = form.watch();
 
-  const requestSealedCopy = form.watch("requestSealedCopy");
-  const numberOfPages = form.watch("numberOfPages");
-  
   const basePrice = useMemo(() => {
-    const pages = numberOfPages > 0 ? numberOfPages : 0;
-    return (PRICE_PER_PAGE * pages) + (requestSealedCopy ? SEALED_COPY_PRICE : 0);
-  }, [requestSealedCopy, numberOfPages]);
+      const { documentType, numberOfPages, requestSealedCopy } = watchAllFields;
+      if (!documentType || !numberOfPages || numberOfPages < 1) {
+          return 0;
+      }
+      const pricePerPage = documentPricing[documentType];
+      let total = pricePerPage * numberOfPages;
+
+      if (requestSealedCopy) {
+          total += PRICE_PER_STAMPED_PAGE * numberOfPages;
+      }
+      
+      if (numberOfPages > 10) {
+          total *= 0.9; // 10% discount
+      }
+      
+      return Math.max(total, MINIMUM_CHARGE);
+
+  }, [watchAllFields]);
 
   const [finalPrice, setFinalPrice] = useState(basePrice);
   
@@ -306,9 +349,18 @@ export default function TranslationForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {documentTypeOptions.map(type => (
-                            <SelectItem key={type} value={type}>{type}</SelectItem>
-                          ))}
+                            {Object.entries(documentTypeGroups).map(([group, types]) => (
+                                <SelectGroup key={group}>
+                                    <SelectLabel>{group}</SelectLabel>
+                                    {types.map(type => (
+                                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            ))}
+                            <SelectGroup>
+                                <SelectLabel>Other</SelectLabel>
+                                <SelectItem value="Other">Other</SelectItem>
+                            </SelectGroup>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -368,43 +420,18 @@ export default function TranslationForm() {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel>
-                          Request Sealed Physical Copy from an Approved Office
+                          Request Certified Stamped Copy
                         </FormLabel>
                         <FormDescription>
-                          An official, sealed document will be delivered to your address within 2 business days for an additional fee of OMR {SEALED_COPY_PRICE.toFixed(2)}.
+                          An official, stamped document for legal use. Adds OMR {PRICE_PER_STAMPED_PAGE.toFixed(2)} per page.
                         </FormDescription>
                       </div>
                     </FormItem>
                   )}
                 />
-                
-                {requestSealedCopy && (
-                  <FormField
-                    control={form.control}
-                    name="translationOffice"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Approved Translation Office</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select an office..." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {translationOffices.map(office => (
-                              <SelectItem key={office} value={office}>{office}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
 
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-                    <CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment (${finalPrice.toFixed(2)})
+                    <CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment ({finalPrice.toFixed(2)} OMR)
                 </Button>
               </form>
             </Form>
@@ -493,9 +520,9 @@ export default function TranslationForm() {
             {submittedData?.requestSealedCopy && (
             <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800">
                 <Stamp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <AlertTitle>Physical Document Delivery</AlertTitle>
+                <AlertTitle>Certified Stamped Document</AlertTitle>
                 <AlertDescription className="text-blue-800 dark:text-blue-200">
-                Your sealed, physical copy will be prepared and delivered by <strong>{submittedData.translationOffice}</strong> within 2 business days.
+                Your certified, stamped digital copy is ready. For physical copies, please contact our support team.
                 </AlertDescription>
             </Alert>
             )}
