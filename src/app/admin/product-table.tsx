@@ -14,8 +14,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import type { Product, ProductStage } from "@/lib/products";
+import type { Product } from "@/lib/products";
 import { initialProducts } from "@/lib/products";
+import type { ProjectStage } from "@/lib/stages";
+import { useProjectStagesData } from "./stage-table";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -33,15 +35,13 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
-const ProductStages: ProductStage[] = ['Idea', 'Planning', 'Validation', 'Design', 'Development', 'Testing', 'Launch', 'Post-Launch', 'Ready'];
-
 const ProductSchema = z.object({
   name: z.string().min(3, "Name is required"),
   description: z.string().min(10, "Description is required"),
   image: z.string().min(1, "An image is required"),
   aiHint: z.string().min(2, "AI hint is required"),
   enabled: z.boolean(),
-  stage: z.enum(ProductStages),
+  stage: z.string().min(1, "Stage is required"),
 });
 type ProductValues = z.infer<typeof ProductSchema>;
 
@@ -54,10 +54,12 @@ export const useProductsData = () => {
 const AddEditProductDialog = ({ 
     product, 
     onSave,
+    stages,
     children 
 }: { 
     product?: Product, 
     onSave: (values: ProductValues, id?: string) => void,
+    stages: ProjectStage[],
     children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -147,7 +149,7 @@ const AddEditProductDialog = ({
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                     <SelectContent>
-                                        {ProductStages.map(stage => <SelectItem key={stage} value={stage}>{stage}</SelectItem>)}
+                                        {stages.map(stage => <SelectItem key={stage.id} value={stage.name}>{stage.name}</SelectItem>)}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -199,6 +201,7 @@ const AddEditProductDialog = ({
 
 export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (products: Product[]) => void }) {
     const { toast } = useToast();
+    const { stages } = useProjectStagesData();
 
     const handleSave = (values: ProductValues, id?: string) => {
         if (id) {
@@ -235,7 +238,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                     <CardTitle>Digital Product Management</CardTitle>
                     <CardDescription>Manage the products showcased on your homepage.</CardDescription>
                 </div>
-                <AddEditProductDialog onSave={handleSave}>
+                <AddEditProductDialog onSave={handleSave} stages={stages}>
                     <Button><PlusCircle /> Add Product</Button>
                 </AddEditProductDialog>
             </CardHeader>
@@ -254,7 +257,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                         {products.map(p => (
                             <TableRow key={p.id}>
                                 <TableCell>
-                                    <AddEditProductDialog product={p} onSave={handleSave}>
+                                    <AddEditProductDialog product={p} onSave={handleSave} stages={stages}>
                                         <div className="p-1 -m-1 rounded-md hover:bg-muted cursor-pointer w-fit">
                                             <Image src={p.image} alt={p.name} width={60} height={45} className="rounded-md object-cover" />
                                         </div>
@@ -276,7 +279,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <AddEditProductDialog product={p} onSave={handleSave}>
+                                        <AddEditProductDialog product={p} onSave={handleSave} stages={stages}>
                                             <Button variant="ghost" size="icon"><Edit /></Button>
                                         </AddEditProductDialog>
                                         <AlertDialog>

@@ -3,10 +3,12 @@
 
 import OpportunityTable, { useOpportunitiesData } from "../opportunity-table";
 import PricingTable, { usePricingData } from "../pricing-table";
+import StageTable, { useProjectStagesData } from "../stage-table";
 
 export default function AdminOperationsPage() {
   const opportunityData = useOpportunitiesData();
   const pricingData = usePricingData();
+  const stageData = useProjectStagesData();
 
   return (
     <div className="space-y-8">
@@ -18,6 +20,7 @@ export default function AdminOperationsPage() {
         </div>
         <OpportunityTable {...opportunityData} />
         <PricingTable {...pricingData} />
+        <StageTable {...stageData} />
     </div>
   );
 }

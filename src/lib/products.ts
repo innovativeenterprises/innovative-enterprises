@@ -1,16 +1,5 @@
 
 
-export type ProductStage = 
-  | 'Idea' 
-  | 'Planning' 
-  | 'Validation' 
-  | 'Design' 
-  | 'Development' 
-  | 'Testing' 
-  | 'Launch' 
-  | 'Post-Launch' 
-  | 'Ready';
-
 export interface Product {
   id: string;
   name: string;
@@ -18,7 +7,7 @@ export interface Product {
   image: string;
   aiHint: string;
   enabled: boolean;
-  stage: ProductStage;
+  stage: string;
 }
 
 export const initialProducts: Product[] = [
@@ -69,12 +58,12 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'prod_6',
-    name: 'AI Outsourcing Services',
-    description: 'Leverage our GENIUS platform for provision of skilled labor, domestic workers, consultants, and specialists. Our AI-powered tools streamline the recruitment and management process.',
-    image: 'https://images.unsplash.com/photo-1542744095-291d1f67b221?q=80&w=1920&auto=format&fit=crop',
-    aiHint: 'outsourcing hr',
+    name: 'GENIUS - AI Career Platform',
+    description: 'An end-to-end solution for career development—from document parsing to interview preparation—all within a seamless mobile and web experience.',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'career development',
     enabled: true,
-    stage: 'Ready',
+    stage: 'Development',
   },
    {
     id: 'prod_7',
@@ -91,15 +80,6 @@ export const initialProducts: Product[] = [
     description: 'Translate legal, financial, and official documents with high accuracy. This service is managed by Voxi, our AI Translation Agent.',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'document translation',
-    enabled: true,
-    stage: 'Ready',
-  },
-  {
-    id: 'prod_9',
-    name: 'GENIUS - AI Career Platform',
-    description: 'An end-to-end solution for career development—from document parsing to interview preparation—all within a seamless mobile and web experience.',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'career development',
     enabled: true,
     stage: 'Ready',
   },
