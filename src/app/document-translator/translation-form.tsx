@@ -101,7 +101,7 @@ type FormValues = z.infer<typeof FormSchema>;
 const languageOptions = [
     "English", "Arabic", "French", "Spanish", "German", "Chinese", "Russian", "Japanese", "Portuguese", "Italian"
 ];
-const documentTypeOptions: z.infer<typeof documentTypeEnum>[] = documentTypeEnum.getValues();
+const documentTypeOptions: z.infer<typeof documentTypeEnum>[] = documentTypeEnum.options;
 
 const translationOffices = [
     "Al-Mutarjim Al-Awal Translation Services",
