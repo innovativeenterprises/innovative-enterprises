@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Agent, AgentCategory } from "@/lib/agents";
 import { initialLeadershipTeam, initialAgentCategories } from "@/lib/agents";
+import { Textarea } from "@/components/ui/textarea";
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -212,8 +213,17 @@ export const useStaffData = () => {
 }
 
 
-export default function StaffTable() {
-    const { leadership, setLeadership, agentCategories, setAgentCategories } = useStaffData();
+export default function StaffTable({ 
+    leadership, 
+    setLeadership, 
+    agentCategories, 
+    setAgentCategories 
+} : {
+    leadership: Agent[],
+    setLeadership: (l: Agent[]) => void,
+    agentCategories: AgentCategory[],
+    setAgentCategories: (ac: AgentCategory[]) => void
+}) {
     const { toast } = useToast();
 
     const handleToggle = (name: string, type: 'leadership' | 'agent') => {
