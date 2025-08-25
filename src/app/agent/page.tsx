@@ -65,7 +65,7 @@ const PaymentSchema = z.object({
 type PaymentValues = z.infer<typeof PaymentSchema>;
 
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted';
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted' | 'capture_id_front' | 'capture_id_back';
 type ApplicantType = 'individual' | 'company';
 
 const REGISTRATION_FEE = 10;
@@ -174,7 +174,13 @@ export default function AgentPage() {
   const onIdFrontCaptured = (imageUri: string) => {
     individualUploadForm.setValue('idDocumentFrontUri', imageUri);
      setPageState('upload');
-     toast({ title: 'Front of ID Captured!', description: "You can now optionally scan the back or add other documents."})
+     toast({ title: 'Front of ID Captured!', description: "Please scan the back of the ID card now."})
+  }
+
+  const onIdBackCaptured = (imageUri: string) => {
+    individualUploadForm.setValue('idDocumentBackUri', imageUri);
+    setPageState('upload');
+    toast({ title: 'Back of ID Captured!', description: "You can now proceed with the analysis."});
   }
 
   const handleProceedToPayment: SubmitHandler<ManualEntryValues> = async (data) => {
@@ -390,20 +396,21 @@ export default function AgentPage() {
                  <Form {...individualUploadForm}>
                     <form onSubmit={individualUploadForm.handleSubmit(handleIndividualAnalysis)} className="space-y-6">
                         <div className="grid grid-cols-2 gap-4">
-                            <Button type="button" onClick={() => setPageState('capture_id_front')}>
+                            <Button type="button" onClick={() => setPageState('capture_id_front')} disabled={!!individualUploadForm.getValues('idDocumentFrontUri')}>
                                <Camera className="mr-2 h-4 w-4" /> Scan Front of ID
                             </Button>
-                             <Button type="button" variant="outline" onClick={() => alert("Please scan the back of the ID card.")}>
+                             <Button type="button" variant="outline" onClick={() => setPageState('capture_id_back')} disabled={!individualUploadForm.getValues('idDocumentFrontUri') || !!individualUploadForm.getValues('idDocumentBackUri')}>
                                <Camera className="mr-2 h-4 w-4" /> Scan Back of ID
                             </Button>
                         </div>
 
-                         {individualUploadForm.getValues('idDocumentFrontUri') && (
+                         {(individualUploadForm.getValues('idDocumentFrontUri') || individualUploadForm.getValues('idDocumentBackUri')) && (
                             <Alert variant="default" className="text-green-800 bg-green-50 border-green-200 dark:text-green-200 dark:bg-green-900/30 dark:border-green-800">
                                <ScanLine className="h-4 w-4 text-green-600 dark:text-green-400" />
                                <AlertTitle>ID Scanned Successfully</AlertTitle>
                                <AlertDescription>
-                                Front and back of ID card captured.
+                                {individualUploadForm.getValues('idDocumentFrontUri') && "Front of ID captured. "}
+                                {individualUploadForm.getValues('idDocumentBackUri') && "Back of ID captured."}
                                </AlertDescription>
                            </Alert>
                          )}
@@ -620,6 +627,7 @@ export default function AgentPage() {
         case 'generating_agreements': return <LoadingScreen title="Generating Agreements..." description="Your legal documents are being drafted by our AI." />;
         case 'submitted': return <SubmittedScreen />;
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };
