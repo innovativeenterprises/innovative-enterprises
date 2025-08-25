@@ -1,8 +1,13 @@
 
-import StaffTable from "../staff-table";
-import ProviderTable from "../provider-table";
+'use client';
+
+import StaffTable, { useStaffData } from "../staff-table";
+import ProviderTable, { useProvidersData } from "../provider-table";
 
 export default function AdminPeoplePage() {
+  const staffData = useStaffData();
+  const providerData = useProvidersData();
+
   return (
     <div className="space-y-8">
         <div>
@@ -11,8 +16,8 @@ export default function AdminPeoplePage() {
                 Manage your internal staff and external network of providers.
             </p>
         </div>
-        <StaffTable />
-        <ProviderTable />
+        <StaffTable {...staffData} />
+        <ProviderTable {...providerData} />
     </div>
   );
 }

@@ -10,8 +10,14 @@ import { initialSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export default function SettingsTable() {
+// This component is now the source of truth for settings data
+export const useSettingsData = () => {
     const [settings, setSettings] = useState<AppSettings>(initialSettings);
+    return { settings, setSettings };
+};
+
+
+export default function SettingsTable({ settings, setSettings }: { settings: AppSettings, setSettings: (settings: AppSettings) => void}) {
     const { toast } = useToast();
 
     const handleModeChange = (value: 'direct' | 'tender' | 'builtin') => {

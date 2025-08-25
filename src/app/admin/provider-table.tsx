@@ -21,6 +21,13 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Link as LinkIcon } from "lucide-react";
 import Link from 'next/link';
 
+// This component is now the source of truth for providers data
+export const useProvidersData = () => {
+    const [providers, setProviders] = useState<Provider[]>(initialProviders);
+    return { providers, setProviders };
+};
+
+
 const ProviderSchema = z.object({
   name: z.string().min(3, "Name is required"),
   email: z.string().email("A valid email is required"),
@@ -121,8 +128,13 @@ const AddEditProviderDialog = ({
     )
 }
 
-export default function ProviderTable() {
-    const [providers, setProviders] = useState<Provider[]>(initialProviders);
+export default function ProviderTable({ 
+    providers, 
+    setProviders 
+}: { 
+    providers: Provider[], 
+    setProviders: (providers: Provider[]) => void 
+}) {
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();

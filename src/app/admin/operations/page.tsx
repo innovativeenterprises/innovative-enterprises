@@ -1,9 +1,13 @@
 
-import OpportunityTable from "../opportunity-table";
-import PricingTable from "../pricing-table";
-import SettingsTable from "../settings-table";
+'use client';
+
+import OpportunityTable, { useOpportunitiesData } from "../opportunity-table";
+import PricingTable, { usePricingData } from "../pricing-table";
 
 export default function AdminOperationsPage() {
+  const opportunityData = useOpportunitiesData();
+  const pricingData = usePricingData();
+
   return (
     <div className="space-y-8">
         <div>
@@ -12,8 +16,8 @@ export default function AdminOperationsPage() {
                 Manage business operations like opportunities and pricing.
             </p>
         </div>
-        <OpportunityTable />
-        <PricingTable />
+        <OpportunityTable {...opportunityData} />
+        <PricingTable {...pricingData} />
     </div>
   );
 }

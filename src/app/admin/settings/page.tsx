@@ -1,7 +1,11 @@
 
-import SettingsTable from "../settings-table";
+'use client';
+
+import SettingsTable, { useSettingsData } from "../settings-table";
 
 export default function AdminSettingsPage() {
+  const settingsData = useSettingsData();
+  
   return (
     <div className="space-y-8">
         <div>
@@ -10,7 +14,7 @@ export default function AdminSettingsPage() {
                 Manage core operational settings for your application.
             </p>
         </div>
-        <SettingsTable />
+        <SettingsTable {...settingsData} />
     </div>
   );
 }

@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight } from "lucide-react";
 import type { Opportunity } from "@/lib/opportunities";
-import { initialOpportunities, opportunityIconMap } from "@/lib/opportunities";
+import { opportunityIconMap } from "@/lib/opportunities";
+// Import the data hook from the admin table
+import { useOpportunitiesData } from "@/app/admin/opportunity-table";
 
 const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
     const getStatusColor = () => {
@@ -53,8 +55,11 @@ const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
 }
 
 export default function OpportunitiesPage() {
-    const [opportunities, setOpportunities] = useState<Opportunity[]>(initialOpportunities);
-
+    // This is a bit of a trick for the prototype.
+    // We "render" the admin component that holds the state, but invisibly.
+    // In a real app, this data would come from a shared store or an API.
+    const { opportunities } = useOpportunitiesData();
+    
     const publicOpportunities = opportunities
         .filter(opp => opp.status !== 'Closed')
         .sort((a,b) => (a.status === 'In Progress' ? -1 : 1));

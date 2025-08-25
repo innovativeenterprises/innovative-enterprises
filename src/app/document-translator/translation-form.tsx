@@ -18,9 +18,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Pricing } from '@/lib/pricing';
-import { initialPricing } from '@/lib/pricing';
 import type { AppSettings } from '@/lib/settings';
-import { initialSettings } from '@/lib/settings';
 import { translationOffices } from '@/lib/offices';
 
 
@@ -95,12 +93,10 @@ const MINIMUM_CHARGE = 3.0;
 
 type PageState = 'form' | 'payment' | 'translating' | 'result';
 
-export default function TranslationForm() {
+export default function TranslationForm({ pricing, settings }: { pricing: Pricing[], settings: AppSettings }) {
   const [pageState, setPageState] = useState<PageState>('form');
   const [response, setResponse] = useState<DocumentTranslationOutput | null>(null);
   const [submittedData, setSubmittedData] = useState<FormValues | null>(null);
-  const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
-  const [settings, setSettings] = useState<AppSettings>(initialSettings);
   const { toast } = useToast();
 
   const pricingMap = useMemo(() => {

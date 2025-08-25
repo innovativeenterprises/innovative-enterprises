@@ -16,6 +16,12 @@ import type { Pricing } from "@/lib/pricing";
 import { initialPricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 
+// This component is now the source of truth for pricing data
+export const usePricingData = () => {
+    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+    return { pricing, setPricing };
+};
+
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
 });
@@ -73,8 +79,13 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() {
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+export default function PricingTable({ 
+    pricing, 
+    setPricing 
+} : { 
+    pricing: Pricing[], 
+    setPricing: (pricing: Pricing[]) => void 
+}) {
     const { toast } = useToast();
 
     const handleSave = (values: PricingValues, id: string) => {

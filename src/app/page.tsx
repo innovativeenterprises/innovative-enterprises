@@ -1,41 +1,25 @@
 
 'use client';
 
-import { useState } from 'react';
 import CompanyOverview from '@/components/company-overview';
 import ServiceCatalog from '@/components/service-catalog';
 import ProductShowcase from '@/components/product-showcase';
 import ClientTestimonials from '@/components/client-testimonials';
 import AiToolsCta from '@/components/ai-tools-cta';
 import ChatWidget from '@/components/chat-widget';
-import type { Service } from '@/lib/services';
-import { initialServices } from '@/lib/services';
-import type { Product } from '@/lib/products';
-import { initialProducts } from '@/lib/products';
-import type { Client, Testimonial } from '@/lib/clients';
-import { initialClients, initialTestimonials } from '@/lib/clients';
-import AdminContentPage from './admin/content/page';
 
+// The state for these components is now managed in the admin dashboard pages.
+// We use these hooks to get the current state. In a real app, this might
+// come from a global state manager (like Redux or Zustand) or be fetched
+// from a database via an API.
+import { useServicesData } from './admin/service-table';
+import { useProductsData } from './admin/product-table';
+import { useClientsData } from './admin/client-table';
 
 export default function Home() {
-  // In a real app, this state would be fetched from a central store or API.
-  // For this prototype, we're managing it here to simulate the dynamic
-  // connection between the admin panel and the live site.
-  const [services, setServices] = useState<Service[]>(initialServices);
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [clients, setClients] = useState<Client[]>(initialClients);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
-
-  // This is a stand-in for a proper admin data management solution.
-  // It allows us to simulate the admin panel's data hooks without
-  // actually rendering the admin page.
-  const AdminDataRoot = () => {
-    return (
-        <div style={{display: 'none'}}>
-            <AdminContentPage />
-        </div>
-    )
-  }
+  const { services } = useServicesData();
+  const { products } = useProductsData();
+  const { clients, testimonials } = useClientsData();
 
   return (
     <div className="flex flex-col">
@@ -45,7 +29,6 @@ export default function Home() {
       <ClientTestimonials clients={clients} testimonials={testimonials} />
       <AiToolsCta />
       <ChatWidget />
-      {/* <AdminDataRoot /> */}
     </div>
   );
 }

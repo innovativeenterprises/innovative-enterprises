@@ -20,6 +20,13 @@ import { initialOpportunities } from "@/lib/opportunities";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Trophy } from "lucide-react";
 
+// This component is now the source of truth for opportunities data
+export const useOpportunitiesData = () => {
+    const [opportunities, setOpportunities] = useState<Opportunity[]>(initialOpportunities);
+    return { opportunities, setOpportunities };
+};
+
+
 const OpportunitySchema = z.object({
   title: z.string().min(3, "Title is required"),
   type: z.string().min(3, "Type is required"),
@@ -122,8 +129,13 @@ const AddEditOpportunityDialog = ({
     )
 }
 
-export default function OpportunityTable() {
-    const [opportunities, setOpportunities] = useState<Opportunity[]>(initialOpportunities);
+export default function OpportunityTable({
+    opportunities,
+    setOpportunities,
+}: {
+    opportunities: Opportunity[],
+    setOpportunities: (opportunities: Opportunity[]) => void,
+}) {
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();

@@ -1,12 +1,13 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TranslationForm from "./translation-form";
 import { Languages, FileText, Banknote, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pricing, PricingGroup } from '@/lib/pricing';
-import { initialPricing } from '@/lib/pricing';
+import { usePricingData } from '@/app/admin/pricing-table';
+import { useSettingsData } from '@/app/admin/settings-table';
 
 const iconMap: { [key: string]: React.ElementType } = {
     "Legal & Official Documents": ShieldCheck,
@@ -18,9 +19,7 @@ const iconMap: { [key: string]: React.ElementType } = {
     "Financial & Trade Documents": ShieldCheck,
 };
 
-const PriceList = () => {
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
-
+const PriceList = ({ pricing }: { pricing: Pricing[] }) => {
     const documentTypeGroups = pricing.reduce((acc, item) => {
         const group = item.group;
         if (!acc[group]) {
@@ -86,6 +85,10 @@ const PriceList = () => {
 
 
 export default function DocumentTranslatorPage() {
+  // Pull data from our admin "sources of truth"
+  const { pricing } = usePricingData();
+  const { settings } = useSettingsData();
+
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
@@ -99,9 +102,9 @@ export default function DocumentTranslatorPage() {
           </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">
-            <TranslationForm />
+            <TranslationForm pricing={pricing} settings={settings} />
         </div>
-        <PriceList />
+        <PriceList pricing={pricing} />
       </div>
     </div>
   );
