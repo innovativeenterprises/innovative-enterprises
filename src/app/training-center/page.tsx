@@ -1,3 +1,4 @@
+
 import TrainingForm from "./training-form";
 import { BrainCircuit } from "lucide-react";
 
