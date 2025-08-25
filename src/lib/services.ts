@@ -1,6 +1,6 @@
 
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 
@@ -44,6 +44,13 @@ export const initialServices: Service[] = [
     title: "Data Analytics & BI",
     description: "Turn your data into actionable insights with our business intelligence and data visualization services.",
     enabled: true,
+  },
+  {
+    icon: Server,
+    title: "IT Infrastructure Rentals",
+    description: "On-demand rental of IT equipment like servers, networking devices, and workstations.",
+    enabled: true,
+    href: "/infra-rent",
   },
   {
     icon: Briefcase,

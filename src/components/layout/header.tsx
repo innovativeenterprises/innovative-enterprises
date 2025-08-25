@@ -85,6 +85,11 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
     description: "End-to-end solutions to build, manage, and scale your online business.",
   },
   {
+    title: "IT Infrastructure Rentals",
+    href: "/infra-rent",
+    description: "On-demand rental of IT equipment like servers, workstations, and networking gear.",
+  },
+  {
     title: "Be our Partner",
     href: "/partner",
     description:
