@@ -21,5 +21,6 @@ import '@/ai/flows/generate-agreement.ts';
 import '@/ai/flows/interview-coach.ts';
 import '@/ai/flows/whatsapp-agent.ts';
 import '@/ai/flows/project-inception.ts';
+import '@/ai/flows/financial-document-analysis.ts';
 
     

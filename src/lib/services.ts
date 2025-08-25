@@ -1,6 +1,6 @@
 
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 
@@ -107,5 +107,12 @@ export const initialServices: Service[] = [
     description: "Practice for your next job interview with AI-generated, role-specific questions.",
     enabled: true,
     href: "/interview-coach",
+  },
+  {
+    icon: Shield,
+    title: "Financial Audit Hub",
+    description: "Connect with certified financial audit offices and get AI-powered preliminary analysis of your financial documents.",
+    enabled: true,
+    href: "/financial-audit",
   },
 ];

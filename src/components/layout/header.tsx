@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -58,6 +58,11 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     title: "CV & Outsourcing Services",
     href: "/cv-enhancer",
     description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
+  },
+  {
+    title: "Financial Audit Hub",
+    href: "/financial-audit",
+    description: "Connect with certified audit offices and get AI-powered analysis of your financial documents.",
   },
 ];
 
