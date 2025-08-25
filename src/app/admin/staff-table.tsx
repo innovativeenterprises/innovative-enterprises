@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -20,6 +21,7 @@ import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Co
 import { useToast } from "@/hooks/use-toast";
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -120,25 +122,53 @@ const AddEditStaffDialog = ({
     children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<Omit<StaffValues, 'photo'> & { photo: any }>({
-        resolver: zodResolver(StaffSchema.omit({ photo: true })),
-        defaultValues: staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type, aiHint: staffMember.aiHint } : { name: "", role: "", type: "AI Agent", aiHint: "person portrait" },
+    const form = useForm({
+        defaultValues: {
+            name: staffMember?.name || "",
+            role: staffMember?.role || "",
+            type: staffMember?.type || "AI Agent",
+            aiHint: staffMember?.aiHint || "person portrait",
+            photoFile: undefined,
+            photoUrl: staffMember?.photo.startsWith('http') ? staffMember.photo : "",
+            useUrl: staffMember?.photo.startsWith('http') || false,
+        },
     });
 
     useEffect(() => {
         if(isOpen) {
-            form.reset(staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type, aiHint: staffMember.aiHint } : { name: "", role: "", type: "AI Agent", photo: "", aiHint: "person portrait" });
+            const isUrl = staffMember?.photo?.startsWith('http') ?? false;
+            form.reset({ 
+                name: staffMember?.name || "",
+                role: staffMember?.role || "",
+                type: staffMember?.type || "AI Agent",
+                aiHint: staffMember?.aiHint || "person portrait",
+                photoFile: undefined,
+                photoUrl: isUrl ? staffMember.photo : "",
+                useUrl: isUrl,
+            });
         }
     }, [staffMember, form, isOpen]);
 
+    const watchUseUrl = form.watch('useUrl');
+
     const onSubmit: SubmitHandler<any> = async (data) => {
-        let photoDataUri = staffMember?.photo || "";
-        if (data.photo && data.photo.length > 0) {
-            const file = data.photo[0];
-            photoDataUri = await fileToDataURI(file);
+        let photoValue = staffMember?.photo || "";
+
+        if (data.useUrl) {
+            if(data.photoUrl) photoValue = data.photoUrl;
+        } else {
+             if (data.photoFile && data.photoFile.length > 0) {
+                const file = data.photoFile[0];
+                photoValue = await fileToDataURI(file);
+            }
         }
         
-        onSave({ ...data, photo: photoDataUri }, staffMember?.name);
+        if (!photoValue) {
+            form.setError('photoUrl', { message: 'Please provide either a photo file or a URL.' });
+            return;
+        }
+        
+        onSave({ name: data.name, role: data.role, type: data.type, aiHint: data.aiHint, photo: photoValue }, staffMember?.name);
         form.reset();
         setIsOpen(false);
     };
@@ -182,16 +212,34 @@ const AddEditStaffDialog = ({
                                 <FormMessage />
                             </FormItem>
                         )} />
+
+                        <FormField control={form.control} name="useUrl" render={({ field }) => (
+                             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                                <FormControl>
+                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>Use Photo URL</FormLabel>
+                                </div>
+                            </FormItem>
+                        )}/>
+
                         <div className="grid grid-cols-2 gap-4">
-                            <FormField control={form.control} name="photo" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Photo</FormLabel>
-                                    <FormControl>
-                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
+                             {watchUseUrl ? (
+                                <FormField control={form.control} name="photoUrl" render={({ field }) => (
+                                    <FormItem className="col-span-2"><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                                )} />
+                            ) : (
+                                <FormField control={form.control} name="photoFile" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Photo</FormLabel>
+                                        <FormControl>
+                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            )}
                             <FormField control={form.control} name="aiHint" render={({ field }) => (
                                 <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                             )} />

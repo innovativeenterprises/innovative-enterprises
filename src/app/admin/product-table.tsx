@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -18,6 +19,7 @@ import type { Product } from "@/lib/products";
 import { initialProducts } from "@/lib/products";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
+import { Checkbox } from "@/components/ui/checkbox";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -46,29 +48,51 @@ const AddEditProductDialog = ({
     children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<Omit<ProductValues, 'image'> & { image: any }>({
-        resolver: zodResolver(ProductSchema.omit({ image: true })),
-        defaultValues: product || { 
-            name: "", 
-            description: "", 
-            aiHint: "",
+    const form = useForm({
+        defaultValues: {
+            name: product?.name || "",
+            description: product?.description || "",
+            aiHint: product?.aiHint || "",
+            imageFile: undefined,
+            imageUrl: product?.image.startsWith('http') ? product.image : "",
+            useUrl: product?.image.startsWith('http') || false,
         },
     });
 
     useEffect(() => {
         if(isOpen) {
-           form.reset(product || { name: "", description: "", image: "", aiHint: "" });
+           const isUrl = product?.image?.startsWith('http') ?? false;
+           form.reset({ 
+                name: product?.name || "",
+                description: product?.description || "",
+                aiHint: product?.aiHint || "",
+                imageFile: undefined,
+                imageUrl: isUrl ? product.image : "",
+                useUrl: isUrl,
+            });
         }
     }, [product, form, isOpen]);
 
+    const watchUseUrl = form.watch('useUrl');
+
     const onSubmit: SubmitHandler<any> = async (data) => {
-        let imageDataUri = product?.image || "";
-        if (data.image && data.image.length > 0) {
-            const file = data.image[0];
-            imageDataUri = await fileToDataURI(file);
+        let imageValue = product?.image || "";
+        
+        if(data.useUrl) {
+            if(data.imageUrl) imageValue = data.imageUrl;
+        } else {
+            if (data.imageFile && data.imageFile.length > 0) {
+                const file = data.imageFile[0];
+                imageValue = await fileToDataURI(file);
+            }
+        }
+        
+        if (!imageValue) {
+            form.setError('imageUrl', { message: 'Please provide either an image file or a URL.' });
+            return;
         }
 
-        onSave({ ...data, image: imageDataUri }, product?.id);
+        onSave({ name: data.name, description: data.description, aiHint: data.aiHint, image: imageValue }, product?.id);
         form.reset();
         setIsOpen(false);
     };
@@ -91,16 +115,35 @@ const AddEditProductDialog = ({
                         <FormField control={form.control} name="description" render={({ field }) => (
                             <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea rows={4} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
+                        
+                        <FormField control={form.control} name="useUrl" render={({ field }) => (
+                             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                                <FormControl>
+                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>Use Image URL</FormLabel>
+                                </div>
+                            </FormItem>
+                        )}/>
+
                         <div className="grid grid-cols-2 gap-4">
-                           <FormField control={form.control} name="image" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Image</FormLabel>
-                                    <FormControl>
-                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
+                           {watchUseUrl ? (
+                                <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                                    <FormItem className="col-span-2"><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                                )} />
+                           ) : (
+                                <FormField control={form.control} name="imageFile" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Image</FormLabel>
+                                        <FormControl>
+                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                           )}
+                           
                             <FormField control={form.control} name="aiHint" render={({ field }) => (
                                 <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />

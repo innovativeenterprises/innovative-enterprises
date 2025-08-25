@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -19,6 +20,7 @@ import { initialClients, initialTestimonials } from "@/lib/clients";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -47,24 +49,54 @@ type TestimonialValues = z.infer<typeof TestimonialSchema>;
 // Add/Edit Dialogs
 const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<Omit<ClientValues, 'logo'> & { logo: any }>({
-        resolver: zodResolver(ClientSchema.omit({ logo: true })),
-        defaultValues: client || { name: "", aiHint: "" },
+    const [useUrl, setUseUrl] = useState(false);
+    
+    const form = useForm({
+        defaultValues: {
+            name: client?.name || "",
+            aiHint: client?.aiHint || "",
+            logoFile: undefined,
+            logoUrl: client?.logo.startsWith('http') ? client.logo : "",
+            useUrl: client?.logo.startsWith('http') || false,
+        },
     });
+    
     useEffect(() => { 
         if(isOpen) {
-            form.reset(client || { name: "", logo: "", aiHint: "" });
+            const isUrl = client?.logo?.startsWith('http') ?? false;
+            form.reset({ 
+                name: client?.name || "", 
+                aiHint: client?.aiHint || "",
+                logoFile: undefined,
+                logoUrl: isUrl ? client.logo : "",
+                useUrl: isUrl,
+            });
+            setUseUrl(isUrl);
         }
     }, [client, form, isOpen]);
     
+    const watchUseUrl = form.watch('useUrl');
+
     const onSubmit: SubmitHandler<any> = async (data) => {
-        let logoDataUri = client?.logo || "";
-        if (data.logo && data.logo[0]) {
-            const file = data.logo[0];
-            logoDataUri = await fileToDataURI(file);
-        }
+        let logoValue = client?.logo || "";
         
-        onSave({ ...data, logo: logoDataUri }, client?.id);
+        if(data.useUrl) {
+            if (data.logoUrl) {
+                logoValue = data.logoUrl;
+            }
+        } else {
+            if (data.logoFile && data.logoFile[0]) {
+                const file = data.logoFile[0];
+                logoValue = await fileToDataURI(file);
+            }
+        }
+
+        if (!logoValue) {
+            form.setError('logoUrl', { message: 'Please provide either a logo file or a URL.' });
+            return;
+        }
+
+        onSave({ name: data.name, aiHint: data.aiHint, logo: logoValue }, client?.id);
         setIsOpen(false);
     };
 
@@ -78,15 +110,34 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
                         <FormField control={form.control} name="name" render={({ field }) => (
                             <FormItem><FormLabel>Client Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <FormField control={form.control} name="logo" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Logo Image</FormLabel>
+
+                        <FormField control={form.control} name="useUrl" render={({ field }) => (
+                             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
                                 <FormControl>
-                                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                 </FormControl>
-                                <FormMessage />
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>Use Image URL</FormLabel>
+                                </div>
                             </FormItem>
-                        )} />
+                        )}/>
+
+                        {watchUseUrl ? (
+                            <FormField control={form.control} name="logoUrl" render={({ field }) => (
+                                <FormItem><FormLabel>Logo Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        ) : (
+                             <FormField control={form.control} name="logoFile" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Logo Image</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                        )}
+
                         <FormField control={form.control} name="aiHint" render={({ field }) => (
                             <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
