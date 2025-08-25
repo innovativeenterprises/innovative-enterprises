@@ -49,7 +49,6 @@ type TestimonialValues = z.infer<typeof TestimonialSchema>;
 // Add/Edit Dialogs
 const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [useUrl, setUseUrl] = useState(false);
     
     const form = useForm({
         defaultValues: {
@@ -71,7 +70,6 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
                 logoUrl: isUrl ? client.logo : "",
                 useUrl: isUrl,
             });
-            setUseUrl(isUrl);
         }
     }, [client, form, isOpen]);
     
@@ -158,7 +156,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
         resolver: zodResolver(TestimonialSchema),
         defaultValues: testimonial || { quote: "", author: "", company: "" },
     });
-    useEffect(() => { form.reset(testimonial || { quote: "", author: "", company: "" }) }, [testimonial, form, isOpen]);
+    useEffect(() => { if(isOpen) {form.reset(testimonial || { quote: "", author: "", company: "" })} }, [testimonial, form, isOpen]);
 
     const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
         onSave(data, testimonial?.id);
@@ -261,15 +259,15 @@ export default function ClientTable() {
                              <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
                                 {clients.map(client => (
-                                    <TableRow key={client.id}>
+                                    <TableRow key={client.id} className="cursor-pointer">
                                         <TableCell>
                                             <AddEditClientDialog client={client} onSave={handleSaveClient}>
-                                                <div className="p-2 rounded-md hover:bg-muted cursor-pointer">
+                                                <div className="p-2 rounded-md hover:bg-muted">
                                                     <Image src={client.logo || "https://placehold.co/150x60.png"} alt={client.name} width={100} height={40} className="object-contain" />
                                                 </div>
                                             </AddEditClientDialog>
                                         </TableCell>
-                                        <TableCell>{client.name}</TableCell>
+                                        <TableCell><AddEditClientDialog client={client} onSave={handleSaveClient}><div>{client.name}</div></AddEditClientDialog></TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
                                                 <AlertDialog>
@@ -291,13 +289,17 @@ export default function ClientTable() {
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
                                 {testimonials.map(t => (
-                                    <TableRow key={t.id}>
+                                    <TableRow key={t.id} className="cursor-pointer">
                                         <TableCell className="italic max-w-md truncate">
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
-                                                <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>
+                                                <div className="p-2 -m-2 rounded-md hover:bg-muted">"{t.quote}"</div>
                                             </AddEditTestimonialDialog>
                                         </TableCell>
-                                        <TableCell>{t.author}, <span className="text-muted-foreground">{t.company}</span></TableCell>
+                                        <TableCell>
+                                            <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
+                                                <div>{t.author}, <span className="text-muted-foreground">{t.company}</span></div>
+                                            </AddEditTestimonialDialog>
+                                        </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
                                                 <AlertDialog>
