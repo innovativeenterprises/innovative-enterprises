@@ -54,10 +54,10 @@ export default function PartnerPage() {
         const result = await analyzeCrDocument({ documentDataUri });
         setAnalysisResult(result);
         inquiryForm.reset({
-            companyName: result.companyName || '',
-            contactName: result.contactName || '',
-            email: result.email || '',
-            partnershipDetails: result.activities || '',
+            companyName: result.companyInfo?.companyNameEnglish || result.companyInfo?.companyNameArabic || '',
+            contactName: result.authorizedSignatories?.[0]?.name || result.boardMembers?.[0]?.name || '',
+            email: result.companyInfo?.contactEmail || '',
+            partnershipDetails: result.summary || '',
         });
         setPageState('review');
         toast({
@@ -253,5 +253,3 @@ export default function PartnerPage() {
     </div>
   );
 }
-
-    
