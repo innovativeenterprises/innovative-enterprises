@@ -1,6 +1,6 @@
 
 export interface AppSettings {
-    translationAssignmentMode: 'direct' | 'tender';
+    translationAssignmentMode: 'direct' | 'tender' | 'builtin';
 }
 
 export const initialSettings: AppSettings = {

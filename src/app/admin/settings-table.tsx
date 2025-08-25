@@ -14,9 +14,21 @@ export default function SettingsTable() {
     const [settings, setSettings] = useState<AppSettings>(initialSettings);
     const { toast } = useToast();
 
-    const handleModeChange = (value: 'direct' | 'tender') => {
+    const handleModeChange = (value: 'direct' | 'tender' | 'builtin') => {
+        let description = '';
+        switch(value) {
+            case 'direct':
+                description = 'Direct Assignment';
+                break;
+            case 'tender':
+                description = 'Tender to Partners';
+                break;
+            case 'builtin':
+                description = 'Built-in AI Translator';
+                break;
+        }
         setSettings(prev => ({...prev, translationAssignmentMode: value }));
-        toast({ title: "Setting updated.", description: `Translation assignment mode set to ${value === 'direct' ? 'Direct Assignment' : 'Tender'}.`});
+        toast({ title: "Setting updated.", description: `Translation assignment mode set to ${description}.`});
     };
 
     return (
@@ -43,14 +55,19 @@ export default function SettingsTable() {
                                 <RadioGroup 
                                     value={settings.translationAssignmentMode} 
                                     onValueChange={handleModeChange}
+                                    className="gap-3"
                                 >
                                     <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="builtin" id="builtin" />
+                                        <Label htmlFor="builtin">Built-in AI Translator</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="direct" id="direct" />
-                                        <Label htmlFor="direct">Direct Assignment</Label>
+                                        <Label htmlFor="direct">Direct Assignment to Partner</Label>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="tender" id="tender" />
-                                        <Label htmlFor="tender">Tender to Partners</Label>
+                                        <Label htmlFor="tender">Tender to Partner Network</Label>
                                     </div>
                                 </RadioGroup>
                            </TableCell>
