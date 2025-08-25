@@ -1,29 +1,30 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-
-const clients = [
-    { name: "Oman Government Partner 1", logo: "https://placehold.co/150x60.png", aiHint: "government building" },
-    { name: "Oman Government Partner 2", logo: "https://placehold.co/150x60.png", aiHint: "oman flag" },
-    { name: "Key Partner 1", logo: "https://placehold.co/150x60.png", aiHint: "corporate logo" },
-    { name: "Key Partner 2", logo: "https://placehold.co/150x60.png", aiHint: "tech company" },
-    { name: "Key Partner 3", logo: "https://placehold.co/150x60.png", aiHint: "finance building" },
-    { name: "Key Partner 4", logo: "https://placehold.co/150x60.png", aiHint: "abstract logo" },
-];
-
-const testimonials = [
-    {
-        quote: "Innovative Enterprises has been a pivotal partner in our digital transformation journey. Their expertise and commitment are unparalleled.",
-        author: "Director General",
-        company: "Government Entity",
-    },
-    {
-        quote: "The solutions provided by Innovative Enterprises have significantly improved our operational efficiency. Their team is professional and highly skilled.",
-        author: "CEO",
-        company: "Leading Corporation",
-    },
-];
+import type { Client, Testimonial } from '@/lib/clients';
+import { initialClients, initialTestimonials } from '@/lib/clients';
 
 export default function ClientTestimonials() {
+  const [clients, setClients] = useState<Client[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    try {
+      const storedClients = localStorage.getItem('clients_data');
+      setClients(storedClients ? JSON.parse(storedClients) : initialClients);
+
+      const storedTestimonials = localStorage.getItem('testimonials_data');
+      setTestimonials(storedTestimonials ? JSON.parse(storedTestimonials) : initialTestimonials);
+    } catch (error) {
+      console.error("Failed to parse data from localStorage", error);
+      setClients(initialClients);
+      setTestimonials(initialTestimonials);
+    }
+  }, []);
+
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -35,7 +36,7 @@ export default function ClientTestimonials() {
         </div>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
           {clients.map((client) => (
-            <div key={client.name} className="grayscale hover:grayscale-0 transition-all duration-300" title={client.name}>
+            <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300" title={client.name}>
               <Image
                 src={client.logo}
                 alt={client.name}
@@ -49,8 +50,8 @@ export default function ClientTestimonials() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-                <Card key={index} className="bg-card">
+            {testimonials.map((testimonial) => (
+                <Card key={testimonial.id} className="bg-card">
                     <CardContent className="p-6">
                         <blockquote className="border-l-4 border-accent pl-4 italic text-muted-foreground">
                             {testimonial.quote}

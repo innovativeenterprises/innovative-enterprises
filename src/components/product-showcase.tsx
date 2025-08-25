@@ -1,41 +1,26 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-
-const products = [
-  {
-    name: 'PanoSpace',
-    description: 'An immersive platform for virtual tours and panoramic experiences.',
-    image: 'https://placehold.co/400x300.png',
-    aiHint: 'virtual reality',
-  },
-  {
-    name: 'ameen',
-    description: 'A secure digital identity and authentication solution.',
-    image: 'https://placehold.co/400x300.png',
-    aiHint: 'security shield',
-  },
-  {
-    name: 'APPI',
-    description: 'An intuitive API management and integration platform.',
-    image: 'https://placehold.co/400x300.png',
-    aiHint: 'api integration',
-  },
-  {
-    name: 'KHIDMAAI',
-    description: 'AI-powered customer service and support automation tool.',
-    image: 'https://placehold.co/400x300.png',
-    aiHint: 'chatbot ai',
-  },
-  {
-    name: 'VMALL',
-    description: 'A comprehensive virtual mall and e-commerce ecosystem.',
-    image: 'https://placehold.co/400x300.png',
-    aiHint: 'online shopping',
-  },
-];
+import type { Product } from '@/lib/products';
+import { initialProducts } from '@/lib/products';
 
 export default function ProductShowcase() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('products_data');
+      setProducts(stored ? JSON.parse(stored) : initialProducts);
+    } catch (error) {
+      console.error("Failed to parse products from localStorage", error);
+      setProducts(initialProducts);
+    }
+  }, []);
+
   return (
     <section id="products" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
