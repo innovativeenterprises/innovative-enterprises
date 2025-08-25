@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
@@ -59,6 +59,11 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
 
 export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (services: Service[]) => void }) {
     const { toast } = useToast();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const handleToggle = (title: string) => {
         setServices(
@@ -71,10 +76,10 @@ export default function ServiceTable({ services, setServices }: { services: Serv
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        if (active.id !== over?.id) {
+        if (over && active.id !== over.id) {
             setServices((items) => {
                 const oldIndex = items.findIndex(item => item.title === active.id);
-                const newIndex = items.findIndex(item => item.title === over?.id);
+                const newIndex = items.findIndex(item => item.title === over.id);
                 return arrayMove(items, oldIndex, newIndex);
             });
             toast({ title: "Service order updated." });
@@ -97,19 +102,39 @@ export default function ServiceTable({ services, setServices }: { services: Serv
                             <TableHead className="text-center">Status</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <DndContext sensors={[]} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                        <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
-                            <TableBody>
-                                {services.map(service => (
-                                    <SortableServiceRow
-                                        key={service.title}
-                                        service={service}
-                                        handleToggle={handleToggle}
-                                    />
-                                ))}
-                            </TableBody>
-                        </SortableContext>
-                    </DndContext>
+                    {isMounted ? (
+                        <DndContext sensors={[]} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                            <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
+                                <TableBody>
+                                    {services.map(service => (
+                                        <SortableServiceRow
+                                            key={service.title}
+                                            service={service}
+                                            handleToggle={handleToggle}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </SortableContext>
+                        </DndContext>
+                    ) : (
+                         <TableBody>
+                            {services.map(service => (
+                                <TableRow key={service.title}>
+                                    <TableCell><GripVertical className="h-4 w-4 text-muted-foreground" /></TableCell>
+                                    <TableCell className="font-medium">{service.title}</TableCell>
+                                    <TableCell>{service.description}</TableCell>
+                                    <TableCell className="text-center">
+                                         <div className="flex flex-col items-center gap-1">
+                                            <Switch checked={service.enabled} disabled />
+                                            <Badge variant={service.enabled ? "default" : "secondary"}>
+                                                {service.enabled ? "Enabled" : "Disabled"}
+                                            </Badge>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    )}
                 </Table>
             </CardContent>
         </Card>
