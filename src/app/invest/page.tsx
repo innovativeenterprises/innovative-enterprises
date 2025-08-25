@@ -1,4 +1,5 @@
 
+
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck } from "lucide-react";
 import InvestForm from "./invest-form";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -32,8 +33,10 @@ const currentProjects = [
 ];
 
 const pipelineProjects = [
-    { name: "EduVerse", description: "An AI-driven platform for personalized education and skill development.", status: "In Development" },
-    { name: "Agri-Tech Solutions", description: "IoT and AI-based solutions for optimizing agriculture in arid regions.", status: "Prototyping" },
+    { name: "APPI – عـبِّـي", description: "AI-Powered Smart Home Utility Management App enabling real-time monitoring and optimization of electricity, water, and gas consumption.", status: "In Development" },
+    { name: "SHUKRAN – شكرا", description: "Smart Lost & Found Solution App using AI image recognition and smart matching to connect lost items with their owners.", status: "In Development" },
+    { name: "KHIDMA – خدمة", description: "A digital marketplace using AI-matching for on-demand services where providers bid competitively on customer requests.", status: "In Development" },
+    { name: "V MALL", description: "A Smart VR/AR Shopping & Virtual Tour Marketplace for immersive e-commerce, real estate tours, and virtual events.", status: "In Development" },
     { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
 ];
 
