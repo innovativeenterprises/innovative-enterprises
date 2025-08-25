@@ -18,9 +18,9 @@ export const initialProducts: Product[] = [
   {
     id: 'prod_2',
     name: 'ameen',
-    description: 'A secure digital identity and authentication solution.',
-    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-182313-146-secure_child.png',
-    aiHint: 'secure child',
+    description: 'A comprehensive "super-app" for communities in Oman and the GCC, featuring AI-powered Lost & Found, civic issue reporting, on-demand social services, and bill payments to provide trusted digital safety and convenience.',
+    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-185127-249-secure_child.png',
+    aiHint: 'community safety app',
   },
   {
     id: 'prod_3',
@@ -33,7 +33,7 @@ export const initialProducts: Product[] = [
     id: 'prod_4',
     name: 'KHIDMAAI',
     description: 'A digital marketplace using AI-matching for on-demand services where providers bid competitively on customer requests.',
-    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-183606-538-service_marketplace.png',
+    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240731-190300-848-service_marketplace.png',
     aiHint: 'service marketplace',
   },
   {
