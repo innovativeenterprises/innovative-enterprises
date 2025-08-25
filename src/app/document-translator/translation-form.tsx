@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp, FileText, AlignLeft } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp, FileText, AlignLeft, CreditCard } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -97,9 +97,17 @@ const FormSchema = z.object({
     message: "Please select a translation office.",
     path: ["translationOffice"],
 });
-
-
 type FormValues = z.infer<typeof FormSchema>;
+
+const PaymentSchema = z.object({
+    cardholderName: z.string().min(3, 'Cardholder name is required.'),
+    cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
+    expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
+    cvc: z.string().length(3, 'CVC must be 3 digits.'),
+    coupon: z.string().optional(),
+});
+type PaymentValues = z.infer<typeof PaymentSchema>;
+
 
 const languageOptions = [
     "English", "Arabic", "French", "Spanish", "German", "Chinese", "Russian", "Japanese", "Portuguese", "Italian"
@@ -115,8 +123,10 @@ const translationOffices = [
 const PRICE_PER_PAGE = 10;
 const SEALED_COPY_PRICE = 50; // Extra charge for sealed physical copy
 
+type PageState = 'form' | 'payment' | 'translating' | 'result';
+
 export default function TranslationForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [pageState, setPageState] = useState<PageState>('form');
   const [response, setResponse] = useState<DocumentTranslationOutput | null>(null);
   const [submittedData, setSubmittedData] = useState<FormValues | null>(null);
   const { toast } = useToast();
@@ -131,44 +141,65 @@ export default function TranslationForm() {
       numberOfPages: 1,
     },
   });
+  
+  const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
+
 
   const requestSealedCopy = form.watch("requestSealedCopy");
   const numberOfPages = form.watch("numberOfPages");
-  const price = useMemo(() => {
+  
+  const basePrice = useMemo(() => {
     const pages = numberOfPages > 0 ? numberOfPages : 0;
     return (PRICE_PER_PAGE * pages) + (requestSealedCopy ? SEALED_COPY_PRICE : 0);
   }, [requestSealedCopy, numberOfPages]);
 
+  const [finalPrice, setFinalPrice] = useState(basePrice);
+  
+  useEffect(() => {
+      setFinalPrice(basePrice);
+  }, [basePrice]);
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setIsLoading(true);
-    setResponse(null);
-    setSubmittedData(null);
+
+  const handleProceedToPayment: SubmitHandler<FormValues> = async (data) => {
+    setSubmittedData(data);
+    setPageState('payment');
+  };
+  
+  const handleFinalSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
+    if (!submittedData) return;
+    
+    setPageState('translating');
+    console.log("Processing payment with details:", paymentData);
+    if(finalPrice > 0) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
+        toast({ title: 'Payment Successful!', description: "Your payment has been processed."});
+    }
+
     try {
-      const file = data.documentFiles[0];
+      const file = submittedData.documentFiles[0];
       const documentDataUri = await fileToDataURI(file);
 
       const result = await translateDocument({
           documentDataUri,
-          sourceLanguage: data.sourceLanguage,
-          targetLanguage: data.targetLanguage,
-          documentType: data.documentType,
+          sourceLanguage: submittedData.sourceLanguage,
+          targetLanguage: submittedData.targetLanguage,
+          documentType: submittedData.documentType,
       });
 
       setResponse(result);
-      setSubmittedData(data);
+      setPageState('result');
 
       toast({
         title: 'Translation Complete!',
         description: 'Your document has been successfully translated.',
       });
       
-      if (data.documentFiles.length > 1) {
-          const remainingFiles = Array.from(data.documentFiles).slice(1);
+      if (submittedData.documentFiles.length > 1) {
+          const remainingFiles = Array.from(submittedData.documentFiles).slice(1);
           form.setValue('documentFiles', remainingFiles);
-           toast({
+          toast({
             title: 'Next file is ready',
-            description: `${remainingFiles.length} file(s) remaining in your queue. Click "Translate Document" again to process the next one.`,
+            description: `${remainingFiles.length} file(s) remaining in your queue. Go back to the form to process the next one.`,
             duration: 9000,
           });
       } else {
@@ -182,8 +213,7 @@ export default function TranslationForm() {
         description: 'Failed to translate the document. Please try again.',
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
+      setPageState('form');
     }
   };
 
@@ -204,20 +234,36 @@ export default function TranslationForm() {
     navigator.clipboard.writeText(content);
     toast({ title: 'Copied!', description: 'Translated content copied to clipboard.'});
   };
+
+  const handleApplyCoupon = () => {
+    const coupon = paymentForm.getValues('coupon')?.toUpperCase();
+    if (!coupon) {
+      toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
+      return;
+    }
+    // Dummy coupon logic
+    if (coupon === 'FREE100') {
+      setFinalPrice(0);
+      toast({ title: 'Coupon Applied!', description: 'Your translation is now free.' });
+    } else if (coupon === 'AGENT50') {
+      setFinalPrice(basePrice / 2);
+      toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
+    } else {
+      toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
+    }
+  }
   
   const targetLanguage = form.watch("targetLanguage");
 
-  return (
-    <div className="space-y-8">
-      {!response ? (
-        <Card>
+  const FormScreen = () => (
+      <Card>
           <CardHeader>
             <CardTitle>Translate a Document</CardTitle>
             <CardDescription>Upload your document and specify the translation details. Your document is processed securely and is not stored.</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(handleProceedToPayment)} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -325,7 +371,7 @@ export default function TranslationForm() {
                           Request Sealed Physical Copy from an Approved Office
                         </FormLabel>
                         <FormDescription>
-                          An official, sealed document will be delivered to your address within 2 business days for an additional fee.
+                          An official, sealed document will be delivered to your address within 2 business days for an additional fee of OMR {SEALED_COPY_PRICE.toFixed(2)}.
                         </FormDescription>
                       </div>
                     </FormItem>
@@ -357,32 +403,101 @@ export default function TranslationForm() {
                   />
                 )}
 
-                <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-                  {isLoading ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Translating...</>
-                  ) : (
-                     <><Sparkles className="mr-2 h-4 w-4" /> {`Translate Document ($${price.toFixed(2)})`}</>
-                  )}
+                <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
+                    <CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment (${finalPrice.toFixed(2)})
                 </Button>
               </form>
             </Form>
           </CardContent>
         </Card>
-      ) : (
-        <Card>
-          <CardHeader>
+  );
+
+  const PaymentScreen = () => (
+     <Card>
+      <CardHeader>
+        <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('form')}>&larr; Back to Form</Button>
+        <CardTitle className="text-center pt-8">Final Step: Complete Payment</CardTitle>
+        <CardDescription className="text-center">Please confirm the payment to begin your translation.</CardDescription>
+      </CardHeader>
+      <CardContent>
+         <Form {...paymentForm}>
+          <form onSubmit={paymentForm.handleSubmit(handleFinalSubmit)} className="space-y-4">
+            <Card className="bg-muted/50">
+                <CardContent className="p-4">
+                     <FormField control={paymentForm.control} name="coupon" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Coupon Code</FormLabel>
+                            <div className="flex gap-2">
+                                <FormControl>
+                                    <Input placeholder="Enter coupon code..." {...field} />
+                                </FormControl>
+                                <Button type="button" variant="secondary" onClick={handleApplyCoupon}>Apply</Button>
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}/>
+                </CardContent>
+            </Card>
+            <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
+                <span className="text-muted-foreground">Total Amount</span>
+                <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
+            </div>
+            {finalPrice > 0 && (
+                <>
+                    <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                        <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
+                    )}/>
+                    <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                        <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+                    )}/>
+                     <div className="grid grid-cols-2 gap-4">
+                        <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                            <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                        <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                            <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                    </div>
+                </>
+            )}
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
+                {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Translate` : `Submit Free Translation`}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+
+  const TranslatingScreen = () => (
+    <Card>
+        <CardContent className="p-10 text-center">
+            <div className="flex flex-col items-center gap-6">
+                <Loader2 className="h-12 w-12 text-primary animate-spin" />
+                <div className="space-y-2">
+                    <CardTitle className="text-2xl">Translating Document...</CardTitle>
+                    <CardDescription>Voxi is processing your document. This may take a moment.</CardDescription>
+                </div>
+            </div>
+        </CardContent>
+    </Card>
+  );
+
+  const ResultScreen = () => (
+    <Card>
+        <CardHeader>
             <CardTitle className="flex items-center gap-2"><FileCheck2 /> Translation Complete</CardTitle>
             <CardDescription>Your document has been translated by Voxi. You can copy or download the results.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-             {submittedData?.requestSealedCopy && (
-              <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800">
+        </CardHeader>
+        <CardContent className="space-y-6">
+            {submittedData?.requestSealedCopy && (
+            <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800">
                 <Stamp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                 <AlertTitle>Physical Document Delivery</AlertTitle>
                 <AlertDescription className="text-blue-800 dark:text-blue-200">
-                  Your sealed, physical copy will be prepared and delivered by <strong>{submittedData.translationOffice}</strong> within 2 business days.
+                Your sealed, physical copy will be prepared and delivered by <strong>{submittedData.translationOffice}</strong> within 2 business days.
                 </AlertDescription>
-              </Alert>
+            </Alert>
             )}
 
             <Tabs defaultValue="formatted" className="w-full">
@@ -391,28 +506,28 @@ export default function TranslationForm() {
                     <TabsTrigger value="clean"><AlignLeft className="mr-2 h-4 w-4"/> Clean Text Version</TabsTrigger>
                 </TabsList>
                 <TabsContent value="formatted">
-                     <div 
+                    <div 
                         className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto"
                         dir={targetLanguage === 'Arabic' ? 'rtl' : 'ltr'}
-                      >
-                        {response.formattedTranslatedText}
-                     </div>
-                     <div className="flex justify-end gap-2 mt-2">
-                        <Button variant="outline" size="sm" onClick={() => handleDownload(response.formattedTranslatedText)}><Download className="mr-2 h-4 w-4"/> Download</Button>
-                        <Button variant="outline" size="sm" onClick={() => handleCopy(response.formattedTranslatedText)}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                     </div>
+                    >
+                        {response!.formattedTranslatedText}
+                    </div>
+                    <div className="flex justify-end gap-2 mt-2">
+                        <Button variant="outline" size="sm" onClick={() => handleDownload(response!.formattedTranslatedText)}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                        <Button variant="outline" size="sm" onClick={() => handleCopy(response!.formattedTranslatedText)}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                    </div>
                 </TabsContent>
                 <TabsContent value="clean">
-                     <div 
+                    <div 
                         className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto"
                         dir={targetLanguage === 'Arabic' ? 'rtl' : 'ltr'}
-                      >
-                        {response.cleanTranslatedText}
-                      </div>
-                      <div className="flex justify-end gap-2 mt-2">
-                        <Button variant="outline" size="sm" onClick={() => handleDownload(response.cleanTranslatedText)}><Download className="mr-2 h-4 w-4"/> Download</Button>
-                        <Button variant="outline" size="sm" onClick={() => handleCopy(response.cleanTranslatedText)}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                     </div>
+                    >
+                        {response!.cleanTranslatedText}
+                    </div>
+                    <div className="flex justify-end gap-2 mt-2">
+                        <Button variant="outline" size="sm" onClick={() => handleDownload(response!.cleanTranslatedText)}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                        <Button variant="outline" size="sm" onClick={() => handleCopy(response!.cleanTranslatedText)}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                    </div>
                 </TabsContent>
             </Tabs>
             
@@ -420,25 +535,31 @@ export default function TranslationForm() {
                 <ShieldCheck className="h-4 w-4" />
                 <AlertTitle>Statement of Translation Accuracy</AlertTitle>
                 <AlertDescription>
-                  {response.verificationStatement}
+                {response!.verificationStatement}
                 </AlertDescription>
             </Alert>
 
-          </CardContent>
-           <CardFooter>
-             <Button onClick={() => { setResponse(null); setSubmittedData(null); }} className="w-full">Translate Another Document</Button>
-            </CardFooter>
-        </Card>
-      )}
-
-      {isLoading && !response && (
-        <Card className="mt-8">
-          <CardContent className="p-6 text-center">
-            <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-            <p className="mt-4 text-muted-foreground">Voxi is processing your document... This may take a moment.</p>
-          </CardContent>
-        </Card>
-      )}
-    </div>
+        </CardContent>
+        <CardFooter>
+            <Button onClick={() => setPageState('form')} className="w-full">Translate Another Document</Button>
+        </CardFooter>
+    </Card>
   );
+
+  const renderContent = () => {
+    switch (pageState) {
+      case 'form':
+        return <FormScreen />;
+      case 'payment':
+        return <PaymentScreen />;
+      case 'translating':
+        return <TranslatingScreen />;
+      case 'result':
+        return <ResultScreen />;
+      default:
+        return <FormScreen />;
+    }
+  };
+
+  return <div className="space-y-8">{renderContent()}</div>;
 }
