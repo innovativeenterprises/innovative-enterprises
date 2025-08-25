@@ -37,7 +37,7 @@ export type IdentityAnalysisInput = z.infer<typeof IdentityAnalysisInputSchema>;
 
 const PersonalDetailsSchema = z.object({
     fullName: z.string().optional().describe("The full name of the individual."),
-    email: z.string().email().optional().describe("The primary email address found from the CV."),
+    email: z.string().email().or(z.literal('')).optional().describe("The primary email address found from the CV."),
     phone: z.string().optional().describe("The primary phone number found from the CV."),
     nationality: z.string().optional().describe("The nationality of the individual."),
     dateOfBirth: z.string().optional().describe("The individual's date of birth (YYYY-MM-DD)."),
