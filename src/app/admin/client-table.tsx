@@ -20,10 +20,19 @@ import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
 // Schemas
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  logo: z.string().url("A valid logo URL is required"),
+  logo: z.string().min(1, "A logo is required"),
   aiHint: z.string().min(2, "AI hint is required"),
 });
 type ClientValues = z.infer<typeof ClientSchema>;
@@ -40,12 +49,20 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<ClientValues>({
         resolver: zodResolver(ClientSchema),
-        defaultValues: client || { name: "", logo: "https://placehold.co/150x60.png", aiHint: "" },
+        defaultValues: client || { name: "", logo: "", aiHint: "" },
     });
-    useEffect(() => { form.reset(client || { name: "", logo: "https://placehold.co/150x60.png", aiHint: "" }) }, [client, form, isOpen]);
+    useEffect(() => { form.reset(client || { name: "", logo: "", aiHint: "" }) }, [client, form, isOpen]);
     
-    const onSubmit: SubmitHandler<ClientValues> = (data) => {
-        onSave(data, client?.id);
+    const onSubmit: SubmitHandler<any> = async (data) => {
+        let logoDataUri = client?.logo || "";
+        if (data.logo && typeof data.logo !== 'string') {
+            const file = data.logo[0];
+            if(file) {
+               logoDataUri = await fileToDataURI(file);
+            }
+        }
+        
+        onSave({ ...data, logo: logoDataUri }, client?.id);
         setIsOpen(false);
     };
 
@@ -60,7 +77,13 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
                             <FormItem><FormLabel>Client Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                         <FormField control={form.control} name="logo" render={({ field }) => (
-                            <FormItem><FormLabel>Logo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem>
+                                <FormLabel>Logo Image</FormLabel>
+                                <FormControl>
+                                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
                         )} />
                         <FormField control={form.control} name="aiHint" render={({ field }) => (
                             <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -218,7 +241,7 @@ export default function ClientTable() {
                                         <TableCell>
                                             <AddEditClientDialog client={client} onSave={handleSaveClient}>
                                                 <div className="p-2 rounded-md hover:bg-muted cursor-pointer">
-                                                    <Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain" />
+                                                    <Image src={client.logo || "https://placehold.co/150x60.png"} alt={client.name} width={100} height={40} className="object-contain" />
                                                 </div>
                                             </AddEditClientDialog>
                                         </TableCell>
@@ -244,7 +267,7 @@ export default function ClientTable() {
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
                                 {testimonials.map(t => (
-                                    <TableRow key={t.id}>
+                                    <TableRow key={t.id} className="cursor-pointer">
                                         <TableCell className="italic max-w-md truncate">
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
                                                 <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>

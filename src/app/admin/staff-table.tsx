@@ -22,6 +22,15 @@ import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
 interface Agent {
     role: string;
     name: string;
@@ -95,7 +104,7 @@ const StaffSchema = z.object({
   name: z.string().min(3, "Name is required"),
   role: z.string().min(3, "Role is required"),
   type: z.enum(["Leadership", "AI Agent"]),
-  photo: z.string().url("A valid photo URL is required."),
+  photo: z.string().min(1, "A photo is required."),
   aiHint: z.string().min(2, "AI hint is required"),
 });
 type StaffValues = z.infer<typeof StaffSchema>;
@@ -111,21 +120,25 @@ const AddEditStaffDialog = ({
     children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<StaffValues>({
-        resolver: zodResolver(StaffSchema),
-        defaultValues: staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type, photo: staffMember.photo, aiHint: staffMember.aiHint } : { name: "", role: "", type: "AI Agent", photo: "https://placehold.co/40x40.png", aiHint: "person portrait" },
+    const form = useForm<Omit<StaffValues, 'photo'> & { photo: any }>({
+        resolver: zodResolver(StaffSchema.omit({ photo: true })),
+        defaultValues: staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type, aiHint: staffMember.aiHint } : { name: "", role: "", type: "AI Agent", aiHint: "person portrait" },
     });
 
     useEffect(() => {
-        if(staffMember) {
-            form.reset({ name: staffMember.name, role: staffMember.role, type: staffMember.type, photo: staffMember.photo, aiHint: staffMember.aiHint });
-        } else {
-            form.reset({ name: "", role: "", type: "AI Agent", photo: "https://placehold.co/40x40.png", aiHint: "person portrait" });
+        if(isOpen) {
+            form.reset(staffMember ? { name: staffMember.name, role: staffMember.role, type: staffMember.type, aiHint: staffMember.aiHint } : { name: "", role: "", type: "AI Agent", photo: "", aiHint: "person portrait" });
         }
     }, [staffMember, form, isOpen]);
 
-    const onSubmit: SubmitHandler<StaffValues> = (data) => {
-        onSave(data, staffMember?.name);
+    const onSubmit: SubmitHandler<any> = async (data) => {
+        let photoDataUri = staffMember?.photo || "";
+        if (data.photo && data.photo.length > 0) {
+            const file = data.photo[0];
+            photoDataUri = await fileToDataURI(file);
+        }
+        
+        onSave({ ...data, photo: photoDataUri }, staffMember?.name);
         form.reset();
         setIsOpen(false);
     };
@@ -171,7 +184,13 @@ const AddEditStaffDialog = ({
                         )} />
                         <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name="photo" render={({ field }) => (
-                                <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                                <FormItem>
+                                    <FormLabel>Photo</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
                             )} />
                             <FormField control={form.control} name="aiHint" render={({ field }) => (
                                 <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -216,7 +235,7 @@ export default function StaffTable() {
     const handleSave = (values: StaffValues, originalName?: string) => {
         if (originalName) {
             // Update
-            const updateStaff = (staff: Agent) => (staff.name === originalName ? { ...staff, ...values } : staff);
+            const updateStaff = (staff: Agent) => (staff.name === originalName ? { ...staff, ...values, description: staff.description, icon: staff.icon } : staff);
             
             setLeadership(prev => prev.map(updateStaff));
             setAgentCategories(prev => prev.map(cat => ({

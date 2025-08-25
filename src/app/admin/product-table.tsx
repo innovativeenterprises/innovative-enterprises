@@ -19,10 +19,19 @@ import { initialProducts } from "@/lib/products";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
 const ProductSchema = z.object({
   name: z.string().min(3, "Name is required"),
   description: z.string().min(10, "Description is required"),
-  image: z.string().url("A valid image URL is required"),
+  image: z.string().min(1, "An image is required"),
   aiHint: z.string().min(2, "AI hint is required"),
 });
 type ProductValues = z.infer<typeof ProductSchema>;
@@ -37,22 +46,29 @@ const AddEditProductDialog = ({
     children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<ProductValues>({
-        resolver: zodResolver(ProductSchema),
+    const form = useForm<Omit<ProductValues, 'image'> & { image: any }>({
+        resolver: zodResolver(ProductSchema.omit({ image: true })),
         defaultValues: product || { 
             name: "", 
             description: "", 
-            image: "https://placehold.co/400x300.png", 
             aiHint: "",
         },
     });
 
     useEffect(() => {
-        form.reset(product || { name: "", description: "", image: "https://placehold.co/400x300.png", aiHint: "" });
+        if(isOpen) {
+           form.reset(product || { name: "", description: "", image: "", aiHint: "" });
+        }
     }, [product, form, isOpen]);
 
-    const onSubmit: SubmitHandler<ProductValues> = (data) => {
-        onSave(data, product?.id);
+    const onSubmit: SubmitHandler<any> = async (data) => {
+        let imageDataUri = product?.image || "";
+        if (data.image && data.image.length > 0) {
+            const file = data.image[0];
+            imageDataUri = await fileToDataURI(file);
+        }
+
+        onSave({ ...data, image: imageDataUri }, product?.id);
         form.reset();
         setIsOpen(false);
     };
@@ -76,8 +92,14 @@ const AddEditProductDialog = ({
                             <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea rows={4} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                         <div className="grid grid-cols-2 gap-4">
-                            <FormField control={form.control} name="image" render={({ field }) => (
-                                <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                           <FormField control={form.control} name="image" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Image</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
                             )} />
                             <FormField control={form.control} name="aiHint" render={({ field }) => (
                                 <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl><FormMessage /></FormItem>
