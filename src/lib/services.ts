@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {
@@ -47,6 +47,13 @@ export const initialServices: Service[] = [
     icon: Briefcase,
     title: "CV ATS Enhancer",
     description: "Get a step-by-step CV enhancement. Optimize your CV for your target job position.",
+    enabled: true,
+    href: "/cv-enhancer",
+  },
+  {
+    icon: Users,
+    title: "AI Outsourcing Services",
+    description: "Provision of skilled labor, domestic workers, consultants, and specialists.",
     enabled: true,
     href: "/cv-enhancer",
   },
