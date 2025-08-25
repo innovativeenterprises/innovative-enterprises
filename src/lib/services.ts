@@ -3,6 +3,7 @@
 import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
+import BusinessHubIcon from '@/components/icons/business-hub-icon';
 
 export interface Service {
   icon: LucideIcon;
@@ -38,6 +39,13 @@ export const initialServices: Service[] = [
     description: "End-to-end services for building, managing, and scaling your online store, from development to marketing.",
     enabled: true,
     href: "/ecommerce",
+  },
+    {
+    icon: BusinessHubIcon,
+    title: "Business Hub",
+    description: "A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities.",
+    enabled: true,
+    href: "/business-hub",
   },
   {
     icon: BarChart,

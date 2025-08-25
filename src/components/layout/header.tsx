@@ -40,6 +40,11 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     description: "A digital gateway connecting users with Sanad Service Centres across Oman for task delegation and service bidding.",
   },
   {
+    title: "Business Hub",
+    href: "/business-hub",
+    description: "A B2B and B2C marketplace connecting businesses with each other and with new clients for opportunities.",
+  },
+  {
     title: "E-commerce Services",
     href: "/ecommerce",
     description: "End-to-end solutions to build, manage, and scale your online business.",
