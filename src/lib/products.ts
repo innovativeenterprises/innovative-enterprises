@@ -19,7 +19,7 @@ export const initialProducts: Product[] = [
     id: 'prod_2',
     name: 'ameen',
     description: 'A secure digital identity and authentication solution.',
-    image: 'https://placehold.co/400x300.png',
+    image: 'https://storage.googleapis.com/stella-images/studio-app-live/20240730-193433-228-secure_child.png',
     aiHint: 'secure child',
   },
   {
