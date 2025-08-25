@@ -11,8 +11,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Send, User, Bot, Calendar } from 'lucide-react';
+import { Loader2, Send, User, Bot, Calendar, Mail, MessageSquare } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import Link from 'next/link';
 
 const FormSchema = z.object({
   question: z.string().min(3, 'Question must be at least 3 characters.'),
@@ -23,12 +24,16 @@ interface Message {
     sender: 'user' | 'bot';
     text: string;
     meetingUrl?: string;
+    contactOptions?: {
+        email?: string;
+        whatsapp?: string;
+    };
 }
 
 export default function FaqChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-      { sender: 'bot', text: "Hello! I'm the virtual assistant for Innovative Enterprises. How can I help you today?" }
+      { sender: 'bot', text: "Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?" }
   ]);
   const { toast } = useToast();
   const scrollViewportRef = useRef<HTMLDivElement>(null);
@@ -61,6 +66,7 @@ export default function FaqChat() {
         sender: 'bot', 
         text: result.answer,
         meetingUrl: result.meetingUrl,
+        contactOptions: result.contactOptions,
       };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
@@ -93,16 +99,30 @@ export default function FaqChat() {
                             )}
                              <div className={`rounded-lg p-3 max-w-[80%] ${message.sender === 'user' ? 'bg-accent text-accent-foreground' : 'bg-muted'}`}>
                                 <p className="text-sm" style={{whiteSpace: 'pre-wrap'}}>{message.text}</p>
-                                {message.meetingUrl && (
-                                    <Button 
-                                        asChild 
-                                        className="mt-3" 
-                                        size="sm"
-                                    >
-                                        <a href={message.meetingUrl} target="_blank" rel="noopener noreferrer">
-                                            <Calendar className="mr-2 h-4 w-4" /> Book a Meeting
-                                        </a>
-                                    </Button>
+                                {(message.meetingUrl || message.contactOptions) && (
+                                    <div className="mt-3 flex flex-wrap gap-2">
+                                        {message.meetingUrl && (
+                                            <Button asChild size="sm">
+                                                <a href={message.meetingUrl} target="_blank" rel="noopener noreferrer">
+                                                    <Calendar className="mr-2 h-4 w-4" /> Book a Meeting
+                                                </a>
+                                            </Button>
+                                        )}
+                                        {message.contactOptions?.email && (
+                                            <Button asChild variant="outline" size="sm">
+                                                <a href={`mailto:${message.contactOptions.email}`}>
+                                                    <Mail className="mr-2 h-4 w-4" /> Email Us
+                                                </a>
+                                            </Button>
+                                        )}
+                                        {message.contactOptions?.whatsapp && (
+                                             <Button asChild variant="outline" size="sm">
+                                                <a href={`https://wa.me/${message.contactOptions.whatsapp}`} target="_blank" rel="noopener noreferrer">
+                                                    <MessageSquare className="mr-2 h-4 w-4" /> WhatsApp
+                                                </a>
+                                            </Button>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                              {message.sender === 'user' && (

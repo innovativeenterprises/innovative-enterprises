@@ -20,6 +20,10 @@ export type AnswerQuestionInput = z.infer<typeof AnswerQuestionInputSchema>;
 const AnswerQuestionOutputSchema = z.object({
   answer: z.string().describe('The answer to the user question.'),
   meetingUrl: z.string().url().optional().describe('An optional URL for booking a meeting if the user requested it.'),
+  contactOptions: z.object({
+    email: z.string().email().optional().describe('Email address for the specialist.'),
+    whatsapp: z.string().optional().describe('WhatsApp contact number for the specialist.'),
+  }).optional(),
 });
 export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
@@ -27,42 +31,78 @@ export async function answerQuestion(input: AnswerQuestionInput): Promise<Answer
   return answerQuestionFlow(input);
 }
 
-const bookMeetingTool = ai.defineTool(
+// A simple map of specialists for our tool
+const specialists: Record<string, { name: string; email: string; whatsapp: string }> = {
+    'legal': { name: 'Lexi', email: 'lexi.legal@innovative.om', whatsapp: '+96899123456' },
+    'marketing': { name: 'Mira', email: 'mira.marketing@innovative.om', whatsapp: '+96899123457' },
+    'hr': { name: 'Hira', email: 'hira.hr@innovative.om', whatsapp: '+96899123458' },
+    'sales': { name: 'Sami', email: 'sami.sales@innovative.om', whatsapp: '+96899123459' },
+};
+
+
+const routeToSpecialistTool = ai.defineTool(
     {
-        name: 'bookMeeting',
-        description: 'Use this tool when a user wants to schedule a meeting, call, or appointment.',
+        name: 'routeToSpecialist',
+        description: 'Use this tool to route a complex user query to a specialist agent. You must determine the correct department (legal, marketing, hr, or sales) based on the user\'s question.',
         inputSchema: z.object({
-            topic: z.string().describe('The topic or reason for the meeting.'),
+            department: z.enum(['legal', 'marketing', 'hr', 'sales']).describe('The department to route the query to.'),
+            userQuery: z.string().describe("The original user query."),
         }),
         outputSchema: z.object({
-            bookingUrl: z.string().url().describe('The URL where the user can book the meeting.'),
+            isAvailable: z.boolean().describe("Whether the specialist agent is currently available."),
+            response: z.string().describe("The response to give to the user."),
+            meetingUrl: z.string().url().optional(),
+            contactOptions: z.object({
+                email: z.string().email().optional(),
+                whatsapp: z.string().optional(),
+            }).optional(),
         })
     },
-    async ({ topic }) => {
-        // In a real application, you might have different links for different topics.
-        // For this prototype, we'll use a generic Calendly link.
-        console.log(`Booking meeting for topic: ${topic}`);
-        return {
-            bookingUrl: 'https://calendly.com/your-username'
-        };
+    async ({ department }) => {
+        const specialist = specialists[department];
+        if (!specialist) {
+            return { isAvailable: false, response: "I'm sorry, I can't find the right person to help with that." };
+        }
+
+        // Simulate unavailability for ~50% of requests
+        const isAvailable = Math.random() > 0.5;
+
+        if (isAvailable) {
+            return {
+                isAvailable: true,
+                response: `I've connected you with ${specialist.name}, our ${department} specialist. They will answer your question now.`,
+            };
+        } else {
+            return {
+                isAvailable: false,
+                response: `I'm sorry, ${specialist.name} is currently assisting other clients. I can help you book a meeting, or you can contact them directly via email or WhatsApp. What works best for you?`,
+                meetingUrl: 'https://calendly.com/your-username',
+                contactOptions: {
+                    email: specialist.email,
+                    whatsapp: specialist.whatsapp,
+                }
+            };
+        }
     }
 );
+
 
 const prompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
   input: {schema: AnswerQuestionInputSchema},
-  output: {schema: AnswerQuestionOutputSchema},
-  tools: [bookMeetingTool],
-  prompt: `You are a virtual assistant chatbot for Innovative Enterprises. Your name is Aida.
+  output: {schema: z.object({ answer: z.string() })},
+  tools: [routeToSpecialistTool],
+  prompt: `You are Aida, a master AI assistant for Innovative Enterprises. Your primary job is to understand a user's query and decide the best course of action.
 
-  If the user asks to book a meeting, schedule a call, or a similar request, use the bookMeeting tool.
+**Decision Process:**
+1.  **Analyze the Query:** First, understand the user's question: \`{{{question}}}\`
+2.  **Check for Specialist Topics:** If the query is about complex legal, marketing, HR, or sales topics, you MUST use the \`routeToSpecialist\` tool.
+3.  **Answer General Questions:** If the query is a general question about the company, its products (PANOSPACE, ameen, etc.), services, or its status as an Omani SME, you should answer it directly yourself using the context below. Do NOT use a tool for these general questions.
+4.  **Booking Meetings:** If the user explicitly asks to book a meeting, schedule a call, or a similar request, use the \`routeToSpecialist\` tool and set the department to 'sales' to handle the booking.
 
-  Otherwise, answer the following question about the company's services and capabilities:
-
-  Question: {{{question}}}
-
-  Context: Innovative Enterprises is an Omani SME focused on emerging technology and digital transformation solutions. They offer services in areas like cloud computing, AI, and cybersecurity. They also have products like PANOSPACE, ameen, APPI, KHIDMA, and VMALL. As an Omani SME, Innovative Enterprises can provide unique benefits to government partners seeking to support local businesses and innovation.
-  `,
+**Context for General Questions:**
+Innovative Enterprises is an Omani SME focused on emerging technology and digital transformation solutions. We offer services in areas like cloud computing, AI, and cybersecurity. Our products include PANOSPACE, ameen, APPI, KHIDMAAI, and VMALL. As an Omani SME, we provide unique benefits to government partners seeking to support local businesses and innovation.
+`,
 });
 
 const answerQuestionFlow = ai.defineFlow(
@@ -71,26 +111,40 @@ const answerQuestionFlow = ai.defineFlow(
     inputSchema: AnswerQuestionInputSchema,
     outputSchema: AnswerQuestionOutputSchema,
   },
-  async input => {
+  async (input) => {
     const response = await prompt(input);
     
     const toolRequest = response.toolRequest();
-    if (toolRequest) {
+
+    if (toolRequest?.name === 'routeToSpecialist') {
         const toolResponse = await toolRequest.run();
-        const toolOutput = toolResponse.output() as { bookingUrl: string };
-        return {
-            answer: "Great! I can help with that. You can schedule a meeting with our team using the button below.",
-            meetingUrl: toolOutput.bookingUrl,
+        const toolOutput = toolResponse.output() as z.infer<typeof routeToSpecialistTool.outputSchema>;
+
+        if (toolOutput.isAvailable) {
+            // The specialist is "available". We'll just provide their introductory response.
+            // In a real app, we might chain this to another AI call with that specialist's persona.
+            return {
+                answer: toolOutput.response,
+            };
+        } else {
+            // The specialist is "unavailable". Return their response and all contact options.
+            return {
+                answer: toolOutput.response,
+                meetingUrl: toolOutput.meetingUrl,
+                contactOptions: toolOutput.contactOptions,
+            };
         }
     }
 
-    const output = response.output();
-    if (output) {
-      return output;
+    // If no tool was called, or it was a different tool, return the direct text response.
+    const directAnswer = response.text;
+    if (directAnswer) {
+      return { answer: directAnswer };
     }
     
+    // Fallback
     return {
-        answer: response.text,
+        answer: "I'm sorry, I'm not sure how to handle that request. Could you please rephrase it?",
     };
   }
 );
