@@ -43,7 +43,7 @@ const FormSchema = z.object({
 type FormValues = z.infer<typeof FormSchema>;
 
 const PaymentSchema = z.object({
-    subscriptionTier: z.enum(['monthly', 'yearly']),
+    subscriptionTier: z.enum(['monthly', 'yearly', 'lifetime']),
     cardholderName: z.string().min(3, 'Cardholder name is required.'),
     cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
     expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
@@ -54,6 +54,7 @@ type PaymentValues = z.infer<typeof PaymentSchema>;
 const REGISTRATION_FEE = 25;
 const MONTHLY_FEE = 16;
 const YEARLY_FEE = 160;
+const LIFETIME_FEE = 280;
 const DISCOUNT_PERCENTAGE = 0.60;
 
 type PageState = 'form' | 'payment' | 'submitting' | 'submitted';
@@ -88,9 +89,15 @@ export default function OfficeForm() {
   const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
 
   useEffect(() => {
-    const subscriptionFee = watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE;
-    const discountedSubscription = subscriptionFee * (1 - DISCOUNT_PERCENTAGE);
-    setTotalPrice(REGISTRATION_FEE + discountedSubscription);
+    let price = 0;
+    if (watchSubscriptionTier === 'lifetime') {
+        price = LIFETIME_FEE;
+    } else {
+        const subscriptionFee = watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE;
+        const discountedSubscription = subscriptionFee * (1 - DISCOUNT_PERCENTAGE);
+        price = REGISTRATION_FEE + discountedSubscription;
+    }
+    setTotalPrice(price);
   }, [watchSubscriptionTier]);
   
   const handleCrAnalysis = async () => {
@@ -354,7 +361,7 @@ export default function OfficeForm() {
                                     <RadioGroup
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
-                                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                    className="grid grid-cols-1 md:grid-cols-3 gap-4"
                                     >
                                     <Label htmlFor="monthly" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer', field.value === 'monthly' && 'border-primary ring-2 ring-primary')}>
                                         <RadioGroupItem value="monthly" id="monthly" className="sr-only" />
@@ -368,6 +375,12 @@ export default function OfficeForm() {
                                         <span className="text-2xl font-extrabold">OMR {YEARLY_FEE}<span className="text-sm font-normal text-muted-foreground">/year</span></span>
                                         <span className="text-xs text-muted-foreground mt-2">Save over 15%!</span>
                                     </Label>
+                                    <Label htmlFor="lifetime" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer', field.value === 'lifetime' && 'border-primary ring-2 ring-primary')}>
+                                        <RadioGroupItem value="lifetime" id="lifetime" className="sr-only" />
+                                        <span className="font-bold text-lg">Lifetime</span>
+                                        <span className="text-2xl font-extrabold">OMR {LIFETIME_FEE}<span className="text-sm font-normal text-muted-foreground">/once</span></span>
+                                        <span className="text-xs text-muted-foreground mt-2">One-time payment.</span>
+                                    </Label>
                                     </RadioGroup>
                                 </FormControl>
                                 </FormItem>
@@ -379,9 +392,10 @@ export default function OfficeForm() {
                                 <CardTitle className="text-lg">Order Summary</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2 text-sm">
-                                <div className="flex justify-between"><span>One-time Registration Fee:</span><span>OMR {REGISTRATION_FEE.toFixed(2)}</span></div>
-                                <div className="flex justify-between"><span>{watchSubscriptionTier === 'yearly' ? 'Yearly' : 'Monthly'} Subscription:</span><span>OMR {(watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE).toFixed(2)}</span></div>
-                                <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>First-time Discount (60%):</span><span>- OMR {( (watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE) * DISCOUNT_PERCENTAGE).toFixed(2)}</span></div>
+                                {watchSubscriptionTier !== 'lifetime' && <div className="flex justify-between"><span>One-time Registration Fee:</span><span>OMR {REGISTRATION_FEE.toFixed(2)}</span></div>}
+                                {watchSubscriptionTier === 'monthly' && <div className="flex justify-between"><span>Monthly Subscription:</span><span>OMR {MONTHLY_FEE.toFixed(2)}</span></div>}
+                                {watchSubscriptionTier === 'yearly' && <div className="flex justify-between"><span>Yearly Subscription:</span><span>OMR {YEARLY_FEE.toFixed(2)}</span></div>}
+                                {watchSubscriptionTier !== 'lifetime' && <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>First-time Discount (60%):</span><span>- OMR {( (watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE) * DISCOUNT_PERCENTAGE).toFixed(2)}</span></div>}
                                 <hr className="my-2 border-dashed" />
                                 <div className="flex justify-between font-bold text-lg"><span>Total Due Today:</span><span className="text-primary">OMR {totalPrice.toFixed(2)}</span></div>
                             </CardContent>
