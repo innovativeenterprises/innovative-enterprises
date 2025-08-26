@@ -51,7 +51,7 @@ const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
                    {opp.status === 'Closed' ? (
                        <span>Closed for Applications</span>
                    ) : (
-                       <Link href="/submit-work">
+                       <Link href={`/opportunities/${opp.id}`}>
                            View Details & Apply <ArrowRight className="ml-2 w-4 h-4"/>
                        </Link>
                    )}
