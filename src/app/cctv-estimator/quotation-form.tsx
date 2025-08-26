@@ -80,7 +80,7 @@ const existingSystemTypes = [
 const FormSchema = z.object({
   purposePreset: z.string().optional(),
   purpose: z.string().min(10, { message: "Please describe the purpose in more detail." }),
-  buildingType: z.string({ required_error: "Please select a building type." }),
+  buildingType: z.string().min(1, { message: "Please select a building type." }),
   buildingDimensions: z.string().optional(),
   numberOfFloors: z.coerce.number().optional(),
   buildingHeight: z.string().optional(),
@@ -665,7 +665,7 @@ export default function QuotationForm() {
                 )} />
             )}
 
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={pageState==='analyzing_plan'}>
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg" disabled={pageState==='analyzing_plan'}>
                 <Sparkles className="mr-2 h-4 w-4" /> Get AI Quotation
             </Button>
           </form>
