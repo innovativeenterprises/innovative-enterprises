@@ -33,7 +33,7 @@ const EquipmentSchema = z.object({
 
 export const CctvQuotationOutputSchema = z.object({
   quotationId: z.string().describe("A unique ID for this quotation (e.g., 'QT-CCTV-12345')."),
-  summary: z.string().describe("A brief summary of the proposed surveillance solution."),
+  summary: z.string().describe("A single, concise sentence summarizing the proposed surveillance solution."),
   equipmentList: z.array(EquipmentSchema).describe("A detailed list of all required equipment."),
   cablingEstimate: z.object({
     totalLengthMeters: z.number().describe("The total estimated length of cable needed in meters."),

@@ -79,7 +79,7 @@ const prompt = ai.definePrompt({
     *   Connectors/Mounts/Misc: OMR 5 per camera
 6.  **Calculate Total Cost:** Sum up the costs of all equipment and labor to provide a grand total.
 7.  **Provide Summary & Next Steps:**
-    *   Write a brief summary of the proposed solution based on your analysis.
+    *   Write a single, concise sentence summarizing the proposed solution.
     *   Generate a unique quotation ID.
     *   Outline the next steps for the client (e.g., "Review the quotation. To proceed, you can approve this quote to have it posted as a work order for our network of certified installers.").
 
