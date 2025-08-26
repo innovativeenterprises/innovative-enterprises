@@ -12,7 +12,7 @@ export default function TenderAssistantPage() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary">Tender Response Assistant</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Upload your tender documents and project requirements, and let our AI agent, Mira, generate a comprehensive and professional draft response to help you win your next bid.
+            Upload your tender documents and project requirements, and let our AI agent, TenderPro, generate a comprehensive and professional draft response to help you win your next bid.
           </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">
