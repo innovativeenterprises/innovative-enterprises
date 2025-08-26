@@ -27,4 +27,5 @@ import '@/ai/flows/floor-plan-analysis.ts';
 import '@/ai/flows/it-rental-agent.ts';
 import '@/ai/flows/sanad-task-analysis.ts';
 import '@/ai/flows/sanad-office-registration.ts';
+import '@/ai/flows/sanad-office-registration.schema.ts';
     
