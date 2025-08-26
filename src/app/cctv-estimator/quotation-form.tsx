@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw, Shield, Users, VenetianMask } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw, Shield, Users, VenetianMask, PawPrint, Baby } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -47,11 +47,11 @@ const buildingTypes = [
 ];
 
 const purposePresets = [
-    { id: 'general_security', label: 'General Security', description: 'Overall surveillance for safety and deterrence.' },
-    { id: 'employee_monitoring', label: 'Employee Monitoring', description: 'Overseeing staff activity and productivity.' },
-    { id: 'property_surveillance', label: 'Property Surveillance', description: 'Monitoring a specific property or asset.' },
-    { id: 'theft_prevention', label: 'Theft Prevention', description: 'Focusing on deterring and catching theft.' },
-    { id: 'child_pet_monitoring', label: 'Child / Pet Monitoring', description: 'Keeping an eye on family members or pets at home.' },
+    { id: 'general_security', label: 'General Security', description: 'Overall surveillance for safety and deterrence.', icon: Shield },
+    { id: 'employee_monitoring', label: 'Employee Monitoring', description: 'Overseeing staff activity and productivity.', icon: Users },
+    { id: 'theft_prevention', label: 'Theft Prevention', description: 'Focusing on deterring and catching theft.', icon: VenetianMask },
+    { id: 'child_monitoring', label: 'Child Monitoring', description: 'Keeping an eye on children at home.', icon: Baby },
+    { id: 'pet_monitoring', label: 'Pet Monitoring', description: 'Watching over pets while you are away.', icon: PawPrint },
 ];
 
 const coverageTypes = [
@@ -398,47 +398,55 @@ export default function QuotationForm() {
               )}
             />
             
-            <div className="grid md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="purposePreset"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Primary Purpose</FormLabel>
-                      <Select
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          const selected = purposePresets.find(p => p.label === value);
-                          if (selected) {
-                            form.setValue('purpose', selected.description);
-                          }
-                        }}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a primary purpose..." />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {purposePresets.map(preset => (
-                            <SelectItem key={preset.id} value={preset.label}>{preset.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>Select a preset to start, then add more details below.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField control={form.control} name="purpose" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Purpose Details</FormLabel>
-                        <FormControl><Textarea placeholder="e.g., General security, monitoring employees, watching pets, etc." {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )} />
-            </div>
+            <FormField
+              control={form.control}
+              name="purposePreset"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Primary Purpose</FormLabel>
+                  <FormDescription>Select a preset to start, then add more details below.</FormDescription>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        const selected = purposePresets.find(p => p.id === value);
+                        if (selected) {
+                          form.setValue('purpose', selected.description);
+                        }
+                      }}
+                      defaultValue={field.value}
+                      className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2"
+                    >
+                      {purposePresets.map(({ id, label, description, icon: Icon }) => (
+                        <FormItem key={id}>
+                          <FormControl>
+                            <RadioGroupItem value={id} id={`purpose_${id}`} className="sr-only" />
+                          </FormControl>
+                          <Label
+                            htmlFor={`purpose_${id}`}
+                            className={cn(
+                              'flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer text-center',
+                              field.value === id && 'border-primary'
+                            )}
+                          >
+                            <Icon className="mb-2 h-6 w-6" />
+                            <span className="text-sm">{label}</span>
+                          </Label>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField control={form.control} name="purpose" render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Purpose Details</FormLabel>
+                    <FormControl><Textarea placeholder="e.g., General security, monitoring employees, watching pets, etc." {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+            )} />
             
             <div>
               <FormLabel>Building Plan or Photo</FormLabel>
