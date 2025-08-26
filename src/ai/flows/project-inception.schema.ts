@@ -35,5 +35,6 @@ export const ProjectInceptionOutputSchema = z.object({
   coreFeatures: z.array(CoreFeatureSchema).describe('A list of 3-5 essential features for the Minimum Viable Product (MVP), structured as objects.'),
   risks: z.array(RiskSchema).describe('A list of 3 potential risks (market, technical, execution), structured as objects.'),
   recommendedAgents: z.array(z.string()).describe('A list of recommended AI agents from the provided list that should be assigned to this project.'),
+  imagePrompt: z.string().describe('A simple, two-word DALL-E prompt to generate a visually appealing image for this project (e.g., "virtual reality", "community safety").'),
 });
 export type ProjectInceptionOutput = z.infer<typeof ProjectInceptionOutputSchema>;

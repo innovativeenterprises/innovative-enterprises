@@ -14,6 +14,9 @@ import { Loader2, Sparkles, Wand2, Bot, Users, Target, Shield, ListChecks, Miles
 import { Badge } from '@/components/ui/badge';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import type { ProjectInceptionInput, ProjectInceptionOutput } from '@/ai/flows/project-inception.schema';
+import { generateImage } from '@/ai/flows/image-generator';
+import type { Product } from '@/lib/products';
+import { useProductsData } from '../product-table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const FormSchema = z.object({
@@ -31,7 +34,7 @@ const Section = ({ icon, title, children }: { icon: React.ReactNode, title: stri
     </div>
 );
 
-const PlanDisplay = ({ plan }: { plan: ProjectInceptionOutput }) => (
+const PlanDisplay = ({ plan, onCreateProject, isCreating }: { plan: ProjectInceptionOutput, onCreateProject: (plan: ProjectInceptionOutput) => void, isCreating: boolean }) => (
     <Card>
         <CardHeader>
             <CardTitle>{plan.projectName}</CardTitle>
@@ -84,7 +87,11 @@ const PlanDisplay = ({ plan }: { plan: ProjectInceptionOutput }) => (
             </div>
         </CardContent>
         <CardFooter>
-            <Button className="w-full">Create Project & Assign Tasks</Button>
+            <Button className="w-full" onClick={() => onCreateProject(plan)} disabled={isCreating}>
+                {isCreating ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating Project...</>
+                ) : "Create Project & Add to Products"}
+            </Button>
         </CardFooter>
     </Card>
 );
@@ -92,7 +99,9 @@ const PlanDisplay = ({ plan }: { plan: ProjectInceptionOutput }) => (
 
 export default function ProjectsPage() {
     const [isLoading, setIsLoading] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
     const [analysis, setAnalysis] = useState<ProjectInceptionOutput | null>(null);
+    const { setProducts } = useProductsData();
     const { toast } = useToast();
 
     const form = useForm<FormValues>({
@@ -114,6 +123,34 @@ export default function ProjectsPage() {
             setIsLoading(false);
         }
     };
+    
+    const handleCreateProject = async (plan: ProjectInceptionOutput) => {
+        setIsCreating(true);
+        try {
+            toast({ title: "Generating project image...", description: "Lina is creating a visual for your new project." });
+            const imageUrl = await generateImage({ prompt: plan.imagePrompt });
+
+            const newProduct: Product = {
+                id: `prod_${Date.now()}`,
+                name: plan.projectName,
+                description: plan.summary,
+                image: imageUrl,
+                aiHint: plan.imagePrompt,
+                enabled: true,
+                stage: 'Idea Phase', // Default starting stage
+            };
+
+            setProducts(prev => [newProduct, ...prev]);
+            
+            toast({ title: "Project Created!", description: `${plan.projectName} has been added to your product list.` });
+            setAnalysis(null); // Clear the plan display after creation
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Project Creation Failed", description: "Could not create the project. Please try again.", variant: 'destructive' });
+        } finally {
+            setIsCreating(false);
+        }
+    }
 
     return (
         <div className="space-y-8">
@@ -175,7 +212,7 @@ export default function ProjectsPage() {
             {analysis && (
                 <div className="space-y-4">
                     <h2 className="text-2xl font-bold text-center">Generated Project Plan</h2>
-                    <PlanDisplay plan={analysis} />
+                    <PlanDisplay plan={analysis} onCreateProject={handleCreateProject} isCreating={isCreating}/>
                 </div>
             )}
         </div>
