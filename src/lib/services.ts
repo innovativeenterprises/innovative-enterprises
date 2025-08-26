@@ -24,7 +24,7 @@ export const initialServices: Service[] = [
   {
     icon: Bot,
     title: "Synergy AI",
-    description: "Leverage AI to automate processes, gain insights, and create intelligent products.",
+    description: "Leverage AI to automate processes, gain insights, and create intelligent products and agents.",
     enabled: true,
     href: "/automation",
   },
@@ -62,25 +62,11 @@ export const initialServices: Service[] = [
     enabled: true,
   },
   {
-    icon: Server,
-    title: "InfraRent",
-    description: "On-demand rental of IT equipment like servers, networking devices, and workstations.",
-    enabled: true,
-    href: "/infra-rent",
-  },
-  {
     icon: Video,
     title: "Vision AI Estimator",
     description: "Get an AI-powered quotation for your surveillance system needs, from design to installation.",
     enabled: true,
     href: "/cctv-estimator",
-  },
-  {
-    icon: Briefcase,
-    title: "GENIUS Career Platform",
-    description: "Enhance your CV, get tailored career advice, and prepare for interviews with our AI coach.",
-    enabled: true,
-    href: "/cv-enhancer",
   },
    {
     icon: FileText,
@@ -89,26 +75,12 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/tender-assistant",
   },
-  {
-    icon: Users,
-    title: "Catalyst Workforce",
-    description: "Provision of skilled labor, domestic workers, consultants, and specialists.",
-    enabled: true,
-    href: "/cv-enhancer",
-  },
    {
     icon: Megaphone,
     title: "Mira Marketing Agent",
     description: "Generate social media posts, tender responses, and other marketing copy.",
     enabled: true,
     href: "/social-media-post-generator",
-  },
-  {
-    icon: Languages,
-    title: "Voxi Translator",
-    description: "Translate legal, financial, and official documents with high accuracy and a formal verification statement.",
-    enabled: true,
-    href: "/document-translator",
   },
    {
     icon: NotebookText,
@@ -123,13 +95,6 @@ export const initialServices: Service[] = [
     description: "Access a financial command center to monitor cash flow, manage expenses, and oversee payroll.",
     enabled: true,
     href: "/cfo",
-  },
-   {
-    icon: HomeWorkforceIcon,
-    title: "RAAHA Platform",
-    description: "An AI-powered white-label platform to connect domestic work agencies with clients, simplifying recruitment.",
-    enabled: true,
-    href: "/raaha",
   },
   {
     icon: Shield,

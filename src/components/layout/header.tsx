@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -85,11 +86,6 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     href: "/rentals",
     description: "View our catalog of available IT hardware and cloud infrastructure for rent.",
   },
-  {
-    title: "Tender Assistant",
-    href: "/tender-assistant",
-    description: "Generate comprehensive and professional draft responses to help you win your next bid.",
-  },
 ];
 
 
@@ -128,6 +124,11 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     title: "AI Image Generator",
     href: "/image-generator",
     description: "Create stunning visuals from text descriptions in seconds.",
+  },
+  {
+    title: "Tender Response Assistant",
+    href: "/tender-assistant",
+    description: "Generate comprehensive and professional draft responses to help you win your next bid.",
   },
 ];
 
