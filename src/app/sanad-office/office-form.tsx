@@ -11,10 +11,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake, Download, Building } from 'lucide-react';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { handleSanadOfficeRegistration } from '@/ai/flows/sanad-office-registration';
+import type { SanadOfficeRegistrationInput } from '@/ai/flows/sanad-office-registration.schema';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -33,6 +34,8 @@ const FormSchema = z.object({
   email: z.string().email("A valid email is required"),
   phone: z.string().min(5, "A valid phone number is required"),
   services: z.string().min(10, "Please list the key services you offer."),
+  logoFile: z.any().optional(),
+  serviceChargesFile: z.any().optional(),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -85,9 +88,32 @@ export default function OfficeForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-    console.log("Submitting Sanad Office Registration:", data);
+    
+    let logoDataUri: string | undefined;
+    if (data.logoFile && data.logoFile.length > 0) {
+        logoDataUri = await fileToDataURI(data.logoFile[0]);
+    }
+
+    let serviceChargesDataUri: string | undefined;
+     if (data.serviceChargesFile && data.serviceChargesFile.length > 0) {
+        serviceChargesDataUri = await fileToDataURI(data.serviceChargesFile[0]);
+    }
+    
+    const submissionData: SanadOfficeRegistrationInput = {
+      officeName: data.officeName,
+      crNumber: data.crNumber,
+      contactName: data.contactName,
+      email: data.email,
+      phone: data.phone,
+      services: data.services,
+      logoDataUri,
+      serviceChargesDataUri,
+    };
+    
+    console.log("Submitting Sanad Office Registration:", submissionData);
+
     try {
-        await handleSanadOfficeRegistration(data);
+        await handleSanadOfficeRegistration(submissionData);
         toast({
             title: "Registration Submitted!",
             description: "Thank you for your application. Our team will review it and be in touch shortly."
@@ -100,6 +126,22 @@ export default function OfficeForm() {
         setIsLoading(false);
     }
   };
+  
+  const handleDownloadTemplate = () => {
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Service Name,Official Fee (OMR),Our Service Charge (OMR)\n"
+      + "New Commercial Registration (CR),50.00,15.00\n"
+      + "CR Renewal,30.00,10.00\n"
+      + "New Visa Application (Work),20.00,20.00\n";
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "sanad_service_charge_template.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
   if (isSubmitted) {
       return (
@@ -191,11 +233,54 @@ export default function OfficeForm() {
               <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
             )} />
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
-              {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><Handshake className="mr-2 h-4 w-4"/> Submit Registration</>}
-            </Button>
-          </CardFooter>
+        </Card>
+
+         <Card>
+            <CardHeader>
+                <CardTitle>Step 3: Service Charges & Branding</CardTitle>
+                <CardDescription>Upload your list of service charges and your office logo.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                 <div>
+                    <FormLabel>Service Charge List</FormLabel>
+                    <div className="flex flex-col sm:flex-row gap-2 mt-2">
+                       <Button type="button" variant="secondary" onClick={handleDownloadTemplate} className="w-full sm:w-auto">
+                            <Download className="mr-2 h-4 w-4" /> Download Template
+                        </Button>
+                        <FormField
+                            control={form.control}
+                            name="serviceChargesFile"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                <FormControl>
+                                    <Input type="file" accept=".csv,.xls,.xlsx" onChange={(e) => field.onChange(e.target.files)} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                 </div>
+
+                 <FormField
+                    control={form.control}
+                    name="logoFile"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Office Logo (Optional)</FormLabel>
+                        <FormControl>
+                           <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </CardContent>
+             <CardFooter>
+                <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
+                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><Handshake className="mr-2 h-4 w-4"/> Submit Registration</>}
+                </Button>
+            </CardFooter>
         </Card>
       </form>
     </Form>

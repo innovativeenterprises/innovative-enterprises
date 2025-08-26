@@ -11,6 +11,8 @@ export const SanadOfficeRegistrationInputSchema = z.object({
   email: z.string().email(),
   phone: z.string(),
   services: z.string(),
+  logoDataUri: z.string().optional().describe("The office's logo as a data URI."),
+  serviceChargesDataUri: z.string().optional().describe("A document (e.g., CSV) with the office's service charges, as a data URI."),
 });
 export type SanadOfficeRegistrationInput = z.infer<typeof SanadOfficeRegistrationInputSchema>;
 

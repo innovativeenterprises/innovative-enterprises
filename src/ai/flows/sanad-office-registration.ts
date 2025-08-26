@@ -27,6 +27,13 @@ Office Name: {{{officeName}}}
 CR Number: {{{crNumber}}}
 Contact: {{{contactName}}} ({{{email}}})
 
+{{#if logoDataUri}}
+- A logo has been provided.
+{{/if}}
+{{#if serviceChargesDataUri}}
+- A service charge list has been provided.
+{{/if}}
+
 Generate a confirmation message acknowledging their submission and create a unique Office ID for them.
 The Office ID should be in the format 'SOH-[Random-6-Digit-Number]'.
 `,
