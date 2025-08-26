@@ -19,38 +19,50 @@ export default function CompanyProfileDownloader() {
         const enabledProducts = products.filter(p => p.enabled);
         const enabledLeadership = leadership.filter(l => l.enabled);
 
-        let content = `INNOVATIVE ENTERPRISES - COMPANY PROFILE\n`;
-        content += `Generated on: ${new Date().toLocaleDateString()}\n`;
-        content += `==================================================\n\n`;
+        const sectionSeparator = "======================================================================\n";
+        const subHeaderSeparator = "----------------------------------------------------------------------\n";
 
-        content += `1. ABOUT US\n`;
-        content += `------------------------\n`;
-        content += `Innovative Enterprises is a leading Omani SME dedicated to delivering cutting-edge solutions in emerging technology and digital transformation. We empower businesses and government entities to thrive in the digital age.\n\n`;
+        let content = "";
 
-        content += `2. LEADERSHIP TEAM\n`;
-        content += `------------------------\n`;
+        content += sectionSeparator;
+        content += "           INNOVATIVE ENTERPRISES - OFFICIAL COMPANY PROFILE\n";
+        content += sectionSeparator;
+        content += `\nGenerated on: ${new Date().toUTCString()}\n\n`;
+
+        content += "1.  ABOUT US\n";
+        content += subHeaderSeparator;
+        content += "Innovative Enterprises is a leading Omani SME dedicated to delivering\n";
+        content += "cutting-edge solutions in emerging technology and digital transformation.\n";
+        content += "We empower businesses and government entities to thrive in the digital age.\n\n";
+
+        content += "2.  LEADERSHIP TEAM\n";
+        content += subHeaderSeparator;
         enabledLeadership.forEach(member => {
-            content += `- ${member.name.toUpperCase()}, ${member.role}\n`;
+            content += `    - ${member.name.toUpperCase()}\n`;
+            content += `      ${member.role}\n\n`;
         });
-        content += `\n`;
-
-        content += `3. CORE SERVICES\n`;
-        content += `------------------------\n`;
-        enabledServices.forEach(service => {
-            content += `* ${service.title}:\n  ${service.description}\n`;
-        });
-        content += `\n`;
         
-        content += `4. DIGITAL PRODUCTS\n`;
-        content += `------------------------\n`;
-        enabledProducts.forEach(product => {
-            content += `* ${product.name} [${product.stage}]:\n  ${product.description}\n`;
+        content += "\n3.  CORE SERVICES\n";
+        content += subHeaderSeparator;
+        enabledServices.forEach(service => {
+            content += `    ■  ${service.title.toUpperCase()}\n`;
+            content += `       ${service.description}\n\n`;
         });
-        content += `\n`;
 
-        content += `5. CONTACT\n`;
-        content += `------------------------\n`;
-        content += `For investment inquiries, please contact our team via the form on our website at https://innovative-oman.com/invest or email us at invest@innovative.om.\n`;
+        content += "\n4.  DIGITAL PRODUCTS\n";
+        content += subHeaderSeparator;
+        enabledProducts.forEach(product => {
+            content += `    ■  ${product.name.toUpperCase()} [Status: ${product.stage}]\n`;
+            content += `       ${product.description}\n\n`;
+        });
+
+        content += "\n5.  CONTACT & INQUIRIES\n";
+        content += subHeaderSeparator;
+        content += "For investment inquiries, partnership proposals, or more information,\n";
+        content += "please contact our team via the form on our website or email us directly.\n\n";
+        content += "    - Website: https://innovative-oman.com/invest\n";
+        content += "    - Email:   invest@innovative.om\n\n";
+        content += sectionSeparator;
 
         return content;
     };
@@ -58,7 +70,7 @@ export default function CompanyProfileDownloader() {
     const handleDownload = () => {
         const content = generateProfileContent();
         const element = document.createElement("a");
-        const file = new Blob([content], { type: 'text/plain' });
+        const file = new Blob([content], { type: 'text/plain;charset=utf-8' });
         element.href = URL.createObjectURL(file);
         element.download = "Innovative-Enterprises-Company-Profile.txt";
         document.body.appendChild(element);
