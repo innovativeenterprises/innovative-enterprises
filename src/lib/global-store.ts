@@ -18,6 +18,7 @@ import { initialPricing, type Pricing } from './pricing';
 import { initialStages, type ProjectStage } from './stages';
 import { initialSettings, type AppSettings } from './settings';
 import { initialProviders, type Provider } from './providers';
+import { initialAssets, type Asset } from './assets';
 
 type AppState = {
   services: Service[];
@@ -31,6 +32,7 @@ type AppState = {
   stages: ProjectStage[];
   settings: AppSettings;
   providers: Provider[];
+  assets: Asset[];
 };
 
 // The single source of truth for our application's shared state.
@@ -46,6 +48,7 @@ let state: AppState = {
   stages: initialStages,
   settings: initialSettings,
   providers: initialProviders,
+  assets: initialAssets,
 };
 
 // A list of all component update functions to call when state changes.
