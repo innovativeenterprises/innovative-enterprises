@@ -79,6 +79,11 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     href: "/cctv-estimator",
     description: "Get an AI-powered quotation for your surveillance system needs, from design to installation.",
   },
+  {
+    title: "Browse IT Rentals",
+    href: "/rentals",
+    description: "View our catalog of available IT hardware and cloud infrastructure for rent.",
+  },
 ];
 
 

@@ -103,7 +103,7 @@ export default function InfraRentPage() {
                         <Link href="/partner">Become a Vendor</Link>
                     </Button>
                      <Button asChild size="lg" variant="outline" >
-                        <Link href="/opportunities">Browse Rentals</Link>
+                        <Link href="/rentals">Browse Rentals</Link>
                     </Button>
                 </CardFooter>
             </Card>
