@@ -11,11 +11,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake, Download, Building } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake, Download, Building, CreditCard, Ticket, BadgePercent } from 'lucide-react';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { handleSanadOfficeRegistration } from '@/ai/flows/sanad-office-registration';
 import type { SanadOfficeRegistrationInput } from '@/ai/flows/sanad-office-registration.schema';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -37,13 +40,30 @@ const FormSchema = z.object({
   logoFile: z.any().optional(),
   serviceChargesFile: z.any().optional(),
 });
-
 type FormValues = z.infer<typeof FormSchema>;
 
+const PaymentSchema = z.object({
+    subscriptionTier: z.enum(['monthly', 'yearly']),
+    cardholderName: z.string().min(3, 'Cardholder name is required.'),
+    cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
+    expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
+    cvc: z.string().length(3, 'CVC must be 3 digits.'),
+});
+type PaymentValues = z.infer<typeof PaymentSchema>;
+
+const REGISTRATION_FEE = 25;
+const MONTHLY_FEE = 16;
+const YEARLY_FEE = 160;
+const DISCOUNT_PERCENTAGE = 0.60;
+
+type PageState = 'form' | 'payment' | 'submitting' | 'submitted';
+
 export default function OfficeForm() {
+  const [pageState, setPageState] = useState<PageState>('form');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | null>(null);
+  const [totalPrice, setTotalPrice] = useState(REGISTRATION_FEE + (MONTHLY_FEE * (1 - DISCOUNT_PERCENTAGE)));
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -57,6 +77,21 @@ export default function OfficeForm() {
       services: '',
     }
   });
+
+  const paymentForm = useForm<PaymentValues>({
+    resolver: zodResolver(PaymentSchema),
+    defaultValues: {
+        subscriptionTier: 'monthly',
+    }
+  });
+
+  const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
+
+  React.useEffect(() => {
+    const subscriptionFee = watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE;
+    const discountedSubscription = subscriptionFee * (1 - DISCOUNT_PERCENTAGE);
+    setTotalPrice(REGISTRATION_FEE + discountedSubscription);
+  }, [watchSubscriptionTier]);
   
   const handleCrAnalysis = async () => {
     const crFile = form.getValues('crDocument');
@@ -86,37 +121,48 @@ export default function OfficeForm() {
     }
   };
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onFormSubmit: SubmitHandler<FormValues> = async (data) => {
+    console.log("Verified form data:", data);
+    setPageState('payment');
+  };
+
+  const onPaymentSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
     setIsLoading(true);
+
+    const officeData = form.getValues();
     
     let logoDataUri: string | undefined;
-    if (data.logoFile && data.logoFile.length > 0) {
-        logoDataUri = await fileToDataURI(data.logoFile[0]);
+    if (officeData.logoFile && officeData.logoFile.length > 0) {
+        logoDataUri = await fileToDataURI(officeData.logoFile[0]);
     }
 
     let serviceChargesDataUri: string | undefined;
-     if (data.serviceChargesFile && data.serviceChargesFile.length > 0) {
-        serviceChargesDataUri = await fileToDataURI(data.serviceChargesFile[0]);
+     if (officeData.serviceChargesFile && officeData.serviceChargesFile.length > 0) {
+        serviceChargesDataUri = await fileToDataURI(officeData.serviceChargesFile[0]);
     }
     
     const submissionData: SanadOfficeRegistrationInput = {
-      officeName: data.officeName,
-      crNumber: data.crNumber,
-      contactName: data.contactName,
-      email: data.email,
-      phone: data.phone,
-      services: data.services,
+      officeName: officeData.officeName,
+      crNumber: officeData.crNumber,
+      contactName: officeData.contactName,
+      email: officeData.email,
+      phone: officeData.phone,
+      services: officeData.services,
       logoDataUri,
       serviceChargesDataUri,
     };
     
     console.log("Submitting Sanad Office Registration:", submissionData);
+    console.log("Payment Details:", paymentData);
+    console.log("Total Price Paid:", totalPrice);
+    
+     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
 
     try {
         await handleSanadOfficeRegistration(submissionData);
         toast({
-            title: "Registration Submitted!",
-            description: "Thank you for your application. Our team will review it and be in touch shortly."
+            title: "Registration Complete!",
+            description: "Payment successful. Your application will be reviewed and you'll be notified upon approval."
         });
         setIsSubmitted(true);
     } catch (e) {
@@ -157,7 +203,7 @@ export default function OfficeForm() {
                             Your application to join the Sanad Hub Network has been received. Our partnership team will review your details and contact you within 2-3 business days to finalize your onboarding.
                         </CardDescription>
                     </div>
-                    <Button onClick={() => { setIsSubmitted(false); form.reset(); setAnalysisResult(null); }}>Register Another Office</Button>
+                    <Button onClick={() => { setIsSubmitted(false); setPageState('form'); form.reset(); setAnalysisResult(null); }}>Register Another Office</Button>
                 </div>
             </CardContent>
         </Card>
@@ -165,124 +211,212 @@ export default function OfficeForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Step 1: AI-Powered Onboarding</CardTitle>
-            <CardDescription>Upload your Commercial Record (CR) and let our AI assist you with the form.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FormField
-              control={form.control}
-              name="crDocument"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Commercial Record (CR) Document</FormLabel>
-                  <div className="flex gap-2">
-                    <FormControl>
-                      <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
-                    </FormControl>
-                    <Button type="button" variant="secondary" onClick={handleCrAnalysis} disabled={isLoading}>
-                      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                      Pre-fill Form
-                    </Button>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {analysisResult && (
-              <Alert className="mt-4">
-                <FileCheck2 className="h-4 w-4" />
-                <AlertTitle>Analysis Complete</AlertTitle>
-                <AlertDescription>
-                  Successfully extracted data for: <strong>{analysisResult.companyInfo.companyNameEnglish || analysisResult.companyInfo.companyNameArabic}</strong> (CR: {analysisResult.companyInfo.registrationNumber})
-                </AlertDescription>
-              </Alert>
-            )}
-          </CardContent>
-        </Card>
+    <>
+      {pageState === 'form' && (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Step 1: AI-Powered Onboarding</CardTitle>
+                        <CardDescription>Upload your Commercial Record (CR) and let our AI assist you with the form.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <FormField
+                        control={form.control}
+                        name="crDocument"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Commercial Record (CR) Document</FormLabel>
+                            <div className="flex gap-2">
+                                <FormControl>
+                                <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                </FormControl>
+                                <Button type="button" variant="secondary" onClick={handleCrAnalysis} disabled={isLoading}>
+                                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                Pre-fill Form
+                                </Button>
+                            </div>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                        {analysisResult && (
+                        <Alert className="mt-4">
+                            <FileCheck2 className="h-4 w-4" />
+                            <AlertTitle>Analysis Complete</AlertTitle>
+                            <AlertDescription>
+                            Successfully extracted data for: <strong>{analysisResult.companyInfo.companyNameEnglish || analysisResult.companyInfo.companyNameArabic}</strong> (CR: {analysisResult.companyInfo.registrationNumber})
+                            </AlertDescription>
+                        </Alert>
+                        )}
+                    </CardContent>
+                </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Step 2: Verify Office Details</CardTitle>
-            <CardDescription>Please review the pre-filled information or enter your details manually.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <FormField control={form.control} name="officeName" render={({ field }) => (
-                <FormItem><FormLabel>Sanad Office Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="crNumber" render={({ field }) => (
-                <FormItem><FormLabel>CR Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-              )} />
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <FormField control={form.control} name="contactName" render={({ field }) => (
-                <FormItem><FormLabel>Main Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="phone" render={({ field }) => (
-                <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-              )} />
-            </div>
-            <FormField control={form.control} name="email" render={({ field }) => (
-              <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="services" render={({ field }) => (
-              <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-          </CardContent>
-        </Card>
+                <Card>
+                <CardHeader>
+                    <CardTitle>Step 2: Verify Office Details</CardTitle>
+                    <CardDescription>Please review the pre-filled information or enter your details manually.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                    <FormField control={form.control} name="officeName" render={({ field }) => (
+                        <FormItem><FormLabel>Sanad Office Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="crNumber" render={({ field }) => (
+                        <FormItem><FormLabel>CR Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                    <FormField control={form.control} name="contactName" render={({ field }) => (
+                        <FormItem><FormLabel>Main Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="phone" render={({ field }) => (
+                        <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    </div>
+                    <FormField control={form.control} name="email" render={({ field }) => (
+                    <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="services" render={({ field }) => (
+                    <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                </CardContent>
+                </Card>
 
-         <Card>
-            <CardHeader>
-                <CardTitle>Step 3: Service Charges & Branding</CardTitle>
-                <CardDescription>Upload your list of service charges and your office logo.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                 <div>
-                    <FormLabel>Service Charge List</FormLabel>
-                    <div className="flex flex-col sm:flex-row gap-2 mt-2">
-                       <Button type="button" variant="secondary" onClick={handleDownloadTemplate} className="w-full sm:w-auto">
-                            <Download className="mr-2 h-4 w-4" /> Download Template
-                        </Button>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Step 3: Service Charges & Branding</CardTitle>
+                        <CardDescription>Upload your list of service charges and your office logo.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div>
+                            <FormLabel>Service Charge List</FormLabel>
+                            <div className="flex flex-col sm:flex-row gap-2 mt-2">
+                            <Button type="button" variant="secondary" onClick={handleDownloadTemplate} className="w-full sm:w-auto">
+                                    <Download className="mr-2 h-4 w-4" /> Download Template
+                                </Button>
+                                <FormField
+                                    control={form.control}
+                                    name="serviceChargesFile"
+                                    render={({ field }) => (
+                                        <FormItem className="flex-1">
+                                        <FormControl>
+                                            <Input type="file" accept=".csv,.xls,.xlsx" onChange={(e) => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </div>
+
                         <FormField
                             control={form.control}
-                            name="serviceChargesFile"
+                            name="logoFile"
                             render={({ field }) => (
-                                <FormItem className="flex-1">
+                                <FormItem>
+                                <FormLabel>Office Logo (Optional)</FormLabel>
                                 <FormControl>
-                                    <Input type="file" accept=".csv,.xls,.xlsx" onChange={(e) => field.onChange(e.target.files)} />
+                                <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                 </FormControl>
                                 <FormMessage />
                                 </FormItem>
                             )}
                         />
-                    </div>
-                 </div>
+                    </CardContent>
+                    <CardFooter>
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
+                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><CreditCard className="mr-2 h-4 w-4"/> Proceed to Payment</>}
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </form>
+        </Form>
+      )}
 
-                 <FormField
-                    control={form.control}
-                    name="logoFile"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Office Logo (Optional)</FormLabel>
-                        <FormControl>
-                           <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </CardContent>
-             <CardFooter>
-                <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
-                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><Handshake className="mr-2 h-4 w-4"/> Submit Registration</>}
-                </Button>
-            </CardFooter>
-        </Card>
-      </form>
-    </Form>
+      {pageState === 'payment' && (
+        <Form {...paymentForm}>
+            <form onSubmit={paymentForm.handleSubmit(onPaymentSubmit)}>
+                 <Card>
+                    <CardHeader>
+                        <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('form')}>&larr; Back</Button>
+                        <CardTitle className="text-center pt-8">Step 4: Subscription & Payment</CardTitle>
+                        <CardDescription className="text-center">Choose your plan and complete the payment to join the network.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                         <FormField
+                            control={paymentForm.control}
+                            name="subscriptionTier"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                <FormLabel>Choose Your Subscription Plan</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                    >
+                                    <Label htmlFor="monthly" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer', field.value === 'monthly' && 'border-primary ring-2 ring-primary')}>
+                                        <RadioGroupItem value="monthly" id="monthly" className="sr-only" />
+                                        <span className="font-bold text-lg">Monthly</span>
+                                        <span className="text-2xl font-extrabold">OMR {MONTHLY_FEE}<span className="text-sm font-normal text-muted-foreground">/month</span></span>
+                                        <span className="text-xs text-muted-foreground mt-2">Billed every month.</span>
+                                    </Label>
+                                    <Label htmlFor="yearly" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer', field.value === 'yearly' && 'border-primary ring-2 ring-primary')}>
+                                        <RadioGroupItem value="yearly" id="yearly" className="sr-only" />
+                                        <span className="font-bold text-lg">Yearly</span>
+                                        <span className="text-2xl font-extrabold">OMR {YEARLY_FEE}<span className="text-sm font-normal text-muted-foreground">/year</span></span>
+                                        <span className="text-xs text-muted-foreground mt-2">Save over 15%!</span>
+                                    </Label>
+                                    </RadioGroup>
+                                </FormControl>
+                                </FormItem>
+                            )}
+                            />
+
+                        <Card className="bg-muted/50">
+                            <CardHeader>
+                                <CardTitle className="text-lg">Order Summary</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm">
+                                <div className="flex justify-between"><span>One-time Registration Fee:</span><span>OMR {REGISTRATION_FEE.toFixed(2)}</span></div>
+                                <div className="flex justify-between"><span>{watchSubscriptionTier === 'yearly' ? 'Yearly' : 'Monthly'} Subscription:</span><span>OMR {(watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE).toFixed(2)}</span></div>
+                                <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>First-time Discount (60%):</span><span>- OMR {( (watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE) * DISCOUNT_PERCENTAGE).toFixed(2)}</span></div>
+                                <hr className="my-2 border-dashed" />
+                                <div className="flex justify-between font-bold text-lg"><span>Total Due Today:</span><span className="text-primary">OMR {totalPrice.toFixed(2)}</span></div>
+                            </CardContent>
+                        </Card>
+
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
+                            <div className="space-y-4">
+                                <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                                    <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                                    <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                                        <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )}/>
+                                    <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                                        <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )}/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </CardContent>
+                    <CardFooter>
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
+                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Processing...</> : <>Pay OMR {totalPrice.toFixed(2)} & Complete Registration</>}
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </form>
+        </Form>
+      )}
+    </>
   );
 }
