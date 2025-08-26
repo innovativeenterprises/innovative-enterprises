@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -87,7 +87,7 @@ export default function OfficeForm() {
 
   const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
 
-  React.useEffect(() => {
+  useEffect(() => {
     const subscriptionFee = watchSubscriptionTier === 'yearly' ? YEARLY_FEE : MONTHLY_FEE;
     const discountedSubscription = subscriptionFee * (1 - DISCOUNT_PERCENTAGE);
     setTotalPrice(REGISTRATION_FEE + discountedSubscription);
