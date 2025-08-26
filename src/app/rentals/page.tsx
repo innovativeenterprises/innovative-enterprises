@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import Image from 'next/image';
 import type { Asset } from "@/lib/assets";
 import { useAssetsData } from "@/app/admin/asset-table";
 import { RentalRequestForm } from './rental-form';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => void }) => {
     const getStatusBadge = (status: string) => {
@@ -59,6 +60,13 @@ export default function RentalsPage() {
     const { assets } = useAssetsData();
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        // This effect runs only on the client, after the component mounts.
+        setIsClient(true);
+    }, []);
+
 
     const handleRentClick = (asset: Asset) => {
         setSelectedAsset(asset);
@@ -86,9 +94,30 @@ export default function RentalsPage() {
                 </div>
 
                 <div className="max-w-6xl mx-auto mt-16 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {availableAssets.map((asset) => (
-                        <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
-                    ))}
+                    {!isClient ? (
+                        // Render skeletons on the server and initial client render
+                        Array.from({ length: 8 }).map((_, index) => (
+                           <Card key={index}>
+                                <CardHeader className="p-0">
+                                    <Skeleton className="h-48 w-full rounded-t-lg" />
+                                </CardHeader>
+                                <CardContent className="p-4 space-y-2">
+                                    <Skeleton className="h-4 w-20" />
+                                    <Skeleton className="h-6 w-3/4" />
+                                    <Skeleton className="h-4 w-full" />
+                                </CardContent>
+                                <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                                    <Skeleton className="h-8 w-1/3" />
+                                    <Skeleton className="h-10 w-1/2" />
+                                </CardFooter>
+                           </Card>
+                        ))
+                    ) : (
+                        // Render the actual content only on the client
+                        availableAssets.map((asset) => (
+                            <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
+                        ))
+                    )}
                 </div>
 
                 {selectedAsset && (
