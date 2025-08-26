@@ -8,15 +8,15 @@ import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Send, CheckCircle, Search, FileUp, ArrowLeft, Bot, MessageSquare } from 'lucide-react';
-import { sanadServiceGroups } from '@/lib/sanad-services';
+import { sanadServiceGroups, sanadServiceIcons } from '@/lib/sanad-services';
 import { analyzeSanadTask, type SanadTaskAnalysisOutput } from '@/ai/flows/sanad-task-analysis';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { answerQuestion, type AnswerQuestionOutput } from '@/ai/flows/ai-powered-faq';
+import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 
@@ -27,8 +27,8 @@ type ServiceValues = z.infer<typeof ServiceSchema>;
 
 const DetailsSchema = z.object({
     taskDescription: z.string().min(20, "Please provide a more detailed description (at least 20 characters)."),
-    documentFiles: z.any().optional(),
-});
+    // The documents will be validated dynamically, not with a static schema
+}).passthrough();
 type DetailsValues = z.infer<typeof DetailsSchema>;
 
 
@@ -55,7 +55,6 @@ const SanadChatbot = ({ onServiceSelect }: { onServiceSelect: (service: string) 
         setInput('');
         setIsLoading(true);
 
-        // A simplified list of services for the chatbot to recognize
         const serviceKeywords = Object.values(sanadServiceGroups).flat().join(', ');
 
         try {
@@ -136,7 +135,18 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
     resolver: zodResolver(ServiceSchema),
   });
 
-  const detailsForm = useForm<DetailsValues>();
+  const detailsForm = useForm<DetailsValues>({
+      resolver: zodResolver(DetailsSchema),
+  });
+  
+  // Register dynamic fields when requiredDocs changes
+  useEffect(() => {
+    if (requiredDocs) {
+      requiredDocs.documentList.forEach(doc => {
+        detailsForm.register(doc, { required: `${doc} is a required document.` });
+      });
+    }
+  }, [requiredDocs, detailsForm]);
 
   const filteredServices = useMemo(() => {
     if (!searchTerm) return sanadServiceGroups;
@@ -165,7 +175,7 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
     } catch(e) {
         console.error(e);
         toast({ title: "Error", description: "Could not determine document requirements. Please proceed with manual description.", variant: 'destructive' });
-        setRequiredDocs(null); // Ensure we proceed even if AI fails
+        setRequiredDocs(null); 
         setStep(2);
     } finally {
         setIsAnalyzing(false);
@@ -187,8 +197,7 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
     setIsLoading(true);
     console.log("Submitting Sanad Hub Task:", {
         service: serviceForm.getValues('serviceType'),
-        description: data.taskDescription,
-        files: data.documentFiles,
+        ...data
     });
     // Simulate API call to task routing engine
     await new Promise(res => setTimeout(res, 2000));
@@ -273,25 +282,31 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
                         </div>
                         <SanadChatbot onServiceSelect={handleChatbotServiceSelect} />
                     </div>
-                    <ScrollArea className="h-96 w-full pr-4">
-                        <div className="space-y-4">
-                            {Object.entries(filteredServices).map(([group, services]) => (
-                                <div key={group}>
-                                    <h3 className="font-semibold text-muted-foreground">{group}</h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
-                                        {services.map(service => (
-                                            <Button 
-                                                key={service} 
-                                                variant="outline" 
-                                                className="justify-start h-auto py-2"
-                                                onClick={() => handleServiceSelect(service)}
-                                            >
-                                                {service}
-                                            </Button>
-                                        ))}
+                    <ScrollArea className="h-[450px] w-full -mx-4 px-4">
+                        <div className="space-y-6">
+                            {Object.entries(filteredServices).map(([group, services]) => {
+                                const Icon = sanadServiceIcons[group];
+                                return (
+                                    <div key={group}>
+                                        <h3 className="font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                                            {Icon && <Icon className="w-5 h-5" />}
+                                            {group}
+                                        </h3>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                            {services.map(service => (
+                                                <Button 
+                                                    key={service} 
+                                                    variant="outline" 
+                                                    className="justify-start h-auto py-2 text-left"
+                                                    onClick={() => handleServiceSelect(service)}
+                                                >
+                                                    {service}
+                                                </Button>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     </ScrollArea>
                 </CardContent>
@@ -311,20 +326,7 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
                          </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                         {requiredDocs && (
-                            <Card className="bg-muted/50">
-                                <CardHeader>
-                                    <CardTitle className="text-lg">Required Documents</CardTitle>
-                                    {requiredDocs.notes && <CardDescription>{requiredDocs.notes}</CardDescription>}
-                                </CardHeader>
-                                <CardContent>
-                                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 list-disc list-inside">
-                                        {requiredDocs.documentList.map((doc, i) => <li key={i}>{doc}</li>)}
-                                    </ul>
-                                </CardContent>
-                            </Card>
-                         )}
-                         <FormField
+                        <FormField
                             control={detailsForm.control}
                             name="taskDescription"
                             render={({ field }) => (
@@ -333,28 +335,40 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
                                 <FormControl>
                                     <Textarea
                                     placeholder="Please provide all relevant details, such as names, CR numbers, visa types, deadlines, etc."
-                                    rows={6}
+                                    rows={4}
                                     {...field}
                                     />
                                 </FormControl>
                                 <FormMessage />
                                 </FormItem>
                             )}
-                            />
-                        <FormField
-                            control={detailsForm.control}
-                            name="documentFiles"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel>Attach Documents</FormLabel>
-                                <FormControl>
-                                    <Input type="file" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
-                                </FormControl>
-                                <FormDescription>Upload any required forms, IDs, or supporting documents.</FormDescription>
-                                <FormMessage />
-                                </FormItem>
-                            )}
                         />
+                         {requiredDocs && requiredDocs.documentList.length > 0 && (
+                            <Card className="bg-muted/50">
+                                <CardHeader>
+                                    <CardTitle className="text-lg">Required Documents</CardTitle>
+                                    {requiredDocs.notes && <CardDescription>{requiredDocs.notes}</CardDescription>}
+                                </CardHeader>
+                                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                                     {requiredDocs.documentList.map((doc, i) => (
+                                         <FormField
+                                            key={i}
+                                            control={detailsForm.control}
+                                            name={doc}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>{doc}</FormLabel>
+                                                <FormControl>
+                                                    <Input type="file" onChange={(e) => field.onChange(e.target.files)} />
+                                                </FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                     ))}
+                                </CardContent>
+                            </Card>
+                         )}
                     </CardContent>
                     <CardFooter>
                         <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">

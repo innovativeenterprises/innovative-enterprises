@@ -1,11 +1,19 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Building, User, FileText, Globe } from "lucide-react";
+import { Building, User, FileText, Globe, Case, Landmark, Users, Briefcase } from "lucide-react";
 
 export interface SanadService {
     name: string;
     icon: LucideIcon;
 }
+
+export const sanadServiceIcons: Record<string, LucideIcon> = {
+    "Business & Corporate Services": Briefcase,
+    "Individual & Family Services": User,
+    "Ministry & Government Transactions": Landmark,
+    "Other Services": FileText,
+};
+
 
 export const sanadServiceGroups: Record<string, string[]> = {
     "Business & Corporate Services": [
