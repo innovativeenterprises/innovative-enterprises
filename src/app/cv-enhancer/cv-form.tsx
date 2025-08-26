@@ -9,8 +9,8 @@ import { analyzeCv, generateEnhancedCv } from '@/ai/flows/cv-enhancement';
 import { type CvAnalysisOutput, type CvGenerationOutput } from '@/ai/flows/cv-enhancement.schema';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
 import { type GenerateSocialMediaPostOutput, GenerateSocialMediaPostInputSchema } from '@/ai/flows/social-media-post-generator.schema';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -374,6 +374,8 @@ export default function CvForm() {
   const generationForm = useForm<GenerationValues>({
     resolver: zodResolver(GenerationSchema),
     defaultValues: {
+      targetPosition: '',
+      jobAdvertisement: '',
       languages: ["english"],
     },
   });
