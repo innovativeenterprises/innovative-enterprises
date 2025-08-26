@@ -59,7 +59,7 @@ export const initialProducts: Product[] = [
   {
     id: 'prod_6',
     name: 'GENIUS - AI Career Platform',
-    description: 'An end-to-end solution for career development—from document parsing to interview preparation—all within a seamless mobile and web experience.',
+    description: 'An end-to-end solution for career development—from document parsing and CV enhancement to tailored interview preparation—all within a seamless mobile and web experience.',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'career development',
     enabled: true,

@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, Languages, ArrowLeft, Mic } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -121,7 +121,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 
-    const socialForm = useForm<GenerateSocialMediaPostInput>({
+    const socialForm = useForm<z.infer<typeof GenerateSocialMediaPostInputSchema>>({
         resolver: zodResolver(GenerateSocialMediaPostInputSchema),
         defaultValues: {
             topic: `I just enhanced my CV for a ${targetPosition} role using Innovative Enterprises' AI tool!`,
@@ -131,7 +131,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
         }
     });
 
-    const handleSocialPost: SubmitHandler<GenerateSocialMediaPostInput> = async (data) => {
+    const handleSocialPost: SubmitHandler<z.infer<typeof GenerateSocialMediaPostInputSchema>> = async (data) => {
         setIsLoading(true);
         try {
             const result = await generateSocialMediaPost(data);
