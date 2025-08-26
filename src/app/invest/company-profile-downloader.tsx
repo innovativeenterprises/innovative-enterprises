@@ -85,15 +85,9 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => (
                      </div>
                      <hr className="my-4"/>
                       <div className="space-y-2 text-xs text-gray-700">
-                         <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>CEO@innovativeenterprises.tech</p></div>
-                         <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>cto@innovativeenterprises.tech</p></div>
-                         <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>pm@innovativeenterprises.tech</p></div>
                          <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>info@innovativeenterprises.tech</p></div>
                          <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>Investor@innovativeenterprises.tech</p></div>
                          <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>partners@innovativeenterprises.tech</p></div>
-                         <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>freelancers@innovativeenterprises.tech</p></div>
-                         <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>sales@innovativeenterprises.tech</p></div>
-                         <div className="flex items-start gap-2"><Mail className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>Legal@innovativeenterprises.tech</p></div>
                       </div>
                 </aside>
             </main>
@@ -156,19 +150,18 @@ export default function CompanyProfileDownloader() {
             });
             
             const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
-            const ratio = canvasWidth / canvasHeight;
-            const pdfHeight = pdfWidth / ratio;
-            
-            const totalPDFPages = Math.ceil(pdfHeight / pdf.internal.pageSize.getHeight());
+            const ratio = pdfWidth / canvasWidth;
+            const totalPDFPages = Math.ceil(canvasHeight * ratio / pdfHeight);
             
             for (let i = 0; i < totalPDFPages; i++) {
                 if (i > 0) {
                     pdf.addPage();
                 }
-                const yPos = -(pdf.internal.pageSize.getHeight() * i);
-                pdf.addImage(imgData, 'PNG', 0, yPos, pdfWidth, pdfHeight);
+                const yPos = -(pdfHeight * i);
+                pdf.addImage(imgData, 'PNG', 0, yPos, pdfWidth, canvasHeight * ratio);
             }
 
             pdf.save("Innovative-Enterprises-Company-Profile.pdf");
