@@ -123,11 +123,6 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     href: "/image-generator",
     description: "Create stunning visuals from text descriptions in seconds.",
   },
-  {
-    title: "Apex Interview Coach",
-    href: "/interview-coach",
-    description: "Practice for your next job interview with AI-generated, role-specific questions.",
-  }
 ];
 
 const partnershipLinks: { title: string; href: string; description: string }[] = [

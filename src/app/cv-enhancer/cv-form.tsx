@@ -9,13 +9,15 @@ import { analyzeCv, generateEnhancedCv } from '@/ai/flows/cv-enhancement';
 import { type CvAnalysisOutput, type CvGenerationOutput } from '@/ai/flows/cv-enhancement.schema';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
 import { type GenerateSocialMediaPostOutput, GenerateSocialMediaPostInputSchema } from '@/ai/flows/social-media-post-generator.schema';
+import { generateInterviewQuestions } from '@/ai/flows/interview-coach';
+import type { InterviewQuestion } from '@/ai/flows/interview-coach.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, Languages } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, Languages, ArrowLeft, Mic } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
@@ -341,6 +343,87 @@ const FinalActions = ({ onDownload, onCopy, onEmail, onSave }: {
                 <Button variant="outline" onClick={onDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
                 <Button variant="outline" onClick={onCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
                 <Button onClick={onEmail}><Mail className="mr-2 h-4 w-4"/> Email</Button>
+            </div>
+        </div>
+    )
+}
+
+const InterviewCoach = ({ jobTitle, onStartOver }: { jobTitle: string; onStartOver: () => void; }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const { toast } = useToast();
+
+    const handleGenerateQuestions = async () => {
+        setIsLoading(true);
+        setQuestions([]);
+        setCurrentQuestionIndex(0);
+        try {
+            const result = await generateInterviewQuestions({ jobTitle });
+            setQuestions(result.questions);
+            toast({ title: "Questions Generated!", description: "Your interview practice session is ready to begin." });
+        } catch (error) {
+            console.error(error);
+            toast({ title: 'Error', description: 'Failed to generate interview questions. Please try again.', variant: 'destructive' });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleNextQuestion = () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(prev => prev + 1);
+        }
+    };
+
+    const handlePrevQuestion = () => {
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex(prev => prev + 1);
+        }
+    };
+
+    if (questions.length === 0) {
+        return (
+            <div className="text-center p-8 space-y-4">
+                <p>Prepare for your <strong>{jobTitle}</strong> interview.</p>
+                <Button onClick={handleGenerateQuestions} disabled={isLoading}>
+                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating Questions...</> : <><Sparkles className="mr-2 h-4 w-4"/>Generate Practice Questions</>}
+                </Button>
+            </div>
+        )
+    }
+
+    const currentQuestion = questions[currentQuestionIndex];
+    return (
+        <div className="p-6 space-y-6">
+            <div className="text-center">
+                <p className="text-sm text-muted-foreground">Question {currentQuestionIndex + 1} of {questions.length}</p>
+                <Badge>{currentQuestion.category}</Badge>
+            </div>
+            <div className="flex items-start gap-4 p-4 min-h-[120px] bg-muted rounded-lg">
+                <div className="bg-primary text-primary-foreground p-2 rounded-full">
+                    <Bot className="h-5 w-5"/>
+                </div>
+                <p className="flex-1 font-semibold text-lg">{currentQuestion.question}</p>
+            </div>
+            <div className="flex items-start gap-4 p-4 min-h-[150px]">
+                 <div className="bg-accent text-accent-foreground p-2 rounded-full">
+                    <Mic className="h-5 w-5"/>
+                </div>
+                <div className="flex-1">
+                    <p className="font-semibold text-muted-foreground mb-2">Your Answer:</p>
+                     <div className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap p-2 border-b-2 border-primary focus-within:border-primary-focus">
+                         <p className="text-sm text-muted-foreground italic">Think about your response. In a future version, you'll be able to record your answer here and get feedback.</p>
+                     </div>
+                </div>
+            </div>
+            <div className="flex justify-between w-full">
+                <Button variant="outline" onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0}>
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+                </Button>
+                <Button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1}>
+                     Next <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
             </div>
         </div>
     )
@@ -723,9 +806,10 @@ export default function CvForm() {
                  )}
 
                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="cv" disabled={!isUnlocked}>Enhanced CV</TabsTrigger>
                         <TabsTrigger value="letter" disabled={!isUnlocked}>Cover Letter</TabsTrigger>
+                        <TabsTrigger value="interview" disabled={!isUnlocked}>Interview Prep</TabsTrigger>
                     </TabsList>
                     <TabsContent value="cv">
                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
@@ -736,6 +820,9 @@ export default function CvForm() {
                          <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
                              {isUnlocked ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
                         </div>
+                    </TabsContent>
+                    <TabsContent value="interview">
+                        <InterviewCoach jobTitle={targetPosition} onStartOver={() => setGeneratedCv(null)} />
                     </TabsContent>
                 </Tabs>
 
@@ -772,15 +859,17 @@ export default function CvForm() {
                         onUnlock={handleUnlock}
                     />
                  ) : (
-                    <div className="p-6 w-full space-y-4">
-                        <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
-                        <FinalActions 
-                            onDownload={handleDownload}
-                            onCopy={handleCopy}
-                            onEmail={handleEmail}
-                            onSave={() => {}}
-                        />
-                    </div>
+                    activeTab !== 'interview' && (
+                        <div className="p-6 w-full space-y-4">
+                            <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
+                            <FinalActions 
+                                onDownload={handleDownload}
+                                onCopy={handleCopy}
+                                onEmail={handleEmail}
+                                onSave={() => {}}
+                            />
+                        </div>
+                    )
                  )}
             </CardFooter>
          </Card>

@@ -70,7 +70,7 @@ export const initialServices: Service[] = [
   {
     icon: Briefcase,
     title: "GENIUS Career Platform",
-    description: "Get a step-by-step CV enhancement. Optimize your CV for your target job position.",
+    description: "Enhance your CV, get tailored career advice, and prepare for interviews with our AI coach.",
     enabled: true,
     href: "/cv-enhancer",
   },
@@ -122,13 +122,6 @@ export const initialServices: Service[] = [
     description: "An AI-powered white-label platform to connect domestic work agencies with clients, simplifying recruitment.",
     enabled: true,
     href: "/raaha",
-  },
-  {
-    icon: Mic,
-    title: "Apex Interview Coach",
-    description: "Practice for your next job interview with AI-generated, role-specific questions.",
-    enabled: true,
-    href: "/interview-coach",
   },
   {
     icon: Shield,
