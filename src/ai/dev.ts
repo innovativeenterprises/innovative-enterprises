@@ -25,4 +25,5 @@ import '@/ai/flows/financial-document-analysis.ts';
 import '@/ai/flows/cctv-quotation.ts';
 import '@/ai/flows/floor-plan-analysis.ts';
 import '@/ai/flows/it-rental-agent.ts';
+import '@/ai/flows/sanad-task-analysis.ts';
     

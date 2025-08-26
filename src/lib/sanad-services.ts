@@ -1,4 +1,12 @@
 
+import type { LucideIcon } from "lucide-react";
+import { Building, User, FileText, Globe } from "lucide-react";
+
+export interface SanadService {
+    name: string;
+    icon: LucideIcon;
+}
+
 export const sanadServiceGroups: Record<string, string[]> = {
     "Business & Corporate Services": [
         "New Commercial Registration (CR)",
