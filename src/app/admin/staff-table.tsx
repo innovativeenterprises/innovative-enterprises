@@ -16,14 +16,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, PlusCircle, Trash2, Edit, NotebookText, WalletCards } from "lucide-react";
+import { User, Bot, PlusCircle, Trash2, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Agent, AgentCategory } from "@/lib/agents";
-import { initialLeadershipTeam, initialAgentCategories } from "@/lib/agents";
 import { Textarea } from "@/components/ui/textarea";
+import { store } from "@/lib/global-store";
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -199,18 +198,32 @@ const AddEditStaffDialog = ({
     )
 }
 
-// Make this component the source of truth for team data
+// This hook now connects to the global store.
 export const useStaffData = () => {
-    const [leadership, setLeadership] = useState<Agent[]>(initialLeadershipTeam);
-    const [agentCategories, setAgentCategories] = useState<AgentCategory[]>(initialAgentCategories);
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
 
     return {
-        leadership,
-        setLeadership,
-        agentCategories,
-        setAgentCategories
-    }
-}
+        leadership: data.leadership,
+        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
+            const currentAgents = store.get().leadership;
+            const newAgents = updater(currentAgents);
+            store.set(state => ({ ...state, leadership: newAgents }));
+        },
+        agentCategories: data.agentCategories,
+        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
+            const currentCategories = store.get().agentCategories;
+            const newCategories = updater(currentCategories);
+            store.set(state => ({ ...state, agentCategories: newCategories }));
+        }
+    };
+};
 
 
 export default function StaffTable({ 
@@ -220,9 +233,9 @@ export default function StaffTable({
     setAgentCategories 
 } : {
     leadership: Agent[],
-    setLeadership: (l: Agent[]) => void,
+    setLeadership: (updater: (l: Agent[]) => Agent[]) => void,
     agentCategories: AgentCategory[],
-    setAgentCategories: (ac: AgentCategory[]) => void
+    setAgentCategories: (updater: (ac: AgentCategory[]) => AgentCategory[]) => void
 }) {
     const { toast } = useToast();
 

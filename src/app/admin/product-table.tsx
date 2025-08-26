@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -14,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/lib/products";
-import { initialProducts } from "@/lib/products";
 import type { ProjectStage } from "@/lib/stages";
 import { useProjectStagesData } from "./stage-table";
 import { PlusCircle, Edit, Trash2, GripVertical } from "lucide-react";
@@ -26,6 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DndContext, closestCenter, type DragEndEvent, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { store } from "@/lib/global-store";
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -47,10 +48,25 @@ const ProductSchema = z.object({
 });
 type ProductValues = z.infer<typeof ProductSchema>;
 
-// This component is now the source of truth for products data
+// This hook now connects to the global store.
 export const useProductsData = () => {
-    const [products, setProducts] = useState<Product[]>(initialProducts);
-    return { products, setProducts };
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        products: data.products,
+        setProducts: (updater: (products: Product[]) => Product[]) => {
+            const currentProducts = store.get().products;
+            const newProducts = updater(currentProducts);
+            store.set(state => ({ ...state, products: newProducts }));
+        }
+    };
 };
 
 const AddEditProductDialog = ({ 
@@ -260,7 +276,7 @@ const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleT
     );
 };
 
-export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (products: Product[]) => void }) {
+export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (updater: (products: Product[]) => Product[]) => void }) {
     const { toast } = useToast();
     const { stages } = useProjectStagesData();
     const [isMounted, setIsMounted] = useState(false);

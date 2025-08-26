@@ -58,7 +58,7 @@ export const initialAgentCategories: AgentCategory[] = [
             { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1614149290184-7376551e15a9?q=80&w=1920&auto=format&fit=crop', aiHint: 'it support' },
             { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698323-b1e79e63d68c?q=80&w=1920&auto=format&fit=crop', aiHint: 'data analytics' },
             { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1620712943543-bcc4622f4273?q=80&w=1920&auto=format&fit=crop', aiHint: 'ai brain', href: "/training-center" },
-            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617371-5def988c7c25?q=80&w=1920&auto=format&fit=crop', aiHint: 'automation robot' },
+            { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617243-caff45c4e094?q=80&w=1920&auto=format&fit=crop', aiHint: 'automation robot' },
         ]
     },
     {
@@ -78,3 +78,8 @@ export const initialAgentCategories: AgentCategory[] = [
         ]
     },
 ];
+
+export const initialStaffData = {
+    leadership: initialLeadershipTeam,
+    agentCategories: initialAgentCategories,
+}

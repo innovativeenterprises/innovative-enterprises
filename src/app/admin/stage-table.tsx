@@ -15,13 +15,28 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { ProjectStage } from "@/lib/stages";
-import { initialStages } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { store } from "@/lib/global-store";
 
-// This component is the source of truth for project stages data
+// This hook now connects to the global store.
 export const useProjectStagesData = () => {
-    const [stages, setStages] = useState<ProjectStage[]>(initialStages);
-    return { stages, setStages };
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        stages: data.stages,
+        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
+            const currentStages = store.get().stages;
+            const newStages = updater(currentStages);
+            store.set(state => ({ ...state, stages: newStages }));
+        }
+    };
 };
 
 
@@ -90,7 +105,7 @@ export default function StageTable({
     setStages,
 }: {
     stages: ProjectStage[],
-    setStages: (stages: ProjectStage[]) => void,
+    setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => void,
 }) {
     const { toast } = useToast();
 
@@ -149,8 +164,7 @@ export default function StageTable({
                                                 <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{stage.name}" stage.</AlertDialogDescription></AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(stage.id)}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
+                                                    <AlertDialogAction onClick={() => handleDelete(stage.id)}>Delete</AlertDialogAction></AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
                                     </div>

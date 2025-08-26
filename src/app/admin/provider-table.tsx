@@ -16,15 +16,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { Provider } from "@/lib/providers";
-import { initialProviders } from "@/lib/providers";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Link as LinkIcon } from "lucide-react";
 import Link from 'next/link';
+import { store } from "@/lib/global-store";
 
-// This component is now the source of truth for providers data
+// This hook now connects to the global store.
 export const useProvidersData = () => {
-    const [providers, setProviders] = useState<Provider[]>(initialProviders);
-    return { providers, setProviders };
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        providers: data.providers,
+        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
+            const currentProviders = store.get().providers;
+            const newProviders = updater(currentProviders);
+            store.set(state => ({ ...state, providers: newProviders }));
+        }
+    };
 };
 
 
@@ -133,7 +148,7 @@ export default function ProviderTable({
     setProviders 
 }: { 
     providers: Provider[], 
-    setProviders: (providers: Provider[]) => void 
+    setProviders: (updater: (providers: Provider[]) => Provider[]) => void 
 }) {
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);

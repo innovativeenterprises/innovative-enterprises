@@ -13,13 +13,28 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing";
-import { initialPricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
+import { store } from "@/lib/global-store";
 
-// This component is now the source of truth for pricing data
+// This hook now connects to the global store.
 export const usePricingData = () => {
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
-    return { pricing, setPricing };
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        pricing: data.pricing,
+        setPricing: (updater: (pricing: Pricing[]) => Pricing[]) => {
+            const currentPricing = store.get().pricing;
+            const newPricing = updater(currentPricing);
+            store.set(state => ({ ...state, pricing: newPricing }));
+        }
+    };
 };
 
 const PricingSchema = z.object({
@@ -84,7 +99,7 @@ export default function PricingTable({
     setPricing 
 } : { 
     pricing: Pricing[], 
-    setPricing: (pricing: Pricing[]) => void 
+    setPricing: (updater: (pricing: Pricing[]) => Pricing[]) => void 
 }) {
     const { toast } = useToast();
 

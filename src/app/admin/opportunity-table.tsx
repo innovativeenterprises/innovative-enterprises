@@ -16,14 +16,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { Opportunity } from "@/lib/opportunities";
-import { initialOpportunities } from "@/lib/opportunities";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Trophy } from "lucide-react";
+import { store } from "@/lib/global-store";
 
-// This component is now the source of truth for opportunities data
+// This hook now connects to the global store.
 export const useOpportunitiesData = () => {
-    const [opportunities, setOpportunities] = useState<Opportunity[]>(initialOpportunities);
-    return { opportunities, setOpportunities };
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        opportunities: data.opportunities,
+        setOpportunities: (updater: (opportunities: Opportunity[]) => Opportunity[]) => {
+            const currentOpportunities = store.get().opportunities;
+            const newOpportunities = updater(currentOpportunities);
+            store.set(state => ({ ...state, opportunities: newOpportunities }));
+        }
+    };
 };
 
 
@@ -134,7 +149,7 @@ export default function OpportunityTable({
     setOpportunities,
 }: {
     opportunities: Opportunity[],
-    setOpportunities: (opportunities: Opportunity[]) => void,
+    setOpportunities: (updater: (opportunities: Opportunity[]) => Opportunity[]) => void,
 }) {
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);

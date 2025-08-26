@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -6,18 +7,33 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import type { Service } from "@/lib/services";
-import { initialServices } from "@/lib/services";
 import { Badge } from "@/components/ui/badge";
 import { DndContext, closestCenter, type DragEndEvent, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from "@/components/ui/button";
 import { GripVertical } from 'lucide-react';
+import { store } from "@/lib/global-store";
 
-// This component is now the source of truth for services data
+// This hook now connects to the global store.
 export const useServicesData = () => {
-    const [services, setServices] = useState<Service[]>(initialServices);
-    return { services, setServices };
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        services: data.services,
+        setServices: (updater: (services: Service[]) => Service[]) => {
+            const currentServices = store.get().services;
+            const newServices = updater(currentServices);
+            store.set(state => ({ ...state, services: newServices }));
+        }
+    };
 };
 
 const SortableServiceRow = ({ service, handleToggle }: { service: Service, handleToggle: (title: string) => void }) => {
@@ -56,7 +72,7 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     );
 };
 
-export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (services: Service[]) => void }) {
+export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (updater: (services: Service[]) => Service[]) => void }) {
     const { toast } = useToast();
     const [isMounted, setIsMounted] = useState(false);
 
@@ -73,8 +89,8 @@ export default function ServiceTable({ services, setServices }: { services: Serv
     );
 
     const handleToggle = (title: string) => {
-        setServices(
-            services.map(service =>
+        setServices(prev =>
+            prev.map(service =>
                 service.title === title ? { ...service, enabled: !service.enabled } : service
             )
         );

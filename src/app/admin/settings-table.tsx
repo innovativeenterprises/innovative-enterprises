@@ -6,18 +6,33 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { AppSettings } from "@/lib/settings";
-import { initialSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { store } from "@/lib/global-store";
 
-// This component is now the source of truth for settings data
+// This hook now connects to the global store.
 export const useSettingsData = () => {
-    const [settings, setSettings] = useState<AppSettings>(initialSettings);
-    return { settings, setSettings };
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        settings: data.settings,
+        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
+            const currentSettings = store.get().settings;
+            const newSettings = updater(currentSettings);
+            store.set(state => ({ ...state, settings: newSettings }));
+        }
+    };
 };
 
 
-export default function SettingsTable({ settings, setSettings }: { settings: AppSettings, setSettings: (settings: AppSettings) => void}) {
+export default function SettingsTable({ settings, setSettings }: { settings: AppSettings, setSettings: (updater: (settings: AppSettings) => AppSettings) => void}) {
     const { toast } = useToast();
 
     const handleModeChange = (value: 'direct' | 'tender' | 'builtin') => {
