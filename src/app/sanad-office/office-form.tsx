@@ -123,83 +123,81 @@ export default function OfficeForm() {
   }
 
   return (
-    <div className="space-y-8">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <Card>
-            <CardHeader>
-                <CardTitle>Step 1: AI-Powered Onboarding</CardTitle>
-                <CardDescription>Upload your Commercial Record (CR) and let our AI assist you with the form.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                 <FormField
-                    control={form.control}
-                    name="crDocument"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Commercial Record (CR) Document</FormLabel>
-                            <div className="flex gap-2">
-                                <FormControl>
-                                    <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
-                                </FormControl>
-                                <Button type="button" variant="secondary" onClick={handleCrAnalysis} disabled={isLoading}>
-                                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                    Pre-fill Form
-                                </Button>
-                            </div>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                 {analysisResult && (
-                    <Alert className="mt-4">
-                        <FileCheck2 className="h-4 w-4" />
-                        <AlertTitle>Analysis Complete</AlertTitle>
-                        <AlertDescription>
-                            Successfully extracted data for: <strong>{analysisResult.companyInfo.companyNameEnglish || analysisResult.companyInfo.companyNameArabic}</strong> (CR: {analysisResult.companyInfo.registrationNumber})
-                        </AlertDescription>
-                    </Alert>
-                )}
-            </CardContent>
+          <CardHeader>
+            <CardTitle>Step 1: AI-Powered Onboarding</CardTitle>
+            <CardDescription>Upload your Commercial Record (CR) and let our AI assist you with the form.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="crDocument"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Commercial Record (CR) Document</FormLabel>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                    </FormControl>
+                    <Button type="button" variant="secondary" onClick={handleCrAnalysis} disabled={isLoading}>
+                      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                      Pre-fill Form
+                    </Button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {analysisResult && (
+              <Alert className="mt-4">
+                <FileCheck2 className="h-4 w-4" />
+                <AlertTitle>Analysis Complete</AlertTitle>
+                <AlertDescription>
+                  Successfully extracted data for: <strong>{analysisResult.companyInfo.companyNameEnglish || analysisResult.companyInfo.companyNameArabic}</strong> (CR: {analysisResult.companyInfo.registrationNumber})
+                </AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
         </Card>
 
         <Card>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <CardHeader>
-                        <CardTitle>Step 2: Verify Office Details</CardTitle>
-                        <CardDescription>Please review the pre-filled information or enter your details manually.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <FormField control={form.control} name="officeName" render={({ field }) => (
-                                <FormItem><FormLabel>Sanad Office Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                            <FormField control={form.control} name="crNumber" render={({ field }) => (
-                                <FormItem><FormLabel>CR Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                        </div>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <FormField control={form.control} name="contactName" render={({ field }) => (
-                                <FormItem><FormLabel>Main Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                            <FormField control={form.control} name="phone" render={({ field }) => (
-                                <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                        </div>
-                        <FormField control={form.control} name="email" render={({ field }) => (
-                            <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <FormField control={form.control} name="services" render={({ field }) => (
-                            <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                    </CardContent>
-                    <CardFooter>
-                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
-                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><Handshake className="mr-2 h-4 w-4"/> Submit Registration</>}
-                       </Button>
-                    </CardFooter>
-                </form>
-            </Form>
+          <CardHeader>
+            <CardTitle>Step 2: Verify Office Details</CardTitle>
+            <CardDescription>Please review the pre-filled information or enter your details manually.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <FormField control={form.control} name="officeName" render={({ field }) => (
+                <FormItem><FormLabel>Sanad Office Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+              )} />
+              <FormField control={form.control} name="crNumber" render={({ field }) => (
+                <FormItem><FormLabel>CR Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+              )} />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <FormField control={form.control} name="contactName" render={({ field }) => (
+                <FormItem><FormLabel>Main Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+              )} />
+              <FormField control={form.control} name="phone" render={({ field }) => (
+                <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+              )} />
+            </div>
+            <FormField control={form.control} name="email" render={({ field }) => (
+              <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="services" render={({ field }) => (
+              <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
+              {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><Handshake className="mr-2 h-4 w-4"/> Submit Registration</>}
+            </Button>
+          </CardFooter>
         </Card>
-    </div>
+      </form>
+    </Form>
   );
 }
