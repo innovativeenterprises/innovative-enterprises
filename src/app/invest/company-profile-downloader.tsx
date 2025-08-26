@@ -146,13 +146,9 @@ export default function CompanyProfileDownloader() {
                 useCORS: true,
                 logging: false,
                 backgroundColor: null,
-                 onclone: (document) => {
-                    // This can be used to modify the document before rendering, if needed
-                }
             });
 
             const imgData = canvas.toDataURL('image/png');
-            
             const pdf = new jsPDF({
                 orientation: 'portrait',
                 unit: 'mm',
@@ -161,19 +157,21 @@ export default function CompanyProfileDownloader() {
             
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
+            
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
-            const ratio = canvasWidth / canvasHeight;
-            let imgHeight = pdfWidth / ratio;
             
-            let position = 0;
+            const ratio = canvasWidth / canvasHeight;
+            const imgHeight = pdfWidth / ratio;
+            
             let heightLeft = imgHeight;
+            let position = 0;
 
             pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
             heightLeft -= pdfHeight;
 
             while (heightLeft > 0) {
-                position = -heightLeft;
+                position = heightLeft - imgHeight;
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
                 heightLeft -= pdfHeight;
