@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -40,6 +40,22 @@ const buildingTypes = [
     { id: 'Hotel', label: 'Hotel', icon: Hotel },
 ];
 
+const coverageTypes = [
+    { id: 'Full Environment', label: 'Full', description: 'Cover all areas', icon: Expand },
+    { id: 'Partial', label: 'Partial', description: 'Cover specific areas', icon: Shrink },
+];
+
+const remoteMonitoringTypes = [
+    { id: 'Yes', label: 'Yes', description: 'Monitor from anywhere', icon: Wifi },
+    { id: 'No', label: 'No', description: 'Local viewing only', icon: WifiOff },
+];
+
+const existingSystemTypes = [
+    { id: 'None', label: 'None', description: 'New installation', icon: Plus },
+    { id: 'Keep Some', label: 'Keep Some', description: 'Integrate parts', icon: Construction },
+    { id: 'Replace All', label: 'Replace All', description: 'Full upgrade', icon: RefreshCw },
+];
+
 const FormSchema = z.object({
   purpose: z.string().min(10, { message: "Please describe the purpose in more detail." }),
   buildingType: z.string({ required_error: "Please select a building type." }),
@@ -54,6 +70,9 @@ const FormSchema = z.object({
 }).refine(data => data.floorPlanUri || (data.floorPlanFile && data.floorPlanFile.length > 0) || data.dimensions, {
     message: "A floor plan, sketch, photo, or building dimensions must be provided.",
     path: ["floorPlanFile"],
+}).refine(data => data.coverage !== 'Partial' || (data.coverage === 'Partial' && data.coverageDetails && data.coverageDetails.length > 5), {
+    message: "Please describe which areas need partial coverage.",
+    path: ["coverageDetails"],
 });
 
 
@@ -259,7 +278,7 @@ export default function QuotationForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
               name="buildingType"
@@ -336,33 +355,91 @@ export default function QuotationForm() {
 
             <div className="grid md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="dimensions" render={({ field }) => (
-                    <FormItem><FormLabel>Building Dimensions</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m, 3 floors" {...field} /></FormControl><FormDescription>Provide overall dimensions if no image.</FormDescription><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Building Dimensions</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m, 3 floors" {...field} /></FormControl><FormDescription>Provide if no image.</FormDescription><FormMessage /></FormItem>
                 )} />
                  <FormField control={form.control} name="dvrSwitchTvLocation" render={({ field }) => (
                     <FormItem><FormLabel>Proposed DVR/Switch/TV Location</FormLabel><FormControl><Input placeholder="e.g., Under the stairs, IT room" {...field} /></FormControl><FormDescription>Where should the main hub be?</FormDescription><FormMessage /></FormItem>
                 )} />
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-                <FormField control={form.control} name="coverage" render={({ field }) => (
-                    <FormItem className="space-y-3"><FormLabel>Required Coverage</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
-                        <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Full Environment" /></FormControl><FormLabel className="font-normal">Full Environment</FormLabel></FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Partial" /></FormControl><FormLabel className="font-normal">Partial</FormLabel></FormItem>
-                    </RadioGroup></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="remoteMonitoring" render={({ field }) => (
-                    <FormItem className="space-y-3"><FormLabel>Remote Monitoring</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
-                        <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem>
-                    </RadioGroup></FormControl><FormMessage /></FormItem>
-                )} />
-                 <FormField control={form.control} name="existingSystem" render={({ field }) => (
-                    <FormItem className="space-y-3"><FormLabel>Existing System</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
-                        <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="None" /></FormControl><FormLabel className="font-normal">None</FormLabel></FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Keep Some" /></FormControl><FormLabel className="font-normal">Keep Some Components</FormLabel></FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Replace All" /></FormControl><FormLabel className="font-normal">Replace All</FormLabel></FormItem>
-                    </RadioGroup></FormControl><FormMessage /></FormItem>
-                )} />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 <FormField
+                    control={form.control}
+                    name="coverage"
+                    render={({ field }) => (
+                        <FormItem className="space-y-3">
+                        <FormLabel>Coverage</FormLabel>
+                        <FormControl>
+                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-2">
+                                {coverageTypes.map(({ id, label, description, icon: Icon }) => (
+                                    <FormItem key={id} className="flex-1">
+                                        <FormControl>
+                                            <RadioGroupItem value={id} id={`coverage_${id}`} className="sr-only" />
+                                        </FormControl>
+                                        <Label htmlFor={`coverage_${id}`} className={cn('flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer', field.value === id && 'border-primary')}>
+                                            <Icon className="mb-2 h-6 w-6" />
+                                            {label}
+                                            <span className="text-xs text-muted-foreground">{description}</span>
+                                        </Label>
+                                    </FormItem>
+                                ))}
+                            </RadioGroup>
+                        </FormControl>
+                         <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="remoteMonitoring"
+                    render={({ field }) => (
+                        <FormItem className="space-y-3">
+                        <FormLabel>Remote Monitoring</FormLabel>
+                        <FormControl>
+                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-2">
+                                {remoteMonitoringTypes.map(({ id, label, description, icon: Icon }) => (
+                                    <FormItem key={id} className="flex-1">
+                                        <FormControl>
+                                            <RadioGroupItem value={id} id={`monitoring_${id}`} className="sr-only" />
+                                        </FormControl>
+                                        <Label htmlFor={`monitoring_${id}`} className={cn('flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer', field.value === id && 'border-primary')}>
+                                            <Icon className="mb-2 h-6 w-6" />
+                                            {label}
+                                            <span className="text-xs text-muted-foreground">{description}</span>
+                                        </Label>
+                                    </FormItem>
+                                ))}
+                            </RadioGroup>
+                        </FormControl>
+                         <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="existingSystem"
+                    render={({ field }) => (
+                        <FormItem className="space-y-3">
+                        <FormLabel>Existing System</FormLabel>
+                        <FormControl>
+                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-2">
+                                {existingSystemTypes.map(({ id, label, description, icon: Icon }) => (
+                                    <FormItem key={id} className="flex-1">
+                                        <FormControl>
+                                            <RadioGroupItem value={id} id={`system_${id}`} className="sr-only" />
+                                        </FormControl>
+                                        <Label htmlFor={`system_${id}`} className={cn('flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer text-center', field.value === id && 'border-primary')}>
+                                            <Icon className="mb-2 h-6 w-6" />
+                                            {label}
+                                        </Label>
+                                    </FormItem>
+                                ))}
+                            </RadioGroup>
+                        </FormControl>
+                         <FormMessage />
+                        </FormItem>
+                    )}
+                />
             </div>
             
             {watchCoverage === 'Partial' && (
