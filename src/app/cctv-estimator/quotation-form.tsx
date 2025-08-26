@@ -81,7 +81,9 @@ const FormSchema = z.object({
   purposePreset: z.string().optional(),
   purpose: z.string().min(10, { message: "Please describe the purpose in more detail." }),
   buildingType: z.string({ required_error: "Please select a building type." }),
-  dimensions: z.string().optional(),
+  buildingDimensions: z.string().optional(),
+  numberOfFloors: z.coerce.number().optional(),
+  buildingHeight: z.string().optional(),
   floorPlanUri: z.string().optional(),
   floorPlanFile: z.any().optional(),
   surveillanceArea: z.enum(['Internal Only', 'External Only', 'Both'], { required_error: "Please select the surveillance area." }),
@@ -98,7 +100,7 @@ const FormSchema = z.object({
   audioRecording: z.boolean(),
   storageDuration: z.coerce.number().min(7),
 
-}).refine(data => data.floorPlanUri || (data.floorPlanFile && data.floorPlanFile.length > 0) || data.dimensions, {
+}).refine(data => data.floorPlanUri || (data.floorPlanFile && data.floorPlanFile.length > 0) || data.buildingDimensions, {
     message: "A floor plan, sketch, photo, or building dimensions must be provided.",
     path: ["floorPlanFile"],
 }).refine(data => data.coverage !== 'Partial' || (data.coverage === 'Partial' && data.coverageDetails && data.coverageDetails.length > 5), {
@@ -125,7 +127,7 @@ export default function QuotationForm() {
     defaultValues: {
       purpose: '',
       buildingType: '',
-      dimensions: '',
+      buildingDimensions: '',
       coverageDetails: '',
       dvrSwitchTvLocation: '',
       floorPlanUri: '',
@@ -134,6 +136,8 @@ export default function QuotationForm() {
       nightVision: true,
       audioRecording: false,
       storageDuration: 30,
+      numberOfFloors: 1,
+      buildingHeight: '',
     },
   });
 
@@ -141,7 +145,7 @@ export default function QuotationForm() {
     setPageState('analyzing_plan');
     try {
         const result = await analyzeFloorPlan({ documentDataUri: uri });
-        if(result.dimensions) form.setValue('dimensions', result.dimensions);
+        if(result.dimensions) form.setValue('buildingDimensions', result.dimensions);
         if(result.suggestedDvrLocation) form.setValue('dvrSwitchTvLocation', result.suggestedDvrLocation);
         toast({ title: 'Pre-Analysis Complete', description: 'AI has suggested dimensions and DVR location.' });
     } catch (e) {
@@ -177,7 +181,7 @@ export default function QuotationForm() {
         finalFloorPlanUri = await fileToDataURI(data.floorPlanFile[0]);
       }
 
-      if (!finalFloorPlanUri && !data.dimensions) {
+      if (!finalFloorPlanUri && !data.buildingDimensions) {
           toast({ title: 'Input Missing', description: 'Please provide a plan, photo, or dimensions.', variant: 'destructive'});
           setPageState('form');
           return;
@@ -508,14 +512,21 @@ export default function QuotationForm() {
               )}
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="dimensions" render={({ field }) => (
-                    <FormItem><FormLabel>Building Dimensions</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m, 3 floors" {...field} /></FormControl><FormDescription>Provide if no image.</FormDescription><FormMessage /></FormItem>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <FormField control={form.control} name="buildingDimensions" render={({ field }) => (
+                    <FormItem><FormLabel>Building Dimensions</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m" {...field} /></FormControl><FormDescription>Provide if no image.</FormDescription><FormMessage /></FormItem>
                 )} />
-                 <FormField control={form.control} name="dvrSwitchTvLocation" render={({ field }) => (
-                    <FormItem><FormLabel>Proposed DVR/Switch/TV Location</FormLabel><FormControl><Input placeholder="e.g., Under the stairs, IT room" {...field} /></FormControl><FormDescription>Where should the main hub be?</FormDescription><FormMessage /></FormItem>
+                 <FormField control={form.control} name="numberOfFloors" render={({ field }) => (
+                    <FormItem><FormLabel>Number of Floors</FormLabel><FormControl><Input type="number" min="1" placeholder="e.g., 3" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                 <FormField control={form.control} name="buildingHeight" render={({ field }) => (
+                    <FormItem><FormLabel>Building Height (m)</FormLabel><FormControl><Input placeholder="e.g., 12m" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
             </div>
+
+            <FormField control={form.control} name="dvrSwitchTvLocation" render={({ field }) => (
+                <FormItem><FormLabel>Proposed DVR/Switch/TV Location</FormLabel><FormControl><Input placeholder="e.g., Under the stairs, IT room" {...field} /></FormControl><FormDescription>Where should the main hub be?</FormDescription><FormMessage /></FormItem>
+            )} />
 
             <FormField
               control={form.control}

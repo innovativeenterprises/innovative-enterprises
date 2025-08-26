@@ -51,18 +51,20 @@ const quotationTextPrompt = ai.definePrompt({
 {{#if floorPlanUri}}
 - **Floor Plan / Sketch / Photo:** {{media url=floorPlanUri}} (Analyze this image to determine layout, key entry/exit points, windows, and overall dimensions. If it's a photo of an area, use it to assess camera placement needs.)
 {{else}}
-- **Dimensions:** {{dimensions}}
+- **Building Dimensions:** {{buildingDimensions}}
+- **Number of Floors:** {{numberOfFloors}}
+- **Building Height:** {{buildingHeight}}
 {{/if}}
 
 **Your Task:**
-1.  **Analyze the Inputs:** Carefully review all the client's requirements and analyze the provided floor plan, sketch, photo, or dimensions. Make logical assumptions based on the visual data. Pay close attention to whether the surveillance is internal, external, or both.
+1.  **Analyze the Inputs:** Carefully review all the client's requirements and analyze the provided floor plan, sketch, photo, or dimensions. Make logical assumptions based on the visual data. Pay close attention to whether the surveillance is internal, external, or both. Use the number of floors and building height for cabling estimates.
 2.  **Design the System:**
     *   Determine the optimal number and type of cameras (e.g., dome, bullet, PTZ) needed to achieve the desired coverage, considering the client's preference for '{{cameraType}}' and the '{{surveillanceArea}}'. Use weatherproof bullet cameras for external areas.
     *   Select cameras that meet the resolution ('{{cameraResolution}}'), night vision, and audio recording requirements.
     *   Select an appropriate Network Video Recorder (NVR). The storage capacity MUST be sufficient for {{storageDuration}} days of continuous recording from all cameras. A 4K camera requires ~150GB/day. A standard HD camera requires ~40GB/day. Calculate total storage needed and select an NVR with adequate HDD space (e.g., 2TB, 4TB, 8TB, 16TB).
     *   Determine the required network switch (PoE or standard) and other necessary components (e.g., power supplies, connectors).
 3.  **Estimate Cabling:**
-    *   Based on the visual data or dimensions and the DVR location, estimate the total length of Ethernet cabling required.
+    *   Based on the visual data or dimensions, number of floors, and building height, estimate the total length of Ethernet cabling required.
     *   Provide brief notes on the recommended cabling strategy (e.g., "Cabling to be run through ceiling conduits").
 4.  **Estimate Installation Labor:**
     *   Estimate the total labor hours required for installation, configuration, and testing.

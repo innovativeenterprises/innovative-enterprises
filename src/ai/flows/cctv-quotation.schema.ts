@@ -7,7 +7,9 @@ import { z } from 'zod';
 export const CctvQuotationInputSchema = z.object({
   purpose: z.string().min(1, "Purpose is required."),
   buildingType: z.string().min(1, "Building type is required."),
-  dimensions: z.string().optional().describe("Building dimensions if no floor plan is provided (e.g., '15m x 20m, 2 floors')."),
+  buildingDimensions: z.string().optional().describe("Overall building dimensions if no floor plan is provided (e.g., '15m x 20m')."),
+  numberOfFloors: z.coerce.number().optional().describe("The number of floors in the building."),
+  buildingHeight: z.string().optional().describe("The total estimated height of the building (e.g., '10m')."),
   floorPlanUri: z.string().optional().describe("A floor plan or sketch of the building, as a data URI."),
   surveillanceArea: z.enum(['Internal Only', 'External Only', 'Both']),
   coverage: z.enum(['Full Environment', 'Partial']),
