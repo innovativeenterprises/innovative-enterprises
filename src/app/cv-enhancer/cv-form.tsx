@@ -119,17 +119,17 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 
-    const socialForm = useForm({
+    const socialForm = useForm<GenerateSocialMediaPostInput>({
         resolver: zodResolver(GenerateSocialMediaPostInputSchema),
         defaultValues: {
             topic: `I just enhanced my CV for a ${targetPosition} role using Innovative Enterprises' AI tool!`,
-            platform: "LinkedIn" as const,
-            tone: "Professional" as const,
+            platform: "LinkedIn",
+            tone: "Professional",
             generateImage: true,
         }
     });
 
-    const handleSocialPost: SubmitHandler<any> = async (data) => {
+    const handleSocialPost: SubmitHandler<GenerateSocialMediaPostInput> = async (data) => {
         setIsLoading(true);
         try {
             const result = await generateSocialMediaPost(data);
