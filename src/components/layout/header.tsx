@@ -45,37 +45,37 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     description: "A B2B and B2C marketplace connecting businesses with each other and with new clients for opportunities.",
   },
   {
-    title: "E-commerce Services",
+    title: "Nova Commerce",
     href: "/ecommerce",
     description: "End-to-end solutions to build, manage, and scale your online business.",
   },
   {
-    title: "IT Infrastructure Rentals",
+    title: "InfraRent",
     href: "/infra-rent",
     description: "On-demand rental of IT equipment like servers, workstations, and networking gear.",
   },
    {
-    title: "Domestic Workforce Platform (RAAHA)",
+    title: "RAAHA Platform",
     href: "/raaha",
     description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
   },
    {
-    title: "CFO as a Service",
+    title: "Finley CFO Service",
     href: "/cfo",
     description: "Access a financial command center to monitor cash flow, manage expenses, and oversee payroll.",
   },
    {
-    title: "CV & Outsourcing Services",
+    title: "GENIUS Career Platform",
     href: "/cv-enhancer",
     description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
   },
   {
-    title: "Financial Audit Hub",
+    title: "Certus Audit Hub",
     href: "/financial-audit",
     description: "Connect with certified audit offices and get AI-powered analysis of your financial documents.",
   },
   {
-    title: "Smart CCTV & Surveillance",
+    title: "Vision AI Estimator",
     href: "/cctv-estimator",
     description: "Get an AI-powered quotation for your surveillance system needs, from design to installation.",
   },
@@ -94,17 +94,17 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     description: "Generate draft responses for government and corporate tenders based on your documents.",
   },
   {
-    title: "Marketing & Content Agent",
+    title: "Mira Marketing Agent",
     href: "/social-media-post-generator",
     description: "Generate social media posts, marketing copy, and other creative content.",
   },
    {
-    title: "Verified Document Translator",
+    title: "Voxi Translator",
     href: "/document-translator",
     description: "Translate legal, financial, and official documents with high accuracy.",
   },
   {
-    title: "AI Admin & Legal Assistant",
+    title: "Aida Legal Assistant",
     href: "/legal-agent",
     description: "Get preliminary analysis, draft agreements, or ask general questions from our AI agent, Aida.",
   },
@@ -119,7 +119,7 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     description: "Create stunning visuals from text descriptions in seconds.",
   },
   {
-    title: "AI Interview Coach",
+    title: "Apex Interview Coach",
     href: "/interview-coach",
     description: "Practice for your next job interview with AI-generated, role-specific questions.",
   }
