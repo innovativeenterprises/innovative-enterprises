@@ -2,7 +2,7 @@
 export interface Asset {
   id: string;
   name: string;
-  type: 'Server' | 'Laptop' | 'Workstation' | 'Networking' | 'Storage';
+  type: 'Server' | 'Laptop' | 'Workstation' | 'Networking' | 'Storage' | 'Peripheral';
   status: 'Available' | 'Rented' | 'Maintenance';
   specs: string;
   monthlyPrice: number;
@@ -310,5 +310,66 @@ export const initialAssets: Asset[] = [
         monthlyPrice: 1500,
         image: 'https://placehold.co/600x400.png',
         aiHint: 'flash storage array'
+    },
+    {
+        id: 'asset_31',
+        name: 'LG 27" UltraFine 4K Monitor',
+        type: 'Peripheral',
+        status: 'Available',
+        specs: '27-inch 4K UHD (3840 x 2160) IPS Display',
+        monthlyPrice: 25,
+        image: 'https://placehold.co/600x400.png',
+        aiHint: '4k monitor'
+    },
+    {
+        id: 'asset_32',
+        name: 'Logitech MX Master 3S',
+        type: 'Peripheral',
+        status: 'Available',
+        specs: 'Wireless Performance Mouse with Quiet Clicks',
+        monthlyPrice: 10,
+        image: 'https://placehold.co/600x400.png',
+        aiHint: 'computer mouse'
+    },
+    {
+        id: 'asset_33',
+        name: 'Epson SureColor P900',
+        type: 'Peripheral',
+        status: 'Maintenance',
+        specs: '17-Inch Professional Photographic Printer',
+        monthlyPrice: 70,
+        image: 'https://placehold.co/600x400.png',
+        aiHint: 'large printer'
+    },
+    {
+        id: 'asset_34',
+        name: 'High-Performance Wifi Router',
+        type: 'Networking',
+        status: 'Available',
+        specs: 'Wi-Fi 6E Tri-Band, supports up to 100 devices',
+        monthlyPrice: 30,
+        image: 'https://placehold.co/600x400.png',
+        aiHint: 'wifi router'
+    },
+    {
+        id: 'asset_35',
+        name: 'Conference Room Projector',
+        type: 'Peripheral',
+        status: 'Available',
+        specs: '4000 Lumens, 1080p Full HD Resolution',
+        monthlyPrice: 45,
+        image: 'https://placehold.co/600x400.png',
+        aiHint: 'video projector'
+    },
+    {
+        id: 'asset_36',
+        name: 'Mobile Hotspot Device',
+        type: 'Networking',
+        status: 'Available',
+        specs: '5G Connectivity, supports up to 20 devices',
+        monthlyPrice: 20,
+        image: 'https://placehold.co/600x400.png',
+        aiHint: 'mobile hotspot'
     }
 ];
+

@@ -8,7 +8,7 @@ import { generateItRentalProposal } from '@/ai/flows/it-rental-agent';
 import { ItRentalInquiryInputSchema, type ItRentalInquiryInput, type ItRentalProposalOutput } from '@/ai/flows/it-rental-agent.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -27,15 +27,12 @@ export default function ItRentalAgentForm() {
     resolver: zodResolver(ItRentalInquiryInputSchema),
     defaultValues: {
       projectName: '',
-      projectType: 'Web Hosting (e.g., Website, E-commerce)',
-      userCount: 1,
-      workload: 'Medium (consistent daily use)',
-      requiredSoftware: '',
-      storageNeeds: '',
-      networkNeeds: '',
-      securityNeeds: '',
-      budget: undefined,
+      purposeOfRental: 'Training Program or Workshop',
+      numberOfAttendees: 10,
+      existingInfrastructure: '',
+      missingComponents: '',
       rentalDurationMonths: 1,
+      budget: undefined,
     },
   });
 
@@ -101,15 +98,21 @@ export default function ItRentalAgentForm() {
             <CardContent className="space-y-6">
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Recommended Hardware Package</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-4">
                         {response.recommendedAssets.map(asset => (
                             <Card key={asset.id} className="flex items-start gap-4 p-4">
                                 <Image src={asset.image} alt={asset.name} width={80} height={80} className="rounded-md object-cover" />
-                                <div className="space-y-1">
-                                    <p className="font-semibold">{asset.name}</p>
+                                <div className="space-y-1 flex-grow">
+                                    <div className="flex justify-between">
+                                      <p className="font-semibold">{asset.name}</p>
+                                      <p className="font-bold text-lg text-primary">x {asset.quantity}</p>
+                                    </div>
                                     <Badge variant="outline">{asset.type}</Badge>
                                     <p className="text-xs text-muted-foreground">{asset.specs}</p>
-                                    <p className="text-sm font-bold text-primary">OMR {asset.monthlyPrice.toFixed(2)}/mo</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm font-bold text-primary">OMR {asset.monthlyPrice.toFixed(2)}</p>
+                                    <p className="text-xs text-muted-foreground">/mo per unit</p>
                                 </div>
                             </Card>
                         ))}
@@ -145,54 +148,47 @@ export default function ItRentalAgentForm() {
     <Card>
       <CardHeader>
         <CardTitle>New Infrastructure Request</CardTitle>
-        <CardDescription>Tell us about your project, and our AI will recommend a rental package.</CardDescription>
+        <CardDescription>Describe your event or project, and our AI will recommend a complete rental package.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField control={form.control} name="projectName" render={({ field }) => (
-                <FormItem><FormLabel>Project Name</FormLabel><FormControl><Input placeholder="e.g., 'My E-commerce Website'" {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Project or Event Name</FormLabel><FormControl><Input placeholder="e.g., 'Q4 Sales Kickoff Event'" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
 
             <div className="grid md:grid-cols-2 gap-6">
-                 <FormField control={form.control} name="projectType" render={({ field }) => (
-                    <FormItem><FormLabel>Project Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                        <SelectItem value="Web Hosting (e.g., Website, E-commerce)">Web Hosting</SelectItem>
-                        <SelectItem value="Data Analytics & BI">Data Analytics & BI</SelectItem>
-                        <SelectItem value="AI/ML Model Training">AI/ML Model Training</SelectItem>
-                        <SelectItem value="Development & Testing Environment">Development & Testing</SelectItem>
-                        <SelectItem value="General Office Workstations">General Office Workstations</SelectItem>
+                 <FormField control={form.control} name="purposeOfRental" render={({ field }) => (
+                    <FormItem><FormLabel>Purpose of Rental</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                        <SelectItem value="Temporary Office Setup">Temporary Office Setup</SelectItem>
+                        <SelectItem value="Training Program or Workshop">Training Program or Workshop</SelectItem>
+                        <SelectItem value="Special Event (e.g., conference, hackathon)">Special Event</SelectItem>
+                        <SelectItem value="Short-term Project (e.g., data analysis, software dev)">Short-term Project</SelectItem>
+                        <SelectItem value="Hardware Evaluation or Testing">Hardware Evaluation/Testing</SelectItem>
                         <SelectItem value="Other">Other</SelectItem>
                     </SelectContent></Select><FormMessage /></FormItem>
                 )} />
-                <FormField control={form.control} name="userCount" render={({ field }) => (
-                    <FormItem><FormLabel>Number of Users</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
+                <FormField control={form.control} name="numberOfAttendees" render={({ field }) => (
+                    <FormItem><FormLabel>Number of Attendees / Users</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
             </div>
 
-            <FormField control={form.control} name="workload" render={({ field }) => (
-                <FormItem><FormLabel>Expected Workload</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                    <SelectItem value="Low (occasional use)">Low (occasional use)</SelectItem>
-                    <SelectItem value="Medium (consistent daily use)">Medium (consistent daily use)</SelectItem>
-                    <SelectItem value="High (intensive, 24/7 processing)">High (intensive, 24/7 processing)</SelectItem>
-                </SelectContent></Select><FormMessage /></FormItem>
+            <FormField control={form.control} name="existingInfrastructure" render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Existing Infrastructure (Optional)</FormLabel>
+                    <FormControl><Textarea placeholder="List any equipment you already have available, e.g., 'Our office provides monitors, keyboards, mice, and a stable internet connection.'" {...field} /></FormControl>
+                    <FormDescription>This helps the AI avoid recommending items you don't need.</FormDescription>
+                    <FormMessage />
+                </FormItem>
             )} />
 
-            <div className="grid md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="storageNeeds" render={({ field }) => (
-                    <FormItem><FormLabel>Storage Needs</FormLabel><FormControl><Input placeholder="e.g., 500GB SSD" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="networkNeeds" render={({ field }) => (
-                    <FormItem><FormLabel>Network Needs</FormLabel><FormControl><Input placeholder="e.g., 1Gbps connection" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-            </div>
-
-            <FormField control={form.control} name="requiredSoftware" render={({ field }) => (
-                <FormItem><FormLabel>Required Software (Optional)</FormLabel><FormControl><Textarea placeholder="e.g., Docker, Kubernetes, PostgreSQL, a specific Linux distro..." {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-
-             <FormField control={form.control} name="securityNeeds" render={({ field }) => (
-                <FormItem><FormLabel>Security Needs (Optional)</FormLabel><FormControl><Textarea placeholder="e.g., Dedicated firewall, VPN access, data encryption..." {...field} /></FormControl><FormMessage /></FormItem>
+             <FormField control={form.control} name="missingComponents" render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Specific Missing Components (Optional)</FormLabel>
+                    <FormControl><Textarea placeholder="If you know exactly what you're missing, list it here. e.g., 'We need 15 laptops with at least 16GB RAM and one powerful server for processing data.'" {...field} /></FormControl>
+                    <FormDescription>Provide this if you have specific hardware in mind.</FormDescription>
+                    <FormMessage />
+                </FormItem>
             )} />
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -200,10 +196,9 @@ export default function ItRentalAgentForm() {
                     <FormItem><FormLabel>Rental Duration (Months)</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                  <FormField control={form.control} name="budget" render={({ field }) => (
-                    <FormItem><FormLabel>Monthly Budget (OMR, Optional)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Estimated Monthly Budget (OMR, Optional)</FormLabel><FormControl><Input type="number" placeholder="e.g., 1500" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
             </div>
-
 
             <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
               {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</> : <><Sparkles className="mr-2 h-4 w-4" /> Generate Proposal</>}

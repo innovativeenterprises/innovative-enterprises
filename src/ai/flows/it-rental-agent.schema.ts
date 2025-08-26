@@ -7,22 +7,19 @@ import { AssetSchema } from '@/lib/assets.schema'; // We'll create this to share
 
 export const ItRentalInquiryInputSchema = z.object({
   projectName: z.string().min(3, "Project name is required."),
-  projectType: z.enum([
-    'Web Hosting (e.g., Website, E-commerce)',
-    'Data Analytics & BI',
-    'AI/ML Model Training',
-    'Development & Testing Environment',
-    'General Office Workstations',
+  purposeOfRental: z.enum([
+    'Temporary Office Setup',
+    'Training Program or Workshop',
+    'Special Event (e.g., conference, hackathon)',
+    'Short-term Project (e.g., data analysis, software dev)',
+    'Hardware Evaluation or Testing',
     'Other'
   ]),
-  userCount: z.coerce.number().min(1, "At least one user is required."),
-  workload: z.enum(['Low (occasional use)', 'Medium (consistent daily use)', 'High (intensive, 24/7 processing)']),
-  requiredSoftware: z.string().optional().describe("List any specific software required, e.g., 'Docker, NodeJS, Python 3.10'"),
-  storageNeeds: z.string().min(3, "Please specify storage needs (e.g., '500GB SSD', '10TB HDD for backups')."),
-  networkNeeds: z.string().min(3, "Describe network needs (e.g., 'High-speed internal network, 1Gbps internet')."),
-  securityNeeds: z.string().optional().describe("Describe any special security needs like VPNs, firewalls, etc."),
-  budget: z.coerce.number().optional().describe("Your estimated monthly budget in OMR."),
+  numberOfAttendees: z.coerce.number().min(1, "Please specify the number of attendees/users."),
+  existingInfrastructure: z.string().optional().describe("List any equipment you already have (e.g., 'We have monitors and mice')."),
+  missingComponents: z.string().optional().describe("Tell us what specific components you know you're missing."),
   rentalDurationMonths: z.coerce.number().min(1, "Minimum rental is 1 month."),
+  budget: z.coerce.number().optional().describe("Your estimated monthly budget in OMR."),
 });
 export type ItRentalInquiryInput = z.infer<typeof ItRentalInquiryInputSchema>;
 
@@ -30,7 +27,7 @@ export type ItRentalInquiryInput = z.infer<typeof ItRentalInquiryInputSchema>;
 export const ItRentalProposalOutputSchema = z.object({
   proposalTitle: z.string().describe("A title for the proposal, e.g., 'Infrastructure Proposal for Project X'."),
   executiveSummary: z.string().describe("A brief summary of the proposed solution and its benefits."),
-  recommendedAssets: z.array(AssetSchema).describe("A list of recommended assets from the available inventory."),
+  recommendedAssets: z.array(AssetSchema.extend({ quantity: z.number().describe("The number of units recommended for this asset.") })).describe("A list of recommended assets from the available inventory, including quantity."),
   totalMonthlyCost: z.number().describe("The total calculated monthly cost for all recommended assets."),
   serviceAgreement: z.string().describe("A generated service level agreement (SLA) in Markdown format, outlining terms, support, and responsibilities."),
 });

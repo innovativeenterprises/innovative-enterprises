@@ -9,7 +9,7 @@ import { z } from 'zod';
 export const AssetSchema = z.object({
   id: z.string(),
   name: z.string(),
-  type: z.enum(['Server', 'Laptop', 'Workstation', 'Networking', 'Storage']),
+  type: z.enum(['Server', 'Laptop', 'Workstation', 'Networking', 'Storage', 'Peripheral']),
   status: z.enum(['Available', 'Rented', 'Maintenance']),
   specs: z.string(),
   monthlyPrice: z.number(),

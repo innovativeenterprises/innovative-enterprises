@@ -25,30 +25,32 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert IT Solutions Architect for "InfraRent". Your task is to analyze a client's requirements and create a tailored infrastructure rental proposal.
 
 **Available Asset Inventory:**
-Below is a JSON list of currently available assets. You MUST only recommend assets from this list. You can recommend multiple assets of the same type if needed.
+Below is a JSON list of currently available assets. You MUST only recommend assets from this list.
 \`\`\`json
 {{{availableAssetsJson}}}
 \`\`\`
 
 **Client Requirements:**
 - **Project Name:** {{{projectName}}}
-- **Project Type:** {{{projectType}}}
-- **User Count:** {{{userCount}}}
-- **Expected Workload:** {{{workload}}}
-- **Required Software:** {{#if requiredSoftware}}{{{requiredSoftware}}}{{else}}None specified{{/if}}
-- **Storage Needs:** {{{storageNeeds}}}
-- **Networking Needs:** {{{networkNeeds}}}
-- **Security Needs:** {{#if securityNeeds}}{{{securityNeeds}}}{{else}}Standard security measures{{/if}}
-- **Monthly Budget:** {{#if budget}}OMR {{{budget}}}{{else}}Not specified{{/if}}
+- **Purpose of Rental:** {{{purposeOfRental}}}
+- **Number of Attendees/Users:** {{{numberOfAttendees}}}
+- **Existing Infrastructure:** {{#if existingInfrastructure}}{{{existingInfrastructure}}}{{else}}None specified{{/if}}
+- **Client-Identified Missing Components:** {{#if missingComponents}}{{{missingComponents}}}{{else}}None specified{{/if}}
 - **Rental Duration:** {{{rentalDurationMonths}}} months
+- **Monthly Budget:** {{#if budget}}OMR {{{budget}}}{{else}}Not specified{{/if}}
 
 **Your Task:**
-1.  **Analyze and Select:** Carefully analyze the client's needs. Select the most appropriate assets from the inventory to build a complete and cost-effective solution. Pay attention to the number of users, workload, and software requirements to determine the necessary specifications (RAM, CPU, etc.).
-2.  **Calculate Cost:** Sum the 'monthlyPrice' of all selected assets to calculate the 'totalMonthlyCost'.
-3.  **Write Proposal:**
+1.  **Analyze and Design:**
+    *   Carefully analyze the client's needs based on the **purpose of the rental** and the **number of attendees**. For example, a 'Training Program' for 20 people needs 20 laptops, a powerful router, and maybe a server. A 'Conference' might need laptops for registration staff, networking gear, and projectors.
+    *   Consider the client's stated **existing infrastructure** and **missing components** to avoid recommending items they already have.
+    *   Design a complete, logical, and cost-effective solution. Select the most appropriate assets from the inventory.
+    *   For each recommended asset, you MUST determine a **quantity**. For user-specific items like laptops or workstations, the quantity should generally match the number of attendees. For shared items like servers or routers, the quantity is usually 1, unless more are clearly needed for redundancy or load.
+
+2.  **Generate Proposal:**
     *   **proposalTitle:** Create a clear title for the proposal.
     *   **executiveSummary:** Write a concise summary explaining why the selected package is a good fit for the client's project.
-    *   **recommendedAssets:** Create a JSON array of the exact asset objects you selected from the inventory.
+    *   **recommendedAssets:** Create a JSON array of the exact asset objects you selected from the inventory. **Crucially, add a 'quantity' field to each asset object in the array.**
+    *   **totalMonthlyCost:** Calculate the total cost by summing up (asset.monthlyPrice * quantity) for every asset in your recommended list.
     *   **serviceAgreement:** Draft a standard Service Level Agreement (SLA) in Markdown format. It should include sections for: Scope of Services, Rental Term, Payment Terms, Support & Maintenance (e.g., "8/5 remote support"), and Client Responsibilities.
 
 Return the complete response in the specified structured JSON format.
