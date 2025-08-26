@@ -3,8 +3,8 @@
 
 import { useState, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { analyzeCv, generateEnhancedCv } from '@/ai/flows/cv-enhancement';
 import { type CvAnalysisOutput, type CvGenerationOutput } from '@/ai/flows/cv-enhancement.schema';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, Languages, ArrowLeft, Mic } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -378,7 +378,7 @@ const InterviewCoach = ({ jobTitle, onStartOver }: { jobTitle: string; onStartOv
 
     const handlePrevQuestion = () => {
         if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex(prev => prev + 1);
+            setCurrentQuestionIndex(prev => prev - 1);
         }
     };
 
