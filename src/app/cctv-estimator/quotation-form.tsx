@@ -423,7 +423,7 @@ export default function QuotationForm() {
                         <FormLabel>Existing System</FormLabel>
                         <FormControl>
                             <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-2">
-                                {existingSystemTypes.map(({ id, label, description, icon: Icon }) => (
+                                {existingSystemTypes.map(({ id, label, icon: Icon }) => (
                                     <FormItem key={id} className="flex-1">
                                         <FormControl>
                                             <RadioGroupItem value={id} id={`system_${id}`} className="sr-only" />
