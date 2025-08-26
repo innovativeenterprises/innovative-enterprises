@@ -1,5 +1,6 @@
+
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle, ServerCog } from "lucide-react";
 
 export interface Agent {
     role: string;
@@ -56,6 +57,7 @@ export const initialAgentCategories: AgentCategory[] = [
         category: "Tech & Data Agents",
         agents: [
             { name: "Tariq Tech", role: "IT Support Agent", description: "Automates IT processes, assists with software troubleshooting, and manages system configurations.", icon: Cpu, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1614149290184-7376551e15a9?q=80&w=1920&auto=format&fit=crop', aiHint: 'it support' },
+            { name: "A.S.A", role: "IT Solutions Architect", description: "Analyzes client needs to design and propose custom IT infrastructure rental packages.", icon: ServerCog, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1593941707882-6e87a2b9a5c0?q=80&w=1920&auto=format&fit=crop', aiHint: 'architect robot', href: "/it-rental-agent" },
             { name: "Dana", role: "Data Analyst Agent", description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.", icon: Database, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698323-b1e79e63d68c?q=80&w=1920&auto=format&fit=crop', aiHint: 'data analytics' },
             { name: "Neo", role: "AI Training Agent", description: "Fine-tunes other AI agents by processing custom knowledge documents and Q&A pairs.", icon: BrainCircuit, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1620712943543-bcc4622f4273?q=80&w=1920&auto=format&fit=crop', aiHint: 'ai brain', href: "/training-center" },
             { name: "AutoNabil", role: "Automation Agent", description: "Connects disparate tools and services to create seamless, automated workflows across the business.", icon: Bot, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617243-caff45c4e094?q=80&w=1920&auto=format&fit=crop', aiHint: 'automation robot' },

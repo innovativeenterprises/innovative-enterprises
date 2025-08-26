@@ -1,0 +1,216 @@
+
+'use client';
+
+import { useState } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { generateItRentalProposal } from '@/ai/flows/it-rental-agent';
+import { ItRentalInquiryInputSchema, type ItRentalInquiryInput, type ItRentalProposalOutput } from '@/ai/flows/it-rental-agent.schema';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Sparkles, FileText, Briefcase, Download, CheckCircle, Mail } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+
+export default function ItRentalAgentForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState<ItRentalProposalOutput | null>(null);
+  const { toast } = useToast();
+
+  const form = useForm<ItRentalInquiryInput>({
+    resolver: zodResolver(ItRentalInquiryInputSchema),
+    defaultValues: {
+      projectName: '',
+      projectType: 'Web Hosting (e.g., Website, E-commerce)',
+      userCount: 1,
+      workload: 'Medium (consistent daily use)',
+      requiredSoftware: '',
+      storageNeeds: '',
+      networkNeeds: '',
+      securityNeeds: '',
+      budget: undefined,
+      rentalDurationMonths: 1,
+    },
+  });
+
+  const onSubmit: SubmitHandler<ItRentalInquiryInput> = async (data) => {
+    setIsLoading(true);
+    setResponse(null);
+    try {
+      const result = await generateItRentalProposal(data);
+      setResponse(result);
+      toast({
+        title: 'Proposal Generated!',
+        description: 'Your custom infrastructure proposal is ready for review.',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error Generating Proposal',
+        description: 'An unexpected error occurred. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleDownloadAgreement = () => {
+    if (!response?.serviceAgreement) return;
+    const element = document.createElement("a");
+    const file = new Blob([response.serviceAgreement], {type: 'text/markdown'});
+    element.href = URL.createObjectURL(file);
+    element.download = "Service-Agreement.md";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-10 text-center">
+          <div className="flex flex-col items-center gap-6">
+            <Loader2 className="h-12 w-12 text-primary animate-spin" />
+            <div className="space-y-2">
+              <CardTitle className="text-2xl">Designing Your Solution...</CardTitle>
+              <CardDescription>Our AI Architect is analyzing your requirements to build the perfect package.</CardDescription>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  if (response) {
+      return (
+         <Card>
+            <CardHeader className="text-center">
+                <div className="mx-auto bg-green-100 dark:bg-green-900/50 p-4 rounded-full w-fit mb-4">
+                    <CheckCircle className="h-12 w-12 text-green-500" />
+                </div>
+                <CardTitle className="text-2xl">{response.proposalTitle}</CardTitle>
+                <CardDescription>{response.executiveSummary}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div>
+                    <h3 className="text-lg font-semibold mb-2">Recommended Hardware Package</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {response.recommendedAssets.map(asset => (
+                            <Card key={asset.id} className="flex items-start gap-4 p-4">
+                                <Image src={asset.image} alt={asset.name} width={80} height={80} className="rounded-md object-cover" />
+                                <div className="space-y-1">
+                                    <p className="font-semibold">{asset.name}</p>
+                                    <Badge variant="outline">{asset.type}</Badge>
+                                    <p className="text-xs text-muted-foreground">{asset.specs}</p>
+                                    <p className="text-sm font-bold text-primary">OMR {asset.monthlyPrice.toFixed(2)}/mo</p>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="p-4 rounded-md border bg-muted/50 flex justify-between items-center">
+                    <span className="text-muted-foreground font-semibold">Total Estimated Monthly Cost</span>
+                    <span className="text-2xl font-bold text-primary">OMR {response.totalMonthlyCost.toFixed(2)}</span>
+                </div>
+
+                <div>
+                    <h3 className="text-lg font-semibold mb-2">Draft Service Agreement</h3>
+                    <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
+                        {response.serviceAgreement}
+                    </div>
+                </div>
+            </CardContent>
+            <CardFooter className="flex-col gap-4">
+                 <div className="flex justify-between w-full">
+                    <Button variant="outline" onClick={() => setResponse(null)} className="w-full sm:w-auto">Request a New Proposal</Button>
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={handleDownloadAgreement}><Download className="mr-2 h-4 w-4"/> Download Agreement</Button>
+                        <Button asChild><Link href="/partner"><Mail className="mr-2 h-4 w-4"/> Accept & Proceed</Link></Button>
+                    </div>
+                 </div>
+            </CardFooter>
+        </Card>
+      )
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>New Infrastructure Request</CardTitle>
+        <CardDescription>Tell us about your project, and our AI will recommend a rental package.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField control={form.control} name="projectName" render={({ field }) => (
+                <FormItem><FormLabel>Project Name</FormLabel><FormControl><Input placeholder="e.g., 'My E-commerce Website'" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+
+            <div className="grid md:grid-cols-2 gap-6">
+                 <FormField control={form.control} name="projectType" render={({ field }) => (
+                    <FormItem><FormLabel>Project Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                        <SelectItem value="Web Hosting (e.g., Website, E-commerce)">Web Hosting</SelectItem>
+                        <SelectItem value="Data Analytics & BI">Data Analytics & BI</SelectItem>
+                        <SelectItem value="AI/ML Model Training">AI/ML Model Training</SelectItem>
+                        <SelectItem value="Development & Testing Environment">Development & Testing</SelectItem>
+                        <SelectItem value="General Office Workstations">General Office Workstations</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent></Select><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="userCount" render={({ field }) => (
+                    <FormItem><FormLabel>Number of Users</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+            </div>
+
+            <FormField control={form.control} name="workload" render={({ field }) => (
+                <FormItem><FormLabel>Expected Workload</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                    <SelectItem value="Low (occasional use)">Low (occasional use)</SelectItem>
+                    <SelectItem value="Medium (consistent daily use)">Medium (consistent daily use)</SelectItem>
+                    <SelectItem value="High (intensive, 24/7 processing)">High (intensive, 24/7 processing)</SelectItem>
+                </SelectContent></Select><FormMessage /></FormItem>
+            )} />
+
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="storageNeeds" render={({ field }) => (
+                    <FormItem><FormLabel>Storage Needs</FormLabel><FormControl><Input placeholder="e.g., 500GB SSD" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="networkNeeds" render={({ field }) => (
+                    <FormItem><FormLabel>Network Needs</FormLabel><FormControl><Input placeholder="e.g., 1Gbps connection" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+            </div>
+
+            <FormField control={form.control} name="requiredSoftware" render={({ field }) => (
+                <FormItem><FormLabel>Required Software (Optional)</FormLabel><FormControl><Textarea placeholder="e.g., Docker, Kubernetes, PostgreSQL, a specific Linux distro..." {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+
+             <FormField control={form.control} name="securityNeeds" render={({ field }) => (
+                <FormItem><FormLabel>Security Needs (Optional)</FormLabel><FormControl><Textarea placeholder="e.g., Dedicated firewall, VPN access, data encryption..." {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="rentalDurationMonths" render={({ field }) => (
+                    <FormItem><FormLabel>Rental Duration (Months)</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                 <FormField control={form.control} name="budget" render={({ field }) => (
+                    <FormItem><FormLabel>Monthly Budget (OMR, Optional)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+            </div>
+
+
+            <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
+              {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</> : <><Sparkles className="mr-2 h-4 w-4" /> Generate Proposal</>}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}
