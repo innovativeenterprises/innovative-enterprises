@@ -30,6 +30,8 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+
 
 export default function AdminLayout({
   children,
@@ -52,12 +54,8 @@ export default function AdminLayout({
         <SidebarHeader>
           <Button asChild variant="ghost" className="h-auto w-auto p-1">
             <Link href="/" className="flex items-center gap-2">
-              <div className="bg-primary p-2 rounded-lg">
-                <Lightbulb className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">
-                Innovative
-              </span>
+               <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-32 h-auto object-contain group-data-[collapsible=icon]:hidden" />
+               <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={32} height={32} className="w-8 h-8 object-contain hidden group-data-[collapsible=icon]:block" />
             </Link>
           </Button>
         </SidebarHeader>

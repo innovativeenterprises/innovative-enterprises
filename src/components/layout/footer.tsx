@@ -1,8 +1,7 @@
 
 import Link from 'next/link';
-import { Lightbulb } from 'lucide-react';
 import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
-import { Button } from '../ui/button';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -10,8 +9,7 @@ export default function Footer() {
       <div className="container mx-auto py-8 px-4">
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="flex items-center gap-2 justify-center md:justify-start">
-            <Lightbulb className="h-6 w-6 text-accent" />
-            <span className="font-bold text-lg text-primary">INNOVATIVE ENTERPRISES</span>
+             <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={200} height={50} className="h-12 w-auto object-contain" />
           </div>
           <div className="flex flex-col gap-4 items-center">
              <CompanyProfileDownloader />

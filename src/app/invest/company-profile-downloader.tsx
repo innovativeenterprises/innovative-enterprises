@@ -10,6 +10,7 @@ import { Download, Lightbulb, Loader2, Mail, Phone, Globe, MapPin, Building2, Ch
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import Image from "next/image";
 
 // This is the hidden component that will be rendered to generate the PDF
 const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => (
@@ -17,13 +18,7 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => (
         <div className="p-12">
             <header className="flex items-start justify-between pb-6 border-b-4 border-primary">
                 <div className="flex items-center gap-4">
-                    <div className="bg-primary p-3 rounded-lg">
-                        <Lightbulb className="w-10 h-10 text-white" />
-                    </div>
-                    <div>
-                        <h1 className="text-3xl font-bold text-primary">INNOVATIVE ENTERPRISES</h1>
-                        <p className="text-sm text-gray-600">Pioneering Tomorrow's Technology, Today.</p>
-                    </div>
+                    <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={240} height={60} className="h-16 w-auto object-contain" />
                 </div>
                 <div className="text-right text-xs text-gray-500">
                     <p className="font-semibold">Generated On</p>

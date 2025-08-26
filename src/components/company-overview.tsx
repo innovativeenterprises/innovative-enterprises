@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -32,9 +33,9 @@ export default function CompanyOverview() {
             </div>
             <div className="flex items-center gap-4 pt-4">
                 <div className="flex -space-x-2">
-                    <Image src="https://placehold.co/40x40.png" alt="Client 1" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
-                    <Image src="https://placehold.co/40x40.png" alt="Client 2" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
-                    <Image src="https://placehold.co/40x40.png" alt="Client 3" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
+                    <Image src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde" alt="Client 1" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
+                    <Image src="https://images.unsplash.com/photo-1599566150163-29194dcaad36" alt="Client 2" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
+                    <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2" alt="Client 3" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
                 </div>
                 <div>
                     <div className="flex text-yellow-400">
@@ -50,7 +51,7 @@ export default function CompanyOverview() {
           </div>
           <div className="relative h-80 md:h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl group">
              <Image
-              src="https://placehold.co/600x600.png"
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"
               alt="Innovative office space"
               fill
               className="object-cover transform group-hover:scale-105 transition-transform duration-500"

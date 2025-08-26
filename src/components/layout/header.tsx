@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -26,6 +26,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
+import Image from 'next/image';
 
 const navLinks = [
   { href: '/#products', label: 'Products' },
@@ -83,6 +84,11 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     title: "Browse IT Rentals",
     href: "/rentals",
     description: "View our catalog of available IT hardware and cloud infrastructure for rent.",
+  },
+  {
+    title: "Tender Assistant",
+    href: "/tender-assistant",
+    description: "Generate comprehensive and professional draft responses to help you win your next bid.",
   },
 ];
 
@@ -209,11 +215,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <div className="bg-primary p-2 rounded-lg">
-            <Lightbulb className="h-6 w-6 text-primary-foreground" />
-          </div>
-          <span className="hidden sm:inline">INNOVATIVE</span>
-          <span className="sm:hidden">IE</span>
+          <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-40 h-10 object-contain" />
         </Link>
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
@@ -307,10 +309,7 @@ export default function Header() {
                 <SheetContent side="right">
                 <div className="flex flex-col gap-4 py-8">
                     <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary mb-4 px-2" onClick={handleLinkClick}>
-                        <div className="bg-primary p-2 rounded-lg">
-                            <Lightbulb className="h-6 w-6 text-primary-foreground" />
-                        </div>
-                    <span>INNOVATIVE ENTERPRISES</span>
+                       <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-40 h-10 object-contain" />
                     </Link>
                     <nav className="flex flex-col gap-2">
                       {mobileNavLinks}
