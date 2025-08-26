@@ -14,7 +14,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Send, CheckCircle, Search, FileUp, ArrowLeft, Bot, MessageSquare } from 'lucide-react';
 import { sanadServiceGroups, sanadServiceIcons } from '@/lib/sanad-services';
 import { analyzeSanadTask, type SanadTaskAnalysisOutput } from '@/ai/flows/sanad-task-analysis';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -385,3 +384,5 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
     </Card>
   );
 }
+
+    
