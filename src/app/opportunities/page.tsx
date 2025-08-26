@@ -10,6 +10,7 @@ import type { Opportunity } from "@/lib/opportunities";
 import { opportunityIconMap } from "@/lib/opportunities";
 // Import the data hook from the admin table
 import { useOpportunitiesData } from "@/app/admin/opportunity-table";
+import Link from "next/link";
 
 const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
     const getStatusColor = () => {
@@ -46,8 +47,14 @@ const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
                         <span>{opp.deadline}</span>
                     </div>
                 </div>
-                <Button className="w-full" disabled={opp.status === 'Closed'}>
-                    {opp.status === 'Closed' ? 'Closed for Applications' : <>View Details & Apply <ArrowRight className="ml-2 w-4 h-4"/></>}
+                <Button asChild className="w-full" disabled={opp.status === 'Closed'}>
+                   {opp.status === 'Closed' ? (
+                       <span>Closed for Applications</span>
+                   ) : (
+                       <Link href="/submit-work">
+                           View Details & Apply <ArrowRight className="ml-2 w-4 h-4"/>
+                       </Link>
+                   )}
                 </Button>
             </CardFooter>
         </Card>
