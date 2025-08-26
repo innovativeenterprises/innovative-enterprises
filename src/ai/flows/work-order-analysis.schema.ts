@@ -27,5 +27,6 @@ export const WorkOrderAnalysisOutputSchema = z.object({
     .describe('The category the work order falls into.'),
   summary: z.string().describe('A concise summary of the opportunity, suitable for posting on an opportunities board.'),
   recommendedNextSteps: z.string().describe('A brief recommendation for the business owner on what to expect next.'),
+  generatedQuestions: z.array(z.string()).describe("A list of 3-5 key questions for potential service providers to answer in their proposal."),
 });
 export type WorkOrderAnalysisOutput = z.infer<typeof WorkOrderAnalysisOutputSchema>;

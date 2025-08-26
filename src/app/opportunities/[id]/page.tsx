@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { initialOpportunities, opportunityIconMap } from "@/lib/opportunities";
 import { notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Calendar, DollarSign, ArrowRight } from "lucide-react";
+import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
@@ -60,11 +61,25 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
                                 <h3 className="text-xl font-semibold mb-2">Description</h3>
                                 <p className="text-muted-foreground whitespace-pre-wrap">{opportunity.description}</p>
                             </div>
+                             {opportunity.questions && opportunity.questions.length > 0 && (
+                                <div>
+                                    <h3 className="text-xl font-semibold mb-2">Key Questions</h3>
+                                    <Alert>
+                                        <HelpCircle className="h-4 w-4" />
+                                        <AlertTitle>Address These in Your Proposal</AlertTitle>
+                                        <AlertDescription>
+                                            <ul className="list-disc pl-5 mt-2 space-y-1">
+                                                {opportunity.questions.map((q, i) => <li key={i}>{q}</li>)}
+                                            </ul>
+                                        </AlertDescription>
+                                    </Alert>
+                                </div>
+                            )}
                         </CardContent>
                         <CardFooter>
                             <Button asChild size="lg" className="w-full">
                                 <Link href="/submit-work">
-                                    Apply Now <ArrowRight className="ml-2 w-5 h-5" />
+                                    Submit Proposal <ArrowRight className="ml-2 w-5 h-5" />
                                 </Link>
                             </Button>
                         </CardFooter>

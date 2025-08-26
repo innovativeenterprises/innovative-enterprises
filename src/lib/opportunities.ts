@@ -14,6 +14,7 @@ export interface Opportunity {
   iconName: keyof typeof opportunityIconMap;
   badgeVariant: OpportunityBadgeVariant;
   status: 'Open' | 'Closed' | 'In Progress';
+  questions?: string[];
 }
 
 export const opportunityIconMap = {
@@ -37,6 +38,12 @@ export const initialOpportunities: Opportunity[] = [
         iconName: "Brush",
         badgeVariant: "default",
         status: "Open",
+        questions: [
+            "What is your design philosophy?",
+            "Can you provide a portfolio of previous branding projects?",
+            "What is your proposed timeline for the initial concepts?",
+            "How do you incorporate feedback into your design process?"
+        ]
     },
     {
         id: "2",
@@ -48,6 +55,12 @@ export const initialOpportunities: Opportunity[] = [
         iconName: "Code",
         badgeVariant: "secondary",
         status: "Open",
+         questions: [
+            "What is your experience with React and TypeScript?",
+            "Can you provide examples of similar UI components you have built?",
+            "How would you ensure the widget is performant and accessible?",
+            "What is your estimated time to complete this task?"
+        ]
     },
     {
         id: "3",

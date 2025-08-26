@@ -49,7 +49,9 @@ Your task is to analyze a new work order submitted by a potential client and pre
 
 2.  **Write a Public Summary:** Create a clear, concise, and anonymous summary of the opportunity. This summary will be posted on our public "Opportunities" page for freelancers. Remove any client-specific identifying information. It should be written to attract the right talent.
 
-3.  **Recommend Next Steps:** Provide a short (1-2 sentences) message for the client who submitted the form, explaining what they should expect next. For example, "Our team will review the analysis and prepare it for our opportunities board." or "Thank you. Our partnerships team will contact you to discuss the RFP requirements."
+3.  **Generate Clarifying Questions:** Based on the provided title and description, generate a list of 3-5 important and clarifying questions that a potential service provider should answer in their proposal. These questions should help solicit the necessary information to properly scope and quote the project (e.g., "What is your experience with [specific technology]?", "Can you provide examples of similar projects you have completed?", "What is your proposed timeline for the key milestones?").
+
+4.  **Recommend Next Steps:** Provide a short (1-2 sentences) message for the client who submitted the form, explaining what they should expect next. For example, "Our team will review the analysis and prepare it for our opportunities board." or "Thank you. Our partnerships team will contact you to discuss the RFP requirements."
 
 Generate the response in the required structured format.
 `,
