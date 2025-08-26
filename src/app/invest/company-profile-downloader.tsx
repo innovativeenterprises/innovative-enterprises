@@ -33,18 +33,18 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => (
 
             <main className="mt-8 grid grid-cols-3 gap-8">
                 <div className="col-span-2 space-y-8">
-                    <section>
+                    <section className="[break-inside:avoid]">
                         <h2 className="text-xl font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">1. About Us</h2>
                         <p className="text-sm leading-relaxed text-gray-700">
                             Innovative Enterprises is a leading Omani SME dedicated to delivering cutting-edge solutions in emerging technology and digital transformation. We empower businesses and government entities to thrive in the digital age by providing a suite of innovative products and services designed to enhance efficiency, drive growth, and foster collaboration. Our mission is to pioneer tomorrow's technology today, with a strong focus on local talent and client success.
                         </p>
                     </section>
 
-                    <section>
+                    <section className="[break-inside:avoid]">
                         <h2 className="text-xl font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">2. Core Services</h2>
                         <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                             {services.map((service: any) => (
-                                <div key={service.title} className="flex items-start gap-2">
+                                <div key={service.title} className="flex items-start gap-2 [break-inside:avoid]">
                                     <CheckSquare className="w-4 h-4 mt-1 text-accent shrink-0" />
                                     <div>
                                         <h3 className="font-semibold text-sm">{service.title}</h3>
@@ -55,11 +55,11 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => (
                         </div>
                     </section>
                     
-                     <section>
+                     <section className="[break-inside:avoid]">
                         <h2 className="text-xl font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">3. Leadership Team</h2>
                         <div className="grid grid-cols-2 gap-6">
                             {leadership.map((member: any) => (
-                                <div key={member.name} className="flex items-center gap-3">
+                                <div key={member.name} className="flex items-center gap-3 [break-inside:avoid]">
                                     <img src={member.photo} alt={member.name} className="w-16 h-16 rounded-full object-cover border-2 border-primary/20" />
                                     <div>
                                         <h3 className="font-bold text-sm">{member.name}</h3>
@@ -71,7 +71,7 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => (
                     </section>
 
                 </div>
-                <aside className="col-span-1 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <aside className="col-span-1 bg-gray-50 p-4 rounded-lg border border-gray-200 h-fit">
                      <h3 className="text-base font-bold text-primary mb-4">Contact Information</h3>
                      <div className="space-y-3 text-xs text-gray-700">
                         <div className="flex items-start gap-2"><MapPin className="w-3 h-3 mt-0.5 text-primary shrink-0" /><p>Al Amerat, Muscat, Oman</p></div>
@@ -98,11 +98,11 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => (
                 </aside>
             </main>
 
-             <section className="mt-8 pt-8 border-t-2 border-primary/20">
+             <section className="mt-8 pt-8 border-t-2 border-primary/20 [break-before:page]">
                 <h2 className="text-xl font-bold text-primary mb-4">4. Digital Products</h2>
                  <div className="grid grid-cols-2 gap-6">
                     {products.map((product: any) => (
-                        <div key={product.name} className="flex gap-4">
+                        <div key={product.name} className="flex gap-4 [break-inside:avoid]">
                             <img src={product.image} alt={product.name} className="w-24 h-24 rounded-lg object-cover border-2 border-gray-200" />
                             <div>
                                 <h3 className="font-bold text-base">{product.name}</h3>
@@ -142,7 +142,7 @@ export default function CompanyProfileDownloader() {
         
         try {
             const canvas = await html2canvas(profileRef.current, {
-                scale: 2,
+                scale: 2, // Higher scale for better quality
                 useCORS: true,
                 logging: false,
                 backgroundColor: null,
@@ -156,25 +156,19 @@ export default function CompanyProfileDownloader() {
             });
             
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
-            
             const ratio = canvasWidth / canvasHeight;
-            const imgHeight = pdfWidth / ratio;
+            const pdfHeight = pdfWidth / ratio;
             
-            let heightLeft = imgHeight;
-            let position = 0;
-
-            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
-
-            while (heightLeft > 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-                heightLeft -= pdfHeight;
+            const totalPDFPages = Math.ceil(pdfHeight / pdf.internal.pageSize.getHeight());
+            
+            for (let i = 0; i < totalPDFPages; i++) {
+                if (i > 0) {
+                    pdf.addPage();
+                }
+                const yPos = -(pdf.internal.pageSize.getHeight() * i);
+                pdf.addImage(imgData, 'PNG', 0, yPos, pdfWidth, pdfHeight);
             }
 
             pdf.save("Innovative-Enterprises-Company-Profile.pdf");
