@@ -14,13 +14,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw, Shield, Users, VenetianMask } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { CameraCapture } from '@/components/camera-capture';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -40,6 +42,14 @@ const buildingTypes = [
     { id: 'Hotel', label: 'Hotel', icon: Hotel },
 ];
 
+const purposePresets = [
+    { id: 'general_security', label: 'General Security', description: 'Overall surveillance for safety and deterrence.' },
+    { id: 'employee_monitoring', label: 'Employee Monitoring', description: 'Overseeing staff activity and productivity.' },
+    { id: 'property_surveillance', label: 'Property Surveillance', description: 'Monitoring a specific property or asset.' },
+    { id: 'theft_prevention', label: 'Theft Prevention', description: 'Focusing on deterring and catching theft.' },
+    { id: 'child_pet_monitoring', label: 'Child / Pet Monitoring', description: 'Keeping an eye on family members or pets at home.' },
+];
+
 const coverageTypes = [
     { id: 'Full Environment', label: 'Full', description: 'Cover all areas', icon: Expand },
     { id: 'Partial', label: 'Partial', description: 'Cover specific areas', icon: Shrink },
@@ -57,6 +67,7 @@ const existingSystemTypes = [
 ];
 
 const FormSchema = z.object({
+  purposePreset: z.string().optional(),
   purpose: z.string().min(10, { message: "Please describe the purpose in more detail." }),
   buildingType: z.string({ required_error: "Please select a building type." }),
   dimensions: z.string().optional(),
@@ -315,9 +326,47 @@ export default function QuotationForm() {
               )}
             />
             
-             <FormField control={form.control} name="purpose" render={({ field }) => (
-                <FormItem><FormLabel>Purpose of Installation</FormLabel><FormControl><Textarea placeholder="e.g., General security, monitoring employees, watching pets, etc." {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="purposePreset"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Primary Purpose</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          const selected = purposePresets.find(p => p.label === value);
+                          if (selected) {
+                            form.setValue('purpose', selected.description);
+                          }
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a primary purpose..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {purposePresets.map(preset => (
+                            <SelectItem key={preset.id} value={preset.label}>{preset.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>Select a preset to start, then add more details below.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField control={form.control} name="purpose" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Purpose Details</FormLabel>
+                        <FormControl><Textarea placeholder="e.g., General security, monitoring employees, watching pets, etc." {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )} />
+            </div>
             
             <div>
               <FormLabel>Building Plan or Photo</FormLabel>
