@@ -31,6 +31,7 @@ const quotationTextPrompt = ai.definePrompt({
 **Client Requirements:**
 - **Building Type:** {{buildingType}}
 - **Purpose of Installation:** {{purpose}}
+- **Surveillance Area:** {{surveillanceArea}} (Internal Only, External Only, or Both). This is a critical factor for camera type selection (e.g., weatherproof cameras for external).
 - **Coverage Required:** {{coverage}}
 {{#if coverageDetails}}
 - **Partial Coverage Details:** {{coverageDetails}}
@@ -54,9 +55,9 @@ const quotationTextPrompt = ai.definePrompt({
 {{/if}}
 
 **Your Task:**
-1.  **Analyze the Inputs:** Carefully review all the client's requirements and analyze the provided floor plan, sketch, photo, or dimensions. Make logical assumptions based on the visual data.
+1.  **Analyze the Inputs:** Carefully review all the client's requirements and analyze the provided floor plan, sketch, photo, or dimensions. Make logical assumptions based on the visual data. Pay close attention to whether the surveillance is internal, external, or both.
 2.  **Design the System:**
-    *   Determine the optimal number and type of cameras (e.g., dome, bullet, PTZ) needed to achieve the desired coverage, considering the client's preference for '{{cameraType}}'.
+    *   Determine the optimal number and type of cameras (e.g., dome, bullet, PTZ) needed to achieve the desired coverage, considering the client's preference for '{{cameraType}}' and the '{{surveillanceArea}}'. Use weatherproof bullet cameras for external areas.
     *   Select cameras that meet the resolution ('{{cameraResolution}}'), night vision, and audio recording requirements.
     *   Select an appropriate Network Video Recorder (NVR). The storage capacity MUST be sufficient for {{storageDuration}} days of continuous recording from all cameras. A 4K camera requires ~150GB/day. A standard HD camera requires ~40GB/day. Calculate total storage needed and select an NVR with adequate HDD space (e.g., 2TB, 4TB, 8TB, 16TB).
     *   Determine the required network switch (PoE or standard) and other necessary components (e.g., power supplies, connectors).

@@ -55,6 +55,12 @@ const purposePresets = [
     { id: 'pet_monitoring', label: 'Pet Monitoring', description: 'Watching over pets while you are away.', icon: PawPrint },
 ];
 
+const surveillanceAreaTypes = [
+    { id: 'Internal Only', label: 'Internal', description: 'Inside the building', icon: Home },
+    { id: 'External Only', label: 'External', description: 'Outside perimeter', icon: Sun },
+    { id: 'Both', label: 'Both', description: 'Internal and external', icon: Map },
+];
+
 const coverageTypes = [
     { id: 'Full Environment', label: 'Full', description: 'Cover all areas', icon: Expand },
     { id: 'Partial', label: 'Partial', description: 'Cover specific areas', icon: Shrink },
@@ -78,6 +84,7 @@ const FormSchema = z.object({
   dimensions: z.string().optional(),
   floorPlanUri: z.string().optional(),
   floorPlanFile: z.any().optional(),
+  surveillanceArea: z.enum(['Internal Only', 'External Only', 'Both'], { required_error: "Please select the surveillance area." }),
   coverage: z.enum(['Full Environment', 'Partial'], { required_error: "Coverage selection is required." }),
   coverageDetails: z.string().optional(),
   remoteMonitoring: z.enum(['Yes', 'No'], { required_error: "Remote monitoring selection is required." }),
@@ -510,6 +517,33 @@ export default function QuotationForm() {
                 )} />
             </div>
 
+            <FormField
+              control={form.control}
+              name="surveillanceArea"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Surveillance Area</FormLabel>
+                  <FormControl>
+                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-2">
+                      {surveillanceAreaTypes.map(({ id, label, description, icon: Icon }) => (
+                        <FormItem key={id} className="flex-1">
+                          <FormControl>
+                            <RadioGroupItem value={id} id={`area_${id}`} className="sr-only" />
+                          </FormControl>
+                           <Label htmlFor={`area_${id}`} className={cn('flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer text-center', field.value === id && 'border-primary')}>
+                            <Icon className="mb-2 h-6 w-6" />
+                            {label}
+                            <span className="text-xs text-muted-foreground">{description}</span>
+                          </Label>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Card className="bg-muted/50 p-6">
                  <CardTitle className="text-lg mb-4">System Specifications</CardTitle>
                  <div className="space-y-6">
@@ -540,7 +574,7 @@ export default function QuotationForm() {
                     name="coverage"
                     render={({ field }) => (
                         <FormItem className="space-y-3">
-                        <FormLabel>Coverage</FormLabel>
+                        <FormLabel>Coverage Extent</FormLabel>
                         <FormControl>
                             <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-2">
                                 {coverageTypes.map(({ id, label, description, icon: Icon }) => (

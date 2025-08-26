@@ -9,6 +9,7 @@ export const CctvQuotationInputSchema = z.object({
   buildingType: z.string().min(1, "Building type is required."),
   dimensions: z.string().optional().describe("Building dimensions if no floor plan is provided (e.g., '15m x 20m, 2 floors')."),
   floorPlanUri: z.string().optional().describe("A floor plan or sketch of the building, as a data URI."),
+  surveillanceArea: z.enum(['Internal Only', 'External Only', 'Both']),
   coverage: z.enum(['Full Environment', 'Partial']),
   coverageDetails: z.string().optional().describe("Details about which areas need partial coverage."),
   remoteMonitoring: z.boolean(),
