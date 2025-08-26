@@ -7,6 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod';
 import {
     CctvQuotationInput,
     CctvQuotationInputSchema,
@@ -18,10 +19,13 @@ export async function generateCctvQuotation(input: CctvQuotationInput): Promise<
   return cctvQuotationFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'cctvQuotationPrompt',
+// Define the schema for the text-based part of the quotation first
+const CctvQuotationTextOutputSchema = CctvQuotationOutputSchema.omit({ annotatedPlanUri: true });
+
+const quotationTextPrompt = ai.definePrompt({
+  name: 'cctvQuotationTextPrompt',
   input: { schema: CctvQuotationInputSchema },
-  output: { schema: CctvQuotationOutputSchema },
+  output: { schema: CctvQuotationTextOutputSchema },
   prompt: `You are an expert CCTV and surveillance systems engineer. Your task is to analyze a client's requirements and generate a detailed, professional quotation for a complete installation.
 
 **Client Requirements:**
@@ -83,7 +87,7 @@ const prompt = ai.definePrompt({
     *   Generate a unique quotation ID.
     *   Outline the next steps for the client (e.g., "Review the quotation. To proceed, you can approve this quote to have it posted as a work order for our network of certified installers.").
 
-Return the complete response in the specified structured JSON format.
+Return the complete response in the specified structured JSON format. Do not include the annotatedPlanUri field yet.
 `,
 });
 
@@ -94,7 +98,54 @@ const cctvQuotationFlow = ai.defineFlow(
     outputSchema: CctvQuotationOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
-    return output!;
+    // Step 1: Generate the text-based quotation to determine the equipment list.
+    const { output: textQuotation } = await quotationTextPrompt(input);
+    if (!textQuotation) {
+        throw new Error('Failed to generate text part of the quotation.');
+    }
+
+    // Step 2: If a floor plan was provided, generate the annotated image.
+    let annotatedPlanUri: string | undefined;
+    if (input.floorPlanUri) {
+        const equipmentListForPrompt = textQuotation.equipmentList.map(e => `- ${e.quantity}x ${e.item}`).join('\n');
+
+        const imageGenerationPrompt = `
+        You are a CCTV system designer. Your task is to annotate the provided floor plan or building sketch with the locations of the required surveillance equipment.
+
+        Equipment to place:
+        ${equipmentListForPrompt}
+        - The main NVR/Switch is at: ${input.dvrSwitchTvLocation}
+
+        Instructions:
+        1. Use the original image as the background.
+        2. Place simple, clear icons on the image to mark the location of each camera. Use a small circle or dot for each camera.
+        3. Draw a square icon labeled "NVR" to mark the location of the main recording device.
+        4. Draw simple dashed lines to indicate the general path of the network cabling from each camera back to the NVR location.
+        5. Keep the annotations clean and easy to understand. Do not add any text other than the "NVR" label.
+        `;
+
+        try {
+            const { media } = await ai.generate({
+                model: 'googleai/gemini-2.0-flash-preview-image-generation',
+                prompt: [
+                    { media: { url: input.floorPlanUri } },
+                    { text: imageGenerationPrompt },
+                ],
+                config: {
+                    responseModalities: ['TEXT', 'IMAGE'],
+                },
+            });
+            annotatedPlanUri = media?.url;
+        } catch (error) {
+            console.error("Image annotation failed, proceeding without it.", error);
+            // Don't throw an error, just proceed without the annotated image.
+        }
+    }
+
+    // Step 3: Combine the text quotation and the annotated image URI into the final output.
+    return {
+        ...textQuotation,
+        annotatedPlanUri,
+    };
   }
 );

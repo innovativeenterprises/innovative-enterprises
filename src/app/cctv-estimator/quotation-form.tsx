@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw, Shield, Users, VenetianMask, PawPrint, Baby, Video, AudioWaveform, CameraOff, TowerControl, Tv, Sun, Moon } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw, Shield, Users, VenetianMask, PawPrint, Baby, Video, AudioWaveform, CameraOff, TowerControl, Tv, Sun, Moon, Map } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -295,6 +295,15 @@ export default function QuotationForm() {
             <AlertTitle>Solution Summary</AlertTitle>
             <AlertDescription>{response.summary}</AlertDescription>
           </Alert>
+
+          {response.annotatedPlanUri && (
+            <div>
+                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2"><Map className="h-5 w-5"/> Annotated Plan</h3>
+                <div className="relative aspect-video w-full overflow-hidden rounded-md border bg-muted">
+                    <img src={response.annotatedPlanUri} alt="Annotated floor plan" className="object-contain w-full h-full" />
+                </div>
+            </div>
+          )}
 
           <div>
             <h3 className="text-lg font-semibold mb-2">Equipment Details</h3>

@@ -46,5 +46,6 @@ export const CctvQuotationOutputSchema = z.object({
   }).describe("An estimate for the installation labor."),
   totalEstimatedCost: z.number().describe("The grand total estimated cost for the project in OMR (equipment + installation)."),
   nextSteps: z.string().describe("Recommended next steps for the user to take after reviewing the quotation."),
+  annotatedPlanUri: z.string().optional().describe("The floor plan image with suggested equipment locations marked on it, as a data URI."),
 });
 export type CctvQuotationOutput = z.infer<typeof CctvQuotationOutputSchema>;
