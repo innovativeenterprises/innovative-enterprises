@@ -1,24 +1,26 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateCctvQuotation } from '@/ai/flows/cctv-quotation';
 import type { CctvQuotationOutput, CctvQuotationInput } from '@/ai/flows/cctv-quotation.schema';
+import { analyzeFloorPlan } from '@/ai/flows/floor-plan-analysis';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { CameraCapture } from '@/components/camera-capture';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -29,9 +31,18 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
+const buildingTypes = [
+    { id: 'Villa', label: 'Villa', icon: Home },
+    { id: 'Office Building', label: 'Office', icon: Building },
+    { id: 'Warehouse', label: 'Warehouse', icon: Warehouse },
+    { id: 'School', label: 'School', icon: School },
+    { id: 'Hospital', label: 'Hospital', icon: Hospital },
+    { id: 'Hotel', label: 'Hotel', icon: Hotel },
+];
+
 const FormSchema = z.object({
   purpose: z.string().min(10, { message: "Please describe the purpose in more detail." }),
-  buildingType: z.string().min(3, { message: "Building type is required." }),
+  buildingType: z.string({ required_error: "Please select a building type." }),
   dimensions: z.string().optional(),
   floorPlanUri: z.string().optional(),
   floorPlanFile: z.any().optional(),
@@ -40,14 +51,15 @@ const FormSchema = z.object({
   remoteMonitoring: z.enum(['Yes', 'No'], { required_error: "Remote monitoring selection is required." }),
   existingSystem: z.enum(['None', 'Keep Some', 'Replace All'], { required_error: "Existing system selection is required." }),
   dvrSwitchTvLocation: z.string().min(3, { message: "Please specify the location." }),
-}).refine(data => data.floorPlanUri || data.floorPlanFile?.length > 0 || data.dimensions, {
+}).refine(data => data.floorPlanUri || (data.floorPlanFile && data.floorPlanFile.length > 0) || data.dimensions, {
     message: "A floor plan, sketch, photo, or building dimensions must be provided.",
     path: ["floorPlanFile"],
 });
 
+
 type FormValues = z.infer<typeof FormSchema>;
 
-type PageState = 'form' | 'capturing' | 'loading' | 'result';
+type PageState = 'form' | 'capturing' | 'loading' | 'analyzing_plan' | 'result';
 
 export default function QuotationForm() {
   const [pageState, setPageState] = useState<PageState>('form');
@@ -65,6 +77,37 @@ export default function QuotationForm() {
       floorPlanUri: '',
     },
   });
+
+  const handlePreAnalysis = async (uri: string) => {
+    setPageState('analyzing_plan');
+    try {
+        const result = await analyzeFloorPlan({ documentDataUri: uri });
+        if(result.dimensions) form.setValue('dimensions', result.dimensions);
+        if(result.suggestedDvrLocation) form.setValue('dvrSwitchTvLocation', result.suggestedDvrLocation);
+        toast({ title: 'Pre-Analysis Complete', description: 'AI has suggested dimensions and DVR location.' });
+    } catch (e) {
+        toast({ title: 'Pre-Analysis Failed', description: 'Could not analyze image. Please enter details manually.', variant: 'destructive' });
+    } finally {
+        setPageState('form');
+    }
+  }
+
+  const onImageCaptured = (imageUri: string) => {
+    form.setValue('floorPlanUri', imageUri);
+    form.setValue('floorPlanFile', undefined); // Clear file input if camera is used
+    setPageState('form');
+    toast({ title: 'Image Captured!', description: "The captured image will now be analyzed."})
+    handlePreAnalysis(imageUri);
+  }
+  
+  const onFileSelected = async (files: FileList | null) => {
+    if (files && files.length > 0) {
+        const file = files[0];
+        form.setValue('floorPlanUri', ''); // Clear captured image if file is selected
+        const uri = await fileToDataURI(file);
+        handlePreAnalysis(uri);
+    }
+  }
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setPageState('loading');
@@ -105,25 +148,19 @@ export default function QuotationForm() {
     }
   };
 
-  const onImageCaptured = (imageUri: string) => {
-    form.setValue('floorPlanUri', imageUri);
-    form.setValue('floorPlanFile', undefined); // Clear file input if camera is used
-    setPageState('form');
-    toast({ title: 'Image Captured!', description: "The captured image will be used for analysis."})
-  }
 
   const watchCoverage = form.watch('coverage');
   const watchFloorPlanUri = form.watch('floorPlanUri');
 
-  if (pageState === 'loading') {
+  if (pageState === 'loading' || pageState === 'analyzing_plan') {
     return (
       <Card>
         <CardContent className="p-10 text-center">
           <div className="flex flex-col items-center gap-6">
             <Loader2 className="h-12 w-12 text-primary animate-spin" />
             <div className="space-y-2">
-              <CardTitle className="text-2xl">Generating Your Quotation...</CardTitle>
-              <CardDescription>Our AI is analyzing your requirements and designing your system. This may take a moment.</CardDescription>
+              <CardTitle className="text-2xl">{pageState === 'loading' ? 'Generating Your Quotation...' : 'Analyzing Floor Plan...'}</CardTitle>
+              <CardDescription>{pageState === 'loading' ? 'Our AI is designing your system. This may take a moment.' : 'Our AI is extracting details from your image.'}</CardDescription>
             </div>
           </div>
         </CardContent>
@@ -223,14 +260,42 @@ export default function QuotationForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="buildingType" render={({ field }) => (
-                    <FormItem><FormLabel>Building Type</FormLabel><FormControl><Input placeholder="e.g., Villa, Office, Warehouse" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                 <FormField control={form.control} name="dvrSwitchTvLocation" render={({ field }) => (
-                    <FormItem><FormLabel>Proposed DVR/Switch/TV Location</FormLabel><FormControl><Input placeholder="e.g., Under the stairs, IT room" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-            </div>
+            <FormField
+              control={form.control}
+              name="buildingType"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Building Type</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="grid grid-cols-3 md:grid-cols-6 gap-2"
+                    >
+                      {buildingTypes.map(({ id, label, icon: Icon }) => (
+                        <FormItem key={id}>
+                          <FormControl>
+                            <RadioGroupItem value={id} id={id} className="sr-only" />
+                          </FormControl>
+                          <Label
+                            htmlFor={id}
+                            className={cn(
+                              'flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer',
+                              field.value === id && 'border-primary'
+                            )}
+                          >
+                            <Icon className="mb-2 h-6 w-6" />
+                            {label}
+                          </Label>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
              <FormField control={form.control} name="purpose" render={({ field }) => (
                 <FormItem><FormLabel>Purpose of Installation</FormLabel><FormControl><Textarea placeholder="e.g., General security, monitoring employees, watching pets, etc." {...field} /></FormControl><FormMessage /></FormItem>
             )} />
@@ -249,7 +314,7 @@ export default function QuotationForm() {
                           accept=".pdf,.png,.jpg,.jpeg" 
                           onChange={(e) => {
                             field.onChange(e.target.files);
-                            form.setValue('floorPlanUri', ''); // Clear captured image if file is selected
+                            onFileSelected(e.target.files);
                           }} 
                           className="w-full"
                           />
@@ -267,8 +332,14 @@ export default function QuotationForm() {
                     </AlertDescription>
                 </Alert>
               )}
-               <FormField control={form.control} name="dimensions" render={({ field }) => (
-                    <FormItem className="mt-4"><FormLabel>Building Dimensions (if no plan/photo)</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m, 3 floors" {...field} /></FormControl><FormDescription>Provide overall dimensions.</FormDescription><FormMessage /></FormItem>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="dimensions" render={({ field }) => (
+                    <FormItem><FormLabel>Building Dimensions</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m, 3 floors" {...field} /></FormControl><FormDescription>Provide overall dimensions if no image.</FormDescription><FormMessage /></FormItem>
+                )} />
+                 <FormField control={form.control} name="dvrSwitchTvLocation" render={({ field }) => (
+                    <FormItem><FormLabel>Proposed DVR/Switch/TV Location</FormLabel><FormControl><Input placeholder="e.g., Under the stairs, IT room" {...field} /></FormControl><FormDescription>Where should the main hub be?</FormDescription><FormMessage /></FormItem>
                 )} />
             </div>
 
@@ -300,7 +371,7 @@ export default function QuotationForm() {
                 )} />
             )}
 
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={pageState==='analyzing_plan'}>
                 <Sparkles className="mr-2 h-4 w-4" /> Get AI Quotation
             </Button>
           </form>

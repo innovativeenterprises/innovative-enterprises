@@ -23,4 +23,5 @@ import '@/ai/flows/whatsapp-agent.ts';
 import '@/ai/flows/project-inception.ts';
 import '@/ai/flows/financial-document-analysis.ts';
 import '@/ai/flows/cctv-quotation.ts';
+import '@/ai/flows/floor-plan-analysis.ts';
     
