@@ -215,8 +215,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <Lightbulb className="w-7 h-7" />
-          <span>INNOVATIVE ENTERPRISES</span>
+          <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-40 h-auto object-contain" />
         </Link>
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
@@ -310,8 +309,7 @@ export default function Header() {
                 <SheetContent side="right">
                 <div className="flex flex-col gap-4 py-8">
                     <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary mb-4 px-2" onClick={handleLinkClick}>
-                        <Lightbulb className="w-6 h-6" />
-                        <span>INNOVATIVE ENTERPRISES</span>
+                        <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-40 h-auto object-contain" />
                     </Link>
                     <nav className="flex flex-col gap-2">
                       {mobileNavLinks}
