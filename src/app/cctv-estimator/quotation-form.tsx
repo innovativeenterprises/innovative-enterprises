@@ -8,6 +8,9 @@ import { z } from 'zod';
 import { generateCctvQuotation } from '@/ai/flows/cctv-quotation';
 import type { CctvQuotationOutput, CctvQuotationInput } from '@/ai/flows/cctv-quotation.schema';
 import { analyzeFloorPlan } from '@/ai/flows/floor-plan-analysis';
+import { analyzeWorkOrder } from '@/ai/flows/work-order-analysis';
+import type { Opportunity } from '@/lib/opportunities';
+import { useOpportunitiesData } from '@/app/admin/opportunity-table';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
@@ -22,6 +25,7 @@ import { CameraCapture } from '@/components/camera-capture';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useRouter } from 'next/navigation';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -93,8 +97,12 @@ type PageState = 'form' | 'capturing' | 'loading' | 'analyzing_plan' | 'result';
 
 export default function QuotationForm() {
   const [pageState, setPageState] = useState<PageState>('form');
+  const [isPosting, setIsPosting] = useState(false);
   const [response, setResponse] = useState<CctvQuotationOutput | null>(null);
   const { toast } = useToast();
+  const { setOpportunities } = useOpportunitiesData();
+  const router = useRouter();
+
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -175,6 +183,64 @@ export default function QuotationForm() {
         description: 'An unexpected error occurred. Please try again.',
         variant: 'destructive',
       });
+    }
+  };
+  
+  const handlePostAsWorkOrder = async () => {
+    if (!response) return;
+
+    setIsPosting(true);
+    toast({ title: 'Posting Work Order...', description: 'Please wait while we convert your quotation into an opportunity.' });
+
+    try {
+        // Step 1: Use the `analyzeWorkOrder` flow to categorize and summarize the quotation.
+        const workOrderAnalysis = await analyzeWorkOrder({
+            title: `CCTV Installation for ${form.getValues('buildingType')}`,
+            description: response.summary,
+            budget: `Approx. OMR ${response.totalEstimatedCost.toFixed(2)}`,
+            timeline: 'To be determined', // Or derive from quotation if available
+        });
+        
+        // Step 2: Create a new Opportunity object from the analysis.
+        const newOpportunity: Opportunity = {
+            id: response.quotationId,
+            title: `CCTV Installation for ${form.getValues('buildingType')}`,
+            type: workOrderAnalysis.category, // Use AI-determined category
+            prize: `OMR ${response.totalEstimatedCost.toFixed(2)}`,
+            deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // e.g., 30 days from now
+            description: workOrderAnalysis.summary, // Use AI-generated public summary
+            iconName: 'Trophy', // Default icon
+            badgeVariant: 'outline',
+            status: 'Open',
+        };
+
+        // Step 3: Add the new opportunity to the global state.
+        setOpportunities(prev => [newOpportunity, ...prev]);
+        
+        toast({
+            title: 'Work Order Posted!',
+            description: 'Your project is now listed in our opportunities network.',
+            variant: 'default',
+            duration: 9000,
+            action: (
+                <Button variant="outline" size="sm" asChild>
+                  <a href="/opportunities">View Opportunities</a>
+                </Button>
+            ),
+        });
+
+        // Redirect or update UI
+        router.push('/opportunities');
+
+    } catch (error) {
+        console.error("Failed to post work order:", error);
+        toast({
+            title: 'Posting Failed',
+            description: 'There was an error posting your work order. Please try again.',
+            variant: 'destructive',
+        });
+    } finally {
+        setIsPosting(false);
     }
   };
 
@@ -266,8 +332,14 @@ export default function QuotationForm() {
 
         </CardContent>
         <CardFooter className="flex-col sm:flex-row gap-2">
-          <Button onClick={() => setPageState('form')} variant="outline" className="w-full sm:w-auto">Request a New Quotation</Button>
-          <Button className="w-full sm:w-auto flex-grow"><CircleDollarSign className="mr-2 h-4 w-4" /> Approve & Post as Work Order</Button>
+          <Button onClick={() => { setResponse(null); setPageState('form'); }} variant="outline" className="w-full sm:w-auto">Request a New Quotation</Button>
+          <Button onClick={handlePostAsWorkOrder} className="w-full sm:w-auto flex-grow" disabled={isPosting}>
+            {isPosting ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Posting...</>
+            ) : (
+                <><CircleDollarSign className="mr-2 h-4 w-4" /> Approve & Post as Work Order</>
+            )}
+            </Button>
         </CardFooter>
       </Card>
     )
