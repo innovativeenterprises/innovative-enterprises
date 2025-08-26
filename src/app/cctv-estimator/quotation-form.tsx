@@ -13,11 +13,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { CameraCapture } from '@/components/camera-capture';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -32,21 +33,24 @@ const FormSchema = z.object({
   purpose: z.string().min(10, { message: "Please describe the purpose in more detail." }),
   buildingType: z.string().min(3, { message: "Building type is required." }),
   dimensions: z.string().optional(),
-  floorPlan: z.any().optional(),
+  floorPlanUri: z.string().optional(),
+  floorPlanFile: z.any().optional(),
   coverage: z.enum(['Full Environment', 'Partial'], { required_error: "Coverage selection is required." }),
   coverageDetails: z.string().optional(),
   remoteMonitoring: z.enum(['Yes', 'No'], { required_error: "Remote monitoring selection is required." }),
   existingSystem: z.enum(['None', 'Keep Some', 'Replace All'], { required_error: "Existing system selection is required." }),
   dvrSwitchTvLocation: z.string().min(3, { message: "Please specify the location." }),
-}).refine(data => data.floorPlan?.length > 0 || data.dimensions, {
-    message: "Either a floor plan or building dimensions must be provided.",
-    path: ["floorPlan"],
+}).refine(data => data.floorPlanUri || data.floorPlanFile?.length > 0 || data.dimensions, {
+    message: "A floor plan, sketch, photo, or building dimensions must be provided.",
+    path: ["floorPlanFile"],
 });
 
 type FormValues = z.infer<typeof FormSchema>;
 
+type PageState = 'form' | 'capturing' | 'loading' | 'result';
+
 export default function QuotationForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [pageState, setPageState] = useState<PageState>('form');
   const [response, setResponse] = useState<CctvQuotationOutput | null>(null);
   const { toast } = useToast();
 
@@ -58,45 +62,60 @@ export default function QuotationForm() {
       dimensions: '',
       coverageDetails: '',
       dvrSwitchTvLocation: '',
+      floorPlanUri: '',
     },
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setIsLoading(true);
+    setPageState('loading');
     setResponse(null);
     try {
-      let floorPlanUri: string | undefined;
-      if (data.floorPlan && data.floorPlan.length > 0) {
-        floorPlanUri = await fileToDataURI(data.floorPlan[0]);
+      let finalFloorPlanUri = data.floorPlanUri;
+      if (data.floorPlanFile && data.floorPlanFile.length > 0) {
+        finalFloorPlanUri = await fileToDataURI(data.floorPlanFile[0]);
+      }
+
+      if (!finalFloorPlanUri && !data.dimensions) {
+          toast({ title: 'Input Missing', description: 'Please provide a plan, photo, or dimensions.', variant: 'destructive'});
+          setPageState('form');
+          return;
       }
 
       const input: CctvQuotationInput = {
         ...data,
         remoteMonitoring: data.remoteMonitoring === 'Yes',
-        floorPlanUri,
+        floorPlanUri: finalFloorPlanUri,
       };
 
       const result = await generateCctvQuotation(input);
       setResponse(result);
+      setPageState('result');
       toast({
         title: 'Quotation Generated!',
         description: 'Your CCTV system quotation is ready for review.',
       });
     } catch (error) {
       console.error(error);
+      setPageState('form');
       toast({
         title: 'Error Generating Quotation',
         description: 'An unexpected error occurred. Please try again.',
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const watchCoverage = form.watch('coverage');
+  const onImageCaptured = (imageUri: string) => {
+    form.setValue('floorPlanUri', imageUri);
+    form.setValue('floorPlanFile', undefined); // Clear file input if camera is used
+    setPageState('form');
+    toast({ title: 'Image Captured!', description: "The captured image will be used for analysis."})
+  }
 
-  if (isLoading) {
+  const watchCoverage = form.watch('coverage');
+  const watchFloorPlanUri = form.watch('floorPlanUri');
+
+  if (pageState === 'loading') {
     return (
       <Card>
         <CardContent className="p-10 text-center">
@@ -112,7 +131,7 @@ export default function QuotationForm() {
     );
   }
 
-  if (response) {
+  if (pageState === 'result' && response) {
     return (
       <Card>
         <CardHeader>
@@ -180,10 +199,18 @@ export default function QuotationForm() {
 
         </CardContent>
         <CardFooter className="flex-col sm:flex-row gap-2">
-          <Button onClick={() => setResponse(null)} variant="outline" className="w-full sm:w-auto">Request a New Quotation</Button>
+          <Button onClick={() => setPageState('form')} variant="outline" className="w-full sm:w-auto">Request a New Quotation</Button>
           <Button className="w-full sm:w-auto flex-grow"><CircleDollarSign className="mr-2 h-4 w-4" /> Approve & Post as Work Order</Button>
         </CardFooter>
       </Card>
+    )
+  }
+
+  if (pageState === 'capturing') {
+    return (
+        <Card>
+            <CameraCapture title="Scan Area or Floor Plan" onCapture={onImageCaptured} onCancel={() => setPageState('form')} />
+        </Card>
     )
   }
 
@@ -208,12 +235,40 @@ export default function QuotationForm() {
                 <FormItem><FormLabel>Purpose of Installation</FormLabel><FormControl><Textarea placeholder="e.g., General security, monitoring employees, watching pets, etc." {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             
-            <div className="grid md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="floorPlan" render={({ field }) => (
-                    <FormItem><FormLabel>Building Floor Plan / Croquis</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormDescription>A simple sketch is enough.</FormDescription><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="dimensions" render={({ field }) => (
-                    <FormItem><FormLabel>Building Dimensions (if no plan)</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m, 3 floors" {...field} /></FormControl><FormDescription>Provide overall dimensions.</FormDescription><FormMessage /></FormItem>
+            <div>
+              <FormLabel>Building Plan or Photo</FormLabel>
+              <div className="mt-2 grid grid-cols-2 gap-4">
+                 <Button type="button" onClick={() => setPageState('capturing')} variant="outline">
+                    <Camera className="mr-2 h-4 w-4"/> Scan with Camera
+                 </Button>
+                 <FormField control={form.control} name="floorPlanFile" render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input 
+                          type="file" 
+                          accept=".pdf,.png,.jpg,.jpeg" 
+                          onChange={(e) => {
+                            field.onChange(e.target.files);
+                            form.setValue('floorPlanUri', ''); // Clear captured image if file is selected
+                          }} 
+                          className="w-full"
+                          />
+                      </FormControl>
+                      <FormMessage className="absolute"/>
+                    </FormItem>
+                  )} />
+              </div>
+               {watchFloorPlanUri && (
+                <Alert variant="default" className="text-green-800 bg-green-50 border-green-200 dark:text-green-200 dark:bg-green-900/30 dark:border-green-800 mt-4">
+                    <ScanLine className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    <AlertTitle>Image Captured</AlertTitle>
+                    <AlertDescription>
+                        An image from your camera is ready for analysis.
+                    </AlertDescription>
+                </Alert>
+              )}
+               <FormField control={form.control} name="dimensions" render={({ field }) => (
+                    <FormItem className="mt-4"><FormLabel>Building Dimensions (if no plan/photo)</FormLabel><FormControl><Input placeholder="e.g., 25m x 30m, 3 floors" {...field} /></FormControl><FormDescription>Provide overall dimensions.</FormDescription><FormMessage /></FormItem>
                 )} />
             </div>
 
@@ -245,8 +300,8 @@ export default function QuotationForm() {
                 )} />
             )}
 
-            <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Estimate...</> : <><Sparkles className="mr-2 h-4 w-4" /> Get AI Quotation</>}
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                <Sparkles className="mr-2 h-4 w-4" /> Get AI Quotation
             </Button>
           </form>
         </Form>
