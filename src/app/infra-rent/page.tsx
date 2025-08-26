@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, Server, Laptop, Network, Database } from "lucide-react";
+import { CheckCircle, Server, Laptop, Network, Database, Cloud } from "lucide-react";
 import Link from "next/link";
 
 const problems = [
