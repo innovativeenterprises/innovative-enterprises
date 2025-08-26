@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import TaskForm from './task-form';
 import SanadHubIcon from '@/components/icons/sanad-hub-icon';
+import Link from 'next/link';
 
 export default function SanadHubPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -34,8 +35,8 @@ export default function SanadHubPage() {
                         <Button size="lg" onClick={handleGetStarted}>
                             Submit a Task <ArrowRight className="ml-2 h-5 w-5"/>
                         </Button>
-                        <Button size="lg" variant="outline">
-                            For Sanad Offices
+                        <Button size="lg" variant="outline" asChild>
+                           <Link href="/sanad-office">For Sanad Offices</Link>
                         </Button>
                     </div>
                 </div>
