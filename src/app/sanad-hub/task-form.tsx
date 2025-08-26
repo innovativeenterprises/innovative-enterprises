@@ -54,11 +54,20 @@ const SanadChatbot = ({ onServiceSelect }: { onServiceSelect: (service: string) 
         setInput('');
         setIsLoading(true);
 
-        const serviceKeywords = Object.values(sanadServiceGroups).flat().join(', ');
+        const serviceContext = JSON.stringify(sanadServiceGroups, null, 2);
 
         try {
             const result = await answerQuestion({
-                question: `Based on the following user query, which of these Sanad services is the best match? If you find a good match, respond with 'SERVICE_SELECTED: [Service Name]'. If not, just answer the question normally. User Query: "${input}". Available Services: ${serviceKeywords}.`,
+                question: `You are Saif, a Sanad Hub assistant. A user has asked: "${input}". Based on their query and your knowledge of Omani government services, determine which specific service they need from the list provided below.
+                
+If you find an exact match, you MUST respond ONLY with the string 'SERVICE_SELECTED: [The Exact Service Name]'. 
+If you are unsure or the request is ambiguous, ask a clarifying question to the user. Do not guess.
+
+Available Services (in JSON format):
+\`\`\`json
+${serviceContext}
+\`\`\`
+`,
             });
             
             const botResponseText = result.answer;
@@ -286,7 +295,7 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
                             {Object.entries(filteredServices).map(([group, services]) => {
                                 const Icon = sanadServiceIcons[group];
                                 return (
-                                    <div key={group}>
+                                    <div key={group} className="border-b last:border-b-0 pb-4">
                                         <h3 className="font-semibold text-muted-foreground mb-3 flex items-center gap-2">
                                             {Icon && <Icon className="w-5 h-5" />}
                                             {group}
@@ -384,5 +393,3 @@ export default function TaskForm({ isVisible }: { isVisible: boolean }) {
     </Card>
   );
 }
-
-    
