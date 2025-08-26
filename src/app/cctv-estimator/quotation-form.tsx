@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw, Shield, Users, VenetianMask, PawPrint, Baby } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Info, ClipboardCheck, CircleDollarSign, Camera, ScanLine, Building, Home, Warehouse, School, Hospital, Hotel, Wifi, WifiOff, Expand, Shrink, Construction, Plus, RefreshCw, Shield, Users, VenetianMask, PawPrint, Baby, Video, AudioWaveform, CameraOff, TowerControl, Tv, Sun, Moon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -26,6 +26,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRouter } from 'next/navigation';
+import { Switch } from '@/components/ui/switch';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -82,6 +83,14 @@ const FormSchema = z.object({
   remoteMonitoring: z.enum(['Yes', 'No'], { required_error: "Remote monitoring selection is required." }),
   existingSystem: z.enum(['None', 'Keep Some', 'Replace All'], { required_error: "Existing system selection is required." }),
   dvrSwitchTvLocation: z.string().min(3, { message: "Please specify the location." }),
+  
+  // New fields
+  cameraType: z.enum(['Any', 'Dome', 'Bullet', 'PTZ']),
+  cameraResolution: z.enum(['Standard HD', '4K Ultra HD']),
+  nightVision: z.boolean(),
+  audioRecording: z.boolean(),
+  storageDuration: z.coerce.number().min(7),
+
 }).refine(data => data.floorPlanUri || (data.floorPlanFile && data.floorPlanFile.length > 0) || data.dimensions, {
     message: "A floor plan, sketch, photo, or building dimensions must be provided.",
     path: ["floorPlanFile"],
@@ -113,6 +122,11 @@ export default function QuotationForm() {
       coverageDetails: '',
       dvrSwitchTvLocation: '',
       floorPlanUri: '',
+      cameraType: 'Any',
+      cameraResolution: 'Standard HD',
+      nightVision: true,
+      audioRecording: false,
+      storageDuration: 30,
     },
   });
 
@@ -193,28 +207,25 @@ export default function QuotationForm() {
     toast({ title: 'Posting Work Order...', description: 'Please wait while we convert your quotation into an opportunity.' });
 
     try {
-        // Step 1: Use the `analyzeWorkOrder` flow to categorize and summarize the quotation.
         const workOrderAnalysis = await analyzeWorkOrder({
             title: `CCTV Installation for ${form.getValues('buildingType')}`,
             description: response.summary,
             budget: `Approx. OMR ${response.totalEstimatedCost.toFixed(2)}`,
-            timeline: 'To be determined', // Or derive from quotation if available
+            timeline: 'To be determined',
         });
         
-        // Step 2: Create a new Opportunity object from the analysis.
         const newOpportunity: Opportunity = {
             id: response.quotationId,
             title: `CCTV Installation for ${form.getValues('buildingType')}`,
-            type: workOrderAnalysis.category, // Use AI-determined category
+            type: workOrderAnalysis.category,
             prize: `OMR ${response.totalEstimatedCost.toFixed(2)}`,
-            deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // e.g., 30 days from now
-            description: workOrderAnalysis.summary, // Use AI-generated public summary
-            iconName: 'Trophy', // Default icon
+            deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            description: workOrderAnalysis.summary,
+            iconName: 'Trophy',
             badgeVariant: 'outline',
             status: 'Open',
         };
 
-        // Step 3: Add the new opportunity to the global state.
         setOpportunities(prev => [newOpportunity, ...prev]);
         
         toast({
@@ -229,7 +240,6 @@ export default function QuotationForm() {
             ),
         });
 
-        // Redirect or update UI
         router.push('/opportunities');
 
     } catch (error) {
@@ -491,6 +501,30 @@ export default function QuotationForm() {
                 )} />
             </div>
 
+            <Card className="bg-muted/50 p-6">
+                 <CardTitle className="text-lg mb-4">System Specifications</CardTitle>
+                 <div className="space-y-6">
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <FormField control={form.control} name="cameraType" render={({ field }) => (
+                            <FormItem><FormLabel>Camera Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Any">Any Type</SelectItem><SelectItem value="Dome">Dome</SelectItem><SelectItem value="Bullet">Bullet</SelectItem><SelectItem value="PTZ">PTZ</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="cameraResolution" render={({ field }) => (
+                            <FormItem><FormLabel>Resolution</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Standard HD">Standard HD</SelectItem><SelectItem value="4K Ultra HD">4K Ultra HD</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="nightVision" render={({ field }) => (
+                            <FormItem className="flex flex-col gap-2 rounded-lg border p-3 pt-2 bg-background"><FormLabel>Night Vision</FormLabel><FormControl><div className="flex items-center space-x-2"><Switch id="night-vision-switch" checked={field.value} onCheckedChange={field.onChange} /><Label htmlFor="night-vision-switch">{field.value ? "Required" : "Not Required"}</Label></div></FormControl></FormItem>
+                        )} />
+                        <FormField control={form.control} name="audioRecording" render={({ field }) => (
+                           <FormItem className="flex flex-col gap-2 rounded-lg border p-3 pt-2 bg-background"><FormLabel>Audio Recording</FormLabel><FormControl><div className="flex items-center space-x-2"><Switch id="audio-switch" checked={field.value} onCheckedChange={field.onChange} /><Label htmlFor="audio-switch">{field.value ? "Required" : "Not Required"}</Label></div></FormControl></FormItem>
+                        )} />
+                     </div>
+                      <FormField control={form.control} name="storageDuration" render={({ field }) => (
+                        <FormItem><FormLabel>Recording Storage Duration (Days)</FormLabel><FormControl><Input type="number" min="7" step="1" {...field} /></FormControl><FormDescription>How many days of continuous video recording do you need to store?</FormDescription><FormMessage /></FormItem>
+                    )} />
+                 </div>
+            </Card>
+
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                  <FormField
                     control={form.control}
@@ -525,7 +559,7 @@ export default function QuotationForm() {
                         <FormItem className="space-y-3">
                         <FormLabel>Remote Monitoring</FormLabel>
                         <FormControl>
-                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-2">
+                            <RadioGroup onValueChange={(value: 'Yes' | 'No') => field.onChange(value)} defaultValue={field.value} className="grid grid-cols-2 gap-2">
                                 {remoteMonitoringTypes.map(({ id, label, description, icon: Icon }) => (
                                     <FormItem key={id} className="flex-1">
                                         <FormControl>

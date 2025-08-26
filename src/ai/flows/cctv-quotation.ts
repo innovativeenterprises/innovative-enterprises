@@ -31,9 +31,16 @@ const prompt = ai.definePrompt({
 {{#if coverageDetails}}
 - **Partial Coverage Details:** {{coverageDetails}}
 {{/if}}
-- **Remote Monitoring:** {{remoteMonitoring}}
-- **Existing System:** {{existingSystem}}
 - **DVR/Switch/TV Location:** {{dvrSwitchTvLocation}}
+
+**System Specifications:**
+- **Remote Monitoring:** {{#if remoteMonitoring}}Yes{{else}}No{{/if}}
+- **Existing System:** {{existingSystem}}
+- **Preferred Camera Type:** {{cameraType}}
+- **Required Resolution:** {{cameraResolution}}
+- **Night Vision:** {{#if nightVision}}Yes{{else}}No{{/if}}
+- **Audio Recording:** {{#if audioRecording}}Yes{{else}}No{{/if}}
+- **Required Storage Duration:** {{storageDuration}} days
 
 **Client Provided Assets:**
 {{#if floorPlanUri}}
@@ -45,8 +52,9 @@ const prompt = ai.definePrompt({
 **Your Task:**
 1.  **Analyze the Inputs:** Carefully review all the client's requirements and analyze the provided floor plan, sketch, photo, or dimensions. Make logical assumptions based on the visual data.
 2.  **Design the System:**
-    *   Determine the optimal number and type of cameras (e.g., dome, bullet, PTZ) needed to achieve the desired coverage. Consider indoor vs. outdoor placement. Use the visual information to make smart recommendations.
-    *   Select an appropriate Network Video Recorder (NVR) with sufficient channels and storage capacity. Assume standard 30-day storage unless otherwise specified.
+    *   Determine the optimal number and type of cameras (e.g., dome, bullet, PTZ) needed to achieve the desired coverage, considering the client's preference for '{{cameraType}}'.
+    *   Select cameras that meet the resolution ('{{cameraResolution}}'), night vision, and audio recording requirements.
+    *   Select an appropriate Network Video Recorder (NVR). The storage capacity MUST be sufficient for {{storageDuration}} days of continuous recording from all cameras. A 4K camera requires ~150GB/day. A standard HD camera requires ~40GB/day. Calculate total storage needed and select an NVR with adequate HDD space (e.g., 2TB, 4TB, 8TB, 16TB).
     *   Determine the required network switch (PoE or standard) and other necessary components (e.g., power supplies, connectors).
 3.  **Estimate Cabling:**
     *   Based on the visual data or dimensions and the DVR location, estimate the total length of Ethernet cabling required.
@@ -55,17 +63,23 @@ const prompt = ai.definePrompt({
     *   Estimate the total labor hours required for installation, configuration, and testing.
     *   Calculate the labor cost. Assume a rate of OMR 10 per hour.
 5.  **Generate Equipment List:** Create a detailed list of all equipment with quantities and estimated unit prices in OMR.
+    *   Standard HD Dome Camera: OMR 35
     *   4K Dome Camera: OMR 45
+    *   Standard HD Bullet Camera: OMR 45
     *   4K Bullet Camera: OMR 55
+    *   PTZ Camera: OMR 150
     *   8-Channel NVR (2TB): OMR 120
     *   16-Channel NVR (4TB): OMR 200
+    *   16-Channel NVR (8TB): OMR 350
+    *   32-Channel NVR (16TB): OMR 600
     *   8-Port PoE Switch: OMR 60
     *   16-Port PoE Switch: OMR 100
     *   CAT6 Cable: OMR 0.3 per meter
+    *   Microphone (if needed for non-audio cameras): OMR 10
     *   Connectors/Mounts/Misc: OMR 5 per camera
 6.  **Calculate Total Cost:** Sum up the costs of all equipment and labor to provide a grand total.
 7.  **Provide Summary & Next Steps:**
-    *   Write a brief summary of the proposed solution based on your analysis of the client's needs and visual data.
+    *   Write a brief summary of the proposed solution based on your analysis.
     *   Generate a unique quotation ID.
     *   Outline the next steps for the client (e.g., "Review the quotation. To proceed, you can approve this quote to have it posted as a work order for our network of certified installers.").
 

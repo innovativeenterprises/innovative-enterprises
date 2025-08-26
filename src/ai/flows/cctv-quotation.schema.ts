@@ -14,6 +14,13 @@ export const CctvQuotationInputSchema = z.object({
   remoteMonitoring: z.boolean(),
   existingSystem: z.enum(['None', 'Keep Some', 'Replace All']),
   dvrSwitchTvLocation: z.string().min(1, "DVR/Switch/TV location is required."),
+  
+  // New granular fields for a more precise quotation
+  cameraType: z.enum(['Any', 'Dome', 'Bullet', 'PTZ']).describe("The preferred style of camera."),
+  cameraResolution: z.enum(['Standard HD', '4K Ultra HD']).describe("The required video resolution."),
+  nightVision: z.boolean().describe("Whether cameras with night vision are required."),
+  audioRecording: z.boolean().describe("Whether audio recording capabilities are needed."),
+  storageDuration: z.coerce.number().min(7).describe("The number of days for continuous recording storage (e.g., 30, 60, 90)."),
 });
 export type CctvQuotationInput = z.infer<typeof CctvQuotationInputSchema>;
 
