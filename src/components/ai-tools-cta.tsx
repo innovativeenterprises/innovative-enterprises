@@ -13,7 +13,7 @@ export default function AiToolsCta() {
                         Leverage our powerful AI tools and agents to streamline your workflows, get instant answers, and automate your business processes.
                     </p>
                 </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     <Card className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                         <CardHeader>
                             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
@@ -29,24 +29,6 @@ export default function AiToolsCta() {
                         <CardFooter className="justify-center">
                             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
                                 <Link href="/automation">Explore Agents</Link>
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                    <Card className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-                        <CardHeader>
-                            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
-                                <FileText className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <CardTitle>Tender Response Assistant</CardTitle>
-                            <CardDescription className="mt-2">
-                                Generate draft responses to government tenders in minutes.
-                            </CardDescription>
-                        </CardContent>
-                        <CardFooter className="justify-center">
-                            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                <Link href="/tender-assistant">Try the Assistant</Link>
                             </Button>
                         </CardFooter>
                     </Card>

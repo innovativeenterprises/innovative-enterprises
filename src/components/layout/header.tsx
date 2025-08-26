@@ -99,11 +99,6 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     description: "Generate minutes and action items from a meeting transcript automatically.",
   },
   {
-    title: "Tender Assistant",
-    href: "/tender-assistant",
-    description: "Generate draft responses for government and corporate tenders based on your documents.",
-  },
-  {
     title: "Mira Marketing Agent",
     href: "/social-media-post-generator",
     description: "Generate social media posts, marketing copy, and other creative content.",

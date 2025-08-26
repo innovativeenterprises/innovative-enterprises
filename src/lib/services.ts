@@ -74,6 +74,13 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/cv-enhancer",
   },
+   {
+    icon: FileText,
+    title: "Tender Assistant",
+    description: "Generate comprehensive and professional draft responses to help you win your next bid.",
+    enabled: true,
+    href: "/tender-assistant",
+  },
   {
     icon: Users,
     title: "Catalyst Workforce",
