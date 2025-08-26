@@ -1,6 +1,6 @@
 
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -59,6 +59,13 @@ export const initialServices: Service[] = [
     description: "On-demand rental of IT equipment like servers, networking devices, and workstations.",
     enabled: true,
     href: "/infra-rent",
+  },
+  {
+    icon: Video,
+    title: "Smart CCTV & Surveillance",
+    description: "Get an AI-powered quotation for your surveillance system needs, from design to installation.",
+    enabled: true,
+    href: "/cctv-estimator",
   },
   {
     icon: Briefcase,

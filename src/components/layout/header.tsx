@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server } from 'lucide-react';
+import { Menu, Lightbulb, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -73,6 +73,11 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     title: "Financial Audit Hub",
     href: "/financial-audit",
     description: "Connect with certified audit offices and get AI-powered analysis of your financial documents.",
+  },
+  {
+    title: "Smart CCTV & Surveillance",
+    href: "/cctv-estimator",
+    description: "Get an AI-powered quotation for your surveillance system needs, from design to installation.",
   },
 ];
 
