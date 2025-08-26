@@ -5,6 +5,7 @@ import InvestForm from "./invest-form";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import CompanyProfileDownloader from "./company-profile-downloader";
 
 const investmentReasons = [
     {
@@ -121,7 +122,7 @@ export default function InvestPage() {
             <div>
                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Pitch Decks & Downloads</h2>
                 <div className="max-w-4xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* These links would point to the actual PDF files */}
+                    <CompanyProfileDownloader />
                     <Button asChild variant="outline" size="lg">
                         <a href="/pitch-deck-company.pdf" download>
                             <Download className="mr-2 h-5 w-5" /> Company Pitch Deck
