@@ -114,11 +114,11 @@ const answerQuestionFlow = ai.defineFlow(
   async (input) => {
     const response = await prompt(input);
     
-    const toolRequest = response.toolRequest();
+    const toolRequest = response.toolRequest;
 
     if (toolRequest?.name === 'routeToSpecialist') {
         const toolResponse = await toolRequest.run();
-        const toolOutput = toolResponse.output() as z.infer<typeof routeToSpecialistTool.outputSchema>;
+        const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
 
         if (toolOutput.isAvailable) {
             // The specialist is "available". We'll just provide their introductory response.
