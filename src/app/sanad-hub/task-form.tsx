@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea';
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Send, CheckCircle, Search, FileUp, ArrowLeft, Bot, MessageSquare } from 'lucide-react';
 import { sanadServiceGroups, sanadServiceIcons } from '@/lib/sanad-services';
