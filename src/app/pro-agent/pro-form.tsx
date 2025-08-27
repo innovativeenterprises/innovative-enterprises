@@ -9,17 +9,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, FileText, Printer, FileDown, AlertTriangle } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
-import { sanadServiceGroups, sanadServiceIcons } from '@/lib/sanad-services';
-import { analyzeProTask } from '@/ai/flows/pro-task-analysis';
+import { Loader2, Sparkles, CheckCircle, FileText, Printer, FileDown, AlertTriangle, ListTodo, Plus, Trash2 } from 'lucide-react';
+import { sanadServiceGroups } from '@/lib/sanad-services';
+import { analyzeProTask, type ProTaskAnalysis } from '@/ai/flows/pro-task-analysis';
 import type { ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis.schema';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+
 
 const FormSchema = z.object({
-  serviceName: z.string({ required_error: 'Please select a service.' }),
+  serviceNames: z.array(z.string()).refine((value) => value.length > 0, {
+    message: "You must select at least one service.",
+  }),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -29,11 +34,11 @@ const AssignmentProgress = () => {
     const [currentStep, setCurrentStep] = useState(0);
 
     return (
-        <div className="w-full">
+        <div className="w-full pt-2">
              <div className="flex justify-between mb-2">
                 {steps.map((step, index) => (
                     <div key={step} className="flex-1 text-center">
-                        <p className={`text-sm font-medium ${index <= currentStep ? 'text-primary' : 'text-muted-foreground'}`}>{step}</p>
+                        <p className={`text-xs font-medium ${index <= currentStep ? 'text-primary' : 'text-muted-foreground'}`}>{step}</p>
                     </div>
                 ))}
             </div>
@@ -49,7 +54,7 @@ const AssignmentProgress = () => {
                 </div>
             </div>
             <div className="text-center mt-4">
-                 <Button onClick={() => setCurrentStep(s => (s + 1) % steps.length)}>Update Progress</Button>
+                 <Button size="sm" onClick={() => setCurrentStep(s => (s + 1) % steps.length)}>Update Status</Button>
             </div>
         </div>
     )
@@ -64,18 +69,21 @@ export default function ProForm() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+        serviceNames: [],
+    }
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await analyzeProTask({ serviceName: data.serviceName });
+      const result = await analyzeProTask({ serviceNames: data.serviceNames });
       setResponse(result);
     } catch (error) {
       toast({
         title: 'Analysis Failed',
-        description: 'Could not get details for the selected service.',
+        description: 'Could not get details for the selected service(s).',
         variant: 'destructive',
       });
     } finally {
@@ -88,7 +96,7 @@ export default function ProForm() {
     if (printContent) {
         const newWindow = window.open('', '_blank', 'width=800,height=600');
         newWindow?.document.write('<html><head><title>Print Assignment</title>');
-        newWindow?.document.write('<style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ddd;padding:8px;text-align:left;} th{background-color:#f2f2f2;}</style>');
+        newWindow?.document.write('<style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ddd;padding:8px;text-align:left;} th{background-color:#f2f2f2;} h1,h2,h3{color:#293462; border-bottom: 1px solid #ccc; padding-bottom: 5px;} .no-print{display:none !important;}</style>');
         newWindow?.document.write('</head><body>');
         newWindow?.document.write(printContent.innerHTML);
         newWindow?.document.write('</body></html>');
@@ -101,40 +109,68 @@ export default function ProForm() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Create New PRO Assignment</CardTitle>
-          <CardDescription>Select a government service to generate an assignment brief for your PRO.</CardDescription>
+          <CardTitle>Create New PRO Assignment Sheet</CardTitle>
+          <CardDescription>Select one or more government services to generate a consolidated assignment brief for your PRO.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
+                <FormField
                 control={form.control}
-                name="serviceName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Select Government Service</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Choose a service..." />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(sanadServiceGroups).map(([group, services]) => (
-                            <SelectGroup key={group}>
-                                <SelectLabel>{group}</SelectLabel>
-                                {services.map(service => <SelectItem key={service} value={service}>{service}</SelectItem>)}
-                            </SelectGroup>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
+                name="serviceNames"
+                render={() => (
+                    <FormItem>
+                         <Accordion type="multiple" className="w-full">
+                            {Object.entries(sanadServiceGroups).map(([group, services]) => (
+                                <AccordionItem value={group} key={group}>
+                                    <AccordionTrigger className="font-semibold">{group}</AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                        {services.map((service) => (
+                                            <FormField
+                                            key={service}
+                                            control={form.control}
+                                            name="serviceNames"
+                                            render={({ field }) => {
+                                                return (
+                                                <FormItem
+                                                    key={service}
+                                                    className="flex flex-row items-center space-x-3 space-y-0 p-3 rounded-md border bg-background hover:bg-muted/50"
+                                                >
+                                                    <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value?.includes(service)}
+                                                        onCheckedChange={(checked) => {
+                                                        return checked
+                                                            ? field.onChange([...field.value, service])
+                                                            : field.onChange(
+                                                                field.value?.filter(
+                                                                (value) => value !== service
+                                                                )
+                                                            )
+                                                        }}
+                                                    />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal w-full cursor-pointer">
+                                                        {service}
+                                                    </FormLabel>
+                                                </FormItem>
+                                                )
+                                            }}
+                                            />
+                                        ))}
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                      <FormMessage />
+                    </FormItem>
                 )}
-              />
+                />
               <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                Analyze Task & Estimate Fees
+                Analyze Tasks & Build Assignment Sheet
               </Button>
             </form>
           </Form>
@@ -145,7 +181,7 @@ export default function ProForm() {
         <Card>
           <CardContent className="p-6 text-center">
             <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-            <p className="mt-4 text-muted-foreground">Fahim is analyzing the requirements and estimating fees...</p>
+            <p className="mt-4 text-muted-foreground">Fahim is analyzing the requirements for all selected tasks...</p>
           </CardContent>
         </Card>
       )}
@@ -153,20 +189,56 @@ export default function ProForm() {
       {response && (
         <Card>
           <CardHeader>
-            <CardTitle>Assignment Details: {form.getValues('serviceName')}</CardTitle>
-            <CardDescription>Review the details below. You can print this page for your PRO.</CardDescription>
+            <CardTitle>Daily Assignment Sheet: {new Date().toLocaleDateString()}</CardTitle>
+            <CardDescription>Review the consolidated assignment below. You can print this page for your PRO.</CardDescription>
           </CardHeader>
-          <CardContent ref={printRef} className="space-y-6 print-content">
-            <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h3 className="font-semibold mb-2 text-lg">Required Documents</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
-                        {response.documentList.map((doc, i) => <li key={i}>{doc}</li>)}
-                    </ul>
-                </div>
-                 <div>
-                    <h3 className="font-semibold mb-2 text-lg">Fee & Allowance Estimate</h3>
-                    <Table>
+          <CardContent ref={printRef} className="space-y-8 print-content">
+            {response.tasks.map((task, index) => (
+                 <div key={index} className="p-4 border rounded-lg">
+                    <h2 className="text-xl font-bold text-primary mb-4">Task {index + 1}: {task.serviceName}</h2>
+                     <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 className="font-semibold mb-2">Required Documents</h3>
+                            <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                                {task.documentList.map((doc, i) => <li key={i}>{doc}</li>)}
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 className="font-semibold mb-2">Government Fees</h3>
+                            <Table>
+                                <TableBody>
+                                    {task.fees.map((fee, i) => (
+                                        <TableRow key={i}>
+                                            <TableCell>{fee.description}</TableCell>
+                                            <TableCell className="text-right font-medium">{fee.amount.toFixed(3)}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                     </div>
+                      {task.notes && (
+                        <Alert className="mt-4">
+                            <AlertTriangle className="h-4 w-4" />
+                            <AlertTitle>Important Notes for this task</AlertTitle>
+                            <AlertDescription>{task.notes}</AlertDescription>
+                        </Alert>
+                    )}
+                    <Separator className="my-4" />
+                    <div className="no-print">
+                        <Label htmlFor={`notes-${index}`} className="font-semibold">Follow-up Notes</Label>
+                        <Textarea id={`notes-${index}`} className="mt-2" placeholder="Add notes on progress, reasons for non-completion, etc." />
+                    </div>
+                     <div className="no-print">
+                        <h3 className="font-semibold mt-4 mb-2 text-center">Task Progress</h3>
+                        <AssignmentProgress />
+                     </div>
+                 </div>
+            ))}
+             <Card className="bg-muted">
+                <CardHeader><CardTitle>Total Estimated Cost</CardTitle></CardHeader>
+                <CardContent>
+                      <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Description</TableHead>
@@ -174,37 +246,20 @@ export default function ProForm() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {response.fees.map((fee, i) => (
+                            {response.totalFees.map((fee, i) => (
                                 <TableRow key={i}>
                                     <TableCell>{fee.description}</TableCell>
                                     <TableCell className="text-right font-medium">{fee.amount.toFixed(3)}</TableCell>
                                 </TableRow>
                             ))}
-                             <TableRow className="bg-muted hover:bg-muted font-bold">
-                                <TableCell>Total Estimated Cost</TableCell>
-                                <TableCell className="text-right text-base text-primary">{response.totalEstimatedCost.toFixed(3)}</TableCell>
+                             <TableRow className="bg-background hover:bg-background font-bold">
+                                <TableCell>Grand Total Estimated Cost</TableCell>
+                                <TableCell className="text-right text-base text-primary">{response.grandTotal.toFixed(3)}</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
-                </div>
-            </div>
-            
-            {response.notes && (
-                <Alert>
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle>Important Notes</AlertTitle>
-                    <AlertDescription>
-                        {response.notes}
-                    </AlertDescription>
-                </Alert>
-            )}
-
-            <Separator />
-            
-             <div>
-                <h3 className="font-semibold mb-4 text-lg text-center">Assignment Progress Tracker</h3>
-                <AssignmentProgress />
-            </div>
+                </CardContent>
+             </Card>
 
           </CardContent>
           <CardFooter>

@@ -5,7 +5,7 @@
 import { z } from 'zod';
 
 export const ProTaskAnalysisInputSchema = z.object({
-  serviceName: z.string().describe("The name of the government service requested by the user."),
+  serviceNames: z.array(z.string()).min(1, "At least one service name is required."),
 });
 export type ProTaskAnalysisInput = z.infer<typeof ProTaskAnalysisInputSchema>;
 
@@ -15,11 +15,18 @@ const FeeSchema = z.object({
     amount: z.number().describe("The estimated amount in OMR."),
 });
 
-export const ProTaskAnalysisOutputSchema = z.object({
+export const ProTaskAnalysisSchema = z.object({
+  serviceName: z.string(),
   documentList: z.array(z.string()).describe("A comprehensive list of all required documents for this specific service."),
   notes: z.string().optional().describe("Any important notes or pre-requisites for the user regarding this service."),
-  fees: z.array(FeeSchema).describe("A breakdown of estimated government fees and standard allowances."),
-  totalEstimatedCost: z.number().describe("The total estimated cost for the task, including all fees and allowances."),
-  assignmentSummary: z.string().describe("A concise summary of the assignment for the printable document."),
+  fees: z.array(FeeSchema).describe("A breakdown of estimated government fees for this specific task."),
+});
+export type ProTaskAnalysis = z.infer<typeof ProTaskAnalysisSchema>;
+
+
+export const ProTaskAnalysisOutputSchema = z.object({
+  tasks: z.array(ProTaskAnalysisSchema),
+  totalFees: z.array(FeeSchema).describe("A consolidated list of all fees for all tasks, including allowances."),
+  grandTotal: z.number().describe("The grand total estimated cost for the entire assignment."),
 });
 export type ProTaskAnalysisOutput = z.infer<typeof ProTaskAnalysisOutputSchema>;
