@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Printer, FlaskConical, BookOpen, GraduationCap, Utensils, Brush, Code, Handshake, Car, Building, HeartPulse, ShoppingBag } from "lucide-react";
+import { ArrowRight, Printer, FlaskConical, BookOpen, GraduationCap, Utensils, Brush, Code, Handshake, Car, Building, HeartPulse, ShoppingBag, Plane, Scale, Banknote, PartyPopper } from "lucide-react";
 import Link from "next/link";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 
@@ -20,6 +20,10 @@ const categories = [
     { name: "Real Estate & Construction", icon: Building },
     { name: "Health & Wellness", icon: HeartPulse },
     { name: "Retail & E-commerce", icon: ShoppingBag },
+    { name: "Tourism & Hospitality", icon: Plane },
+    { name: "Legal Services", icon: Scale },
+    { name: "Financial & Banking", icon: Banknote },
+    { name: "Events & Entertainment", icon: PartyPopper },
 ];
 
 export default function BusinessHubPage() {
