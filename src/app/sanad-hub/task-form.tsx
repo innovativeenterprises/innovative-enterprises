@@ -58,7 +58,7 @@ const SanadChatbot = ({ onServiceSelect }: { onServiceSelect: (service: string) 
 
         try {
             const result = await answerQuestion({
-                question: `You are Saif, a Sanad Hub assistant. A user has asked: "${input}". Based on their query and your knowledge of Omani government services, determine which specific service they need from the list provided below.
+                question: `You are Saif, the Product Manager for the Sanad Hub. A user has asked: "${input}". Based on their query and your knowledge of Omani government services, determine which specific service they need from the list provided below.
                 
 If you find an exact match, you MUST respond ONLY with the string 'SERVICE_SELECTED: [The Exact Service Name]'. 
 If you are unsure or the request is ambiguous, ask a clarifying question to the user. Do not guess.
