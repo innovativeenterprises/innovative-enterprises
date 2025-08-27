@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake, Download, Building, CreditCard, Ticket, BadgePercent } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake, Download, Building, CreditCard, Ticket, BadgePercent, Phone } from 'lucide-react';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { handleSanadOfficeRegistration } from '@/ai/flows/sanad-office-registration';
@@ -37,6 +37,7 @@ const FormSchema = z.object({
   contactName: z.string().min(3, "Contact name is required"),
   email: z.string().email("A valid email is required"),
   phone: z.string().min(5, "A valid phone number is required"),
+  whatsapp: z.string().optional(),
   services: z.string().min(10, "Please list the key services you offer."),
   logoFile: z.any().optional(),
   serviceChargesFile: z.any().optional(),
@@ -73,6 +74,7 @@ export default function OfficeForm() {
       contactName: '',
       email: '',
       phone: '',
+      whatsapp: '',
       services: '',
     }
   });
@@ -116,6 +118,7 @@ export default function OfficeForm() {
       form.setValue('crNumber', result.companyInfo?.registrationNumber || '');
       form.setValue('email', result.companyInfo?.contactEmail || '');
       form.setValue('phone', result.companyInfo?.contactMobile || '');
+      form.setValue('whatsapp', result.companyInfo?.contactMobile || '');
       form.setValue('contactName', result.authorizedSignatories?.[0]?.name || '');
       form.setValue('services', result.commercialActivities?.map(a => a.activityName).join(', ') || '');
       toast({ title: 'Analysis Complete!', description: 'Office details have been pre-filled from the CR.' });
@@ -279,9 +282,14 @@ export default function OfficeForm() {
                         <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     </div>
-                    <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <FormField control={form.control} name="email" render={({ field }) => (
+                            <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="whatsapp" render={({ field }) => (
+                            <FormItem><FormLabel>WhatsApp Number</FormLabel><FormControl><Input placeholder="+968 99123456" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                    </div>
                     <FormField control={form.control} name="services" render={({ field }) => (
                     <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
                     )} />

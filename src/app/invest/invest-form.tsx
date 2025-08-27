@@ -7,13 +7,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateLetterOfInterest } from '@/ai/flows/letter-of-interest';
 import { type GenerateLetterOfInterestOutput } from '@/ai/flows/letter-of-interest.schema';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Mail, Download, Briefcase, Calendar, CheckCircle, Bot, FileUp, ShieldCheck } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Mail, Download, Briefcase, Calendar, CheckCircle, Bot, FileUp, ShieldCheck, Phone } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -22,6 +22,7 @@ const FormSchema = z.object({
   organizationName: z.string().optional(),
   email: z.string().email('Please enter a valid email address.'),
   phone: z.string().optional(),
+  whatsapp: z.string().optional(),
   country: z.string().optional(),
   investorType: z.enum(['Angel', 'Venture Capital', 'Corporate', 'Individual', 'Other']).optional(),
   website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
@@ -54,6 +55,7 @@ export default function InvestForm() {
       organizationName: '',
       email: '',
       phone: '',
+      whatsapp: '',
       country: '',
       investorType: undefined,
       website: '',
@@ -193,6 +195,19 @@ export default function InvestForm() {
                                         <FormLabel>Phone Number (Optional)</FormLabel>
                                         <FormControl>
                                             <Input placeholder="+1 234 567 890" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="whatsapp"
+                                    render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>WhatsApp Number (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g., +968 99123456" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle, ServerCog, FileText, Building, AudioLines } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle, ServerCog, FileText, Building, AudioLines, MessageSquare } from "lucide-react";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 
@@ -45,7 +45,7 @@ export const initialAgentCategories: AgentCategory[] = [
             { name: "Hira", role: "Product Manager (GENIUS)", description: "Analyzes CVs, enhances resumes, and provides interview coaching for the GENIUS career platform.", icon: Users, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?q=80&w=1920&auto=format&fit=crop', aiHint: 'human resources robot', href: "/cv-enhancer" },
             { name: "TenderPro", role: "Tender Response Assistant", description: "Analyzes tender documents and requirements to generate comprehensive and professional draft responses.", icon: FileText, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617353-c0451a7e8e97?q=80&w=1920&auto=format&fit=crop', aiHint: 'document robot', href: "/tender-assistant" },
             { name: "Talia", role: "Talent & Competition Agent", description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", icon: Trophy, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616805-669c3fa0de40?q=80&w=1920&auto=format&fit=crop', aiHint: 'robot trophy', href: "/opportunities" },
-            { name: "Waleed", role: "WhatsApp Comms Agent", description: "Manages all WhatsApp communications, including OTP logins, notifications, and customer interactions via the Business API.", icon: MessageCircle, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1614149290174-a732a3c7a02c?q=80&w=1920&auto=format&fit=crop', aiHint: 'whatsapp robot' },
+            { name: "Waleed", role: "WhatsApp Comms Agent", description: "Manages all WhatsApp communications, including OTP logins, notifications, and customer interactions via the Business API.", icon: MessageSquare, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1614149290174-a732a3c7a02c?q=80&w=1920&auto=format&fit=crop', aiHint: 'whatsapp robot' },
         ]
     },
     {
