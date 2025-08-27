@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -121,6 +121,11 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     title: "Aida Legal Assistant",
     href: "/legal-agent",
     description: "Get preliminary analysis, draft agreements, or ask general questions from our AI agent, Aida.",
+  },
+   {
+    title: "AI Interview Coach",
+    href: "/interview-coach",
+    description: "Practice for your next job interview with AI-generated questions.",
   },
   {
     title: "AI Training Center",
