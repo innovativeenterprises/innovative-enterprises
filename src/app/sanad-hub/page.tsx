@@ -9,16 +9,6 @@ import SanadHubIcon from '@/components/icons/sanad-hub-icon';
 import Link from 'next/link';
 
 export default function SanadHubPage() {
-    const [isFormVisible, setIsFormVisible] = useState(false);
-
-    const handleGetStarted = () => {
-        setIsFormVisible(true);
-        // Scroll to the form section smoothly
-        const formElement = document.getElementById('task-form');
-        if (formElement) {
-            formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -32,8 +22,8 @@ export default function SanadHubPage() {
                         A unified platform connecting you to Sanad Service Centres across Oman. Delegate tasks, receive competitive offers, and get your work done faster and more efficiently.
                     </p>
                     <div className="mt-8 flex justify-center gap-4">
-                        <Button size="lg" onClick={handleGetStarted}>
-                            Submit a Task <ArrowRight className="ml-2 h-5 w-5"/>
+                        <Button size="lg" asChild>
+                           <a href="#task-form">Submit a Task <ArrowRight className="ml-2 h-5 w-5"/></a>
                         </Button>
                         <Button size="lg" variant="outline" asChild>
                            <Link href="/sanad-office">For Sanad Offices</Link>
@@ -42,7 +32,7 @@ export default function SanadHubPage() {
                 </div>
 
                 <div id="task-form" className="max-w-4xl mx-auto mt-20">
-                    <TaskForm isVisible={isFormVisible} />
+                    <TaskForm />
                 </div>
 
             </div>

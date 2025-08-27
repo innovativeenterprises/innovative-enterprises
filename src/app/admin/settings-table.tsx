@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Edit } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 
 // This hook now connects to the global store.
@@ -132,6 +133,11 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
         toast({ title: "Setting updated.", description: `Translation assignment mode set to ${description}.`});
     };
     
+    const handleVoiceChange = (value: boolean) => {
+        setSettings(prev => ({...prev, voiceInteractionEnabled: value }));
+        toast({ title: "Setting updated.", description: `Voice interaction has been ${value ? 'enabled' : 'disabled'}.`});
+    };
+    
     const handleSavePricing = (values: z.infer<typeof SanadPricingSchema>) => {
         setSettings(prev => ({
             ...prev,
@@ -180,6 +186,24 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
                                         <Label htmlFor="tender">Tender to Partner Network</Label>
                                     </div>
                                 </RadioGroup>
+                            </TableCell>
+                        </TableRow>
+                         <TableRow>
+                            <TableCell>
+                                <p className="font-medium">Chatbot Voice Interaction</p>
+                                <p className="text-sm text-muted-foreground">Globally enable or disable voice input/output on all AI chatbots.</p>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id="voice-interaction-switch"
+                                        checked={settings.voiceInteractionEnabled}
+                                        onCheckedChange={handleVoiceChange}
+                                    />
+                                    <Label htmlFor="voice-interaction-switch">
+                                        {settings.voiceInteractionEnabled ? "Enabled" : "Disabled"}
+                                    </Label>
+                                </div>
                             </TableCell>
                         </TableRow>
                         </TableBody>

@@ -11,6 +11,7 @@ export interface SanadOfficeSettings {
 export interface AppSettings {
     translationAssignmentMode: 'direct' | 'tender' | 'builtin';
     sanadOffice: SanadOfficeSettings;
+    voiceInteractionEnabled: boolean;
 }
 
 export const initialSettings: AppSettings = {
@@ -21,5 +22,6 @@ export const initialSettings: AppSettings = {
         yearlyFee: 160,
         lifetimeFee: 280,
         firstTimeDiscountPercentage: 0.60,
-    }
+    },
+    voiceInteractionEnabled: true,
 };

@@ -6,7 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowRight, Printer, FlaskConical, BookOpen, GraduationCap, Utensils, Brush, Code, Handshake, Car, Building, HeartPulse, ShoppingBag, Plane, Scale, Banknote, PartyPopper } from "lucide-react";
 import Link from "next/link";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
-import BusinessHubChat from "./business-hub-chat";
+import { ChatComponent } from "@/components/chat/chat-component";
+import { Bot } from "lucide-react";
+import { useSettingsData } from "@/app/admin/settings-table";
+import { answerHubQuery } from "@/ai/flows/business-hub-agent";
 
 const categories = [
     { name: "Printing & Publishing", icon: Printer },
@@ -27,7 +30,18 @@ const categories = [
     { name: "Events & Entertainment", icon: PartyPopper },
 ];
 
+const businessCategoriesList = categories.map(c => c.name);
+
 export default function BusinessHubPage() {
+  const { settings } = useSettingsData();
+
+  const hubQueryFlow = async (input: { [key: string]: any }) => {
+    return await answerHubQuery({
+        query: input.message,
+        businessCategories: businessCategoriesList,
+    });
+  };
+
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
@@ -42,7 +56,15 @@ export default function BusinessHubPage() {
         </div>
 
         <div className="max-w-3xl mx-auto mt-12">
-            <BusinessHubChat />
+            <ChatComponent
+                agentName="Hubert"
+                agentIcon={Bot}
+                agentDescription="Your AI guide to the Business Hub network"
+                welcomeMessage="Hello! I'm Hubert, your Business Hub coordinator. Tell me what you're looking for, and I'll help you find the right category."
+                placeholder="e.g., 'I need someone to build a website'"
+                aiFlow={hubQueryFlow}
+                settings={settings}
+            />
         </div>
 
         <div className="max-w-5xl mx-auto mt-20">

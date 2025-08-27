@@ -29,4 +29,5 @@ import '@/ai/flows/sanad-task-analysis.ts';
 import '@/ai/flows/sanad-office-registration.ts';
 import '@/ai/flows/sanad-office-registration.schema.ts';
 import '@/ai/flows/business-hub-agent.ts';
+import '@/ai/flows/text-to-speech.ts';
     
