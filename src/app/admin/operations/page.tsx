@@ -5,10 +5,10 @@ import OpportunityTable, { useOpportunitiesData } from "../opportunity-table";
 import PricingTable, { usePricingData } from "../pricing-table";
 import StageTable, { useProjectStagesData } from "../stage-table";
 import AssetTable, { useAssetsData } from "../asset-table";
-import ProForm from "@/app/pro-agent/pro-form";
-import TenderForm from "@/app/tender-assistant/tender-form";
-import TrainingForm from "@/app/training-center/training-form";
-import MeetingForm from "@/app/meeting-agent/meeting-form";
+import ProForm from "@/app/admin/operations/pro-form";
+import TenderForm from "@/app/admin/operations/tender-form";
+import TrainingForm from "@/app/admin/operations/training-form";
+import MeetingForm from "@/app/admin/operations/meeting-form";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, BrainCircuit, NotebookText } from "lucide-react";
 
