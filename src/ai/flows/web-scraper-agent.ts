@@ -129,7 +129,7 @@ const searchSummaryPrompt = ai.definePrompt({
 1.  **Title**: Create a summary title for the research, like "Research Summary for '{{{query}}}'".
 2.  **Summary**: Write a comprehensive, multi-paragraph summary that provides a general overview of the topic. Cover the key aspects, different viewpoints, and important entities related to the query.
 3.  **Key Points**: List the 5-7 most important facts, definitions, or common findings related to this topic.
-4.  **Source**: Provide a URL for a plausible search engine result, e.g., \`https://www.google.com/search?q={{{query}}}\`
+4.  **Source**: Provide a plausible search engine result, e.g., \`https://www.google.com/search?q={{{query}}}\`
 
 Return the response in the specified JSON format.
 `
