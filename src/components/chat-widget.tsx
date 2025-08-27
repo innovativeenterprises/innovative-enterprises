@@ -4,11 +4,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Bot, X, MessageSquare } from "lucide-react";
-import FaqChat from "@/app/faq/faq-chat";
+import { X, MessageSquare, Bot } from "lucide-react";
+import { ChatComponent } from '@/components/chat/chat-component';
+import { useSettingsData } from '@/app/admin/settings-table';
+import { answerQuestion } from '@/ai/flows/ai-powered-faq';
+
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
+    const { settings } = useSettingsData();
 
     return (
         <div className="fixed bottom-4 right-4 z-50">
@@ -29,7 +33,15 @@ export default function ChatWidget() {
                     onOpenAutoFocus={(e) => e.preventDefault()}
                 >
                     <div className="flex flex-col h-full bg-card rounded-2xl overflow-hidden">
-                       <FaqChat />
+                       <ChatComponent
+                            agentName="Aida"
+                            agentIcon={Bot}
+                            agentDescription="Virtual assistant for Innovative Enterprises"
+                            welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
+                            placeholder="Ask about our services or book a meeting..."
+                            aiFlow={answerQuestion}
+                            settings={settings}
+                       />
                     </div>
                 </PopoverContent>
             </Popover>

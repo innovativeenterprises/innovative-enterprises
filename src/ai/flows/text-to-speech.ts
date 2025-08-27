@@ -7,20 +7,9 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
 import wav from 'wav';
 import { googleAI } from '@genkit-ai/googleai';
-
-export const TextToSpeechInputSchema = z.object({
-  textToSpeak: z.string().describe("The text to be converted to speech."),
-  voice: z.enum(['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer']).optional().default('onyx'),
-});
-export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
-
-export const TextToSpeechOutputSchema = z.object({
-  audioUrl: z.string().describe("The data URI of the generated audio file."),
-});
-export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
+import { TextToSpeechInput, TextToSpeechInputSchema, TextToSpeechOutput } from './text-to-speech.schema';
 
 
 /**
