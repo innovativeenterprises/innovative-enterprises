@@ -55,6 +55,13 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/sanad-hub",
   },
+   {
+    icon: HomeWorkforceIcon,
+    title: "RAAHA Platform",
+    description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
+    enabled: true,
+    href: "/raaha",
+  },
   {
     icon: BarChart,
     title: "Momentum BI",

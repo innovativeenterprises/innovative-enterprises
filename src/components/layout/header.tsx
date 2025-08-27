@@ -30,6 +30,7 @@ import React from 'react';
 import Image from 'next/image';
 import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
+import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 
 const navLinks = [
   { href: '/#products', label: 'Products' },
@@ -66,7 +67,7 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     title: "RAAHA Platform",
     href: "/raaha",
     description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
-    icon: Building,
+    icon: HomeWorkforceIcon,
   },
    {
     title: "GENIUS Career Platform",
