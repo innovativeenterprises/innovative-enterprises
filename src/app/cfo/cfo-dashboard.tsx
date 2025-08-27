@@ -5,8 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowDownLeft, ArrowUpRight, DollarSign, MoreHorizontal, PlusCircle, CreditCard, Users, ReceiptText } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, DollarSign, MoreHorizontal, PlusCircle, CreditCard, Users, ReceiptText, CalendarCheck, UserCheck } from "lucide-react";
 import { useSettingsData } from "@/app/admin/settings-table";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const transactions = [
     { description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28" },
@@ -35,12 +36,43 @@ const getStatusBadge = (status: string) => {
     }
 }
 
+const getNextVatDueDate = (): { dueDate: Date, daysRemaining: number } => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const quarterEndDates = [
+        new Date(year, 2, 31), // March 31
+        new Date(year, 5, 30), // June 30
+        new Date(year, 8, 30), // September 30
+        new Date(year, 11, 31) // December 31
+    ];
+
+    let nextDueDate: Date | null = null;
+    for (const date of quarterEndDates) {
+        if (date >= now) {
+            nextDueDate = date;
+            break;
+        }
+    }
+
+    // If all of this year's due dates have passed, the next one is next year's first quarter
+    if (!nextDueDate) {
+        nextDueDate = new Date(year + 1, 2, 31);
+    }
+    
+    const timeDiff = nextDueDate.getTime() - now.getTime();
+    const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    return { dueDate: nextDueDate, daysRemaining };
+};
+
+
 export default function CfoDashboard() {
   const { settings } = useSettingsData();
 
   const totalRevenue = 250450.00;
   const vatPayable = settings.vat.enabled ? totalRevenue * settings.vat.rate : 0;
   const vatRatePercentage = (settings.vat.rate * 100).toFixed(1);
+  const { dueDate: nextVatDueDate, daysRemaining: vatDaysRemaining } = getNextVatDueDate();
 
   const overviewStats = [
     { title: "Total Revenue", value: `OMR ${totalRevenue.toFixed(2)}`, change: "+20.1% from last month", icon: DollarSign },
@@ -56,15 +88,21 @@ export default function CfoDashboard() {
           change: "on this month's revenue",
           icon: ReceiptText
       });
+      overviewStats.push({
+          title: "VAT Payment Due",
+          value: `${vatDaysRemaining} days`,
+          change: `Next deadline: ${nextVatDueDate.toLocaleDateString()}`,
+          icon: CalendarCheck
+      });
   }
 
 
   return (
     <div className="space-y-8">
         {/* Overview Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {overviewStats.map((stat, index) => (
-                <Card key={index}>
+                <Card key={index} className="xl:col-span-1">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
                         <stat.icon className="h-4 w-4 text-muted-foreground" />
@@ -123,25 +161,46 @@ export default function CfoDashboard() {
                 </CardContent>
             </Card>
 
-            {/* Upcoming Payments */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Upcoming Payments</CardTitle>
-                    <CardDescription>Bills and subscriptions to be paid soon.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    {upcomingPayments.map((payment, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                            <div>
-                                <p className="font-medium">{payment.name}</p>
-                                <p className="text-sm text-muted-foreground">Due: {payment.dueDate}</p>
+            {/* Side Column */}
+            <div className="space-y-8">
+                 {/* VAT Filing Task */}
+                {settings.vat.enabled && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>VAT Filing Task</CardTitle>
+                             <CardDescription>Quarterly VAT filing and payment.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Alert className="border-primary/30">
+                                <UserCheck className="h-4 w-4"/>
+                                <AlertTitle>Assigned To</AlertTitle>
+                                <AlertDescription>
+                                    This task is assigned to the **PRO & Financial Agent (Finley)** for processing and payment before the deadline.
+                                </AlertDescription>
+                            </Alert>
+                        </CardContent>
+                    </Card>
+                )}
+                {/* Upcoming Payments */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Upcoming Payments</CardTitle>
+                        <CardDescription>Bills and subscriptions to be paid soon.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {upcomingPayments.map((payment, index) => (
+                            <div key={index} className="flex justify-between items-center">
+                                <div>
+                                    <p className="font-medium">{payment.name}</p>
+                                    <p className="text-sm text-muted-foreground">Due: {payment.dueDate}</p>
+                                </div>
+                                <p className="font-semibold">OMR {payment.amount.toFixed(2)}</p>
                             </div>
-                            <p className="font-semibold">OMR {payment.amount.toFixed(2)}</p>
-                        </div>
-                    ))}
-                    <Button variant="outline" className="w-full mt-4">Manage Subscriptions</Button>
-                </CardContent>
-            </Card>
+                        ))}
+                        <Button variant="outline" className="w-full mt-4">Manage Subscriptions</Button>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     </div>
   )
