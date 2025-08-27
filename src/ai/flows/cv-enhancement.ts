@@ -12,6 +12,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod';
 import {
   CvAnalysisInput,
   CvAnalysisInputSchema,
@@ -31,23 +32,40 @@ export async function generateEnhancedCv(input: CvGenerationInput): Promise<CvGe
   return cvGenerationFlow(input);
 }
 
+// New Step 1: A robust prompt to just extract and repair text from the document.
+const repairPrompt = ai.definePrompt({
+    name: 'cvRepairPrompt',
+    input: { schema: CvAnalysisInputSchema },
+    output: { schema: z.object({ repairedText: z.string().describe("The clean, repaired text extracted from the CV document.") }) },
+    prompt: `You are an OCR and text extraction expert. Your only task is to read the provided document, which is a CV, and extract all of its text content.
+    The document may be a messy PDF, an image, or a Word file. Do your best to reconstruct the text, correct OCR errors, and present it as a clean, readable block of text.
+
+    CV Document: {{media url=cvDataUri}}
+
+    Return ONLY the cleaned text in the 'repairedText' field.`,
+});
+
+
 const analysisPrompt = ai.definePrompt({
   name: 'cvAnalysisPrompt',
-  input: { schema: CvAnalysisInputSchema },
+  input: { schema: z.object({ cvText: z.string() }) }, // Input is now clean text
   output: { schema: CvAnalysisOutputSchema },
   prompt: `You are an expert HR professional specializing in optimizing resumes for Applicant Tracking Systems (ATS).
-Your task is to analyze the provided CV and give detailed, actionable feedback to improve its ATS compatibility.
+Your task is to analyze the provided CV text and give detailed, actionable feedback to improve its ATS compatibility.
 
-CV Document: {{media url=cvDataUri}}
+CV Text:
+"""
+{{{cvText}}}
+"""
 
-Analyze the CV based on the following criteria and provide a structured response. Even if the CV is poorly formatted or hard to read, do your best to extract information and provide feedback.
-1.  **Overall Score**: Provide a score from 0 to 100 representing how well the CV is optimized for ATS. Base this on the content you can successfully parse.
-2.  **Summary**: Briefly summarize the key areas for improvement. Mention if parts of the document were difficult to parse.
+Analyze the CV text based on the following criteria and provide a structured response.
+1.  **Overall Score**: Provide a score from 0 to 100 representing how well the CV is optimized for ATS.
+2.  **Summary**: Briefly summarize the key areas for improvement.
 3.  **Contact Information**: Check for standard format (Name, Phone, Email, LinkedIn URL). Ensure it's easily parsable.
-4.  **Work Experience**: Check for standard formatting (Job Title, Company, Dates, Bullet Points). Ensure action verbs are used. Check for keywords relevant to common job descriptions.
-5.  **Skills**: Ensure there is a dedicated skills section with a list of relevant hard skills. Avoid graphics or complex formatting for skills.
+4.  **Work Experience**: Check for standard formatting (Job Title, Company, Dates, Bullet Points). Ensure action verbs are used.
+5.  **Skills**: Ensure there is a dedicated skills section with a list of relevant hard skills.
 6.  **Education**: Check for standard format (Degree, University, Graduation Date).
-7.  **Formatting**: Analyze the overall formatting. The CV should be in a single column, use standard fonts (like Calibri, Arial, Times New Roman), and have no images, tables, or complex headers/footers. The file type should be checked (PDF or DOCX are best).
+7.  **Formatting**: Analyze the overall formatting based on the text structure. The structure should be logical and easy to follow.
 
 For each section (Contact Info, Work Experience, etc.), determine if it is compliant and provide a list of specific, actionable suggestions for improvement. If a section is already good, provide positive reinforcement. If you cannot find a section, state that and recommend adding it.
 `,
@@ -60,7 +78,16 @@ const cvAnalysisFlow = ai.defineFlow(
     outputSchema: CvAnalysisOutputSchema,
   },
   async (input) => {
-    const { output } = await analysisPrompt(input);
+    // Step 1: Repair and extract clean text from the document.
+    const repairResult = await repairPrompt(input);
+    const cvText = repairResult.output?.repairedText;
+
+    if (!cvText) {
+        throw new Error("Could not extract any text from the provided CV document.");
+    }
+    
+    // Step 2: Analyze the clean text.
+    const { output } = await analysisPrompt({ cvText });
     return output!;
   }
 );
