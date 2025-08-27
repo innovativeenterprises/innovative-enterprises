@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from 'lucide-react';
-import { Trophy, Brush, Code, Megaphone, Calendar, Bot, Headset } from "lucide-react";
+import { Trophy, Brush, Code, Megaphone, Calendar, Bot, Headset, Server } from "lucide-react";
 
 export type OpportunityBadgeVariant = "default" | "secondary" | "destructive" | "outline";
 
@@ -24,7 +24,8 @@ export const opportunityIconMap = {
     Megaphone,
     Calendar,
     Bot,
-    Headset
+    Headset,
+    Server,
 };
 
 export const initialOpportunities: Opportunity[] = [

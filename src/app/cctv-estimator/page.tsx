@@ -1,6 +1,6 @@
 
 import QuotationForm from "./quotation-form";
-import { Server, Video } from "lucide-react";
+import { Server } from "lucide-react";
 
 export default function IctEstimatorPage() {
   return (

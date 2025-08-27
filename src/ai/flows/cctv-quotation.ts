@@ -3,7 +3,7 @@
 
 /**
  * @fileOverview An AI agent that generates a quotation for ICT rentals and surveillance systems.
- * - generateIctProposal - A function that analyzes user requirements for a project.
+ * - generateIctProposal - a function that analyzes user requirements for a project.
  */
 
 import { ai } from '@/ai/genkit';
