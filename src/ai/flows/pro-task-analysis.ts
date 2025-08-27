@@ -15,7 +15,7 @@ import {
     ProTaskAnalysis,
     ProTaskAnalysisSchema,
 } from './pro-task-analysis.schema';
-import { ministryLocations, type Ministry, calculateTotalDistance } from '@/lib/oman-locations';
+import { ministryLocations, type Ministry, calculateTotalDistance, type Governorate, OMAN_GOVERNORATES } from '@/lib/oman-locations';
 
 const FUEL_RATE_PER_KM = 0.400; // OMR per KM. This can be moved to admin settings later.
 
@@ -26,35 +26,46 @@ export async function analyzeProTask(input: ProTaskAnalysisInput): Promise<ProTa
 const getTravelPlanTool = ai.defineTool(
     {
         name: 'getTravelPlan',
-        description: 'Calculates the total travel distance for a list of required government ministries for a day\'s tasks. The starting and ending point is always the main office in Al Amerat.',
+        description: 'Calculates the total travel distance for a list of required government ministries within a specific Omani governorate. The trip starts and ends at the specified startLocation.',
         inputSchema: z.object({
-            ministriesToVisit: z.array(z.string().describe('The unique names of the ministries or authorities the PRO needs to visit.')).describe('A list of unique ministry names that need to be visited.')
+            ministriesToVisit: z.array(z.string().describe('The unique names of the ministries or authorities the PRO needs to visit.')).describe('A list of unique ministry names that need to be visited.'),
+            governorate: z.enum(OMAN_GOVERNORATES).describe("The governorate where the tasks will be performed."),
+            startLocationName: z.string().describe("The name of the starting point for the trip (e.g., 'Al Amerat Office', 'Sohar Port')."),
+            startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).describe("The GPS coordinates of the starting point."),
         }),
         outputSchema: z.object({
             totalDistanceKm: z.number().describe('The total round-trip distance in kilometers.'),
             tripDescription: z.string().describe('A short description of the planned route.'),
+            unmappedLocations: z.array(z.string()).describe("A list of any locations that could not be found in the specified governorate."),
         }),
     },
-    async ({ ministriesToVisit }) => {
-        // Deduplicate and find coordinates
-        const uniqueMinistries = [...new Set(ministriesToVisit)] as Ministry[];
-        const locationsToVisit = uniqueMinistries.map(name => {
-            const location = ministryLocations[name];
-            if (!location) {
-                throw new Error(`Location for ministry "${name}" not found.`);
+    async ({ ministriesToVisit, governorate, startLocationName, startLocationCoords }) => {
+        const unmappedLocations: string[] = [];
+        
+        const locationsToVisit = ministriesToVisit.map(name => {
+            const governorateLocations = ministryLocations[governorate];
+            if (!governorateLocations || !(name in governorateLocations)) {
+                unmappedLocations.push(name);
+                return null;
             }
-            return { name, ...location };
-        });
+            return { name, ...governorateLocations[name as keyof typeof governorateLocations] };
+        }).filter((l): l is { name: string; lat: number; lon: number; } => l !== null);
 
-        if (locationsToVisit.length === 0) {
-            return { totalDistanceKm: 0, tripDescription: 'No travel required.' };
+
+        if (locationsToVisit.length === 0 && unmappedLocations.length > 0) {
+             return { 
+                totalDistanceKm: 0,
+                tripDescription: `Could not map any locations in ${governorate}.`,
+                unmappedLocations,
+            };
         }
 
-        const { distance, path } = calculateTotalDistance(locationsToVisit);
+        const { distance, path } = calculateTotalDistance(locationsToVisit, {name: startLocationName, ...startLocationCoords});
         
         return {
             totalDistanceKm: distance,
-            tripDescription: `Calculated route: ${path.join(' -> ')}. Total distance: ${distance.toFixed(1)} km.`
+            tripDescription: `Calculated route: ${path.join(' -> ')}. Total distance: ${distance.toFixed(1)} km.`,
+            unmappedLocations,
         }
     }
 );
@@ -103,9 +114,21 @@ const proTaskAnalysisFlow = ai.defineFlow(
     let tripDetails = "No travel required or all tasks are online.";
 
     if (ministriesToVisit.length > 0) {
-        const travelPlan = await getTravelPlanTool({ ministriesToVisit });
-        fuelAllowance = travelPlan.totalDistanceKm * FUEL_RATE_PER_KM;
-        tripDetails = travelPlan.tripDescription;
+        const travelPlan = await getTravelPlanTool({ 
+            ministriesToVisit,
+            governorate: input.governorate,
+            startLocationName: input.startLocationName,
+            startLocationCoords: input.startLocationCoords
+        });
+        
+        if (travelPlan.unmappedLocations.length > 0) {
+            // In a real scenario, you might have a follow-up prompt to ask the user for the addresses
+            // of the unmapped locations. For now, we'll just add a note.
+            tripDetails = `Could not map the following locations in ${input.governorate}: ${travelPlan.unmappedLocations.join(', ')}. Please verify their addresses.`;
+        } else {
+             fuelAllowance = travelPlan.totalDistanceKm * FUEL_RATE_PER_KM;
+             tripDetails = travelPlan.tripDescription;
+        }
     }
 
 

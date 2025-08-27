@@ -1,13 +1,20 @@
 
+
 /**
  * @fileOverview Schemas and types for the PRO Task Analysis flow.
  */
 
 import { z } from 'zod';
-import { OMAN_MINISTRIES } from '@/lib/oman-locations';
+import { OMAN_MINISTRIES, OMAN_GOVERNORATES } from '@/lib/oman-locations';
 
 export const ProTaskAnalysisInputSchema = z.object({
   serviceNames: z.array(z.string()).min(1, "At least one service name is required."),
+  governorate: z.enum(OMAN_GOVERNORATES, { required_error: "Please select a governorate." }),
+  startLocationName: z.string().min(3, "Please provide a name for the start location."),
+  startLocationCoords: z.object({
+      lat: z.number(),
+      lon: z.number()
+  }, { required_error: "Please select a valid start location on the map."}),
 });
 export type ProTaskAnalysisInput = z.infer<typeof ProTaskAnalysisInputSchema>;
 

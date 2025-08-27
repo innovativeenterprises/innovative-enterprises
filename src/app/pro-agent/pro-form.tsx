@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, FileText, Printer, FileDown, AlertTriangle, ListTodo, Plus, Trash2 } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, FileText, Printer, FileDown, AlertTriangle, ListTodo, Plus, Trash2, MapPin } from 'lucide-react';
 import { sanadServiceGroups } from '@/lib/sanad-services';
-import { analyzeProTask, type ProTaskAnalysis } from '@/ai/flows/pro-task-analysis';
+import { OMAN_GOVERNORATES } from '@/lib/oman-locations';
+import { analyzeProTask } from '@/ai/flows/pro-task-analysis';
 import type { ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis.schema';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -19,12 +20,20 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 
 const FormSchema = z.object({
   serviceNames: z.array(z.string()).refine((value) => value.length > 0, {
     message: "You must select at least one service.",
   }),
+  governorate: z.enum(OMAN_GOVERNORATES, { required_error: "Please select a governorate." }),
+  startLocationName: z.string().min(3, "Please provide a name for the start location."),
+  startLocationCoords: z.object({
+      lat: z.number(),
+      lon: z.number()
+  }, { required_error: "Please select a valid start location on the map."}),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -71,6 +80,9 @@ export default function ProForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
         serviceNames: [],
+        governorate: 'Muscat',
+        startLocationName: 'Innovative Enterprises HQ',
+        startLocationCoords: { lat: 23.5518, lon: 58.5024 },
     }
   });
 
@@ -78,7 +90,7 @@ export default function ProForm() {
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await analyzeProTask({ serviceNames: data.serviceNames });
+      const result = await analyzeProTask(data);
       setResponse(result);
     } catch (error) {
       toast({
@@ -115,11 +127,45 @@ export default function ProForm() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <Card className="bg-muted/50 p-6">
+                     <CardTitle className="text-lg mb-4 flex items-center gap-2"><MapPin/> Trip Details</CardTitle>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <FormField
+                            control={form.control}
+                            name="governorate"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Governorate</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                        <SelectContent>
+                                            {OMAN_GOVERNORATES.map(gov => <SelectItem key={gov} value={gov}>{gov}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="startLocationName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Start Location Name</FormLabel>
+                                    <FormControl><Input placeholder="e.g., Head Office" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                     <p className="text-sm text-muted-foreground mt-4">Note: The PRO's starting GPS coordinates are currently fixed to our Head Office. Map-based location selection will be available in a future update.</p>
+                </Card>
                 <FormField
                 control={form.control}
                 name="serviceNames"
                 render={() => (
                     <FormItem>
+                        <FormLabel className="text-lg font-semibold">Select Tasks</FormLabel>
                          <Accordion type="multiple" className="w-full">
                             {Object.entries(sanadServiceGroups).map(([group, services]) => (
                                 <AccordionItem value={group} key={group}>
