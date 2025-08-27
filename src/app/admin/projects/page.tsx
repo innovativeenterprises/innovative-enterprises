@@ -21,7 +21,7 @@ import Image from 'next/image';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { AddEditProductDialog, type ProductValues } from './product-form-dialog';
+import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
