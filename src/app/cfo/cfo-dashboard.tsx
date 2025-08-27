@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowDownLeft, ArrowUpRight, DollarSign, PlusCircle, CreditCard, Users, ReceiptText, CalendarCheck, UserCheck, Upload, Paperclip } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, DollarSign, PlusCircle, CreditCard, Users, ReceiptText, CalendarCheck, UserCheck, Upload, Paperclip, FilePlus, Eye, Trash2 } from "lucide-react";
 import { useSettingsData } from "@/app/admin/settings-table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
@@ -17,14 +17,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 const initialTransactions = [
-    { description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28", proof: "doc_123.pdf" },
-    { description: "AWS Cloud Services Bill", amount: -2500.00, type: "expense", status: "Paid", date: "2024-07-27", proof: "doc_124.pdf" },
-    { description: "Freelancer Payment - John Doe", amount: -1200.00, type: "expense", status: "Paid", date: "2024-07-25" },
-    { description: "Invoice #INV-007 to Tech Corp", amount: 15000.00, type: "income", status: "Pending", date: "2024-07-22" },
-    { description: "Salaries - July 2024", amount: -15000.00, type: "expense", status: "Paid", date: "2024-07-31", proof: "doc_125.pdf" },
-    { description: "Office Supplies Purchase", amount: -350.00, type: "expense", status: "Paid", date: "2024-07-20" },
+    { id: "tx_1", description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28", proof: "doc_123.pdf" },
+    { id: "tx_2", description: "AWS Cloud Services Bill", amount: -2500.00, type: "expense", status: "Paid", date: "2024-07-27", proof: "doc_124.pdf" },
+    { id: "tx_3", description: "Freelancer Payment - John Doe", amount: -1200.00, type: "expense", status: "Paid", date: "2024-07-25" },
+    { id: "tx_4", description: "Invoice #INV-007 to Tech Corp", amount: 15000.00, type: "income", status: "Pending", date: "2024-07-22" },
+    { id: "tx_5", description: "Salaries - July 2024", amount: -15000.00, type: "expense", status: "Paid", date: "2024-07-31", proof: "doc_125.pdf" },
+    { id: "tx_6", description: "Office Supplies Purchase", amount: -350.00, type: "expense", status: "Paid", date: "2024-07-20" },
 ];
 
 const upcomingPayments = [
@@ -39,6 +40,24 @@ const CsvImportSchema = z.object({
 });
 type CsvImportValues = z.infer<typeof CsvImportSchema>;
 type Transaction = typeof initialTransactions[0];
+
+
+const InvoiceLineItemSchema = z.object({
+    description: z.string().min(1, "Description is required"),
+    quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+    price: z.coerce.number().min(0, "Price must be positive"),
+});
+
+const InvoiceSchema = z.object({
+    clientName: z.string().min(2, "Client name is required"),
+    clientEmail: z.string().email("A valid email is required"),
+    invoiceDate: z.string(),
+    dueDate: z.string(),
+    lineItems: z.array(InvoiceLineItemSchema).min(1, "At least one line item is required"),
+});
+
+type InvoiceValues = z.infer<typeof InvoiceSchema>;
+
 
 const ImportTransactionsDialog = ({ onImport, children }: { onImport: (transactions: Transaction[]) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -58,6 +77,7 @@ const ImportTransactionsDialog = ({ onImport, children }: { onImport: (transacti
                         return null;
                     }
                     return {
+                        id: `tx_csv_${Date.now()}_${index}`,
                         description: columns[0]?.trim(),
                         amount: parseFloat(columns[1]?.trim()) || 0,
                         type: columns[2]?.trim() as any,
@@ -116,6 +136,100 @@ const ImportTransactionsDialog = ({ onImport, children }: { onImport: (transacti
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit">Import Transactions</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+
+const AddInvoiceDialog = ({ onSave, children, vatRate }: { onSave: (invoice: InvoiceValues, total: number) => void, children: React.ReactNode, vatRate: number }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const form = useForm<InvoiceValues>({
+        resolver: zodResolver(InvoiceSchema),
+        defaultValues: {
+            clientName: "",
+            clientEmail: "",
+            invoiceDate: new Date().toISOString().split('T')[0],
+            dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            lineItems: [{ description: "", quantity: 1, price: 0 }],
+        }
+    });
+    
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: "lineItems",
+    });
+
+    const watchLineItems = form.watch("lineItems");
+    const subtotal = watchLineItems.reduce((acc, item) => acc + (item.quantity || 0) * (item.price || 0), 0);
+    const vat = subtotal * vatRate;
+    const total = subtotal + vat;
+    
+    const onSubmit: SubmitHandler<InvoiceValues> = (data) => {
+        onSave(data, total);
+        setIsOpen(false);
+        form.reset();
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>Create New Invoice</DialogTitle>
+                    <DialogDescription>Fill in the details below to create and log a new invoice.</DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField name="clientName" control={form.control} render={({ field }) => <FormItem><FormLabel>Client Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
+                            <FormField name="clientEmail" control={form.control} render={({ field }) => <FormItem><FormLabel>Client Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>} />
+                        </div>
+                         <div className="grid grid-cols-2 gap-4">
+                            <FormField name="invoiceDate" control={form.control} render={({ field }) => <FormItem><FormLabel>Invoice Date</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>} />
+                            <FormField name="dueDate" control={form.control} render={({ field }) => <FormItem><FormLabel>Due Date</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>} />
+                        </div>
+
+                        <Separator />
+                        
+                        <div>
+                            {fields.map((field, index) => (
+                                <div key={field.id} className="grid grid-cols-12 gap-2 items-end mb-2">
+                                    <FormField name={`lineItems.${index}.description`} control={form.control} render={({ field }) => (
+                                        <FormItem className="col-span-6"><FormLabel className={cn(index !== 0 && "sr-only")}>Description</FormLabel><FormControl><Input placeholder="Service or product description" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                    <FormField name={`lineItems.${index}.quantity`} control={form.control} render={({ field }) => (
+                                        <FormItem className="col-span-2"><FormLabel className={cn(index !== 0 && "sr-only")}>Qty</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                    <FormField name={`lineItems.${index}.price`} control={form.control} render={({ field }) => (
+                                        <FormItem className="col-span-3"><FormLabel className={cn(index !== 0 && "sr-only")}>Price</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                    <div className="col-span-1">
+                                        <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                                    </div>
+                                </div>
+                            ))}
+                            <Button type="button" variant="outline" size="sm" onClick={() => append({ description: "", quantity: 1, price: 0 })}>
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add Line Item
+                            </Button>
+                        </div>
+                        
+                        <Separator />
+
+                        <div className="flex justify-end">
+                            <div className="w-64 space-y-2 text-sm">
+                                <div className="flex justify-between"><span>Subtotal:</span><span>OMR {subtotal.toFixed(2)}</span></div>
+                                <div className="flex justify-between"><span>VAT ({vatRate * 100}%):</span><span>OMR {vat.toFixed(2)}</span></div>
+                                <div className="flex justify-between font-bold text-base border-t pt-2"><span>Total:</span><span>OMR {total.toFixed(2)}</span></div>
+                            </div>
+                        </div>
+
+                        <DialogFooter className="sticky bottom-0 bg-background pt-4 pb-0 -mb-2">
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Create & Log Invoice</Button>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -189,6 +303,8 @@ export default function CfoDashboard() {
   const { settings } = useSettingsData();
   const [transactions, setTransactions] = useState(initialTransactions);
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  const { toast } = useToast();
 
   const totalRevenue = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
   const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Math.abs(t.amount), 0);
@@ -203,6 +319,20 @@ export default function CfoDashboard() {
 
   const handleImport = (newTransactions: Transaction[]) => {
       setTransactions(prev => [...newTransactions, ...prev].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+  };
+  
+  const handleSaveInvoice = (invoice: InvoiceValues, total: number) => {
+    const newTransaction: Transaction = {
+        id: `tx_inv_${Date.now()}`,
+        description: `Invoice to ${invoice.clientName}`,
+        amount: total,
+        type: 'income',
+        status: 'Pending',
+        date: invoice.invoiceDate,
+        proof: '', // No proof initially for an invoice
+    };
+    setTransactions(prev => [newTransaction, ...prev]);
+    toast({ title: "Invoice Created", description: `Invoice for OMR ${total.toFixed(2)} has been logged as a pending transaction.` });
   };
   
   const filteredTransactions = transactions.filter(t => {
@@ -275,6 +405,9 @@ export default function CfoDashboard() {
                         <CardDescription>An overview of recent financial movements.</CardDescription>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                         <AddInvoiceDialog onSave={handleSaveInvoice} vatRate={settings.vat.enabled ? settings.vat.rate : 0}>
+                            <Button variant="outline" size="sm" className="w-full"><FilePlus className="mr-2 h-4 w-4" /> Create Invoice</Button>
+                        </AddInvoiceDialog>
                         <ImportTransactionsDialog onImport={handleImport}>
                             <Button variant="outline" size="sm" className="w-full"><Upload className="mr-2 h-4 w-4" /> Import Transactions</Button>
                         </ImportTransactionsDialog>
@@ -294,18 +427,21 @@ export default function CfoDashboard() {
                                 <TableHead>Date</TableHead>
                                 <TableHead>Proof of Payment</TableHead>
                                 <TableHead className="text-right">Amount (OMR)</TableHead>
-                                <TableHead className="text-center">Status</TableHead>
+                                <TableHead className="text-center">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredTransactions.map((tx, index) => (
-                                <TableRow key={index}>
+                            {filteredTransactions.map((tx) => (
+                                <TableRow key={tx.id}>
                                     <TableCell>
                                         <div className="flex items-center gap-2">
                                             <div className={cn("p-1 rounded-full", tx.type === 'income' ? 'bg-green-500/20' : 'bg-red-500/20')}>
                                                 {tx.type === 'income' ? <ArrowDownLeft className="h-4 w-4 text-green-600" /> : <ArrowUpRight className="h-4 w-4 text-red-600" />}
                                             </div>
-                                            <span className="font-medium">{tx.description}</span>
+                                            <div>
+                                                <p className="font-medium">{tx.description}</p>
+                                                {getStatusBadge(tx.status)}
+                                            </div>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">{tx.date}</TableCell>
@@ -325,7 +461,9 @@ export default function CfoDashboard() {
                                     <TableCell className={cn("text-right font-semibold", tx.amount > 0 ? 'text-green-600' : 'text-destructive')}>
                                         {tx.amount.toFixed(2)}
                                     </TableCell>
-                                    <TableCell className="text-center">{getStatusBadge(tx.status)}</TableCell>
+                                    <TableCell className="text-center">
+                                         <Button variant="ghost" size="icon" onClick={() => setSelectedTransaction(tx)}><Eye className="h-4 w-4"/></Button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -374,6 +512,23 @@ export default function CfoDashboard() {
                 </Card>
             </div>
         </div>
+         {selectedTransaction && (
+            <Dialog open={!!selectedTransaction} onOpenChange={(open) => !open && setSelectedTransaction(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Transaction Details</DialogTitle>
+                        <DialogDescription>{selectedTransaction.description}</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-2 text-sm">
+                        <p><strong>Date:</strong> {selectedTransaction.date}</p>
+                        <p><strong>Amount:</strong> <span className={cn(selectedTransaction.amount > 0 ? 'text-green-600' : 'text-destructive')}>{selectedTransaction.amount.toFixed(2)} OMR</span></p>
+                        <p><strong>Type:</strong> {selectedTransaction.type}</p>
+                        <p><strong>Status:</strong> {selectedTransaction.status}</p>
+                        <p><strong>Proof:</strong> {selectedTransaction.proof || 'Not attached'}</p>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        )}
     </div>
   )
 }
