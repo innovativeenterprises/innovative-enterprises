@@ -6,14 +6,14 @@ export interface ProjectStage {
 }
 
 export const initialStages: ProjectStage[] = [
-    { id: 'stage_1', name: 'Idea Phase', description: 'Identify the problem or opportunity.' },
-    { id: 'stage_2', name: 'Planning Phase', description: 'Define goals, scope, budget, and timeline.' },
-    { id: 'stage_3', name: 'Validation Phase', description: 'Test the idea with users or market research.' },
-    { id: 'stage_4', name: 'Design Phase', description: 'Create UX/UI and system architecture.' },
-    { id: 'stage_5', name: 'Development Phase', description: 'Build the product.' },
-    { id: 'stage_6', name: 'Testing Phase', description: 'Check for bugs and ensure quality.' },
-    { id: 'stage_7', 'name': 'Launch Phase', description: 'Release the product to users.' },
-    { id: 'stage_8', name: 'Post-Launch Phase', description: 'Monitor, update, and improve.' },
-    { id: 'stage_9', name: 'Ready', description: 'The product is live and on the market.' },
-    { id: 'stage_10', name: 'Research Phase', description: 'Initial exploration and research of a new concept.' },
+    { id: 'stage_1', name: 'Idea Phase', description: 'Initial concept and high-level brainstorming.' },
+    { id: 'stage_2', name: 'Research Phase', description: 'In-depth market research, competitive analysis, and feasibility studies.' },
+    { id: 'stage_3', name: 'Planning Phase', description: 'Defining project scope, goals, requirements, timeline, and resource allocation.' },
+    { id: 'stage_4', name: 'Validation Phase', description: 'Validating the core concept with target users through surveys, interviews, or prototypes.' },
+    { id: 'stage_5', name: 'Design Phase', description: 'Creating wireframes, mockups, UI/UX designs, and system architecture.' },
+    { id: 'stage_6', name: 'Development Phase', description: 'Writing code and building the actual product based on the design specifications.' },
+    { id: 'stage_7', name: 'Testing Phase', description: 'Performing QA, bug fixing, and user acceptance testing (UAT).' },
+    { id: 'stage_8', name: 'Launch Phase', description: 'Preparing for and executing the public release of the product.' },
+    { id: 'stage_9', name: 'Post-Launch Phase', description: 'Monitoring performance, gathering feedback, and providing initial support.' },
+    { id: 'stage_10', name: 'Live & Operating', description: 'The product is stable, live, and undergoing regular maintenance and updates.' },
 ];
