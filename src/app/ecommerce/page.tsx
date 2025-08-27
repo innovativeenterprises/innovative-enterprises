@@ -4,11 +4,12 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Search, Star, Filter, Bot } from "lucide-react";
+import { ArrowRight, Search, Star, Filter, Bot, ShoppingCart } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
 import { useProductsData } from '@/app/admin/product-table';
 import type { Product } from '@/lib/products';
+import { useToast } from '@/hooks/use-toast';
 
 const categories = [
     "All",
@@ -20,9 +21,19 @@ const categories = [
     "Beauty",
 ];
 
-const ProductCard = ({ product }: { product: Product }) => (
-    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        <Link href={`/ecommerce/${product.id}`}>
+const ProductCard = ({ product }: { product: Product }) => {
+    const { toast } = useToast();
+
+    const handleAddToCart = () => {
+        toast({
+            title: "Added to Cart!",
+            description: `1 x "${product.name}" has been added to your shopping cart.`,
+        });
+    };
+    
+    return (
+    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
+        <Link href={`/ecommerce/${product.id}`} className="flex-grow flex flex-col">
             <CardHeader className="p-0">
                 <div className="relative h-64 w-full">
                     <Image 
@@ -34,7 +45,7 @@ const ProductCard = ({ product }: { product: Product }) => (
                     />
                 </div>
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="p-4 flex-grow">
                 <p className="text-sm text-muted-foreground">{product.category}</p>
                 <h3 className="font-semibold text-lg truncate mt-1">{product.name}</h3>
                 <div className="flex justify-between items-center mt-2">
@@ -47,10 +58,13 @@ const ProductCard = ({ product }: { product: Product }) => (
             </CardContent>
         </Link>
         <CardFooter className="p-4 pt-0">
-            <Button className="w-full">Add to Cart</Button>
+            <Button className="w-full" onClick={handleAddToCart}>
+                <ShoppingCart className="mr-2 h-4 w-4"/>
+                Add to Cart
+            </Button>
         </CardFooter>
     </Card>
-);
+)};
 
 export default function EcommercePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
