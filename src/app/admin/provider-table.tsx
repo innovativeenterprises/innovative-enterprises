@@ -17,10 +17,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Provider } from "@/lib/providers";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Link as LinkIcon } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon } from "lucide-react";
 import Link from 'next/link';
 import { store } from "@/lib/global-store";
 import { useRouter } from "next/navigation";
+import { Progress } from "@/components/ui/progress";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 // This hook now connects to the global store.
 export const useProvidersData = () => {
@@ -51,6 +56,8 @@ const ProviderSchema = z.object({
   status: z.enum(['Vetted', 'Pending Review', 'On Hold']),
   portfolio: z.string().url("A valid URL is required").optional().or(z.literal('')),
   notes: z.string().optional(),
+  subscriptionTier: z.enum(['Monthly', 'Yearly', 'Lifetime', 'None']),
+  subscriptionExpiry: z.date().optional(),
 });
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -63,31 +70,35 @@ const AddEditProviderDialog = ({
     onOpenChange,
 }: { 
     provider?: Provider, 
-    onSave: (values: ProviderValues, id?: string) => void,
+    onSave: (values: ProviderValues & { subscriptionExpiry: string }, id?: string) => void,
     children: React.ReactNode,
     isOpen: boolean,
     onOpenChange: (open: boolean) => void,
 }) => {
+    const defaultExpiry = provider?.subscriptionExpiry ? new Date(provider.subscriptionExpiry) : undefined;
+    
     const form = useForm<ProviderValues>({
         resolver: zodResolver(ProviderSchema),
-        defaultValues: provider || { 
-            name: "", 
-            email: "", 
-            services: "", 
-            status: "Pending Review", 
-            portfolio: "",
-            notes: ""
-        },
+        defaultValues: {
+            ...provider,
+            subscriptionExpiry: defaultExpiry,
+        }
     });
 
     useEffect(() => {
          if (isOpen) {
-            form.reset(provider || { name: "", email: "", services: "", status: "Pending Review", portfolio: "", notes: "" });
+            form.reset({
+                ...provider,
+                subscriptionExpiry: provider?.subscriptionExpiry ? new Date(provider.subscriptionExpiry) : undefined,
+            });
          }
     }, [provider, form, isOpen]);
 
     const onSubmit: SubmitHandler<ProviderValues> = (data) => {
-        onSave(data, provider?.id);
+        onSave({
+            ...data,
+            subscriptionExpiry: data.subscriptionExpiry ? format(data.subscriptionExpiry, 'yyyy-MM-dd') : '',
+        }, provider?.id);
         form.reset();
         onOpenChange(false);
     };
@@ -118,18 +129,72 @@ const AddEditProviderDialog = ({
                         <FormField control={form.control} name="portfolio" render={({ field }) => (
                             <FormItem><FormLabel>Portfolio URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                         <FormField control={form.control} name="status" render={({ field }) => (
-                            <FormItem><FormLabel>Status</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                <SelectContent>
-                                    <SelectItem value="Vetted">Vetted</SelectItem>
-                                    <SelectItem value="Pending Review">Pending Review</SelectItem>
-                                    <SelectItem value="On Hold">On Hold</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage /></FormItem>
-                        )} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="status" render={({ field }) => (
+                                <FormItem><FormLabel>Status</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="Vetted">Vetted</SelectItem>
+                                        <SelectItem value="Pending Review">Pending Review</SelectItem>
+                                        <SelectItem value="On Hold">On Hold</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="subscriptionTier" render={({ field }) => (
+                                <FormItem><FormLabel>Subscription Tier</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="None">None</SelectItem>
+                                        <SelectItem value="Monthly">Monthly</SelectItem>
+                                        <SelectItem value="Yearly">Yearly</SelectItem>
+                                        <SelectItem value="Lifetime">Lifetime</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage /></FormItem>
+                            )} />
+                        </div>
+                         <FormField
+                            control={form.control}
+                            name="subscriptionExpiry"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                <FormLabel>Subscription Expiry</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-[240px] pl-3 text-left font-normal",
+                                            !field.value && "text-muted-foreground"
+                                        )}
+                                        >
+                                        {field.value ? (
+                                            format(field.value, "PPP")
+                                        ) : (
+                                            <span>Pick a date</span>
+                                        )}
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={field.value}
+                                        onSelect={field.onChange}
+                                        disabled={(date) => date < new Date("1900-01-01")}
+                                        initialFocus
+                                    />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
                         <FormField control={form.control} name="notes" render={({ field }) => (
                             <FormItem><FormLabel>Internal Notes</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
@@ -161,16 +226,14 @@ export default function ProviderTable({
         setIsDialogOpen(true);
     }
 
-    const handleSave = (values: ProviderValues, id?: string) => {
+    const handleSave = (values: ProviderValues & { subscriptionExpiry: string }, id?: string) => {
         if (id) {
-            // Update
             setProviders(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
             toast({ title: "Provider updated successfully." });
         } else {
-            // Create
             const newProvider: Provider = {
                 ...values,
-                id: (Math.random() + 1).toString(36).substring(7), // simple unique id
+                id: `prov_${Date.now()}`,
             };
             setProviders(prev => [newProvider, ...prev]);
             toast({ title: "Provider added successfully." });
@@ -189,6 +252,38 @@ export default function ProviderTable({
             case "On Hold": return <Badge variant="destructive" className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">On Hold</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
         }
+    }
+    
+    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
+        if (tier === 'None' || !expiry) {
+            return <Badge variant="secondary">No Subscription</Badge>;
+        }
+        if (tier === 'Lifetime') {
+            return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Lifetime</Badge>;
+        }
+
+        const expiryDate = new Date(expiry);
+        const now = new Date();
+        const daysUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
+
+        let progressColor = "bg-green-500";
+        if (daysUntilExpiry <= 0) progressColor = "bg-red-500";
+        else if (daysUntilExpiry < 30) progressColor = "bg-yellow-500";
+        
+        const totalDuration = tier === 'Yearly' ? 365 : 30;
+        const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
+
+        return (
+            <div className="w-full min-w-[150px]">
+                <div className="flex justify-between items-center mb-1">
+                    <Badge variant="outline">{tier}</Badge>
+                    <p className="text-xs text-muted-foreground">
+                        {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
+                    </p>
+                </div>
+                <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
+            </div>
+        )
     }
 
 
@@ -216,6 +311,7 @@ export default function ProviderTable({
                             <TableHead>Name</TableHead>
                             <TableHead>Services</TableHead>
                             <TableHead>Status</TableHead>
+                            <TableHead>Subscription</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -228,6 +324,9 @@ export default function ProviderTable({
                                 </TableCell>
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
+                                <TableCell>
+                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} />
+                                </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
                                         <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)}><Edit className="h-4 w-4" /></Button>
