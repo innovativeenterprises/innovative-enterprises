@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -7,10 +8,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { translateDocument } from '@/ai/flows/document-translation';
 import { type DocumentTranslationOutput } from '@/ai/flows/document-translation.schema';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Copy, Download, Languages, FileCheck2, ShieldCheck, Stamp, FileText, AlignLeft, CreditCard, Users, Send, Bot } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
@@ -139,7 +140,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
     return pricingMap[documentType] || 0;
   }, [watchAllFields, pricingMap]);
 
-  const basePrice = useMemo(() => {
+  const subtotal = useMemo(() => {
       const { numberOfPages, requestSealedCopy } = watchAllFields;
       if (!pricePerPage || !numberOfPages || numberOfPages < 1) {
           return 0;
@@ -159,11 +160,15 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
 
   }, [watchAllFields, pricePerPage]);
 
-  const [finalPrice, setFinalPrice] = useState(basePrice);
+  const vatAmount = useMemo(() => {
+    return settings.vat.enabled ? subtotal * settings.vat.rate : 0;
+  }, [subtotal, settings.vat]);
+
+  const [finalPrice, setFinalPrice] = useState(subtotal + vatAmount);
   
   useEffect(() => {
-      setFinalPrice(basePrice);
-  }, [basePrice]);
+      setFinalPrice(subtotal + vatAmount);
+  }, [subtotal, vatAmount]);
 
 
   const handleProceedToPayment: SubmitHandler<FormValues> = async (data) => {
@@ -272,7 +277,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
       setFinalPrice(0);
       toast({ title: 'Coupon Applied!', description: 'Your translation is now free.' });
     } else if (coupon === 'AGENT50') {
-      setFinalPrice(basePrice / 2);
+      setFinalPrice((subtotal + vatAmount) / 2);
       toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
     } else {
       toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
@@ -540,9 +545,22 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
                     )}/>
                 </CardContent>
             </Card>
-            <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
-                <span className="text-muted-foreground">Total Amount</span>
-                <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
+            <div className="p-4 rounded-md border bg-muted/50 space-y-2">
+                <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Subtotal</span>
+                    <span>OMR {subtotal.toFixed(2)}</span>
+                </div>
+                 {settings.vat.enabled && (
+                    <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">VAT ({settings.vat.rate * 100}%)</span>
+                        <span>OMR {vatAmount.toFixed(2)}</span>
+                    </div>
+                 )}
+                 <hr className="my-2 border-dashed" />
+                <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold">Total Amount</span>
+                    <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
+                </div>
             </div>
             {finalPrice > 0 && (
                 <>
