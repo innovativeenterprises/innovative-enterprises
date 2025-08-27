@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle, ServerCog, FileText, Building, AudioLines, MessageSquare, Brain, Mic } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle, ServerCog, FileText, Building, AudioLines, MessageSquare, Brain, Mic, Search } from "lucide-react";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 
@@ -81,7 +81,7 @@ export const initialAgentCategories: AgentCategory[] = [
     {
         category: "Special Growth Agents",
         agents: [
-            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Target, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616895-c1864e4e9411?q=80&w=1920&auto=format&fit=crop', aiHint: 'strategy bot' },
+            { name: "Rami", role: "Strategy & Research Agent", description: "Performs market research, competitor analysis, and tracks industry trends to inform business strategy.", icon: Search, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162616895-c1864e4e9411?q=80&w=1920&auto=format&fit=crop', aiHint: 'strategy bot', href: "/researcher" },
             { name: "Navi", role: "Innovation Agent", description: "Analyzes market gaps and internal capabilities to suggest new products and service offerings.", icon: Rocket, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617243-caff45c4e094?q=80&w=1920&auto=format&fit=crop', aiHint: 'innovation bot' },
             { name: "Paz", role: "Partnership Agent", description: "Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.", icon: Handshake, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162618033-95b778794c8e?q=80&w=1920&auto=format&fit=crop', aiHint: 'partnership bot', href: "/partner" },
         ]

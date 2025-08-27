@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -126,6 +126,12 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     description: "Generate social media posts, tender responses, and other marketing copy.",
     icon: Sparkles,
   },
+  {
+    title: "Rami Data Miner",
+    href: "/researcher",
+    description: "Scrape web pages or perform web searches to gather and summarize information.",
+    icon: Search,
+  }
 ];
 
 const partnershipLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
