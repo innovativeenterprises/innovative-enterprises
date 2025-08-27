@@ -87,8 +87,8 @@ export default function EcommercePage() {
   const { products } = useProductsData();
 
   const filteredProducts = selectedCategory === 'All'
-    ? products
-    : products.filter(product => product.category === selectedCategory);
+    ? products.filter(p => p.enabled)
+    : products.filter(product => product.enabled && product.category === selectedCategory);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
