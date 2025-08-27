@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowDownLeft, ArrowUpRight, DollarSign, PlusCircle, CreditCard, Users, ReceiptText, CalendarCheck, UserCheck, Upload } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, DollarSign, PlusCircle, CreditCard, Users, ReceiptText, CalendarCheck, UserCheck, Upload, Paperclip } from "lucide-react";
 import { useSettingsData } from "@/app/admin/settings-table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useState } from "react";
@@ -18,11 +18,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 
 const initialTransactions = [
-    { description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28" },
-    { description: "AWS Cloud Services Bill", amount: -2500.00, type: "expense", status: "Paid", date: "2024-07-27" },
+    { description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28", proof: "doc_123.pdf" },
+    { description: "AWS Cloud Services Bill", amount: -2500.00, type: "expense", status: "Paid", date: "2024-07-27", proof: "doc_124.pdf" },
     { description: "Freelancer Payment - John Doe", amount: -1200.00, type: "expense", status: "Paid", date: "2024-07-25" },
     { description: "Invoice #INV-007 to Tech Corp", amount: 15000.00, type: "income", status: "Pending", date: "2024-07-22" },
-    { description: "Salaries - July 2024", amount: -15000.00, type: "expense", status: "Paid", date: "2024-07-31" },
+    { description: "Salaries - July 2024", amount: -15000.00, type: "expense", status: "Paid", date: "2024-07-31", proof: "doc_125.pdf" },
     { description: "Office Supplies Purchase", amount: -350.00, type: "expense", status: "Paid", date: "2024-07-20" },
 ];
 
@@ -52,7 +52,7 @@ const ImportTransactionsDialog = ({ onImport, children }: { onImport: (transacti
                 const rows = text.split('\n').slice(1); // remove header
                 const newTransactions: Transaction[] = rows.map((row, index) => {
                     const columns = row.split(',');
-                    if (columns.length !== 5) {
+                    if (columns.length < 5) {
                         console.warn(`Skipping malformed row ${index + 2}: ${row}`);
                         return null;
                     }
@@ -62,6 +62,7 @@ const ImportTransactionsDialog = ({ onImport, children }: { onImport: (transacti
                         type: columns[2]?.trim() as any,
                         status: columns[3]?.trim(),
                         date: columns[4]?.trim(),
+                        proof: columns[5]?.trim() || '',
                     };
                 }).filter((t): t is Transaction => t !== null && t.description !== '');
                 resolve(newTransactions);
@@ -84,7 +85,7 @@ const ImportTransactionsDialog = ({ onImport, children }: { onImport: (transacti
     };
     
     const handleDownloadTemplate = () => {
-        const headers = ["description", "amount", "type (income/expense)", "status", "date (YYYY-MM-DD)"];
+        const headers = ["description", "amount", "type (income/expense)", "status", "date (YYYY-MM-DD)", "proof (optional_filename)"];
         const csvContent = headers.join(",") + "\n";
         const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
         const link = document.createElement("a");
@@ -268,7 +269,7 @@ export default function CfoDashboard() {
                     </div>
                     <div className="flex gap-2">
                         <ImportTransactionsDialog onImport={handleImport}>
-                            <Button variant="outline" size="sm"><Upload className="mr-2 h-4 w-4" /> Import from CSV</Button>
+                            <Button variant="outline" size="sm"><Upload className="mr-2 h-4 w-4" /> Import Transactions from CSV</Button>
                         </ImportTransactionsDialog>
                         <Button size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Add Manually</Button>
                     </div>
@@ -279,6 +280,7 @@ export default function CfoDashboard() {
                             <TableRow>
                                 <TableHead>Description</TableHead>
                                 <TableHead>Date</TableHead>
+                                <TableHead>Proof of Payment</TableHead>
                                 <TableHead className="text-right">Amount (OMR)</TableHead>
                                 <TableHead className="text-center">Status</TableHead>
                             </TableRow>
@@ -295,6 +297,19 @@ export default function CfoDashboard() {
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">{tx.date}</TableCell>
+                                    <TableCell>
+                                        {tx.proof ? (
+                                             <Button variant="outline" size="sm" className="h-8">
+                                                <Paperclip className="h-3 w-3 mr-2" />
+                                                View Proof
+                                            </Button>
+                                        ) : (
+                                            <Button variant="ghost" size="sm" className="h-8 text-muted-foreground">
+                                                <Upload className="h-3 w-3 mr-2" />
+                                                Attach
+                                            </Button>
+                                        )}
+                                    </TableCell>
                                     <TableCell className={`text-right font-semibold ${tx.amount > 0 ? 'text-green-600' : 'text-destructive'}`}>
                                         {tx.amount.toFixed(2)}
                                     </TableCell>
