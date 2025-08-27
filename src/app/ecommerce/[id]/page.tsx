@@ -10,22 +10,25 @@ import Image from 'next/image';
 import { ArrowLeft, Star, ShoppingCart, Minus, Plus } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 const RelatedProductCard = ({ product }: { product: Product }) => (
-    <Card className="overflow-hidden group">
-        <div className="relative h-40 w-full">
-            <Image 
-                src={product.image} 
-                alt={product.name} 
-                fill 
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-        </div>
-        <CardContent className="p-3">
-            <p className="text-xs text-muted-foreground">{product.category}</p>
-            <h3 className="font-semibold text-sm truncate mt-1">{product.name}</h3>
-            <p className="font-bold text-md text-primary mt-1">OMR {product.price.toFixed(2)}</p>
-        </CardContent>
+    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <Link href={`/ecommerce/${product.id}`}>
+            <div className="relative h-40 w-full">
+                <Image 
+                    src={product.image} 
+                    alt={product.name} 
+                    fill 
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+            </div>
+            <CardContent className="p-3">
+                <p className="text-xs text-muted-foreground">{product.category}</p>
+                <h3 className="font-semibold text-sm truncate mt-1">{product.name}</h3>
+                <p className="font-bold text-md text-primary mt-1">OMR {product.price.toFixed(2)}</p>
+            </CardContent>
+        </Link>
     </Card>
 );
 
