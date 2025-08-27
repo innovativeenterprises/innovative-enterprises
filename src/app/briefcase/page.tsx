@@ -8,12 +8,14 @@ import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package } from 'lucide-react';
+import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -48,12 +50,21 @@ interface ServiceRegistration {
     priceListFilename?: string;
 }
 
+interface UserDocument {
+    id: string;
+    name: string;
+    fileType: string;
+    dataUri: string;
+    uploadedAt: string;
+}
+
 interface BriefcaseData {
     recordNumber: string;
     applicantName: string;
     agreements: Agreement;
     date: string;
     registrations: ServiceRegistration[];
+    userDocuments: UserDocument[];
 }
 
 const NewServiceSchema = z.object({
@@ -64,6 +75,11 @@ const NewServiceSchema = z.object({
 const UpdatePriceListSchema = z.object({
     serviceChargesFile: z.any().refine(file => file?.length > 0, 'A new price list file is required.'),
 });
+
+const UploadDocumentSchema = z.object({
+    documentFile: z.any().refine(file => file?.length > 0, 'Please select a file to upload.'),
+});
+
 
 const downloadPricingTemplate = (category: string) => {
     // This is a simplified version of the logic in partner page.
@@ -236,6 +252,59 @@ const UpdatePriceListDialog = ({ registration, onUpdate }: { registration: Servi
     )
 }
 
+const UploadDocumentDialog = ({ onUpload }: { onUpload: (file: File) => void }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const { toast } = useToast();
+    const form = useForm<z.infer<typeof UploadDocumentSchema>>({
+        resolver: zodResolver(UploadDocumentSchema)
+    });
+
+    const onSubmit: SubmitHandler<z.infer<typeof UploadDocumentSchema>> = (data) => {
+        onUpload(data.documentFile[0]);
+        toast({ title: 'Document Uploaded', description: 'Your document has been saved to your briefcase.' });
+        setIsOpen(false);
+        form.reset();
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button><Upload className="mr-2 h-4 w-4"/> Upload Document</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Upload a New Document</DialogTitle>
+                    <DialogDescription>
+                        Upload any personal or business document to your secure briefcase.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="documentFile"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Select File</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" onChange={(e) => field.onChange(e.target.files)} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <DialogFooter>
+                            <DialogClose asChild><Button variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Upload</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+
 export default function BriefcasePage() {
     const [briefcaseData, setBriefcaseData] = useState<BriefcaseData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -251,14 +320,12 @@ export default function BriefcasePage() {
             const storedData = localStorage.getItem('user_briefcase');
             if (storedData) {
                 const parsedData = JSON.parse(storedData);
-                // migration for old data structure
                 if (parsedData.serviceChargesDataUri && !parsedData.registrations) {
                     parsedData.registrations = [{ category: 'General Services', priceListUrl: parsedData.serviceChargesDataUri, priceListFilename: 'service-charges.csv' }];
                     delete parsedData.serviceChargesDataUri;
                 }
-                 if (!parsedData.registrations) {
-                    parsedData.registrations = [];
-                }
+                if (!parsedData.registrations) parsedData.registrations = [];
+                if (!parsedData.userDocuments) parsedData.userDocuments = [];
                 setBriefcaseData(parsedData);
             }
         } catch (error) {
@@ -283,6 +350,28 @@ export default function BriefcasePage() {
          );
          const newData = { ...briefcaseData, registrations: updatedRegistrations };
          updateBriefcase(newData);
+    }
+
+    const handleUploadDocument = async (file: File) => {
+        if (!briefcaseData) return;
+        const dataUri = await fileToDataURI(file);
+        const newDocument: UserDocument = {
+            id: `doc_${Date.now()}`,
+            name: file.name,
+            fileType: file.type,
+            dataUri: dataUri,
+            uploadedAt: new Date().toISOString(),
+        };
+        const newData = { ...briefcaseData, userDocuments: [...briefcaseData.userDocuments, newDocument]};
+        updateBriefcase(newData);
+    }
+
+    const handleDeleteDocument = (docId: string) => {
+        if (!briefcaseData) return;
+        const updatedDocuments = briefcaseData.userDocuments.filter(doc => doc.id !== docId);
+        const newData = { ...briefcaseData, userDocuments: updatedDocuments };
+        updateBriefcase(newData);
+        toast({ title: 'Document Deleted', description: 'The document has been removed from your briefcase.', variant: 'destructive'});
     }
     
     if (isLoading) {
@@ -337,6 +426,53 @@ export default function BriefcasePage() {
                                     )}
                                 </CardContent>
                             </Card>
+                            
+                             <Card>
+                                <CardHeader className="flex-row justify-between items-center">
+                                    <div>
+                                        <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5"/> My Documents</CardTitle>
+                                        <CardDescription>Upload and manage your personal or business documents.</CardDescription>
+                                    </div>
+                                    <UploadDocumentDialog onUpload={handleUploadDocument} />
+                                </CardHeader>
+                                <CardContent>
+                                    {briefcaseData.userDocuments.length > 0 ? (
+                                        <div className="space-y-4">
+                                            {briefcaseData.userDocuments.map(doc => (
+                                                <Card key={doc.id} className="flex justify-between items-center p-4 bg-muted/50">
+                                                    <div>
+                                                        <p className="font-semibold">{doc.name}</p>
+                                                        <p className="text-sm text-muted-foreground">Uploaded on: {new Date(doc.uploadedAt).toLocaleDateString()}</p>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <Button variant="outline" size="sm" asChild><a href={doc.dataUri} download={doc.name}><Download className="mr-2 h-4 w-4"/>Download</a></Button>
+                                                        <AlertDialog>
+                                                          <AlertDialogTrigger asChild>
+                                                            <Button variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
+                                                          </AlertDialogTrigger>
+                                                          <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                              <AlertDialogDescription>
+                                                                This action will permanently delete "{doc.name}" from your briefcase.
+                                                              </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                              <AlertDialogAction onClick={() => handleDeleteDocument(doc.id)}>Delete</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                          </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
+                                                </Card>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                         <p className="text-sm text-muted-foreground text-center py-4">You have not uploaded any documents yet.</p>
+                                    )}
+                                </CardContent>
+                            </Card>
+                            
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Your Legal Documents</CardTitle>
