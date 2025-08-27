@@ -289,13 +289,23 @@ export default function PartnerPage() {
     toast({ title: 'Thank You!', description: "Your agreements have been electronically signed and saved."});
   }
 
-  const handleSaveToBriefcase = () => {
+  const handleSaveToBriefcase = async () => {
     if (!agreement || !recordNumber) return;
+
+    let serviceChargesDataUri: string | undefined;
+    const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
+    const serviceChargesFile = formToUse.getValues('serviceChargesFile');
+
+    if (serviceChargesFile && serviceChargesFile.length > 0) {
+      serviceChargesDataUri = await fileToDataURI(serviceChargesFile[0]);
+    }
+
     const briefcaseData = {
         recordNumber,
         applicantName: inquiryForm.getValues('companyName') || inquiryForm.getValues('contactName'),
         agreements: agreement,
         date: new Date().toISOString(),
+        serviceChargesDataUri,
     };
     try {
         localStorage.setItem('user_briefcase', JSON.stringify(briefcaseData));

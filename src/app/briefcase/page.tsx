@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, Download, FileSignature, FileText, AlertTriangle } from 'lucide-react';
+import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Agreement {
@@ -18,6 +18,7 @@ interface BriefcaseData {
     applicantName: string;
     agreements: Agreement;
     date: string;
+    serviceChargesDataUri?: string;
 }
 
 export default function BriefcasePage() {
@@ -57,6 +58,18 @@ export default function BriefcasePage() {
         document.body.removeChild(element);
         toast({ title: 'Downloaded!', description: `Your ${filename} has been downloaded.`});
     };
+
+    const handleDownloadPriceList = () => {
+        if (!briefcaseData?.serviceChargesDataUri) return;
+        const link = document.createElement("a");
+        link.href = briefcaseData.serviceChargesDataUri;
+        // The file name will depend on what it was originally, let's give it a generic one
+        link.download = `service-charges-${briefcaseData.recordNumber}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({ title: 'Downloaded!', description: `Your service charges sheet has been downloaded.`});
+    }
     
     const handleESign = () => {
         toast({ title: 'Agreements Already Signed', description: "Your agreements have been electronically signed and saved."});
@@ -94,6 +107,11 @@ export default function BriefcasePage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
+                                {briefcaseData.serviceChargesDataUri && (
+                                    <Button onClick={handleDownloadPriceList} variant="outline" className="w-full">
+                                        <FileSpreadsheet className="mr-2 h-4 w-4"/> Download Submitted Price List
+                                    </Button>
+                                )}
                                 <Tabs defaultValue="nda" className="w-full">
                                     <TabsList className="grid w-full grid-cols-2">
                                         <TabsTrigger value="nda"><FileText className="mr-2 h-4 w-4"/> Non-Disclosure Agreement</TabsTrigger>
