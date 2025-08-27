@@ -1,46 +1,77 @@
 
 'use client';
 
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Printer, FlaskConical, BookOpen, GraduationCap, Utensils, Brush, Code, Handshake, Car, Building, HeartPulse, ShoppingBag, Plane, Scale, Banknote, PartyPopper } from "lucide-react";
+import { ArrowRight, Search, Bot, Handshake, Check, Star } from "lucide-react";
 import Link from "next/link";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import { ChatComponent } from "@/components/chat/chat-component";
-import { Bot } from "lucide-react";
 import { useSettingsData } from "@/app/admin/settings-table";
 import { answerHubQuery } from "@/ai/flows/business-hub-agent";
+import { useProvidersData } from "@/app/admin/provider-table";
+import type { Provider } from "@/lib/providers";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 const categories = [
-    { name: "Printing & Publishing", icon: Printer },
-    { name: "Perfumes & Cosmetics", icon: FlaskConical },
-    { name: "Bookshops & Stationery", icon: BookOpen },
-    { name: "Schools & Education", icon: GraduationCap },
-    { name: "Restaurants & Cafes", icon: Utensils },
-    { name: "Creative & Design", icon: Brush },
-    { name: "Tech & IT Services", icon: Code },
-    { name: "Consulting & Professional Services", icon: Handshake },
-    { name: "Automotive Services", icon: Car },
-    { name: "Real Estate & Construction", icon: Building },
-    { name: "Health & Wellness", icon: HeartPulse },
-    { name: "Retail & E-commerce", icon: ShoppingBag },
-    { name: "Tourism & Hospitality", icon: Plane },
-    { name: "Legal Services", icon: Scale },
-    { name: "Financial & Banking", icon: Banknote },
-    { name: "Events & Entertainment", icon: PartyPopper },
+    "All", "Tech & IT Services", "Creative & Design", "Consulting & Professional Services", "Legal Services", "Financial & Banking"
 ];
 
-const businessCategoriesList = categories.map(c => c.name);
+const ProviderCard = ({ provider }: { provider: Provider }) => (
+    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
+        <CardHeader>
+             <div className="flex justify-between items-start">
+                <CardTitle className="text-xl">{provider.name}</CardTitle>
+                {provider.status === 'Vetted' && (
+                    <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30 flex items-center gap-1">
+                        <Check className="h-3 w-3" /> Vetted
+                    </Badge>
+                )}
+             </div>
+            <CardDescription className="text-sm truncate">{provider.services}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-grow">
+            <p className="text-muted-foreground text-sm line-clamp-3">
+                {provider.notes || `A ${provider.status.toLowerCase()} provider specializing in ${provider.services}. Contact for more details.`}
+            </p>
+        </CardContent>
+        <CardFooter>
+            <Button asChild className="w-full">
+                <Link href={`/provider/${provider.id}`}>View Profile <ArrowRight className="ml-2 h-4 w-4"/></Link>
+            </Button>
+        </CardFooter>
+    </Card>
+);
+
 
 export default function BusinessHubPage() {
   const { settings } = useSettingsData();
+  const { providers } = useProvidersData();
+  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const businessCategoriesList = useMemo(() => {
+    const allServices = providers.flatMap(p => p.services.split(',').map(s => s.trim()));
+    return ["All", ...Array.from(new Set(allServices))];
+  }, [providers]);
 
   const hubQueryFlow = async (input: { [key: string]: any }) => {
     return await answerHubQuery({
         query: input.message,
-        businessCategories: businessCategoriesList,
+        businessCategories: businessCategoriesList.filter(c => c !== 'All'),
     });
   };
+  
+  const filteredProviders = useMemo(() => {
+      return providers.filter(provider => {
+          const matchesCategory = selectedCategory === 'All' || provider.services.toLowerCase().includes(selectedCategory.toLowerCase());
+          const matchesSearch = provider.name.toLowerCase().includes(searchTerm.toLowerCase()) || provider.services.toLowerCase().includes(searchTerm.toLowerCase());
+          return matchesCategory && matchesSearch;
+      })
+  }, [providers, selectedCategory, searchTerm]);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -55,31 +86,40 @@ export default function BusinessHubPage() {
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto mt-12">
-            <ChatComponent
-                agentName="Hubert"
-                agentIcon={Bot}
-                agentDescription="Your AI guide to the Business Hub network"
-                welcomeMessage="Hello! I'm Hubert, your Business Hub coordinator. Tell me what you're looking for, and I'll help you find the right category."
-                placeholder="e.g., 'I need someone to build a website'"
-                aiFlow={hubQueryFlow}
-                settings={settings}
-            />
-        </div>
-
         <div className="max-w-5xl mx-auto mt-20">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Explore Business Categories</h2>
-                <p className="mt-4 text-lg text-muted-foreground">Find partners and services in a variety of sectors.</p>
+            <div className="text-center mb-8">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary">Find a Service Provider</h2>
+                <p className="mt-2 text-muted-foreground">Search our network of vetted freelancers and partner companies.</p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {categories.map((cat) => (
-                    <Card key={cat.name} className="group text-center flex flex-col items-center justify-center p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-primary/5">
-                        <div className="bg-primary/10 p-4 rounded-full mb-4 group-hover:bg-accent transition-colors">
-                            <cat.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground" />
-                        </div>
-                        <h3 className="font-semibold text-lg">{cat.name}</h3>
-                    </Card>
+            
+            <div className="flex flex-col md:flex-row gap-4 mb-8">
+                 <div className="relative flex-grow">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                        type="search"
+                        placeholder="Search by name or service (e.g., 'Web Development')"
+                        className="w-full pl-10"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                 <div className="flex gap-2 overflow-x-auto pb-2">
+                    {businessCategoriesList.slice(0, 6).map((cat) => (
+                        <Button
+                            key={cat}
+                            variant={selectedCategory === cat ? 'default' : 'outline'}
+                            onClick={() => setSelectedCategory(cat)}
+                            className="shrink-0"
+                        >
+                            {cat}
+                        </Button>
+                    ))}
+                 </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProviders.map((provider) => (
+                    <ProviderCard key={provider.id} provider={provider} />
                 ))}
             </div>
         </div>
