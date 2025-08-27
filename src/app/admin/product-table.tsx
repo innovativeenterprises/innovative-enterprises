@@ -323,7 +323,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
         } else {
             const newProduct: Product = {
                 ...values,
-                id: Math.max(...products.map(p => p.id), 0) + 1,
+                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
             };
             setProducts(prev => [newProduct, ...prev]);
             toast({ title: "Product added successfully." });

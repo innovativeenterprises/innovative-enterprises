@@ -53,6 +53,14 @@ export default function CheckoutPage() {
         resolver: zodResolver(CheckoutSchema),
         defaultValues: {
             country: 'Oman',
+            cardholderName: '',
+            cardNumber: '',
+            expiryDate: '',
+            cvc: '',
+            fullName: '',
+            address: '',
+            city: '',
+            postalCode: '',
         }
     });
 
@@ -82,6 +90,20 @@ export default function CheckoutPage() {
         store.set(state => ({ ...state, cart: [] }));
         router.push('/ecommerce/checkout/success');
         setIsLoading(false);
+    };
+
+    const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/\D/g, '');
+        const formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+        form.setValue('cardNumber', formattedValue.slice(0, 19));
+    };
+    
+    const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        form.setValue('expiryDate', value.slice(0, 5));
     };
 
     return (
@@ -122,11 +144,11 @@ export default function CheckoutPage() {
                                                 <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
                                             )}/>
                                             <FormField control={form.control} name="cardNumber" render={({ field }) => (
-                                                <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+                                                <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} onChange={handleCardNumberChange} /></FormControl><FormMessage /></FormItem>
                                             )}/>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <FormField control={form.control} name="expiryDate" render={({ field }) => (
-                                                    <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                                                    <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} onChange={handleExpiryDateChange} /></FormControl><FormMessage /></FormItem>
                                                 )}/>
                                                 <FormField control={form.control} name="cvc" render={({ field }) => (
                                                     <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
