@@ -119,10 +119,9 @@ const answerQuestionFlow = ai.defineFlow(
   async (input) => {
     const response = await prompt(input);
     
-    const toolRequest = response.toolRequest;
-
-    if (toolRequest?.name === 'routeToSpecialist') {
-        const toolResponse = await toolRequest.run();
+    // Check if the model decided to use a tool.
+    if (response.toolRequest?.name === 'routeToSpecialist') {
+        const toolResponse = await response.toolRequest.run();
         const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
 
         return {
@@ -133,16 +132,20 @@ const answerQuestionFlow = ai.defineFlow(
         };
     }
 
-    // If no tool was called, or it was a different tool, return the direct text response.
+    // If no tool was called, return the direct text response.
     const directAnswer = response.output;
     if (directAnswer) {
+      // Ensure there are always some suggestions, even if the model forgets.
+      if (!directAnswer.suggestedReplies || directAnswer.suggestedReplies.length === 0) {
+        directAnswer.suggestedReplies = ["What services do you offer?", "Who are your clients?", "Contact sales"];
+      }
       return directAnswer;
     }
     
-    // Fallback
+    // Fallback in case of unexpected response from the model
     return {
         answer: "I'm sorry, I'm not sure how to handle that request. Could you please rephrase it?",
-        suggestedReplies: ["What services do you offer?", "Who are your clients?"],
+        suggestedReplies: ["What services do you offer?", "Who are your clients?", "Contact sales"],
     };
   }
 );

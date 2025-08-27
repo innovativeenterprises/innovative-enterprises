@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Send, Mic, Square, CornerDownLeft, Bot, User, Volume2, Link as LinkIcon, CheckCircle } from 'lucide-react';
 import type { LucideIcon } from "lucide-react";
@@ -146,14 +146,18 @@ export const ChatComponent = ({
   }
 
   const submitMessage = async (message: string) => {
+    if (!message.trim()) return;
+    
     stopAudio();
     setIsLoading(true);
     setShowSuggestions(false);
     const userMessage: Message = { role: 'user', content: message };
     setMessages(prev => [...prev, userMessage]);
+    form.reset();
 
     try {
-      const result = await aiFlow({ message: message });
+      // The AI flow can return 'answer' (from FAQ) or 'response' (from other agents)
+      const result = await aiFlow({ question: message, message: message });
       const botMessage: Message = { 
           role: 'bot', 
           content: result.answer || result.response,
@@ -164,8 +168,7 @@ export const ChatComponent = ({
       };
       setMessages(prev => [...prev, botMessage]);
       setShowSuggestions(true);
-      form.reset();
-
+      
       if (settings.voiceInteractionEnabled && botMessage.content) {
           handleTextToSpeech(botMessage.content);
       }
@@ -188,8 +191,11 @@ export const ChatComponent = ({
   };
   
   const handleSuggestionClick = (suggestion: string) => {
+    form.setValue('message', suggestion);
     submitMessage(suggestion);
   }
+
+  const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
 
   return (
     <Card className="w-full h-full flex flex-col">
@@ -267,7 +273,7 @@ export const ChatComponent = ({
                     {isPlaying ? (
                         <Button type="button" size="icon" variant="destructive" onClick={stopAudio}><Square className="h-5 w-5"/></Button>
                     ): (
-                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(messages[messages.length-1].content)} disabled={isLoading || messages.length === 0 || messages[messages.length - 1]?.role !== 'bot'}>
+                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(lastMessage!.content)} disabled={isLoading || !lastMessage || lastMessage.role !== 'bot'}>
                             <Volume2 className="h-5 w-5"/>
                         </Button>
                     )}
