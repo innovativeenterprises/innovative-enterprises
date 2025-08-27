@@ -26,6 +26,7 @@ const transactionData = [
 ];
 
 const upcomingPayments = [
+    { source: "VAT Filing & Payment", amount: 2153.52, dueDate: "2024-09-30" },
     { source: "Partner Commission Payout", amount: 1200.00, dueDate: "2024-08-25" },
     { source: "Cloud Services (AWS)", amount: 450.50, dueDate: "2024-08-28" },
     { source: "Office Rent", amount: 800.00, dueDate: "2024-09-01" },
@@ -60,6 +61,15 @@ export default function CfoDashboard() {
         return <Badge variant="outline">{status}</Badge>;
     }
   };
+
+  const getDaysRemaining = (dueDate: string) => {
+    const due = new Date(dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffTime = due.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
 
   return (
     <div className="space-y-8">
@@ -145,15 +155,23 @@ export default function CfoDashboard() {
                            </TableRow>
                         </TableHeader>
                         <TableBody>
-                           {upcomingPayments.map((payment, index) => (
-                               <TableRow key={index}>
-                                   <TableCell>
-                                       <div className="font-medium">{payment.source}</div>
-                                       <div className="text-sm text-muted-foreground">Due: {payment.dueDate}</div>
-                                   </TableCell>
-                                   <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
-                               </TableRow>
-                           ))}
+                           {upcomingPayments.map((payment, index) => {
+                               const daysRemaining = getDaysRemaining(payment.dueDate);
+                               return (
+                                   <TableRow key={index}>
+                                       <TableCell>
+                                           <div className="font-medium">{payment.source}</div>
+                                           <div className="text-sm text-muted-foreground">
+                                               Due: {payment.dueDate} 
+                                               {daysRemaining >= 0 ? 
+                                                 <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span> 
+                                               : ' (Overdue)'}
+                                           </div>
+                                       </TableCell>
+                                       <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
+                                   </TableRow>
+                               )
+                           })}
                         </TableBody>
                     </Table>
                 </CardContent>
