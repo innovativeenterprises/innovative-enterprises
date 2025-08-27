@@ -17,13 +17,13 @@ export default function AdminOperationsPage() {
         <div>
             <h1 className="text-3xl font-bold">Operations</h1>
             <p className="text-muted-foreground">
-                Manage business operations like opportunities and pricing.
+                Manage business operations like opportunities, pricing, and rental assets.
             </p>
         </div>
-        <AssetTable {...assetData} />
         <OpportunityTable {...opportunityData} />
         <PricingTable {...pricingData} />
         <StageTable {...stageData} />
+        <AssetTable {...assetData} />
     </div>
   );
 }
