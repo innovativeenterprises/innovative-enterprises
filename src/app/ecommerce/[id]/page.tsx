@@ -1,8 +1,5 @@
-
-'use client';
-
-import { notFound, useRouter } from 'next/navigation';
-import { useProductsData } from '@/app/admin/product-table';
+import { notFound } from 'next/navigation';
+import { initialProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,22 +31,22 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 
 
 export default function ProductDetailPage({ params }: { params: { id: string }}) {
-    const router = useRouter();
-    const { products } = useProductsData();
-    const product = products.find(p => p.id === parseInt(params.id, 10));
+    const product = initialProducts.find(p => p.id === parseInt(params.id, 10));
 
     if (!product) {
         return notFound();
     }
 
-    const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+    const relatedProducts = initialProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
 
     return (
         <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
-                <Button variant="ghost" onClick={() => router.back()} className="mb-8">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Shop
+                <Button variant="ghost" asChild className="mb-8">
+                    <Link href="/ecommerce">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back to Shop
+                    </Link>
                 </Button>
                 <div className="grid lg:grid-cols-2 gap-12">
                     <div>
@@ -108,6 +105,3 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
         </div>
     );
 }
-
-// Enable dynamic rendering for this page
-export const dynamic = 'force-dynamic';
