@@ -3,14 +3,13 @@
 
 /**
  * @fileOverview An AI flow that converts text to speech.
- * - textToSpeech - A function that takes text and returns an audio data URI.
+ * - textToSpeech - a function that takes text and returns an audio data URI.
  */
 
 import { ai } from '@/ai/genkit';
 import wav from 'wav';
 import { googleAI } from '@genkit-ai/googleai';
-import { TextToSpeechInput, TextToSpeechInputSchema, TextToSpeechOutput } from './text-to-speech.schema';
-
+import { TextToSpeechInput, TextToSpeechOutput } from './text-to-speech.schema';
 
 /**
  * Converts PCM audio data to WAV format as a Base64 string.
@@ -49,12 +48,14 @@ async function toWav(
  */
 export async function textToSpeech(input: TextToSpeechInput): Promise<TextToSpeechOutput> {
     const { media } = await ai.generate({
-      model: googleAI.model('text-to-speech-1'),
+      model: googleAI.model('gemini-2.5-flash-preview-tts'),
       config: {
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Algenib' }, // Using a fixed voice for now
+            // The schema lists several voices, but the API may have different names.
+            // Using a high-quality prebuilt voice for consistency.
+            prebuiltVoiceConfig: { voiceName: 'Algenib' }, 
           },
         },
       },
