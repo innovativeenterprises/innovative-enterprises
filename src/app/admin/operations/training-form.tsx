@@ -17,6 +17,7 @@ import { Loader2, Sparkles, Bot, PlusCircle, Trash2, CheckCircle, FileUp, ListCh
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { initialAgentCategories } from '@/lib/agents';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Label } from '@/components/ui/label';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
