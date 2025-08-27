@@ -8,13 +8,15 @@ import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2, User } from 'lucide-react';
+import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2, User, Wand2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
+import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -56,6 +58,7 @@ interface UserDocument {
     fileType: string;
     dataUri: string;
     uploadedAt: string;
+    analysis?: CrAnalysisOutput | IdentityAnalysisOutput | null;
 }
 
 interface BriefcaseData {
@@ -316,9 +319,23 @@ const createEmptyBriefcase = (): BriefcaseData => ({
     userDocuments: [],
 });
 
+const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | IdentityAnalysisOutput }) => {
+    if ('companyInfo' in analysis) { // CR Analysis
+        const { companyNameEnglish, companyNameArabic, registrationNumber, status } = analysis.companyInfo;
+        return <p className="text-xs text-muted-foreground"><strong>Type:</strong> CR / <strong>Name:</strong> {companyNameEnglish || companyNameArabic} / <strong>CRN:</strong> {registrationNumber} / <strong>Status:</strong> {status}</p>;
+    }
+    if ('personalDetails' in analysis) { // ID Analysis
+        const { fullName, civilNumber } = analysis.idCardDetails || {};
+        return <p className="text-xs text-muted-foreground"><strong>Type:</strong> Identity / <strong>Name:</strong> {analysis.personalDetails?.fullName || fullName} / <strong>ID:</strong> {civilNumber}</p>;
+    }
+    return null;
+}
+
+
 export default function BriefcasePage() {
     const [briefcaseData, setBriefcaseData] = useState<BriefcaseData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [analyzingDocId, setAnalyzingDocId] = useState<string | null>(null);
     const { toast } = useToast();
 
     const updateBriefcase = (newData: BriefcaseData) => {
@@ -390,6 +407,34 @@ export default function BriefcasePage() {
         const newData = { ...briefcaseData, userDocuments: updatedDocuments };
         updateBriefcase(newData);
         toast({ title: 'Document Deleted', description: 'The document has been removed from your briefcase.', variant: 'destructive'});
+    }
+
+    const handleAnalyzeDocument = async (doc: UserDocument) => {
+        if (!briefcaseData) return;
+        setAnalyzingDocId(doc.id);
+        
+        try {
+            let result;
+            // Simple heuristic to determine which AI agent to call
+            if (doc.name.toLowerCase().includes('cr') || doc.name.toLowerCase().includes('commercial')) {
+                result = await analyzeCrDocument({ documentDataUri: doc.dataUri });
+            } else {
+                 result = await analyzeIdentity({ idDocumentFrontUri: doc.dataUri });
+            }
+
+            const updatedDocuments = briefcaseData.userDocuments.map(d => 
+                d.id === doc.id ? { ...d, analysis: result } : d
+            );
+            const newData = { ...briefcaseData, userDocuments: updatedDocuments };
+            updateBriefcase(newData);
+
+            toast({ title: "Analysis Complete", description: `Successfully analyzed ${doc.name}.` });
+        } catch (error) {
+            console.error("Analysis failed:", error);
+            toast({ title: "Analysis Failed", description: `Could not analyze ${doc.name}. The document might be unsupported.`, variant: "destructive" });
+        } finally {
+            setAnalyzingDocId(null);
+        }
     }
     
     if (isLoading) {
@@ -474,31 +519,45 @@ export default function BriefcasePage() {
                                 {briefcaseData.userDocuments.length > 0 ? (
                                     <div className="space-y-4">
                                         {briefcaseData.userDocuments.map(doc => (
-                                            <Card key={doc.id} className="flex justify-between items-center p-4 bg-muted/50">
-                                                <div>
-                                                    <p className="font-semibold">{doc.name}</p>
-                                                    <p className="text-sm text-muted-foreground">Uploaded on: {new Date(doc.uploadedAt).toLocaleDateString()}</p>
+                                            <Card key={doc.id} className="p-4 bg-muted/50">
+                                                <div className="flex justify-between items-center">
+                                                    <div>
+                                                        <p className="font-semibold">{doc.name}</p>
+                                                        <p className="text-sm text-muted-foreground">Uploaded on: {new Date(doc.uploadedAt).toLocaleDateString()}</p>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <Button variant="outline" size="sm" onClick={() => handleAnalyzeDocument(doc)} disabled={analyzingDocId === doc.id}>
+                                                             {analyzingDocId === doc.id ? (
+                                                                <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Analyzing...</>
+                                                            ) : (
+                                                                <><Wand2 className="mr-2 h-4 w-4"/>Analyze Document</>
+                                                            )}
+                                                        </Button>
+                                                        <Button variant="outline" size="sm" asChild><a href={doc.dataUri} download={doc.name}><Download className="mr-2 h-4 w-4"/>Download</a></Button>
+                                                        <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action will permanently delete "{doc.name}" from your briefcase.
+                                                            </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                            <AlertDialogAction onClick={() => handleDeleteDocument(doc.id)}>Delete</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
                                                 </div>
-                                                <div className="flex gap-2">
-                                                    <Button variant="outline" size="sm" asChild><a href={doc.dataUri} download={doc.name}><Download className="mr-2 h-4 w-4"/>Download</a></Button>
-                                                    <AlertDialog>
-                                                      <AlertDialogTrigger asChild>
-                                                        <Button variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
-                                                      </AlertDialogTrigger>
-                                                      <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                          <AlertDialogDescription>
-                                                            This action will permanently delete "{doc.name}" from your briefcase.
-                                                          </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                          <AlertDialogAction onClick={() => handleDeleteDocument(doc.id)}>Delete</AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                      </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </div>
+                                                {doc.analysis && (
+                                                    <div className="mt-3 pt-3 border-t">
+                                                        <AnalysisResultDisplay analysis={doc.analysis} />
+                                                    </div>
+                                                )}
                                             </Card>
                                         ))}
                                     </div>
@@ -542,3 +601,4 @@ export default function BriefcasePage() {
         </div>
     );
 }
+
