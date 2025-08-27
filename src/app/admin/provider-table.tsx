@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Provider } from "@/lib/providers";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon, Upload } from "lucide-react";
 import Link from 'next/link';
 import { store } from "@/lib/global-store";
 import { useRouter } from "next/navigation";
@@ -61,6 +61,10 @@ const ProviderSchema = z.object({
 });
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
+const CsvImportSchema = z.object({
+  csvFile: z.any().refine(file => file?.length == 1, 'A CSV file is required.'),
+});
+type CsvImportValues = z.infer<typeof CsvImportSchema>;
 
 const AddEditProviderDialog = ({ 
     provider, 
@@ -209,12 +213,99 @@ const AddEditProviderDialog = ({
     )
 }
 
+const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: Provider[]) => void, children: React.ReactNode }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const form = useForm<CsvImportValues>({ resolver: zodResolver(CsvImportSchema) });
+    const { toast } = useToast();
+
+    const handleFileParse = (file: File): Promise<Provider[]> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const text = event.target?.result as string;
+                const rows = text.split('\n').slice(1); // remove header
+                const newProviders: Provider[] = rows.map((row, index) => {
+                    const columns = row.split(',');
+                    if (columns.length !== 8) {
+                        console.warn(`Skipping malformed row ${index + 2}: ${row}`);
+                        return null;
+                    }
+                    return {
+                        id: `prov_bulk_${Date.now()}_${index}`,
+                        name: columns[0]?.trim(),
+                        email: columns[1]?.trim(),
+                        services: columns[2]?.trim(),
+                        status: columns[3]?.trim() as any,
+                        portfolio: columns[4]?.trim(),
+                        notes: columns[5]?.trim(),
+                        subscriptionTier: columns[6]?.trim() as any,
+                        subscriptionExpiry: columns[7]?.trim(),
+                    };
+                }).filter((p): p is Provider => p !== null && p.name !== '');
+                resolve(newProviders);
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsText(file);
+        });
+    }
+
+    const onSubmit: SubmitHandler<CsvImportValues> = async (data) => {
+        try {
+            const newProviders = await handleFileParse(data.csvFile[0]);
+            onImport(newProviders);
+            toast({ title: "Import Successful", description: `${newProviders.length} providers have been added.` });
+            setIsOpen(false);
+            form.reset();
+        } catch (error) {
+            toast({ title: "Import Failed", description: "Could not parse the CSV file. Please check the format.", variant: 'destructive' });
+        }
+    };
+    
+    const handleDownloadTemplate = () => {
+        const headers = ["name", "email", "services", "status", "portfolio", "notes", "subscriptionTier", "subscriptionExpiry"];
+        const csvContent = headers.join(",") + "\n";
+        const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "provider_template.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Import Providers from CSV</DialogTitle>
+                    <DialogDescription>
+                        Upload a CSV file to add multiple providers at once. Ensure the file has the correct columns.
+                    </DialogDescription>
+                </DialogHeader>
+                <Button variant="outline" onClick={handleDownloadTemplate}>Download Template</Button>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="csvFile" render={({ field }) => (
+                            <FormItem><FormLabel>CSV File</FormLabel><FormControl><Input type="file" accept=".csv" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Import Providers</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 export default function ProviderTable({ 
     providers, 
     setProviders 
 }: { 
     providers: Provider[], 
-    setProviders: (updater: (providers: Provider[]) => Provider[]) => void 
+    setProviders: (updater: (providers: Provider[]) => void) => void 
 }) {
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -238,6 +329,10 @@ export default function ProviderTable({
             setProviders(prev => [newProvider, ...prev]);
             toast({ title: "Provider added successfully." });
         }
+    };
+    
+    const handleBulkImport = (newProviders: Provider[]) => {
+        setProviders(prev => [...newProviders, ...prev]);
     };
 
     const handleDelete = (id: string) => {
@@ -294,7 +389,12 @@ export default function ProviderTable({
                     <CardTitle>Provider Management</CardTitle>
                     <CardDescription>Manage freelancers, subcontractors, and service providers.</CardDescription>
                 </div>
-                 <Button onClick={() => handleOpenDialog()}><PlusCircle /> Add Provider</Button>
+                <div className="flex gap-2">
+                    <ImportProvidersDialog onImport={handleBulkImport}>
+                        <Button variant="outline"><Upload className="mr-2 h-4 w-4" /> Import from CSV</Button>
+                    </ImportProvidersDialog>
+                    <Button onClick={() => handleOpenDialog()}><PlusCircle /> Add Provider</Button>
+                </div>
             </CardHeader>
             <CardContent>
                 <AddEditProviderDialog
