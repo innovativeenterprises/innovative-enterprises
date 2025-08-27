@@ -420,5 +420,3 @@ export default function AssetTable({
         </Card>
     );
 }
-
-    
