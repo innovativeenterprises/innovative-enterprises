@@ -3,7 +3,7 @@
 
 /**
  * @fileOverview An AI agent for the e-commerce store, helping users find products.
- * - answerEcommerceQuery - A function that answers user questions about products.
+ * - answerEcommerceQuery - a function that answers user questions about products.
  */
 
 import { ai } from '@/ai/genkit';
