@@ -96,7 +96,6 @@ const StageColumn = ({ stage, products }: { stage: any, products: Product[] }) =
 
 export default function ProjectsPage() {
     const [isLoading, setIsLoading] = useState(false);
-    const [isCreating, setIsCreating] = useState(false);
     
     const { products, setProducts } = useProductsData();
     const { stages } = useProjectStagesData();
@@ -113,12 +112,11 @@ export default function ProjectsPage() {
             grouped[stage.name] = [];
         });
         products.forEach(product => {
-            if(grouped[product.stage]) {
-                grouped[product.stage].push(product);
-            } else {
-                 if(!grouped['Idea Phase']) grouped['Idea Phase'] = [];
-                 grouped['Idea Phase'].push(product); // Fallback
+            const stageName = product.stage || 'Idea Phase';
+            if (!grouped[stageName]) {
+                grouped[stageName] = [];
             }
+            grouped[stageName].push(product);
         });
         return grouped;
     }, [products, stages]);
@@ -150,6 +148,47 @@ export default function ProjectsPage() {
             })
         }
     }
+    
+    const handleProjectInception: SubmitHandler<FormValues> = async (data) => {
+        setIsLoading(true);
+        toast({ title: "Generating Project Plan...", description: "Navi is analyzing your idea. This may take a moment." });
+        
+        try {
+            const plan = await generateProjectPlan({ idea: data.idea });
+            toast({ title: "Plan Generated!", description: "Now creating a project image..." });
+
+            const imageUrl = await generateImage({ prompt: plan.imagePrompt });
+            
+            const newProduct: Product = {
+                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
+                name: plan.projectName,
+                description: plan.summary,
+                stage: 'Idea Phase',
+                category: 'Uncategorized',
+                price: 0,
+                rating: 0,
+                enabled: false, // Start as disabled
+                image: imageUrl,
+                aiHint: plan.imagePrompt,
+            };
+
+            setProducts(prev => [newProduct, ...prev]);
+            
+            toast({
+                title: "Project Created Successfully!",
+                description: `"${plan.projectName}" has been added to the Idea Phase.`,
+                variant: 'default'
+            });
+
+            form.reset();
+
+        } catch (error) {
+            console.error("Project inception failed:", error);
+            toast({ title: "Error", description: "Failed to create the new project. Please try again.", variant: 'destructive' });
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
 
     return (
@@ -161,7 +200,7 @@ export default function ProjectsPage() {
                 </p>
             </div>
             
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible defaultValue="item-1">
                 <AccordionItem value="item-1">
                     <AccordionTrigger>
                         <div className="flex items-center gap-3">
@@ -177,7 +216,7 @@ export default function ProjectsPage() {
                             </CardHeader>
                             <CardContent>
                                 <Form {...form}>
-                                    <form onSubmit={form.handleSubmit(() => {})} className="space-y-4">
+                                    <form onSubmit={form.handleSubmit(handleProjectInception)} className="space-y-4">
                                         <FormField
                                             control={form.control}
                                             name="idea"
@@ -195,8 +234,8 @@ export default function ProjectsPage() {
                                                 </FormItem>
                                             )}
                                         />
-                                        <Button type="submit" disabled={true} className="w-full" size="lg">
-                                            <Wand2 className="mr-2 h-4 w-4" />Generate Project Plan (Feature Coming Soon)
+                                        <Button type="submit" disabled={isLoading} className="w-full" size="lg">
+                                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Generating...</> : <><Wand2 className="mr-2 h-4 w-4" />Generate Project Plan</>}
                                         </Button>
                                     </form>
                                 </Form>
