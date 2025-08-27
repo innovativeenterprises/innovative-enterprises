@@ -3,8 +3,8 @@
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -37,6 +37,7 @@ const CompanyUploadSchema = z.object({
   crDocument: z.any().refine(file => file?.length == 1, 'Commercial Record is required.'),
   repIdDocumentFrontUri: z.string().min(1, 'Front of Representative ID is required.'),
   repIdDocumentBackUri: z.string().optional(),
+  serviceChargesFile: z.any().optional(),
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
@@ -46,6 +47,7 @@ const IndividualUploadSchema = z.object({
     passportDocumentUri: z.any().optional(),
     personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
+    serviceChargesFile: z.any().optional(),
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
 
@@ -288,6 +290,18 @@ export default function PartnerPage() {
       toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
     }
   }
+  
+  const handleDownloadPricingTemplate = () => {
+    const headers = ["ServiceName", "ServiceDescription", "Unit (e.g., per hour, per project)", "Price (OMR)"];
+    const csvContent = headers.join(",") + "\n";
+    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "partner_pricing_template.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
   const renderAnalysisResult = () => {
     if (!analysisResult) return null;
@@ -410,6 +424,20 @@ export default function PartnerPage() {
                            </Alert>
                           )}
                         </div>
+                        <FormField control={companyUploadForm.control} name="serviceChargesFile" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>3. Services & Pricing List (Optional)</FormLabel>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                    <Button type="button" variant="secondary" onClick={handleDownloadPricingTemplate} className="w-full sm:w-auto">
+                                        <Download className="mr-2 h-4 w-4" /> Download Template
+                                    </Button>
+                                    <FormControl className="flex-1">
+                                        <Input type="file" accept=".csv,.xls,.xlsx" onChange={(e) => field.onChange(e.target.files)} />
+                                    </FormControl>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
                         <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!companyUploadForm.getValues('repIdDocumentFrontUri')}><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
                 </Form>
@@ -435,15 +463,30 @@ export default function PartnerPage() {
                                </AlertDescription>
                            </Alert>
                          )}
-
-                         <FormField control={individualUploadForm.control} name="passportDocument" render={({ field }) => (
-                            <FormItem><FormLabel>Passport (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                         <FormField control={individualUploadForm.control} name="personalPhoto" render={({ field }) => (
-                            <FormItem><FormLabel>Personal Photo (Optional)</FormLabel><FormControl><Input type="file" accept=".png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
-                        )} />
+                         <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={individualUploadForm.control} name="passportDocument" render={({ field }) => (
+                                <FormItem><FormLabel>Passport (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={individualUploadForm.control} name="personalPhoto" render={({ field }) => (
+                                <FormItem><FormLabel>Personal Photo (Optional)</FormLabel><FormControl><Input type="file" accept=".png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                         </div>
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
-                            <FormItem><FormLabel>CV / Resume (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>CV / Resume / Portfolio (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={individualUploadForm.control} name="serviceChargesFile" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Services & Pricing List (Optional)</FormLabel>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                    <Button type="button" variant="secondary" onClick={handleDownloadPricingTemplate} className="w-full sm:w-auto">
+                                        <Download className="mr-2 h-4 w-4" /> Download Template
+                                    </Button>
+                                    <FormControl className="flex-1">
+                                        <Input type="file" accept=".csv,.xls,.xlsx" onChange={(e) => field.onChange(e.target.files)} />
+                                    </FormControl>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
                         )} />
                         <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!individualUploadForm.getValues('idDocumentFrontUri')}><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
