@@ -121,6 +121,12 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     icon: Lightbulb,
   },
   {
+    title: "VEO Video Factory",
+    href: "/video-generator",
+    description: "Generate short video clips from text prompts using AI.",
+    icon: Video,
+  },
+  {
     title: "Mira Marketing Agent",
     href: "/social-media-post-generator",
     description: "Generate social media posts, tender responses, and other marketing copy.",
