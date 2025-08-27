@@ -26,9 +26,9 @@ const prompt = ai.definePrompt({
 
 **Available Asset Inventory:**
 Below is a JSON list of currently available assets. You MUST only recommend assets from this list.
-\`\`\`json
+\'\'\'json
 {{{availableAssetsJson}}}
-\`\`\`
+\'\'\'
 
 **Client Requirements:**
 - **Project Name:** {{{projectName}}}
