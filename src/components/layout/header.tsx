@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -92,6 +92,11 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
 
 
 const aiToolsLinks: { title: string; href: string; description: string }[] = [
+   {
+    title: "PRO Agent",
+    href: "/pro-agent",
+    description: "Delegate government service tasks, get fee estimates, and generate assignment documents.",
+  },
   {
     title: "IT Solutions Architect",
     href: "/it-rental-agent",

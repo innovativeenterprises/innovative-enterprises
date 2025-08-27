@@ -33,4 +33,6 @@ import '@/ai/flows/text-to-speech.ts';
 import '@/ai/flows/text-to-speech.schema.ts';
 import '@/ai/flows/ecommerce-agent.ts';
 import '@/ai/flows/ecommerce-agent.schema.ts';
+import '@/ai/flows/pro-task-analysis.ts';
+import '@/ai/flows/pro-task-analysis.schema.ts';
     
