@@ -61,6 +61,7 @@ export const ChatComponent = ({
 
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const { toast } = useToast();
   const form = useForm<FormValues>({
@@ -75,6 +76,16 @@ export const ChatComponent = ({
         setIsPlaying(false);
     }
   }, []);
+  
+  const scrollToBottom = () => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
@@ -193,7 +204,7 @@ export const ChatComponent = ({
         </CardHeader>
 
         <CardContent className="flex-1 overflow-hidden p-0">
-            <ScrollArea className="h-full p-4">
+            <ScrollArea className="h-full p-4" viewportRef={scrollAreaRef}>
                 <div className="space-y-6">
                     {messages.map((msg, index) => (
                         <div key={index}>
