@@ -1,6 +1,7 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle, ServerCog, FileText } from "lucide-react";
+import { Briefcase, DollarSign, Users, Scale, Headset, TrendingUp, Megaphone, Contact, Cpu, Database, BrainCircuit, Bot, PenSquare, Palette, Languages, Camera, Target, Rocket, Handshake, User, Trophy, WalletCards, NotebookText, MessageCircle, ServerCog, FileText, Building } from "lucide-react";
+import BusinessHubIcon from "@/components/icons/business-hub-icon";
 
 export interface Agent {
     role: string;
@@ -49,9 +50,10 @@ export const initialAgentCategories: AgentCategory[] = [
         category: "Customer & Sales Agents",
         agents: [
             { name: "Sami", role: "Sales Agent", description: "Generates tailored Letters of Interest for potential investors and follows up on leads.", icon: TrendingUp, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1920&auto=format&fit=crop', aiHint: 'sales bot', href: "/invest" },
-            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, marketing copy, and creative content for various platforms.", icon: Megaphone, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1612428978260-2b9c7df20150?q=80&w=1920&auto=format&fit=crop', aiHint: 'marketing bot', href: "/social-media-post-generator" },
+            { name: "Mira", role: "Marketing & Content Agent", description: "Generates social media posts, and creative content for various platforms.", icon: Megaphone, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1612428978260-2b9c7df20150?q=80&w=1920&auto=format&fit=crop', aiHint: 'marketing bot', href: "/social-media-post-generator" },
             { name: "TenderPro", role: "Tender Response Assistant", description: "Analyzes tender documents and requirements to generate comprehensive and professional draft responses.", icon: FileText, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611162617353-c0451a7e8e97?q=80&w=1920&auto=format&fit=crop', aiHint: 'document robot', href: "/tender-assistant" },
             { name: "Remi", role: "CRM Agent", description: "Tracks customer relationships, logs inquiries, and sends automated follow-ups to maintain engagement.", icon: Contact, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1611605698323-b1e79e63d68c?q=80&w=1920&auto=format&fit=crop', aiHint: 'crm bot' },
+            { name: "Hubert", role: "Business Hub Coordinator", description: "Assists users in navigating the Business Hub, finding partners, and connecting with services.", icon: Building, enabled: true, type: 'AI Agent', photo: 'https://images.unsplash.com/photo-1593941707882-6e87a2b9a5c0?q=80&w=1920&auto=format&fit=crop', aiHint: 'business robot', href: "/business-hub" },
         ]
     },
     {

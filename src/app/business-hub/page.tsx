@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowRight, Printer, FlaskConical, BookOpen, GraduationCap, Utensils, Brush, Code, Handshake, Car, Building, HeartPulse, ShoppingBag, Plane, Scale, Banknote, PartyPopper } from "lucide-react";
 import Link from "next/link";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
+import BusinessHubChat from "./business-hub-chat";
 
 const categories = [
     { name: "Printing & Publishing", icon: Printer },
@@ -38,6 +39,10 @@ export default function BusinessHubPage() {
           <p className="mt-4 text-lg text-muted-foreground">
             A B2B and B2C marketplace connecting businesses with each other and with new clients. Find opportunities, collaborate on projects, and grow your network.
           </p>
+        </div>
+
+        <div className="max-w-3xl mx-auto mt-12">
+            <BusinessHubChat />
         </div>
 
         <div className="max-w-5xl mx-auto mt-20">
