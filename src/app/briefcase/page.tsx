@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -320,6 +321,7 @@ export default function BriefcasePage() {
             const storedData = localStorage.getItem('user_briefcase');
             if (storedData) {
                 const parsedData = JSON.parse(storedData);
+                // Backwards compatibility for old data structure
                 if (parsedData.serviceChargesDataUri && !parsedData.registrations) {
                     parsedData.registrations = [{ category: 'General Services', priceListUrl: parsedData.serviceChargesDataUri, priceListFilename: 'service-charges.csv' }];
                     delete parsedData.serviceChargesDataUri;

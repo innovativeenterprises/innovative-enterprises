@@ -211,10 +211,10 @@ export default function PartnerPage() {
         }
 
         const result = await analyzeIdentity({ 
-            idDocumentFrontUri: data.idDocumentFrontUri,
-            idDocumentBackUri: data.idDocumentBackUri,
-            cvDocumentUri,
-            passportDocumentUri,
+            idDocumentFrontUri: data.idDocumentFrontUri, 
+            idDocumentBackUri: data.idDocumentBackUri, 
+            cvDocumentUri, 
+            passportDocumentUri, 
             photoUri,
         });
         setAnalysisResult(result);
@@ -318,12 +318,19 @@ export default function PartnerPage() {
   const handleSaveToBriefcase = async () => {
     if (!agreement || !recordNumber) return;
 
-    let serviceChargesDataUri: string | undefined;
     const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
+    const businessCategory = formToUse.getValues('businessCategory');
     const serviceChargesFile = formToUse.getValues('serviceChargesFile');
 
-    if (serviceChargesFile && serviceChargesFile.length > 0) {
-      serviceChargesDataUri = await fileToDataURI(serviceChargesFile[0]);
+    let registrations = [];
+    if (businessCategory) {
+        let priceListUrl: string | undefined;
+        let priceListFilename: string | undefined;
+        if(serviceChargesFile && serviceChargesFile.length > 0) {
+            priceListUrl = await fileToDataURI(serviceChargesFile[0]);
+            priceListFilename = serviceChargesFile[0].name;
+        }
+        registrations.push({ category: businessCategory, priceListUrl, priceListFilename });
     }
 
     const briefcaseData = {
@@ -331,8 +338,10 @@ export default function PartnerPage() {
         applicantName: inquiryForm.getValues('companyName') || inquiryForm.getValues('contactName'),
         agreements: agreement,
         date: new Date().toISOString(),
-        serviceChargesDataUri,
+        registrations,
+        userDocuments: [],
     };
+
     try {
         localStorage.setItem('user_briefcase', JSON.stringify(briefcaseData));
         toast({
