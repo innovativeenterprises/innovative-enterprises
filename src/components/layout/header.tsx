@@ -115,7 +115,7 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     icon: Mic,
   },
   {
-    title: "AI Image Generator",
+    title: "Lina Image Generator",
     href: "/image-generator",
     description: "Create stunning visuals from text descriptions in seconds.",
     icon: Lightbulb,
@@ -137,6 +137,12 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     href: "/feasibility-study",
     description: "Generate a comprehensive feasibility study for any business idea using AI-driven research.",
     icon: BrainCircuit,
+  },
+   {
+    title: "IT Rental Solutions Agent",
+    href: "/it-rental-agent",
+    description: "Let an AI architect design a custom hardware rental package for your project needs.",
+    icon: ServerCog,
   }
 ];
 
