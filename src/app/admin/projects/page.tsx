@@ -18,8 +18,8 @@ import { useProductsData } from '../product-table';
 import { useProjectStagesData } from '../stage-table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
-import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
@@ -78,11 +78,11 @@ const StageColumn = ({ stage, products, onEditProduct }: { stage: any, products:
     
     return (
         <div ref={setNodeRef} className="flex-shrink-0 w-[300px]">
-            <Card className="bg-muted/50">
+            <Card className="bg-muted/50 h-full flex flex-col">
                 <CardHeader className="p-4">
                     <CardTitle className="text-base">{stage.name}</CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 min-h-[200px]">
+                <CardContent className="p-4 min-h-[200px] flex-grow overflow-y-auto">
                      <SortableContext items={products.map(p => p.id)} strategy={verticalListSortingStrategy}>
                         {products.map(product => (
                             <ProductCard key={product.id} product={product} onEdit={onEditProduct} />
@@ -117,6 +117,8 @@ export default function ProjectsPage() {
         products.forEach(product => {
             const stageName = product.stage || 'Idea Phase';
             if (!grouped[stageName]) {
+                // This handles cases where a product has a stage that's been deleted.
+                // It will create a temporary column for it.
                 grouped[stageName] = [];
             }
             grouped[stageName].push(product);
@@ -136,24 +138,31 @@ export default function ProjectsPage() {
     };
 
     const handleSaveProduct = (values: ProductValues, id?: number) => {
-        if (id) {
-            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
+        if (id !== undefined) {
+            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values, id } : p));
             toast({ title: "Project updated successfully." });
         } else {
            // This case is handled by project inception
         }
     };
 
+    const getStageForOverId = (over: Over | null) => {
+        if (!over) return null;
+        if (over.data.current?.type === 'Stage') {
+            return over.data.current.stage.name;
+        }
+        if (over.data.current?.type === 'Product') {
+            return over.data.current.product.stage;
+        }
+        return null;
+    }
+
     const onDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        if (!over || active.id === over.id) {
-            return;
-        }
-
-        const activeProduct = products.find(p => p.id === active.id);
-        const overStageName = over.data.current?.type === 'Stage' 
-            ? over.data.current.stage.name 
-            : products.find(p => p.id === over.id)?.stage;
+        if (!over) return;
+        
+        const activeProduct = active.data.current?.product as Product;
+        const overStageName = getStageForOverId(over);
 
         if (activeProduct && overStageName && activeProduct.stage !== overStageName) {
             setProducts(prev => 
@@ -161,7 +170,7 @@ export default function ProjectsPage() {
             );
             toast({
                 title: "Project Stage Updated",
-                description: `${activeProduct.name} moved to ${overStageName}.`
+                description: `"${activeProduct.name}" moved to ${overStageName}.`
             })
         }
     }
@@ -267,15 +276,17 @@ export default function ProjectsPage() {
                 <h2 className="text-2xl font-bold mb-4">Project Pipeline</h2>
                  <div className="overflow-x-auto pb-4">
                     <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCorners}>
-                        <div className="flex gap-6">
-                            {stages.map(stage => (
-                                <StageColumn
-                                    key={stage.id}
-                                    stage={stage}
-                                    products={productsByStage[stage.name] || []}
-                                    onEditProduct={handleEditProduct}
-                                />
-                            ))}
+                         <div className="flex gap-6">
+                            <SortableContext items={stages.map(s => s.name)} strategy={horizontalListSortingStrategy}>
+                                {stages.map(stage => (
+                                    <StageColumn
+                                        key={stage.id}
+                                        stage={stage}
+                                        products={productsByStage[stage.name] || []}
+                                        onEditProduct={handleEditProduct}
+                                    />
+                                ))}
+                            </SortableContext>
                         </div>
                     </DndContext>
                 </div>
