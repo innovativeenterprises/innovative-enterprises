@@ -98,11 +98,21 @@ const proTaskAnalysisFlow = ai.defineFlow(
   async (input) => {
     // 1. Analyze each task in parallel
     const analysisPromises = input.serviceNames.map(serviceName => 
-        singleTaskAnalysisPrompt({ serviceName })
+      singleTaskAnalysisPrompt({ serviceName }).catch(e => {
+        console.error(`Error analyzing service: ${serviceName}`, e);
+        return null; // Return null on error for this specific task
+      })
     );
     const analysisResults = await Promise.all(analysisPromises);
     
-    const tasks: ProTaskAnalysis[] = analysisResults.map(result => result.output!).filter(Boolean);
+    const tasks: ProTaskAnalysis[] = analysisResults
+      .map(result => result?.output)
+      .filter((output): output is ProTaskAnalysis => !!output);
+
+    // If all tasks failed, throw an error
+    if (tasks.length === 0 && input.serviceNames.length > 0) {
+      throw new Error("Could not get details for any of the selected services.");
+    }
 
     // 2. Determine unique ministries to visit
     const ministriesToVisit = [...new Set(
