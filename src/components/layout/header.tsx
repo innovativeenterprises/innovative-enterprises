@@ -182,20 +182,6 @@ const partnershipLinks: { title: string; href: string; description: string, icon
     icon: Handshake,
   },
   {
-    title: "Become an Agent",
-    href: "/agent",
-    description:
-      "Represent Innovative Enterprises and earn commissions by bringing in new business.",
-    icon: UserRoundCheck,
-  },
-  {
-    title: "Let's Become Your CTO",
-    href: "/cto",
-    description:
-      "Leverage our expertise to lead your technology strategy and execution.",
-    icon: Cpu,
-  },
-  {
     title: "Invest With Us",
     href: "/invest",
     description:
