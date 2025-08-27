@@ -81,7 +81,7 @@ export default function FeasibilityStudyPage() {
                                 <Textarea placeholder="e.g., A subscription box service for rare and exotic coffees, sourced directly from farmers." rows={5} {...field} />
                                 </FormControl>
                                 <FormMessage />
-                            </FormItem>
+                                </FormItem>
                             )}
                         />
                         <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
