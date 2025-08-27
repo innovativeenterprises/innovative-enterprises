@@ -1,8 +1,10 @@
+
 /**
  * @fileOverview Schemas and types for the PRO Task Analysis flow.
  */
 
 import { z } from 'zod';
+import { OMAN_MINISTRIES } from '@/lib/oman-locations';
 
 export const ProTaskAnalysisInputSchema = z.object({
   serviceNames: z.array(z.string()).min(1, "At least one service name is required."),
@@ -20,6 +22,7 @@ export const ProTaskAnalysisSchema = z.object({
   documentList: z.array(z.string()).describe("A comprehensive list of all required documents for this specific service."),
   notes: z.string().optional().describe("Any important notes or pre-requisites for the user regarding this service."),
   fees: z.array(FeeSchema).describe("A breakdown of estimated government fees for this specific task."),
+  ministryToVisit: z.enum([...OMAN_MINISTRIES, "Online"]).describe("The government ministry or authority building the PRO must visit for this task. 'Online' if no physical visit is required."),
 });
 export type ProTaskAnalysis = z.infer<typeof ProTaskAnalysisSchema>;
 
