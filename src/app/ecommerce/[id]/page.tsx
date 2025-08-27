@@ -1,3 +1,6 @@
+
+'use client';
+
 import { notFound } from 'next/navigation';
 import { initialProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
@@ -8,6 +11,8 @@ import { ArrowLeft, Star, ShoppingCart, Minus, Plus } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 const RelatedProductCard = ({ product }: { product: Product }) => (
     <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -31,10 +36,19 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 
 
 export default function ProductDetailPage({ params }: { params: { id: string }}) {
+    const [quantity, setQuantity] = useState(1);
+    const { toast } = useToast();
     const product = initialProducts.find(p => p.id === parseInt(params.id, 10));
 
     if (!product) {
         return notFound();
+    }
+    
+    const handleAddToCart = () => {
+        toast({
+            title: "Added to Cart!",
+            description: `${quantity} x "${product.name}" has been added to your shopping cart.`,
+        })
     }
 
     const relatedProducts = initialProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
@@ -81,11 +95,11 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
 
                         <div className="flex flex-col sm:flex-row items-center gap-4">
                            <div className="flex items-center gap-2 border rounded-md p-2">
-                                <Button variant="ghost" size="icon" className="h-8 w-8"><Minus className="h-4 w-4" /></Button>
-                                <span className="font-bold text-lg w-8 text-center">1</span>
-                                <Button variant="ghost" size="icon" className="h-8 w-8"><Plus className="h-4 w-4" /></Button>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                <span className="font-bold text-lg w-8 text-center">{quantity}</span>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                            </div>
-                            <Button size="lg" className="w-full sm:w-auto">
+                            <Button size="lg" className="w-full sm:w-auto" onClick={handleAddToCart}>
                                 <ShoppingCart className="mr-2 h-5 w-5" />
                                 Add to Cart
                             </Button>
