@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Asset } from "@/lib/assets";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Upload } from "lucide-react";
 import Image from 'next/image';
 import { Checkbox } from "@/components/ui/checkbox";
 import { store } from "@/lib/global-store";
@@ -54,7 +54,7 @@ export const useAssetsData = () => {
 
 const AssetSchema = z.object({
   name: z.string().min(3, "Asset name is required"),
-  type: z.enum(['Server', 'Laptop', 'Workstation', 'Networking', 'Storage']),
+  type: z.enum(['Server', 'Laptop', 'Workstation', 'Networking', 'Storage', 'Peripheral']),
   specs: z.string().min(5, "Specifications are required"),
   monthlyPrice: z.coerce.number().min(1, "Monthly price is required"),
   status: z.enum(['Available', 'Rented', 'Maintenance']),
@@ -154,7 +154,14 @@ const AddEditAssetDialog = ({
 
                         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                              <FormField control={form.control} name="type" render={({ field }) => (
-                                <FormItem><FormLabel>Asset Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Server">Server</SelectItem><SelectItem value="Laptop">Laptop</SelectItem><SelectItem value="Workstation">Workstation</SelectItem><SelectItem value="Networking">Networking</SelectItem><SelectItem value="Storage">Storage</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                <FormItem><FormLabel>Asset Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                    <SelectItem value="Server">Server</SelectItem>
+                                    <SelectItem value="Laptop">Laptop</SelectItem>
+                                    <SelectItem value="Workstation">Workstation</SelectItem>
+                                    <SelectItem value="Networking">Networking</SelectItem>
+                                    <SelectItem value="Storage">Storage</SelectItem>
+                                    <SelectItem value="Peripheral">Peripheral</SelectItem>
+                                </SelectContent></Select><FormMessage /></FormItem>
                             )} />
                              <FormField control={form.control} name="status" render={({ field }) => (
                                 <FormItem><FormLabel>Status</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Available">Available</SelectItem><SelectItem value="Rented">Rented</SelectItem><SelectItem value="Maintenance">Maintenance</SelectItem></SelectContent></Select><FormMessage /></FormItem>
@@ -207,6 +214,97 @@ const AddEditAssetDialog = ({
     )
 }
 
+const CsvImportSchema = z.object({
+  csvFile: z.any().refine(file => file?.length == 1, 'A CSV file is required.'),
+});
+type CsvImportValues = z.infer<typeof CsvImportSchema>;
+
+const ImportAssetsDialog = ({ onImport, children }: { onImport: (assets: Asset[]) => void, children: React.ReactNode }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const form = useForm<CsvImportValues>({ resolver: zodResolver(CsvImportSchema) });
+    const { toast } = useToast();
+
+    const handleFileParse = (file: File): Promise<Asset[]> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const text = event.target?.result as string;
+                const rows = text.split('\n').slice(1); // remove header
+                const newAssets: Asset[] = rows.map((row, index) => {
+                    const columns = row.split(',');
+                    if (columns.length !== 7) {
+                        console.warn(`Skipping malformed row ${index + 2}: ${row}`);
+                        return null;
+                    }
+                    return {
+                        id: `asset_bulk_${Date.now()}_${index}`,
+                        name: columns[0]?.trim(),
+                        type: columns[1]?.trim() as any,
+                        specs: columns[2]?.trim(),
+                        monthlyPrice: parseFloat(columns[3]?.trim()) || 0,
+                        status: columns[4]?.trim() as any,
+                        image: columns[5]?.trim(),
+                        aiHint: columns[6]?.trim(),
+                    };
+                }).filter((p): p is Asset => p !== null && p.name !== '');
+                resolve(newAssets);
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsText(file);
+        });
+    }
+
+    const onSubmit: SubmitHandler<CsvImportValues> = async (data) => {
+        try {
+            const newAssets = await handleFileParse(data.csvFile[0]);
+            onImport(newAssets);
+            toast({ title: "Import Successful", description: `${newAssets.length} assets have been added.` });
+            setIsOpen(false);
+            form.reset();
+        } catch (error) {
+            toast({ title: "Import Failed", description: "Could not parse the CSV file. Please check the format.", variant: 'destructive' });
+        }
+    };
+    
+    const handleDownloadTemplate = () => {
+        const headers = ["name", "type", "specs", "monthlyPrice", "status", "image", "aiHint"];
+        const csvContent = headers.join(",") + "\n";
+        const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "asset_template.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Import Assets from CSV</DialogTitle>
+                    <DialogDescription>
+                        Upload a CSV file to add multiple assets at once. Ensure the file has the correct columns.
+                    </DialogDescription>
+                </DialogHeader>
+                <Button variant="outline" onClick={handleDownloadTemplate}>Download Template</Button>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="csvFile" render={({ field }) => (
+                            <FormItem><FormLabel>CSV File</FormLabel><FormControl><Input type="file" accept=".csv" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Import Assets</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 export default function AssetTable({
     assets,
     setAssets,
@@ -228,6 +326,10 @@ export default function AssetTable({
             setAssets(prev => [newAsset, ...prev]);
             toast({ title: "Asset added successfully." });
         }
+    };
+    
+    const handleBulkImport = (newAssets: Asset[]) => {
+        setAssets(prev => [...newAssets, ...prev]);
     };
 
     const handleDelete = (id: string) => {
@@ -252,9 +354,14 @@ export default function AssetTable({
                     <CardTitle>InfraRent Asset Management</CardTitle>
                     <CardDescription>Manage IT hardware and infrastructure available for rent.</CardDescription>
                 </div>
-                 <AddEditAssetDialog onSave={handleSave}>
-                    <Button><PlusCircle /> Add Asset</Button>
-                </AddEditAssetDialog>
+                <div className="flex gap-2">
+                    <ImportAssetsDialog onImport={handleBulkImport}>
+                         <Button variant="outline"><Upload className="mr-2 h-4 w-4" /> Import from CSV</Button>
+                    </ImportAssetsDialog>
+                     <AddEditAssetDialog onSave={handleSave}>
+                        <Button><PlusCircle /> Add Asset</Button>
+                    </AddEditAssetDialog>
+                </div>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -313,3 +420,4 @@ export default function AssetTable({
         </Card>
     );
 }
+
