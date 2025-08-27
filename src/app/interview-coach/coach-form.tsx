@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight, Video, VideoOff } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Image from 'next/image';
 
 const FormSchema = z.object({
   jobTitle: z.string().min(3, 'Please enter a valid job title.'),
@@ -134,15 +135,26 @@ export default function InterviewCoachForm() {
                     <CardDescription className="text-center">Role: {form.getValues('jobTitle')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="aspect-video bg-black rounded-lg overflow-hidden relative flex items-center justify-center">
-                        <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
-                         {!hasCameraPermission && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white p-4">
-                                <VideoOff className="w-12 h-12 mb-4" />
-                                <h3 className="text-lg font-semibold">Camera Not Available</h3>
-                                <p className="text-sm text-center">Please grant camera permission to use the video simulation feature.</p>
-                            </div>
-                        )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="relative aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center text-white">
+                             <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2" alt="Interviewer" layout="fill" objectFit="cover" className="opacity-90" />
+                             <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 text-sm rounded-md">
+                                 <p className="font-semibold">AI Interviewer</p>
+                             </div>
+                        </div>
+                        <div className="relative aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                            {!hasCameraPermission && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white p-4 text-center">
+                                    <VideoOff className="w-10 h-10 mb-2" />
+                                    <h3 className="font-semibold">Camera Not Found</h3>
+                                    <p className="text-xs">Please grant camera permission.</p>
+                                </div>
+                            )}
+                             <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 text-sm rounded-md">
+                                <p className="font-semibold">You</p>
+                             </div>
+                        </div>
                     </div>
                     
                     <div className="text-center">
