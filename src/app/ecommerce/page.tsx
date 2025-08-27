@@ -1,19 +1,21 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Search, SlidersHorizontal, Star, Tag, Truck, Filter, Bot } from "lucide-react";
+import { ArrowRight, Search, Star, Filter, Bot } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
 
 const categories = [
-    { name: "Electronics", icon: <SlidersHorizontal /> },
-    { name: "Apparel", icon: <SlidersHorizontal /> },
-    { name: "Home Goods", icon: <SlidersHorizontal /> },
-    { name: "Books", icon: <SlidersHorizontal /> },
-    { name: "Sports", icon: <SlidersHorizontal /> },
-    { name: "Beauty", icon: <SlidersHorizontal /> },
+    "All",
+    "Electronics",
+    "Apparel",
+    "Home Goods",
+    "Books",
+    "Sports",
+    "Beauty",
 ];
 
 const products = [
@@ -122,6 +124,12 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => (
 );
 
 export default function EcommercePage() {
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  const filteredProducts = selectedCategory === 'All'
+    ? products
+    : products.filter(product => product.category === selectedCategory);
+
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
         <section className="bg-muted/30 border-b">
@@ -161,9 +169,14 @@ export default function EcommercePage() {
                             <h3 className="font-semibold mb-2">Categories</h3>
                             <div className="space-y-2">
                                 {categories.map(cat => (
-                                    <Link href="#" key={cat.name} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
-                                        {cat.name}
-                                    </Link>
+                                    <Button
+                                      key={cat}
+                                      variant={selectedCategory === cat ? 'secondary' : 'ghost'}
+                                      className="w-full justify-start"
+                                      onClick={() => setSelectedCategory(cat)}
+                                    >
+                                      {cat}
+                                    </Button>
                                 ))}
                             </div>
                         </div>
@@ -179,7 +192,7 @@ export default function EcommercePage() {
             </aside>
             <main className="lg:col-span-3">
                 <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {products.map(product => <ProductCard key={product.id} product={product} />)}
+                    {filteredProducts.map(product => <ProductCard key={product.id} product={product} />)}
                 </div>
                  <div className="mt-12 text-center">
                     <Button variant="outline">Load More Products</Button>
