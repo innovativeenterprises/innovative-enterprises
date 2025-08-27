@@ -1,6 +1,6 @@
 
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -103,4 +103,11 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/financial-audit",
   },
+  {
+    icon: UserRoundCheck,
+    title: "PRO Task Delegation",
+    description: "Efficiently manage your government-related tasks and generate assignment documents for your PRO.",
+    enabled: true,
+    href: "/pro-agent",
+  }
 ];

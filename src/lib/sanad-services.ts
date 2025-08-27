@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Building, User, FileText, Globe, Case, Landmark, Users, Briefcase, Car, Shield, HeartPulse, HandCoins } from "lucide-react";
+import { Building, User, FileText, Globe, Case, Landmark, Users, Briefcase, Car, Shield, HeartPulse, HandCoins, UserRoundCheck } from "lucide-react";
 
 export interface SanadService {
     name: string;
