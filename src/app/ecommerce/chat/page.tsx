@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useSettingsData } from '@/app/admin/settings-table';
