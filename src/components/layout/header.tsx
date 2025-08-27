@@ -170,7 +170,7 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
       "Represent Innovative Enterprises and earn commissions by bringing in new business.",
   },
   {
-    title: "Become our Fractional CTO",
+    title: "Let's Become Your CTO",
     href: "/cto",
     description:
       "Leverage our expertise to lead your technology strategy and execution.",

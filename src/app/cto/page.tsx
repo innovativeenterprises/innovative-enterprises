@@ -112,7 +112,7 @@ export default function CtoPage() {
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">Let's Be Your CTO</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">Let's Become Your CTO</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             Leverage our expertise to lead your technology strategy and execution. Get a fractional CTO to guide your startup or project to success.
           </p>
