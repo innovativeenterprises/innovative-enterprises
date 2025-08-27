@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,8 +12,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight, Video, VideoOff } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const FormSchema = z.object({
   jobTitle: z.string().min(3, 'Please enter a valid job title.'),
@@ -24,6 +25,8 @@ export default function InterviewCoachForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -32,6 +35,44 @@ export default function InterviewCoachForm() {
       jobTitle: '',
     },
   });
+
+  useEffect(() => {
+    // This effect will run when `questions` has been populated.
+    const getCameraPermission = async () => {
+      if (questions.length > 0 && !hasCameraPermission) {
+         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error('Camera API not available.');
+            setHasCameraPermission(false);
+            return;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          setHasCameraPermission(true);
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (error) {
+          console.error('Error accessing camera:', error);
+          setHasCameraPermission(false);
+          toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings to use this feature.',
+          });
+        }
+      }
+    };
+
+    getCameraPermission();
+
+    // Cleanup function to stop video stream when component unmounts or questions are cleared
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [questions, hasCameraPermission, toast]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
@@ -68,6 +109,7 @@ export default function InterviewCoachForm() {
   const startOver = () => {
       setQuestions([]);
       setCurrentQuestionIndex(0);
+      setHasCameraPermission(false);
       form.reset();
   }
 
@@ -86,33 +128,36 @@ export default function InterviewCoachForm() {
     if (questions.length > 0) {
         const currentQuestion = questions[currentQuestionIndex];
         return (
-             <Card>
+             <Card className="overflow-hidden">
                 <CardHeader>
-                    <CardTitle className="text-center">Interview Practice Session</CardTitle>
+                    <CardTitle className="text-center">Virtual Interview Simulation</CardTitle>
                     <CardDescription className="text-center">Role: {form.getValues('jobTitle')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                    <div className="aspect-video bg-black rounded-lg overflow-hidden relative flex items-center justify-center">
+                        <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                         {!hasCameraPermission && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white p-4">
+                                <VideoOff className="w-12 h-12 mb-4" />
+                                <h3 className="text-lg font-semibold">Camera Not Available</h3>
+                                <p className="text-sm text-center">Please grant camera permission to use the video simulation feature.</p>
+                            </div>
+                        )}
+                    </div>
+                    
                     <div className="text-center">
                         <p className="text-sm text-muted-foreground">Question {currentQuestionIndex + 1} of {questions.length}</p>
                         <Badge>{currentQuestion.category}</Badge>
                     </div>
-                    <div className="flex items-start gap-4 p-4 min-h-[120px] bg-muted rounded-lg">
-                        <div className="bg-primary text-primary-foreground p-2 rounded-full">
-                            <Bot className="h-5 w-5"/>
-                        </div>
-                        <p className="flex-1 font-semibold text-lg">{currentQuestion.question}</p>
-                    </div>
-                    <div className="flex items-start gap-4 p-4 min-h-[150px]">
-                         <div className="bg-accent text-accent-foreground p-2 rounded-full">
-                            <User className="h-5 w-5"/>
-                        </div>
-                        <div className="flex-1">
-                            <p className="font-semibold text-muted-foreground mb-2">Your Answer:</p>
-                             <div className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap p-2 border-b-2 border-primary focus-within:border-primary-focus">
-                                 <p className="text-sm text-muted-foreground italic">Think about your response. In a future version, you'll be able to record your answer here and get feedback.</p>
-                             </div>
-                        </div>
-                    </div>
+                    
+                    <Alert className="border-primary/50">
+                        <Bot className="h-4 w-4" />
+                        <AlertTitle className="font-semibold">Interviewer's Question:</AlertTitle>
+                        <AlertDescription className="text-lg font-medium text-foreground pt-1">
+                            {currentQuestion.question}
+                        </AlertDescription>
+                    </Alert>
+
                 </CardContent>
                 <CardFooter className="flex-col gap-4">
                     <div className="flex justify-between w-full">
@@ -155,7 +200,7 @@ export default function InterviewCoachForm() {
                     {isLoading ? (
                         <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Questions...</>
                     ) : (
-                        <><Sparkles className="mr-2 h-4 w-4" /> Generate Questions</>
+                        <><Sparkles className="mr-2 h-4 w-4" /> Generate Questions & Start Simulation</>
                     )}
                     </Button>
                 </form>
