@@ -4,14 +4,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Briefcase } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Briefcase, Percent } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
 const kpiData = [
     { title: "Net Revenue", value: "OMR 45,231.89", change: "+20.1% from last month", icon: CircleDollarSign },
     { title: "Subscriptions", value: "+2,350", change: "+180.1% from last month", icon: Users },
-    { title: "Project Billings", value: "OMR 12,234.50", change: "+19% from last month", icon: Briefcase },
+    { title: "VAT Collected", value: "OMR 2,153.52", change: "+22% from last month", icon: Percent },
     { title: "Operational Cost", value: "OMR 9,231.89", change: "+2% from last month", icon: TrendingUp },
 ];
 
