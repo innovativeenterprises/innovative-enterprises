@@ -232,7 +232,7 @@ export const ChatComponent = ({
                     {isPlaying ? (
                         <Button type="button" size="icon" variant="destructive" onClick={stopAudio}><Square className="h-5 w-5"/></Button>
                     ): (
-                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(messages[messages.length-1].content)} disabled={isLoading || messages[messages.length-1].role !== 'bot'}>
+                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(messages[messages.length-1].content)} disabled={isLoading || messages.length === 0 || messages[messages.length-1].role !== 'bot'}>
                             <Volume2 className="h-5 w-5"/>
                         </Button>
                     )}
