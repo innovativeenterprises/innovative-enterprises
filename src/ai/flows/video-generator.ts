@@ -15,6 +15,7 @@ import { Readable } from 'stream';
 
 const GenerateVideoInputSchema = z.object({
   prompt: z.string().describe('A text description of the video to generate.'),
+  durationSeconds: z.number().optional().default(5).describe('The duration of the video in seconds.'),
 });
 export type GenerateVideoInput = z.infer<typeof GenerateVideoInputSchema>;
 
@@ -28,8 +29,12 @@ export async function generateVideo(input: GenerateVideoInput): Promise<string> 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
        const generationResult = await ai.generate({
-          model: googleAI.model('veo-3.0-generate-preview'),
+          model: googleAI.model('veo-2.0-generate-001'),
           prompt: input.prompt,
+          config: {
+            durationSeconds: input.durationSeconds,
+            aspectRatio: '16:9',
+          }
       });
       operation = generationResult.operation;
       if (operation) {
