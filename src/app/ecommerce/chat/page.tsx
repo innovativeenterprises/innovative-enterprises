@@ -31,7 +31,7 @@ export default function EcommerceChatPage() {
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)] py-16">
             <div className="container mx-auto px-4 relative">
-                 <Button asChild variant="outline" className="absolute top-0 left-0">
+                 <Button asChild variant="outline" className="absolute top-0 left-4 md:left-0">
                     <Link href="/ecommerce">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to Store
