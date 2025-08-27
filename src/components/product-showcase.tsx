@@ -8,6 +8,7 @@ import Image from 'next/image';
 import type { Product } from '@/lib/products';
 import { initialProducts } from '@/lib/products';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 const StageBadge = ({ stage }: { stage: string }) => {
     const getStageColor = () => {
@@ -70,26 +71,28 @@ export default function ProductShowcase({ products: managedProducts }: { product
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {enabledProducts.map((product) => (
-            <Card key={product.name} className="overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-              <CardHeader className="p-0">
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    data-ai-hint={product.aiHint}
-                  />
-                   <StageBadge stage={product.stage} />
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 flex-grow">
-                <CardTitle className="text-xl mb-2">{product.name}</CardTitle>
-                <CardDescription>{product.description}</CardDescription>
-              </CardContent>
-              <CardFooter className="p-6 pt-0">
-                <Button variant="outline">Learn More</Button>
-              </CardFooter>
+            <Card key={product.id} className="overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+              <Link href={`/ecommerce/${product.id}`} className="flex flex-col h-full">
+                <CardHeader className="p-0">
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      data-ai-hint={product.aiHint}
+                    />
+                    <StageBadge stage={product.stage} />
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6 flex-grow">
+                  <CardTitle className="text-xl mb-2">{product.name}</CardTitle>
+                  <CardDescription>{product.description}</CardDescription>
+                </CardContent>
+                <CardFooter className="p-6 pt-0">
+                  <Button variant="outline">Learn More</Button>
+                </CardFooter>
+              </Link>
             </Card>
           ))}
         </div>

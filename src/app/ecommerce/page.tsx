@@ -8,6 +8,7 @@ import { ArrowRight, Search, Star, Filter, Bot } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
 import { useProductsData } from '@/app/admin/product-table';
+import type { Product } from '@/lib/products';
 
 const categories = [
     "All",
@@ -19,30 +20,32 @@ const categories = [
     "Beauty",
 ];
 
-const ProductCard = ({ product }: { product: ReturnType<typeof useProductsData>['products'][0] }) => (
+const ProductCard = ({ product }: { product: Product }) => (
     <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        <CardHeader className="p-0">
-            <div className="relative h-64 w-full">
-                <Image 
-                    src={product.image} 
-                    alt={product.name} 
-                    fill 
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    data-ai-hint={product.aiHint}
-                />
-            </div>
-        </CardHeader>
-        <CardContent className="p-4">
-            <p className="text-sm text-muted-foreground">{product.category}</p>
-            <h3 className="font-semibold text-lg truncate mt-1">{product.name}</h3>
-            <div className="flex justify-between items-center mt-2">
-                <p className="font-bold text-xl text-primary">OMR {product.price.toFixed(2)}</p>
-                <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                    <span className="text-sm font-medium">{product.rating}</span>
+        <Link href={`/ecommerce/${product.id}`}>
+            <CardHeader className="p-0">
+                <div className="relative h-64 w-full">
+                    <Image 
+                        src={product.image} 
+                        alt={product.name} 
+                        fill 
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        data-ai-hint={product.aiHint}
+                    />
                 </div>
-            </div>
-        </CardContent>
+            </CardHeader>
+            <CardContent className="p-4">
+                <p className="text-sm text-muted-foreground">{product.category}</p>
+                <h3 className="font-semibold text-lg truncate mt-1">{product.name}</h3>
+                <div className="flex justify-between items-center mt-2">
+                    <p className="font-bold text-xl text-primary">OMR {product.price.toFixed(2)}</p>
+                    <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                        <span className="text-sm font-medium">{product.rating}</span>
+                    </div>
+                </div>
+            </CardContent>
+        </Link>
         <CardFooter className="p-4 pt-0">
             <Button className="w-full">Add to Cart</Button>
         </CardFooter>
