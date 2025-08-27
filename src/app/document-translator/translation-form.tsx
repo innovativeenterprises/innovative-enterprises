@@ -59,7 +59,6 @@ const documentTypeEnum = z.enum([
     // Financial & Trade
     'Bank Statements, Loan Forms, Insurance Policies',
     'Trading Contracts, Customs Declarations, Tax Reports',
-    'Invoices',
     'Other',
 ]);
 
@@ -610,11 +609,11 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
     switch (settings.translationAssignmentMode) {
         case 'direct':
             alertTitle = 'Task Assigned Directly';
-            alertDescription = `This task has been assigned to ${submittedData?.assignedOffice}.`;
+            alertDescription = `This task has been assigned to ${submittedData?.assignedOffice}. They will be in touch shortly.`;
             break;
         case 'tender':
             alertTitle = 'Task Sent to Tender';
-            alertDescription = `This task has been sent out for tender to ${submittedData?.tenderOffices?.length} partner(s).`;
+            alertDescription = `This task has been sent out for tender to ${submittedData?.tenderOffices?.length} partner(s). Expect to receive quotes soon.`;
             break;
         case 'builtin':
             alertTitle = 'Internal AI Translation';
