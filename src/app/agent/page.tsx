@@ -41,7 +41,7 @@ type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 const IndividualUploadSchema = z.object({
     idDocumentFrontUri: z.string().min(1, 'Front of ID is required.'),
     idDocumentBackUri: z.string().optional(),
-    passportDocument: z.any().optional(),
+    passportDocumentUri: z.any().optional(),
     personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
 });
