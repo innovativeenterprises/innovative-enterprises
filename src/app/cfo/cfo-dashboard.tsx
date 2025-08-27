@@ -1,15 +1,23 @@
 
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowDownLeft, ArrowUpRight, DollarSign, MoreHorizontal, PlusCircle, CreditCard, Users, ReceiptText, CalendarCheck, UserCheck } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, DollarSign, PlusCircle, CreditCard, Users, ReceiptText, CalendarCheck, UserCheck, Upload } from "lucide-react";
 import { useSettingsData } from "@/app/admin/settings-table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-const transactions = [
+const initialTransactions = [
     { description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28" },
     { description: "AWS Cloud Services Bill", amount: -2500.00, type: "expense", status: "Paid", date: "2024-07-27" },
     { description: "Freelancer Payment - John Doe", amount: -1200.00, type: "expense", status: "Paid", date: "2024-07-25" },
@@ -23,6 +31,97 @@ const upcomingPayments = [
     { name: "Office Rent - August", amount: 2000.00, dueDate: "2024-08-05" },
     { name: "Figma Subscription", amount: 75.00, dueDate: "2024-08-10" },
 ];
+
+
+const CsvImportSchema = z.object({
+  csvFile: z.any().refine(file => file?.length == 1, 'A CSV file is required.'),
+});
+type CsvImportValues = z.infer<typeof CsvImportSchema>;
+type Transaction = typeof initialTransactions[0];
+
+const ImportTransactionsDialog = ({ onImport, children }: { onImport: (transactions: Transaction[]) => void, children: React.ReactNode }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const form = useForm<CsvImportValues>({ resolver: zodResolver(CsvImportSchema) });
+    const { toast } = useToast();
+
+    const handleFileParse = (file: File): Promise<Transaction[]> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const text = event.target?.result as string;
+                const rows = text.split('\n').slice(1); // remove header
+                const newTransactions: Transaction[] = rows.map((row, index) => {
+                    const columns = row.split(',');
+                    if (columns.length !== 5) {
+                        console.warn(`Skipping malformed row ${index + 2}: ${row}`);
+                        return null;
+                    }
+                    return {
+                        description: columns[0]?.trim(),
+                        amount: parseFloat(columns[1]?.trim()) || 0,
+                        type: columns[2]?.trim() as any,
+                        status: columns[3]?.trim(),
+                        date: columns[4]?.trim(),
+                    };
+                }).filter((t): t is Transaction => t !== null && t.description !== '');
+                resolve(newTransactions);
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsText(file);
+        });
+    }
+
+    const onSubmit: SubmitHandler<CsvImportValues> = async (data) => {
+        try {
+            const newTransactions = await handleFileParse(data.csvFile[0]);
+            onImport(newTransactions);
+            toast({ title: "Import Successful", description: `${newTransactions.length} transactions have been added.` });
+            setIsOpen(false);
+            form.reset();
+        } catch (error) {
+            toast({ title: "Import Failed", description: "Could not parse the CSV file. Please check the format.", variant: 'destructive' });
+        }
+    };
+    
+    const handleDownloadTemplate = () => {
+        const headers = ["description", "amount", "type (income/expense)", "status", "date (YYYY-MM-DD)"];
+        const csvContent = headers.join(",") + "\n";
+        const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "transaction_template.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Import Transactions from CSV</DialogTitle>
+                    <DialogDescription>
+                        Upload a CSV file to add multiple income/expense records at once.
+                    </DialogDescription>
+                </DialogHeader>
+                <Button variant="outline" onClick={handleDownloadTemplate}>Download Template</Button>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="csvFile" render={({ field }) => (
+                            <FormItem><FormLabel>CSV File</FormLabel><FormControl><Input type="file" accept=".csv" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Import Transactions</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 
 const getStatusBadge = (status: string) => {
     switch (status) {
@@ -86,17 +185,22 @@ const getNextIncomeTaxDueDate = (): { dueDate: Date, daysRemaining: number } => 
 
 export default function CfoDashboard() {
   const { settings } = useSettingsData();
+  const [transactions, setTransactions] = useState(initialTransactions);
 
-  const totalRevenue = 250450.00;
-  const totalExpenses = 120830.00;
+  const totalRevenue = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+  const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Math.abs(t.amount), 0);
   const netIncome = totalRevenue - totalExpenses;
   
   const vatPayable = settings.vat.enabled ? totalRevenue * settings.vat.rate : 0;
-  const corporateTaxPayable = netIncome * 0.15; // 15% corporate tax on net income
+  const corporateTaxPayable = netIncome > 0 ? netIncome * 0.15 : 0; // 15% corporate tax on net income
   
   const vatRatePercentage = (settings.vat.rate * 100).toFixed(1);
   const { dueDate: nextVatDueDate, daysRemaining: vatDaysRemaining } = getNextVatDueDate();
   const { dueDate: nextIncomeTaxDueDate, daysRemaining: incomeTaxDaysRemaining } = getNextIncomeTaxDueDate();
+
+  const handleImport = (newTransactions: Transaction[]) => {
+      setTransactions(prev => [...newTransactions, ...prev].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+  };
 
 
   const overviewStats = [
@@ -163,8 +267,10 @@ export default function CfoDashboard() {
                         <CardDescription>An overview of recent financial movements.</CardDescription>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Add Expense</Button>
-                        <Button size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Create Invoice</Button>
+                        <ImportTransactionsDialog onImport={handleImport}>
+                            <Button variant="outline" size="sm"><Upload className="mr-2 h-4 w-4" /> Import from CSV</Button>
+                        </ImportTransactionsDialog>
+                        <Button size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Add Manually</Button>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -189,7 +295,7 @@ export default function CfoDashboard() {
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">{tx.date}</TableCell>
-                                    <TableCell className={`text-right font-semibold ${tx.type === 'income' ? 'text-green-600' : 'text-destructive'}`}>
+                                    <TableCell className={`text-right font-semibold ${tx.amount > 0 ? 'text-green-600' : 'text-destructive'}`}>
                                         {tx.amount.toFixed(2)}
                                     </TableCell>
                                     <TableCell className="text-center">{getStatusBadge(tx.status)}</TableCell>
