@@ -1,6 +1,6 @@
 
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -81,5 +81,12 @@ export const initialServices: Service[] = [
     description: "Connect with certified audit offices and leverage AI for a preliminary analysis of your financial documents.",
     enabled: true,
     href: "/financial-audit",
+  },
+  {
+    icon: Lock,
+    title: "Ameen Digital Identity",
+    description: "Secure, password-free login using your WhatsApp account and other advanced authentication solutions.",
+    enabled: true,
+    href: "/ameen",
   },
 ];
