@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle, FileText, Bot, ListChecks, Calendar, Users, Milestone, PartyPopper } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const FormSchema = z.object({
   transcript: z.string().min(50, 'Transcript must be at least 50 characters.'),
