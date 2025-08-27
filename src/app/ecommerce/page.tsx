@@ -1,78 +1,183 @@
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ShoppingCart, Store, LineChart, Megaphone } from "lucide-react";
-import Link from "next/link";
+import { ArrowRight, Search, SlidersHorizontal, Star, Tag, Truck, Filter } from "lucide-react";
+import Image from 'next/image';
+import Link from 'next/link';
 
-const features = [
-    {
-        icon: Store,
-        title: "Store Setup & Design",
-        description: "We build beautiful, high-performance online stores on leading platforms, tailored to your brand and optimized for conversions.",
-    },
-    {
-        icon: Megaphone,
-        title: "Digital Marketing",
-        description: "Drive traffic and sales with targeted marketing campaigns, including SEO, social media marketing, and email automation.",
-    },
-    {
-        icon: LineChart,
-        title: "Analytics & Insights",
-        description: "Leverage data to understand customer behavior, track key metrics, and make informed decisions to grow your business.",
-    },
-    {
-        icon: ShoppingCart,
-        title: "Operations & Logistics",
-        description: "Streamline your order fulfillment, inventory management, and payment processing with our integrated solutions.",
-    }
+const categories = [
+    { name: "Electronics", icon: <SlidersHorizontal /> },
+    { name: "Apparel", icon: <SlidersHorizontal /> },
+    { name: "Home Goods", icon: <SlidersHorizontal /> },
+    { name: "Books", icon: <SlidersHorizontal /> },
+    { name: "Sports", icon: <SlidersHorizontal /> },
+    { name: "Beauty", icon: <SlidersHorizontal /> },
 ];
+
+const products = [
+    {
+        id: 1,
+        name: "Wireless Headphones",
+        category: "Electronics",
+        price: 129.99,
+        image: "https://picsum.photos/400/400?random=1",
+        aiHint: "headphones product",
+        rating: 4.5,
+    },
+    {
+        id: 2,
+        name: "Modern Coffee Table",
+        category: "Home Goods",
+        price: 249.00,
+        image: "https://picsum.photos/400/400?random=2",
+        aiHint: "coffee table",
+        rating: 4.8,
+    },
+    {
+        id: 3,
+        name: "Performance Running Shoes",
+        category: "Sports",
+        price: 89.95,
+        image: "https://picsum.photos/400/400?random=3",
+        aiHint: "running shoes",
+        rating: 4.7,
+    },
+    {
+        id: 4,
+        name: "Organic Cotton T-Shirt",
+        category: "Apparel",
+        price: 24.50,
+        image: "https://picsum.photos/400/400?random=4",
+        aiHint: "cotton t-shirt",
+        rating: 4.9,
+    },
+     {
+        id: 5,
+        name: "Smartwatch Series 8",
+        category: "Electronics",
+        price: 399.00,
+        image: "https://picsum.photos/400/400?random=5",
+        aiHint: "smartwatch product",
+        rating: 4.9,
+    },
+    {
+        id: 6,
+        name: "Leather Backpack",
+        category: "Apparel",
+        price: 150.00,
+        image: "https://picsum.photos/400/400?random=6",
+        aiHint: "leather backpack",
+        rating: 4.6,
+    },
+    {
+        id: 7,
+        name: "Non-stick Cookware Set",
+        category: "Home Goods",
+        price: 199.99,
+        image: "https://picsum.photos/400/400?random=7",
+        aiHint: "cookware set",
+        rating: 4.7,
+    },
+    {
+        id: 8,
+        name: "The Alchemist",
+        category: "Books",
+        price: 12.99,
+        image: "https://picsum.photos/400/400?random=8",
+        aiHint: "book cover",
+        rating: 4.8,
+    },
+];
+
+const ProductCard = ({ product }: { product: typeof products[0] }) => (
+    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <CardHeader className="p-0">
+            <div className="relative h-64 w-full">
+                <Image 
+                    src={product.image} 
+                    alt={product.name} 
+                    fill 
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    data-ai-hint={product.aiHint}
+                />
+            </div>
+        </CardHeader>
+        <CardContent className="p-4">
+            <p className="text-sm text-muted-foreground">{product.category}</p>
+            <h3 className="font-semibold text-lg truncate mt-1">{product.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+                <p className="font-bold text-xl text-primary">OMR {product.price.toFixed(2)}</p>
+                <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                    <span className="text-sm font-medium">{product.rating}</span>
+                </div>
+            </div>
+        </CardContent>
+        <CardFooter className="p-4 pt-0">
+            <Button className="w-full">Add to Cart</Button>
+        </CardFooter>
+    </Card>
+);
 
 export default function EcommercePage() {
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
+        <section className="bg-muted/30 border-b">
+            <div className="container mx-auto px-4 py-16 text-center">
+                <h1 className="text-4xl md:text-6xl font-bold text-primary">Nova Commerce</h1>
+                <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Your destination for quality products and seamless shopping. Explore our curated collections.
+                </p>
+                <div className="mt-8 max-w-xl mx-auto">
+                    <div className="relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <input
+                            type="search"
+                            placeholder="Search for products..."
+                            className="w-full pl-12 pr-4 py-3 rounded-full border bg-background"
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
       <div className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto text-center">
-            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                <ShoppingCart className="w-10 h-10 text-primary" />
-            </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">E-commerce Solutions</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            From initial setup to scaling your online business, we provide end-to-end e-commerce services to help you succeed in the digital marketplace.
-          </p>
-        </div>
-
-        <div className="max-w-5xl mx-auto mt-16">
-            <div className="grid md:grid-cols-2 gap-8">
-                {features.map((feature) => (
-                    <Card key={feature.title} className="bg-card border-l-4 border-primary/50">
-                        <CardHeader className="flex flex-row items-center gap-4">
-                            <div className="bg-primary/10 p-3 rounded-full">
-                                <feature.icon className="w-6 h-6 text-primary" />
+        <div className="grid lg:grid-cols-4 gap-8">
+            <aside className="lg:col-span-1">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Filter className="h-5 w-5" /> Filters</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div>
+                            <h3 className="font-semibold mb-2">Categories</h3>
+                            <div className="space-y-2">
+                                {categories.map(cat => (
+                                    <Link href="#" key={cat.name} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                                        {cat.name}
+                                    </Link>
+                                ))}
                             </div>
-                            <CardTitle>{feature.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{feature.description}</p>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        </div>
-
-        <div className="max-w-3xl mx-auto mt-20 text-center">
-            <Card className="bg-muted/50">
-                <CardHeader>
-                    <CardTitle className="text-2xl">Ready to Start Selling Online?</CardTitle>
-                    <CardDescription>
-                        Let's build your e-commerce empire together. Submit your project details and our team will get in touch with a customized plan.
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter className="justify-center">
-                    <Button asChild size="lg">
-                        <Link href="/submit-work">Submit a Work Order</Link>
-                    </Button>
-                </CardFooter>
-            </Card>
+                        </div>
+                         <div>
+                            <h3 className="font-semibold mb-2">Price Range</h3>
+                            {/* Placeholder for price range slider */}
+                            <div className="h-10 bg-muted rounded-md flex items-center justify-center text-sm text-muted-foreground">
+                                Price Slider
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </aside>
+            <main className="lg:col-span-3">
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {products.map(product => <ProductCard key={product.id} product={product} />)}
+                </div>
+                 <div className="mt-12 text-center">
+                    <Button variant="outline">Load More Products</Button>
+                </div>
+            </main>
         </div>
       </div>
     </div>
