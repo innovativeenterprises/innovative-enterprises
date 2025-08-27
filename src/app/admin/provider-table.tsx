@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Link as LinkIcon } from "lucide-react";
 import Link from 'next/link';
 import { store } from "@/lib/global-store";
+import { useRouter } from "next/navigation";
 
 // This hook now connects to the global store.
 export const useProvidersData = () => {
@@ -153,6 +154,7 @@ export default function ProviderTable({
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
+    const router = useRouter();
 
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);
@@ -219,15 +221,16 @@ export default function ProviderTable({
                     </TableHeader>
                     <TableBody>
                         {providers.map(p => (
-                            <TableRow key={p.id} onClick={() => handleOpenDialog(p)} className="cursor-pointer">
+                            <TableRow key={p.id} onClick={() => router.push(`/admin/people/${p.id}`)} className="cursor-pointer">
                                 <TableCell className="font-medium">
                                     {p.name}
                                     <p className="text-sm text-muted-foreground">{p.email}</p>
                                 </TableCell>
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                                <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                                    <div className="flex justify-end gap-1">
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)}><Edit className="h-4 w-4" /></Button>
                                         {p.portfolio && (
                                             <Button asChild variant="ghost" size="icon">
                                                 <a href={p.portfolio} target="_blank" rel="noopener noreferrer"><LinkIcon /></a>

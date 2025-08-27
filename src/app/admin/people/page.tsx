@@ -4,8 +4,6 @@
 import StaffTable, { useStaffData } from "../staff-table";
 import ProviderTable, { useProvidersData } from "../provider-table";
 import ClientTable, { useClientsData } from "../client-table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 
 export default function AdminPeoplePage() {
@@ -22,22 +20,9 @@ export default function AdminPeoplePage() {
             </p>
         </div>
 
-        <Tabs defaultValue="staff">
-            <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="staff">Staff Management</TabsTrigger>
-                <TabsTrigger value="providers">Provider Network</TabsTrigger>
-                <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
-            </TabsList>
-            <TabsContent value="staff">
-                <StaffTable {...staffData} />
-            </TabsContent>
-            <TabsContent value="providers">
-                <ProviderTable {...providerData} />
-            </TabsContent>
-            <TabsContent value="clients">
-                 <ClientTable {...clientData} />
-            </TabsContent>
-        </Tabs>
+        <StaffTable {...staffData} />
+        <ProviderTable {...providerData} />
+        <ClientTable {...clientData} />
     </div>
   );
 }
