@@ -45,7 +45,11 @@ const ProductSchema = z.object({
   aiHint: z.string().min(2, "AI hint is required"),
   enabled: z.boolean(),
   stage: z.string().min(1, "Stage is required"),
+  price: z.coerce.number().min(0, "Price is required."),
+  rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5."),
+  category: z.string().min(1, "Category is required."),
 });
+
 type ProductValues = z.infer<typeof ProductSchema>;
 
 // This hook now connects to the global store.
@@ -76,7 +80,7 @@ const AddEditProductDialog = ({
     children 
 }: { 
     product?: Product, 
-    onSave: (values: ProductValues, id?: string) => void,
+    onSave: (values: ProductValues, id?: number) => void,
     stages: ProjectStage[],
     children: React.ReactNode 
 }) => {
@@ -89,8 +93,11 @@ const AddEditProductDialog = ({
             aiHint: product?.aiHint || "",
             enabled: product?.enabled ?? true,
             stage: product?.stage || 'Idea Phase',
+            price: product?.price || 0,
+            rating: product?.rating || 0,
+            category: product?.category || 'Uncategorized',
             imageFile: undefined,
-            imageUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') ? product.image : "",
+            imageUrl: (product?.image.startsWith('http') || product?.image.startsWith('data:')) ? product.image : "",
             useUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') || false,
         },
     });
@@ -104,6 +111,9 @@ const AddEditProductDialog = ({
                 aiHint: product?.aiHint || "",
                 enabled: product?.enabled ?? true,
                 stage: product?.stage || 'Idea Phase',
+                price: product?.price || 0,
+                rating: product?.rating || 0,
+                category: product?.category || 'Uncategorized',
                 imageFile: undefined,
                 imageUrl: isUrl ? product.image : "",
                 useUrl: isUrl,
@@ -131,12 +141,8 @@ const AddEditProductDialog = ({
         }
 
         onSave({ 
-            name: data.name, 
-            description: data.description, 
-            aiHint: data.aiHint, 
-            image: imageValue, 
-            enabled: data.enabled,
-            stage: data.stage,
+            ...data,
+            image: imageValue,
         }, product?.id);
         form.reset();
         setIsOpen(false);
@@ -161,18 +167,35 @@ const AddEditProductDialog = ({
                             <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea rows={4} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                         
-                        <FormField control={form.control} name="stage" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Project Stage</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                    <SelectContent>
-                                        {stages.map(stage => <SelectItem key={stage.id} value={stage.name}>{stage.name}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="stage" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Project Stage</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                        <SelectContent>
+                                            {stages.map(stage => <SelectItem key={stage.id} value={stage.name}>{stage.name}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                            <FormField control={form.control} name="category" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>E-commerce Category</FormLabel>
+                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="price" render={({ field }) => (
+                                <FormItem><FormLabel>Price (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField control={form.control} name="rating" render={({ field }) => (
+                                <FormItem><FormLabel>Rating (0-5)</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
 
                         <FormField control={form.control} name="useUrl" render={({ field }) => (
                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
@@ -217,7 +240,7 @@ const AddEditProductDialog = ({
     )
 }
 
-const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleToggle }: { product: Product, stages: ProjectStage[], handleSave: (values: ProductValues, id?: string) => void, handleDelete: (id: string) => void, handleToggle: (id: string) => void }) => {
+const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleToggle }: { product: Product, stages: ProjectStage[], handleSave: (values: ProductValues, id?: number) => void, handleDelete: (id: number) => void, handleToggle: (id: number) => void }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: product.id });
 
     const style = {
@@ -240,7 +263,7 @@ const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleT
                 </AddEditProductDialog>
             </TableCell>
             <TableCell className="font-medium">{product.name}</TableCell>
-            <TableCell><Badge variant="outline">{product.stage}</Badge></TableCell>
+            <TableCell><Badge variant="outline">{product.stage || 'N/A'}</Badge></TableCell>
             <TableCell className="text-center">
                 <div className="flex flex-col items-center gap-1">
                     <Switch
@@ -293,21 +316,21 @@ export default function ProductTable({ products, setProducts }: { products: Prod
         })
     );
 
-    const handleSave = (values: ProductValues, id?: string) => {
+    const handleSave = (values: ProductValues, id?: number) => {
         if (id) {
             setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
             toast({ title: "Product updated successfully." });
         } else {
             const newProduct: Product = {
                 ...values,
-                id: `prod_${(Math.random() + 1).toString(36).substring(7)}`,
+                id: Math.max(...products.map(p => p.id), 0) + 1,
             };
             setProducts(prev => [newProduct, ...prev]);
             toast({ title: "Product added successfully." });
         }
     };
     
-    const handleToggle = (id: string) => {
+    const handleToggle = (id: number) => {
         setProducts(
             products.map(p =>
                 p.id === id ? { ...p, enabled: !p.enabled } : p
@@ -316,7 +339,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
         toast({ title: "Product status updated." });
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = (id: number) => {
         setProducts(prev => prev.filter(p => p.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
@@ -338,7 +361,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                     <CardTitle>Digital Product Management</CardTitle>
-                    <CardDescription>Manage the products showcased on your homepage.</CardDescription>
+                    <CardDescription>Manage the products showcased on your homepage and e-commerce store.</CardDescription>
                 </div>
                 <AddEditProductDialog onSave={handleSave} stages={stages}>
                     <Button><PlusCircle /> Add Product</Button>
@@ -358,7 +381,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                             </TableRow>
                         </TableHeader>
                         {isMounted ? (
-                            <SortableContext items={products} strategy={verticalListSortingStrategy}>
+                            <SortableContext items={products.map(p => p.id)} strategy={verticalListSortingStrategy}>
                                 <TableBody>
                                     {products.map(p => (
                                         <SortableProductRow
