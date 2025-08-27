@@ -24,6 +24,7 @@ const AnswerQuestionOutputSchema = z.object({
     email: z.string().email().optional().describe('Email address for the specialist.'),
     whatsapp: z.string().optional().describe('WhatsApp contact number for the specialist.'),
   }).optional(),
+  suggestedReplies: z.array(z.string()).optional().describe("A list of short, relevant follow-up questions the user might ask."),
 });
 export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
@@ -56,6 +57,7 @@ const routeToSpecialistTool = ai.defineTool(
                 email: z.string().email().optional(),
                 whatsapp: z.string().optional(),
             }).optional(),
+            suggestedReplies: z.array(z.string()).optional(),
         })
     },
     async ({ department }) => {
@@ -71,6 +73,7 @@ const routeToSpecialistTool = ai.defineTool(
             return {
                 isAvailable: true,
                 response: `I've connected you with ${specialist.name}, our ${department} specialist. They will answer your question now.`,
+                suggestedReplies: ["What are your office hours?", "Tell me about your products."],
             };
         } else {
             return {
@@ -80,7 +83,8 @@ const routeToSpecialistTool = ai.defineTool(
                 contactOptions: {
                     email: specialist.email,
                     whatsapp: specialist.whatsapp,
-                }
+                },
+                suggestedReplies: ["Book a meeting", `Email ${specialist.name}`, `WhatsApp ${specialist.name}`],
             };
         }
     }
@@ -90,7 +94,7 @@ const routeToSpecialistTool = ai.defineTool(
 const prompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
   input: {schema: AnswerQuestionInputSchema},
-  output: {schema: z.object({ answer: z.string() })},
+  output: {schema: AnswerQuestionOutputSchema},
   tools: [routeToSpecialistTool],
   prompt: `You are Aida, a master AI assistant for Innovative Enterprises. Your primary job is to understand a user's query and decide the best course of action.
 
@@ -99,6 +103,7 @@ const prompt = ai.definePrompt({
 2.  **Check for Specialist Topics:** If the query is about complex legal, marketing, HR, or sales topics, you MUST use the \`routeToSpecialist\` tool.
 3.  **Answer General Questions:** If the query is a general question about the company, its products (PANOSPACE, ameen, etc.), services, or its status as an Omani SME, you should answer it directly yourself using the context below. Do NOT use a tool for these general questions.
 4.  **Booking Meetings:** If the user explicitly asks to book a meeting, schedule a call, or a similar request, use the \`routeToSpecialist\` tool and set the department to 'sales' to handle the booking.
+5.  **Suggest Follow-up Actions:** After every response, you MUST provide 2-3 short, relevant follow-up questions or actions in the \`suggestedReplies\` field that the user might likely ask next. For example, if answering about services, you could suggest "Tell me more about PANOSPACE", "What are your business hours?", or "How can I become a partner?".
 
 **Context for General Questions:**
 Innovative Enterprises is an Omani SME focused on emerging technology and digital transformation solutions. We offer services in areas like cloud computing, AI, and cybersecurity. Our products include PANOSPACE, ameen, APPI, KHIDMAAI, and VMALL. As an Omani SME, we provide unique benefits to government partners seeking to support local businesses and innovation.
@@ -120,31 +125,24 @@ const answerQuestionFlow = ai.defineFlow(
         const toolResponse = await toolRequest.run();
         const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
 
-        if (toolOutput.isAvailable) {
-            // The specialist is "available". We'll just provide their introductory response.
-            // In a real app, we might chain this to another AI call with that specialist's persona.
-            return {
-                answer: toolOutput.response,
-            };
-        } else {
-            // The specialist is "unavailable". Return their response and all contact options.
-            return {
-                answer: toolOutput.response,
-                meetingUrl: toolOutput.meetingUrl,
-                contactOptions: toolOutput.contactOptions,
-            };
-        }
+        return {
+            answer: toolOutput.response,
+            meetingUrl: toolOutput.meetingUrl,
+            contactOptions: toolOutput.contactOptions,
+            suggestedReplies: toolOutput.suggestedReplies,
+        };
     }
 
     // If no tool was called, or it was a different tool, return the direct text response.
-    const directAnswer = response.text;
+    const directAnswer = response.output;
     if (directAnswer) {
-      return { answer: directAnswer };
+      return directAnswer;
     }
     
     // Fallback
     return {
         answer: "I'm sorry, I'm not sure how to handle that request. Could you please rephrase it?",
+        suggestedReplies: ["What services do you offer?", "Who are your clients?"],
     };
   }
 );

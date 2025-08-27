@@ -28,6 +28,7 @@ interface Message {
       email?: string;
       whatsapp?: string;
   };
+  suggestedReplies?: string[];
 }
 
 const FormSchema = z.object({
@@ -56,6 +57,7 @@ export const ChatComponent = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
 
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -75,7 +77,7 @@ export const ChatComponent = ({
   }, []);
 
   useEffect(() => {
-    setMessages([{ role: 'bot', content: welcomeMessage }]);
+    setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
 
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -132,22 +134,25 @@ export const ChatComponent = ({
       }
   }
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const submitMessage = async (message: string) => {
     stopAudio();
     setIsLoading(true);
-    const userMessage: Message = { role: 'user', content: data.message };
+    setShowSuggestions(false);
+    const userMessage: Message = { role: 'user', content: message };
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      const result = await aiFlow({ message: data.message });
+      const result = await aiFlow({ message: message });
       const botMessage: Message = { 
           role: 'bot', 
           content: result.answer || result.response,
           meetingUrl: result.meetingUrl,
           contactOptions: result.contactOptions,
           imageUrl: result.imageUrl,
+          suggestedReplies: result.suggestedReplies,
       };
       setMessages(prev => [...prev, botMessage]);
+      setShowSuggestions(true);
       form.reset();
 
       if (settings.voiceInteractionEnabled && botMessage.content) {
@@ -167,6 +172,14 @@ export const ChatComponent = ({
     }
   };
 
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    submitMessage(data.message);
+  };
+  
+  const handleSuggestionClick = (suggestion: string) => {
+    submitMessage(suggestion);
+  }
+
   return (
     <Card className="w-full h-full flex flex-col">
         <CardHeader className="flex flex-row items-center gap-4">
@@ -183,32 +196,43 @@ export const ChatComponent = ({
             <ScrollArea className="h-full p-4">
                 <div className="space-y-6">
                     {messages.map((msg, index) => (
-                        <div key={index} className={cn("flex items-start gap-3", msg.role === 'user' ? 'justify-end' : '')}>
-                             {msg.role === 'bot' && <Avatar className="h-8 w-8"><AvatarFallback><AgentIcon className="h-5 w-5"/></AvatarFallback></Avatar>}
-                            <div className={cn("max-w-xs md:max-w-md rounded-xl px-4 py-3", 
-                                msg.role === 'user' 
-                                    ? 'bg-primary text-primary-foreground' 
-                                    : 'bg-muted'
-                            )}>
-                                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                                {msg.meetingUrl && (
-                                    <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
-                                        <Link href={msg.meetingUrl} target="_blank">Book a Meeting</Link>
-                                    </Button>
-                                )}
-                                {msg.contactOptions && (
-                                    <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex gap-2">
-                                        {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${msg.contactOptions.email}`}>Email</a></Button>}
-                                        {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${msg.contactOptions.whatsapp}`} target="_blank">WhatsApp</a></Button>}
-                                    </div>
-                                )}
-                                {msg.imageUrl && (
-                                     <div className="mt-3 relative aspect-video w-full overflow-hidden rounded-md border">
-                                        <img src={msg.imageUrl} alt="Generated for social media post" className="object-cover w-full h-full"/>
-                                    </div>
-                                )}
+                        <div key={index}>
+                            <div className={cn("flex items-start gap-3", msg.role === 'user' ? 'justify-end' : '')}>
+                                 {msg.role === 'bot' && <Avatar className="h-8 w-8"><AvatarFallback><AgentIcon className="h-5 w-5"/></AvatarFallback></Avatar>}
+                                <div className={cn("max-w-xs md:max-w-md rounded-xl px-4 py-3", 
+                                    msg.role === 'user' 
+                                        ? 'bg-primary text-primary-foreground' 
+                                        : 'bg-muted'
+                                )}>
+                                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                                    {msg.meetingUrl && (
+                                        <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
+                                            <Link href={msg.meetingUrl} target="_blank">Book a Meeting</Link>
+                                        </Button>
+                                    )}
+                                    {msg.contactOptions && (
+                                        <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex gap-2">
+                                            {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${msg.contactOptions.email}`}>Email</a></Button>}
+                                            {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${msg.contactOptions.whatsapp}`} target="_blank">WhatsApp</a></Button>}
+                                        </div>
+                                    )}
+                                    {msg.imageUrl && (
+                                         <div className="mt-3 relative aspect-video w-full overflow-hidden rounded-md border">
+                                            <img src={msg.imageUrl} alt="Generated for social media post" className="object-cover w-full h-full"/>
+                                        </div>
+                                    )}
+                                </div>
+                                {msg.role === 'user' && <Avatar className="h-8 w-8"><AvatarFallback><User className="h-5 w-5"/></AvatarFallback></Avatar>}
                             </div>
-                            {msg.role === 'user' && <Avatar className="h-8 w-8"><AvatarFallback><User className="h-5 w-5"/></AvatarFallback></Avatar>}
+                            {msg.role === 'bot' && msg.suggestedReplies && msg.suggestedReplies.length > 0 && showSuggestions && index === messages.length - 1 && (
+                                <div className="flex flex-wrap gap-2 mt-3 pl-12">
+                                    {msg.suggestedReplies.map((reply, i) => (
+                                        <Button key={i} variant="outline" size="sm" onClick={() => handleSuggestionClick(reply)}>
+                                            {reply}
+                                        </Button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     ))}
                     {isLoading && (
@@ -232,7 +256,7 @@ export const ChatComponent = ({
                     {isPlaying ? (
                         <Button type="button" size="icon" variant="destructive" onClick={stopAudio}><Square className="h-5 w-5"/></Button>
                     ): (
-                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(messages[messages.length-1].content)} disabled={isLoading || messages.length === 0 || messages[messages.length-1].role !== 'bot'}>
+                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(messages[messages.length-1].content)} disabled={isLoading || messages.length === 0 || messages[messages.length-1]?.role !== 'bot'}>
                             <Volume2 className="h-5 w-5"/>
                         </Button>
                     )}
