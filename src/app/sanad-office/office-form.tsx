@@ -57,13 +57,15 @@ type PageState = 'form' | 'payment' | 'submitting' | 'submitted';
 
 export default function OfficeForm() {
   const { settings } = useSettingsData();
-  const { sanadOffice: sanadSettings } = settings;
+  const { sanadOffice: sanadSettings, vat } = settings;
   
   const [pageState, setPageState] = useState<PageState>('form');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [vatAmount, setVatAmount] = useState(0);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -89,16 +91,21 @@ export default function OfficeForm() {
   const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
 
   useEffect(() => {
-    let price = 0;
+    let currentSubtotal = 0;
     if (watchSubscriptionTier === 'lifetime') {
-        price = sanadSettings.lifetimeFee;
+        currentSubtotal = sanadSettings.lifetimeFee;
     } else {
         const subscriptionFee = watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
         const discountedSubscription = subscriptionFee * (1 - sanadSettings.firstTimeDiscountPercentage);
-        price = sanadSettings.registrationFee + discountedSubscription;
+        currentSubtotal = sanadSettings.registrationFee + discountedSubscription;
     }
-    setTotalPrice(price);
-  }, [watchSubscriptionTier, sanadSettings]);
+    setSubtotal(currentSubtotal);
+    
+    const currentVatAmount = vat.enabled ? currentSubtotal * vat.rate : 0;
+    setVatAmount(currentVatAmount);
+
+    setTotalPrice(currentSubtotal + currentVatAmount);
+  }, [watchSubscriptionTier, sanadSettings, vat]);
   
   const handleCrAnalysis = async () => {
     const crFile = form.getValues('crDocument');
@@ -403,6 +410,9 @@ export default function OfficeForm() {
                                 {watchSubscriptionTier === 'yearly' && <div className="flex justify-between"><span>Yearly Subscription:</span><span>OMR {sanadSettings.yearlyFee.toFixed(2)}</span></div>}
                                 {watchSubscriptionTier !== 'lifetime' && <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>First-time Discount ({sanadSettings.firstTimeDiscountPercentage * 100}%):</span><span>- OMR {( (watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee) * sanadSettings.firstTimeDiscountPercentage).toFixed(2)}</span></div>}
                                 <hr className="my-2 border-dashed" />
+                                <div className="flex justify-between"><span>Subtotal:</span><span>OMR {subtotal.toFixed(2)}</span></div>
+                                {vat.enabled && <div className="flex justify-between"><span>VAT ({vat.rate * 100}%):</span><span>OMR {vatAmount.toFixed(2)}</span></div>}
+                                <hr className="my-2" />
                                 <div className="flex justify-between font-bold text-lg"><span>Total Due Today:</span><span className="text-primary">OMR {totalPrice.toFixed(2)}</span></div>
                             </CardContent>
                         </Card>
