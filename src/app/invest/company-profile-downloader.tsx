@@ -4,7 +4,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useStaffData } from "@/app/admin/staff-table";
 import { useServicesData } from "@/app/admin/service-table";
-import { useProductsData } from "@/app/admin/product-table";
+import { initialProducts } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Download, Lightbulb, Loader2, Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -123,14 +123,15 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => {
 export default function CompanyProfileDownloader() {
     const { leadership } = useStaffData();
     const { services } = useServicesData();
-    const { products } = useProductsData();
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
 
     const enabledServices = services.filter(s => s.enabled);
-    const enabledProducts = products.filter(p => p.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
+    // Use the initialProducts directly to avoid hydration issues.
+    // This data is static and consistent on both server and client.
+    const products = initialProducts.filter(p => p.enabled);
 
 
     const handleDownload = async () => {
@@ -187,7 +188,7 @@ export default function CompanyProfileDownloader() {
                     innerRef={profileRef}
                     leadership={enabledLeadership}
                     services={enabledServices}
-                    products={enabledProducts}
+                    products={products}
                 />
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
