@@ -65,24 +65,49 @@ const getNextVatDueDate = (): { dueDate: Date, daysRemaining: number } => {
     return { dueDate: nextDueDate, daysRemaining };
 };
 
+const getNextIncomeTaxDueDate = (): { dueDate: Date, daysRemaining: number } => {
+    const now = new Date();
+    let year = now.getFullYear();
+    
+    // The deadline is April 30th of the following year for the current tax year.
+    let dueDate = new Date(year, 3, 30); // April 30 of current year
+
+    if (now > dueDate) {
+        // If we are past April 30th, the next deadline is next year.
+        dueDate = new Date(year + 1, 3, 30);
+    }
+    
+    const timeDiff = dueDate.getTime() - now.getTime();
+    const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    return { dueDate, daysRemaining };
+};
+
 
 export default function CfoDashboard() {
   const { settings } = useSettingsData();
 
   const totalRevenue = 250450.00;
+  const totalExpenses = 120830.00;
+  const netIncome = totalRevenue - totalExpenses;
+  
   const vatPayable = settings.vat.enabled ? totalRevenue * settings.vat.rate : 0;
+  const corporateTaxPayable = netIncome * 0.15; // 15% corporate tax on net income
+  
   const vatRatePercentage = (settings.vat.rate * 100).toFixed(1);
   const { dueDate: nextVatDueDate, daysRemaining: vatDaysRemaining } = getNextVatDueDate();
+  const { dueDate: nextIncomeTaxDueDate, daysRemaining: incomeTaxDaysRemaining } = getNextIncomeTaxDueDate();
+
 
   const overviewStats = [
     { title: "Total Revenue", value: `OMR ${totalRevenue.toFixed(2)}`, change: "+20.1% from last month", icon: DollarSign },
-    { title: "Total Expenses", value: "OMR 120,830.00", change: "+15.2% from last month", icon: CreditCard },
-    { title: "Net Income", value: "OMR 129,620.00", change: "+25.5% from last month", icon: DollarSign },
+    { title: "Total Expenses", value: `OMR ${totalExpenses.toFixed(2)}`, change: "+15.2% from last month", icon: CreditCard },
+    { title: "Net Income", value: `OMR ${netIncome.toFixed(2)}`, change: "+25.5% from last month", icon: DollarSign },
     { title: "Active Subscriptions", value: "+OMR 5,230", change: "22 active accounts", icon: Users },
   ];
 
   if (settings.vat.enabled) {
-      overviewStats.splice(3, 0, {
+      overviewStats.push({
           title: `VAT Payable (${vatRatePercentage}%)`,
           value: `OMR ${vatPayable.toFixed(2)}`,
           change: "on this month's revenue",
@@ -96,13 +121,27 @@ export default function CfoDashboard() {
       });
   }
 
+  // Add Corporate Tax stats
+   overviewStats.push({
+      title: `Estimated Corp. Tax (15%)`,
+      value: `OMR ${corporateTaxPayable.toFixed(2)}`,
+      change: "on current net income",
+      icon: ReceiptText
+  });
+   overviewStats.push({
+      title: "Corp. Tax Filing Due",
+      value: `${incomeTaxDaysRemaining} days`,
+      change: `Next deadline: ${nextIncomeTaxDueDate.toLocaleDateString()}`,
+      icon: CalendarCheck
+  });
+
 
   return (
     <div className="space-y-8">
         {/* Overview Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {overviewStats.map((stat, index) => (
-                <Card key={index} className="xl:col-span-1">
+                <Card key={index}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
                         <stat.icon className="h-4 w-4 text-muted-foreground" />
