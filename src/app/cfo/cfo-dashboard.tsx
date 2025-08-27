@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 const initialTransactions = [
     { description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28", proof: "doc_123.pdf" },
@@ -187,6 +188,7 @@ const getNextIncomeTaxDueDate = (): { dueDate: Date, daysRemaining: number } => 
 export default function CfoDashboard() {
   const { settings } = useSettingsData();
   const [transactions, setTransactions] = useState(initialTransactions);
+  const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
 
   const totalRevenue = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
   const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Math.abs(t.amount), 0);
@@ -202,6 +204,11 @@ export default function CfoDashboard() {
   const handleImport = (newTransactions: Transaction[]) => {
       setTransactions(prev => [...newTransactions, ...prev].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   };
+  
+  const filteredTransactions = transactions.filter(t => {
+      if (filter === 'all') return true;
+      return t.type === filter;
+  });
 
 
   const overviewStats = [
@@ -262,19 +269,24 @@ export default function CfoDashboard() {
         <div className="grid lg:grid-cols-3 gap-8">
             {/* Recent Transactions */}
             <Card className="lg:col-span-2">
-                <CardHeader className="flex flex-row items-center justify-between">
+                <CardHeader className="flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
                         <CardTitle>Recent Transactions</CardTitle>
                         <CardDescription>An overview of recent financial movements.</CardDescription>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                         <ImportTransactionsDialog onImport={handleImport}>
-                            <Button variant="outline" size="sm"><Upload className="mr-2 h-4 w-4" /> Import Transactions from CSV</Button>
+                            <Button variant="outline" size="sm" className="w-full"><Upload className="mr-2 h-4 w-4" /> Import Transactions</Button>
                         </ImportTransactionsDialog>
-                        <Button size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Add Manually</Button>
+                        <Button size="sm" className="w-full"><PlusCircle className="mr-2 h-4 w-4" /> Add Manually</Button>
                     </div>
                 </CardHeader>
                 <CardContent>
+                    <div className="flex gap-2 mb-4">
+                        <Button variant={filter === 'all' ? 'default' : 'outline'} onClick={() => setFilter('all')}>All</Button>
+                        <Button variant={filter === 'income' ? 'default' : 'outline'} onClick={() => setFilter('income')}>Income</Button>
+                        <Button variant={filter === 'expense' ? 'default' : 'outline'} onClick={() => setFilter('expense')}>Expenses</Button>
+                    </div>
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -286,11 +298,11 @@ export default function CfoDashboard() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {transactions.map((tx, index) => (
+                            {filteredTransactions.map((tx, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
                                         <div className="flex items-center gap-2">
-                                            <div className={`p-1 rounded-full ${tx.type === 'income' ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
+                                            <div className={cn("p-1 rounded-full", tx.type === 'income' ? 'bg-green-500/20' : 'bg-red-500/20')}>
                                                 {tx.type === 'income' ? <ArrowDownLeft className="h-4 w-4 text-green-600" /> : <ArrowUpRight className="h-4 w-4 text-red-600" />}
                                             </div>
                                             <span className="font-medium">{tx.description}</span>
@@ -310,7 +322,7 @@ export default function CfoDashboard() {
                                             </Button>
                                         )}
                                     </TableCell>
-                                    <TableCell className={`text-right font-semibold ${tx.amount > 0 ? 'text-green-600' : 'text-destructive'}`}>
+                                    <TableCell className={cn("text-right font-semibold", tx.amount > 0 ? 'text-green-600' : 'text-destructive')}>
                                         {tx.amount.toFixed(2)}
                                     </TableCell>
                                     <TableCell className="text-center">{getStatusBadge(tx.status)}</TableCell>
