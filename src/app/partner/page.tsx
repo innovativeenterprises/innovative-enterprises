@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -16,7 +16,7 @@ import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.sc
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
-import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket, BadgePercent, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -679,9 +679,9 @@ export default function PartnerPage() {
                             </FormControl>
                             <div className="space-y-1 leading-none">
                                 <FormLabel>Information Validity Undertaking</FormLabel>
-                                <FormDescription>
+                                <p className="text-sm text-muted-foreground">
                                     I hereby declare that all the information provided is true and correct to the best of my knowledge.
-                                </FormDescription>
+                                </p>
                                 <FormMessage />
                             </div>
                             </FormItem>
