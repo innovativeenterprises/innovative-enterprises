@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,211 +10,219 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Wand2, Bot, Users, Target, Shield, ListChecks, Milestone } from 'lucide-react';
+import { Loader2, Sparkles, Wand2, Bot, Users, Target, Shield, ListChecks, Milestone, GripVertical } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import type { ProjectInceptionInput, ProjectInceptionOutput } from '@/ai/flows/project-inception.schema';
 import { generateImage } from '@/ai/flows/image-generator';
 import type { Product } from '@/lib/products';
 import { useProductsData } from '../product-table';
+import { useProjectStagesData } from '../stage-table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import Image from 'next/image';
+import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type DragOverEvent, type DragStartEvent } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
-const Section = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
-    <div>
-        <h3 className="font-semibold text-lg flex items-center gap-2 mb-2">
-            {icon}
-            {title}
-        </h3>
-        <div className="text-sm text-muted-foreground space-y-2">{children}</div>
-    </div>
-);
 
-const PlanDisplay = ({ plan, onCreateProject, isCreating }: { plan: ProjectInceptionOutput, onCreateProject: (plan: ProjectInceptionOutput) => void, isCreating: boolean }) => (
-    <Card>
-        <CardHeader>
-            <CardTitle>{plan.projectName}</CardTitle>
-            <CardDescription>{plan.summary}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-                <Section icon={<Target />} title="Target Audience">
-                    <p>{plan.targetAudience}</p>
-                </Section>
-                <Section icon={<Milestone />} title="Value Proposition">
-                    <p>{plan.valueProposition}</p>
-                </Section>
-            </div>
-             <Section icon={<ListChecks />} title="Core Features (MVP)">
-                <Accordion type="single" collapsible className="w-full">
-                    {plan.coreFeatures.map((feature, i) => (
-                        <AccordionItem value={`item-${i}`} key={i}>
-                            <AccordionTrigger className="font-medium text-sm text-foreground">{feature.title}</AccordionTrigger>
-                            <AccordionContent className="space-y-2 pl-2">
-                                <p className="text-muted-foreground">{feature.description}</p>
-                                <p className="text-xs font-semibold text-foreground">Acceptance Criteria: <span className="font-normal text-muted-foreground">{feature.acceptanceCriteria}</span></p>
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
-            </Section>
-            <div className="grid md:grid-cols-2 gap-6">
-                 <Section icon={<Shield />} title="Potential Risks">
-                    <div className="space-y-2">
-                        {plan.risks.map((risk, i) => {
-                            const likelihoodColor = risk.likelihood === 'High' ? 'bg-destructive/80' : risk.likelihood === 'Medium' ? 'bg-yellow-500 text-black' : 'bg-green-500';
-                            return (
-                                <div key={i} className="p-3 border rounded-md">
-                                    <div className="flex justify-between items-center">
-                                        <p className="font-semibold text-foreground text-sm">{risk.risk}</p>
-                                        <Badge variant="default" className={likelihoodColor}>{risk.likelihood}</Badge>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground mt-1"><strong>Mitigation:</strong> {risk.mitigation}</p>
-                                </div>
-                            )
-                        })}
+const ProductCard = ({ product }: { product: Product }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ 
+        id: product.id,
+        data: {
+            type: 'Product',
+            product,
+        }
+     });
+
+    const style = {
+        transition,
+        transform: CSS.Transform.toString(transform),
+    };
+
+    return (
+        <div ref={setNodeRef} style={style}>
+            <Card className="mb-4 group" >
+                <CardContent className="p-3">
+                    <div className="flex items-start gap-3">
+                        <Button variant="ghost" size="icon" className="cursor-grab h-8 w-8 -ml-2" {...attributes} {...listeners}>
+                            <GripVertical className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        <div className="relative h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
+                            <Image src={product.image} alt={product.name} fill className="object-cover"/>
+                        </div>
+                        <div className="flex-grow">
+                             <p className="font-semibold text-sm leading-tight group-hover:text-primary">{product.name}</p>
+                             <p className="text-xs text-muted-foreground truncate">{product.description}</p>
+                        </div>
                     </div>
-                </Section>
-                <Section icon={<Users />} title="Recommended Agents">
-                    <div className="flex flex-wrap gap-2">
-                         {plan.recommendedAgents.map((agent, i) => <Badge key={i} variant="secondary">{agent}</Badge>)}
-                    </div>
-                </Section>
-            </div>
-        </CardContent>
-        <CardFooter>
-            <Button className="w-full" onClick={() => onCreateProject(plan)} disabled={isCreating}>
-                {isCreating ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating Project...</>
-                ) : "Create Project & Add to Products"}
-            </Button>
-        </CardFooter>
-    </Card>
-);
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
+
+const StageColumn = ({ stage, products }: { stage: any, products: Product[] }) => {
+    const { setNodeRef } = useSortable({
+        id: stage.name,
+        data: {
+            type: 'Stage',
+            stage,
+        }
+    });
+    
+    return (
+        <div ref={setNodeRef} className="flex-shrink-0 w-[300px]">
+            <Card className="bg-muted/50">
+                <CardHeader className="p-4">
+                    <CardTitle className="text-base">{stage.name}</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 min-h-[200px]">
+                     <SortableContext items={products.map(p => p.id)} strategy={verticalListSortingStrategy}>
+                        {products.map(product => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </SortableContext>
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
 
 
 export default function ProjectsPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
-    const [analysis, setAnalysis] = useState<ProjectInceptionOutput | null>(null);
-    const { setProducts } = useProductsData();
+    
+    const { products, setProducts } = useProductsData();
+    const { stages } = useProjectStagesData();
     const { toast } = useToast();
 
     const form = useForm<FormValues>({
         resolver: zodResolver(FormSchema),
         defaultValues: { idea: '' },
     });
-
-    const onSubmit: SubmitHandler<FormValues> = async (data) => {
-        setIsLoading(true);
-        setAnalysis(null);
-        try {
-            const result = await generateProjectPlan(data);
-            setAnalysis(result);
-            toast({ title: "Project Plan Generated!", description: "Navi has created the initial project analysis." });
-        } catch (error) {
-            console.error(error);
-            toast({ title: "Analysis Failed", description: "Could not generate project plan. Please try again.", variant: 'destructive' });
-        } finally {
-            setIsLoading(false);
-        }
-    };
     
-    const handleCreateProject = async (plan: ProjectInceptionOutput) => {
-        setIsCreating(true);
-        try {
-            toast({ title: "Generating project image...", description: "Lina is creating a visual for your new project." });
-            const imageUrl = await generateImage({ prompt: plan.imagePrompt });
+    const productsByStage = useMemo(() => {
+        const grouped: Record<string, Product[]> = {};
+        stages.forEach(stage => {
+            grouped[stage.name] = [];
+        });
+        products.forEach(product => {
+            if(grouped[product.stage]) {
+                grouped[product.stage].push(product);
+            } else {
+                 if(!grouped['Idea Phase']) grouped['Idea Phase'] = [];
+                 grouped['Idea Phase'].push(product); // Fallback
+            }
+        });
+        return grouped;
+    }, [products, stages]);
 
-            const newProduct: Product = {
-                id: `prod_${Date.now()}`,
-                name: plan.projectName,
-                description: plan.summary,
-                image: imageUrl,
-                aiHint: plan.imagePrompt,
-                enabled: true,
-                stage: 'Idea Phase', // Default starting stage
-            };
+    const sensors = useSensors(useSensor(PointerSensor, {
+        activationConstraint: {
+            distance: 8,
+        },
+    }));
 
-            setProducts(prev => [newProduct, ...prev]);
-            
-            toast({ title: "Project Created!", description: `${plan.projectName} has been added to your product list.` });
-            setAnalysis(null); // Clear the plan display after creation
-        } catch (error) {
-            console.error(error);
-            toast({ title: "Project Creation Failed", description: "Could not create the project. Please try again.", variant: 'destructive' });
-        } finally {
-            setIsCreating(false);
+    const onDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) {
+            return;
+        }
+
+        const activeProduct = products.find(p => p.id === active.id);
+        const overStageName = over.data.current?.type === 'Stage' 
+            ? over.data.current.stage.name 
+            : products.find(p => p.id === over.id)?.stage;
+
+        if (activeProduct && overStageName && activeProduct.stage !== overStageName) {
+            setProducts(prev => 
+                prev.map(p => p.id === active.id ? { ...p, stage: overStageName } : p)
+            );
+            toast({
+                title: "Project Stage Updated",
+                description: `${activeProduct.name} moved to ${overStageName}.`
+            })
         }
     }
+
 
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold">Project Inception</h1>
+                <h1 className="text-3xl font-bold">Projects</h1>
                 <p className="text-muted-foreground">
-                    Transform a simple idea into a structured project plan with the help of Navi, our AI Innovation Agent.
+                    Create new projects and manage your product development pipeline.
                 </p>
             </div>
             
-            <Card>
-                <CardHeader>
-                    <CardTitle>Submit a New Idea</CardTitle>
-                    <CardDescription>Describe your new project or product idea below.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="idea"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Product Idea</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="e.g., A mobile app that uses AI to create personalized travel itineraries based on a user's budget and interests."
-                                                rows={5}
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                             <Button type="submit" disabled={isLoading} className="w-full" size="lg">
-                                {isLoading ? (
-                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing Idea...</>
-                                ) : (
-                                    <><Wand2 className="mr-2 h-4 w-4" />Generate Project Plan</>
-                                )}
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-
-            {isLoading && (
-                <Card>
-                    <CardContent className="p-6 text-center">
-                        <div className="flex items-center justify-center gap-4 text-muted-foreground">
-                            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                            <p>Navi is analyzing your idea and researching the market... This may take a moment.</p>
+            <Accordion type="single" collapsible>
+                <AccordionItem value="item-1">
+                    <AccordionTrigger>
+                        <div className="flex items-center gap-3">
+                            <Wand2 className="h-5 w-5 text-primary" />
+                             <h2 className="text-xl font-semibold">Project Inception</h2>
                         </div>
-                    </CardContent>
-                </Card>
-            )}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        <Card className="border-t-0 rounded-t-none">
+                            <CardHeader>
+                                <CardTitle>Submit a New Idea</CardTitle>
+                                <CardDescription>Describe your new project or product idea below. Navi, our AI Innovation Agent, will analyze it and generate a structured project plan.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(() => {})} className="space-y-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="idea"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Product Idea</FormLabel>
+                                                    <FormControl>
+                                                        <Textarea
+                                                            placeholder="e.g., A mobile app that uses AI to create personalized travel itineraries based on a user's budget and interests."
+                                                            rows={5}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <Button type="submit" disabled={true} className="w-full" size="lg">
+                                            <Wand2 className="mr-2 h-4 w-4" />Generate Project Plan (Feature Coming Soon)
+                                        </Button>
+                                    </form>
+                                </Form>
+                            </CardContent>
+                        </Card>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
 
-            {analysis && (
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-bold text-center">Generated Project Plan</h2>
-                    <PlanDisplay plan={analysis} onCreateProject={handleCreateProject} isCreating={isCreating}/>
+
+            <div>
+                <h2 className="text-2xl font-bold mb-4">Project Pipeline</h2>
+                 <div className="overflow-x-auto pb-4">
+                    <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCorners}>
+                        <div className="flex gap-6">
+                            {stages.map(stage => (
+                                <StageColumn
+                                    key={stage.id}
+                                    stage={stage}
+                                    products={productsByStage[stage.name] || []}
+                                />
+                            ))}
+                        </div>
+                    </DndContext>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
