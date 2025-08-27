@@ -4,7 +4,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Briefcase, Percent } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Briefcase, Percent, ShieldAlert } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
@@ -26,12 +26,14 @@ const transactionData = [
 ];
 
 const upcomingPayments = [
-    { source: "VAT Filing & Payment", amount: 2153.52, dueDate: "2024-09-30" },
     { source: "Partner Commission Payout", amount: 1200.00, dueDate: "2024-08-25" },
     { source: "Cloud Services (AWS)", amount: 450.50, dueDate: "2024-08-28" },
     { source: "Office Rent", amount: 800.00, dueDate: "2024-09-01" },
     { source: "Software Licenses", amount: 250.00, dueDate: "2024-09-05" },
 ];
+
+const vatPayment = { source: "VAT Filing & Payment", amount: 2153.52, dueDate: "2024-09-30" };
+
 
 const cashFlowData = [
   { month: 'Mar', income: 4000, expenses: 2400 },
@@ -70,6 +72,8 @@ export default function CfoDashboard() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   }
+  
+  const vatDaysRemaining = getDaysRemaining(vatPayment.dueDate);
 
   return (
     <div className="space-y-8">
@@ -140,6 +144,20 @@ export default function CfoDashboard() {
                             <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
                         </BarChart>
                     </ChartContainer>
+                </CardContent>
+            </Card>
+            <Card className="border-destructive/50 bg-destructive/5">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-destructive"><ShieldAlert />VAT Payment Due</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                    <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
+                    <p className="text-muted-foreground mt-1">
+                        Due Date: {vatPayment.dueDate}
+                    </p>
+                    <p className="text-sm font-medium text-destructive mt-2">
+                         ({vatDaysRemaining >= 0 ? `${vatDaysRemaining} days remaining` : 'Overdue'})
+                    </p>
                 </CardContent>
             </Card>
              <Card>
