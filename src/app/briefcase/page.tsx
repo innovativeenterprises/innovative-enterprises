@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2 } from 'lucide-react';
+import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -304,6 +304,17 @@ const UploadDocumentDialog = ({ onUpload }: { onUpload: (file: File) => void }) 
     )
 }
 
+const createEmptyBriefcase = (): BriefcaseData => ({
+    recordNumber: `USER-${Date.now()}`,
+    applicantName: "Guest User",
+    agreements: {
+        ndaContent: "No Non-Disclosure Agreement found. Please complete the partner application to generate one.",
+        serviceAgreementContent: "No Service Agreement found. Please complete the partner application to generate one.",
+    },
+    date: new Date().toISOString(),
+    registrations: [],
+    userDocuments: [],
+});
 
 export default function BriefcasePage() {
     const [briefcaseData, setBriefcaseData] = useState<BriefcaseData | null>(null);
@@ -328,6 +339,12 @@ export default function BriefcasePage() {
                 if (!parsedData.registrations) parsedData.registrations = [];
                 if (!parsedData.userDocuments) parsedData.userDocuments = [];
                 setBriefcaseData(parsedData);
+            } else {
+                // If no data, create an empty briefcase for the new user
+                const emptyBriefcase = createEmptyBriefcase();
+                setBriefcaseData(emptyBriefcase);
+                // Optionally save it immediately so it persists on refresh
+                localStorage.setItem('user_briefcase', JSON.stringify(emptyBriefcase));
             }
         } catch (error) {
             console.error("Failed to load briefcase data from localStorage", error);
@@ -383,137 +400,143 @@ export default function BriefcasePage() {
         );
     }
 
+    if (!briefcaseData) {
+         return (
+             <div className="bg-background min-h-[calc(100vh-8rem)] flex items-center justify-center">
+                <div className="container mx-auto px-4 py-16">
+                     <div className="max-w-3xl mx-auto text-center">
+                        <div className="mx-auto bg-yellow-100 dark:bg-yellow-900/50 p-4 rounded-full w-fit mb-4">
+                            <AlertTriangle className="w-10 h-10 text-yellow-500" />
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-bold text-primary">Could Not Load Briefcase</h1>
+                        <p className="mt-4 text-lg text-muted-foreground">
+                           There was an error loading your E-Briefcase data. Please try again later or contact support.
+                        </p>
+                    </div>
+                </div>
+            </div>
+         )
+    }
+
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto">
-                    {briefcaseData ? (
-                        <div className="space-y-12">
-                             <div>
-                                <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                                    <Briefcase className="w-10 h-10 text-primary" />
-                                </div>
-                                <h1 className="text-4xl md:text-5xl font-bold text-primary text-center">My E-Briefcase</h1>
-                                <p className="mt-4 text-lg text-muted-foreground text-center">
-                                    Welcome, <span className="font-semibold text-primary">{briefcaseData.applicantName}</span>. Manage your partnership documents and services here.
-                                </p>
+                    <div className="space-y-12">
+                         <div>
+                            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                                <Briefcase className="w-10 h-10 text-primary" />
                             </div>
-                            <Card>
-                                <CardHeader className="flex-row justify-between items-center">
-                                    <div>
-                                        <CardTitle className="flex items-center gap-2"><Package className="h-5 w-5"/> Registered Services</CardTitle>
-                                        <CardDescription>Manage the services you offer and update your price lists.</CardDescription>
-                                    </div>
-                                    <AddServiceDialog onAddService={handleAddService} />
-                                </CardHeader>
-                                <CardContent>
-                                    {briefcaseData.registrations.length > 0 ? (
-                                        <div className="space-y-4">
-                                            {briefcaseData.registrations.map(reg => (
-                                                <Card key={reg.category} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted/50">
-                                                    <div>
-                                                        <p className="font-semibold">{reg.category}</p>
-                                                        {reg.priceListUrl && <p className="text-sm text-muted-foreground">Current Price List: {reg.priceListFilename || 'price_list.csv'}</p>}
-                                                    </div>
-                                                    <div className="flex gap-2 mt-2 sm:mt-0">
-                                                        {reg.priceListUrl && <Button variant="outline" size="sm" asChild><a href={reg.priceListUrl} download={reg.priceListFilename || 'price_list.csv'}><Download className="mr-2 h-4 w-4"/>Download</a></Button>}
-                                                        <UpdatePriceListDialog registration={reg} onUpdate={handleUpdatePriceList} />
-                                                    </div>
-                                                </Card>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-muted-foreground text-center py-4">You have not registered for any services yet.</p>
-                                    )}
-                                </CardContent>
-                            </Card>
-                            
-                             <Card>
-                                <CardHeader className="flex-row justify-between items-center">
-                                    <div>
-                                        <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5"/> My Documents</CardTitle>
-                                        <CardDescription>Upload and manage your personal or business documents.</CardDescription>
-                                    </div>
-                                    <UploadDocumentDialog onUpload={handleUploadDocument} />
-                                </CardHeader>
-                                <CardContent>
-                                    {briefcaseData.userDocuments.length > 0 ? (
-                                        <div className="space-y-4">
-                                            {briefcaseData.userDocuments.map(doc => (
-                                                <Card key={doc.id} className="flex justify-between items-center p-4 bg-muted/50">
-                                                    <div>
-                                                        <p className="font-semibold">{doc.name}</p>
-                                                        <p className="text-sm text-muted-foreground">Uploaded on: {new Date(doc.uploadedAt).toLocaleDateString()}</p>
-                                                    </div>
-                                                    <div className="flex gap-2">
-                                                        <Button variant="outline" size="sm" asChild><a href={doc.dataUri} download={doc.name}><Download className="mr-2 h-4 w-4"/>Download</a></Button>
-                                                        <AlertDialog>
-                                                          <AlertDialogTrigger asChild>
-                                                            <Button variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
-                                                          </AlertDialogTrigger>
-                                                          <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                              <AlertDialogDescription>
-                                                                This action will permanently delete "{doc.name}" from your briefcase.
-                                                              </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                              <AlertDialogAction onClick={() => handleDeleteDocument(doc.id)}>Delete</AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                          </AlertDialogContent>
-                                                        </AlertDialog>
-                                                    </div>
-                                                </Card>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                         <p className="text-sm text-muted-foreground text-center py-4">You have not uploaded any documents yet.</p>
-                                    )}
-                                </CardContent>
-                            </Card>
-                            
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Your Legal Documents</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <Tabs defaultValue="nda" className="w-full">
-                                        <TabsList className="grid w-full grid-cols-2">
-                                            <TabsTrigger value="nda"><FileText className="mr-2 h-4 w-4"/> Non-Disclosure Agreement</TabsTrigger>
-                                            <TabsTrigger value="service"><FileText className="mr-2 h-4 w-4"/> Service Agreement</TabsTrigger>
-                                        </TabsList>
-                                        <TabsContent value="nda">
-                                            <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
-                                                {briefcaseData.agreements.ndaContent}
-                                            </div>
-                                        </TabsContent>
-                                        <TabsContent value="service">
-                                            <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
-                                                {briefcaseData.agreements.serviceAgreementContent}
-                                            </div>
-                                        </TabsContent>
-                                    </Tabs>
-                                </CardContent>
-                                 <CardFooter>
-                                    <Button onClick={() => toast({title: "Agreements already signed."})} className="w-full" size="lg" disabled>
-                                        <FileSignature className="mr-2 h-5 w-5" /> View E-Signature
-                                    </Button>
-                                </CardFooter>
-                            </Card>
-                        </div>
-                    ) : (
-                         <div className="max-w-3xl mx-auto text-center">
-                            <div className="mx-auto bg-yellow-100 dark:bg-yellow-900/50 p-4 rounded-full w-fit mb-4">
-                                <AlertTriangle className="w-10 h-10 text-yellow-500" />
-                            </div>
-                            <h1 className="text-4xl md:text-5xl font-bold text-primary">Your E-Briefcase is Empty</h1>
-                            <p className="mt-4 text-lg text-muted-foreground">
-                                It looks like you haven't saved any documents yet. After you complete an agent or partner application, you can save your agreements and manage your services here.
+                            <h1 className="text-4xl md:text-5xl font-bold text-primary text-center">My E-Briefcase</h1>
+                            <p className="mt-4 text-lg text-muted-foreground text-center">
+                                Welcome, <span className="font-semibold text-primary">{briefcaseData.applicantName}</span>. Manage your documents, agreements, and services here.
                             </p>
                         </div>
-                    )}
+                        <Card>
+                            <CardHeader className="flex-row justify-between items-center">
+                                <div>
+                                    <CardTitle className="flex items-center gap-2"><Package className="h-5 w-5"/> Registered Services</CardTitle>
+                                    <CardDescription>Manage the services you offer and update your price lists.</CardDescription>
+                                </div>
+                                <AddServiceDialog onAddService={handleAddService} />
+                            </CardHeader>
+                            <CardContent>
+                                {briefcaseData.registrations.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {briefcaseData.registrations.map(reg => (
+                                            <Card key={reg.category} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted/50">
+                                                <div>
+                                                    <p className="font-semibold">{reg.category}</p>
+                                                    {reg.priceListUrl && <p className="text-sm text-muted-foreground">Current Price List: {reg.priceListFilename || 'price_list.csv'}</p>}
+                                                </div>
+                                                <div className="flex gap-2 mt-2 sm:mt-0">
+                                                    {reg.priceListUrl && <Button variant="outline" size="sm" asChild><a href={reg.priceListUrl} download={reg.priceListFilename || 'price_list.csv'}><Download className="mr-2 h-4 w-4"/>Download</a></Button>}
+                                                    <UpdatePriceListDialog registration={reg} onUpdate={handleUpdatePriceList} />
+                                                </div>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground text-center py-4">You have not registered for any services yet. Click "Apply for New Service" to get started.</p>
+                                )}
+                            </CardContent>
+                        </Card>
+                        
+                         <Card>
+                            <CardHeader className="flex-row justify-between items-center">
+                                <div>
+                                    <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5"/> My Documents</CardTitle>
+                                    <CardDescription>Upload and manage your personal or business documents.</CardDescription>
+                                </div>
+                                <UploadDocumentDialog onUpload={handleUploadDocument} />
+                            </CardHeader>
+                            <CardContent>
+                                {briefcaseData.userDocuments.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {briefcaseData.userDocuments.map(doc => (
+                                            <Card key={doc.id} className="flex justify-between items-center p-4 bg-muted/50">
+                                                <div>
+                                                    <p className="font-semibold">{doc.name}</p>
+                                                    <p className="text-sm text-muted-foreground">Uploaded on: {new Date(doc.uploadedAt).toLocaleDateString()}</p>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <Button variant="outline" size="sm" asChild><a href={doc.dataUri} download={doc.name}><Download className="mr-2 h-4 w-4"/>Download</a></Button>
+                                                    <AlertDialog>
+                                                      <AlertDialogTrigger asChild>
+                                                        <Button variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
+                                                      </AlertDialogTrigger>
+                                                      <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                          <AlertDialogDescription>
+                                                            This action will permanently delete "{doc.name}" from your briefcase.
+                                                          </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                          <AlertDialogAction onClick={() => handleDeleteDocument(doc.id)}>Delete</AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                      </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </div>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                ) : (
+                                     <p className="text-sm text-muted-foreground text-center py-4">You have not uploaded any documents yet.</p>
+                                )}
+                            </CardContent>
+                        </Card>
+                        
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Your Legal Documents</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Tabs defaultValue="nda" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2">
+                                        <TabsTrigger value="nda"><FileText className="mr-2 h-4 w-4"/> Non-Disclosure Agreement</TabsTrigger>
+                                        <TabsTrigger value="service"><FileText className="mr-2 h-4 w-4"/> Service Agreement</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="nda">
+                                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
+                                            {briefcaseData.agreements.ndaContent}
+                                        </div>
+                                    </TabsContent>
+                                    <TabsContent value="service">
+                                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
+                                            {briefcaseData.agreements.serviceAgreementContent}
+                                        </div>
+                                    </TabsContent>
+                                </Tabs>
+                            </CardContent>
+                             <CardFooter>
+                                <Button onClick={() => toast({title: "Agreements already signed."})} className="w-full" size="lg" disabled={briefcaseData.applicantName === 'Guest User'}>
+                                    <FileSignature className="mr-2 h-5 w-5" /> View E-Signature
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    </div>
                 </div>
             </div>
         </div>
