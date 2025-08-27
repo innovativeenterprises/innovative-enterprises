@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview Schemas and types for the social media post generator flow.
  *
@@ -6,26 +7,31 @@
  * and outputs of the social media post generation AI flow. These are
  * separated to allow client-side components to import them without
  * pulling in server-only code.
- *
- * - GenerateSocialMediaPostInputSchema - Zod schema for the input.
- * - GenerateSocialMediaPostInput - TypeScript type for the input.
- * - GenerateSocialMediaPostOutputSchema - Zod schema for the output.
- * - GenerateSocialMediaPostOutput - TypeScript type for the output.
  */
 
 import {z} from 'zod';
 
+const platformEnum = z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp', 'Tender Response']);
+export type Platform = z.infer<typeof platformEnum>;
+
 export const GenerateSocialMediaPostInputSchema = z.object({
   topic: z.string().describe('The topic for the social media post.'),
-  platform: z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp', 'Tender Response']).describe('The target social media platform or content type.'),
+  platforms: z.array(platformEnum).min(1, 'Please select at least one platform.'),
   tone: z.enum(['Professional', 'Casual', 'Witty', 'Enthusiastic']).describe('The desired tone of the post.'),
   generateImage: z.boolean().optional().describe('Whether to generate a suggested image for the post.'),
 });
 export type GenerateSocialMediaPostInput = z.infer<typeof GenerateSocialMediaPostInputSchema>;
 
+export const GeneratedPostSchema = z.object({
+  platform: platformEnum.describe('The platform for which this content was generated.'),
+  postContent: z.string().describe('The generated social media post content, tailored for the platform.'),
+  suggestedHashtags: z.array(z.string()).describe('A list of suggested hashtags for the platform.'),
+});
+export type GeneratedPost = z.infer<typeof GeneratedPostSchema>;
+
+
 export const GenerateSocialMediaPostOutputSchema = z.object({
-  postContent: z.string().describe('The generated social media post content.'),
-  suggestedHashtags: z.array(z.string()).describe('A list of suggested hashtags.'),
+  posts: z.array(GeneratedPostSchema).describe('A list of generated posts, one for each requested platform.'),
   imageUrl: z.string().optional().describe('A data URI of a suggested image for the post.'),
 });
 export type GenerateSocialMediaPostOutput = z.infer<typeof GenerateSocialMediaPostOutputSchema>;

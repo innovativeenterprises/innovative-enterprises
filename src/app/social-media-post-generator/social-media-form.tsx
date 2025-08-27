@@ -4,17 +4,27 @@
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
-import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GenerateSocialMediaPostInput } from '@/ai/flows/social-media-post-generator.schema';
+import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GenerateSocialMediaPostInput, type GeneratedPost } from '@/ai/flows/social-media-post-generator.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download, Twitter, Linkedin, FacebookIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+
+const platformOptions = [
+    { id: "LinkedIn", label: "LinkedIn", icon: Linkedin },
+    { id: "Twitter", label: "Twitter", icon: Twitter },
+    { id: "Facebook", label: "Facebook", icon: FacebookIcon },
+] as const;
+
 
 export default function SocialMediaForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +35,7 @@ export default function SocialMediaForm() {
     resolver: zodResolver(GenerateSocialMediaPostInputSchema),
     defaultValues: {
       topic: '',
-      platform: 'LinkedIn',
+      platforms: ['LinkedIn'],
       tone: 'Professional',
       generateImage: false,
     },
@@ -60,12 +70,19 @@ export default function SocialMediaForm() {
     toast({ title: "Downloaded!", description: "The image has been downloaded." });
   }
 
+  const handleCopy = (content: string, hashtags: string[]) => {
+    const fullText = `${content}\n\n${hashtags.join(' ')}`;
+    navigator.clipboard.writeText(fullText);
+    toast({ title: "Copied!", description: "The post content has been copied to your clipboard." });
+  };
+
+
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Generate Content</CardTitle>
-          <CardDescription>Fill in the details below to generate marketing copy or a social post.</CardDescription>
+          <CardTitle>Generate a Social Media Campaign</CardTitle>
+          <CardDescription>Describe your topic, select your target platforms, and Mira will craft a tailored post for each one.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -87,32 +104,57 @@ export default function SocialMediaForm() {
                   </FormItem>
                 )}
               />
+              
+              <FormField
+                control={form.control}
+                name="platforms"
+                render={() => (
+                  <FormItem>
+                    <div>
+                        <FormLabel>Target Platforms</FormLabel>
+                        <FormDescription>Select one or more platforms for your campaign.</FormDescription>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 pt-2">
+                    {platformOptions.map((item) => (
+                      <FormField
+                        key={item.id}
+                        control={form.control}
+                        name="platforms"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, item.id])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== item.id
+                                          )
+                                        )
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal flex items-center gap-2">
+                                <item.icon className="h-4 w-4" /> {item.label}
+                              </FormLabel>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="platform"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Content Type / Platform</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a platform" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="LinkedIn">LinkedIn Post</SelectItem>
-                          <SelectItem value="Twitter">Twitter Post</SelectItem>
-                          <SelectItem value="Facebook">Facebook Post</SelectItem>
-                          <SelectItem value="Instagram">Instagram Post</SelectItem>
-                          <SelectItem value="WhatsApp">WhatsApp Message</SelectItem>
-                          <SelectItem value="Tender Response">Tender Response</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="tone"
@@ -136,13 +178,12 @@ export default function SocialMediaForm() {
                     </FormItem>
                   )}
                 />
-              </div>
 
-               <FormField
+                 <FormField
                   control={form.control}
                   name="generateImage"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                    <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 shadow-sm h-fit mt-auto">
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -151,13 +192,14 @@ export default function SocialMediaForm() {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel>
-                          Generate an image for the post
+                          Generate a campaign image
                         </FormLabel>
                         <FormMessage />
                       </div>
                     </FormItem>
                   )}
                 />
+              </div>
 
               <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                 {isLoading ? (
@@ -168,7 +210,7 @@ export default function SocialMediaForm() {
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Generate Content
+                    Generate Campaign
                   </>
                 )}
               </Button>
@@ -186,34 +228,15 @@ export default function SocialMediaForm() {
          </Card>
       )}
 
-      {response && (
+      {response && response.posts.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Megaphone className="h-6 w-6" /> Generated Content</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Megaphone className="h-6 w-6" /> Generated Campaign</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="relative">
-                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                    <p>{response.postContent}</p>
-                    {response.suggestedHashtags && response.suggestedHashtags.length > 0 && (
-                      <p className="font-semibold">{response.suggestedHashtags.join(' ')}</p>
-                    )}
-                </div>
-              <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 text-muted-foreground"
-                  onClick={() => {
-                    navigator.clipboard.writeText(response.postContent + '\n\n' + (response.suggestedHashtags?.join(' ') || ''));
-                    toast({ title: "Copied!", description: "The content has been copied to your clipboard." });
-                  }}
-                >
-                  <Copy className="h-5 w-5" />
-              </Button>
-            </div>
              {response.imageUrl && (
                 <div>
-                     <h3 className="text-lg font-semibold flex items-center gap-2 mb-2"><ImageIcon className="h-5 w-5" /> Generated Image</h3>
+                     <h3 className="text-lg font-semibold flex items-center gap-2 mb-2"><ImageIcon className="h-5 w-5" /> Generated Campaign Image</h3>
                     <div className="relative aspect-video w-full overflow-hidden rounded-md border">
                          <Image src={response.imageUrl} alt="Generated for social media post" layout="fill" objectFit="cover" />
                     </div>
@@ -222,6 +245,31 @@ export default function SocialMediaForm() {
                     </div>
                 </div>
             )}
+             <Tabs defaultValue={response.posts[0].platform} className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                    {response.posts.map(p => <TabsTrigger key={p.platform} value={p.platform}>{p.platform}</TabsTrigger>)}
+                </TabsList>
+                {response.posts.map(post => (
+                    <TabsContent key={post.platform} value={post.platform}>
+                         <div className="relative">
+                            <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+                                <p>{post.postContent}</p>
+                                {post.suggestedHashtags && post.suggestedHashtags.length > 0 && (
+                                <p className="font-semibold">{post.suggestedHashtags.join(' ')}</p>
+                                )}
+                            </div>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute top-2 right-2 text-muted-foreground"
+                                onClick={() => handleCopy(post.postContent, post.suggestedHashtags)}
+                                >
+                                <Copy className="h-5 w-5" />
+                            </Button>
+                        </div>
+                    </TabsContent>
+                ))}
+            </Tabs>
           </CardContent>
         </Card>
       )}

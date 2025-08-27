@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -26,15 +27,31 @@ export async function generateSocialMediaPost(input: GenerateSocialMediaPostInpu
 const textGenerationPrompt = ai.definePrompt({
   name: 'socialMediaTextGeneratorPrompt',
   input: {schema: GenerateSocialMediaPostInputSchema},
-  output: {schema: GenerateSocialMediaPostOutputSchema.pick({ postContent: true, suggestedHashtags: true })},
-  prompt: `You are an expert social media manager. Your task is to generate compelling social media post content.
+  output: {schema: GenerateSocialMediaPostOutputSchema.pick({ posts: true })},
+  prompt: `You are an expert social media manager. Your task is to generate compelling content for multiple social media platforms based on a single topic.
 
-Platform: {{{platform}}}
-Topic: {{{topic}}}
-Tone: {{{tone}}}
+**Topic:**
+{{{topic}}}
 
-Based on the above, create post content that is engaging and appropriate for the specified platform and tone.
-Also, provide a list of relevant hashtags to maximize reach. For WhatsApp, hashtags are not needed.
+**Tone:**
+{{{tone}}}
+
+**Platforms to generate content for:**
+{{#each platforms}}
+- {{this}}
+{{/each}}
+
+**Instructions:**
+For each platform listed above, create a post that is engaging and perfectly tailored to that platform's audience and format.
+
+- **LinkedIn:** Professional tone, longer format, focus on business value, use professional hashtags.
+- **Twitter:** Concise, witty, under 280 characters, use punchy hashtags.
+- **Facebook:** Casual and engaging, can be longer, ask questions to encourage comments.
+- **Instagram:** Visually focused caption, use plenty of relevant hashtags. Should be shorter and more personal.
+- **WhatsApp:** Very casual, conversational, and direct, like a message to a friend. No hashtags.
+- **Tender Response:** Formal, professional, detailed, and structured like a proposal summary. No hashtags.
+
+For each platform, also provide a list of relevant hashtags to maximize reach (except for WhatsApp and Tender Response). Return the results as an array of 'posts' objects.
 `,
 });
 
@@ -49,19 +66,18 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     let imagePromise: Promise<string | undefined> | undefined;
 
     if (input.generateImage) {
-        imagePromise = generateImage({ prompt: `A visually appealing image for a social media post about: ${input.topic}` });
+        imagePromise = generateImage({ prompt: `A visually appealing image for a social media campaign about: ${input.topic}` });
     }
     
     const [textResult, imageUrl] = await Promise.all([textPromise, imagePromise]);
     
     const output = textResult.output;
-    if (!output) {
+    if (!output || !output.posts) {
       throw new Error('Failed to generate text content.');
     }
     
     return {
-      postContent: output.postContent,
-      suggestedHashtags: output.suggestedHashtags,
+      posts: output.posts,
       imageUrl,
     };
   }
