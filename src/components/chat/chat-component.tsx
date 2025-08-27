@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Send, Mic, Square, CornerDownLeft, Bot, User, Volume2, Link as LinkIcon, CheckCircle } from 'lucide-react';
+import { Loader2, Send, Mic, Square, CornerDownLeft, Bot, User, Volume2, Link as LinkIcon, CheckCircle, ShoppingCart } from 'lucide-react';
 import type { LucideIcon } from "lucide-react";
 import type { AppSettings } from '@/lib/settings';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
@@ -18,6 +18,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { store } from '@/lib/global-store';
+import { type Product } from '@/lib/products';
 
 interface Message {
   role: 'user' | 'bot';
@@ -28,6 +30,7 @@ interface Message {
       email?: string;
       whatsapp?: string;
   };
+  itemAddedToCart?: Product;
   suggestedReplies?: string[];
 }
 
@@ -164,9 +167,28 @@ export const ChatComponent = ({
           meetingUrl: result.meetingUrl,
           contactOptions: result.contactOptions,
           imageUrl: result.imageUrl,
+          itemAddedToCart: result.itemAddedToCart,
           suggestedReplies: result.suggestedReplies,
       };
       setMessages(prev => [...prev, botMessage]);
+
+      if (botMessage.itemAddedToCart) {
+          const product = botMessage.itemAddedToCart;
+          store.set(state => {
+            const existingItem = state.cart.find(item => item.id === product.id);
+            if (existingItem) {
+                return {
+                    ...state,
+                    cart: state.cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
+                }
+            }
+            return {
+                ...state,
+                cart: [...state.cart, { ...product, quantity: 1 }]
+            }
+        });
+      }
+
       setShowSuggestions(true);
       
       if (settings.voiceInteractionEnabled && botMessage.content) {
@@ -222,6 +244,17 @@ export const ChatComponent = ({
                                         : 'bg-muted'
                                 )}>
                                     <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                                     {msg.itemAddedToCart && (
+                                        <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex items-center gap-3">
+                                            <div className="relative w-12 h-12 rounded-md overflow-hidden">
+                                                <img src={msg.itemAddedToCart.image} alt={msg.itemAddedToCart.name} className="object-cover w-full h-full"/>
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-sm">{msg.itemAddedToCart.name}</p>
+                                                <p className="text-xs text-muted-foreground">1 x OMR {msg.itemAddedToCart.price.toFixed(2)}</p>
+                                            </div>
+                                        </div>
+                                    )}
                                     {msg.meetingUrl && (
                                         <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
                                             <Link href={msg.meetingUrl} target="_blank">Book a Meeting</Link>

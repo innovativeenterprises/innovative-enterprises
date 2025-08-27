@@ -12,18 +12,32 @@ import {
     EcommerceAgentOutput,
     EcommerceAgentOutputSchema,
 } from './ecommerce-agent.schema';
+import { initialProducts } from '@/lib/products';
+import { ProductSchema } from '@/lib/products.schema';
 
-// In a real app, products would come from a database.
-const products = [
-    { name: "Wireless Headphones", category: "Electronics" },
-    { name: "Modern Coffee Table", category: "Home Goods" },
-    { name: "Performance Running Shoes", category: "Sports" },
-    { name: "Organic Cotton T-Shirt", category: "Apparel" },
-    { name: "Smartwatch Series 8", category: "Electronics" },
-    { name: "Leather Backpack", category: "Apparel" },
-    { name: "Non-stick Cookware Set", category: "Home Goods" },
-    { name: "The Alchemist", category: "Books" },
-];
+const allProducts = initialProducts;
+
+const addProductToCartTool = ai.defineTool(
+    {
+        name: 'addProductToCart',
+        description: 'Use this tool when the user wants to buy, purchase, or add a specific product to their cart.',
+        inputSchema: z.object({
+            productName: z.string().describe("The exact name of the product to add to the cart."),
+        }),
+        outputSchema: z.object({
+            product: ProductSchema.optional(),
+            error: z.string().optional(),
+        })
+    },
+    async ({ productName }) => {
+        const product = allProducts.find(p => p.name.toLowerCase() === productName.toLowerCase());
+        if (product) {
+            return { product };
+        }
+        return { error: 'Product not found.' };
+    }
+);
+
 
 export async function answerEcommerceQuery(input: EcommerceAgentInput): Promise<EcommerceAgentOutput> {
   return ecommerceFlow(input);
@@ -33,6 +47,7 @@ const prompt = ai.definePrompt({
   name: 'ecommercePrompt',
   input: { schema: EcommerceAgentInputSchema },
   output: { schema: EcommerceAgentOutputSchema },
+  tools: [addProductToCartTool],
   prompt: `You are "Nova," an expert AI shopping assistant for our e-commerce store. Your job is to help users discover products and navigate our store.
 
 **User's Request:**
@@ -44,7 +59,7 @@ const prompt = ai.definePrompt({
 {{/each}}
 
 **Your Task:**
-1.  **Analyze the Query:** Understand what the user is looking for. They might be asking for a specific product, a category, or general help.
+1.  **Add to Cart:** If the user clearly expresses intent to buy, purchase, or add a specific product to their cart, you MUST use the \`addProductToCart\` tool.
 2.  **Suggest Products/Categories:**
     *   If the user's query clearly matches specific products, suggest them. Set the \`suggestedProducts\` field.
     *   If the query matches a category, guide them towards it. Set the \`suggestedCategory\` field.
@@ -69,8 +84,29 @@ const ecommerceFlow = ai.defineFlow(
     outputSchema: EcommerceAgentOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const response = await prompt(input);
     
+    // Handle tool call for adding to cart
+    if (response.toolRequest?.name === 'addProductToCart') {
+        const toolResponse = await response.toolRequest.run();
+        const toolOutput = toolResponse.output as z.infer<typeof addProductToCartTool.outputSchema>;
+        
+        if (toolOutput.product) {
+             return {
+                response: `Great, I've added the "${toolOutput.product.name}" to your cart!`,
+                itemAddedToCart: toolOutput.product,
+                suggestedReplies: ["View my cart", "Continue shopping", "What's on sale?"],
+             }
+        } else {
+            return {
+                response: "I'm sorry, I couldn't find that product. Could you be more specific?",
+                suggestedReplies: ["Show all categories", "What's on sale?"],
+            }
+        }
+    }
+
+    const output = response.output;
+
     if (output && (!output.suggestedReplies || output.suggestedReplies.length === 0)) {
         output.suggestedReplies = ["Show all categories", "What's on sale?", "Tell me your return policy"];
     }
