@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -50,21 +51,46 @@ const businessCategories = [
 const pricingTemplates: Record<string, string[][]> = {
     "Tech & IT Services": [
         ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
-        ["Custom Website Development", "Full website design and build", "per project", ""],
-        ["API Integration", "Connecting two software systems", "per integration", ""],
-        ["Monthly IT Support", "Retainer for ongoing IT help", "per month", ""],
+        ["Custom Website Development", "Full website design and build (up to 10 pages)", "per project", ""],
+        ["E-commerce Store Setup", "Setup of a Shopify or WooCommerce store", "per project", ""],
+        ["Mobile App Development (iOS)", "Native iOS application development", "per project", ""],
+        ["Mobile App Development (Android)", "Native Android application development", "per project", ""],
+        ["API Integration", "Connecting two software systems via API", "per integration", ""],
+        ["Monthly IT Support (Basic)", "Up to 10 hours of remote IT support", "per month", ""],
+        ["Monthly IT Support (Premium)", "Up to 30 hours of remote and on-site support", "per month", ""],
+        ["Cloud Server Setup", "Configuration of a new cloud server (AWS, Azure, GCP)", "per server", ""],
+        ["Cybersecurity Audit", "Basic security vulnerability assessment", "per audit", ""],
     ],
     "Creative & Design": [
         ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
-        ["Logo Design & Branding Package", "Full brand identity kit", "per package", ""],
-        ["Social Media Graphics", "Set of 10 custom graphics", "per set", ""],
-        ["Promotional Video", "1-2 minute marketing video", "per video", ""],
+        ["Logo Design & Branding Package", "Full brand identity kit (logo, color palette, fonts)", "per package", ""],
+        ["Social Media Graphics (Monthly)", "Set of 20 custom graphics for social media", "per month", ""],
+        ["Promotional Video (1-min)", "1-minute animated or live-action marketing video", "per video", ""],
+        ["UI/UX Design for Mobile App", "Complete UI/UX design for up to 15 screens", "per project", ""],
+        ["Website Mockup Design", "Visual mockup for a new website (up to 5 pages)", "per project", ""],
+        ["Company Profile Brochure", "Design of a 12-page A4 company profile", "per brochure", ""],
     ],
     "Consulting & Professional Services": [
         ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
-        ["Business Strategy Workshop", "Full-day strategic planning session", "per workshop", ""],
-        ["Market Research Report", "In-depth analysis of a target market", "per report", ""],
-        ["Hourly Consultation", "Expert advice on a specific topic", "per hour", ""],
+        ["Business Strategy Workshop", "Full-day strategic planning session with key stakeholders", "per workshop", ""],
+        ["Market Research Report", "In-depth analysis of a target market segment", "per report", ""],
+        ["Hourly Consultation", "Expert advice on a specific topic (e.g., finance, marketing, HR)", "per hour", ""],
+        ["Financial Modeling", "Creation of a 5-year financial forecast for your business", "per project", ""],
+        ["HR Policy Manual Creation", "Development of a comprehensive HR policy document", "per project", ""],
+    ],
+    "Printing & Publishing": [
+        ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
+        ["Business Cards (x500)", "Double-sided, premium cardstock", "per 500 cards", ""],
+        ["A4 Flyers (x1000)", "Full color, double-sided printing", "per 1000 flyers", ""],
+        ["Roll-up Banner", "Standard size roll-up banner with stand", "per banner", ""],
+        ["Book Printing (100 pages)", "Paperback book printing, A5 size", "per copy", ""],
+    ],
+     "Events & Entertainment": [
+        ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
+        ["Corporate Event Planning", "Full planning for an event up to 100 guests", "per event", ""],
+        ["Photography Services", "4 hours of event photography coverage", "per event", ""],
+        ["Videography Services", "4 hours of event videography coverage + edited video", "per event", ""],
+        ["Live Band / DJ", "3-hour performance set", "per event", ""],
     ],
     "default": [
         ["ServiceName", "ServiceDescription", "Unit (e.g., per hour, per project)", "Price (OMR)"],
