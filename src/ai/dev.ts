@@ -36,4 +36,5 @@ import '@/ai/flows/ecommerce-agent.schema.ts';
 import '@/ai/flows/pro-task-analysis.ts';
 import '@/ai/flows/pro-task-analysis.schema.ts';
 import '@/ai/flows/video-generator.ts';
+import '@/ai/flows/subscription-reminders.ts';
     
