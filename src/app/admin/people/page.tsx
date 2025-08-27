@@ -3,10 +3,12 @@
 
 import StaffTable, { useStaffData } from "../staff-table";
 import ProviderTable, { useProvidersData } from "../provider-table";
+import ClientTable, { useClientsData } from "../client-table";
 
 export default function AdminPeoplePage() {
   const staffData = useStaffData();
   const providerData = useProvidersData();
+  const clientData = useClientsData();
 
   return (
     <div className="space-y-8">
@@ -18,6 +20,7 @@ export default function AdminPeoplePage() {
         </div>
         <StaffTable {...staffData} />
         <ProviderTable {...providerData} />
+        <ClientTable {...clientData} />
     </div>
   );
 }
