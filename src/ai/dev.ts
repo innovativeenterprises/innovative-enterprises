@@ -35,4 +35,5 @@ import '@/ai/flows/ecommerce-agent.ts';
 import '@/ai/flows/ecommerce-agent.schema.ts';
 import '@/ai/flows/pro-task-analysis.ts';
 import '@/ai/flows/pro-task-analysis.schema.ts';
+import '@/ai/flows/video-generator.ts';
     
