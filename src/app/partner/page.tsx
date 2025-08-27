@@ -581,7 +581,7 @@ export default function PartnerPage() {
                             )} />
                          </div>
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
-                            <FormItem><FormLabel>CV / Resume / Portfolio (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.docx,.doc" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>CV / Resume (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
                         <FormField
                             control={individualUploadForm.control}

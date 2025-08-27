@@ -30,6 +30,7 @@ const CheckoutSchema = z.object({
   cardNumber: z.string().length(19, 'Card number must be 16 digits formatted as 0000 0000 0000 0000.'),
   expiryDate: z.string().length(5, 'Expiry date must be in MM/YY format.'),
   cvc: z.string().length(3, 'CVC must be 3 digits.'),
+  coupon: z.string().optional(),
 });
 
 type CheckoutValues = z.infer<typeof CheckoutSchema>;
@@ -40,6 +41,7 @@ export default function CheckoutPage() {
     const { settings } = useSettingsData();
     const { toast } = useToast();
     const router = useRouter();
+    const [discount, setDiscount] = useState(0);
 
     useEffect(() => {
         const updateCart = () => setCartItems(store.get().cart);
@@ -63,13 +65,31 @@ export default function CheckoutPage() {
             address: '',
             city: '',
             postalCode: '',
+            coupon: '',
         }
     });
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shipping = subtotal > 0 ? 5.00 : 0;
-    const vatAmount = settings.vat.enabled ? (subtotal + shipping) * settings.vat.rate : 0;
-    const total = subtotal + shipping + vatAmount;
+    const vatAmount = settings.vat.enabled ? (subtotal + shipping - discount) * settings.vat.rate : 0;
+    const total = subtotal + shipping - discount + vatAmount;
+
+    const handleApplyCoupon = () => {
+        const coupon = form.getValues('coupon')?.toUpperCase();
+        if (!coupon) {
+          toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
+          return;
+        }
+        // Dummy coupon logic
+        if (coupon === 'AGENT50') {
+          const newDiscount = subtotal * 0.5;
+          setDiscount(newDiscount);
+          toast({ title: 'Coupon Applied!', description: `You received a 50% discount (OMR ${newDiscount.toFixed(2)}).` });
+        } else {
+          toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
+        }
+    };
+
 
     const onSubmit: SubmitHandler<CheckoutValues> = async (data) => {
         setIsLoading(true);
@@ -175,6 +195,19 @@ export default function CheckoutPage() {
                                     <CardTitle>Order Summary</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
+                                     <FormField control={form.control} name="coupon" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Coupon Code</FormLabel>
+                                            <div className="flex gap-2">
+                                                <FormControl>
+                                                    <Input placeholder="Enter coupon code..." {...field} />
+                                                </FormControl>
+                                                <Button type="button" variant="secondary" onClick={handleApplyCoupon}>Apply</Button>
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}/>
+                                    <hr />
                                     {cartItems.map(item => (
                                         <div key={item.id} className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
@@ -191,6 +224,12 @@ export default function CheckoutPage() {
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between"><span>Subtotal</span><span>OMR {subtotal.toFixed(2)}</span></div>
                                         <div className="flex justify-between"><span>Shipping</span><span>OMR {shipping.toFixed(2)}</span></div>
+                                        {discount > 0 && (
+                                            <div className="flex justify-between text-green-600 dark:text-green-400">
+                                                <span>Discount</span>
+                                                <span>- OMR {discount.toFixed(2)}</span>
+                                            </div>
+                                        )}
                                         {settings.vat.enabled && (
                                             <div className="flex justify-between">
                                                 <span>VAT ({settings.vat.rate * 100}%)</span>

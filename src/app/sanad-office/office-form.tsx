@@ -47,6 +47,7 @@ type FormValues = z.infer<typeof FormSchema>;
 
 const PaymentSchema = z.object({
     subscriptionTier: z.enum(['monthly', 'yearly', 'lifetime']),
+    coupon: z.string().optional(),
     cardholderName: z.string().min(3, 'Cardholder name is required.'),
     cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
     expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
@@ -84,6 +85,7 @@ export default function OfficeForm() {
     resolver: zodResolver(PaymentSchema),
     defaultValues: {
         subscriptionTier: 'monthly',
+        coupon: '',
     }
   });
 
@@ -198,6 +200,32 @@ export default function OfficeForm() {
     link.click();
     document.body.removeChild(link);
   }
+
+  const handleApplyCoupon = () => {
+    const coupon = paymentForm.getValues('coupon')?.toUpperCase();
+    if (!coupon) {
+      toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
+      return;
+    }
+    // Dummy coupon logic
+    if (coupon === 'FREE100') {
+      setTotalPrice(0);
+      toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
+    } else if (coupon === 'AGENT50') {
+      let currentSubtotal = 0;
+      if (watchSubscriptionTier === 'lifetime') {
+        currentSubtotal = sanadSettings.lifetimeFee;
+      } else {
+        const subscriptionFee = watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
+        currentSubtotal = sanadSettings.registrationFee + subscriptionFee;
+      }
+      setTotalPrice(currentSubtotal * 0.5);
+      toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
+    } else {
+      toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
+    }
+  }
+
 
   if (isSubmitted) {
       return (
@@ -407,6 +435,20 @@ export default function OfficeForm() {
                                 <hr className="my-2" />
                                 <div className="flex justify-between font-bold text-lg"><span>Total Due Today:</span><span className="text-primary">OMR {totalPrice.toFixed(2)}</span></div>
                             </CardContent>
+                             <CardFooter>
+                                <FormField control={paymentForm.control} name="coupon" render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel>Coupon Code</FormLabel>
+                                        <div className="flex gap-2">
+                                            <FormControl>
+                                                <Input placeholder="Enter coupon code..." {...field} />
+                                            </FormControl>
+                                            <Button type="button" variant="secondary" onClick={handleApplyCoupon}>Apply</Button>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}/>
+                            </CardFooter>
                         </Card>
 
                         <div>
