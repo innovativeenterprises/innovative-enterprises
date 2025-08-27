@@ -1,9 +1,10 @@
 
+
 'use client';
 
-import { notFound } from 'next/navigation';
-import { initialProducts } from '@/lib/products';
+import { notFound, useRouter } from 'next/navigation';
 import type { Product } from '@/lib/products';
+import { useProductsData } from '@/app/admin/product-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -13,6 +14,9 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { store } from '@/lib/global-store';
+import type { CartItem } from '@/lib/global-store';
+
 
 const RelatedProductCard = ({ product }: { product: Product }) => (
     <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -36,22 +40,37 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 
 
 export default function ProductDetailPage({ params }: { params: { id: string }}) {
+    const { products } = useProductsData();
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
-    const product = initialProducts.find(p => p.id === parseInt(params.id, 10));
+    const router = useRouter();
+    const product = products.find(p => p.id === parseInt(params.id, 10));
 
     if (!product) {
         return notFound();
     }
     
     const handleAddToCart = () => {
+        store.set(state => {
+            const existingItem = state.cart.find(item => item.id === product.id);
+            if (existingItem) {
+                return {
+                    ...state,
+                    cart: state.cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item)
+                }
+            }
+            return {
+                ...state,
+                cart: [...state.cart, { ...product, quantity }]
+            }
+        });
         toast({
             title: "Added to Cart!",
             description: `${quantity} x "${product.name}" has been added to your shopping cart.`,
         })
     }
 
-    const relatedProducts = initialProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+    const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
 
     return (
         <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">

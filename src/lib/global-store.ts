@@ -20,6 +20,10 @@ import { initialSettings, type AppSettings } from './settings';
 import { initialProviders, type Provider } from './providers';
 import { initialAssets, type Asset } from './assets';
 
+export interface CartItem extends Product {
+  quantity: number;
+}
+
 type AppState = {
   services: Service[];
   products: Product[];
@@ -33,6 +37,7 @@ type AppState = {
   settings: AppSettings;
   providers: Provider[];
   assets: Asset[];
+  cart: CartItem[];
 };
 
 // The single source of truth for our application's shared state.
@@ -49,6 +54,7 @@ let state: AppState = {
   settings: initialSettings,
   providers: initialProviders,
   assets: initialAssets,
+  cart: [],
 };
 
 // A list of all component update functions to call when state changes.

@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
+import { store } from '@/lib/global-store';
+import type { CartItem } from '@/lib/global-store';
 
 const navLinks = [
   { href: '/#products', label: 'Products' },
@@ -175,6 +177,17 @@ const partnershipLinks: { title: string; href: string; description: string }[] =
 export default function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const updateCartCount = () => {
+        const currentCart = store.get().cart;
+        setCartCount(currentCart.reduce((sum, item) => sum + item.quantity, 0));
+    }
+    updateCartCount(); // Initial count
+    const unsubscribe = store.subscribe(updateCartCount);
+    return () => unsubscribe();
+  }, []);
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
@@ -279,6 +292,13 @@ export default function Header() {
           </NavigationMenu>
         </nav>
         <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" asChild>
+                <Link href="/ecommerce/cart" className="relative">
+                     {cartCount > 0 && <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs">{cartCount}</span>}
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="sr-only">Shopping Cart</span>
+                </Link>
+            </Button>
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon">

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -10,6 +11,8 @@ import Link from 'next/link';
 import { useProductsData } from '@/app/admin/product-table';
 import type { Product } from '@/lib/products';
 import { useToast } from '@/hooks/use-toast';
+import { store } from '@/lib/global-store';
+import type { CartItem } from '@/lib/global-store';
 
 const categories = [
     "All",
@@ -25,6 +28,19 @@ const ProductCard = ({ product }: { product: Product }) => {
     const { toast } = useToast();
 
     const handleAddToCart = () => {
+        store.set(state => {
+            const existingItem = state.cart.find(item => item.id === product.id);
+            if (existingItem) {
+                return {
+                    ...state,
+                    cart: state.cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
+                }
+            }
+            return {
+                ...state,
+                cart: [...state.cart, { ...product, quantity: 1 }]
+            }
+        });
         toast({
             title: "Added to Cart!",
             description: `1 x "${product.name}" has been added to your shopping cart.`,
