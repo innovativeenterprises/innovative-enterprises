@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -37,80 +37,94 @@ const navLinks = [
   { href: '/team', label: 'Our Team' },
 ];
 
-const serviceLinks: { title: string; href: string; description: string }[] = [
+const serviceLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
   {
     title: "Sanad Hub Platform",
     href: "/sanad-hub",
     description: "A digital gateway connecting users with Sanad Service Centres across Oman for task delegation and service bidding.",
+    icon: Shield,
   },
   {
     title: "Business Hub",
     href: "/business-hub",
     description: "A B2B and B2C marketplace connecting businesses with each other and with new clients for opportunities.",
+    icon: Handshake,
   },
   {
     title: "Nova Commerce",
     href: "/ecommerce",
     description: "End-to-end solutions to build, manage, and scale your online business.",
+    icon: ShoppingCart,
   },
   {
     title: "InfraRent",
     href: "/infra-rent",
     description: "On-demand rental of IT equipment like servers, workstations, and networking gear.",
+    icon: Server,
   },
    {
     title: "RAAHA Platform",
     href: "/raaha",
     description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
+    icon: Building,
   },
    {
     title: "GENIUS Career Platform",
     href: "/cv-enhancer",
     description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
+    icon: UserRoundCheck,
   },
   {
     title: "Certus Audit Hub",
     href: "/financial-audit",
     description: "Connect with certified audit offices and get AI-powered analysis of your financial documents.",
+    icon: FileText,
   },
   {
     title: "Vision AI Estimator",
     href: "/cctv-estimator",
     description: "Get an AI-powered quotation for your surveillance system needs, from design to installation.",
+    icon: Video,
   },
   {
     title: "Browse IT Rentals",
     href: "/rentals",
     description: "View our catalog of available IT hardware and cloud infrastructure for rent.",
+    icon: ServerCog,
   },
 ];
 
 
-const aiToolsLinks: { title: string; href: string; description: string }[] = [
+const aiToolsLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
   {
     title: "Voxi Translator",
     href: "/document-translator",
     description: "Translate legal, financial, and official documents with high accuracy.",
+    icon: Languages,
   },
   {
     title: "Aida Legal Assistant",
     href: "/legal-agent",
     description: "Get preliminary analysis, draft agreements, or ask general questions from our AI agent, Aida.",
+    icon: Scale,
   },
    {
     title: "AI Interview Coach",
     href: "/interview-coach",
     description: "Practice for your next job interview with AI-generated questions.",
+    icon: Mic,
   },
   {
     title: "AI Image Generator",
     href: "/image-generator",
     description: "Create stunning visuals from text descriptions in seconds.",
+    icon: Lightbulb,
   },
   {
     title: "Mira Marketing Agent",
     href: "/social-media-post-generator",
     description: "Generate social media posts, tender responses, and other marketing copy.",
+    icon: Sparkles,
   },
 ];
 
@@ -225,6 +239,7 @@ export default function Header() {
                         title={component.title}
                         href={component.href}
                         onClick={handleLinkClick}
+                        icon={component.icon}
                       >
                         {component.description}
                       </ListItem>
@@ -244,6 +259,7 @@ export default function Header() {
                         title={component.title}
                         href={component.href}
                         onClick={handleLinkClick}
+                        icon={component.icon}
                       >
                         {component.description}
                       </ListItem>
@@ -381,8 +397,8 @@ export default function Header() {
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<"a"> & { icon?: LucideIcon }
+>(({ className, title, children, icon: Icon, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -394,8 +410,11 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm font-medium leading-none">
+            {Icon && <Icon className="h-5 w-5 text-primary/80" />}
+            {title}
+          </div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground pl-7">
             {children}
           </p>
         </a>
