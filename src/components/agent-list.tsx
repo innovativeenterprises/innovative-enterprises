@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
 import Link from 'next/link';
 import type { Agent, AgentCategory } from '@/lib/agents';
+import { useStaffData } from "@/app/admin/staff-table";
 
 const AgentCard = ({ agent }: { agent: Agent }) => (
     <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
@@ -64,7 +65,7 @@ const LeadershipCard = ({ member }: { member: Agent }) => (
                     </Link>
                 )}
                 {member.socials?.email && (
-                    <Link href={member.socials.email} className="text-muted-foreground hover:text-primary transition-colors">
+                    <Link href={`mailto:${member.socials.email}`} className="text-muted-foreground hover:text-primary transition-colors">
                         <Mail className="w-5 h-5" />
                         <span className="sr-only">Email</span>
                     </Link>
@@ -114,5 +115,18 @@ export function DigitalWorkforce({ categories }: { categories: AgentCategory[] }
                 ))}
             </div>
         </div>
+    )
+}
+
+export default function AgentList() {
+    const { agentCategories } = useStaffData();
+
+    const enabledAgentCategories = agentCategories.map(category => ({
+        ...category,
+        agents: category.agents.filter(agent => agent.enabled)
+    })).filter(category => category.agents.length > 0);
+
+    return (
+        <DigitalWorkforce categories={enabledAgentCategories} />
     )
 }
