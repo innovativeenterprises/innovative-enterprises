@@ -742,7 +742,7 @@ export default function CvForm() {
                              {isUnlocked ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
                         </div>
                     </TabsContent>
-                    <TabsContent value="interview">
+                    <TabsContent value="interview" className="pt-4">
                         <InterviewCoachForm />
                     </TabsContent>
                 </Tabs>
