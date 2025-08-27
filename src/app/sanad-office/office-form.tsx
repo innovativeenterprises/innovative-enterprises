@@ -20,6 +20,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useSettingsData } from '@/app/admin/settings-table';
+import { sanadServiceGroups } from '@/lib/sanad-services';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -183,13 +184,13 @@ export default function OfficeForm() {
   };
   
   const handleDownloadTemplate = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + "Service Name,Official Fee (OMR),Our Service Charge (OMR)\n"
-      + "New Commercial Registration (CR),50.00,15.00\n"
-      + "CR Renewal,30.00,10.00\n"
-      + "New Visa Application (Work),20.00,20.00\n";
+    const headers = ["Service Name", "Official Fee (OMR)", "Our Service Charge (OMR)"];
+    const allServices = Object.values(sanadServiceGroups).flat();
     
-    const encodedUri = encodeURI(csvContent);
+    let csvContent = headers.join(",") + "\n";
+    csvContent += allServices.map(service => `"${service}",,`).join("\n");
+    
+    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "sanad_service_charge_template.csv");
