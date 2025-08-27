@@ -15,6 +15,7 @@ export const sanadServiceIcons: Record<string, LucideIcon> = {
     "Ministry of Health (MOH)": HeartPulse,
     "Ministry of Transport, Communications and IT (MTCIT)": Car,
     "Ministry of Foreign Affairs": Globe,
+    "Tax Authority": HandCoins,
     "Other Services": FileText,
 };
 
@@ -70,8 +71,16 @@ export const sanadServiceGroups: Record<string, string[]> = {
     "Ministry of Foreign Affairs": [
         "Document Attestation (Marriage/Birth Cert., Degrees)",
     ],
+    "Tax Authority": [
+        "New VAT Registration",
+        "New Excise Tax Registration",
+        "VAT Return Filing",
+        "Excise Tax Return Filing",
+        "Tax Card Application / Printing",
+        "Request for Tax Clearance Certificate",
+        "Update Registrant Details",
+    ],
     "Other Services": [
-        "Tax Authority (VAT Registration, Filing)",
         "Utility Bill Payment (Water, Electricity, Telecom)",
         "PRO Services for Document Collection/Submission",
         "General Typing & Form Filling",
