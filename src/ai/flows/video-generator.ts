@@ -22,24 +22,37 @@ export type GenerateVideoInput = z.infer<typeof GenerateVideoInputSchema>;
 export async function generateVideo(input: GenerateVideoInput): Promise<string> {
     
   let operation;
-  try {
-     const generationResult = await ai.generate({
-        model: googleAI.model('veo-2.0-generate-001'),
-        prompt: input.prompt,
-        config: {
-        durationSeconds: input.durationSeconds,
-        aspectRatio: '16:9',
-        },
-    });
-    operation = generationResult.operation;
-  } catch (e) {
-      console.error("Initial video generation call failed", e);
-      throw new Error("Failed to start video generation.");
+  let lastError: any = null;
+  const maxRetries = 3;
+
+  // Add a retry loop for initial generation call
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+       const generationResult = await ai.generate({
+          model: googleAI.model('veo-2.0-generate-001'),
+          prompt: input.prompt,
+          config: {
+          durationSeconds: input.durationSeconds,
+          aspectRatio: '16:9',
+          },
+      });
+      operation = generationResult.operation;
+      if (operation) {
+        lastError = null; // Clear error on success
+        break; // Exit loop on success
+      }
+    } catch (e) {
+        lastError = e;
+        console.error(`Video generation attempt ${attempt} failed:`, e);
+        if (attempt < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, 2000 * attempt)); // Wait before retrying
+        }
+    }
   }
 
-
-  if (!operation) {
-    throw new Error('Expected the model to return an operation');
+  if (lastError || !operation) {
+      console.error("All video generation attempts failed.", lastError);
+      throw new Error(`Failed to start video generation after ${maxRetries} attempts. Please try again later.`);
   }
 
   // Wait until the operation completes. Note that this may take some time.
