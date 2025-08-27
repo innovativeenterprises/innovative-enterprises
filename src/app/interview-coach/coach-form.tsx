@@ -7,13 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateInterviewQuestions } from '@/ai/flows/interview-coach';
 import type { InterviewQuestion } from '@/ai/flows/interview-coach.schema';
-import { generateVideo } from '@/ai/flows/video-generator';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight, Video, VideoOff } from 'lucide-react';
+import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight, VideoOff } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from 'next/image';
@@ -26,7 +25,6 @@ type FormValues = z.infer<typeof FormSchema>;
 export default function InterviewCoachForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
-  const [interviewerVideoUrl, setInterviewerVideoUrl] = useState<string | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -80,22 +78,14 @@ export default function InterviewCoachForm() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setQuestions([]);
-    setInterviewerVideoUrl(null);
     setCurrentQuestionIndex(0);
 
     try {
-        toast({ title: "Preparing your session...", description: "Generating questions and preparing the virtual interviewer." });
+        toast({ title: "Preparing your session...", description: "Generating questions for your interview practice." });
 
-        const questionsPromise = generateInterviewQuestions(data);
-        const videoPromise = generateVideo({ 
-            prompt: "A short, looping, photorealistic video of a friendly, professional HR manager nodding slightly in an office setting. They are looking directly at the camera as if listening. This is for a virtual interview simulation.",
-            durationSeconds: 8,
-        });
-
-        const [questionsResult, videoUrl] = await Promise.all([questionsPromise, videoPromise]);
+        const questionsResult = await generateInterviewQuestions(data);
         
         setQuestions(questionsResult.questions);
-        setInterviewerVideoUrl(videoUrl);
 
         toast({ title: "Session Ready!", description: "Your interview practice session is ready to begin." });
 
@@ -103,7 +93,7 @@ export default function InterviewCoachForm() {
         console.error(error);
         toast({
             title: 'Error Preparing Session',
-            description: 'Failed to generate interview questions or video. Please try again.',
+            description: 'Failed to generate interview questions. Please try again.',
             variant: 'destructive',
         });
     } finally {
@@ -125,7 +115,6 @@ export default function InterviewCoachForm() {
 
   const startOver = () => {
       setQuestions([]);
-      setInterviewerVideoUrl(null);
       setCurrentQuestionIndex(0);
       setHasCameraPermission(false);
       form.reset();
@@ -137,13 +126,13 @@ export default function InterviewCoachForm() {
             <Card>
                 <CardContent className="p-10 text-center">
                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                    <p className="mt-4 text-muted-foreground">Your AI Coach is preparing your questions and the virtual interviewer... this may take up to a minute.</p>
+                    <p className="mt-4 text-muted-foreground">Your AI Coach is preparing your questions...</p>
                 </CardContent>
             </Card>
         );
     }
 
-    if (questions.length > 0 && interviewerVideoUrl) {
+    if (questions.length > 0) {
         const currentQuestion = questions[currentQuestionIndex];
         return (
              <Card className="overflow-hidden">
@@ -154,7 +143,13 @@ export default function InterviewCoachForm() {
                 <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="relative aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center text-white">
-                             <video src={interviewerVideoUrl} loop autoPlay muted playsInline className="w-full h-full object-cover opacity-90" />
+                             <Image 
+                                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1920&auto=format&fit=crop" 
+                                alt="AI Interviewer"
+                                fill
+                                className="object-cover opacity-90"
+                                data-ai-hint="professional woman"
+                             />
                              <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 text-sm rounded-md">
                                  <p className="font-semibold">AI Interviewer</p>
                              </div>
