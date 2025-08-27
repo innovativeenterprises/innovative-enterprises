@@ -1,31 +1,28 @@
+
 /**
- * @fileOverview Schemas and types for the CCTV Quotation AI flow.
+ * @fileOverview Schemas and types for the ICT & Surveillance Proposal AI flow.
  */
 
 import { z } from 'zod';
+import { AssetSchema } from '@/lib/assets.schema';
 
-export const CctvQuotationInputSchema = z.object({
-  purpose: z.string().min(1, "Purpose is required."),
-  buildingType: z.string().min(1, "Building type is required."),
-  buildingDimensions: z.string().optional().describe("Overall building dimensions if no floor plan is provided (e.g., '15m x 20m')."),
-  numberOfFloors: z.coerce.number().optional().describe("The number of floors in the building."),
-  buildingHeight: z.string().optional().describe("The total estimated height of the building (e.g., '10m')."),
-  floorPlanUri: z.string().optional().describe("A floor plan or sketch of the building, as a data URI."),
-  surveillanceArea: z.enum(['Internal Only', 'External Only', 'Both']),
-  coverage: z.enum(['Full Environment', 'Partial']),
-  coverageDetails: z.string().optional().describe("Details about which areas need partial coverage."),
-  remoteMonitoring: z.boolean(),
-  existingSystem: z.enum(['None', 'Keep Some', 'Replace All']),
-  dvrSwitchTvLocation: z.string().min(1, "DVR/Switch/TV location is required."),
-  
-  // New granular fields for a more precise quotation
-  cameraType: z.enum(['Any', 'Dome', 'Bullet', 'PTZ']).describe("The preferred style of camera."),
-  cameraResolution: z.enum(['Standard HD', '4K Ultra HD']).describe("The required video resolution."),
-  nightVision: z.boolean().describe("Whether cameras with night vision are required."),
-  audioRecording: z.boolean().describe("Whether audio recording capabilities are needed."),
-  storageDuration: z.coerce.number().min(7).describe("The number of days for continuous recording storage (e.g., 30, 60, 90)."),
+export const IctProposalInputSchema = z.object({
+  projectName: z.string().describe("The name of the client's project or event."),
+  projectType: z.enum([
+    'Temporary Office Setup',
+    'Training Program or Workshop',
+    'Special Event (e.g., conference, hackathon)',
+    'Short-term Project (e.g., data analysis, software dev)',
+    'Hardware Evaluation or Testing',
+    'Other'
+  ]).describe("The type of project the client is undertaking."),
+  numberOfUsers: z.coerce.number().describe("The number of people who will need equipment (attendees, staff, etc.)."),
+  projectDurationMonths: z.coerce.number().describe("The duration of the project in months."),
+  primaryGoal: z.string().describe("A description of what the users will be doing, which informs the type of hardware needed."),
+  includeSurveillance: z.boolean().describe("Whether the client also needs a quote for a surveillance system."),
+  surveillanceDetails: z.string().optional().describe("Specific requirements for the surveillance system, if requested."),
 });
-export type CctvQuotationInput = z.infer<typeof CctvQuotationInputSchema>;
+export type IctProposalInput = z.infer<typeof IctProposalInputSchema>;
 
 const EquipmentSchema = z.object({
   item: z.string().describe("The name of the equipment (e.g., '4K Dome Camera', '16-Channel NVR')."),
@@ -34,21 +31,21 @@ const EquipmentSchema = z.object({
   totalPrice: z.number().describe("The total estimated price for this line item (quantity * unitPrice)."),
 });
 
-export const CctvQuotationOutputSchema = z.object({
-  quotationId: z.string().describe("A unique ID for this quotation (e.g., 'QT-CCTV-12345')."),
-  summary: z.string().describe("A single, concise sentence summarizing the proposed surveillance solution."),
-  equipmentList: z.array(EquipmentSchema).describe("A detailed list of all required equipment."),
-  cablingEstimate: z.object({
-    totalLengthMeters: z.number().describe("The total estimated length of cable needed in meters."),
-    cablingNotes: z.string().describe("Notes on the recommended cabling path and type."),
-  }).describe("An estimate for the cabling requirements."),
-  installationEstimate: z.object({
-      laborHours: z.number().describe("Estimated labor hours for installation."),
-      laborCost: z.number().describe("Estimated total labor cost in OMR."),
-      notes: z.string().describe("Notes about the installation process."),
-  }).describe("An estimate for the installation labor."),
-  totalEstimatedCost: z.number().describe("The grand total estimated cost for the project in OMR (equipment + installation)."),
-  nextSteps: z.string().describe("Recommended next steps for the user to take after reviewing the quotation."),
-  annotatedPlanUri: z.string().optional().describe("The floor plan image with suggested equipment locations marked on it, as a data URI."),
+export const IctProposalOutputSchema = z.object({
+  proposalId: z.string().describe("A unique ID for this proposal (e.g., 'QT-ICT-12345')."),
+  proposalTitle: z.string().describe("A clear and descriptive title for the proposal."),
+  executiveSummary: z.string().describe("A single, concise paragraph summarizing the proposed technology solution."),
+  recommendedAssets: z.array(AssetSchema.extend({ quantity: z.number().describe("The number of units recommended for this asset.") })).describe("A list of recommended IT assets for rental from the available inventory, including quantity."),
+  surveillanceSystem: z.object({
+    summary: z.string().optional().describe("A brief summary of the proposed surveillance solution."),
+    equipmentList: z.array(EquipmentSchema).describe("A detailed list of all required equipment for the surveillance system purchase."),
+  }).describe("Details of the surveillance system to be purchased."),
+  totalEstimatedCost: z.number().describe("The grand total estimated cost for the project. This should be the sum of all one-time purchase costs (like CCTV) and the total rental cost over the project duration."),
+  costBreakdown: z.object({
+    totalRentalCostPerMonth: z.number().describe("The total monthly cost for all rented assets."),
+    totalRentalCostForDuration: z.number().describe("The total rental cost over the entire project duration."),
+    oneTimePurchaseCost: z.number().describe("The total cost for all purchased items (e.g., surveillance system)."),
+  }),
+  nextSteps: z.string().describe("Recommended next steps for the user to take after reviewing the proposal."),
 });
-export type CctvQuotationOutput = z.infer<typeof CctvQuotationOutputSchema>;
+export type IctProposalOutput = z.infer<typeof IctProposalOutputSchema>;

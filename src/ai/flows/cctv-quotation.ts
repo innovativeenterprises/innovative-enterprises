@@ -2,153 +2,97 @@
 'use server';
 
 /**
- * @fileOverview An AI agent that generates a quotation for a CCTV surveillance system.
- * - generateCctvQuotation - A function that analyzes user requirements and a floor plan.
+ * @fileOverview An AI agent that generates a quotation for ICT rentals and surveillance systems.
+ * - generateIctProposal - A function that analyzes user requirements for a project.
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
+import { initialAssets } from '@/lib/assets';
 import {
-    CctvQuotationInput,
-    CctvQuotationInputSchema,
-    CctvQuotationOutput,
-    CctvQuotationOutputSchema,
+    IctProposalInput,
+    IctProposalInputSchema,
+    IctProposalOutput,
+    IctProposalOutputSchema,
 } from './cctv-quotation.schema';
 
-export async function generateCctvQuotation(input: CctvQuotationInput): Promise<CctvQuotationOutput> {
-  return cctvQuotationFlow(input);
+export async function generateIctProposal(input: IctProposalInput): Promise<IctProposalOutput> {
+  return IctProposalFlow(input);
 }
 
-// Define the schema for the text-based part of the quotation first
-const CctvQuotationTextOutputSchema = CctvQuotationOutputSchema.omit({ annotatedPlanUri: true });
+const prompt = ai.definePrompt({
+  name: 'ictProposalPrompt',
+  input: { schema: IctProposalInputSchema },
+  output: { schema: IctProposalOutputSchema },
+  prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a comprehensive ICT proposal, recommending rental equipment and designing a surveillance system if needed.
 
-const quotationTextPrompt = ai.definePrompt({
-  name: 'cctvQuotationTextPrompt',
-  input: { schema: CctvQuotationInputSchema },
-  output: { schema: CctvQuotationTextOutputSchema },
-  prompt: `You are an expert CCTV and surveillance systems engineer. Your task is to analyze a client's requirements and generate a detailed, professional quotation for a complete installation.
+**Available IT Rental Asset Inventory:**
+You MUST only recommend assets from this list for the rental portion.
+\'\'\'json
+{{{availableAssetsJson}}}
+\'\'\'
 
-**Client Requirements:**
-- **Building Type:** {{buildingType}}
-- **Purpose of Installation:** {{purpose}}
-- **Surveillance Area:** {{surveillanceArea}} (Internal Only, External Only, or Both). This is a critical factor for camera type selection (e.g., weatherproof cameras for external).
-- **Coverage Required:** {{coverage}}
-{{#if coverageDetails}}
-- **Partial Coverage Details:** {{coverageDetails}}
-{{/if}}
-- **DVR/Switch/TV Location:** {{dvrSwitchTvLocation}}
-
-**System Specifications:**
-- **Remote Monitoring:** {{#if remoteMonitoring}}Yes{{else}}No{{/if}}
-- **Existing System:** {{existingSystem}}
-- **Preferred Camera Type:** {{cameraType}}
-- **Required Resolution:** {{cameraResolution}}
-- **Night Vision:** {{#if nightVision}}Yes{{else}}No{{/if}}
-- **Audio Recording:** {{#if audioRecording}}Yes{{else}}No{{/if}}
-- **Required Storage Duration:** {{storageDuration}} days
-
-**Client Provided Assets:**
-{{#if floorPlanUri}}
-- **Floor Plan / Sketch / Photo:** {{media url=floorPlanUri}} (Analyze this image to determine layout, key entry/exit points, windows, and overall dimensions. If it's a photo of an area, use it to assess camera placement needs.)
-{{else}}
-- **Building Dimensions:** {{buildingDimensions}}
-- **Number of Floors:** {{numberOfFloors}}
-- **Building Height:** {{buildingHeight}}
+**Client Project Requirements:**
+- **Project Name:** {{{projectName}}}
+- **Project Type:** {{{projectType}}}
+- **Number of Users:** {{{numberOfUsers}}}
+- **Project Duration:** {{{projectDurationMonths}}} months
+- **Primary Goal/Task:** {{{primaryGoal}}}
+- **Include Surveillance System:** {{#if includeSurveillance}}Yes{{else}}No{{/if}}
+{{#if surveillanceDetails}}
+- **Surveillance Details:** {{{surveillanceDetails}}}
 {{/if}}
 
 **Your Task:**
-1.  **Analyze the Inputs:** Carefully review all the client's requirements and analyze the provided floor plan, sketch, photo, or dimensions. Make logical assumptions based on the visual data. Pay close attention to whether the surveillance is internal, external, or both. Use the number of floors and building height for cabling estimates.
-2.  **Design the System:**
-    *   Determine the optimal number and type of cameras (e.g., dome, bullet, PTZ) needed to achieve the desired coverage, considering the client's preference for '{{cameraType}}' and the '{{surveillanceArea}}'. Use weatherproof bullet cameras for external areas.
-    *   Select cameras that meet the resolution ('{{cameraResolution}}'), night vision, and audio recording requirements.
-    *   Select an appropriate Network Video Recorder (NVR). The storage capacity MUST be sufficient for {{storageDuration}} days of continuous recording from all cameras. A 4K camera requires ~150GB/day. A standard HD camera requires ~40GB/day. Calculate total storage needed and select an NVR with adequate HDD space (e.g., 2TB, 4TB, 8TB, 16TB).
-    *   Determine the required network switch (PoE or standard) and other necessary components (e.g., power supplies, connectors).
-3.  **Estimate Cabling:**
-    *   Based on the visual data or dimensions, number of floors, and building height, estimate the total length of Ethernet cabling required.
-    *   Provide brief notes on the recommended cabling strategy (e.g., "Cabling to be run through ceiling conduits").
-4.  **Estimate Installation Labor:**
-    *   Estimate the total labor hours required for installation, configuration, and testing.
-    *   Calculate the labor cost. Assume a rate of OMR 10 per hour.
-5.  **Generate Equipment List:** Create a detailed list of all equipment with quantities and estimated unit prices in OMR.
-    *   Standard HD Dome Camera: OMR 35
-    *   4K Dome Camera: OMR 45
-    *   Standard HD Bullet Camera: OMR 45
-    *   4K Bullet Camera: OMR 55
-    *   PTZ Camera: OMR 150
-    *   8-Channel NVR (2TB): OMR 120
-    *   16-Channel NVR (4TB): OMR 200
-    *   16-Channel NVR (8TB): OMR 350
-    *   32-Channel NVR (16TB): OMR 600
-    *   8-Port PoE Switch: OMR 60
-    *   16-Port PoE Switch: OMR 100
-    *   CAT6 Cable: OMR 0.3 per meter
-    *   Microphone (if needed for non-audio cameras): OMR 10
-    *   Connectors/Mounts/Misc: OMR 5 per camera
-6.  **Calculate Total Cost:** Sum up the costs of all equipment and labor to provide a grand total.
-7.  **Provide Summary & Next Steps:**
-    *   Write a single, concise sentence summarizing the proposed solution.
-    *   Generate a unique quotation ID.
-    *   Outline the next steps for the client (e.g., "Review the quotation. To proceed, you can approve this quote to have it posted as a work order for our network of certified installers.").
+1.  **Analyze and Design:**
+    *   **IT Rentals:** Based on the **Project Type** and **Primary Goal**, select the most appropriate rental assets from the **Available Asset Inventory**.
+        *   For a 'Training Program', you might need {{numberOfUsers}} laptops.
+        *   For a 'Special Event', you might need laptops, networking gear, and projectors.
+        *   For 'Data Analysis', you'd need powerful workstations or servers.
+        *   The **quantity** for user-specific items (laptops, workstations) should match the **Number of Users**. For shared items (servers, routers), the quantity is usually 1.
+    *   **Surveillance System (if includeSurveillance is true):**
+        *   Design a basic but effective CCTV system suitable for the **Project Type**.
+        *   Determine the number and type of cameras (Dome, Bullet). A typical office might need 4-8 cameras. An event might need more.
+        *   Select an appropriate Network Video Recorder (NVR) and network switch.
+        *   If **Surveillance Details** are provided, use them to tailor the system. Otherwise, make reasonable assumptions.
 
-Return the complete response in the specified structured JSON format. Do not include the annotatedPlanUri field yet.
+2.  **Generate Proposal Content:**
+    *   **proposalId:** Create a unique ID, e.g., 'QT-ICT-12345'.
+    *   **proposalTitle:** Create a clear title, e.g., "ICT & Surveillance Proposal for {{{projectName}}}".
+    *   **executiveSummary:** Write a concise paragraph explaining the proposed solution.
+    *   **recommendedAssets:** Create a JSON array of the exact rental asset objects you selected from the inventory. Crucially, add a 'quantity' field to each asset object. If no rental assets are needed, return an empty array.
+    *   **surveillanceSystem:**
+        *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below. If `includeSurveillance` is false, this list should be empty.
+        *   **CCTV Price List (OMR):** 4K Dome Camera: 45, 4K Bullet Camera: 55, 8-Channel NVR: 120, 16-Channel NVR: 200, 8-Port PoE Switch: 60, 16-Port PoE Switch: 100.
+        *   Write a brief summary of the surveillance solution.
+
+3.  **Calculate Costs:**
+    *   **totalRentalCostPerMonth:** Sum up (asset.monthlyPrice * quantity) for all items in `recommendedAssets`.
+    *   **totalRentalCostForDuration:** Calculate `totalRentalCostPerMonth * projectDurationMonths`.
+    *   **oneTimePurchaseCost:** Sum up the total price for all items in the `surveillanceSystem.equipmentList`.
+    *   **totalEstimatedCost:** Calculate `totalRentalCostForDuration + oneTimePurchaseCost`.
+
+4.  **Next Steps:** Provide a brief, professional closing statement recommending the next steps for the client.
+
+Return the complete response in the specified structured JSON format.
 `,
 });
 
-const cctvQuotationFlow = ai.defineFlow(
+const IctProposalFlow = ai.defineFlow(
   {
-    name: 'cctvQuotationFlow',
-    inputSchema: CctvQuotationInputSchema,
-    outputSchema: CctvQuotationOutputSchema,
+    name: 'IctProposalFlow',
+    inputSchema: IctProposalInputSchema,
+    outputSchema: IctProposalOutputSchema,
   },
   async (input) => {
-    // Step 1: Generate the text-based quotation to determine the equipment list.
-    const { output: textQuotation } = await quotationTextPrompt(input);
-    if (!textQuotation) {
-        throw new Error('Failed to generate text part of the quotation.');
-    }
+    // Filter for available assets to provide to the model
+    const availableAssets = initialAssets.filter(asset => asset.status === 'Available');
+    const availableAssetsJson = JSON.stringify(availableAssets, null, 2);
 
-    // Step 2: If a floor plan was provided, generate the annotated image.
-    let annotatedPlanUri: string | undefined;
-    if (input.floorPlanUri) {
-        const equipmentListForPrompt = textQuotation.equipmentList.map(e => `- ${e.quantity}x ${e.item}`).join('\n');
-
-        const imageGenerationPrompt = `
-        You are a CCTV system designer. Your task is to annotate the provided floor plan or building sketch with the locations of the required surveillance equipment.
-
-        Equipment to place:
-        ${equipmentListForPrompt}
-        - The main NVR/Switch is at: ${input.dvrSwitchTvLocation}
-
-        Instructions:
-        1. Use the original image as the background.
-        2. Place simple, clear icons on the image to mark the location of each camera. Use a small circle or dot for each camera.
-        3. Draw a square icon labeled "NVR" to mark the location of the main recording device.
-        4. Draw simple dashed lines to indicate the general path of the network cabling from each camera back to the NVR location.
-        5. Keep the annotations clean and easy to understand. Do not add any text other than the "NVR" label.
-        `;
-
-        try {
-            const { media } = await ai.generate({
-                model: 'googleai/gemini-2.0-flash-preview-image-generation',
-                prompt: [
-                    { media: { url: input.floorPlanUri } },
-                    { text: imageGenerationPrompt },
-                ],
-                config: {
-                    responseModalities: ['TEXT', 'IMAGE'],
-                },
-            });
-            annotatedPlanUri = media?.url;
-        } catch (error) {
-            console.error("Image annotation failed, proceeding without it.", error);
-            // Don't throw an error, just proceed without the annotated image.
-        }
-    }
-
-    // Step 3: Combine the text quotation and the annotated image URI into the final output.
-    return {
-        ...textQuotation,
-        annotatedPlanUri,
-    };
+    const { output } = await prompt({
+        ...input,
+        availableAssetsJson
+    });
+    
+    return output!;
   }
 );
