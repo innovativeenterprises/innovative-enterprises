@@ -7,6 +7,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { WebScraperInputSchema, WebScraperOutputSchema, type WebScraperInput, type WebScraperOutput } from './web-scraper-agent.schema';
+import { initialProviders } from '@/lib/providers';
 
 const fetchWebPageTool = ai.defineTool(
     {
@@ -36,10 +37,48 @@ const fetchWebPageTool = ai.defineTool(
     }
 );
 
+const queryProviderDatabaseTool = ai.defineTool(
+    {
+        name: 'queryProviderDatabase',
+        description: 'Queries the internal database of registered service providers, freelancers, and partners. Use this for queries about finding specific types of partners, like "vetted developers" or "design agencies".',
+        inputSchema: z.object({
+            query: z.string().describe('A search query describing the provider to find, e.g., "UI/UX designers" or "vetted React developers".')
+        }),
+        outputSchema: z.object({
+            results: z.array(z.object({
+                name: z.string(),
+                services: z.string(),
+                status: z.string(),
+            })).optional(),
+            summary: z.string(),
+        })
+    },
+    async({ query }) => {
+        const queryLower = query.toLowerCase();
+        const results = initialProviders.filter(provider => 
+            provider.name.toLowerCase().includes(queryLower) ||
+            provider.services.toLowerCase().includes(queryLower) ||
+            provider.status.toLowerCase().includes(queryLower)
+        );
+
+        if (results.length === 0) {
+            return { summary: "No providers found matching your query." };
+        }
+
+        const summary = `Found ${results.length} provider(s) matching your query. They are listed below.`;
+        return { 
+            results: results.map(p => ({ name: p.name, services: p.services, status: p.status })),
+            summary,
+        };
+    }
+);
+
+
 const summarizeWebPagePrompt = ai.definePrompt({
     name: 'summarizeWebPagePrompt',
     input: { schema: z.object({ content: z.string(), sourceUrl: z.string() }) },
     output: { schema: WebScraperOutputSchema },
+    tools: [queryProviderDatabaseTool],
     prompt: `You are an expert research analyst. You have been given the raw text content from a webpage.
     
 Webpage Content:
@@ -61,9 +100,16 @@ const searchSummaryPrompt = ai.definePrompt({
     name: 'searchSummaryPrompt',
     input: { schema: z.object({ query: z.string() }) },
     output: { schema: WebScraperOutputSchema },
-    prompt: `You are an expert research analyst. A user wants to know more about the following topic: "{{{query}}}".
+    tools: [queryProviderDatabaseTool],
+    prompt: `You are an expert research analyst. Your task is to respond to the user's query.
 
-Your task is to act as if you have searched the web and are synthesizing the results from the top 5 search hits.
+**User Query:** "{{{query}}}"
+
+**Decision Tree:**
+1.  **Check for Internal Database Query:** If the user's query is about finding internal partners, freelancers, or service providers (e.g., "Find me designers", "List all vetted developers"), you MUST use the \`queryProviderDatabaseTool\`.
+2.  **Perform Web Search:** For all other general research queries (e.g., "market trends in AI", "how to build a website"), act as if you have searched the web and are synthesizing the results from the top 5 search hits.
+
+**Web Search Instructions:**
 1.  **Title**: Create a summary title for the research, like "Research Summary for '{{{query}}}'".
 2.  **Summary**: Write a comprehensive, multi-paragraph summary that provides a general overview of the topic. Cover the key aspects, different viewpoints, and important entities related to the query.
 3.  **Key Points**: List the 5-7 most important facts, definitions, or common findings related to this topic.
@@ -87,9 +133,24 @@ export const scrapeAndSummarize = ai.defineFlow(
       const { output } = await summarizeWebPagePrompt({ content: pageContent.content, sourceUrl: input.source });
       return output!;
     } else {
-      // Simulate a web search by asking the LLM to synthesize information.
-      const { output } = await searchSummaryPrompt({ query: input.source });
-      return output!;
+      const llmResponse = await searchSummaryPrompt({ query: input.source });
+
+      // Check if the LLM decided to use the database tool
+      if (llmResponse.toolRequest?.name === 'queryProviderDatabase') {
+        const toolResult = await llmResponse.toolRequest.run();
+        const dbResponse = toolResult.output as z.infer<typeof queryProviderDatabaseTool.outputSchema>;
+        
+        // Format the database results into the standard WebScraperOutputSchema
+        return {
+            title: `Provider Database Search: "${input.source}"`,
+            summary: dbResponse.summary,
+            keyPoints: dbResponse.results?.map(r => `${r.name} (${r.status}) - Services: ${r.services}`),
+            source: "Internal Provider Database"
+        }
+      }
+
+      // If no tool was used, return the LLM's synthesized web search summary
+      return llmResponse.output!;
     }
   }
 );

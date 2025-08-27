@@ -75,7 +75,7 @@ export default function ResearcherPage() {
             <Card>
                 <CardHeader>
                 <CardTitle>Start Your Research</CardTitle>
-                <CardDescription>Enter a URL to scrape a specific page, or type a query to search the web.</CardDescription>
+                <CardDescription>Enter a URL, a search query, or ask about internal service providers.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
@@ -87,7 +87,7 @@ export default function ResearcherPage() {
                             <FormItem>
                                 <FormLabel>URL or Search Query</FormLabel>
                                 <FormControl>
-                                <Input placeholder="e.g., https://www.innovativeenterprises.tech or 'market trends in AI'" {...field} />
+                                <Input placeholder="e.g., 'vetted UI/UX designers' or 'market trends in AI'" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -122,7 +122,7 @@ export default function ResearcherPage() {
                         </CardTitle>
                         {response.source && (
                             <CardDescription>
-                                Source: <Link href={response.source} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:opacity-80">{response.source}</Link>
+                                Source: {response.source.startsWith("http") ? <Link href={response.source} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:opacity-80">{response.source}</Link> : <span className="font-medium text-primary">{response.source}</span>}
                             </CardDescription>
                         )}
                     </CardHeader>
