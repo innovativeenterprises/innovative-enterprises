@@ -8,31 +8,46 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { WebScraperInputSchema, WebScraperOutputSchema, type WebScraperInput, type WebScraperOutput } from './web-scraper-agent.schema';
 import { initialProviders } from '@/lib/providers';
+import * as cheerio from 'cheerio';
 
 const fetchWebPageTool = ai.defineTool(
     {
         name: 'fetchWebPage',
-        description: 'Fetches the raw text content of a given URL. This should only be used for direct URLs.',
+        description: 'Fetches and parses the content of a given URL, extracting main text and table data.',
         inputSchema: z.object({ url: z.string().url() }),
         outputSchema: z.object({ content: z.string() }),
     },
     async ({ url }) => {
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }});
             if (!response.ok) {
                 return { content: `Error: Failed to fetch URL. Status: ${response.status}` };
             }
-            // This is a simplified version. A real implementation would need a library like Cheerio or JSDOM to properly parse HTML.
-            const textContent = await response.text(); 
-            // A basic attempt to clean up HTML tags for the LLM
-            const cleanedContent = textContent.replace(/<style[^>]*>.*?<\/style>/gs, '') // remove style tags
-                                           .replace(/<script[^>]*>.*?<\/script>/gs, '') // remove script tags
-                                           .replace(/<[^>]+>/g, ' ') // remove all other tags
-                                           .replace(/\s\s+/g, ' ') // collapse whitespace
-                                           .trim();
-            return { content: cleanedContent.substring(0, 20000) }; // Limit content to avoid overly large payloads
+            const html = await response.text();
+            const $ = cheerio.load(html);
+
+            // Remove script, style, nav, header, footer tags to clean up the content
+            $('script, style, nav, header, footer, noscript, [aria-hidden="true"]').remove();
+            
+            // Convert tables to a simplified text format
+            $('table').each((i, table) => {
+                let tableText = "\n--- TABLE START ---\n";
+                $(table).find('tr').each((j, row) => {
+                    const rowTexts = $(row).find('th, td').map((k, cell) => $(cell).text().trim()).get();
+                    if(rowTexts.length > 0) {
+                       tableText += `| ${rowTexts.join(' | ')} |\n`;
+                    }
+                });
+                tableText += "--- TABLE END ---\n";
+                $(table).replaceWith(tableText);
+            });
+
+            // Extract text from the body, collapsing whitespace
+            const bodyText = $('body').text().replace(/\s\s+/g, ' ').trim();
+            
+            return { content: bodyText.substring(0, 30000) }; // Limit content size
         } catch (error: any) {
-            return { content: `Error: Could not fetch the page. ${error.message}` };
+            return { content: `Error: Could not fetch or parse the page. ${error.message}` };
         }
     }
 );
@@ -79,16 +94,17 @@ const summarizeWebPagePrompt = ai.definePrompt({
     input: { schema: z.object({ content: z.string(), sourceUrl: z.string() }) },
     output: { schema: WebScraperOutputSchema },
     tools: [queryProviderDatabaseTool],
-    prompt: `You are an expert research analyst. You have been given the raw text content from a webpage.
-    
+    prompt: `You are an expert research analyst. You have been given the parsed text content from a webpage.
+    The content may include data tables formatted in plain text.
+
 Webpage Content:
 """
 {{{content}}}
 """
 
 Your task is to analyze this content and provide a structured summary.
-1.  **Title**: Extract the most likely title of the page.
-2.  **Summary**: Write a comprehensive, multi-paragraph summary of the page's main topic and arguments.
+1.  **Title**: Extract the most likely title of the page from the content.
+2.  **Summary**: Write a comprehensive, multi-paragraph summary of the page's main topic and arguments. If tables are present, incorporate key data points from them into your summary.
 3.  **Key Points**: List the 5-7 most important facts, findings, or conclusions from the text.
 4.  **Source**: Return the original source URL: {{{sourceUrl}}}
 
