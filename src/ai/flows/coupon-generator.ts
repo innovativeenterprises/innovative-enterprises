@@ -27,7 +27,7 @@ const prompt = ai.definePrompt({
 **Promotion Details:**
 - **Description:** {{{description}}}
 - **Discount Type:** {{{discountType}}}
-- **Discount Value:** {{{discountValue}}}{{#if (eq discountType "percentage")}}{{else}} OMR{{/if}}
+- **Discount Value:** {{{discountValue}}}{{#if (eq discountType 'percentage')}}%{{else}} OMR{{/if}}
 {{#if usageLimit}}
 - **Usage Limit:** {{{usageLimit}}} uses
 {{/if}}
