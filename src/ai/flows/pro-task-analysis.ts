@@ -14,7 +14,8 @@ import {
     ProTaskAnalysisOutput,
     ProTaskAnalysisOutputSchema,
 } from './pro-task-analysis.schema';
-import { ministryLocations, type Ministry, calculateTotalDistance, type Governorate, OMAN_GOVERNORATES } from '@/lib/oman-locations';
+import { OMAN_MINISTRIES, ministryLocations, calculateTotalDistance, type Governorate, OMAN_GOVERNORATES } from '@/lib/oman-locations';
+import { sanadServiceGroups } from '@/lib/sanad-services';
 
 const FUEL_RATE_PER_KM = 0.400; // OMR per KM. This can be moved to admin settings later.
 const SNACKS_ALLOWANCE = 2.000;
@@ -22,6 +23,58 @@ const SNACKS_ALLOWANCE = 2.000;
 export async function analyzeProTask(input: ProTaskAnalysisInput): Promise<ProTaskAnalysisOutput> {
     return proTaskAnalysisFlow(input);
 }
+
+// Find which ministry a service belongs to
+const getMinistryForService = (serviceName: string): string | null => {
+    for (const [ministry, services] of Object.entries(sanadServiceGroups)) {
+        if (services.includes(serviceName)) {
+            return ministry;
+        }
+    }
+    return null;
+}
+
+const getRequiredInstitutions = ai.defineTool(
+    {
+        name: 'getRequiredInstitutions',
+        description: 'Determines which government ministries or authorities are required to be visited for a specific service.',
+        inputSchema: z.object({ serviceName: z.string().describe("The specific government service required.") }),
+        outputSchema: z.object({
+            requiredInstitutions: z.array(z.string()).describe('A list of the names of the required institutions.'),
+            reasoning: z.string().describe('A brief explanation for why these institutions were chosen.'),
+        })
+    },
+    async ({ serviceName }) => {
+        // This is a simplified logic. In a real-world scenario, this might involve a more complex lookup
+        // or even another LLM call with more context about inter-ministry dependencies.
+        const primaryMinistry = getMinistryForService(serviceName);
+        let requiredInstitutions: string[] = [];
+        let reasoning = "";
+
+        if (primaryMinistry) {
+            requiredInstitutions.push(primaryMinistry);
+            reasoning = `The primary institution for '${serviceName}' is the ${primaryMinistry}.`;
+        } else {
+             // Fallback for general services
+            if (serviceName.toLowerCase().includes('visa') || serviceName.toLowerCase().includes('driving')) {
+                requiredInstitutions.push("Royal Oman Police (ROP)");
+                reasoning = "Visa and driving-related services are handled by the Royal Oman Police (ROP).";
+            } else {
+                requiredInstitutions.push("Ministry of Commerce, Industry & Investment Promotion (MOCIIP)");
+                reasoning = `Could not map service directly, defaulting to MOCIIP as it's the most common for business services.`
+            }
+        }
+        
+        // Add dependency logic (example)
+        if (serviceName.includes("New Commercial Registration")) {
+            requiredInstitutions.push("Tax Authority");
+            reasoning += " A new CR also requires registration with the Tax Authority."
+        }
+
+        return { requiredInstitutions, reasoning };
+    }
+);
+
 
 const getTravelPlanTool = ai.defineTool(
     {
@@ -77,10 +130,14 @@ const proTaskAnalysisFlow = ai.defineFlow(
     outputSchema: ProTaskAnalysisOutputSchema,
   },
   async (input) => {
+
+    // 1. Determine which ministries to visit based on the service name
+    const requiredInstitutionsResult = await getRequiredInstitutions({ serviceName: input.serviceName });
+    const ministriesToVisit = requiredInstitutionsResult.requiredInstitutions;
     
-    // 1. Get travel plan and calculate fuel allowance
+    // 2. Get travel plan and calculate fuel allowance
     const travelPlan = await getTravelPlanTool({ 
-        ministriesToVisit: input.institutionNames,
+        ministriesToVisit: ministriesToVisit,
         governorate: input.governorate,
         startLocationName: input.startLocationName,
         startLocationCoords: input.startLocationCoords
@@ -93,11 +150,7 @@ const proTaskAnalysisFlow = ai.defineFlow(
         fuelAllowance = travelPlan.totalDistanceKm * FUEL_RATE_PER_KM;
     }
     
-    if (travelPlan.unmappedLocations.length > 0) {
-        tripDescription += `\nCould not map the following locations: ${travelPlan.unmappedLocations.join(', ')}.`;
-    }
-
-    // 2. Consolidate allowances and calculate total
+    // 3. Consolidate allowances and calculate total
     const allowances: { description: string; amount: number }[] = [];
     let grandTotal = 0;
 
@@ -114,6 +167,7 @@ const proTaskAnalysisFlow = ai.defineFlow(
         tripDescription,
         allowances,
         grandTotal,
+        unmappedLocations: travelPlan.unmappedLocations.length > 0 ? travelPlan.unmappedLocations : undefined,
     };
   }
 );

@@ -4,16 +4,22 @@
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, MapPin, Route } from 'lucide-react';
-import { ProTaskAnalysisInputSchema, type ProTaskAnalysisOutput, type ProTaskAnalysisInput } from '@/ai/flows/pro-task-analysis.schema';
+import { Loader2, Sparkles, Route, MapPin, ListChecks, FileText, Bot } from 'lucide-react';
+import { ProTaskAnalysisInputSchema, type ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis.schema';
 import { analyzeProTask } from '@/ai/flows/pro-task-analysis';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { OMAN_GOVERNORATES, OMAN_MINISTRIES } from '@/lib/oman-locations';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
+import { OMAN_GOVERNORATES } from '@/lib/oman-locations';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { analyzeSanadTask } from '@/ai/flows/sanad-task-analysis';
+import type { SanadTaskAnalysisOutput } from '@/ai/flows/sanad-task-analysis.schema';
+import { sanadServiceGroups } from '@/lib/sanad-services';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
 
 // Dummy map component placeholder
 const DummyMap = ({ onLocationSelect }: { onLocationSelect: (loc: { lat: number, lon: number, name: string }) => void }) => (
@@ -28,20 +34,45 @@ const DummyMap = ({ onLocationSelect }: { onLocationSelect: (loc: { lat: number,
     </div>
 );
 
+const ProTaskFormSchema = ProTaskAnalysisInputSchema.extend({
+    serviceName: z.string().min(1, "Please select a service."),
+});
+type ProTaskFormValues = z.infer<typeof ProTaskFormSchema>;
+
 
 export default function ProForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<SanadTaskAnalysisOutput | null>(null);
   const [response, setResponse] = useState<ProTaskAnalysisOutput | null>(null);
   const { toast } = useToast();
 
-  const form = useForm<ProTaskAnalysisInput>({
-    resolver: zodResolver(ProTaskAnalysisInputSchema),
+  const form = useForm<ProTaskFormValues>({
+    resolver: zodResolver(ProTaskFormSchema),
     defaultValues: {
-      institutionNames: [],
+      governorate: 'Muscat',
+      serviceName: '',
     },
   });
 
-  const onSubmit: SubmitHandler<ProTaskAnalysisInput> = async (data) => {
+  const handleServiceChange = async (serviceName: string) => {
+    if (!serviceName) {
+        setAnalysisResult(null);
+        return;
+    }
+    setIsAnalyzing(true);
+    setAnalysisResult(null);
+    try {
+        const result = await analyzeSanadTask({ serviceName });
+        setAnalysisResult(result);
+    } catch(e) {
+        toast({ title: "Analysis Failed", description: "Could not get details for this service.", variant: "destructive"});
+    } finally {
+        setIsAnalyzing(false);
+    }
+  }
+
+  const onSubmit: SubmitHandler<ProTaskFormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
     try {
@@ -74,48 +105,36 @@ export default function ProForm() {
       <Card>
         <CardHeader>
           <CardTitle>PRO Task Delegation</CardTitle>
-          <CardDescription>Select the ministries to visit and the starting point. Our AI will plan the optimal route and estimate allowances.</CardDescription>
+          <CardDescription>Select the service required, and our AI will plan the optimal route, estimate allowances, and list required documents.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
-                    <FormField
+                   <FormField
                         control={form.control}
-                        name="institutionNames"
+                        name="serviceName"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Ministries / Institutions to Visit</FormLabel>
-                                <Select onValueChange={(value) => field.onChange([...(field.value || []), value])}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Add an institution to the list..." />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {OMAN_MINISTRIES.map(name => (
-                                        <SelectItem key={name} value={name} disabled={field.value?.includes(name)}>
-                                            {name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                             <div className="space-y-2 mt-2">
-                                {field.value?.map((name: string) => (
-                                    <div key={name} className="flex items-center justify-between bg-muted p-2 rounded-md">
-                                        <span className="text-sm">{name}</span>
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => field.onChange(field.value?.filter((v: string) => v !== name))}
-                                        >
-                                            Remove
-                                        </Button>
-                                    </div>
-                                ))}
-                            </div>
-                            <FormMessage />
+                                <FormLabel>Select Service</FormLabel>
+                                <Select onValueChange={(value) => { field.onChange(value); handleServiceChange(value); }} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Choose a government service..." />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {Object.entries(sanadServiceGroups).map(([group, services]) => (
+                                            <SelectGroup key={group}>
+                                                <SelectLabel>{group}</SelectLabel>
+                                                {services.map(service => (
+                                                    <SelectItem key={service} value={service}>{service}</SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -146,6 +165,34 @@ export default function ProForm() {
                         </div>
                     </div>
                 </div>
+
+                 {(isAnalyzing || analysisResult) && (
+                    <Card className="bg-muted/50">
+                        <CardHeader className="flex-row items-center gap-4 space-y-0">
+                            <Bot className="w-6 h-6 text-primary"/>
+                            <CardTitle className="text-lg">Agent Analysis</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {isAnalyzing && <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="w-4 h-4 animate-spin"/> Analyzing service requirements...</div>}
+                            {analysisResult && (
+                                <div className="space-y-4 text-sm">
+                                    <div>
+                                        <h4 className="font-semibold mb-2 flex items-center gap-2"><ListChecks /> Required Documents:</h4>
+                                        <ul className="list-disc pl-5 space-y-1">
+                                            {analysisResult.documentList.map((doc, i) => <li key={i}>{doc}</li>)}
+                                        </ul>
+                                    </div>
+                                    {analysisResult.notes && (
+                                        <div>
+                                            <h4 className="font-semibold mb-2">Important Notes:</h4>
+                                            <p className="text-muted-foreground italic">{analysisResult.notes}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                )}
 
 
               <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
@@ -178,6 +225,12 @@ export default function ProForm() {
              <div>
                 <h3 className="font-semibold flex items-center gap-2 mb-2"><Route className="h-5 w-5"/> Trip Plan</h3>
                 <p className="text-sm text-muted-foreground">{response.tripDescription}</p>
+                 {response.unmappedLocations && response.unmappedLocations.length > 0 && (
+                    <Alert variant="destructive" className="mt-2">
+                        <AlertTitle>Unmapped Locations</AlertTitle>
+                        <AlertDescription>Could not find GPS data for: {response.unmappedLocations.join(', ')}. These locations were not included in the distance calculation.</AlertDescription>
+                    </Alert>
+                )}
              </div>
              <div>
                 <h3 className="font-semibold mb-2">Estimated Allowances</h3>
@@ -211,4 +264,3 @@ export default function ProForm() {
     </div>
   );
 }
-
