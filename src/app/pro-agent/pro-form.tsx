@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef } from 'react';
@@ -176,30 +177,32 @@ export default function ProForm() {
                       </div>
 
                      <Separator className="my-6" />
-
-                     <div className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <FormItem>
-                                <FormLabel>Institution</FormLabel>
-                                 <Select onValueChange={(value) => setCurrentVisit(v => ({...v, name: value}))} value={currentVisit.name}>
-                                    <SelectTrigger><SelectValue placeholder="Select an institution..." /></SelectTrigger>
-                                    <SelectContent>
-                                        {OMAN_MINISTRIES.map(inst => <SelectItem key={inst} value={inst}>{inst}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                            <FormItem>
-                                <FormLabel>Purpose of Visit</FormLabel>
-                                <Input 
-                                    placeholder="e.g., Renew Commercial Registration" 
-                                    value={currentVisit.purpose}
-                                    onChange={(e) => setCurrentVisit(v => ({...v, purpose: e.target.value}))}
-                                />
-                            </FormItem>
-                        </div>
-                        <Button type="button" variant="outline" onClick={handleAddVisit} className="w-full">
-                            <Plus className="mr-2 h-4 w-4" /> Add Place to Visit
-                        </Button>
+                     <div className="p-4 border rounded-lg bg-background">
+                        <h4 className="font-semibold text-base mb-4">Add a New Visit</h4>
+                         <div className="space-y-4">
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <FormItem>
+                                    <FormLabel>Institution</FormLabel>
+                                    <Select onValueChange={(value) => setCurrentVisit(v => ({...v, name: value}))} value={currentVisit.name}>
+                                        <SelectTrigger><SelectValue placeholder="Select an institution..." /></SelectTrigger>
+                                        <SelectContent>
+                                            {OMAN_MINISTRIES.map(inst => <SelectItem key={inst} value={inst}>{inst}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                                <FormItem>
+                                    <FormLabel>Purpose of Visit</FormLabel>
+                                    <Input 
+                                        placeholder="e.g., Renew Commercial Registration" 
+                                        value={currentVisit.purpose}
+                                        onChange={(e) => setCurrentVisit(v => ({...v, purpose: e.target.value}))}
+                                    />
+                                </FormItem>
+                            </div>
+                            <Button type="button" variant="outline" onClick={handleAddVisit} className="w-full">
+                                <Plus className="mr-2 h-4 w-4" /> Add to Trip
+                            </Button>
+                         </div>
                      </div>
                  </Card>
                 
