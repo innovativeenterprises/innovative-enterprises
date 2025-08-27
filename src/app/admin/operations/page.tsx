@@ -10,8 +10,9 @@ import ProForm from "@/app/admin/operations/pro-form";
 import TenderForm from "@/app/admin/operations/tender-form";
 import TrainingForm from "@/app/admin/operations/training-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
+import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, BrainCircuit, NotebookText } from "lucide-react";
+import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
@@ -33,6 +34,7 @@ export default function AdminOperationsPage() {
     { id: 'tender', title: 'Tender Response Assistant', icon: FileText, component: <TenderForm /> },
     { id: 'training', title: 'AI Training Center', icon: BrainCircuit, component: <TrainingForm /> },
     { id: 'meeting', title: 'Online Meeting Agent', icon: NotebookText, component: <MeetingForm /> },
+    { id: 'coupon', title: 'Coupon Code Generator', icon: Ticket, component: <CouponGenerator /> },
   ]
 
   return (
