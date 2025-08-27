@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ import type { CartItem } from '@/lib/global-store';
 import { Loader2, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useSettingsData } from '@/app/admin/settings-table';
 
 const CheckoutSchema = z.object({
   // Shipping Information
@@ -36,6 +38,7 @@ type CheckoutValues = z.infer<typeof CheckoutSchema>;
 export default function CheckoutPage() {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const { settings } = useSettingsData();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -66,7 +69,8 @@ export default function CheckoutPage() {
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shipping = subtotal > 0 ? 5.00 : 0;
-    const total = subtotal + shipping;
+    const vatAmount = settings.vat.enabled ? (subtotal + shipping) * settings.vat.rate : 0;
+    const total = subtotal + shipping + vatAmount;
 
     const onSubmit: SubmitHandler<CheckoutValues> = async (data) => {
         setIsLoading(true);
@@ -188,6 +192,12 @@ export default function CheckoutPage() {
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between"><span>Subtotal</span><span>OMR {subtotal.toFixed(2)}</span></div>
                                         <div className="flex justify-between"><span>Shipping</span><span>OMR {shipping.toFixed(2)}</span></div>
+                                        {settings.vat.enabled && (
+                                            <div className="flex justify-between">
+                                                <span>VAT ({settings.vat.rate * 100}%)</span>
+                                                <span>OMR {vatAmount.toFixed(2)}</span>
+                                            </div>
+                                        )}
                                         <hr className="my-2" />
                                         <div className="flex justify-between font-bold text-lg"><span>Total</span><span>OMR {total.toFixed(2)}</span></div>
                                     </div>

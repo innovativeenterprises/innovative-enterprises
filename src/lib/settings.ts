@@ -12,6 +12,10 @@ export interface AppSettings {
     translationAssignmentMode: 'direct' | 'tender' | 'builtin';
     sanadOffice: SanadOfficeSettings;
     voiceInteractionEnabled: boolean;
+    vat: {
+        enabled: boolean;
+        rate: number; // Stored as a decimal, e.g., 0.05 for 5%
+    };
 }
 
 export const initialSettings: AppSettings = {
@@ -24,4 +28,8 @@ export const initialSettings: AppSettings = {
         firstTimeDiscountPercentage: 0.60,
     },
     voiceInteractionEnabled: true,
+    vat: {
+        enabled: true,
+        rate: 0.05, // 5%
+    },
 };

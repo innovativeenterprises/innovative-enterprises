@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -146,6 +147,20 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
         toast({ title: "Sanad Hub pricing updated successfully." });
     }
 
+    const handleVatEnabledChange = (enabled: boolean) => {
+        setSettings(prev => ({ ...prev, vat: { ...prev.vat, enabled }}));
+        toast({ title: `VAT has been ${enabled ? 'enabled' : 'disabled'}.` });
+    }
+    
+    const handleVatRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newRate = parseFloat(e.target.value);
+        if(!isNaN(newRate)) {
+            setSettings(prev => ({...prev, vat: {...prev.vat, rate: newRate / 100 }}));
+            toast({ title: `VAT rate updated to ${newRate}%.` });
+        }
+    }
+
+
     return (
         <div className="space-y-8">
             <Card>
@@ -203,6 +218,40 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
                                     <Label htmlFor="voice-interaction-switch">
                                         {settings.voiceInteractionEnabled ? "Enabled" : "Disabled"}
                                     </Label>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                             <TableCell>
+                                <p className="font-medium">Value-Added Tax (VAT)</p>
+                                <p className="text-sm text-muted-foreground">Enable or disable VAT on all commercial services and invoices.</p>
+                            </TableCell>
+                             <TableCell>
+                                <div className="flex items-center gap-4">
+                                     <div className="flex items-center space-x-2">
+                                        <Switch
+                                            id="vat-enabled-switch"
+                                            checked={settings.vat.enabled}
+                                            onCheckedChange={handleVatEnabledChange}
+                                        />
+                                        <Label htmlFor="vat-enabled-switch">
+                                            {settings.vat.enabled ? "Enabled" : "Disabled"}
+                                        </Label>
+                                    </div>
+                                     <div className="flex items-center gap-2">
+                                        <Label htmlFor="vat-rate-input">Rate:</Label>
+                                        <Input
+                                            id="vat-rate-input"
+                                            type="number"
+                                            defaultValue={settings.vat.rate * 100}
+                                            onBlur={handleVatRateChange}
+                                            disabled={!settings.vat.enabled}
+                                            className="w-24"
+                                            min="0"
+                                            step="0.1"
+                                        />
+                                        <span className="text-muted-foreground">%</span>
+                                     </div>
                                 </div>
                             </TableCell>
                         </TableRow>
