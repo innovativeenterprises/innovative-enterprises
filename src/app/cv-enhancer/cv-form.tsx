@@ -42,6 +42,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import InterviewCoachForm from '@/app/interview-coach/coach-form';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -125,7 +126,7 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
         resolver: zodResolver(GenerateSocialMediaPostInputSchema),
         defaultValues: {
             topic: `I just enhanced my CV for a ${targetPosition} role using Innovative Enterprises' AI tool!`,
-            platform: "LinkedIn",
+            platforms: ['LinkedIn'],
             tone: "Professional",
             generateImage: true,
         }
@@ -176,11 +177,11 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
                         />
                          <FormField
                             control={socialForm.control}
-                            name="platform"
+                            name="platforms"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Platform</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={(v) => field.onChange([v])} defaultValue={field.value[0]}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a platform" />
@@ -348,86 +349,6 @@ const FinalActions = ({ onDownload, onCopy, onEmail, onSave }: {
     )
 }
 
-const InterviewCoach = ({ jobTitle, onStartOver }: { jobTitle: string; onStartOver: () => void; }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const { toast } = useToast();
-
-    const handleGenerateQuestions = async () => {
-        setIsLoading(true);
-        setQuestions([]);
-        setCurrentQuestionIndex(0);
-        try {
-            const result = await generateInterviewQuestions({ jobTitle });
-            setQuestions(result.questions);
-            toast({ title: "Questions Generated!", description: "Your interview practice session is ready to begin." });
-        } catch (error) {
-            console.error(error);
-            toast({ title: 'Error', description: 'Failed to generate interview questions. Please try again.', variant: 'destructive' });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleNextQuestion = () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex(prev => prev + 1);
-        }
-    };
-
-    const handlePrevQuestion = () => {
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex(prev => prev - 1);
-        }
-    };
-
-    if (questions.length === 0) {
-        return (
-            <div className="text-center p-8 space-y-4">
-                <p>Prepare for your <strong>{jobTitle}</strong> interview.</p>
-                <Button onClick={handleGenerateQuestions} disabled={isLoading}>
-                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating Questions...</> : <><Sparkles className="mr-2 h-4 w-4"/>Generate Practice Questions</>}
-                </Button>
-            </div>
-        )
-    }
-
-    const currentQuestion = questions[currentQuestionIndex];
-    return (
-        <div className="p-6 space-y-6">
-            <div className="text-center">
-                <p className="text-sm text-muted-foreground">Question {currentQuestionIndex + 1} of {questions.length}</p>
-                <Badge>{currentQuestion.category}</Badge>
-            </div>
-            <div className="flex items-start gap-4 p-4 min-h-[120px] bg-muted rounded-lg">
-                <div className="bg-primary text-primary-foreground p-2 rounded-full">
-                    <Bot className="h-5 w-5"/>
-                </div>
-                <p className="flex-1 font-semibold text-lg">{currentQuestion.question}</p>
-            </div>
-            <div className="flex items-start gap-4 p-4 min-h-[150px]">
-                 <div className="bg-accent text-accent-foreground p-2 rounded-full">
-                    <Mic className="h-5 w-5"/>
-                </div>
-                <div className="flex-1">
-                    <p className="font-semibold text-muted-foreground mb-2">Your Answer:</p>
-                     <div className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap p-2 border-b-2 border-primary focus-within:border-primary-focus">
-                         <p className="text-sm text-muted-foreground italic">Think about your response. In a future version, you'll be able to record your answer here and get feedback.</p>
-                     </div>
-                </div>
-            </div>
-            <div className="flex justify-between w-full">
-                <Button variant="outline" onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0}>
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Previous
-                </Button>
-                <Button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1}>
-                     Next <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-            </div>
-        </div>
-    )
-}
 
 export default function CvForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -809,7 +730,7 @@ export default function CvForm() {
                     <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="cv" disabled={!isUnlocked}>Enhanced CV</TabsTrigger>
                         <TabsTrigger value="letter" disabled={!isUnlocked}>Cover Letter</TabsTrigger>
-                        <TabsTrigger value="interview" disabled={!isUnlocked}>Interview Prep</TabsTrigger>
+                        <TabsTrigger value="interview">Interview Prep</TabsTrigger>
                     </TabsList>
                     <TabsContent value="cv">
                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
@@ -822,7 +743,7 @@ export default function CvForm() {
                         </div>
                     </TabsContent>
                     <TabsContent value="interview">
-                        <InterviewCoach jobTitle={targetPosition} onStartOver={() => setGeneratedCv(null)} />
+                        <InterviewCoachForm />
                     </TabsContent>
                 </Tabs>
 

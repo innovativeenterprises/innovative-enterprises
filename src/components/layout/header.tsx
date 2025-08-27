@@ -59,7 +59,7 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
   {
     title: "InfraRent",
     href: "/infra-rent",
-    description: "On-demand rental of IT equipment like servers, workstations, and networking gear.",
+    description: "On-demand rental of IT equipment like servers, workstations, and networking gear for events and projects.",
     icon: Server,
   },
    {
