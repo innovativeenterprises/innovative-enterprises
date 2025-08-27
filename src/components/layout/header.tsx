@@ -149,6 +149,12 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     href: "/it-rental-agent",
     description: "Let an AI architect design a custom hardware rental package for your project needs.",
     icon: ServerCog,
+  },
+   {
+    title: "Tender Response Assistant",
+    href: "/tender-assistant",
+    description: "Upload tender documents and let our AI generate a comprehensive draft response.",
+    icon: FileText,
   }
 ];
 
