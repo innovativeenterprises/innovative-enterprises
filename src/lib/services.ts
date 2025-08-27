@@ -75,4 +75,11 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/document-translator",
   },
+  {
+    icon: FileText,
+    title: "Certus Audit Hub",
+    description: "Connect with certified audit offices and leverage AI for a preliminary analysis of your financial documents.",
+    enabled: true,
+    href: "/financial-audit",
+  },
 ];
