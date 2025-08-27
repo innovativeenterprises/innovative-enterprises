@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import OpportunityTable, { useOpportunitiesData } from "../opportunity-table";
 import PricingTable, { usePricingData } from "../pricing-table";
 import StageTable, { useProjectStagesData } from "../stage-table";
@@ -11,6 +12,8 @@ import TrainingForm from "@/app/admin/operations/training-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, BrainCircuit, NotebookText } from "lucide-react";
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 
 export default function AdminOperationsPage() {
@@ -18,6 +21,12 @@ export default function AdminOperationsPage() {
   const pricingData = usePricingData();
   const stageData = useProjectStagesData();
   const assetData = useAssetsData();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -37,7 +46,24 @@ export default function AdminOperationsPage() {
         <OpportunityTable {...opportunityData} />
         <PricingTable {...pricingData} />
         <StageTable {...stageData} />
-        <AssetTable {...assetData} />
+        
+        {isClient ? (
+            <AssetTable {...assetData} />
+        ) : (
+            <Card>
+                <CardHeader>
+                    <Skeleton className="h-8 w-1/2" />
+                    <Skeleton className="h-4 w-3/4" />
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2">
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                </CardContent>
+            </Card>
+        )}
 
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Internal AI Tools</h2>
