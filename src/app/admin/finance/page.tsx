@@ -14,7 +14,7 @@ export default function AdminFinancePage() {
 
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Financial Tools</h2>
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="w-full" defaultValue="audit">
                  <AccordionItem value="audit">
                     <AccordionTrigger>
                         <div className="flex items-center gap-3">
