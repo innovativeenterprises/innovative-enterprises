@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -131,6 +131,12 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     href: "/researcher",
     description: "Scrape web pages or perform web searches to gather and summarize information.",
     icon: Search,
+  },
+  {
+    title: "Sage Feasibility Study Builder",
+    href: "/feasibility-study",
+    description: "Generate a comprehensive feasibility study for any business idea using AI-driven research.",
+    icon: BrainCircuit,
   }
 ];
 

@@ -37,4 +37,5 @@ import '@/ai/flows/pro-task-analysis.ts';
 import '@/ai/flows/pro-task-analysis.schema.ts';
 import '@/ai/flows/subscription-reminders.ts';
 import '@/ai/flows/web-scraper-agent.ts';
+import '@/ai/flows/feasibility-study.ts';
     
