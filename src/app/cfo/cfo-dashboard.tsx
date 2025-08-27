@@ -6,13 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowDownLeft, ArrowUpRight, DollarSign, MoreHorizontal, PlusCircle, CreditCard, Users, ReceiptText } from "lucide-react";
-
-const overviewStats = [
-    { title: "Total Revenue", value: "OMR 250,450.00", change: "+20.1% from last month", icon: DollarSign },
-    { title: "Total Expenses", value: "OMR 120,830.00", change: "+15.2% from last month", icon: CreditCard },
-    { title: "Net Income", value: "OMR 129,620.00", change: "+25.5% from last month", icon: DollarSign },
-    { title: "Active Subscriptions", value: "+OMR 5,230", change: "22 active accounts", icon: Users },
-];
+import { useSettingsData } from "@/app/admin/settings-table";
 
 const transactions = [
     { description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28" },
@@ -42,10 +36,33 @@ const getStatusBadge = (status: string) => {
 }
 
 export default function CfoDashboard() {
+  const { settings } = useSettingsData();
+
+  const totalRevenue = 250450.00;
+  const vatPayable = settings.vat.enabled ? totalRevenue * settings.vat.rate : 0;
+  const vatRatePercentage = (settings.vat.rate * 100).toFixed(1);
+
+  const overviewStats = [
+    { title: "Total Revenue", value: `OMR ${totalRevenue.toFixed(2)}`, change: "+20.1% from last month", icon: DollarSign },
+    { title: "Total Expenses", value: "OMR 120,830.00", change: "+15.2% from last month", icon: CreditCard },
+    { title: "Net Income", value: "OMR 129,620.00", change: "+25.5% from last month", icon: DollarSign },
+    { title: "Active Subscriptions", value: "+OMR 5,230", change: "22 active accounts", icon: Users },
+  ];
+
+  if (settings.vat.enabled) {
+      overviewStats.splice(3, 0, {
+          title: `VAT Payable (${vatRatePercentage}%)`,
+          value: `OMR ${vatPayable.toFixed(2)}`,
+          change: "on this month's revenue",
+          icon: ReceiptText
+      });
+  }
+
+
   return (
     <div className="space-y-8">
         {/* Overview Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             {overviewStats.map((stat, index) => (
                 <Card key={index}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

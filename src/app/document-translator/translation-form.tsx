@@ -134,13 +134,9 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
 
   const watchAllFields = form.watch();
 
-  const pricePerPage = useMemo(() => {
-    const { documentType } = watchAllFields;
-    return pricingMap[documentType] || 0;
-  }, [watchAllFields, pricingMap]);
-
   const subtotal = useMemo(() => {
-      const { numberOfPages, requestSealedCopy } = watchAllFields;
+      const { documentType, numberOfPages, requestSealedCopy } = watchAllFields;
+      const pricePerPage = pricingMap[documentType] || 0;
       if (!pricePerPage || !numberOfPages || numberOfPages < 1) {
           return 0;
       }
@@ -157,7 +153,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
       
       return Math.max(total, MINIMUM_CHARGE);
 
-  }, [watchAllFields, pricePerPage]);
+  }, [watchAllFields, pricingMap]);
 
   const vatAmount = useMemo(() => {
     return settings.vat.enabled ? subtotal * settings.vat.rate : 0;
@@ -445,6 +441,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
                                         </FormControl>
                                         <SelectContent>
                                         {translationOffices.map(office => {
+                                            const pricePerPage = pricingMap[watchAllFields.documentType] || 0;
                                             const stampCostText = watchAllFields.requestSealedCopy ? ` + OMR ${PRICE_PER_STAMPED_PAGE.toFixed(2)}/stamped` : '';
                                             const label = `${office} (OMR ${pricePerPage.toFixed(2)}/page${stampCostText})`;
                                             return (
