@@ -15,7 +15,6 @@ import { Readable } from 'stream';
 
 const GenerateVideoInputSchema = z.object({
   prompt: z.string().describe('A text description of the video to generate.'),
-  durationSeconds: z.number().optional().default(5),
 });
 export type GenerateVideoInput = z.infer<typeof GenerateVideoInputSchema>;
 
@@ -57,7 +56,7 @@ export async function generateVideo(input: GenerateVideoInput): Promise<string> 
      try {
         operation = await ai.checkOperation(operation);
      } catch (e) {
-         console.error("Failed to check operation status", e);
+         console.error("Failed to check operation status. The operation may still be running. Retrying...", e);
          // Optional: decide if you want to retry or fail here
      }
   }
