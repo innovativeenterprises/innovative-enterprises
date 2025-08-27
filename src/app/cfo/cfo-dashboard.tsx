@@ -20,18 +20,26 @@ import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 const initialTransactions = [
-    { id: "tx_1", description: "Payment from Gov Entity A", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28", proof: "doc_123.pdf" },
+    { id: "tx_1", description: "Payment from Gov Entity A (PANOSPACE Project)", amount: 50000.00, type: "income", status: "Completed", date: "2024-07-28", proof: "doc_123.pdf" },
+    { id: "tx_7", description: "Sanad Hub - New Office Subscription", amount: 280.00, type: "income", status: "Completed", date: "2024-07-28" },
+    { id: "tx_8", description: "CCTV System Installation - Villa Project", amount: 2500.00, type: "income", status: "Completed", date: "2024-07-27" },
     { id: "tx_2", description: "AWS Cloud Services Bill", amount: -2500.00, type: "expense", status: "Paid", date: "2024-07-27", proof: "doc_124.pdf" },
-    { id: "tx_3", description: "Freelancer Payment - John Doe", amount: -1200.00, type: "expense", status: "Paid", date: "2024-07-25" },
+    { id: "tx_3", description: "Freelancer Payment - John Doe (Design)", amount: -1200.00, type: "expense", status: "Paid", date: "2024-07-25" },
+    { id: "tx_9", description: "Nova Commerce - Store Setup Fee", amount: 500.00, type: "income", status: "Completed", date: "2024-07-24" },
     { id: "tx_4", description: "Invoice #INV-007 to Tech Corp", amount: 15000.00, type: "income", status: "Pending", date: "2024-07-22" },
+    { id: "tx_10", description: "Facebook/Google Ads - Marketing", amount: -800.00, type: "expense", status: "Paid", date: "2024-07-21" },
     { id: "tx_5", description: "Salaries - July 2024", amount: -15000.00, type: "expense", status: "Paid", date: "2024-07-31", proof: "doc_125.pdf" },
     { id: "tx_6", description: "Office Supplies Purchase", amount: -350.00, type: "expense", status: "Paid", date: "2024-07-20" },
+    { id: "tx_11", description: "Voxi Translation Service - Legal Docs", amount: 75.00, type: "income", status: "Completed", date: "2024-07-19" },
+    { id: "tx_12", description: "InfraRent - Monthly Server Rental", amount: 150.00, type: "income", status: "Completed", date: "2024-07-18" },
 ];
 
 const upcomingPayments = [
     { name: "Google Workspace Subscription", amount: 150.00, dueDate: "2024-08-01" },
     { name: "Office Rent - August", amount: 2000.00, dueDate: "2024-08-05" },
+    { name: "Partner Commission Payouts", amount: 1500.00, dueDate: "2024-08-07" },
     { name: "Figma Subscription", amount: 75.00, dueDate: "2024-08-10" },
+    { name: "Stripe Transaction Fees - July", amount: 320.00, dueDate: "2024-08-12" },
 ];
 
 
