@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -417,7 +416,7 @@ export default function ProviderTable({
                     </TableHeader>
                     <TableBody>
                         {providers.map(p => (
-                            <TableRow key={p.id} onClick={() => handleOpenDialog(p)} className="cursor-pointer">
+                            <TableRow key={p.id} onClick={() => router.push(`/admin/people/${p.id}`)} className="cursor-pointer">
                                 <TableCell className="font-medium">
                                     {p.name}
                                     <p className="text-sm text-muted-foreground">{p.email}</p>

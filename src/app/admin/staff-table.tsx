@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -71,7 +70,7 @@ const AddEditStaffDialog = ({
 
     useEffect(() => {
         if(isOpen) {
-            const isUrl = staffMember?.photo?.startsWith('http') || staffMember?.photo.startsWith('data:') || false;
+            const isUrl = staffMember?.photo?.startsWith('http') || staffMember?.photo?.startsWith('data:') || false;
             form.reset({ 
                 name: staffMember?.name || "",
                 role: staffMember?.role || "",
@@ -446,5 +445,3 @@ export default function StaffTable({
         </Card>
     );
 }
-
-    

@@ -1,4 +1,3 @@
-
 'use client';
 
 import StaffTable, { useStaffData } from "../staff-table";
