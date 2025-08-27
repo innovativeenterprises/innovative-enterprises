@@ -42,7 +42,7 @@ Below is a JSON list of currently available assets. You MUST only recommend asse
 **Your Task:**
 1.  **Analyze and Design:**
     *   Carefully analyze the client's needs based on the **purpose of the rental** and the **number of attendees**. For example, a 'Training Program' for 20 people needs 20 laptops, a powerful router, and maybe a server. A 'Conference' might need laptops for registration staff, networking gear, and projectors.
-    *   Consider the client's stated **existing infrastructure** and **missing components** to avoid recommending items they already have.
+    *   Consider the client's stated **existing infrastructure** and **missing components** to avoid recommending items you don't need.
     *   Design a complete, logical, and cost-effective solution. Select the most appropriate assets from the inventory.
     *   For each recommended asset, you MUST determine a **quantity**. For user-specific items like laptops or workstations, the quantity should generally match the number of attendees. For shared items like servers or routers, the quantity is usually 1, unless more are clearly needed for redundancy or load.
 
