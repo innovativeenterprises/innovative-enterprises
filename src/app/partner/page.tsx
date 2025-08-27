@@ -22,6 +22,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CameraCapture } from '@/components/camera-capture';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -33,10 +34,49 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
+const businessCategories = [
+    "Tech & IT Services",
+    "Creative & Design",
+    "Consulting & Professional Services",
+    "Printing & Publishing",
+    "Automotive Services",
+    "Health & Wellness",
+    "Legal Services",
+    "Financial & Banking",
+    "Events & Entertainment",
+    "Other",
+];
+
+const pricingTemplates: Record<string, string[][]> = {
+    "Tech & IT Services": [
+        ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
+        ["Custom Website Development", "Full website design and build", "per project", ""],
+        ["API Integration", "Connecting two software systems", "per integration", ""],
+        ["Monthly IT Support", "Retainer for ongoing IT help", "per month", ""],
+    ],
+    "Creative & Design": [
+        ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
+        ["Logo Design & Branding Package", "Full brand identity kit", "per package", ""],
+        ["Social Media Graphics", "Set of 10 custom graphics", "per set", ""],
+        ["Promotional Video", "1-2 minute marketing video", "per video", ""],
+    ],
+    "Consulting & Professional Services": [
+        ["ServiceName", "ServiceDescription", "Unit", "Price (OMR)"],
+        ["Business Strategy Workshop", "Full-day strategic planning session", "per workshop", ""],
+        ["Market Research Report", "In-depth analysis of a target market", "per report", ""],
+        ["Hourly Consultation", "Expert advice on a specific topic", "per hour", ""],
+    ],
+    "default": [
+        ["ServiceName", "ServiceDescription", "Unit (e.g., per hour, per project)", "Price (OMR)"],
+        ["", "", "", ""],
+    ]
+};
+
 const CompanyUploadSchema = z.object({
   crDocument: z.any().refine(file => file?.length == 1, 'Commercial Record is required.'),
   repIdDocumentFrontUri: z.string().min(1, 'Front of Representative ID is required.'),
   repIdDocumentBackUri: z.string().optional(),
+  businessCategory: z.string().min(1, "Please select a business category."),
   serviceChargesFile: z.any().optional(),
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
@@ -47,6 +87,7 @@ const IndividualUploadSchema = z.object({
     passportDocumentUri: z.any().optional(),
     personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
+    businessCategory: z.string().min(1, "Please select a business category."),
     serviceChargesFile: z.any().optional(),
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
@@ -76,8 +117,8 @@ export default function PartnerPage() {
   const [finalPrice, setFinalPrice] = useState(REGISTRATION_FEE);
   const { toast } = useToast();
 
-  const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema) });
-  const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema) });
+  const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema), defaultValues: { businessCategory: '' } });
+  const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema), defaultValues: { businessCategory: '' } });
   const inquiryForm = useForm<z.infer<typeof PartnershipInquiryInputSchema>>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
   const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
 
@@ -292,12 +333,16 @@ export default function PartnerPage() {
   }
   
   const handleDownloadPricingTemplate = () => {
-    const headers = ["ServiceName", "ServiceDescription", "Unit (e.g., per hour, per project)", "Price (OMR)"];
-    const csvContent = headers.join(",") + "\n";
+    const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
+    const category = formToUse.getValues('businessCategory');
+    const templateData = pricingTemplates[category] || pricingTemplates.default;
+    
+    let csvContent = templateData.map(e => e.join(",")).join("\n");
+    
     const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "partner_pricing_template.csv");
+    link.setAttribute("download", `pricing_template_${category.replace(/\s+/g, '_') || 'generic'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -424,9 +469,29 @@ export default function PartnerPage() {
                            </Alert>
                           )}
                         </div>
+                         <FormField
+                            control={companyUploadForm.control}
+                            name="businessCategory"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>3. Business Category</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                    <SelectValue placeholder="Select your primary business category..." />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {businessCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                                </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
                         <FormField control={companyUploadForm.control} name="serviceChargesFile" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>3. Services & Pricing List (Optional)</FormLabel>
+                                <FormLabel>4. Services & Pricing List (Optional)</FormLabel>
                                 <div className="flex flex-col sm:flex-row gap-2">
                                     <Button type="button" variant="secondary" onClick={handleDownloadPricingTemplate} className="w-full sm:w-auto">
                                         <Download className="mr-2 h-4 w-4" /> Download Template
@@ -474,6 +539,26 @@ export default function PartnerPage() {
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
                             <FormItem><FormLabel>CV / Resume / Portfolio (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
+                        <FormField
+                            control={individualUploadForm.control}
+                            name="businessCategory"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Your Primary Skill / Category</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                    <SelectValue placeholder="Select your primary skill category..." />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {businessCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                                </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
                         <FormField control={individualUploadForm.control} name="serviceChargesFile" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Services & Pricing List (Optional)</FormLabel>
