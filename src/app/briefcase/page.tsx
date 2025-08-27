@@ -325,8 +325,9 @@ const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | Iden
         return <p className="text-xs text-muted-foreground"><strong>Type:</strong> CR / <strong>Name:</strong> {companyNameEnglish || companyNameArabic} / <strong>CRN:</strong> {registrationNumber} / <strong>Status:</strong> {status}</p>;
     }
     if ('personalDetails' in analysis) { // ID Analysis
-        const { fullName, civilNumber } = analysis.idCardDetails || {};
-        return <p className="text-xs text-muted-foreground"><strong>Type:</strong> Identity / <strong>Name:</strong> {analysis.personalDetails?.fullName || fullName} / <strong>ID:</strong> {civilNumber}</p>;
+        const { civilNumber } = analysis.idCardDetails || {};
+        const { fullName } = analysis.personalDetails || {};
+        return <p className="text-xs text-muted-foreground"><strong>Type:</strong> Identity / <strong>Name:</strong> {fullName} / <strong>ID:</strong> {civilNumber}</p>;
     }
     return null;
 }
@@ -423,7 +424,7 @@ export default function BriefcasePage() {
             }
 
             const updatedDocuments = briefcaseData.userDocuments.map(d => 
-                d.id === doc.id ? { ...d, analysis: result } : d
+                d.id === doc.id ? { ...d, analysis: result, name: result.suggestedFilename || d.name } : d
             );
             const newData = { ...briefcaseData, userDocuments: updatedDocuments };
             updateBriefcase(newData);
@@ -601,4 +602,3 @@ export default function BriefcasePage() {
         </div>
     );
 }
-

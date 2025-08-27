@@ -65,5 +65,6 @@ export const CrAnalysisOutputSchema = z.object({
   authorizedSignatories: z.array(SignatorySchema).optional().describe("A list of all authorized managers and signatories."),
   commercialActivities: z.array(CommercialActivitySchema).optional().describe("A list of all registered commercial activities."),
   summary: z.string().optional().describe("A concise summary of the business activities or services offered."),
+  suggestedFilename: z.string().optional().describe("A descriptive filename for this document, e.g., CR_CompanyName_12345.pdf"),
 });
 export type CrAnalysisOutput = z.infer<typeof CrAnalysisOutputSchema>;

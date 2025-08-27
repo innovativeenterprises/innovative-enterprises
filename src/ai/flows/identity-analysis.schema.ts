@@ -78,5 +78,6 @@ export const IdentityAnalysisOutputSchema = z.object({
   passportDetails: PassportDetailsSchema.optional(),
   idCardDetails: IdCardDetailsSchema.optional(),
   professionalSummary: z.string().optional().describe("A brief summary of the individual's skills and experience from their CV."),
+  suggestedFilename: z.string().optional().describe("A descriptive filename for this document, e.g., ID_FullName.pdf"),
 });
 export type IdentityAnalysisOutput = z.infer<typeof IdentityAnalysisOutputSchema>;

@@ -51,7 +51,8 @@ const prompt = ai.definePrompt({
     **Summary:**
     -   Based on the list of commercial activities, write a concise, one-paragraph summary of what the company does.
 
-3.  **Return Structured Data:** Populate all extracted information into the specified output format.
+3.  **Generate a Filename:** Create a descriptive filename for the document based on its content. Format: \`CR_{CompanyName}.pdf\`. Replace spaces in the company name with underscores.
+4.  **Return Structured Data:** Populate all extracted information into the specified output format.
 `,
 });
 
