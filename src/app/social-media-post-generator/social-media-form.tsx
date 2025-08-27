@@ -6,12 +6,12 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
 import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GenerateSocialMediaPostInput } from '@/ai/flows/social-media-post-generator.schema';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download, FileText } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
@@ -106,6 +106,7 @@ export default function SocialMediaForm() {
                           <SelectItem value="Facebook">Facebook Post</SelectItem>
                           <SelectItem value="Instagram">Instagram Post</SelectItem>
                           <SelectItem value="WhatsApp">WhatsApp Message</SelectItem>
+                          <SelectItem value="Tender Response">Tender Response</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
