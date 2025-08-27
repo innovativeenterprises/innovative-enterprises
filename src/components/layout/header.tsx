@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -128,42 +128,48 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
   },
 ];
 
-const partnershipLinks: { title: string; href: string; description: string }[] = [
+const partnershipLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
    {
     title: "Submit a Work Order",
     href: "/submit-work",
     description:
       "Have a project or task? Submit it here for analysis and routing to our talent network.",
+    icon: Briefcase,
   },
    {
     title: "Competitions & Opportunities",
     href: "/opportunities",
     description:
         "View open competitions and tasks for our network of freelancers and partners.",
+    icon: Trophy,
   },
   {
     title: "Become a Partner",
     href: "/partner",
     description:
       "Join our network of freelancers, subcontractors, and service providers.",
+    icon: Handshake,
   },
   {
     title: "Become an Agent",
     href: "/agent",
     description:
       "Represent Innovative Enterprises and earn commissions by bringing in new business.",
+    icon: UserRoundCheck,
   },
   {
     title: "Let's Become Your CTO",
     href: "/cto",
     description:
       "Leverage our expertise to lead your technology strategy and execution.",
+    icon: Cpu,
   },
   {
     title: "Invest With Us",
     href: "/invest",
     description:
       "Explore investment opportunities and be part of our innovation journey.",
+    icon: FileText,
   },
 ]
 
@@ -277,6 +283,7 @@ export default function Header() {
                         title={component.title}
                         href={component.href}
                         onClick={handleLinkClick}
+                        icon={component.icon}
                       >
                         {component.description}
                       </ListItem>
