@@ -84,7 +84,7 @@ export default function AdminLayout({
         <SidebarFooter>
            <SidebarMenu>
              <SidebarMenuItem>
-                 <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right', align: 'center' }}>
+                 <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right', align: 'center' }} isActive={pathname === '/admin/settings'}>
                      <Link href="/admin/settings"><Settings /><span>Settings</span></Link>
                  </SidebarMenuButton>
              </SidebarMenuItem>
