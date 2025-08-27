@@ -157,7 +157,7 @@ export const ChatComponent = ({
 
     try {
       // The AI flow can return 'answer' (from FAQ) or 'response' (from other agents)
-      const result = await aiFlow({ question: message, message: message });
+      const result = await aiFlow({ question: message, message: message, query: message });
       const botMessage: Message = { 
           role: 'bot', 
           content: result.answer || result.response,

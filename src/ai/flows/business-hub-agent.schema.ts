@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview Schemas and types for the Business Hub AI Agent flow.
  */
@@ -15,5 +14,6 @@ export const BusinessHubAgentOutputSchema = z.object({
   response: z.string().describe('The helpful response from the AI agent.'),
   suggestedCategory: z.string().optional().describe('A specific business category suggested to the user.'),
   clarificationNeeded: z.boolean().describe('Whether the agent needs more information from the user.'),
+  suggestedReplies: z.array(z.string()).optional().describe("A list of relevant follow-up questions or actions."),
 });
 export type BusinessHubAgentOutput = z.infer<typeof BusinessHubAgentOutputSchema>;

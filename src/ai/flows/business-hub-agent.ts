@@ -37,6 +37,7 @@ const prompt = ai.definePrompt({
 2.  **Match to Category:** If the user's query clearly matches one of the available business categories, identify that category. Your response should gently guide them towards it. Set the \`suggestedCategory\` field to the matched category name.
 3.  **Ask for Clarification:** If the query is ambiguous or doesn't match any category, ask a clarifying question to better understand their needs. For example, if they say "I need a designer," you could ask, "Are you looking for a graphic designer for branding, or a web designer for a website?" Set the \`clarificationNeeded\` field to true.
 4.  **Be Helpful:** Always be friendly and helpful. Your goal is to connect users with the right services.
+5.  **Provide Suggestions:** Based on the conversation, provide a few relevant follow-up questions or actions in the \`suggestedReplies\` field. Examples: "List tech companies", "Show me consulting firms", "What is the Business Hub?".
 
 Provide a helpful, conversational response in the \`response\` field.
 `,
@@ -50,6 +51,11 @@ const businessHubFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await prompt(input);
+    
+    if (output && (!output.suggestedReplies || output.suggestedReplies.length === 0)) {
+        output.suggestedReplies = ["List all categories", "What is the Business Hub?", "How do I register?"];
+    }
+
     return output!;
   }
 );

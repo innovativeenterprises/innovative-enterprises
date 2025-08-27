@@ -50,7 +50,8 @@ const prompt = ai.definePrompt({
     *   If the query matches a category, guide them towards it. Set the \`suggestedCategory\` field.
 3.  **Handle General Questions:** If the user asks about shipping, returns, or our store policies, provide a helpful, general answer.
 4.  **Enable Search:** If you are unsure or the user query seems like a search term (e.g., "blue shoes"), set \`shouldFuzzySearch\` to true and provide a response like "Let me search for that for you."
-5.  **Be Helpful:** Always be friendly and conversational. Your goal is to make shopping easier.
+5.  **Suggest Follow-ups:** Always provide 2-3 relevant follow-up questions in the \`suggestedReplies\` field. Examples: "View running shoes", "What are your shipping costs?", "Do you have smartwatches?".
+6.  **Be Helpful:** Always be friendly and conversational. Your goal is to make shopping easier.
 
 **Store Policies:**
 *   We offer free shipping on orders over OMR 50.
@@ -69,6 +70,11 @@ const ecommerceFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await prompt(input);
+    
+    if (output && (!output.suggestedReplies || output.suggestedReplies.length === 0)) {
+        output.suggestedReplies = ["Show all categories", "What's on sale?", "Tell me your return policy"];
+    }
+
     return output!;
   }
 );

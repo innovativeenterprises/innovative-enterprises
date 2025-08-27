@@ -15,5 +15,6 @@ export const EcommerceAgentOutputSchema = z.object({
   suggestedCategory: z.string().optional().describe('A specific product category suggested to the user.'),
   suggestedProducts: z.array(z.string()).optional().describe('A list of specific product names suggested to the user.'),
   shouldFuzzySearch: z.boolean().describe('Whether the UI should perform a fuzzy search with the user\'s query.'),
+  suggestedReplies: z.array(z.string()).optional().describe("A list of relevant follow-up questions or actions."),
 });
 export type EcommerceAgentOutput = z.infer<typeof EcommerceAgentOutputSchema>;
