@@ -64,11 +64,6 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
     description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
   },
    {
-    title: "Finley CFO Service",
-    href: "/cfo",
-    description: "Access a financial command center to monitor cash flow, manage expenses, and oversee payroll.",
-  },
-   {
     title: "GENIUS Career Platform",
     href: "/cv-enhancer",
     description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
@@ -92,27 +87,7 @@ const serviceLinks: { title: string; href: string; description: string }[] = [
 
 
 const aiToolsLinks: { title: string; href: string; description: string }[] = [
-   {
-    title: "PRO Agent",
-    href: "/pro-agent",
-    description: "Delegate government service tasks, get fee estimates, and generate assignment documents.",
-  },
   {
-    title: "IT Solutions Architect",
-    href: "/it-rental-agent",
-    description: "Describe your project and get a custom-designed infrastructure rental package instantly.",
-  },
-  {
-    title: "Online Meeting Agent",
-    href: "/meeting-agent",
-    description: "Generate minutes and action items from a meeting transcript automatically.",
-  },
-  {
-    title: "Mira Marketing Agent",
-    href: "/social-media-post-generator",
-    description: "Generate social media posts, marketing copy, and other creative content.",
-  },
-   {
     title: "Voxi Translator",
     href: "/document-translator",
     description: "Translate legal, financial, and official documents with high accuracy.",
@@ -128,19 +103,14 @@ const aiToolsLinks: { title: string; href: string; description: string }[] = [
     description: "Practice for your next job interview with AI-generated questions.",
   },
   {
-    title: "AI Training Center",
-    href: "/training-center",
-    description: "Fine-tune your agents with custom data for better performance.",
-  },
-  {
     title: "AI Image Generator",
     href: "/image-generator",
     description: "Create stunning visuals from text descriptions in seconds.",
   },
   {
-    title: "Tender Response Assistant",
-    href: "/tender-assistant",
-    description: "Generate comprehensive and professional draft responses to help you win your next bid.",
+    title: "Mira Marketing Agent",
+    href: "/social-media-post-generator",
+    description: "Generate social media posts, tender responses, and other marketing copy.",
   },
 ];
 

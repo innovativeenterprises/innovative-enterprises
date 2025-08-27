@@ -26,6 +26,7 @@ import {
   GanttChartSquare,
   PanelLeft,
   FolderKanban,
+  WalletCards,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -43,6 +44,7 @@ export default function AdminLayout({
   const menuItems = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
+    { href: '/admin/finance', label: 'Finance', icon: WalletCards },
     { href: '/admin/content', label: 'Site Content', icon: FileText },
     { href: '/admin/people', label: 'People & Network', icon: Handshake },
     { href: '/admin/operations', label: 'Operations', icon: GanttChartSquare },
@@ -65,7 +67,7 @@ export default function AdminLayout({
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href) && (item.href !== '/admin' || pathname === '/admin')}
                   tooltip={{
                     children: item.label,
                     side: 'right',
