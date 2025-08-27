@@ -7,12 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
 import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GenerateSocialMediaPostInput, type GeneratedPost } from '@/ai/flows/social-media-post-generator.schema';
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download, Twitter, Linkedin, FacebookIcon } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download, Twitter, Linkedin, FacebookIcon, Send } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
@@ -21,13 +21,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const platformOptions = [
     { id: "LinkedIn", label: "LinkedIn", icon: Linkedin },
-    { id: "Twitter", label: "Twitter", icon: Twitter },
+    { id: "Twitter", label: "Twitter / X", icon: Twitter },
     { id: "Facebook", label: "Facebook", icon: FacebookIcon },
+    { id: "Instagram", label: "Instagram", icon: ImageIcon },
+    { id: "WhatsApp", label: "WhatsApp", icon: MessageSquare },
+    { id: "Tender Response", label: "Tender Response", icon: FileText },
 ] as const;
 
 
 export default function SocialMediaForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isPublishing, setIsPublishing] = useState<string | null>(null);
   const [response, setResponse] = useState<GenerateSocialMediaPostOutput | null>(null);
   const { toast } = useToast();
 
@@ -75,6 +79,16 @@ export default function SocialMediaForm() {
     navigator.clipboard.writeText(fullText);
     toast({ title: "Copied!", description: "The post content has been copied to your clipboard." });
   };
+  
+  const handlePublish = (platform: string) => {
+      setIsPublishing(platform);
+      toast({ title: 'Publishing...', description: `Sending post to ${platform}.`});
+      // Simulate API call
+      setTimeout(() => {
+          setIsPublishing(null);
+          toast({ title: 'Published Successfully!', description: `Your post is now live on ${platform}.`});
+      }, 2000);
+  }
 
 
   return (
@@ -114,7 +128,7 @@ export default function SocialMediaForm() {
                         <FormLabel>Target Platforms</FormLabel>
                         <FormDescription>Select one or more platforms for your campaign.</FormDescription>
                     </div>
-                    <div className="grid grid-cols-3 gap-4 pt-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
                     {platformOptions.map((item) => (
                       <FormField
                         key={item.id}
@@ -124,7 +138,7 @@ export default function SocialMediaForm() {
                           return (
                             <FormItem
                               key={item.id}
-                              className="flex flex-row items-start space-x-3 space-y-0"
+                              className="flex flex-row items-center space-x-3 space-y-0"
                             >
                               <FormControl>
                                 <Checkbox
@@ -258,14 +272,25 @@ export default function SocialMediaForm() {
                                 <p className="font-semibold">{post.suggestedHashtags.join(' ')}</p>
                                 )}
                             </div>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="absolute top-2 right-2 text-muted-foreground"
-                                onClick={() => handleCopy(post.postContent, post.suggestedHashtags)}
-                                >
-                                <Copy className="h-5 w-5" />
-                            </Button>
+                            <div className="absolute top-2 right-2 flex gap-1">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-muted-foreground h-8 w-8"
+                                    onClick={() => handleCopy(post.postContent, post.suggestedHashtags)}
+                                    >
+                                    <Copy className="h-4 w-4" />
+                                </Button>
+                                 <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-muted-foreground h-8 w-8"
+                                    onClick={() => handlePublish(post.platform)}
+                                    disabled={isPublishing !== null}
+                                    >
+                                     {isPublishing === post.platform ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                </Button>
+                            </div>
                         </div>
                     </TabsContent>
                 ))}
