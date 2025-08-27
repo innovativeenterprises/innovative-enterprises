@@ -19,6 +19,10 @@ import { ministryLocations, type Ministry, calculateTotalDistance } from '@/lib/
 
 const FUEL_RATE_PER_KM = 0.400; // OMR per KM. This can be moved to admin settings later.
 
+export async function analyzeProTask(input: ProTaskAnalysisInput): Promise<ProTaskAnalysisOutput> {
+    return proTaskAnalysisFlow(input);
+}
+
 const getTravelPlanTool = ai.defineTool(
     {
         name: 'getTravelPlan',
@@ -117,8 +121,11 @@ const proTaskAnalysisFlow = ai.defineFlow(
     });
 
     // Add allowances
-    totalFees.push({ description: `Fuel Allowance (${tripDetails})`, amount: fuelAllowance });
-    grandTotal += fuelAllowance;
+    if (fuelAllowance > 0) {
+        totalFees.push({ description: `Fuel Allowance (${tripDetails})`, amount: fuelAllowance });
+        grandTotal += fuelAllowance;
+    }
+
 
     const snacksAllowance = 2.000;
     totalFees.push({ description: 'Snacks & Refreshments Allowance', amount: snacksAllowance });
