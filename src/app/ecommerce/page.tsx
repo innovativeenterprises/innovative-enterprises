@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Search, SlidersHorizontal, Star, Tag, Truck, Filter } from "lucide-react";
+import { ArrowRight, Search, SlidersHorizontal, Star, Tag, Truck, Filter, Bot } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -138,6 +138,13 @@ export default function EcommercePage() {
                             className="w-full pl-12 pr-4 py-3 rounded-full border bg-background"
                         />
                     </div>
+                </div>
+                 <div className="mt-6">
+                    <Button asChild variant="ghost" className="text-primary hover:text-primary">
+                        <Link href="/ecommerce/chat">
+                            <Bot className="mr-2 h-4 w-4" /> Ask Nova, our AI shopping assistant
+                        </Link>
+                    </Button>
                 </div>
             </div>
         </section>

@@ -31,4 +31,6 @@ import '@/ai/flows/sanad-office-registration.schema.ts';
 import '@/ai/flows/business-hub-agent.ts';
 import '@/ai/flows/text-to-speech.ts';
 import '@/ai/flows/text-to-speech.schema.ts';
+import '@/ai/flows/ecommerce-agent.ts';
+import '@/ai/flows/ecommerce-agent.schema.ts';
     
