@@ -197,6 +197,17 @@ export const AddEditProductDialog = ({
                                 <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                         </div>
+                         <FormField control={form.control} name="enabled" render={({ field }) => (
+                             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                                <FormControl>
+                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>Enabled</FormLabel>
+                                    <FormMessage />
+                                </div>
+                            </FormItem>
+                        )}/>
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit">Save Product</Button>
@@ -207,3 +218,5 @@ export const AddEditProductDialog = ({
         </Dialog>
     )
 }
+
+    

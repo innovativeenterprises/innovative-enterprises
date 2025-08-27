@@ -83,14 +83,14 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
             name: client?.name || "",
             aiHint: client?.aiHint || "",
             logoFile: undefined,
-            logoUrl: client?.logo.startsWith('http') ? client.logo : "",
-            useUrl: client?.logo.startsWith('http') || false,
+            logoUrl: client?.logo.startsWith('http') || client?.logo.startsWith('data:') ? client.logo : "",
+            useUrl: client?.logo.startsWith('http') || client?.logo.startsWith('data:') || false,
         },
     });
     
     useEffect(() => { 
         if(isOpen) {
-            const isUrl = client?.logo?.startsWith('http') ?? false;
+            const isUrl = client?.logo?.startsWith('http') || client?.logo.startsWith('data:') || false;
             form.reset({ 
                 name: client?.name || "", 
                 aiHint: client?.aiHint || "",
@@ -357,3 +357,5 @@ export default function ClientTable({
         </Card>
     );
 }
+
+    

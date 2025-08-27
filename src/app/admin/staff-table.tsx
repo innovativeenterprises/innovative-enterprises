@@ -64,14 +64,14 @@ const AddEditStaffDialog = ({
             description: staffMember?.description || "",
             aiHint: staffMember?.aiHint || "person portrait",
             photoFile: undefined,
-            photoUrl: staffMember?.photo.startsWith('http') ? staffMember.photo : "",
-            useUrl: staffMember?.photo.startsWith('http') || false,
+            photoUrl: staffMember?.photo.startsWith('http') || staffMember?.photo.startsWith('data:') ? staffMember.photo : "",
+            useUrl: staffMember?.photo.startsWith('http') || staffMember?.photo.startsWith('data:') || false,
         },
     });
 
     useEffect(() => {
         if(isOpen) {
-            const isUrl = staffMember?.photo?.startsWith('http') ?? false;
+            const isUrl = staffMember?.photo?.startsWith('http') || staffMember?.photo.startsWith('data:') || false;
             form.reset({ 
                 name: staffMember?.name || "",
                 role: staffMember?.role || "",
@@ -233,9 +233,9 @@ export default function StaffTable({
     setAgentCategories 
 } : {
     leadership: Agent[],
-    setLeadership: (updater: (l: Agent[]) => Agent[]) => void,
+    setLeadership: (updater: (l: Agent[]) => void) => void,
     agentCategories: AgentCategory[],
-    setAgentCategories: (updater: (ac: AgentCategory[]) => AgentCategory[]) => void
+    setAgentCategories: (updater: (ac: AgentCategory[]) => void) => void
 }) {
     const { toast } = useToast();
 
@@ -446,3 +446,5 @@ export default function StaffTable({
         </Card>
     );
 }
+
+    
