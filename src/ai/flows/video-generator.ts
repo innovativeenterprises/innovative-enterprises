@@ -29,12 +29,8 @@ export async function generateVideo(input: GenerateVideoInput): Promise<string> 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
        const generationResult = await ai.generate({
-          model: googleAI.model('veo-2.0-generate-001'),
+          model: googleAI.model('veo-3.0-generate-preview'),
           prompt: input.prompt,
-          config: {
-          durationSeconds: input.durationSeconds,
-          aspectRatio: '16:9',
-          },
       });
       operation = generationResult.operation;
       if (operation) {
