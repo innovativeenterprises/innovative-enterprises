@@ -23,6 +23,7 @@ import type { Agent, AgentCategory } from "@/lib/agents";
 import { Textarea } from "@/components/ui/textarea";
 import { store } from "@/lib/global-store";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import Image from "next/image";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -48,10 +49,10 @@ const StaffSchema = z.object({
   type: z.enum(["Leadership", "AI Agent", "Staff"]),
   description: z.string().min(10, "A description is required.").default(''),
   aiHint: z.string().min(2, "AI hint is required").default(''),
-  photoUrl: z.string().optional(),
+  photoUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   photoFile: z.any().optional(),
   socials: SocialsSchema.optional(),
-}).refine(data => data.photoUrl || data.photoFile, {
+}).refine(data => data.photoUrl || (data.photoFile && data.photoFile.length > 0), {
     message: "Either a Photo URL or a Photo File is required.",
     path: ["photoUrl"], // Point error to photoUrl field
 });
@@ -69,6 +70,8 @@ const AddEditStaffDialog = ({
     children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [imagePreview, setImagePreview] = useState<string | null>(staffMember?.photo || null);
+    
     const form = useForm<z.infer<typeof StaffSchema>>({
         resolver: zodResolver(StaffSchema),
         defaultValues: {
@@ -90,6 +93,20 @@ const AddEditStaffDialog = ({
         },
     });
 
+    const watchPhotoUrl = form.watch('photoUrl');
+    const watchPhotoFile = form.watch('photoFile');
+
+    useEffect(() => {
+        if (watchPhotoFile && watchPhotoFile.length > 0) {
+            fileToDataURI(watchPhotoFile[0]).then(setImagePreview);
+        } else if (watchPhotoUrl) {
+            setImagePreview(watchPhotoUrl);
+        } else {
+            setImagePreview(staffMember?.photo || null);
+        }
+    }, [watchPhotoUrl, watchPhotoFile, staffMember?.photo]);
+
+
     useEffect(() => {
         if(isOpen) {
             form.reset({ 
@@ -109,6 +126,7 @@ const AddEditStaffDialog = ({
                     github: staffMember?.socials?.github || '',
                 }
             });
+             setImagePreview(staffMember?.photo || null);
         }
     }, [staffMember, form, isOpen]);
 
@@ -123,6 +141,7 @@ const AddEditStaffDialog = ({
         
         onSave({ ...data, photo: photoValue }, staffMember?.name);
         form.reset();
+        setImagePreview(null);
         setIsOpen(false);
     };
 
@@ -174,25 +193,32 @@ const AddEditStaffDialog = ({
                             </FormItem>
                         )} />
 
-                        <div className="space-y-2 pt-2">
-                            <h4 className="text-sm font-medium">Photo</h4>
-                            <FormField control={form.control} name="photoUrl" render={({ field }) => (
-                                <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                            <div className="relative my-2">
-                            <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                            <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div>
-                            </div>
-                            <FormField control={form.control} name="photoFile" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Upload Photo File</FormLabel>
-                                    <FormControl>
-                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                        </div>
+                        <Card>
+                            <CardContent className="p-4 space-y-4">
+                                <h4 className="text-sm font-medium">Photo</h4>
+                                {imagePreview && (
+                                    <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-primary/20">
+                                        <Image src={imagePreview} alt="Image Preview" fill className="object-cover"/>
+                                    </div>
+                                )}
+                                <FormField control={form.control} name="photoUrl" render={({ field }) => (
+                                    <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                                    <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+                                </div>
+                                <FormField control={form.control} name="photoFile" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Upload Photo File</FormLabel>
+                                        <FormControl>
+                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
                         
 
                         <FormField control={form.control} name="aiHint" render={({ field }) => (
@@ -447,6 +473,3 @@ export default function StaffTable({
 }
 
     
-
-
-

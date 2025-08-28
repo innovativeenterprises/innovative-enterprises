@@ -14,6 +14,8 @@ import type { Product } from "@/lib/products";
 import type { ProjectStage } from "@/lib/stages";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -27,7 +29,7 @@ const fileToDataURI = (file: File): Promise<string> => {
 const ProductSchema = z.object({
   name: z.string().min(3, "Name is required"),
   description: z.string().min(10, "Description is required"),
-  imageUrl: z.string().optional(),
+  imageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   imageFile: z.any().optional(),
   aiHint: z.string().min(2, "AI hint is required"),
   enabled: z.boolean(),
@@ -35,7 +37,7 @@ const ProductSchema = z.object({
   price: z.coerce.number().min(0, "Price is required."),
   rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5."),
   category: z.string().min(1, "Category is required."),
-}).refine(data => data.imageUrl || data.imageFile, {
+}).refine(data => data.imageUrl || (data.imageFile && data.imageFile.length > 0), {
     message: "Either an Image URL or an Image File is required.",
     path: ["imageUrl"], // Point error to imageUrl field
 });
@@ -57,6 +59,8 @@ export const AddEditProductDialog = ({
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
 }) => {
+    const [imagePreview, setImagePreview] = useState<string | null>(product?.image || null);
+
     const form = useForm<z.infer<typeof ProductSchema>>({
         resolver: zodResolver(ProductSchema),
         defaultValues: {
@@ -73,6 +77,19 @@ export const AddEditProductDialog = ({
         },
     });
 
+     const watchImageUrl = form.watch('imageUrl');
+     const watchImageFile = form.watch('imageFile');
+
+    useEffect(() => {
+        if (watchImageFile && watchImageFile.length > 0) {
+            fileToDataURI(watchImageFile[0]).then(setImagePreview);
+        } else if (watchImageUrl) {
+            setImagePreview(watchImageUrl);
+        } else {
+             setImagePreview(product?.image || null);
+        }
+    }, [watchImageUrl, watchImageFile, product?.image]);
+
     useEffect(() => {
         if(isOpen) {
            form.reset({ 
@@ -87,6 +104,7 @@ export const AddEditProductDialog = ({
                 imageUrl: product?.image || "",
                 imageFile: undefined,
             });
+            setImagePreview(product?.image || null);
         }
     }, [product, form, isOpen]);
 
@@ -104,6 +122,7 @@ export const AddEditProductDialog = ({
             image: imageValue,
         }, product?.id);
         form.reset();
+        setImagePreview(null);
         onOpenChange(false);
     };
 
@@ -156,18 +175,29 @@ export const AddEditProductDialog = ({
                             )} />
                         </div>
 
-                         <FormField control={form.control} name="imageUrl" render={({ field }) => (
-                            <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
+                         <Card>
+                            <CardContent className="p-4 space-y-4">
+                                <h4 className="text-sm font-medium">Product Image</h4>
+                                {imagePreview && (
+                                    <div className="relative h-40 w-full rounded-md overflow-hidden border">
+                                        <Image src={imagePreview} alt="Image Preview" fill className="object-contain"/>
+                                    </div>
+                                )}
+                                <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                                    <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                                )} />
 
-                        <div className="relative my-2">
-                           <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                           <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div>
-                        </div>
+                                <div className="relative">
+                                <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                                <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+                                </div>
 
-                        <FormField control={form.control} name="imageFile" render={({ field }) => (
-                           <FormItem><FormLabel>Upload Image File</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
-                        )} />
+                                <FormField control={form.control} name="imageFile" render={({ field }) => (
+                                <FormItem><FormLabel>Upload Image File</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+
 
                          <FormField control={form.control} name="aiHint" render={({ field }) => (
                             <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl><FormMessage /></FormItem>

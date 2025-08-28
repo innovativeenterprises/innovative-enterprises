@@ -33,9 +33,9 @@ const fileToDataURI = (file: File): Promise<string> => {
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
   aiHint: z.string().min(2, "AI hint is required"),
-  logoUrl: z.string().optional(),
+  logoUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   logoFile: z.any().optional(),
-}).refine(data => data.logoUrl || data.logoFile, {
+}).refine(data => data.logoUrl || (data.logoFile && data.logoFile.length > 0), {
     message: "Either a Logo URL or a Logo File is required.",
     path: ["logoUrl"],
 });
@@ -81,7 +81,8 @@ export const useClientsData = () => {
 // Add/Edit Dialogs
 const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
-    
+    const [imagePreview, setImagePreview] = useState<string | null>(client?.logo || null);
+
     const form = useForm<z.infer<typeof ClientSchema>>({
         defaultValues: {
             name: client?.name || "",
@@ -90,6 +91,19 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
             logoFile: undefined,
         },
     });
+
+    const watchLogoUrl = form.watch('logoUrl');
+    const watchLogoFile = form.watch('logoFile');
+
+    useEffect(() => {
+        if (watchLogoFile && watchLogoFile.length > 0) {
+            fileToDataURI(watchLogoFile[0]).then(setImagePreview);
+        } else if (watchLogoUrl) {
+            setImagePreview(watchLogoUrl);
+        } else {
+             setImagePreview(client?.logo || null);
+        }
+    }, [watchLogoUrl, watchLogoFile, client?.logo]);
     
     useEffect(() => { 
         if(isOpen) {
@@ -99,6 +113,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
                 logoUrl: client?.logo || "",
                 logoFile: undefined,
             });
+             setImagePreview(client?.logo || null);
         }
     }, [client, form, isOpen]);
     
@@ -112,6 +127,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
         }
 
         onSave({ ...data, logo: logoValue }, client?.id);
+        setImagePreview(null);
         setIsOpen(false);
     };
 
@@ -126,24 +142,34 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
                             <FormItem><FormLabel>Client Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
 
-                        <FormField control={form.control} name="logoUrl" render={({ field }) => (
-                            <FormItem><FormLabel>Logo Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        
-                        <div className="relative my-2">
-                           <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                           <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
-                        </div>
+                        <Card>
+                            <CardContent className="p-4 space-y-4">
+                                <h4 className="text-sm font-medium">Client Logo</h4>
+                                {imagePreview && (
+                                    <div className="relative h-24 w-full rounded-md overflow-hidden border flex items-center justify-center bg-muted">
+                                        <Image src={imagePreview} alt="Image Preview" fill className="object-contain p-2"/>
+                                    </div>
+                                )}
+                                <FormField control={form.control} name="logoUrl" render={({ field }) => (
+                                    <FormItem><FormLabel>Logo Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                
+                                <div className="relative">
+                                <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                                <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+                                </div>
 
-                         <FormField control={form.control} name="logoFile" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Upload Logo File</FormLabel>
-                                <FormControl>
-                                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
+                                <FormField control={form.control} name="logoFile" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Upload Logo File</FormLabel>
+                                        <FormControl>
+                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
 
                         <FormField control={form.control} name="aiHint" render={({ field }) => (
                             <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
