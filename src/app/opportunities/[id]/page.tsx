@@ -1,15 +1,80 @@
 
 'use client';
 
+import { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useOpportunitiesData } from "@/app/admin/opportunity-table";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { initialOpportunities, opportunityIconMap } from "@/lib/opportunities";
 import { notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle } from "lucide-react";
+import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+
+
+const NegotiationSchema = z.object({
+  proposedPrice: z.coerce.number().positive("Proposed price must be a positive number."),
+  justification: z.string().min(10, "Please provide a brief justification for your proposal."),
+});
+type NegotiationValues = z.infer<typeof NegotiationSchema>;
+
+
+const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const { toast } = useToast();
+    const form = useForm<NegotiationValues>({
+        resolver: zodResolver(NegotiationSchema),
+    });
+
+    const onSubmit: SubmitHandler<NegotiationValues> = (data) => {
+        console.log("Submitting counter-offer:", data);
+        toast({
+            title: "Proposal Submitted!",
+            description: "Your counter-offer has been sent to the opportunity poster.",
+        });
+        setIsOpen(false);
+        form.reset();
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button variant="secondary"><Handshake className="mr-2 h-4 w-4"/> Propose a Different Price</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Negotiate Price for "{opportunity.title}"</DialogTitle>
+                    <DialogDescription>
+                        The current budget is {opportunity.prize}. Submit your counter-offer below.
+                    </DialogDescription>
+                </DialogHeader>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="proposedPrice" render={({ field }) => (
+                            <FormItem><FormLabel>Your Proposed Price (OMR)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="justification" render={({ field }) => (
+                            <FormItem><FormLabel>Justification</FormLabel><FormControl><Textarea placeholder="Briefly explain why your proposed price is different. e.g., 'The project scope requires additional design revisions not mentioned in the brief.'" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Submit Proposal</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
@@ -76,12 +141,13 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
                                 </div>
                             )}
                         </CardContent>
-                        <CardFooter>
-                            <Button asChild size="lg" className="w-full">
+                        <CardFooter className="flex-col sm:flex-row justify-center gap-4">
+                            <Button asChild size="lg" className="w-full sm:w-auto">
                                 <Link href="/submit-work">
                                     Submit Proposal <ArrowRight className="ml-2 w-5 h-5" />
                                 </Link>
                             </Button>
+                            <PriceNegotiationDialog opportunity={opportunity} />
                         </CardFooter>
                     </Card>
                 </div>
