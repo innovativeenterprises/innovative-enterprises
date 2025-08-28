@@ -372,5 +372,3 @@ export const initialAssets: Asset[] = [
         aiHint: 'mobile hotspot'
     }
 ];
-
-    
