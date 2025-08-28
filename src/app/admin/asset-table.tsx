@@ -190,7 +190,7 @@ const AddEditAssetDialog = ({
                            ) : (
                                 <FormField control={form.control} name="imageFile" render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Image</FormLabel>
+                                        <FormLabel>Image Upload</FormLabel>
                                         <FormControl>
                                             <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                         </FormControl>
@@ -420,3 +420,5 @@ export default function AssetTable({
         </Card>
     );
 }
+
+    

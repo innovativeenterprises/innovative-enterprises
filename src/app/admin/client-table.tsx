@@ -155,7 +155,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
                         ) : (
                              <FormField control={form.control} name="logoFile" render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Logo Image</FormLabel>
+                                    <FormLabel>Logo Image Upload</FormLabel>
                                     <FormControl>
                                         <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                     </FormControl>
@@ -357,5 +357,7 @@ export default function ClientTable({
         </Card>
     );
 }
+
+    
 
     
