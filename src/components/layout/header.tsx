@@ -104,9 +104,9 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     icon: Languages,
   },
   {
-    title: "Lexi Contract Analyzer",
-    href: "/contract-analyzer",
-    description: "Analyze legal contracts for risks, liabilities, and ambiguities before you sign.",
+    title: "AI Legal Agent",
+    href: "/legal-agent",
+    description: "Ask legal questions or analyze documents for potential risks and get preliminary advice.",
     icon: Scale,
   },
    {

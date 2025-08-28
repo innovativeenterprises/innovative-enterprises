@@ -23,7 +23,8 @@ export default function AdminOperationsPage() {
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
     { id: 'tender', title: 'Tender Response Assistant', icon: FileText, component: <TenderForm /> },
     { id: 'training', title: 'AI Training Center', icon: BrainCircuit, component: <TrainingForm /> },
-    { id: 'meeting', title: 'Online Meeting Agent', icon: NotebookText, component: <CouponGenerator /> },
+    { id: 'meeting', title: 'Online Meeting Agent', icon: NotebookText, component: <MeetingForm /> },
+    { id: 'coupon', title: 'Coupon Generator', icon: Ticket, component: <CouponGenerator /> },
   ]
 
   return (
