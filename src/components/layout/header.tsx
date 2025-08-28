@@ -159,14 +159,7 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
   }
 ];
 
-const partnershipLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
-   {
-    title: "Submit a Work Order",
-    href: "/submit-work",
-    description:
-      "Have a project or task? Submit it here for analysis and routing to our talent network.",
-    icon: Briefcase,
-  },
+const opportunitiesLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
    {
     title: "Competitions & Opportunities",
     href: "/opportunities",
@@ -175,6 +168,16 @@ const partnershipLinks: { title: string; href: string; description: string, icon
     icon: Trophy,
   },
   {
+    title: "Submit a Work Order",
+    href: "/submit-work",
+    description:
+      "Have a project or task? Submit it here for analysis and routing to our talent network.",
+    icon: Briefcase,
+  },
+];
+
+const networkLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
+    {
     title: "Become a Partner",
     href: "/partner",
     description:
@@ -188,7 +191,7 @@ const partnershipLinks: { title: string; href: string; description: string, icon
       "Explore investment opportunities and be part of our innovation journey.",
     icon: FileText,
   },
-]
+];
 
 
 export default function Header() {
@@ -291,10 +294,28 @@ export default function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base font-medium">Opportunities & Network</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-base font-medium">Opportunities</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {partnershipLinks.map((component) => (
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] lg:w-[300px]">
+                    {opportunitiesLinks.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        onClick={handleLinkClick}
+                        icon={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+               <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">Network</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] lg:w-[300px]">
+                    {networkLinks.map((component) => (
                       <ListItem
                         key={component.title}
                         title={component.title}
@@ -378,8 +399,20 @@ export default function Header() {
                           <Link href={link.href}>{link.title}</Link>
                           </Button>
                       ))}
-                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Opportunities & Network</p>
-                      {partnershipLinks.map((link) => (
+                      <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Opportunities</p>
+                      {opportunitiesLinks.map((link) => (
+                          <Button
+                          key={link.href}
+                          asChild
+                          variant="ghost"
+                          className="justify-start text-base"
+                          onClick={handleLinkClick}
+                          >
+                          <Link href={link.href}>{link.title}</Link>
+                          </Button>
+                      ))}
+                       <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Network</p>
+                      {networkLinks.map((link) => (
                           <Button
                           key={link.href}
                           asChild
