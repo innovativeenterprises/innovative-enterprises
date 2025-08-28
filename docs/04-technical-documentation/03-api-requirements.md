@@ -1,4 +1,3 @@
-
 # API Requirements & Integration Notes
 
 ## Project: Innovative Enterprises - AI Business Platform
@@ -44,3 +43,30 @@
   - `PaymentIntents API`: For creating and confirming payments.
   - `Customers API`: To manage customer payment information.
 - **Integration Notes:** All sensitive operations will be handled server-side in a secure Cloud Function. The frontend will use Stripe.js and the publishable key to tokenize card information.
+
+---
+
+### B2B Partner API (Integration Strategy)
+*This section outlines the strategy for integrating with external partner stores for services like inventory sharing (InfraRent) or product reselling (Nova Commerce).*
+
+To achieve this, the platform will expose a secure, versioned, RESTful Partner API. This allows for a scalable and standardized way for partner systems to communicate with ours.
+
+**Key Principles:**
+1.  **Authentication:** All API requests will be authenticated using a unique, partner-specific API key sent in the `Authorization` header (`Bearer <API_KEY>`).
+2.  **Standard Data Formats:** Data will be exchanged in a standardized JSON format. Schemas for products, assets, and orders will be clearly defined to ensure consistency.
+3.  **Webhooks for Real-time Updates:** For events like "new order placed" or "asset status changed," our system will use webhooks to push real-time notifications to a partner-provided URL, avoiding the need for constant polling.
+
+**Example API Endpoints:**
+
+*   **`GET /api/v1/assets`**:
+    *   **Purpose:** Allows a partner to fetch a list of our available rental assets to display on their own platform.
+    *   **Response:** A JSON array of asset objects, including `id`, `name`, `specs`, `monthlyPrice`, `status`, and `imageUrl`.
+
+*   **`POST /api/v1/products`**:
+    *   **Purpose:** Allows a partner to add or update a product in our Nova Commerce catalog.
+    *   **Request Body:** A JSON object representing the product, including `sku`, `name`, `description`, `price`, `stock`, and `imageUrl`.
+    *   **Action:** Our system would ingest this data and make the product available for sale on our e-commerce store.
+
+*   **`POST /api/v1/orders`**:
+    *   **Purpose:** When a product sold on our store belongs to a partner, our system will call this endpoint on the *partner's* API to notify them of the new sale for fulfillment.
+    *   **Request Body:** A JSON object containing order details like `orderId`, `customerDetails`, and an array of `lineItems` (`sku`, `quantity`).
