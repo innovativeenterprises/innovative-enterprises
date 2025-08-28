@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -138,6 +138,7 @@ type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | '
 type ApplicantType = 'individual' | 'company';
 
 const REGISTRATION_FEE = 10;
+const EXTRA_SERVICE_FEE = 1.5;
 
 export default function PartnerPage() {
   const [pageState, setPageState] = useState<PageState>('selection');
@@ -398,6 +399,13 @@ export default function PartnerPage() {
     link.click();
     document.body.removeChild(link);
   }
+  
+  const selectedCategories = (applicantType === 'company' ? companyUploadForm.watch('businessCategories') : individualUploadForm.watch('businessCategories')) || [];
+  const subtotal = REGISTRATION_FEE + (Math.max(0, selectedCategories.length - 1) * EXTRA_SERVICE_FEE);
+
+  useMemo(() => {
+    setFinalPrice(subtotal);
+  }, [subtotal]);
 
   const renderAnalysisResult = () => {
     if (!analysisResult) return null;
@@ -530,7 +538,7 @@ export default function PartnerPage() {
                             <FormItem>
                                 <div className="mb-4">
                                      <FormLabel>4. Business Categories</FormLabel>
-                                     <FormDescription>Select all categories that apply to your business.</FormDescription>
+                                     <FormDescription>The first category is free. Each additional category is OMR {EXTRA_SERVICE_FEE.toFixed(2)}.</FormDescription>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                 {businessCategories.map((item) => (
@@ -628,7 +636,7 @@ export default function PartnerPage() {
                             <FormItem>
                                 <div className="mb-4">
                                      <FormLabel>Your Primary Skills / Categories</FormLabel>
-                                     <FormDescription>Select all categories that apply to your services.</FormDescription>
+                                     <FormDescription>Select all categories that apply to your services. The first is free.</FormDescription>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                 {businessCategories.map((item) => (
@@ -764,62 +772,83 @@ export default function PartnerPage() {
    </>
   );
 
-  const PaymentScreen = () => (
-    <>
-      <CardHeader>
-        <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}>&larr; Back</Button>
-        <CardTitle className="text-center pt-8">Final Step: Registration Fee</CardTitle>
-        <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
-      </CardHeader>
-      <CardContent>
-         <Form {...paymentForm}>
-          <form onSubmit={paymentForm.handleSubmit(handleFinalSubmit)} className="space-y-4">
-            <Card className="bg-muted/50">
-                <CardContent className="p-4">
-                     <FormField control={paymentForm.control} name="coupon" render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Coupon Code</FormLabel>
-                            <div className="flex gap-2">
-                                <FormControl>
-                                    <Input placeholder="Enter coupon code..." {...field} />
-                                </FormControl>
-                                <Button type="button" variant="secondary" onClick={handleApplyCoupon}>Apply</Button>
+  const PaymentScreen = () => {
+    const extraServicesCount = Math.max(0, selectedCategories.length - 1);
+    const extraServiceFee = extraServicesCount * EXTRA_SERVICE_FEE;
+    const calculatedTotal = REGISTRATION_FEE + extraServiceFee;
+
+    return (
+        <>
+        <CardHeader>
+            <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}>&larr; Back</Button>
+            <CardTitle className="text-center pt-8">Final Step: Registration Fee</CardTitle>
+            <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <Form {...paymentForm}>
+            <form onSubmit={paymentForm.handleSubmit(handleFinalSubmit)} className="space-y-4">
+                <Card className="bg-muted/50">
+                    <CardHeader><CardTitle className="text-lg">Order Summary</CardTitle></CardHeader>
+                    <CardContent className="space-y-2 text-sm">
+                        <div className="flex justify-between"><span>Base Registration Fee:</span><span>OMR {REGISTRATION_FEE.toFixed(2)}</span></div>
+                        {extraServicesCount > 0 && (
+                             <div className="flex justify-between">
+                                <span>Extra Services ({extraServicesCount} x {EXTRA_SERVICE_FEE.toFixed(2)}):</span>
+                                <span>OMR {extraServiceFee.toFixed(2)}</span>
                             </div>
-                            <FormMessage />
-                        </FormItem>
-                    )}/>
-                </CardContent>
-            </Card>
-            <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
-                <span className="text-muted-foreground">Registration Fee</span>
-                <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
-            </div>
-            {finalPrice > 0 && (
-                <>
-                    <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
-                        <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
-                    )}/>
-                    <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
-                        <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
-                    )}/>
-                     <div className="grid grid-cols-2 gap-4">
-                        <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
-                            <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}
+                        <hr className="my-2 border-dashed" />
+                        <div className="flex justify-between font-bold text-lg">
+                            <span>Total Amount:</span>
+                            <span className="text-primary">OMR {calculatedTotal.toFixed(2)}</span>
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        <FormField control={paymentForm.control} name="coupon" render={({ field }) => (
+                            <FormItem className="w-full">
+                                <FormLabel>Coupon Code</FormLabel>
+                                <div className="flex gap-2">
+                                    <FormControl>
+                                        <Input placeholder="Enter coupon code..." {...field} />
+                                    </FormControl>
+                                    <Button type="button" variant="secondary" onClick={handleApplyCoupon}>Apply</Button>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
                         )}/>
-                        <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
-                            <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                    </CardFooter>
+                </Card>
+                <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
+                    <span className="text-lg font-bold">Total Due Today</span>
+                    <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
+                </div>
+                {finalPrice > 0 && (
+                    <>
+                        <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                            <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
                         )}/>
-                    </div>
-                </>
-            )}
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Finalize` : `Complete Free Registration`}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </>
-  );
+                        <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                            <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                                <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                            <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                                <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                        </div>
+                    </>
+                )}
+                <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
+                    {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Finalize` : `Complete Free Registration`}
+                </Button>
+            </form>
+            </Form>
+        </CardContent>
+        </>
+    );
+  }
 
 
   const SubmittedScreen = () => (
@@ -886,7 +915,7 @@ export default function PartnerPage() {
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };
