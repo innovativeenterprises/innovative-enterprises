@@ -44,10 +44,10 @@ const analyzeContractPrompt = ai.definePrompt({
     """
 
     **Instructions:**
-    1.  **Identify Key Clauses:** Identify and summarize the most critical clauses (e.g., Liability, Data Usage, Termination, Governing Law).
-    2.  **Assess Risks (Omani Context):** For each key clause, point out potential risks, ambiguities, or terms that are unfavorable to a user or small business, specifically within the context of Omani law. Reference relevant articles from qanoon.om if applicable.
-    3.  **Provide Recommendations:** Suggest specific actions, questions the user should consider, or amendments they might propose before agreeing to the terms.
-    4.  **Format:** Use Markdown for clear formatting (headings, bullet points).
+    1.  **Format:** Use Markdown for clear, professional formatting. Use headings, subheadings, and bullet points to structure your analysis.
+    2.  **Identify Key Clauses:** Create a section titled "### Key Clause Analysis". Identify and summarize the most critical clauses (e.g., Liability, Data Usage, Termination, Governing Law).
+    3.  **Assess Risks (Omani Context):** For each key clause, create a subsection to point out potential risks, ambiguities, or terms that are unfavorable to a user or small business, specifically within the context of Omani law. Use bullet points for clarity. Reference relevant articles from qanoon.om if applicable.
+    4.  **Provide Recommendations:** Create a section titled "### Recommendations". Suggest specific actions, questions the user should consider, or amendments they might propose before agreeing to the terms.
     5.  **Disclaimer:** You MUST conclude your response with a disclaimer stating this is not real legal advice and a professional should be consulted. Set this in the 'disclaimer' field.
     `,
 });
