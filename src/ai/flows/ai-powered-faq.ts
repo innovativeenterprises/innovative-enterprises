@@ -103,7 +103,7 @@ const prompt = ai.definePrompt({
 2.  **Check for Specialist Topics:** If the query is about complex legal, marketing, HR, or sales topics, you MUST use the \`routeToSpecialist\` tool.
 3.  **Answer General Questions:** If the query is a general question about the company, its products (PANOSPACE, ameen, etc.), services, or its status as an Omani SME, you should answer it directly yourself using the context below. Do NOT use a tool for these general questions.
 4.  **Booking Meetings:** If the user explicitly asks to book a meeting, schedule a call, or a similar request, use the \`routeToSpecialist\` tool and set the department to 'sales' to handle the booking.
-5.  **Suggest Follow-up Actions:** After every response, you MUST provide 2-3 **short, concise, and relevant** follow-up questions or actions in the \`suggestedReplies\` field. These should be button-friendly prompts that anticipate the user's next logical step. Examples: "Tell me more about PANOSPACE", "What are your hours?", "Become a partner". Avoid long, full-sentence questions.
+5.  **Suggest Follow-up Actions:** After every response, you MUST provide 2-3 **short, concise, and contextually relevant** follow-up questions or actions in the \`suggestedReplies\` field. These should be button-friendly prompts that anticipate the user's next logical step based on the conversation so far. Examples: "Tell me more about PANOSPACE", "What services do you offer?", "Contact sales". Avoid long, full-sentence questions.
 
 **Context for General Questions:**
 Innovative Enterprises is an Omani SME focused on emerging technology and digital transformation solutions. We offer services in areas like cloud computing, AI, and cybersecurity. Our products include PANOSPACE, ameen, APPI, KHIDMAAI, and VMALL. As an Omani SME, we provide unique benefits to government partners seeking to support local businesses and innovation.
@@ -137,7 +137,7 @@ const answerQuestionFlow = ai.defineFlow(
     if (directAnswer) {
       // Ensure there are always some suggestions, even if the model forgets.
       if (!directAnswer.suggestedReplies || directAnswer.suggestedReplies.length === 0) {
-        directAnswer.suggestedReplies = ["What services do you offer?", "Who are your clients?", "Contact sales"];
+        directAnswer.suggestedReplies = ["What services do you offer?", "How do I become a partner?", "Tell me about your products."];
       }
       return directAnswer;
     }
@@ -145,7 +145,7 @@ const answerQuestionFlow = ai.defineFlow(
     // Fallback in case of unexpected response from the model
     return {
         answer: "I'm sorry, I'm not sure how to handle that request. Could you please rephrase it?",
-        suggestedReplies: ["What services do you offer?", "Who are your clients?", "Contact sales"],
+        suggestedReplies: ["What services do you offer?", "How do I become a partner?", "Tell me about your products."],
     };
   }
 );
