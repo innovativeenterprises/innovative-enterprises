@@ -62,9 +62,9 @@ export default function ProviderDetailPage() {
         <div className="space-y-8">
              <div>
                 <Button asChild variant="outline">
-                    <Link href="/admin/people">
+                    <Link href="/admin/network">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to People & Network
+                        Back to Network
                     </Link>
                 </Button>
             </div>
