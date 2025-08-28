@@ -42,11 +42,11 @@ const businessCategories = [
     "Tech & IT Services",
     "Creative & Design",
     "Consulting & Professional Services",
-    "Printing & Publishing",
-    "Automotive Services",
-    "Health & Wellness",
     "Legal Services",
     "Financial & Banking",
+    "Automotive Services",
+    "Health & Wellness",
+    "Printing & Publishing",
     "Events & Entertainment",
     "Other",
 ];
@@ -156,6 +156,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
     
     const getTierColor = () => {
         switch(classification.toLowerCase()) {
+            case 'diamond': return 'from-blue-400 to-indigo-500';
             case 'gold': return 'from-yellow-400 to-amber-500';
             case 'silver': return 'from-gray-400 to-slate-500';
             case 'bronze': return 'from-orange-400 to-amber-600';
@@ -165,6 +166,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
 
     const getTierTextColor = () => {
          switch(classification.toLowerCase()) {
+            case 'diamond':
             case 'gold':
             case 'silver':
             case 'bronze': return 'text-white';
@@ -173,7 +175,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
     }
 
     return (
-        <div ref={cardRef} className={'w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl'}>
+        <div ref={cardRef} className={`w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl`}>
             <div className="bg-gray-800 rounded-lg p-6 relative h-full text-white">
                  <div className="absolute top-4 right-4">
                     <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
@@ -213,7 +215,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
                 </div>
 
                  <div className="absolute bottom-4 left-4">
-                    <p className={'font-bold text-lg tracking-wider uppercase ${getTierTextColor()} flex items-center gap-2'}>
+                    <p className={`font-bold text-lg tracking-wider uppercase ${getTierTextColor()} flex items-center gap-2`}>
                         <Star className="w-5 h-5 fill-current" /> {classification} Partner
                     </p>
                 </div>
@@ -235,6 +237,8 @@ export default function PartnerPage() {
   const [finalPrice, setFinalPrice] = useState(REGISTRATION_FEE);
   const [logoDataUri, setLogoDataUri] = useState<string | undefined>();
   const cardRef = useRef<HTMLDivElement>(null);
+  const [isFlipping, setIsFlipping] = useState(false);
+
 
   const { toast } = useToast();
 
@@ -339,7 +343,11 @@ export default function PartnerPage() {
   
   const onIdFrontCaptured = (imageUri: string) => {
     individualUploadForm.setValue('idDocumentFrontUri', imageUri);
-     setPageState('upload');
+     setIsFlipping(true);
+     setTimeout(() => {
+        setPageState('capture_id_back');
+        setIsFlipping(false);
+     }, 500);
      toast({ title: 'Front of ID Captured!', description: "Please scan the back of the ID card now."})
   }
 
@@ -351,7 +359,11 @@ export default function PartnerPage() {
 
   const onRepIdFrontCaptured = (imageUri: string) => {
     companyUploadForm.setValue('repIdDocumentFrontUri', imageUri);
-    setPageState('capture_rep_id_back');
+    setIsFlipping(true);
+    setTimeout(() => {
+        setPageState('capture_rep_id_back');
+        setIsFlipping(false);
+    }, 500);
     toast({ title: "Representative's ID Front Captured!", description: "Please scan the back of the ID card now."})
   }
   
@@ -387,7 +399,7 @@ export default function PartnerPage() {
       });
       setAgreement(agreementData);
       
-      const newRecordNumber = 'PARTNER-${Date.now()}';
+      const newRecordNumber = `PARTNER-${Date.now()}`;
       setRecordNumber(newRecordNumber);
       setPageState('submitted');
       toast({ title: 'Inquiry Submitted & Agreements Generated!', description: "Please review the generated agreements below." });
@@ -410,7 +422,7 @@ export default function PartnerPage() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-    toast({ title: 'Downloaded!', description: 'Your ${filename} has been downloaded.'});
+    toast({ title: 'Downloaded!', description: `Your ${filename} has been downloaded.`});
   };
 
   const handleDownloadCard = async () => {
@@ -441,7 +453,7 @@ export default function PartnerPage() {
     const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
     const primaryCategory = formToUse.getValues('primaryBusinessCategory');
     const additionalCategories = formToUse.getValues('additionalBusinessCategories') || [];
-    const allCategories = [primaryCategory, ...additionalCategories].join(', ');
+    const allCategories = [primaryCategory, ...additionalCategories].filter(Boolean).join(', ');
     
     const serviceChargesFile = formToUse.getValues('serviceChargesFile');
 
@@ -520,12 +532,20 @@ export default function PartnerPage() {
     const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
     const primary = formToUse.getValues('primaryBusinessCategory');
     const additional = formToUse.getValues('additionalBusinessCategories') || [];
-    return [primary, ...additional].filter(Boolean).join(', ');
+    return [primary, ...additional].filter(Boolean);
   }
 
   useEffect(() => {
     setFinalPrice(subtotal);
   }, [subtotal]);
+  
+  const getClassification = (serviceCount: number): string => {
+        if (serviceCount >= 6) return 'Diamond';
+        if (serviceCount >= 4) return 'Gold';
+        if (serviceCount >= 2) return 'Silver';
+        return 'Bronze';
+    };
+
 
   const renderAnalysisResult = () => {
     if (!analysisResult) return null;
@@ -630,14 +650,14 @@ export default function PartnerPage() {
                         <FormField control={companyUploadForm.control} name="logoFile" render={({ field }) => (
                            <FormItem><FormLabel>2. Company Logo (Optional)</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)}/></FormControl><FormMessage/></FormItem>
                         )}/>
+                         <FormField control={companyUploadForm.control} name="address" render={({ field }) => (
+                           <FormItem><FormLabel>3. Physical Address (if different from CR)</FormLabel><FormControl><Input placeholder="e.g., Al-Khuwair, Muscat" {...field} /></FormControl><FormMessage/></FormItem>
+                        )}/>
                          <div>
-                          <FormLabel>3. Representative's ID Card (Optional)</FormLabel>
+                          <FormLabel>4. Representative's ID Card (Optional)</FormLabel>
                           <div className="grid grid-cols-2 gap-4 mt-2">
                               <Button type="button" onClick={() => setPageState('capture_rep_id_front')}>
                                 <Camera className="mr-2 h-4 w-4" /> Scan Front of ID
-                              </Button>
-                              <Button type="button" variant="outline" onClick={() => setPageState('capture_rep_id_back')} disabled={!companyUploadForm.getValues('repIdDocumentFrontUri')}>
-                                <Camera className="mr-2 h-4 w-4" /> Scan Back of ID
                               </Button>
                           </div>
                           {(companyUploadForm.getValues('repIdDocumentFrontUri') || companyUploadForm.getValues('repIdDocumentBackUri')) && (
@@ -657,7 +677,7 @@ export default function PartnerPage() {
                             name="primaryBusinessCategory"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>4. Primary Business Category (Free)</FormLabel>
+                                <FormLabel>5. Primary Business Category (Free)</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl><SelectTrigger><SelectValue placeholder="Select your main service..." /></SelectTrigger></FormControl>
                                     <SelectContent>
@@ -675,7 +695,7 @@ export default function PartnerPage() {
                             render={() => (
                             <FormItem>
                                 <div className="mb-4">
-                                     <FormLabel>5. Additional Categories (OMR {EXTRA_SERVICE_FEE.toFixed(2)} each)</FormLabel>
+                                     <FormLabel>6. Additional Categories (OMR {EXTRA_SERVICE_FEE.toFixed(2)} each)</FormLabel>
                                      <FormDescription>Select any other services you provide.</FormDescription>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
@@ -707,7 +727,7 @@ export default function PartnerPage() {
 
                         <FormField control={companyUploadForm.control} name="serviceChargesFile" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>6. Services & Pricing List (Optional)</FormLabel>
+                                <FormLabel>7. Services & Pricing List (Optional)</FormLabel>
                                 <div className="flex flex-col sm:flex-row gap-2">
                                     <Button type="button" variant="secondary" onClick={handleDownloadPricingTemplate} className="w-full sm:w-auto">
                                         <Download className="mr-2 h-4 w-4" /> Download Template
@@ -975,7 +995,7 @@ export default function PartnerPage() {
                     </>
                 )}
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                    {finalPrice > 0 ? 'Pay OMR ${finalPrice.toFixed(2)} & Finalize' : 'Complete Free Registration'}
+                    {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Finalize` : `Complete Free Registration`}
                 </Button>
             </form>
             </Form>
@@ -996,12 +1016,7 @@ export default function PartnerPage() {
     const expiryDate = new Date(today);
     expiryDate.setFullYear(today.getFullYear() + 1);
 
-    const subscriptionTier = paymentForm.getValues('subscriptionTier');
-    let classification = 'Basic';
-    if(subscriptionTier === 'lifetime') classification = 'Gold';
-    else if (subscriptionTier === 'yearly') classification = 'Silver';
-    else if (subscriptionTier === 'monthly') classification = 'Bronze';
-
+    const classification = getClassification(allSelectedServices().length);
 
     return (
     <>
@@ -1027,7 +1042,7 @@ export default function PartnerPage() {
             joiningDate={today.toLocaleDateString()}
             expiryDate={expiryDate.toLocaleDateString()}
             classification={classification}
-            services={allSelectedServices()}
+            services={allSelectedServices().join(', ')}
             partnerType={applicantType === 'company' ? "Registered Company" : "Individual Freelancer"}
             logoUrl={logoDataUri}
         />
@@ -1078,10 +1093,10 @@ export default function PartnerPage() {
         case 'submitting': return <LoadingScreen title="Finalizing Registration..." description="Processing payment and routing to our partnerships team." />;
         case 'generating_agreements': return <LoadingScreen title="Generating Agreements..." description="Your legal documents are being drafted by our AI." />;
         case 'submitted': return <SubmittedScreen />;
-        case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
+        case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
+        case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         default: return <SelectionScreen />;
     }
   };
