@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -105,7 +105,9 @@ const CompanyUploadSchema = z.object({
   country: z.string().optional(),
   repIdDocumentFrontUri: z.string().min(1, 'Front of Representative ID is required.'),
   repIdDocumentBackUri: z.string().optional(),
-  businessCategory: z.string().min(1, "Please select a business category."),
+  businessCategories: z.array(z.string()).refine(value => value.some(item => item), {
+    message: "You have to select at least one business category.",
+  }),
   serviceChargesFile: z.any().optional(),
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
@@ -116,7 +118,9 @@ const IndividualUploadSchema = z.object({
     passportDocumentUri: z.any().optional(),
     personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
-    businessCategory: z.string().min(1, "Please select a business category."),
+    businessCategories: z.array(z.string()).refine(value => value.some(item => item), {
+        message: "You have to select at least one business category.",
+    }),
     serviceChargesFile: z.any().optional(),
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
@@ -146,8 +150,8 @@ export default function PartnerPage() {
   const [finalPrice, setFinalPrice] = useState(REGISTRATION_FEE);
   const { toast } = useToast();
 
-  const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema), defaultValues: { businessCategory: '' } });
-  const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema), defaultValues: { businessCategory: '' } });
+  const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema), defaultValues: { businessCategories: [] } });
+  const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema), defaultValues: { businessCategories: [] } });
   const inquiryForm = useForm<z.infer<typeof PartnershipInquiryInputSchema>>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
   const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
 
@@ -322,7 +326,7 @@ export default function PartnerPage() {
     if (!agreement || !recordNumber) return;
 
     const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
-    const businessCategory = formToUse.getValues('businessCategory');
+    const businessCategory = formToUse.getValues('businessCategories').join(', ');
     const serviceChargesFile = formToUse.getValues('serviceChargesFile');
 
     let registrations = [];
@@ -381,16 +385,15 @@ export default function PartnerPage() {
   }
   
   const handleDownloadPricingTemplate = () => {
-    const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
-    const category = formToUse.getValues('businessCategory');
-    const templateData = pricingTemplates[category] || pricingTemplates.default;
+    // For simplicity, we'll use a generic template if multiple categories are selected.
+    const templateData = pricingTemplates.default;
     
     let csvContent = templateData.map(e => e.join(",")).join("\n");
     
     const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `pricing_template_${category.replace(/\s+/g, '_') || 'generic'}.csv`);
+    link.setAttribute("download", `pricing_template_generic.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -522,20 +525,48 @@ export default function PartnerPage() {
                         </div>
                          <FormField
                             control={companyUploadForm.control}
-                            name="businessCategory"
-                            render={({ field }) => (
+                            name="businessCategories"
+                            render={() => (
                             <FormItem>
-                                <FormLabel>4. Business Category</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                    <SelectValue placeholder="Select your primary business category..." />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {businessCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
-                                </SelectContent>
-                                </Select>
+                                <div className="mb-4">
+                                     <FormLabel>4. Business Categories</FormLabel>
+                                     <FormDescription>Select all categories that apply to your business.</FormDescription>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                {businessCategories.map((item) => (
+                                    <FormField
+                                    key={item}
+                                    control={companyUploadForm.control}
+                                    name="businessCategories"
+                                    render={({ field }) => {
+                                        return (
+                                        <FormItem
+                                            key={item}
+                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                            <FormControl>
+                                            <Checkbox
+                                                checked={field.value?.includes(item)}
+                                                onCheckedChange={(checked) => {
+                                                return checked
+                                                    ? field.onChange([...(field.value || []), item])
+                                                    : field.onChange(
+                                                        field.value?.filter(
+                                                        (value) => value !== item
+                                                        )
+                                                    )
+                                                }}
+                                            />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                                {item}
+                                            </FormLabel>
+                                        </FormItem>
+                                        )
+                                    }}
+                                    />
+                                ))}
+                                </div>
                                 <FormMessage />
                             </FormItem>
                             )}
@@ -592,20 +623,48 @@ export default function PartnerPage() {
                         )} />
                         <FormField
                             control={individualUploadForm.control}
-                            name="businessCategory"
-                            render={({ field }) => (
+                            name="businessCategories"
+                            render={() => (
                             <FormItem>
-                                <FormLabel>Your Primary Skill / Category</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                    <SelectValue placeholder="Select your primary skill category..." />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {businessCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
-                                </SelectContent>
-                                </Select>
+                                <div className="mb-4">
+                                     <FormLabel>Your Primary Skills / Categories</FormLabel>
+                                     <FormDescription>Select all categories that apply to your services.</FormDescription>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                {businessCategories.map((item) => (
+                                    <FormField
+                                    key={item}
+                                    control={individualUploadForm.control}
+                                    name="businessCategories"
+                                    render={({ field }) => {
+                                        return (
+                                        <FormItem
+                                            key={item}
+                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                            <FormControl>
+                                            <Checkbox
+                                                checked={field.value?.includes(item)}
+                                                onCheckedChange={(checked) => {
+                                                return checked
+                                                    ? field.onChange([...(field.value || []), item])
+                                                    : field.onChange(
+                                                        field.value?.filter(
+                                                        (value) => value !== item
+                                                        )
+                                                    )
+                                                }}
+                                            />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                                {item}
+                                            </FormLabel>
+                                        </FormItem>
+                                        )
+                                    }}
+                                    />
+                                ))}
+                                </div>
                                 <FormMessage />
                             </FormItem>
                             )}
@@ -827,7 +886,7 @@ export default function PartnerPage() {
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };
