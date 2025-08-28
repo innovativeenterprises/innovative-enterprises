@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,13 +16,17 @@ import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.sc
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
-import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket, BadgePercent, Phone } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket, BadgePercent, Phone, ArrowLeft, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CameraCapture } from '@/components/camera-capture';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSettingsData } from '@/app/admin/settings-table';
+import Image from 'next/image';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -103,7 +107,7 @@ const CompanyUploadSchema = z.object({
   address: z.string().optional(),
   city: z.string().optional(),
   country: z.string().optional(),
-  repIdDocumentFrontUri: z.string().min(1, 'Front of Representative ID is required.'),
+  repIdDocumentFrontUri: z.string().optional(),
   repIdDocumentBackUri: z.string().optional(),
   businessCategories: z.array(z.string()).refine(value => value.some(item => item), {
     message: "You have to select at least one business category.",
@@ -140,7 +144,89 @@ type ApplicantType = 'individual' | 'company';
 const REGISTRATION_FEE = 10;
 const EXTRA_SERVICE_FEE = 1.5;
 
+const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDate, classification, services, partnerType, logoUrl }: {
+    cardRef: React.RefObject<HTMLDivElement>,
+    partnerName: string,
+    crNumber?: string,
+    joiningDate: string,
+    expiryDate: string,
+    classification: string,
+    services: string,
+    partnerType: string,
+    logoUrl?: string,
+}) => {
+    
+    const getTierColor = () => {
+        switch(classification.toLowerCase()) {
+            case 'gold': return 'from-yellow-400 to-amber-500';
+            case 'silver': return 'from-gray-400 to-slate-500';
+            case 'bronze': return 'from-orange-400 to-amber-600';
+            default: return 'from-gray-200 to-gray-300';
+        }
+    }
+
+    const getTierTextColor = () => {
+         switch(classification.toLowerCase()) {
+            case 'gold':
+            case 'silver':
+            case 'bronze': return 'text-white';
+            default: return 'text-gray-800';
+        }
+    }
+
+    return (
+        <div ref={cardRef} className={`w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl`}>
+            <div className="bg-gray-800 rounded-lg p-6 relative h-full text-white">
+                 <div className="absolute top-4 right-4">
+                    <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
+                </div>
+                 <div className="absolute bottom-0 right-0 w-32 h-32">
+                    <img src="https://www.svgrepo.com/show/493547/qr-code.svg" alt="QR Code" className="w-full h-full opacity-10" />
+                </div>
+                
+                <div className="flex items-start gap-4">
+                    {logoUrl && (
+                        <div className="w-20 h-20 bg-white rounded-md flex-shrink-0 flex items-center justify-center p-1">
+                            <Image src={logoUrl} alt="Partner Logo" width={72} height={72} className="object-contain" />
+                        </div>
+                    )}
+                    <div className="flex-grow">
+                        <p className="text-xs font-semibold uppercase tracking-widest opacity-70">{partnerType}</p>
+                        <h3 className="text-2xl font-bold">{partnerName}</h3>
+                        {crNumber && <p className="font-mono text-sm opacity-80">CRN: {crNumber}</p>}
+                    </div>
+                </div>
+
+                <div className="mt-6 space-y-3">
+                    <div className="text-sm">
+                        <p className="font-semibold opacity-70">Services:</p>
+                        <p className="opacity-90 truncate">{services}</p>
+                    </div>
+                    <div className="flex justify-between text-xs font-medium">
+                        <div>
+                            <p className="opacity-70">Joined:</p>
+                            <p className="font-semibold opacity-90">{joiningDate}</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="opacity-70">Expires:</p>
+                            <p className="font-semibold opacity-90">{expiryDate}</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <div className="absolute bottom-4 left-4">
+                    <p className={`font-bold text-lg tracking-wider uppercase ${getTierTextColor()} flex items-center gap-2`}>
+                        <Star className="w-5 h-5 fill-current" /> {classification} Partner
+                    </p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+
 export default function PartnerPage() {
+  const { settings } = useSettingsData();
   const [pageState, setPageState] = useState<PageState>('selection');
   const [applicantType, setApplicantType] = useState<ApplicantType>('company');
   
@@ -149,6 +235,9 @@ export default function PartnerPage() {
   const [agreement, setAgreement] = useState<AgreementGenerationOutput | null>(null);
   const [recordNumber, setRecordNumber] = useState<string | null>(null);
   const [finalPrice, setFinalPrice] = useState(REGISTRATION_FEE);
+  const [logoDataUri, setLogoDataUri] = useState<string | undefined>();
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const { toast } = useToast();
 
   const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema), defaultValues: { businessCategories: [] } });
@@ -172,20 +261,28 @@ export default function PartnerPage() {
         const crFile = data.crDocument[0];
 
         const crPromise = fileToDataURI(crFile).then(uri => analyzeCrDocument({ documentDataUri: uri }));
-        const repIdPromise = analyzeIdentity({ 
-            idDocumentFrontUri: data.repIdDocumentFrontUri,
-            idDocumentBackUri: data.repIdDocumentBackUri,
-        });
+        
+        let repIdPromise: Promise<IdentityAnalysisOutput | null> = Promise.resolve(null);
+        if (data.repIdDocumentFrontUri) {
+            repIdPromise = analyzeIdentity({ 
+                idDocumentFrontUri: data.repIdDocumentFrontUri,
+                idDocumentBackUri: data.repIdDocumentBackUri,
+            });
+        }
 
         const [crResult, repResult] = await Promise.all([crPromise, repIdPromise]);
         
+        if (data.logoFile && data.logoFile.length > 0) {
+            setLogoDataUri(await fileToDataURI(data.logoFile[0]));
+        }
+        
         setAnalysisResult(crResult);
-        setRepAnalysisResult(repResult);
+        if (repResult) setRepAnalysisResult(repResult);
         
         inquiryForm.reset({
             companyName: crResult.companyInfo?.companyNameEnglish || crResult.companyInfo?.companyNameArabic || '',
-            contactName: repResult.personalDetails?.fullName || crResult.authorizedSignatories?.[0]?.name || '',
-            email: repResult.personalDetails?.email || crResult.companyInfo?.contactEmail || '',
+            contactName: repResult?.personalDetails?.fullName || crResult.authorizedSignatories?.[0]?.name || '',
+            email: repResult?.personalDetails?.email || crResult.companyInfo?.contactEmail || '',
             partnershipDetails: crResult.summary || '',
             undertaking: false,
         });
@@ -216,6 +313,7 @@ export default function PartnerPage() {
         let photoUri: string | undefined;
         if (data.personalPhoto && data.personalPhoto.length > 0) {
             photoUri = await fileToDataURI(data.personalPhoto[0]);
+            setLogoDataUri(photoUri);
         }
 
         const result = await analyzeIdentity({ 
@@ -255,7 +353,7 @@ export default function PartnerPage() {
 
   const onRepIdFrontCaptured = (imageUri: string) => {
     companyUploadForm.setValue('repIdDocumentFrontUri', imageUri);
-    setPageState('upload');
+    setPageState('capture_rep_id_back');
     toast({ title: "Representative's ID Front Captured!", description: "Please scan the back of the ID card now."})
   }
   
@@ -281,8 +379,6 @@ export default function PartnerPage() {
     
     setPageState('generating_agreements');
     try {
-      // In a real app, you would save the inquiry data to a DB here.
-      // We will still call the AI flow to simulate routing it to the Partnerships agent.
       await handlePartnershipInquiry(inquiryForm.getValues());
       
       const agreementData = await generateAgreement({
@@ -317,6 +413,24 @@ export default function PartnerPage() {
     element.click();
     document.body.removeChild(element);
     toast({ title: 'Downloaded!', description: `Your ${filename} has been downloaded.`});
+  };
+
+  const handleDownloadCard = async () => {
+    if (!cardRef.current) return;
+    toast({ title: 'Generating Card...', description: 'Please wait.' });
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 3,
+        backgroundColor: null,
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = 'innovative-enterprises-partner-card.png';
+      link.href = dataUrl;
+      link.click();
+    } catch(e) {
+        toast({ title: 'Error', description: 'Could not generate card image.', variant: 'destructive' });
+    }
   };
 
   const handleESign = () => {
@@ -378,7 +492,7 @@ export default function PartnerPage() {
       setFinalPrice(0);
       toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
     } else if (coupon === 'AGENT50') {
-      setFinalPrice(REGISTRATION_FEE / 2);
+      setFinalPrice(subtotal / 2);
       toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
     } else {
       toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
@@ -386,7 +500,6 @@ export default function PartnerPage() {
   }
   
   const handleDownloadPricingTemplate = () => {
-    // For simplicity, we'll use a generic template if multiple categories are selected.
     const templateData = pricingTemplates.default;
     
     let csvContent = templateData.map(e => e.join(",")).join("\n");
@@ -403,7 +516,7 @@ export default function PartnerPage() {
   const selectedCategories = (applicantType === 'company' ? companyUploadForm.watch('businessCategories') : individualUploadForm.watch('businessCategories')) || [];
   const subtotal = REGISTRATION_FEE + (Math.max(0, selectedCategories.length - 1) * EXTRA_SERVICE_FEE);
 
-  useMemo(() => {
+  useEffect(() => {
     setFinalPrice(subtotal);
   }, [subtotal]);
 
@@ -492,7 +605,7 @@ export default function PartnerPage() {
   const UploadScreen = () => (
     <>
         <CardHeader>
-            <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('selection')}>&larr; Back</Button>
+            <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('selection')}><ArrowLeft className="mr-2 h-4 w-4"/> Back</Button>
             <CardTitle className="flex items-center gap-2 justify-center pt-8"><UploadCloud /> Upload Your Documents</CardTitle>
             <CardDescription className="text-center">Our AI will analyze your documents to auto-fill the partnership form.</CardDescription>
         </CardHeader>
@@ -511,12 +624,12 @@ export default function PartnerPage() {
                            <FormItem><FormLabel>2. Company Logo (Optional)</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)}/></FormControl><FormMessage/></FormItem>
                         )}/>
                          <div>
-                          <FormLabel>3. Representative's ID Card</FormLabel>
+                          <FormLabel>3. Representative's ID Card (Optional)</FormLabel>
                           <div className="grid grid-cols-2 gap-4 mt-2">
-                              <Button type="button" onClick={() => setPageState('capture_rep_id_front')} disabled={!!companyUploadForm.getValues('repIdDocumentFrontUri')}>
+                              <Button type="button" onClick={() => setPageState('capture_rep_id_front')}>
                                 <Camera className="mr-2 h-4 w-4" /> Scan Front of ID
                               </Button>
-                              <Button type="button" variant="outline" onClick={() => setPageState('capture_rep_id_back')} disabled={!companyUploadForm.getValues('repIdDocumentFrontUri') || !!companyUploadForm.getValues('repIdDocumentBackUri')}>
+                              <Button type="button" variant="outline" onClick={() => setPageState('capture_rep_id_back')} disabled={!companyUploadForm.getValues('repIdDocumentFrontUri')}>
                                 <Camera className="mr-2 h-4 w-4" /> Scan Back of ID
                               </Button>
                           </div>
@@ -593,7 +706,7 @@ export default function PartnerPage() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!companyUploadForm.getValues('repIdDocumentFrontUri')}><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
+                        <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"><Wand2 className="mr-2 h-4 w-4" /> Analyze Documents</Button>
                     </form>
                 </Form>
             ) : (
@@ -775,12 +888,12 @@ export default function PartnerPage() {
   const PaymentScreen = () => {
     const extraServicesCount = Math.max(0, selectedCategories.length - 1);
     const extraServiceFee = extraServicesCount * EXTRA_SERVICE_FEE;
-    const calculatedTotal = REGISTRATION_FEE + extraServiceFee;
+    const calculatedTotal = subtotal;
 
     return (
         <>
         <CardHeader>
-            <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}>&larr; Back</Button>
+            <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}><ArrowLeft className="mr-2 h-4 w-4"/> Back</Button>
             <CardTitle className="text-center pt-8">Final Step: Registration Fee</CardTitle>
             <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
         </CardHeader>
@@ -851,14 +964,32 @@ export default function PartnerPage() {
   }
 
 
-  const SubmittedScreen = () => (
+  const SubmittedScreen = () => {
+    
+    const partnerName = inquiryForm.getValues('companyName') || inquiryForm.getValues('contactName');
+    let crNumber;
+    if (analysisResult && 'companyInfo' in analysisResult) {
+        crNumber = analysisResult.companyInfo?.registrationNumber;
+    }
+    const today = new Date();
+    const expiryDate = new Date(today);
+    expiryDate.setFullYear(today.getFullYear() + 1);
+
+    const subscriptionTier = paymentForm.getValues('subscriptionTier');
+    let classification = 'Basic';
+    if(subscriptionTier === 'lifetime') classification = 'Gold';
+    else if (subscriptionTier === 'yearly') classification = 'Silver';
+    else if (subscriptionTier === 'monthly') classification = 'Bronze';
+
+
+    return (
     <>
     <CardHeader className="text-center">
         <div className="mx-auto bg-green-100 dark:bg-green-900/50 p-4 rounded-full w-fit mb-4">
             <CheckCircle className="h-12 w-12 text-green-500" />
         </div>
-        <CardTitle className="text-2xl">Partnership Inquiry Submitted!</CardTitle>
-        <CardDescription>Thank you! Our Partnership Agent will review your application. Please review and sign the agreements below to finalize the process.</CardDescription>
+        <CardTitle className="text-2xl">Partnership Registration Complete!</CardTitle>
+        <CardDescription>Thank you! You are now a registered partner. Below is your virtual membership card and legal agreements.</CardDescription>
     </CardHeader>
     <CardContent className="space-y-6">
         {recordNumber && (
@@ -867,13 +998,27 @@ export default function PartnerPage() {
                 <AlertDescription className="font-mono text-sm">{recordNumber}</AlertDescription>
             </Alert>
         )}
+
+        <PartnershipCard 
+            cardRef={cardRef}
+            partnerName={partnerName}
+            crNumber={crNumber}
+            joiningDate={today.toLocaleDateString()}
+            expiryDate={expiryDate.toLocaleDateString()}
+            classification={classification}
+            services={selectedCategories.join(', ')}
+            partnerType={applicantType === 'company' ? "Registered Company" : "Individual Freelancer"}
+            logoUrl={logoDataUri}
+        />
+         <Button onClick={handleDownloadCard} variant="outline" className="w-full"><Download className="mr-2 h-4 w-4" /> Download Virtual Card</Button>
+
         <Tabs defaultValue="nda" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="nda">Non-Disclosure Agreement</TabsTrigger>
                 <TabsTrigger value="service">Service Agreement</TabsTrigger>
             </TabsList>
             <TabsContent value="nda">
-                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
+                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
                     {agreement?.ndaContent}
                 </div>
                 <Button onClick={() => handleDownloadAgreement('nda')} variant="outline" className="w-full mt-2">
@@ -881,7 +1026,7 @@ export default function PartnerPage() {
                 </Button>
             </TabsContent>
             <TabsContent value="service">
-                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
+                <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
                     {agreement?.serviceAgreementContent}
                 </div>
                 <Button onClick={() => handleDownloadAgreement('service')} variant="outline" className="w-full mt-2">
@@ -900,7 +1045,7 @@ export default function PartnerPage() {
         </div>
     </CardFooter>
     </>
-  );
+  )};
   
   const renderContent = () => {
     switch (pageState) {
