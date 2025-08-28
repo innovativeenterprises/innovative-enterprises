@@ -109,9 +109,8 @@ const CompanyUploadSchema = z.object({
   country: z.string().optional(),
   repIdDocumentFrontUri: z.string().optional(),
   repIdDocumentBackUri: z.string().optional(),
-  businessCategories: z.array(z.string()).refine(value => value.some(item => item), {
-    message: "You have to select at least one business category.",
-  }),
+  primaryBusinessCategory: z.string().min(1, "Please select your primary business category."),
+  additionalBusinessCategories: z.array(z.string()).optional(),
   serviceChargesFile: z.any().optional(),
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
@@ -119,12 +118,11 @@ type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 const IndividualUploadSchema = z.object({
     idDocumentFrontUri: z.string().min(1, 'Front of ID is required.'),
     idDocumentBackUri: z.string().optional(),
-    passportDocumentUri: z.any().optional(),
+    passportDocument: z.any().optional(),
     personalPhoto: z.any().optional(),
     cvDocument: z.any().optional(),
-    businessCategories: z.array(z.string()).refine(value => value.some(item => item), {
-        message: "You have to select at least one business category.",
-    }),
+    primaryBusinessCategory: z.string().min(1, "Please select your primary skill or category."),
+    additionalBusinessCategories: z.array(z.string()).optional(),
     serviceChargesFile: z.any().optional(),
 });
 type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
@@ -240,8 +238,8 @@ export default function PartnerPage() {
 
   const { toast } = useToast();
 
-  const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema), defaultValues: { businessCategories: [] } });
-  const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema), defaultValues: { businessCategories: [] } });
+  const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema), defaultValues: { primaryBusinessCategory: "", additionalBusinessCategories: [] } });
+  const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema), defaultValues: { primaryBusinessCategory: "", additionalBusinessCategories: [] } });
   const inquiryForm = useForm<z.infer<typeof PartnershipInquiryInputSchema>>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
   const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
 
@@ -441,18 +439,21 @@ export default function PartnerPage() {
     if (!agreement || !recordNumber) return;
 
     const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
-    const businessCategory = formToUse.getValues('businessCategories').join(', ');
+    const primaryCategory = formToUse.getValues('primaryBusinessCategory');
+    const additionalCategories = formToUse.getValues('additionalBusinessCategories') || [];
+    const allCategories = [primaryCategory, ...additionalCategories].join(', ');
+    
     const serviceChargesFile = formToUse.getValues('serviceChargesFile');
 
     let registrations = [];
-    if (businessCategory) {
+    if (allCategories) {
         let priceListUrl: string | undefined;
         let priceListFilename: string | undefined;
         if(serviceChargesFile && serviceChargesFile.length > 0) {
             priceListUrl = await fileToDataURI(serviceChargesFile[0]);
             priceListFilename = serviceChargesFile[0].name;
         }
-        registrations.push({ category: businessCategory, priceListUrl, priceListFilename });
+        registrations.push({ category: allCategories, priceListUrl, priceListFilename });
     }
 
     const briefcaseData = {
@@ -513,8 +514,14 @@ export default function PartnerPage() {
     document.body.removeChild(link);
   }
   
-  const selectedCategories = (applicantType === 'company' ? companyUploadForm.watch('businessCategories') : individualUploadForm.watch('businessCategories')) || [];
-  const subtotal = REGISTRATION_FEE + (Math.max(0, selectedCategories.length - 1) * EXTRA_SERVICE_FEE);
+  const additionalCategoriesCount = (applicantType === 'company' ? companyUploadForm.watch('additionalBusinessCategories') : individualUploadForm.watch('additionalBusinessCategories'))?.length || 0;
+  const subtotal = REGISTRATION_FEE + (additionalCategoriesCount * EXTRA_SERVICE_FEE);
+  const allSelectedServices = () => {
+    const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
+    const primary = formToUse.getValues('primaryBusinessCategory');
+    const additional = formToUse.getValues('additionalBusinessCategories') || [];
+    return [primary, ...additional].filter(Boolean).join(', ');
+  }
 
   useEffect(() => {
     setFinalPrice(subtotal);
@@ -644,47 +651,52 @@ export default function PartnerPage() {
                            </Alert>
                           )}
                         </div>
+                        
                          <FormField
                             control={companyUploadForm.control}
-                            name="businessCategories"
+                            name="primaryBusinessCategory"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>4. Primary Business Category (Free)</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl><SelectTrigger><SelectValue placeholder="Select your main service..." /></SelectTrigger></FormControl>
+                                    <SelectContent>
+                                        {businessCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+
+                         <FormField
+                            control={companyUploadForm.control}
+                            name="additionalBusinessCategories"
                             render={() => (
                             <FormItem>
                                 <div className="mb-4">
-                                     <FormLabel>4. Business Categories</FormLabel>
-                                     <FormDescription>The first category is free. Each additional category is OMR {EXTRA_SERVICE_FEE.toFixed(2)}.</FormDescription>
+                                     <FormLabel>5. Additional Categories (OMR {EXTRA_SERVICE_FEE.toFixed(2)} each)</FormLabel>
+                                     <FormDescription>Select any other services you provide.</FormDescription>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                 {businessCategories.map((item) => (
-                                    <FormField
-                                    key={item}
-                                    control={companyUploadForm.control}
-                                    name="businessCategories"
-                                    render={({ field }) => {
-                                        return (
-                                        <FormItem
-                                            key={item}
-                                            className="flex flex-row items-start space-x-3 space-y-0"
-                                        >
+                                    <FormField key={item} control={companyUploadForm.control} name="additionalBusinessCategories"
+                                    render={({ field }) => (
+                                        <FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0">
                                             <FormControl>
                                             <Checkbox
                                                 checked={field.value?.includes(item)}
+                                                disabled={item === companyUploadForm.watch('primaryBusinessCategory')}
                                                 onCheckedChange={(checked) => {
-                                                return checked
+                                                    return checked
                                                     ? field.onChange([...(field.value || []), item])
-                                                    : field.onChange(
-                                                        field.value?.filter(
-                                                        (value) => value !== item
-                                                        )
-                                                    )
+                                                    : field.onChange(field.value?.filter((value) => value !== item))
                                                 }}
                                             />
                                             </FormControl>
-                                            <FormLabel className="font-normal">
-                                                {item}
-                                            </FormLabel>
+                                            <FormLabel className="font-normal">{item}</FormLabel>
                                         </FormItem>
-                                        )
-                                    }}
+                                    )}
                                     />
                                 ))}
                                 </div>
@@ -692,9 +704,10 @@ export default function PartnerPage() {
                             </FormItem>
                             )}
                         />
+
                         <FormField control={companyUploadForm.control} name="serviceChargesFile" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>5. Services & Pricing List (Optional)</FormLabel>
+                                <FormLabel>6. Services & Pricing List (Optional)</FormLabel>
                                 <div className="flex flex-col sm:flex-row gap-2">
                                     <Button type="button" variant="secondary" onClick={handleDownloadPricingTemplate} className="w-full sm:w-auto">
                                         <Download className="mr-2 h-4 w-4" /> Download Template
@@ -742,47 +755,54 @@ export default function PartnerPage() {
                          <FormField control={individualUploadForm.control} name="cvDocument" render={({ field }) => (
                             <FormItem><FormLabel>CV / Resume (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <FormField
+                        
+                         <FormField
                             control={individualUploadForm.control}
-                            name="businessCategories"
+                            name="primaryBusinessCategory"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Primary Skill / Category (Free)</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl><SelectTrigger><SelectValue placeholder="Select your main skill..." /></SelectTrigger></FormControl>
+                                    <SelectContent>
+                                        {businessCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={individualUploadForm.control}
+                            name="additionalBusinessCategories"
                             render={() => (
                             <FormItem>
                                 <div className="mb-4">
-                                     <FormLabel>Your Primary Skills / Categories</FormLabel>
-                                     <FormDescription>Select all categories that apply to your services. The first is free.</FormDescription>
+                                    <FormLabel>Additional Skills (OMR {EXTRA_SERVICE_FEE.toFixed(2)} each)</FormLabel>
+                                    <FormDescription>Select any other services you provide.</FormDescription>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                 {businessCategories.map((item) => (
                                     <FormField
                                     key={item}
                                     control={individualUploadForm.control}
-                                    name="businessCategories"
-                                    render={({ field }) => {
-                                        return (
-                                        <FormItem
-                                            key={item}
-                                            className="flex flex-row items-start space-x-3 space-y-0"
-                                        >
+                                    name="additionalBusinessCategories"
+                                    render={({ field }) => (
+                                        <FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0">
                                             <FormControl>
                                             <Checkbox
                                                 checked={field.value?.includes(item)}
+                                                disabled={item === individualUploadForm.watch('primaryBusinessCategory')}
                                                 onCheckedChange={(checked) => {
                                                 return checked
                                                     ? field.onChange([...(field.value || []), item])
-                                                    : field.onChange(
-                                                        field.value?.filter(
-                                                        (value) => value !== item
-                                                        )
-                                                    )
+                                                    : field.onChange(field.value?.filter(value => value !== item))
                                                 }}
                                             />
                                             </FormControl>
-                                            <FormLabel className="font-normal">
-                                                {item}
-                                            </FormLabel>
+                                            <FormLabel className="font-normal">{item}</FormLabel>
                                         </FormItem>
-                                        )
-                                    }}
+                                    )}
                                     />
                                 ))}
                                 </div>
@@ -790,6 +810,7 @@ export default function PartnerPage() {
                             </FormItem>
                             )}
                         />
+
                         <FormField control={individualUploadForm.control} name="serviceChargesFile" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Services & Pricing List (Optional)</FormLabel>
@@ -886,7 +907,7 @@ export default function PartnerPage() {
   );
 
   const PaymentScreen = () => {
-    const extraServicesCount = Math.max(0, selectedCategories.length - 1);
+    const extraServicesCount = additionalCategoriesCount;
     const extraServiceFee = extraServicesCount * EXTRA_SERVICE_FEE;
     const calculatedTotal = subtotal;
 
@@ -906,7 +927,7 @@ export default function PartnerPage() {
                         <div className="flex justify-between"><span>Base Registration Fee:</span><span>OMR {REGISTRATION_FEE.toFixed(2)}</span></div>
                         {extraServicesCount > 0 && (
                              <div className="flex justify-between">
-                                <span>Extra Services ({extraServicesCount} x {EXTRA_SERVICE_FEE.toFixed(2)}):</span>
+                                <span>Additional Services ({extraServicesCount} x {EXTRA_SERVICE_FEE.toFixed(2)}):</span>
                                 <span>OMR {extraServiceFee.toFixed(2)}</span>
                             </div>
                         )}
@@ -1006,7 +1027,7 @@ export default function PartnerPage() {
             joiningDate={today.toLocaleDateString()}
             expiryDate={expiryDate.toLocaleDateString()}
             classification={classification}
-            services={selectedCategories.join(', ')}
+            services={allSelectedServices()}
             partnerType={applicantType === 'company' ? "Registered Company" : "Individual Freelancer"}
             logoUrl={logoDataUri}
         />
@@ -1060,7 +1081,7 @@ export default function PartnerPage() {
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };
