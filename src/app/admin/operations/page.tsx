@@ -69,7 +69,7 @@ export default function AdminOperationsPage() {
 
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Internal AI Tools</h2>
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="w-full" defaultValue="pro">
               {internalTools.map(tool => (
                  <AccordionItem value={tool.id} key={tool.id}>
                     <AccordionTrigger>
