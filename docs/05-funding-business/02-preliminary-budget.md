@@ -1,7 +1,7 @@
 
 # Preliminary Budget Draft
 
-## Project: [Project Name]
+## Project: Innovative Enterprises - AI Business Platform
 **Period:** First Year of Operation
 
 ---
@@ -11,42 +11,42 @@
 | Category                    | Monthly Cost (OMR) | Yearly Cost (OMR) | Notes                                           |
 | :-------------------------- | :----------------- | :---------------- | :---------------------------------------------- |
 | **Personnel**               |                    |                   |                                                 |
-| - Core Team Salaries        | 5,000              | 60,000            | (e.g., 2 Developers, 1 Project Manager)         |
-| - Freelancers/Contractors   | 1,500              | 18,000            | For specialized tasks (design, content).        |
-| *Subtotal*                  | *6,500*            | *78,000*          |                                                 |
+| - Core Team Salaries        | 6,000              | 72,000            | (CEO, CTO, Project Manager, Business Dev)       |
+| - Freelancers/Contractors   | 1,000              | 12,000            | For specialized tasks (design, content, legal). |
+| *Subtotal*                  | *7,000*            | *84,000*          |                                                 |
 | **Technology & Software**   |                    |                   |                                                 |
-| - Cloud Hosting (Firebase)  | 200                | 2,400             | Estimate, scales with usage.                    |
-| - Genkit/AI API Costs       | 150                | 1,800             | Estimate, based on projected usage.             |
-| - Domain Names              | 5                  | 60                |                                                 |
-| - Software Licenses         | 100                | 1,200             | (e.g., Figma, GitHub Pro)                       |
-| *Subtotal*                  | *455*              | *5,460*           |                                                 |
+| - Cloud Hosting (Firebase)  | 250                | 3,000             | Scales with usage (Functions, Firestore, Hosting).|
+| - Genkit/AI API Costs       | 200                | 2,400             | Estimate, based on projected AI agent usage.    |
+| - Domain Names & SSL        | 10                 | 120               |                                                 |
+| - Software Licenses         | 150                | 1,800             | (e.g., Figma, GitHub Pro, Office 365)           |
+| *Subtotal*                  | *610*              | *7,320*           |                                                 |
 | **Sales & Marketing**       |                    |                   |                                                 |
-| - Digital Advertising       | 500                | 6,000             | (Google Ads, LinkedIn Ads)                      |
-| - SEO/Content Marketing     | 300                | 3,600             |                                                 |
-| *Subtotal*                  | *800*              | *9,600*           |                                                 |
+| - Digital Advertising       | 600                | 7,200             | (LinkedIn Ads, Google Ads targeting SMEs)       |
+| - SEO/Content Marketing     | 400                | 4,800             | Blog content and SEO optimization.              |
+| *Subtotal*                  | *1,000*            | *12,000*          |                                                 |
 | **Operational & Admin**     |                    |                   |                                                 |
 | - Office Rent & Utilities   | 800                | 9,600             |                                                 |
-| - Legal & Accounting Fees   | 200                | 2,400             |                                                 |
-| - Miscellaneous             | 100                | 1,200             |                                                 |
-| *Subtotal*                  | *1,100*            | *13,200*          |                                                 |
-| **TOTAL EXPENSES**          | **8,855**          | **106,260**       |                                                 |
+| - Legal & Accounting Fees   | 250                | 3,000             | For compliance and financial reporting.         |
+| - Miscellaneous             | 150                | 1,800             | Travel, supplies, etc.                          |
+| *Subtotal*                  | *1,200*            | *14,400*          |                                                 |
+| **TOTAL EXPENSES**          | **9,810**          | **117,720**       |                                                 |
 
 ---
 
-### 2. Estimated Revenue
+### 2. Estimated Revenue (Year 1)
 
 | Stream                      | Monthly Revenue (OMR) | Yearly Revenue (OMR) | Notes                                        |
 | :-------------------------- | :-------------------- | :----------------- | :------------------------------------------- |
-| Subscription Fees           | 500                   | 6,000              | (e.g., 20 partners @ OMR 25/month avg)       |
-| Transaction Commissions     | 1,000                 | 12,000             | (e.g., 5% on OMR 20,000 transaction volume)  |
-| Premium AI Tool Access      | 200                   | 2,400              |                                              |
-| **TOTAL REVENUE**           | **1,700**             | **20,400**         |                                              |
+| Sanad Hub Subscriptions     | 500                   | 6,000              | (e.g., 40 offices @ OMR 12.5/month avg)      |
+| Transaction Commissions     | 1,500                 | 18,000             | (e.g., 7.5% on OMR 20,000 transaction volume)|
+| Premium AI Tool Access      | 300                   | 3,600              | (e.g., Voxi Translator, GENIUS platform)     |
+| **TOTAL REVENUE**           | **2,300**             | **27,600**         |                                              |
 
 ---
 
 ### 3. Funding Requirement (Year 1)
-- **Total Expenses:** 106,260 OMR
-- **Total Revenue:** 20,400 OMR
-- **Net Burn:** (85,860 OMR)
-- **Contingency (15%):** 12,879 OMR
-- **TOTAL FUNDING SOUGHT:** **~OMR 98,739**
+- **Total Expenses:** 117,720 OMR
+- **Total Revenue:** 27,600 OMR
+- **Net Burn:** (90,120 OMR)
+- **Contingency (15%):** 13,518 OMR
+- **TOTAL FUNDING SOUGHT:** **~OMR 105,000**

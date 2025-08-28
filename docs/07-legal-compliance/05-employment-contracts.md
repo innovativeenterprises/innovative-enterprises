@@ -5,29 +5,29 @@
 
 **BETWEEN:**
 
-**Innovative Enterprises** ("Company")
+**Innovative Enterprises** (CRN: 1435192), a company registered in the Sultanate of Oman ("Company")
 
 **AND**
 
-**[Employee Name]** ("Employee")
+**[Employee Name]** (ID/Civil No: [Number]) ("Employee")
 
 ### 1. Position
-The Company agrees to employ the Employee in the position of **[Job Title]**. The Employee will report to [Manager's Title] and will be responsible for the duties outlined in the job description, as well as other duties as assigned.
+The Company agrees to employ the Employee in the position of **[Job Title]**. The Employee will report to the **[Manager's Title, e.g., Chief Technology Officer]** and will be responsible for the duties outlined in the attached job description (Exhibit B), as well as other duties as assigned.
 
 ### 2. Compensation
-- **Salary:** The Employee's annual gross salary will be **OMR [Amount]**, payable in monthly installments in accordance with the Company's standard payroll practices.
-- **Benefits:** The Employee will be eligible for the Company's standard benefits package, which includes [e.g., "health insurance, annual leave, etc."], subject to the terms and conditions of the benefit plans.
+- **Salary:** The Employee's gross monthly salary will be **OMR [Amount]**, payable at the end of each month in accordance with the Company's standard payroll practices.
+- **Benefits:** The Employee will be eligible for the Company's standard benefits package, which includes private health insurance and annual leave, subject to the terms and conditions of the Omani Labour Law and company policy.
 
 ### 3. Confidentiality and Intellectual Property
 - The Employee agrees to be bound by the Company's standard Confidentiality and Intellectual Property Agreement (attached as Exhibit A).
-- All work, ideas, and inventions created by the Employee during their employment related to the Company's business shall be the sole property of the Company.
+- All work, ideas, inventions, software, and other materials created by the Employee during their employment that relate to the Company's actual or anticipated business shall be the sole and exclusive property of the Company ("work made for hire").
 
 ### 4. Term & Termination
-- This is a full-time position.
-- The employment is "at-will" and may be terminated by either party at any time, with or without cause, subject to the notice periods stipulated by Omani Labour Law.
+- This is a full-time position. The first three (3) months of employment will be a probationary period.
+- The employment is "at-will" and may be terminated by either party at any time, with or without cause, subject to the notice periods and procedures stipulated by the Omani Labour Law.
 
 ### 5. Governing Law
-This Agreement shall be governed by the laws of the Sultanate of Oman.
+This Agreement shall be governed by and construed in accordance with the laws of the Sultanate of Oman.
 
 ---
 
@@ -37,7 +37,7 @@ _________________________
 
 **For Innovative Enterprises:**
 _________________________
-[HR Manager Name/CEO Name]
+Jumaa Salim Al Hadidi, CEO
 
 ---
 ***Disclaimer:** This is a basic template. It is essential to consult with a qualified legal professional to ensure full compliance with Omani Labour Law.*

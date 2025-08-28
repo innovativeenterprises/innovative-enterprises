@@ -1,49 +1,57 @@
 
 # Analytics & Metrics Dashboard Plan
 
-*This document outlines the key metrics we need to track to measure the health and success of the project. This can be built using tools like Google Analytics, Mixpanel, or a custom dashboard.*
+*This document outlines the key metrics we need to track to measure the health and success of the platform. This will be built out in the **Admin Dashboard** using `recharts` and data from Firestore.*
 
 ---
 
-### 1. Acquisition Metrics
-*How are users discovering our product?*
-- **Metric:** New Users per Day/Week/Month
-- **Metric:** Traffic Sources (e.g., Organic Search, Paid, Social, Direct)
-- **Metric:** User Sign-up Conversion Rate (Visitors who sign up)
-- **Metric:** Cost Per Acquisition (CPA) from paid campaigns
+### 1. Acquisition Metrics (The "A" in AARRR)
+*How are users discovering our platform?*
+- **Metric:** New User Sign-ups (per day/week/month)
+  - **Breakdown:** by type (SME Client vs. Service Provider).
+- **Metric:** Traffic Sources (Source: Google Analytics)
+  - Organic Search, Paid, Social (LinkedIn), Direct, Referral.
+- **Metric:** Partner Onboarding Funnel Conversion Rate
+  - % of users who start the onboarding flow and successfully complete it.
 
-### 2. Activation Metrics
-*Are users experiencing the core value ("Aha!" moment)?*
-- **Metric:** Activation Rate (% of new users who complete the first critical action, e.g., create their first project).
-- **Metric:** Time to First [Core Action] (How long does it take a new user to do something valuable?).
-- **Metric:** Onboarding Funnel Completion Rate.
+### 2. Activation Metrics (The "A" in AARRR)
+*Are users experiencing the "Aha!" moment?*
+- **Metric:** Activation Rate (% of new users who complete a core action within 7 days).
+  - **For Clients:** Submitting their first task.
+  - **For Providers:** Submitting their first bid.
+- **Metric:** AI Tool Adoption Rate (% of users who have used at least one AI tool like Voxi or Mira).
+- **Metric:** Time to First Task (How long it takes a new client to post their first job).
 
-### 3. Retention Metrics
+### 3. Retention Metrics (The "R" in AARRR)
 *Are users coming back?*
-- **Metric:** Daily/Weekly/Monthly Active Users (DAU/WAU/MAU)
+- **Metric:** Weekly Active Users (WAU) & Monthly Active Users (MAU).
 - **Metric:** User Retention Cohorts (What % of users who signed up in Week 1 are still active in Week 2, 3, 4?).
-- **Metric:** Churn Rate (% of users who cancel or become inactive).
+- **Metric:** Provider Churn Rate (% of service providers who cancel their subscription or become inactive).
 
-### 4. Revenue Metrics
-*Are we making money?*
-- **Metric:** Monthly Recurring Revenue (MRR)
-- **Metric:** Average Revenue Per User (ARPU)
-- **Metric:** Customer Lifetime Value (CLV)
-- **Metric:** Conversion Rate to Paid Plan.
+### 4. Revenue Metrics (The "R" in AARRR)
+*Are we building a sustainable business?*
+- **Metric:** Monthly Recurring Revenue (MRR) from subscriptions.
+- **Metric:** Platform Revenue (Commissions from marketplace transactions).
+- **Metric:** Customer Lifetime Value (CLV).
+- **Metric:** Conversion Rate from free/trial to paid subscription tiers.
 
-### 5. Engagement Metrics
-*How are users interacting with the product?*
-- **Metric:** Feature Adoption Rate (% of users who use a specific feature).
-- **Metric:** Number of [Core Actions] per User per Week (e.g., number of documents translated per user).
-- **Metric:** Session Duration.
+### 5. Referral Metrics (The "R" in AARRR)
+*Are users telling others?*
+- **Metric:** Net Promoter Score (NPS) from user surveys.
+- **Metric:** Number of invites sent via a future referral program.
 
 ---
 
-### Dashboard Mockup
+### Dashboard Mockup (Admin Homepage)
 
-*A simple text-based layout of what the primary dashboard should display.*
+| **Key Metric**        | **Value (Last 30d)** | **Trend** |
+| :-------------------- | :-------------------- | :-------- |
+| New Users (Total)     | 215                   | +15%      |
+| Tasks Posted (Sanad Hub) | 450                | +22%      |
+| MRR                   | OMR 1,250             | +30%      |
+| Active Providers      | 85                    | +10%      |
 
-| **Acquisition**        | **Activation**          | **Retention** | **Revenue** |
-| :--------------------- | :---------------------- | :------------ | :---------- |
-| New Users (30d): 1,204 | Activation Rate: 35%    | WAU: 850      | MRR: OMR 1,700 |
-| CPA: OMR 5.50          | Onboarding Funnel: 60%  | Churn: 5%     | ARPU: OMR 15 |
+**Charts:**
+1.  **Bar Chart:** User Growth (Clients vs. Providers) over the last 6 months.
+2.  **Line Chart:** MRR Growth over the last 12 months.
+3.  **Funnel Chart:** Partner Onboarding funnel (Page View > Start Upload > Analysis Success > Submitted).

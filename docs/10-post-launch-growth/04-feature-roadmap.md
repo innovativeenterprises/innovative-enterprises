@@ -6,42 +6,45 @@
 ---
 
 ### Current Quarter: Q3 2024
-**Theme:** *Launch & Stabilize*
+**Theme:** *Launch & Foundational Growth*
 
 | Feature / Initiative                  | Status      | Goal / Description                                    |
 | :------------------------------------ | :---------- | :---------------------------------------------------- |
-| **MVP Launch**                        | `Done`      | Successfully launch the core product.                 |
-| **User Feedback Implementation**        | `In Progress` | Address the top 5 issues raised by beta testers.    |
-| **Analytics Dashboard Setup**         | `In Progress` | Implement core metrics tracking (Acquisition, Activation). |
+| **MVP Launch**                        | `Done`      | Successfully launch Sanad Hub & Partner Onboarding.   |
+| **Voxi AI Translator**                | `Done`      | Launch the public-facing document translation tool.   |
+| **AI Analysis Improvements**          | `In Progress` | Improve CR/ID analysis accuracy with more diverse training data. |
+| **Initial User Acquisition**          | `In Progress` | Onboard the first 100 SMEs and 50 Service Providers.  |
 
 ---
 
 ### Next Quarter: Q4 2024
-**Theme:** *Monetization & Partner Enablement*
+**Theme:** *Monetization & Engagement*
 
 | Feature / Initiative                  | Status      | Goal / Description                                    |
 | :------------------------------------ | :---------- | :---------------------------------------------------- |
-| **Stripe Payment Integration**        | `To Do`     | Allow users to subscribe to premium plans.            |
-| **E-Briefcase for Partners**          | `To Do`     | Create a central dashboard for partners to manage docs. |
-| **Expanded AI Document Analysis**     | `To Do`     | Add support for analyzing ID cards and CR documents.  |
+| **Payment Integration (Stripe)**      | `To Do`     | Enable partner subscriptions and service fee processing.|
+| **Business Hub Launch**               | `To Do`     | Expand the marketplace to general B2B services.       |
+| **GENIUS Career Platform (V1)**       | `To Do`     | Launch the AI-powered CV Enhancer and Interview Coach.  |
+| **Partner Referral Program**          | `Planned`   | Incentivize partners to refer new clients and providers.|
 
 ---
 
 ### Following Quarter: Q1 2025
-**Theme:** *Scale & Automate*
+**Theme:** *Scale & Enterprise Readiness*
 
 | Feature / Initiative                  | Status      | Goal / Description                                    |
 | :------------------------------------ | :---------- | :---------------------------------------------------- |
-| **Team Collaboration Features**       | `Planned`   | Allow multiple users under a single company account.  |
-| **WhatsApp Integration**              | `Planned`   | Send notifications and allow basic interactions via WhatsApp. |
-| **Referral Program**                  | `Planned`   | Incentivize users to invite others to the platform.   |
+| **Team Accounts**                     | `Planned`   | Allow multiple users under a single company account.  |
+| **Advanced Admin Dashboard**          | `Planned`   | Add detailed analytics, reporting, and financial tracking. |
+| **WhatsApp Integration**              | `Planned`   | Enable task notifications and basic interactions via WhatsApp. |
+| **White-Label Solution (RAAHA)**      | `Planned`   | Begin development of the white-label version of our workforce management platform. |
 
 ---
 
 ### Future / To Be Prioritized
 *Ideas that have been suggested but are not yet on the active roadmap.*
 
-- [ ] Mobile App (iOS/Android)
-- [ ] Advanced AI-powered reporting
-- [ ] Integration with [Third-Party Tool like Slack/Teams]
-- [ ] White-labeling for enterprise clients
+- [ ] Native Mobile App (iOS/Android)
+- [ ] Integration with third-party accounting software (e.g., Zoho Books, Xero)
+- [ ] Advanced AI-powered project management suggestions ("Navi" agent).
+- [ ] Real-time chat between clients and providers on the platform.

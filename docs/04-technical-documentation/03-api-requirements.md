@@ -1,38 +1,46 @@
 
 # API Requirements & Integration Notes
 
-## Project: [Project Name]
+## Project: Innovative Enterprises - AI Business Platform
 
 ---
 
 ### Internal APIs (Genkit Flows)
-*This section details the APIs our frontend will consume from our own backend (Genkit flows).*
+*This section details the primary server-side functions (Genkit flows) that our Next.js frontend consumes. These are typically called as Server Actions.*
 
-**Base URL:** `/api/flows/`
-
-| Flow Name                 | HTTP Method | Endpoint                       | Request Body (Input Schema)                               | Response Body (Output Schema)                                | Description                                       |
-| :------------------------ | :---------- | :----------------------------- | :-------------------------------------------------------- | :----------------------------------------------------------- | :------------------------------------------------ |
-| `generateProjectPlan`     | `POST`      | `/api/flows/projectInception`  | `{ "idea": "string" }`                                    | `ProjectInceptionOutput`                                     | Generates a project plan from an idea.            |
-| `answerQuestion`          | `POST`      | `/api/flows/aiPoweredFaq`      | `{ "question": "string" }`                                | `AnswerQuestionOutput`                                       | Answers questions about the company.              |
-| `[FlowName]`              | `POST`      | `/api/flows/[flow-name]`       | `[InputType]`                                             | `[OutputType]`                                               | [Description of the flow's purpose.]              |
+| Flow Name                 | File Path                       | Request Type (Input Schema)                               | Response Type (Output Schema)                                | Description                                       |
+| :------------------------ | :------------------------------ | :-------------------------------------------------------- | :----------------------------------------------------------- | :------------------------------------------------ |
+| `analyzeCrDocument`       | `cr-analysis.ts`                | `CrAnalysisInput`                                         | `CrAnalysisOutput`                                           | Extracts structured data from a CR document.      |
+| `analyzeIdentity`         | `identity-analysis.ts`          | `IdentityAnalysisInput`                                   | `IdentityAnalysisOutput`                                     | Extracts data from ID cards and passports.        |
+| `generateAgreement`       | `generate-agreement.ts`         | `AgreementGenerationInput`                                | `AgreementGenerationOutput`                                  | Generates NDA and Service Agreement drafts.       |
+| `analyzeSanadTask`        | `sanad-task-analysis.ts`        | `SanadTaskAnalysisInput`                                  | `SanadTaskAnalysisOutput`                                    | Determines required documents for a Sanad task.   |
+| `translateDocument`       | `document-translation.ts`       | `DocumentTranslationInput`                                | `DocumentTranslationOutput`                                  | Translates an uploaded document.                  |
+| `generateEnhancedCv`      | `cv-enhancement.ts`             | `CvGenerationInput`                                       | `CvGenerationOutput`                                         | Rewrites a CV and generates a cover letter.       |
+| `generateSocialMediaPost` | `social-media-post-generator.ts`| `GenerateSocialMediaPostInput`                            | `GenerateSocialMediaPostOutput`                              | Creates social media content for multiple platforms.|
+| `answerQuestion`          | `ai-powered-faq.ts`             | `AnswerQuestionInput`                                     | `AnswerQuestionOutput`                                       | Powers the main FAQ chatbot (Aida).               |
 
 ---
 
 ### External API Integrations
-*This section details third-party APIs we need to integrate with.*
+*This section details third-party APIs we plan to integrate with or are already using.*
 
-#### 1. Google Maps API
-- **Purpose:** To display maps and handle location-based features.
-- **API Key Required:** Yes
-- **Endpoints to Use:**
-  - `Geocoding API`: To convert addresses to coordinates.
-  - `Places API`: For location search and details.
-- **Integration Notes:** Usage will be primarily on the client-side. Key must be restricted to our domain.
+#### 1. Google AI API
+- **Purpose:** The core of our AI capabilities. Used for all generative text, vision, and image generation models.
+- **Provider:** `@genkit-ai/googleai` plugin.
+- **API Key Required:** Yes (`GEMINI_API_KEY`).
+- **Integration Notes:** The Genkit framework abstracts the direct API calls. All interactions are handled server-side within our Genkit flows.
 
-#### 2. Stripe API
-- **Purpose:** To process payments for services.
-- **API Key Required:** Yes (Publishable and Secret keys)
+#### 2. Meta (WhatsApp Business API)
+- **Purpose:** To send and receive WhatsApp messages for notifications and the "Ameen" OTP login.
+- **API Key Required:** Yes (`WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`).
+- **Endpoints Used:**
+  - `POST /v18.0/{PHONE_NUMBER_ID}/messages`: To send messages.
+- **Integration Notes:** All API calls are wrapped in the `whatsapp-agent.ts` flow. A webhook must be configured in the Meta for Developers portal to receive incoming messages.
+
+#### 3. Stripe API (Future)
+- **Purpose:** To process payments for subscriptions and services.
+- **API Key Required:** Yes (Publishable and Secret keys).
 - **Endpoints to Use:**
   - `PaymentIntents API`: For creating and confirming payments.
   - `Customers API`: To manage customer payment information.
-- **Integration Notes:** All sensitive operations will be handled server-side in a secure Cloud Function. The frontend will use Stripe.js and the publishable key.
+- **Integration Notes:** All sensitive operations will be handled server-side in a secure Cloud Function. The frontend will use Stripe.js and the publishable key to tokenize card information.

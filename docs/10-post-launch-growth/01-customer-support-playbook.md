@@ -4,37 +4,39 @@
 ---
 
 ### Guiding Principles
-1.  **Be Empathetic:** Acknowledge the user's frustration first.
-2.  **Be Clear & Concise:** Avoid technical jargon. Provide simple, step-by-step instructions.
-3.  **Be Responsive:** Aim for a first-response time of under 1 hour during business hours.
-4.  **Own the Problem:** Even if it's not our fault, take responsibility for finding a solution for the user.
+1.  **Be Empathetic & Patient:** Our users are busy SME owners and freelancers. Acknowledge their frustration first, then solve their problem.
+2.  **Be Clear & Concise:** Avoid technical jargon. Provide simple, step-by-step instructions. Use screenshots or short videos if necessary.
+3.  **Be Responsive:** Aim for a first-response time of under 2 hours for emails during business hours. Use Aida (AI Chat) for instant Tier 0 support.
+4.  **Own the Problem:** Even if it's a user error, our goal is to get them to a solution. Take responsibility for guiding them through it.
 
 ---
 
 ### Canned Responses / Templates
 
-#### **Issue: User can't log in.**
+#### **Issue: User's CR/ID analysis failed.**
 **Response:**
-"Hi [User Name], I'm sorry to hear you're having trouble logging in. Could you please try resetting your password using the 'Forgot Password' link on the login page? If you've already tried that, please let me know the email address you used to sign up, and I'll investigate further."
+"Hi [User Name], I'm sorry you're having trouble with the document analysis. This can sometimes happen if the uploaded scan is blurry or has a lot of glare. Could you please try uploading a clear, high-resolution picture of the document? If the problem continues, please send the file to `support@innovative.om` and I will ask our technical team to investigate."
 
-#### **Issue: User is reporting a bug.**
+#### **Issue: A Sanad Partner is complaining about not getting leads.**
 **Response:**
-"Thank you so much for reporting this! I've been able to reproduce the issue on our end. I've logged it with our development team, and they will be looking into it with high priority. We'll let you know as soon as a fix is released. We appreciate you helping us improve the product!"
+"Hi [Partner Name], thank you for reaching out. To ensure you receive all relevant task notifications, could you please double-check that your profile is fully complete and that you have registered for all the service categories you wish to provide? A complete profile is much more likely to be selected by clients. Here is a link to your profile settings: [Link]. Let me know if you need any help!"
 
-#### **Issue: User is requesting a feature.**
+#### **Issue: User is asking for a feature we don't have yet.**
 **Response:**
-"That's an excellent suggestion! I can definitely see how [the requested feature] would be useful. I've passed your feedback directly to our product team for consideration in our future roadmap. We really value input from our users, so thank you for sharing!"
+"That's an excellent suggestion for [the requested feature]! I can definitely see how that would be a valuable addition to the platform. Our product team actively reviews all user feedback, and I've passed yours directly to them for consideration in our upcoming roadmap. We really value your input in helping us build a better platform!"
 
-#### **Issue: User is unhappy and threatening to cancel.**
+#### **Issue: A client is unhappy with a service provider from the Hub.**
 **Response:**
-"I'm very sorry to hear that you're not satisfied with your experience. Our goal is to provide a valuable service, and it sounds like we've fallen short. I'd love to understand your specific concerns better to see if we can make things right. Would you be open to a quick 10-minute call this week?"
+"I'm very sorry to hear that you had a negative experience. Our goal is to maintain a network of trusted, high-quality providers, and we take this feedback very seriously. Could you please provide me with the Task ID and some specific details about what went wrong? I will investigate this with the provider immediately and work to find a resolution."
 
 ---
 
 ### Escalation Path
-- **Tier 1 (First Response):** [Support Agent Name]
-  - **Responsibilities:** Handle common questions, troubleshoot basic issues, use canned responses.
-- **Tier 2 (Technical Issues):** [Lead Developer Name]
-  - **When to Escalate:** When a bug is confirmed, when there's a system outage, or when a user has a technical issue that Tier 1 cannot solve.
-- **Tier 3 (Billing/Account Issues):** [Project Manager/CEO Name]
-  - **When to Escalate:** For refund requests, major subscription issues, or complaints about company policy.
+- **Tier 0 (Automated):** **Aida (AI Chatbot)**
+  - **Responsibilities:** Answers general FAQs about services, pricing, and how the platform works.
+- **Tier 1 (First Response):** **[Support Agent Name]**
+  - **Responsibilities:** Handle common questions, troubleshoot basic issues using the playbook, gather details for bug reports.
+- **Tier 2 (Technical Issues):** **Anwar Ahmed Sharif (CTO)**
+  - **When to Escalate:** When a bug is confirmed and reproducible, when there's a system outage, or for any issues related to AI agent performance.
+- **Tier 3 (Partnership/Billing Issues):** **Jumaa Salim Al Hadidi (CEO)**
+  - **When to Escalate:** For refund requests, major subscription issues, or serious complaints/disputes between users.

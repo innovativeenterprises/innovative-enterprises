@@ -7,32 +7,34 @@
 
 ### Common Customer Questions
 
-**Q: How do I reset my password?**
-**A:** Click the "Forgot Password?" link on the login page. An email will be sent with instructions. If the email doesn't arrive, check the spam folder.
+**Q: Is my data safe when I upload a document for AI analysis?**
+**A:** Yes. We prioritize your privacy and security. Documents you upload for analysis are processed in-memory and are **not** stored on our servers after the task is complete. We use Google's secure AI platform, which does not use your data to train their global models. Please see our Privacy Policy for more details.
 
-**Q: Is my payment information secure?**
-**A:** Yes. All payments are processed by Stripe, a certified PCI Level 1 Service Provider. We do not store any of your credit card information on our servers.
+**Q: What happens when I submit a task to the Sanad Hub?**
+**A:** When you submit a task, it is anonymously and securely broadcast to all relevant and verified Sanad Service Centres in our network. Those offices will then review your request and submit competitive bids for your work. You will be notified as bids arrive and can choose the best offer for you.
 
-**Q: What file types can I upload for [Specific Feature]?**
-**A:** For the Document Translator, you can upload PDF, DOCX, PNG, and JPG files.
+**Q: I am a freelancer. How do I get paid?**
+**A:** For tasks and projects facilitated through our platform, we act as the intermediary. The client pays us upon accepting your proposal, and we hold the funds in escrow. The funds are released to you upon successful completion and approval of the work by the client, less our standard platform service fee.
 
-**Q: How does the AI work? Is my data used for training?**
-**A:** We use Google's advanced AI models to power our features. Your private data and documents are processed to provide the service to you but are **not** used to train the global models. Please see our Privacy Policy for more details.
+**Q: The AI made a mistake extracting my CR information. What do I do?**
+**A:** While our AI is highly accurate, mistakes can occasionally happen. The form is fully editable. Please simply correct any errors in the form fields before you submit your application.
 
 ---
 
 ### Troubleshooting Guide
 
-**Issue: User reports that the "Sign in with Google" button is not working.**
-- **Possible Cause 1:** Pop-up blocker is enabled on the user's browser.
-  - **Solution:** Ask the user to disable their pop-up blocker for our site.
-- **Possible Cause 2:** Third-party cookies are disabled.
-  - **Solution:** Guide the user to enable third-party cookies in their browser settings.
-- **Escalation:** If the issue persists, ask for a screenshot of the browser console and escalate to the development team.
+**Issue: User reports that the AI document analysis is failing or timing out.**
+- **Possible Cause 1:** The uploaded document is a very low-quality scan or has complex, unsupported formatting.
+  - **Solution:** Ask the user to try uploading a clearer, higher-resolution version of the document if possible.
+- **Possible Cause 2:** The document is password-protected.
+  - **Solution:** Ask the user to remove the password protection and re-upload.
+- **Possible Cause 3:** Temporary high traffic on the Google AI API.
+  - **Solution:** Advise the user to wait a few minutes and try the analysis again.
+- **Escalation:** If the issue persists with a good-quality document, ask for a copy of the document (with user permission) and escalate to the development team to test the AI flow.
 
-**Issue: An AI feature is taking too long to return a result or times out.**
-- **Possible Cause 1:** The AI model provider (Google) is experiencing high traffic.
-  - **Solution:** Advise the user to wait a few minutes and try again.
-- **Possible Cause 2:** The user's input is very large or complex (e.g., a 100-page document).
-  - **Solution:** Suggest they try with a smaller document to confirm the feature is working, and inform them that larger inputs will naturally take more time.
-- **Escalation:** If the issue is persistent across all inputs, report it to the development team to check the status of our backend services.
+**Issue: A partner says they are not receiving any task notifications.**
+- **Possible Cause 1:** Their profile is incomplete or key services are not listed.
+  - **Solution:** Guide the partner to their E-Briefcase to ensure their profile is fully filled out and that they have registered for the service categories they want to receive tasks for.
+- **Possible Cause 2:** Their notification settings are turned off.
+  - **Solution:** Advise them to check their account settings to ensure email or WhatsApp notifications are enabled.
+- **Escalation:** If the profile is complete and settings are correct, check the admin dashboard to ensure the partner is marked as 'Vetted' and 'Active'. If so, escalate to the development team to check the task routing logic.

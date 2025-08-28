@@ -1,7 +1,7 @@
 
 # Branding Guide - DRAFT
 
-## Project: [Project Name]
+## Project: Innovative Enterprises
 
 ---
 
@@ -9,52 +9,56 @@
 *Insert the final logo versions here (Primary, Secondary, Icon/Favicon).*
 
 **Primary Logo:**
-![Placeholder for Primary Logo](https://placehold.co/300x100?text=Primary+Logo)
+![Placeholder for Primary Logo](https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png)
+
+**Icon:**
+![Placeholder for Icon](https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png)
 
 **Usage Guidelines:**
-- Use the primary logo whenever possible.
+- Use the primary, full-text logo whenever possible, especially in headers.
+- The Icon can be used for favicons, social media profile pictures, and in-app elements where space is limited.
 - Do not stretch, distort, or change the colors of the logo.
-- Maintain a minimum clear space around the logo equal to the height of the main logotype.
+- Maintain a minimum clear space around the logo equal to the height of the "I" in "INNOVATIVE".
 
 ---
 
 ### 2. Color Palette
-*Define the primary and secondary brand colors.*
+*Primary and secondary brand colors are defined in `src/app/globals.css`.*
 
-| Role       | HEX       | RGB             | CMYK              |
-| :--------- | :-------- | :-------------- | :---------------- |
-| **Primary**| `#293462` | `41, 52, 98`    | `90, 77, 34, 25`  |
-| **Accent** | `#E67700` | `230, 119, 0`   | `0, 63, 100, 1`   |
-| **Neutral**| `#F0F4F8` | `240, 244, 248` | `5, 2, 0, 0`      |
-| **Text**   | `#1D2D44` | `29, 45, 68`    | `85, 66, 37, 43`  |
+| Role       | HEX       | HSL Value       | Notes                               |
+| :--------- | :-------- | :-------------- | :---------------------------------- |
+| **Primary**| `#293462` | `226 44% 27%`   | Trust, Professionalism, Stability   |
+| **Accent** | `#E67700` | `28 100% 45%`   | Innovation, Action, AI Features     |
+| **Background**| `#F0F4F8` | `210 20% 96%`   | Clean, Modern, Spacious             |
+| **Text**   | `#1D2D44` | `222 24% 15%`   | High Readability, Formal            |
 
 ---
 
 ### 3. Typography
-*Define the fonts to be used for headings and body text.*
+*Defined in `src/app/layout.tsx` via Google Fonts.*
 
-- **Primary Typeface (Headings):** Inter, Bold (700)
-  - `<h1>` to `<h3>`
-- **Secondary Typeface (Body):** Inter, Regular (400)
-  - Paragraphs, lists, and general text.
+- **Primary Typeface (Headings & UI):** Inter
+  - **Weight:** Bold (700) for titles, Medium (500) for buttons and key labels.
+- **Secondary Typeface (Body Text):** Inter
+  - **Weight:** Regular (400) for paragraphs and descriptions.
 
 ---
 
 ### 4. Tone of Voice
 *How should the brand sound? Describe the personality.*
 
-- **Professional & Knowledgeable:** We are experts in our field.
-- **Innovative & Forward-thinking:** We are modern and solution-oriented.
-- **Trustworthy & Reliable:** We are a dependable partner.
-- **Friendly & Approachable:** We are not overly corporate; we are here to help.
+- **Professional & Knowledgeable:** We are experts in technology and the Omani business landscape. Our language is clear, confident, and precise.
+- **Innovative & Empowering:** We are forward-thinking problem solvers. We don't just offer tools; we offer solutions that empower our clients.
+- **Trustworthy & Reliable:** We are a dependable partner. Our tone is reassuring, secure, and straightforward.
+- **Approachable & Helpful:** We are not an intimidating, faceless corporation. We are an Omani SME here to help other SMEs succeed. Our AI agents have friendly personas (Aida, Voxi, etc.).
 
 **Example "Do" and "Don't":**
-- **Do:** "Leverage our AI-powered platform to automate your workflow."
-- **Don't:** "Our cool app uses AI to do stuff for you."
+- **Do:** "Accelerate your business operations by delegating tasks to our verified network of service providers through the Sanad Hub."
+- **Don't:** "Use our cool app to get stuff done faster by other people."
 
 ---
 
 ### 5. Imagery & Iconography
 *Describe the style of photos and icons to be used.*
-- **Photography:** Use professional, high-quality photos that are authentic and feature a diverse group of people in modern business settings. Avoid generic stock photos.
-- **Iconography:** Use the Lucide React icon library. Icons should be clean, line-based, and consistent.
+- **Photography:** Use professional, high-quality photos that are authentic and feature a diverse group of people in modern Omani business settings. Blend images of technology with Omani culture. Avoid generic, "corporate-speak" stock photos.
+- **Iconography:** Use the `lucide-react` icon library. Icons should be clean, line-based, and consistently implemented across the platform. For custom icons (e.g., Sanad Hub), maintain a similar line weight and style.

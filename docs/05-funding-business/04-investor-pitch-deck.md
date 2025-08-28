@@ -3,54 +3,54 @@
 
 ---
 ### Slide 1: Title Slide
-- **Content:** Company Logo, Project Name, Tagline.
-- **Example:** "Innovative Enterprises presents: Synergy AI - Automating Business Operations."
+- **Content:** Innovative Enterprises Logo, Project Name: "Innovative Enterprises", Tagline: "The Digital Operating System for Business in Oman."
+- **Image:** A sleek, modern image representing technology and Oman's landscape.
 
 ---
 ### Slide 2: The Problem
-- **Content:** A clear, relatable description of the problem you are solving. Use statistics or a powerful anecdote.
-- **Example:** "SMEs spend 20 hours per week on manual administrative tasks, losing OMR 2B in productivity annually."
+- **Content:** "Omani SMEs lose thousands of hours and millions of Rials annually due to operational friction." Use icons to represent three key problems: Manual Paperwork, Fragmented Service Market, and Lack of Digital Tools.
+- **Example:** "SMEs in the GCC spend up to 30% of their time on non-core administrative tasks, a major barrier to growth."
 
 ---
 ### Slide 3: The Solution
-- **Content:** Introduce your product. A single, powerful sentence explaining what it does.
-- **Example:** "Synergy AI is an AI-powered platform that automates your repetitive business tasks, from generating documents to managing customer inquiries."
+- **Content:** Introduce your platform as the all-in-one solution. A single, powerful sentence.
+- **Example:** "Innovative Enterprises is an AI-powered platform that automates your business operations, connects you to a trusted network of service providers, and provides the tools to scale."
 
 ---
-### Slide 4: Market Opportunity
-- **Content:** Define your Total Addressable Market (TAM), Serviceable Addressable Market (SAM), and Serviceable Obtainable Market (SOM).
-- **Example:** "The global market for business process automation (TAM) is $XXB. Our initial target in the GCC (SAM) is $YOM, and we aim to capture 5% of the Omani market (SOM) within 3 years."
+### Slide 4: Market Opportunity (TAM, SAM, SOM)
+- **Content:** Define the market size for SME digital transformation in the GCC.
+- **Example:** "The SME digital transformation market in the GCC (TAM) is valued at $40B. Our initial target in Oman for business services automation (SAM) is $250M. We aim to capture 5% of this (SOM), representing a $12.5M opportunity, within 3 years."
 
 ---
-### Slide 5: Product Demo / How It Works
-- **Content:** Screenshots, a short video, or a simple 3-step diagram showing the product in action.
-- **Example:** 1. Upload a document. 2. Select an AI agent. 3. Receive the completed task in minutes.
+### Slide 5: How It Works / Product Demo
+- **Content:** A simple 3-step visual diagram.
+- **Example:** 1. **Delegate:** A user submits a task (e.g., "Renew CR") on the Sanad Hub. 2. **Automate:** Our AI analyzes requirements and finds providers. 3. **Accomplish:** The user receives competitive quotes and gets the job done.
 
 ---
 ### Slide 6: Business Model
-- **Content:** How do you make money? Be specific.
-- **Example:** "We use a tiered subscription model: Basic (Free), Pro (OMR 20/mo), and Enterprise (Custom)."
+- **Content:** How do you make money? Use clear icons for each stream.
+- **Example:** "We have diversified revenue streams: 1. **Partner Subscriptions** (SaaS), 2. **Transaction Commissions** (Marketplace Fee), 3. **Premium AI Tool Access** (Pay-per-use)."
 
 ---
 ### Slide 7: Traction / Milestones
-- **Content:** Show what you've accomplished so far. (e.g., number of users, revenue, key partnerships, MVP launch).
-- **Example:** "Launched MVP in Q2 2024. Acquired 500+ beta users. Secured partnership with [Key Partner]."
+- **Content:** Show what you've accomplished.
+- **Example:** "Launched MVP in Q3 2024. Onboarded 25+ Sanad service providers in the first month. Processed 100+ AI document analyses. Secured strategic partnership with [Key Omani Tech Partner]."
 
 ---
 ### Slide 8: The Team
-- **Content:** Photos, names, and key roles of the founding team. Highlight relevant experience.
-- **Example:** "Jumaa Salim Al Hadidi (CEO) - 15 years in tech leadership. Anwar Ahmed Sharif (CTO) - Ex-Google AI Engineer."
+- **Content:** Photos, names, and key roles of the founding team. Emphasize local expertise and tech background.
+- **Example:** "Jumaa Salim Al Hadidi (CEO) - 15 years in tech leadership in Oman. Anwar Ahmed Sharif (CTO) - Ex-Google AI Engineer with deep expertise in large language models."
 
 ---
 ### Slide 9: Financial Projections
-- **Content:** A simple, high-level chart showing projected revenue and key metrics for the next 3-5 years.
-- **Example:** A bar chart showing revenue growing from OMR 20k in Year 1 to OMR 480k in Year 3.
+- **Content:** A simple, high-level bar chart showing projected revenue growth over 3 years. Highlight key numbers.
+- **Example:** A bar chart showing revenue growing from OMR 27k in Year 1 to OMR 670k in Year 3, with a clear breakeven point.
 
 ---
 ### Slide 10: The Ask & Use of Funds
-- **Content:** Clearly state how much funding you are seeking and how you will use it.
-- **Example:** "We are raising OMR 100,000 to be allocated as follows: 40% for Product Development, 40% for Sales & Marketing, 20% for Operations."
+- **Content:** Clearly state how much funding you are seeking and show a pie chart for the use of funds.
+- **Example:** "We are raising **OMR 105,000** for a 12-month runway. Funds will be allocated as follows: 40% for Product Development & Engineering, 40% for Sales & Marketing, 20% for Operations."
 
 ---
 ### Slide 11: Contact Information
-- **Content:** Name, Email, Phone Number, Website.
+- **Content:** Jumaa Salim Al Hadidi, CEO | invest@innovative.om | +968 78492280 | innovative.om
