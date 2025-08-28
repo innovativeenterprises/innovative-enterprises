@@ -16,13 +16,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { LucideIcon } from "lucide-react";
-import { User, Bot, PlusCircle, Trash2, Edit } from "lucide-react";
+import { User, Bot, PlusCircle, Trash2, Edit, Mail, Phone, Globe, Linkedin, Twitter, Github } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Agent, AgentCategory } from "@/lib/agents";
 import { Textarea } from "@/components/ui/textarea";
 import { store } from "@/lib/global-store";
-
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -33,14 +33,24 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
+const SocialsSchema = z.object({
+    email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
+    phone: z.string().optional(),
+    website: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
+    linkedin: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
+    twitter: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
+    github: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
+});
+
 const StaffSchema = z.object({
   name: z.string().min(3, "Name is required"),
   role: z.string().min(3, "Role is required"),
   type: z.enum(["Leadership", "AI Agent"]),
-  description: z.string().min(10, "A description is required."),
-  aiHint: z.string().min(2, "AI hint is required"),
+  description: z.string().min(10, "A description is required.").default(''),
+  aiHint: z.string().min(2, "AI hint is required").default(''),
   photoUrl: z.string().optional(),
   photoFile: z.any().optional(),
+  socials: SocialsSchema.optional(),
 }).refine(data => data.photoUrl || data.photoFile, {
     message: "Either a Photo URL or a Photo File is required.",
     path: ["photoUrl"], // Point error to photoUrl field
@@ -69,6 +79,14 @@ const AddEditStaffDialog = ({
             aiHint: staffMember?.aiHint || "",
             photoUrl: staffMember?.photo || "",
             photoFile: undefined,
+            socials: {
+                email: staffMember?.socials?.email || '',
+                phone: staffMember?.socials?.phone || '',
+                website: staffMember?.socials?.website || '',
+                linkedin: staffMember?.socials?.linkedin || '',
+                twitter: staffMember?.socials?.twitter || '',
+                github: staffMember?.socials?.github || '',
+            }
         },
     });
 
@@ -82,6 +100,14 @@ const AddEditStaffDialog = ({
                 aiHint: staffMember?.aiHint || "",
                 photoUrl: staffMember?.photo || "",
                 photoFile: undefined,
+                socials: {
+                    email: staffMember?.socials?.email || '',
+                    phone: staffMember?.socials?.phone || '',
+                    website: staffMember?.socials?.website || '',
+                    linkedin: staffMember?.socials?.linkedin || '',
+                    twitter: staffMember?.socials?.twitter || '',
+                    github: staffMember?.socials?.github || '',
+                }
             });
         }
     }, [staffMember, form, isOpen]);
@@ -103,7 +129,7 @@ const AddEditStaffDialog = ({
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
                     <DialogTitle>{staffMember ? "Edit" : "Add New"} Staff Member</DialogTitle>
                     <DialogDescription>
@@ -129,7 +155,7 @@ const AddEditStaffDialog = ({
                          <FormField control={form.control} name="description" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
-                                <FormControl><Textarea placeholder="Describe their role and responsibilities." {...field} defaultValue={field.value} /></FormControl>
+                                <FormControl><Textarea placeholder="Describe their role and responsibilities." {...field} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
@@ -147,28 +173,58 @@ const AddEditStaffDialog = ({
                             </FormItem>
                         )} />
 
-                        <FormField control={form.control} name="photoUrl" render={({ field }) => (
-                            <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-
-                        <div className="relative my-2">
-                           <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                           <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+                        <div className="space-y-2 pt-2">
+                            <h4 className="text-sm font-medium">Photo</h4>
+                            <FormField control={form.control} name="photoUrl" render={({ field }) => (
+                                <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <div className="relative my-2">
+                            <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                            <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div>
+                            </div>
+                            <FormField control={form.control} name="photoFile" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Upload Photo File</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
                         </div>
-
-                         <FormField control={form.control} name="photoFile" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Upload Photo File</FormLabel>
-                                <FormControl>
-                                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
+                        
 
                         <FormField control={form.control} name="aiHint" render={({ field }) => (
-                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} defaultValue={field.value} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
+
+                        <Accordion type="single" collapsible>
+                            <AccordionItem value="socials">
+                                <AccordionTrigger>Contact & Social Links (Optional)</AccordionTrigger>
+                                <AccordionContent className="space-y-4 pt-2">
+                                     <FormField control={form.control} name="socials.email" render={({ field }) => (
+                                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="contact@example.com" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                     <FormField control={form.control} name="socials.phone" render={({ field }) => (
+                                        <FormItem><FormLabel>Phone</FormLabel><FormControl><Input type="tel" placeholder="+968 1234 5678" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                     <FormField control={form.control} name="socials.website" render={({ field }) => (
+                                        <FormItem><FormLabel>Website URL</FormLabel><FormControl><Input placeholder="https://example.com" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                     <FormField control={form.control} name="socials.linkedin" render={({ field }) => (
+                                        <FormItem><FormLabel>LinkedIn URL</FormLabel><FormControl><Input placeholder="https://linkedin.com/in/..." {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                     <FormField control={form.control} name="socials.twitter" render={({ field }) => (
+                                        <FormItem><FormLabel>Twitter URL</FormLabel><FormControl><Input placeholder="https://twitter.com/..." {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                     <FormField control={form.control} name="socials.github" render={({ field }) => (
+                                        <FormItem><FormLabel>GitHub URL</FormLabel><FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                        
+
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit">Save Staff</Button>
@@ -430,4 +486,5 @@ export default function StaffTable({
 }
 
     
+
 

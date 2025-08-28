@@ -18,6 +18,7 @@ export interface Agent {
         linkedin?: string;
         twitter?: string;
         email?: string;
+        phone?: string;
         github?: string;
         website?: string;
     }
