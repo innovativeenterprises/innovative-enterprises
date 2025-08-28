@@ -99,6 +99,10 @@ const pricingTemplates: Record<string, string[][]> = {
 
 const CompanyUploadSchema = z.object({
   crDocument: z.any().refine(file => file?.length == 1, 'Commercial Record is required.'),
+  logoFile: z.any().optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
   repIdDocumentFrontUri: z.string().min(1, 'Front of Representative ID is required.'),
   repIdDocumentBackUri: z.string().optional(),
   businessCategory: z.string().min(1, "Please select a business category."),
@@ -492,8 +496,11 @@ export default function PartnerPage() {
                                 <FormMessage />
                             </FormItem>
                         )} />
+                        <FormField control={companyUploadForm.control} name="logoFile" render={({ field }) => (
+                           <FormItem><FormLabel>2. Company Logo (Optional)</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)}/></FormControl><FormMessage/></FormItem>
+                        )}/>
                          <div>
-                          <FormLabel>2. Representative's ID Card</FormLabel>
+                          <FormLabel>3. Representative's ID Card</FormLabel>
                           <div className="grid grid-cols-2 gap-4 mt-2">
                               <Button type="button" onClick={() => setPageState('capture_rep_id_front')} disabled={!!companyUploadForm.getValues('repIdDocumentFrontUri')}>
                                 <Camera className="mr-2 h-4 w-4" /> Scan Front of ID
@@ -518,7 +525,7 @@ export default function PartnerPage() {
                             name="businessCategory"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>3. Business Category</FormLabel>
+                                <FormLabel>4. Business Category</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                     <SelectTrigger>
@@ -535,7 +542,7 @@ export default function PartnerPage() {
                         />
                         <FormField control={companyUploadForm.control} name="serviceChargesFile" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>4. Services & Pricing List (Optional)</FormLabel>
+                                <FormLabel>5. Services & Pricing List (Optional)</FormLabel>
                                 <div className="flex flex-col sm:flex-row gap-2">
                                     <Button type="button" variant="secondary" onClick={handleDownloadPricingTemplate} className="w-full sm:w-auto">
                                         <Download className="mr-2 h-4 w-4" /> Download Template
