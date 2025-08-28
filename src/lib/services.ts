@@ -83,6 +83,13 @@ export const initialServices: Service[] = [
     href: "/document-translator",
   },
   {
+    icon: Scale,
+    title: "Contract Risk Analyzer",
+    description: "Leverage AI to analyze legal contracts, identifying potential risks, liabilities, and ambiguities before you sign.",
+    enabled: true,
+    href: "/contract-analyzer",
+  },
+  {
     icon: FileText,
     title: "Certus Audit Hub",
     description: "Connect with certified audit offices and leverage AI for a preliminary analysis of your financial documents.",

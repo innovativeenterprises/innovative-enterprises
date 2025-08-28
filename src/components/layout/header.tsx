@@ -104,9 +104,9 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     icon: Languages,
   },
   {
-    title: "Aida Legal Assistant",
-    href: "/legal-agent",
-    description: "Get preliminary analysis, draft agreements, or ask general questions from our AI agent, Aida.",
+    title: "Lexi Contract Analyzer",
+    href: "/contract-analyzer",
+    description: "Analyze legal contracts for risks, liabilities, and ambiguities before you sign.",
     icon: Scale,
   },
    {
