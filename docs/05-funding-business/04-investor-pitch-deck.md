@@ -39,7 +39,7 @@
 ---
 ### Slide 8: The Team
 - **Content:** Photos, names, and key roles of the founding team. Emphasize local expertise and tech background.
-- **Example:** "Jumaa Salim Al Hadidi (CEO) - 15 years in tech leadership in Oman. Anwar Ahmed Sharif (CTO) - Ex-Google AI Engineer with deep expertise in large language models."
+- **Example:** "Jumaa Salim Al Hadidi (CEO) - 15 years in tech leadership in Oman. Anwar Ahmed Sharif (Deputy CEO & CTO) - The architect behind our solutions; a magical developer with deep expertise in large language models."
 
 ---
 ### Slide 9: Financial Projections
@@ -53,4 +53,5 @@
 
 ---
 ### Slide 11: Contact Information
-- **Content:** Jumaa Salim Al Hadidi, CEO | invest@innovative.om | +968 78492280 | innovative.om
+- **Content:** Jumaa Salim Al Hadidi, CEO | invest@innovativeenterprises.tech | +968 78492280 | innovativeenterprises.tech
+

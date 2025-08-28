@@ -3,7 +3,7 @@
 
 **Last Updated:** 2024-08-01
 
-Innovative Enterprises ("us", "we", or "our") operates the `innovative.om` website and its associated services (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
+Innovative Enterprises ("us", "we", or "our") operates the `innovativeenterprises.tech` website and its associated services (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
 
 ### 1. Information Collection and Use
 We collect several different types of information for various purposes to provide and improve our Service to you.
@@ -26,7 +26,7 @@ Innovative Enterprises uses the collected data for various purposes:
 
 ### 4. Service Providers and AI Models
 We use third-party companies and services to facilitate our Service.
-- **Google AI:** We use Google's generative AI models (Gemini) to power our AI agents. The content of your prompts and documents may be sent to Google to provide the AI feature. Per Google's terms, this data is not used to train their global models.
+- **Google AI:** We use Google's generative AI models (Gemini) to provide the AI feature. Per Google's terms, this data is not used to train their global models.
 - **Firebase:** We use Firebase for hosting, database, and authentication services.
 
 ### 5. Your Rights
@@ -37,3 +37,4 @@ We may update our Privacy Policy from time to time. We will notify you of any ch
 
 ---
 ***Disclaimer:** This is a basic template. It is crucial to have it reviewed by a qualified legal professional to ensure compliance with all applicable laws.*
+

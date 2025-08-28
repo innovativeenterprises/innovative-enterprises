@@ -3,7 +3,7 @@
 
 **Last Updated:** 2024-08-01
 
-Welcome to Innovative Enterprises! These terms and conditions outline the rules and regulations for the use of our website (`innovative.om`) and its associated services, including but not limited to Sanad Hub, Business Hub, and our suite of AI Agents ("Service").
+Welcome to Innovative Enterprises! These terms and conditions outline the rules and regulations for the use of our website (`innovativeenterprises.tech`) and its associated services, including but not limited to Sanad Hub, Business Hub, and our suite of AI Agents ("Service").
 
 By accessing this website, we assume you accept these terms and conditions. Do not continue to use our Service if you do not agree to all of the terms and conditions stated on this page.
 
@@ -39,3 +39,4 @@ By accessing this website, we assume you accept these terms and conditions. Do n
 
 ---
 ***Disclaimer:** This is a basic template. It is crucial to have it reviewed by a qualified legal professional.*
+

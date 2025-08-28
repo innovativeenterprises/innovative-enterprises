@@ -20,7 +20,7 @@ Key features of the platform available at launch include:
 
 Innovative Enterprises is committed to supporting the national agenda by providing the digital infrastructure necessary for a thriving SME ecosystem.
 
-The platform is now live. For more information, visit `https://innovative.om`.
+The platform is now live. For more information, visit `https://innovativeenterprises.tech`.
 
 ### **About Innovative Enterprises**
 Innovative Enterprises is a Muscat-based Omani SME specializing in emerging technology solutions, including cloud computing, artificial intelligence, and cybersecurity. The company is dedicated to delivering high-impact digital products and services to both government and commercial clients in the Sultanate of Oman and the GCC.
@@ -28,7 +28,8 @@ Innovative Enterprises is a Muscat-based Omani SME specializing in emerging tech
 ### **Media Contact**
 Huda Al Salmi
 Public Relations Officer
-huda@innovative.om
+huda@innovativeenterprises.tech
 +968 [Phone Number]
 
 **###**
+
