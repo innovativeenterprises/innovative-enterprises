@@ -71,7 +71,7 @@ const routerPrompt = ai.definePrompt({
     **Intents:**
     1.  **analyze_url**: The user wants to analyze a document from a web link. The query MUST contain a valid URL.
     2.  **analyze_text**: The user wants to analyze a document they have provided as text, or they are asking a question that requires legal analysis of a situation.
-    3.  **generate_document**: The user wants you to create a new legal document, like an NDA or Service Agreement.
+    3.  **generate_document**: The user wants you to create a new legal document, like an NDA or Service Agreement. Look for keywords like "draft," "create," or "generate."
     4.  **general_question**: The user is asking a general question that doesn't require deep legal analysis of a document.
 
     **Entity Extraction:**
@@ -111,7 +111,12 @@ export const legalAgentRouter = ai.defineFlow(
         return analysisResult.output!;
 
       case 'generate_document':
-         const generationResult = await generateAgreement({ applicantType: 'individual' }); // Using 'individual' as a default for now
+         const generationResult = await generateAgreement({ 
+              applicantType: 'individual',
+              // Passing default data for a generic document request
+              individualData: { personalDetails: { fullName: '[Your Name]' }, idCardDetails: { civilNumber: '[Your ID]'}},
+            });
+         
          const documentContent = route.documentType?.toLowerCase().includes('nda')
             ? generationResult.ndaContent
             : generationResult.serviceAgreementContent;
