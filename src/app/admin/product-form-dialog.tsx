@@ -27,16 +27,20 @@ const fileToDataURI = (file: File): Promise<string> => {
 const ProductSchema = z.object({
   name: z.string().min(3, "Name is required"),
   description: z.string().min(10, "Description is required"),
-  image: z.string().min(1, "An image is required"),
+  imageUrl: z.string().optional(),
+  imageFile: z.any().optional(),
   aiHint: z.string().min(2, "AI hint is required"),
   enabled: z.boolean(),
   stage: z.string().min(1, "Stage is required"),
   price: z.coerce.number().min(0, "Price is required."),
   rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5."),
   category: z.string().min(1, "Category is required."),
+}).refine(data => data.imageUrl || data.imageFile, {
+    message: "Either an Image URL or an Image File is required.",
+    path: ["imageUrl"], // Point error to imageUrl field
 });
 
-export type ProductValues = z.infer<typeof ProductSchema>;
+export type ProductValues = z.infer<typeof ProductSchema> & { image: string };
 
 export const AddEditProductDialog = ({ 
     product, 
@@ -53,7 +57,7 @@ export const AddEditProductDialog = ({
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
 }) => {
-    const form = useForm({
+    const form = useForm<z.infer<typeof ProductSchema>>({
         resolver: zodResolver(ProductSchema),
         defaultValues: {
             name: product?.name || "",
@@ -64,15 +68,13 @@ export const AddEditProductDialog = ({
             price: product?.price || 0,
             rating: product?.rating || 0,
             category: product?.category || 'Uncategorized',
+            imageUrl: product?.image || "",
             imageFile: undefined,
-            imageUrl: (product?.image.startsWith('http') || product?.image.startsWith('data:')) ? product.image : "",
-            useUrl: product?.image.startsWith('http') || product?.image.startsWith('data:') || false,
         },
     });
 
     useEffect(() => {
         if(isOpen) {
-           const isUrl = product?.image?.startsWith('http') || product?.image.startsWith('data:') || false;
            form.reset({ 
                 name: product?.name || "",
                 description: product?.description || "",
@@ -82,30 +84,19 @@ export const AddEditProductDialog = ({
                 price: product?.price || 0,
                 rating: product?.rating || 0,
                 category: product?.category || 'Uncategorized',
+                imageUrl: product?.image || "",
                 imageFile: undefined,
-                imageUrl: isUrl ? product.image : "",
-                useUrl: isUrl,
             });
         }
     }, [product, form, isOpen]);
 
-    const watchUseUrl = form.watch('useUrl');
-
-    const onSubmit: SubmitHandler<any> = async (data) => {
-        let imageValue = product?.image || "";
+    const onSubmit: SubmitHandler<z.infer<typeof ProductSchema>> = async (data) => {
+        let imageValue = "";
         
-        if(data.useUrl) {
-            if(data.imageUrl) imageValue = data.imageUrl;
-        } else {
-            if (data.imageFile && data.imageFile.length > 0) {
-                const file = data.imageFile[0];
-                imageValue = await fileToDataURI(file);
-            }
-        }
-        
-        if (!imageValue) {
-            form.setError('imageUrl', { message: 'Please provide either an image file or a URL.' });
-            return;
+        if (data.imageFile && data.imageFile.length > 0) {
+            imageValue = await fileToDataURI(data.imageFile[0]);
+        } else if (data.imageUrl) {
+            imageValue = data.imageUrl;
         }
 
         onSave({ 
@@ -165,38 +156,23 @@ export const AddEditProductDialog = ({
                             )} />
                         </div>
 
-                        <FormField control={form.control} name="useUrl" render={({ field }) => (
-                             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-                                <FormControl>
-                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                    <FormLabel>Use Image URL</FormLabel>
-                                </div>
-                            </FormItem>
-                        )}/>
+                         <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                            <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
 
-                        <div className="grid grid-cols-2 gap-4">
-                           {watchUseUrl ? (
-                                <FormField control={form.control} name="imageUrl" render={({ field }) => (
-                                    <FormItem className="col-span-2"><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                                )} />
-                           ) : (
-                                <FormField control={form.control} name="imageFile" render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Image Upload</FormLabel>
-                                        <FormControl>
-                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
-                           )}
-                           
-                            <FormField control={form.control} name="aiHint" render={({ field }) => (
-                                <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
+                        <div className="relative my-2">
+                           <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                           <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div>
                         </div>
+
+                        <FormField control={form.control} name="imageFile" render={({ field }) => (
+                           <FormItem><FormLabel>Upload Image File</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+
+                         <FormField control={form.control} name="aiHint" render={({ field }) => (
+                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+
                          <FormField control={form.control} name="enabled" render={({ field }) => (
                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
                                 <FormControl>

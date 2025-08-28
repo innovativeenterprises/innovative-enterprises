@@ -19,7 +19,6 @@ import type { LucideIcon } from "lucide-react";
 import { User, Bot, PlusCircle, Trash2, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Checkbox } from "@/components/ui/checkbox";
 import type { Agent, AgentCategory } from "@/lib/agents";
 import { Textarea } from "@/components/ui/textarea";
 import { store } from "@/lib/global-store";
@@ -38,11 +37,16 @@ const StaffSchema = z.object({
   name: z.string().min(3, "Name is required"),
   role: z.string().min(3, "Role is required"),
   type: z.enum(["Leadership", "AI Agent"]),
-  photo: z.string().min(1, "A photo is required."),
-  aiHint: z.string().min(2, "AI hint is required"),
   description: z.string().min(10, "A description is required."),
+  aiHint: z.string().min(2, "AI hint is required"),
+  photoUrl: z.string().optional(),
+  photoFile: z.any().optional(),
+}).refine(data => data.photoUrl || data.photoFile, {
+    message: "Either a Photo URL or a Photo File is required.",
+    path: ["photoUrl"], // Point error to photoUrl field
 });
-type StaffValues = z.infer<typeof StaffSchema>;
+
+type StaffValues = z.infer<typeof StaffSchema> & { photo: string };
 
 
 const AddEditStaffDialog = ({ 
@@ -55,7 +59,7 @@ const AddEditStaffDialog = ({
     children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm({
+    const form = useForm<z.infer<typeof StaffSchema>>({
         resolver: zodResolver(StaffSchema),
         defaultValues: {
             name: staffMember?.name || "",
@@ -63,48 +67,35 @@ const AddEditStaffDialog = ({
             type: staffMember?.type || "AI Agent",
             description: staffMember?.description || "",
             aiHint: staffMember?.aiHint || "",
+            photoUrl: staffMember?.photo || "",
             photoFile: undefined,
-            photoUrl: staffMember?.photo.startsWith('http') || staffMember?.photo.startsWith('data:') ? staffMember.photo : "",
-            useUrl: staffMember?.photo.startsWith('http') || staffMember?.photo.startsWith('data:') || false,
         },
     });
 
     useEffect(() => {
         if(isOpen) {
-            const isUrl = staffMember?.photo?.startsWith('http') || staffMember?.photo?.startsWith('data:') || false;
             form.reset({ 
                 name: staffMember?.name || "",
                 role: staffMember?.role || "",
                 type: staffMember?.type || "AI Agent",
                 description: staffMember?.description || "",
                 aiHint: staffMember?.aiHint || "",
+                photoUrl: staffMember?.photo || "",
                 photoFile: undefined,
-                photoUrl: isUrl ? staffMember.photo : "",
-                useUrl: isUrl,
             });
         }
     }, [staffMember, form, isOpen]);
 
-    const watchUseUrl = form.watch('useUrl');
+    const onSubmit: SubmitHandler<z.infer<typeof StaffSchema>> = async (data) => {
+        let photoValue = "";
 
-    const onSubmit: SubmitHandler<any> = async (data) => {
-        let photoValue = staffMember?.photo || "";
-
-        if (data.useUrl) {
-            if(data.photoUrl) photoValue = data.photoUrl;
-        } else {
-             if (data.photoFile && data.photoFile.length > 0) {
-                const file = data.photoFile[0];
-                photoValue = await fileToDataURI(file);
-            }
+        if (data.photoFile && data.photoFile.length > 0) {
+            photoValue = await fileToDataURI(data.photoFile[0]);
+        } else if (data.photoUrl) {
+            photoValue = data.photoUrl;
         }
         
-        if (!photoValue) {
-            form.setError('photoUrl', { message: 'Please provide either a photo file or a URL.' });
-            return;
-        }
-        
-        onSave({ name: data.name, role: data.role, type: data.type, description: data.description, aiHint: data.aiHint, photo: photoValue }, staffMember?.name);
+        onSave({ ...data, photo: photoValue }, staffMember?.name);
         form.reset();
         setIsOpen(false);
     };
@@ -138,7 +129,7 @@ const AddEditStaffDialog = ({
                          <FormField control={form.control} name="description" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
-                                <FormControl><Textarea placeholder="Describe their role and responsibilities." {...field} /></FormControl>
+                                <FormControl><Textarea placeholder="Describe their role and responsibilities." {...field} defaultValue={field.value} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
@@ -156,37 +147,28 @@ const AddEditStaffDialog = ({
                             </FormItem>
                         )} />
 
-                        <FormField control={form.control} name="useUrl" render={({ field }) => (
-                             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-                                <FormControl>
-                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                    <FormLabel>Use Photo URL</FormLabel>
-                                </div>
-                            </FormItem>
-                        )}/>
+                        <FormField control={form.control} name="photoUrl" render={({ field }) => (
+                            <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
 
-                        <div className="grid grid-cols-2 gap-4">
-                             {watchUseUrl ? (
-                                <FormField control={form.control} name="photoUrl" render={({ field }) => (
-                                    <FormItem className="col-span-2"><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                                )} />
-                            ) : (
-                                <FormField control={form.control} name="photoFile" render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Photo Upload</FormLabel>
-                                        <FormControl>
-                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
-                            )}
-                            <FormField control={form.control} name="aiHint" render={({ field }) => (
-                                <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
+                        <div className="relative my-2">
+                           <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                           <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
                         </div>
+
+                         <FormField control={form.control} name="photoFile" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Upload Photo File</FormLabel>
+                                <FormControl>
+                                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+
+                        <FormField control={form.control} name="aiHint" render={({ field }) => (
+                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} defaultValue={field.value} /></FormControl><FormMessage /></FormItem>
+                        )} />
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit">Save Staff</Button>
@@ -448,3 +430,4 @@ export default function StaffTable({
 }
 
     
+

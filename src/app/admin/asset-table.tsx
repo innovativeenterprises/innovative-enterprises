@@ -19,7 +19,6 @@ import type { Asset } from "@/lib/assets";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload } from "lucide-react";
 import Image from 'next/image';
-import { Checkbox } from "@/components/ui/checkbox";
 import { store } from "@/lib/global-store";
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -58,10 +57,15 @@ const AssetSchema = z.object({
   specs: z.string().min(5, "Specifications are required"),
   monthlyPrice: z.coerce.number().min(1, "Monthly price is required"),
   status: z.enum(['Available', 'Rented', 'Maintenance']),
-  image: z.string().min(1, "An image is required"),
+  imageUrl: z.string().optional(),
+  imageFile: z.any().optional(),
   aiHint: z.string().min(2, "AI hint is required"),
+}).refine(data => data.imageUrl || data.imageFile, {
+    message: "Either an Image URL or an Image File is required.",
+    path: ["imageUrl"], // Point error to imageUrl field
 });
-type AssetValues = z.infer<typeof AssetSchema>;
+
+type AssetValues = z.infer<typeof AssetSchema> & { image: string };
 
 
 const AddEditAssetDialog = ({ 
@@ -74,7 +78,7 @@ const AddEditAssetDialog = ({
     children: React.ReactNode
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const form = useForm({
+    const form = useForm<z.infer<typeof AssetSchema>>({
         resolver: zodResolver(AssetSchema),
         defaultValues: {
             name: asset?.name || "",
@@ -83,15 +87,12 @@ const AddEditAssetDialog = ({
             monthlyPrice: asset?.monthlyPrice || 0,
             status: asset?.status || 'Available',
             aiHint: asset?.aiHint || "",
-            imageFile: undefined,
-            imageUrl: asset?.image.startsWith('http') || asset?.image.startsWith('data:') ? asset.image : "",
-            useUrl: asset?.image.startsWith('http') || asset?.image.startsWith('data:') || false,
+            imageUrl: asset?.image || "",
         },
     });
 
      useEffect(() => {
         if(isOpen) {
-           const isUrl = asset?.image?.startsWith('http') || asset?.image.startsWith('data:') || false;
            form.reset({ 
                 name: asset?.name || "",
                 type: asset?.type || 'Laptop',
@@ -99,30 +100,19 @@ const AddEditAssetDialog = ({
                 monthlyPrice: asset?.monthlyPrice || 0,
                 status: asset?.status || 'Available',
                 aiHint: asset?.aiHint || "",
+                imageUrl: asset?.image || "",
                 imageFile: undefined,
-                imageUrl: isUrl ? asset.image : "",
-                useUrl: isUrl,
             });
         }
     }, [asset, form, isOpen]);
     
-    const watchUseUrl = form.watch('useUrl');
-
-    const onSubmit: SubmitHandler<any> = async (data) => {
-        let imageValue = asset?.image || "";
+    const onSubmit: SubmitHandler<z.infer<typeof AssetSchema>> = async (data) => {
+        let imageValue = "";
         
-        if(data.useUrl) {
-            if(data.imageUrl) imageValue = data.imageUrl;
-        } else {
-            if (data.imageFile && data.imageFile.length > 0) {
-                const file = data.imageFile[0];
-                imageValue = await fileToDataURI(file);
-            }
-        }
-        
-        if (!imageValue) {
-            form.setError('imageUrl', { message: 'Please provide either an image file or a URL.' });
-            return;
+        if (data.imageFile && data.imageFile.length > 0) {
+            imageValue = await fileToDataURI(data.imageFile[0]);
+        } else if (data.imageUrl) {
+            imageValue = data.imageUrl;
         }
 
         onSave({ 
@@ -170,39 +160,25 @@ const AddEditAssetDialog = ({
                                 <FormItem><FormLabel>Price/Month (OMR)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                         </div>
+                        
+                        <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                            <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
 
-                         <FormField control={form.control} name="useUrl" render={({ field }) => (
-                             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-                                <FormControl>
-                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                    <FormLabel>Use Image URL</FormLabel>
-                                </div>
-                            </FormItem>
-                        )}/>
-
-                        <div className="grid grid-cols-2 gap-4">
-                           {watchUseUrl ? (
-                                <FormField control={form.control} name="imageUrl" render={({ field }) => (
-                                    <FormItem className="col-span-2"><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                                )} />
-                           ) : (
-                                <FormField control={form.control} name="imageFile" render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Image Upload</FormLabel>
-                                        <FormControl>
-                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
-                           )}
-                           
-                            <FormField control={form.control} name="aiHint" render={({ field }) => (
-                                <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., server rack" {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
+                        <div className="relative my-2">
+                           <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                           <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div>
                         </div>
+
+                        <FormField control={form.control} name="imageFile" render={({ field }) => (
+                           <FormItem><FormLabel>Upload Image File</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                        )} />
+
+
+                        <FormField control={form.control} name="aiHint" render={({ field }) => (
+                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., server rack" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit">Save Asset</Button>
