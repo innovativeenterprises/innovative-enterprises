@@ -84,10 +84,10 @@ export const initialServices: Service[] = [
   },
   {
     icon: Scale,
-    title: "Contract Risk Analyzer",
-    description: "Leverage AI to analyze legal contracts, identifying potential risks, liabilities, and ambiguities before you sign.",
+    title: "AI Legal Agent",
+    description: "Leverage AI to analyze legal documents, identifying potential risks, liabilities, and ambiguities before you sign.",
     enabled: true,
-    href: "/contract-analyzer",
+    href: "/legal-agent",
   },
   {
     icon: FileText,

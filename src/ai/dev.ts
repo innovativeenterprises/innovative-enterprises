@@ -40,6 +40,4 @@ import '@/ai/flows/feasibility-study.ts';
 import '@/ai/flows/ameen-smart-lock.ts';
 import '@/ai/flows/video-generator.ts';
 import '@/ai/flows/coupon-generator.ts';
-import '@/ai/flows/contract-risk-analysis.ts';
-import '@/ai/flows/contract-risk-analysis.schema.ts';
     
