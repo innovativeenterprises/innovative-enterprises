@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useOpportunitiesData } from "@/app/admin/opportunity-table";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { initialOpportunities, opportunityIconMap } from "@/lib/opportunities";
+import { initialOpportunities, opportunityIconMap, type Opportunity } from "@/lib/opportunities";
 import { notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake, MessageSquare } from "lucide-react";
@@ -19,6 +19,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 const NegotiationSchema = z.object({
@@ -79,11 +80,48 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
     const { opportunities } = useOpportunitiesData();
-    const opportunity = opportunities.find(opp => opp.id === params.id);
+    const [opportunity, setOpportunity] = useState<Opportunity | undefined | null>(null);
+    
+    useEffect(() => {
+      // Set a brief timeout to ensure client-side state is updated after initial render.
+      // This helps prevent hydration mismatches with data coming from localStorage.
+      const timer = setTimeout(() => {
+        const found = opportunities.find(opp => opp.id === params.id);
+        setOpportunity(found);
+      }, 1); 
+      return () => clearTimeout(timer);
+    }, [opportunities, params.id]);
 
-    if (!opportunity) {
-        // In a real app with a database, you would fetch the data here.
-        // If not found, you'd show a 404 page. We simulate that here.
+
+    if (opportunity === null) {
+        // Loading state to prevent flash of incorrect content
+        return (
+             <div className="bg-background min-h-[calc(100vh-8rem)]">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-3xl mx-auto">
+                        <Card>
+                            <CardHeader>
+                                <Skeleton className="h-10 w-3/4" />
+                                <Skeleton className="h-6 w-1/2" />
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <Skeleton className="h-20 w-full" />
+                                    <Skeleton className="h-20 w-full" />
+                                </div>
+                                <div className="space-y-2">
+                                     <Skeleton className="h-6 w-1/4" />
+                                     <Skeleton className="h-24 w-full" />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    
+    if (opportunity === undefined) {
         return notFound();
     }
     
