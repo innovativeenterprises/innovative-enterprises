@@ -50,6 +50,13 @@ const SanadPricingSchema = z.object({
   firstTimeDiscountPercentage: z.coerce.number().min(0).max(1),
 });
 
+const LegalPricingSchema = z.object({
+  b2cFee: z.coerce.number().min(0),
+  b2bFee: z.coerce.number().min(0),
+  b2gFee: z.coerce.number().min(0),
+});
+
+
 const EditSanadPricingDialog = ({
     settings,
     onSave,
@@ -113,6 +120,61 @@ const EditSanadPricingDialog = ({
     )
 }
 
+const EditLegalPricingDialog = ({
+    settings,
+    onSave,
+}: {
+    settings: AppSettings,
+    onSave: (values: z.infer<typeof LegalPricingSchema>) => void,
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const form = useForm<z.infer<typeof LegalPricingSchema>>({
+        resolver: zodResolver(LegalPricingSchema),
+        defaultValues: settings.legalAgentPricing,
+    });
+     useEffect(() => {
+        if(isOpen) form.reset(settings.legalAgentPricing);
+    }, [settings, form, isOpen]);
+
+    const onSubmit: SubmitHandler<z.infer<typeof LegalPricingSchema>> = (data) => {
+        onSave(data);
+        setIsOpen(false);
+    };
+
+    return (
+         <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Fees</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Edit Legal Assistant Fees</DialogTitle>
+                    <DialogDescription>
+                        Update the analysis fees for each contract type.
+                    </DialogDescription>
+                </DialogHeader>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="b2cFee" render={({ field }) => (
+                            <FormItem><FormLabel>B2C (Business-to-Consumer) Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="b2bFee" render={({ field }) => (
+                            <FormItem><FormLabel>B2B (Business-to-Business) Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="b2gFee" render={({ field }) => (
+                            <FormItem><FormLabel>B2G (Business-to-Government) Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Save Fees</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 
 export default function SettingsTable({ settings, setSettings }: { settings: AppSettings, setSettings: (updater: (settings: AppSettings) => AppSettings) => void}) {
     const { toast } = useToast();
@@ -139,12 +201,20 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
         toast({ title: "Setting updated.", description: `Voice interaction has been ${value ? 'enabled' : 'disabled'}.`});
     };
     
-    const handleSavePricing = (values: z.infer<typeof SanadPricingSchema>) => {
+    const handleSaveSanadPricing = (values: z.infer<typeof SanadPricingSchema>) => {
         setSettings(prev => ({
             ...prev,
             sanadOffice: { ...values }
         }));
         toast({ title: "Sanad Hub pricing updated successfully." });
+    }
+    
+    const handleSaveLegalPricing = (values: z.infer<typeof LegalPricingSchema>) => {
+        setSettings(prev => ({
+            ...prev,
+            legalAgentPricing: { ...values }
+        }));
+        toast({ title: "Legal Assistant fees updated successfully." });
     }
 
     const handleVatEnabledChange = (enabled: boolean) => {
@@ -260,13 +330,47 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
                 </CardContent>
             </Card>
 
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>AI Legal Assistant Fees</CardTitle>
+                        <CardDescription>Manage the fees for contract analysis.</CardDescription>
+                    </div>
+                    <EditLegalPricingDialog settings={settings} onSave={handleSaveLegalPricing} />
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                         <TableHeader>
+                            <TableRow>
+                                <TableHead>Contract Type</TableHead>
+                                <TableHead className="text-right">Analysis Fee (OMR)</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>B2C (Business-to-Consumer)</TableCell>
+                                <TableCell className="text-right">{settings.legalAgentPricing.b2cFee.toFixed(2)}</TableCell>
+                            </TableRow>
+                             <TableRow>
+                                <TableCell>B2B (Business-to-Business)</TableCell>
+                                <TableCell className="text-right">{settings.legalAgentPricing.b2bFee.toFixed(2)}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>B2G (Business-to-Government)</TableCell>
+                                <TableCell className="text-right">{settings.legalAgentPricing.b2gFee.toFixed(2)}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+
              <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>
                         <CardTitle>Sanad Hub Subscription Pricing</CardTitle>
                         <CardDescription>Manage the fees for Sanad Office registrations.</CardDescription>
                     </div>
-                    <EditSanadPricingDialog settings={settings} onSave={handleSavePricing} />
+                    <EditSanadPricingDialog settings={settings} onSave={handleSaveSanadPricing} />
                 </CardHeader>
                 <CardContent>
                     <Table>

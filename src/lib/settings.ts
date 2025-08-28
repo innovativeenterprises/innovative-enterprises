@@ -8,9 +8,16 @@ export interface SanadOfficeSettings {
     firstTimeDiscountPercentage: number; // Stored as 0.0 to 1.0
 }
 
+export interface LegalAgentPricing {
+    b2cFee: number;
+    b2bFee: number;
+    b2gFee: number;
+}
+
 export interface AppSettings {
     translationAssignmentMode: 'direct' | 'tender' | 'builtin';
     sanadOffice: SanadOfficeSettings;
+    legalAgentPricing: LegalAgentPricing;
     voiceInteractionEnabled: boolean;
     vat: {
         enabled: boolean;
@@ -26,6 +33,11 @@ export const initialSettings: AppSettings = {
         yearlyFee: 160,
         lifetimeFee: 280,
         firstTimeDiscountPercentage: 0.60,
+    },
+    legalAgentPricing: {
+        b2cFee: 4,
+        b2bFee: 25,
+        b2gFee: 65,
     },
     voiceInteractionEnabled: true,
     vat: {

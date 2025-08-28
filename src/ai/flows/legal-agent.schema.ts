@@ -11,6 +11,7 @@ import { z } from 'zod';
 
 export const LegalAgentInputSchema = z.object({
   question: z.string().describe('The user\'s legal question or topic for analysis.'),
+  contractType: z.enum(['B2C', 'B2B', 'B2G']).describe('The type of contract or context for the legal question.'),
 });
 export type LegalAgentInput = z.infer<typeof LegalAgentInputSchema>;
 
