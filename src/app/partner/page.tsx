@@ -173,7 +173,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
     }
 
     return (
-        <div ref={cardRef} className={`w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl`}>
+        <div ref={cardRef} className={'w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl'}>
             <div className="bg-gray-800 rounded-lg p-6 relative h-full text-white">
                  <div className="absolute top-4 right-4">
                     <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
@@ -213,7 +213,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
                 </div>
 
                  <div className="absolute bottom-4 left-4">
-                    <p className={`font-bold text-lg tracking-wider uppercase ${getTierTextColor()} flex items-center gap-2`}>
+                    <p className={'font-bold text-lg tracking-wider uppercase ${getTierTextColor()} flex items-center gap-2'}>
                         <Star className="w-5 h-5 fill-current" /> {classification} Partner
                     </p>
                 </div>
@@ -387,7 +387,7 @@ export default function PartnerPage() {
       });
       setAgreement(agreementData);
       
-      const newRecordNumber = `PARTNER-${Date.now()}`;
+      const newRecordNumber = 'PARTNER-${Date.now()}';
       setRecordNumber(newRecordNumber);
       setPageState('submitted');
       toast({ title: 'Inquiry Submitted & Agreements Generated!', description: "Please review the generated agreements below." });
@@ -410,7 +410,7 @@ export default function PartnerPage() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-    toast({ title: 'Downloaded!', description: `Your ${filename} has been downloaded.`});
+    toast({ title: 'Downloaded!', description: 'Your ${filename} has been downloaded.'});
   };
 
   const handleDownloadCard = async () => {
@@ -508,7 +508,7 @@ export default function PartnerPage() {
     const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `pricing_template_generic.csv`);
+    link.setAttribute("download", 'pricing_template_generic.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -975,7 +975,7 @@ export default function PartnerPage() {
                     </>
                 )}
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                    {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Finalize` : `Complete Free Registration`}
+                    {finalPrice > 0 ? 'Pay OMR ${finalPrice.toFixed(2)} & Finalize' : 'Complete Free Registration'}
                 </Button>
             </form>
             </Form>
@@ -1081,7 +1081,7 @@ export default function PartnerPage() {
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} />;
         case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} />;
-        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} />;
         default: return <SelectionScreen />;
     }
   };
