@@ -30,6 +30,7 @@ type AppState = {
   clients: Client[];
   testimonials: Testimonial[];
   leadership: Agent[];
+  staff: Agent[];
   agentCategories: AgentCategory[];
   opportunities: Opportunity[];
   pricing: Pricing[];
@@ -47,6 +48,7 @@ let state: AppState = {
   clients: initialClients,
   testimonials: initialTestimonials,
   leadership: initialStaffData.leadership,
+  staff: initialStaffData.staff,
   agentCategories: initialStaffData.agentCategories,
   opportunities: initialOpportunities,
   pricing: initialPricing,

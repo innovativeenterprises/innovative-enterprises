@@ -10,7 +10,7 @@ export interface Agent {
     description: string;
     icon: LucideIcon;
     enabled: boolean;
-    type: 'Leadership' | 'AI Agent';
+    type: 'Leadership' | 'AI Agent' | 'Staff';
     photo: string;
     aiHint: string;
     href?: string;
@@ -32,9 +32,12 @@ export interface AgentCategory {
 export const initialLeadershipTeam: Agent[] = [
     { name: "JUMAA SALIM AL HADIDI", role: "CEO and Co-Founder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1920&auto=format&fit=crop', aiHint: 'oman business man', socials: { linkedin: "#", twitter: "#", email: "jumaa@innovative.om", website: "#" } },
     { name: "ANWAR AHMED SHARIF", role: "CTO and Co-Founder", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=1920&auto=format&fit=crop', aiHint: 'technology expert', socials: { linkedin: "#", twitter: "#", email: "anwar@innovative.om", github: "#" } },
-    { name: "ABDULJABBAR AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1920&auto=format&fit=crop', aiHint: 'project manager', socials: { linkedin: "#", twitter: "#", email: "abduljabbar@innovative.om" } },
-    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1542596594-649ed6e6b343?q=80&w=1920&auto=format&fit=crop', aiHint: 'business woman', socials: { linkedin: "#", email: "huda@innovative.om" } },
-    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=1920&auto=format&fit=crop', aiHint: 'lawyer office', socials: { website: "#", email: "legal@innovative.om" } },
+];
+
+export const initialStaffTeam: Agent[] = [
+    { name: "ABDULJABBAR AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Staff', photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1920&auto=format&fit=crop', aiHint: 'project manager', socials: { linkedin: "#", twitter: "#", email: "abduljabbar@innovative.om" } },
+    { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Staff', photo: 'https://images.unsplash.com/photo-1542596594-649ed6e6b343?q=80&w=1920&auto=format&fit=crop', aiHint: 'business woman', socials: { linkedin: "#", email: "huda@innovative.om" } },
+    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Staff', photo: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=1920&auto=format&fit=crop', aiHint: 'lawyer office', socials: { website: "#", email: "legal@innovative.om" } },
 ];
 
 export const initialAgentCategories: AgentCategory[] = [
@@ -92,5 +95,6 @@ export const initialAgentCategories: AgentCategory[] = [
 
 export const initialStaffData = {
     leadership: initialLeadershipTeam,
+    staff: initialStaffTeam,
     agentCategories: initialAgentCategories,
 }

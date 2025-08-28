@@ -2,23 +2,20 @@
 'use client';
 
 import StaffTable, { useStaffData } from "../staff-table";
-import ProviderTable, { useProvidersData } from "../provider-table";
 
 export default function AdminPeoplePage() {
   const staffData = useStaffData();
-  const providerData = useProvidersData();
 
   return (
     <div className="space-y-8">
         <div>
-            <h1 className="text-3xl font-bold">People & Network</h1>
+            <h1 className="text-3xl font-bold">People</h1>
             <p className="text-muted-foreground">
-                Manage your internal staff and external network of service providers.
+                Manage your internal human and AI workforce.
             </p>
         </div>
 
         <StaffTable {...staffData} />
-        <ProviderTable {...providerData} />
     </div>
   );
 }

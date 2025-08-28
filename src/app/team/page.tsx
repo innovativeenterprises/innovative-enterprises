@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
-import { LeadershipTeam, DigitalWorkforce } from "@/components/agent-list";
+import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -9,9 +10,10 @@ import Link from "next/link";
 import { useStaffData } from '@/app/admin/staff-table';
 
 export default function TeamPage() {
-    const { leadership, agentCategories } = useStaffData();
+    const { leadership, agentCategories, staff } = useStaffData();
 
     const enabledLeadership = leadership.filter(member => member.enabled);
+    const enabledStaff = staff.filter(member => member.enabled);
     const enabledAgentCategories = agentCategories.map(category => ({
         ...category,
         agents: category.agents.filter(agent => agent.enabled)
@@ -34,6 +36,7 @@ export default function TeamPage() {
         </div>
         <div className="space-y-20 mt-20">
             <LeadershipTeam team={enabledLeadership} />
+            <StaffTeam team={enabledStaff} />
             <DigitalWorkforce categories={enabledAgentCategories} />
         </div>
       </div>

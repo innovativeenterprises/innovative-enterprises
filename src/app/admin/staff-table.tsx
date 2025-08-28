@@ -45,7 +45,7 @@ const SocialsSchema = z.object({
 const StaffSchema = z.object({
   name: z.string().min(3, "Name is required"),
   role: z.string().min(3, "Role is required"),
-  type: z.enum(["Leadership", "AI Agent"]),
+  type: z.enum(["Leadership", "AI Agent", "Staff"]),
   description: z.string().min(10, "A description is required.").default(''),
   aiHint: z.string().min(2, "AI hint is required").default(''),
   photoUrl: z.string().optional(),
@@ -74,7 +74,7 @@ const AddEditStaffDialog = ({
         defaultValues: {
             name: staffMember?.name || "",
             role: staffMember?.role || "",
-            type: staffMember?.type || "AI Agent",
+            type: staffMember?.type || "Staff",
             description: staffMember?.description || "",
             aiHint: staffMember?.aiHint || "",
             photoUrl: staffMember?.photo || "",
@@ -95,7 +95,7 @@ const AddEditStaffDialog = ({
             form.reset({ 
                 name: staffMember?.name || "",
                 role: staffMember?.role || "",
-                type: staffMember?.type || "AI Agent",
+                type: staffMember?.type || "Staff",
                 description: staffMember?.description || "",
                 aiHint: staffMember?.aiHint || "",
                 photoUrl: staffMember?.photo || "",
@@ -165,8 +165,9 @@ const AddEditStaffDialog = ({
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                     <SelectContent>
-                                        <SelectItem value="AI Agent">AI Agent</SelectItem>
                                         <SelectItem value="Leadership">Leadership</SelectItem>
+                                        <SelectItem value="Staff">Staff</SelectItem>
+                                        <SelectItem value="AI Agent">AI Agent</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -254,6 +255,12 @@ export const useStaffData = () => {
             const newAgents = updater(currentAgents);
             store.set(state => ({ ...state, leadership: newAgents }));
         },
+        staff: data.staff,
+        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
+            const currentAgents = store.get().staff;
+            const newAgents = updater(currentAgents);
+            store.set(state => ({ ...state, staff: newAgents }));
+        },
         agentCategories: data.agentCategories,
         setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
             const currentCategories = store.get().agentCategories;
@@ -267,30 +274,30 @@ export const useStaffData = () => {
 export default function StaffTable({ 
     leadership, 
     setLeadership, 
+    staff,
+    setStaff,
     agentCategories, 
     setAgentCategories 
 } : {
     leadership: Agent[],
     setLeadership: (updater: (l: Agent[]) => void) => void,
+    staff: Agent[],
+    setStaff: (updater: (s: Agent[]) => void) => void,
     agentCategories: AgentCategory[],
     setAgentCategories: (updater: (ac: AgentCategory[]) => void) => void
 }) {
     const { toast } = useToast();
 
-    const handleToggle = (name: string, type: 'leadership' | 'agent') => {
+    const handleToggle = (name: string, type: 'leadership' | 'staff' | 'agent') => {
         if (type === 'leadership') {
-            setLeadership(prev => 
-                prev.map(member => 
-                    member.name === name ? { ...member, enabled: !member.enabled } : member
-                )
-            );
+            setLeadership(prev => prev.map(member => member.name === name ? { ...member, enabled: !member.enabled } : member));
+        } else if (type === 'staff') {
+            setStaff(prev => prev.map(member => member.name === name ? { ...member, enabled: !member.enabled } : member));
         } else {
             setAgentCategories(prev => 
                 prev.map(category => ({
                     ...category,
-                    agents: category.agents.map(agent => 
-                        agent.name === name ? { ...agent, enabled: !agent.enabled } : agent
-                    )
+                    agents: category.agents.map(agent => agent.name === name ? { ...agent, enabled: !agent.enabled } : agent)
                 }))
             );
         }
@@ -298,26 +305,19 @@ export default function StaffTable({
     };
 
     const handleSave = (values: StaffValues, originalName?: string) => {
-        const updateStaff = (staffList: Agent[]) => {
-            if (originalName) { // Update existing
-                return staffList.map(staff => staff.name === originalName ? { ...staff, ...values } : staff);
+        const newStaffMember: Agent = { ...values, icon: values.type === 'AI Agent' ? Bot : User, enabled: true };
+
+        const updateStaffList = (list: Agent[]) => {
+            if (originalName) {
+                return list.map(staff => staff.name === originalName ? { ...staff, ...values } : staff);
             }
-            // Add new
-            const newStaff: Agent = {
-                ...values,
-                icon: values.type === 'Leadership' ? User : Bot, // Default icon
-                enabled: true,
-            };
-             return [...staffList, newStaff];
+            return [...list, newStaffMember];
         };
 
         if (values.type === 'Leadership') {
-             if (originalName) {
-                setLeadership(prev => prev.map(staff => staff.name === originalName ? { ...staff, ...values } : staff));
-            } else {
-                 const newStaff: Agent = { ...values, icon: User, enabled: true };
-                 setLeadership(prev => [...prev, newStaff]);
-            }
+            setLeadership(updateStaffList);
+        } else if (values.type === 'Staff') {
+            setStaff(updateStaffList);
         } else { // AI Agent
              if (originalName) {
                 let found = false;
@@ -333,16 +333,13 @@ export default function StaffTable({
                     return cat;
                 }));
             } else {
-                 const newStaff: Agent = { ...values, icon: Bot, enabled: true };
                  setAgentCategories(prev => {
                     const newCats = [...prev];
-                    // For simplicity, add to "Core Business Operations Agents"
                     const targetCat = newCats.find(c => c.category === "Core Business Operations Agents");
                     if (targetCat) {
-                        targetCat.agents.push(newStaff);
+                        targetCat.agents.push(newStaffMember);
                     } else {
-                        // Fallback: create a new category
-                        newCats.push({ category: 'General Agents', agents: [newStaff] });
+                        newCats.push({ category: 'General Agents', agents: [newStaffMember] });
                     }
                     return newCats;
                 });
@@ -352,9 +349,11 @@ export default function StaffTable({
         toast({ title: originalName ? "Staff member updated." : "Staff member added." });
     };
 
-    const handleDelete = (name: string, type: 'leadership' | 'agent') => {
+    const handleDelete = (name: string, type: 'leadership' | 'staff' | 'agent') => {
         if (type === 'leadership') {
             setLeadership(prev => prev.filter(member => member.name !== name));
+        } else if (type === 'staff') {
+            setStaff(prev => prev.filter(member => member.name !== name));
         } else {
             setAgentCategories(prev => 
                 prev.map(category => ({
@@ -366,13 +365,58 @@ export default function StaffTable({
         toast({ title: "Staff member removed.", variant: "destructive" });
     };
 
+    const renderStaffRow = (member: Agent, type: 'leadership' | 'staff' | 'agent') => (
+        <TableRow key={member.name}>
+            <TableCell className="font-medium flex items-center gap-3">
+                <AddEditStaffDialog staffMember={member} onSave={handleSave}>
+                    <Avatar className="cursor-pointer">
+                        <AvatarImage src={member.photo} alt={member.name} />
+                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                </AddEditStaffDialog>
+                {member.name}
+            </TableCell>
+            <TableCell>{member.role}</TableCell>
+            <TableCell>
+                <Badge variant={type === 'AI Agent' ? 'default' : 'secondary'} className={type === 'AI Agent' ? 'bg-primary/20 text-primary hover:bg-primary/30' : ''}>
+                    {type === 'leadership' ? 'Leadership' : type === 'staff' ? 'Staff' : 'AI Agent'}
+                </Badge>
+            </TableCell>
+            <TableCell className="text-center">
+                <Switch
+                    checked={member.enabled}
+                    onCheckedChange={() => handleToggle(member.name, type)}
+                    aria-label={`Enable/disable ${member.name}`}
+                />
+            </TableCell>
+            <TableCell className="text-right">
+                <div className="flex justify-end gap-2">
+                    <AddEditStaffDialog staffMember={member} onSave={handleSave}>
+                        <Button variant="ghost" size="icon"><Edit /></Button>
+                    </AddEditStaffDialog>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {member.name}.</AlertDialogDescription></AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(member.name, type)}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
+            </TableCell>
+        </TableRow>
+    );
 
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                    <CardTitle>Staff Management</CardTitle>
-                    <CardDescription>Enable, disable, add, or remove staff members.</CardDescription>
+                    <CardTitle>Workforce Management</CardTitle>
+                    <CardDescription>Manage all human and AI staff members.</CardDescription>
                 </div>
                 <AddEditStaffDialog onSave={handleSave}>
                      <Button><PlusCircle /> Add New Staff</Button>
@@ -390,93 +434,10 @@ export default function StaffTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {leadership.map(member => (
-                            <TableRow key={member.name}>
-                                <TableCell className="font-medium flex items-center gap-3">
-                                    <AddEditStaffDialog staffMember={member} onSave={handleSave}>
-                                        <Avatar className="cursor-pointer">
-                                            <AvatarImage src={member.photo} alt={member.name} />
-                                            <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                    </AddEditStaffDialog>
-                                    {member.name}
-                                </TableCell>
-                                <TableCell>{member.role}</TableCell>
-                                <TableCell>
-                                    <Badge variant="secondary">Leadership</Badge>
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <Switch
-                                        checked={member.enabled}
-                                        onCheckedChange={() => handleToggle(member.name, 'leadership')}
-                                        aria-label={`Enable/disable ${member.name}`}
-                                    />
-                                </TableCell>
-                                <TableCell className="text-right">
-                                     <div className="flex justify-end gap-2">
-                                        <AddEditStaffDialog staffMember={member} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditStaffDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {member.name}.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(member.name, 'leadership')}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                         {agentCategories.flatMap(category => 
-                            category.agents.map(agent => (
-                                <TableRow key={agent.name}>
-                                    <TableCell className="font-medium flex items-center gap-3">
-                                        <AddEditStaffDialog staffMember={agent} onSave={handleSave}>
-                                            <Avatar className="cursor-pointer">
-                                                <AvatarImage src={agent.photo} alt={agent.name} />
-                                                <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                        </AddEditStaffDialog>
-                                        {agent.name}
-                                    </TableCell>
-                                    <TableCell>{agent.role}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="default" className="bg-primary/20 text-primary hover:bg-primary/30">AI Agent</Badge>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Switch
-                                            checked={agent.enabled}
-                                            onCheckedChange={() => handleToggle(agent.name, 'agent')}
-                                            aria-label={`Enable/disable ${agent.name}`}
-                                        />
-                                    </TableCell>
-                                     <TableCell className="text-right">
-                                         <div className="flex justify-end gap-2">
-                                            <AddEditStaffDialog staffMember={agent} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditStaffDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {agent.name}.</AlertDialogDescription></AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction onClick={() => handleDelete(agent.name, 'agent')}>Delete</AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))
+                        {leadership.map(member => renderStaffRow(member, 'leadership'))}
+                        {staff.map(member => renderStaffRow(member, 'staff'))}
+                        {agentCategories.flatMap(category => 
+                            category.agents.map(agent => renderStaffRow(agent, 'agent'))
                         )}
                     </TableBody>
                 </Table>
@@ -486,5 +447,6 @@ export default function StaffTable({
 }
 
     
+
 
 

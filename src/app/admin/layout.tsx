@@ -26,6 +26,8 @@ import {
   PanelLeft,
   FolderKanban,
   WalletCards,
+  Network,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -45,7 +47,9 @@ export default function AdminLayout({
     { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
     { href: '/admin/finance', label: 'Finance', icon: WalletCards },
     { href: '/admin/content', label: 'Site Content', icon: FileText },
-    { href: '/admin/people', label: 'People & Network', icon: Handshake },
+    { href: '/admin/network', label: 'Network', icon: Network },
+    { href: '/admin/opportunities', label: 'Opportunities', icon: Zap },
+    { href: '/admin/people', label: 'People', icon: Users },
     { href: '/admin/operations', label: 'Operations', icon: GanttChartSquare },
   ];
 

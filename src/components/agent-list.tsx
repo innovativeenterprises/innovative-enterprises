@@ -1,7 +1,8 @@
+
 'use client';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
+import { Linkedin, Twitter, Github, Globe, Mail, Users } from "lucide-react";
 import Link from 'next/link';
 import type { Agent, AgentCategory } from '@/lib/agents';
 import { useStaffData } from "@/app/admin/staff-table";
@@ -23,7 +24,7 @@ const AgentCard = ({ agent }: { agent: Agent }) => (
     </Card>
 );
 
-const LeadershipCard = ({ member }: { member: Agent }) => (
+const HumanCard = ({ member }: { member: Agent }) => (
     <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col">
         <CardHeader className="flex flex-col items-center gap-4 pt-8">
                 <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
@@ -75,11 +76,24 @@ const LeadershipCard = ({ member }: { member: Agent }) => (
 );
 
 export function LeadershipTeam({ team }: { team: Agent[] }) {
+    if (team.length === 0) return null;
     return (
         <div>
             <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-10">Our Leadership</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {team.map((member) => <LeadershipCard key={member.name} member={member} />)}
+                {team.map((member) => <HumanCard key={member.name} member={member} />)}
+            </div>
+        </div>
+    )
+}
+
+export function StaffTeam({ team }: { team: Agent[] }) {
+    if (team.length === 0) return null;
+    return (
+        <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-10">Our Team</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                {team.map((member) => <HumanCard key={member.name} member={member} />)}
             </div>
         </div>
     )
