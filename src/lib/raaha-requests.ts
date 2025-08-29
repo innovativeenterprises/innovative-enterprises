@@ -8,6 +8,8 @@ export interface HireRequest {
   requestDate: string; // ISO date string
   status: 'Pending' | 'Contacted' | 'Interviewing' | 'Hired' | 'Closed';
   agencyId: 'Happy Homes Agency' | 'Premier Maids';
+  interviewDate?: string; // ISO date string
+  interviewNotes?: string;
 }
 
 export const initialRequests: HireRequest[] = [
@@ -40,6 +42,8 @@ export const initialRequests: HireRequest[] = [
         requestDate: '2024-07-26T11:00:00Z',
         status: 'Interviewing',
         agencyId: 'Happy Homes Agency',
+        interviewDate: '2024-08-05T14:00:00Z',
+        interviewNotes: 'Zoom call scheduled. Link sent to client.',
     },
     {
         id: 'req_04',
@@ -60,6 +64,8 @@ export const initialRequests: HireRequest[] = [
         requestDate: '2024-07-29T12:00:00Z',
         status: 'Interviewing',
         agencyId: 'Happy Homes Agency',
+        interviewDate: '2024-08-02T10:30:00Z',
+        interviewNotes: 'In-person interview at the hotel lobby.',
     },
     {
         id: 'req_06',
@@ -140,6 +146,8 @@ export const initialRequests: HireRequest[] = [
         requestDate: '2024-07-27T10:00:00Z',
         status: 'Interviewing',
         agencyId: 'Happy Homes Agency',
+        interviewDate: '2024-08-01T09:00:00Z',
+        interviewNotes: 'First round interview via Teams.',
     },
     {
         id: 'req_14',
@@ -150,6 +158,8 @@ export const initialRequests: HireRequest[] = [
         requestDate: '2024-07-26T17:00:00Z',
         status: 'Interviewing',
         agencyId: 'Premier Maids',
+        interviewDate: '2024-08-04T11:00:00Z',
+        interviewNotes: 'Group interview session.',
     },
     {
         id: 'req_15',
