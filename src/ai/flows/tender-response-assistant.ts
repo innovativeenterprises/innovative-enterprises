@@ -5,27 +5,16 @@
  * @fileOverview AI-powered tool to generate draft responses to government tenders.
  *
  * - generateTenderResponse - A function that handles the generation of tender responses.
- * - GenerateTenderResponseInput - The input type for the generateTenderResponse function.
- * - GenerateTenderResponseOutput - The return type for the generateTenderResponse function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {
+    GenerateTenderResponseInput,
+    GenerateTenderResponseInputSchema,
+    GenerateTenderResponseOutput,
+    GenerateTenderResponseOutputSchema,
+} from './tender-response-assistant.schema';
 
-const GenerateTenderResponseInputSchema = z.object({
-  tenderDocuments: z
-    .array(z.string())
-    .describe(
-      'A list of tender documents as data URIs. Each must include a MIME type and use Base64 encoding.' 
-    ),
-  projectRequirements: z.string().describe('The specific requirements for the project.'),
-});
-export type GenerateTenderResponseInput = z.infer<typeof GenerateTenderResponseInputSchema>;
-
-const GenerateTenderResponseOutputSchema = z.object({
-  draftResponse: z.string().describe('The generated draft response to the tender.'),
-});
-export type GenerateTenderResponseOutput = z.infer<typeof GenerateTenderResponseOutputSchema>;
 
 export async function generateTenderResponse(
   input: GenerateTenderResponseInput
