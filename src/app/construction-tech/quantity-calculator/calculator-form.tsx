@@ -28,8 +28,10 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 const FormSchema = z.object({
   floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
-  projectType: z.enum(['Residential Villa', 'Commercial Building', 'Industrial Warehouse']),
-  numberOfFloors: z.coerce.number().min(1, "Number of floors is required."),
+  projectType: z.enum(['Residential Villa', 'Commercial Building', 'Industrial Warehouse'], {
+    required_error: "Please select a project type.",
+  }),
+  numberOfFloors: z.coerce.number().min(1, "Number of floors must be at least 1."),
   additionalSpecs: z.string().optional(),
 });
 type FormValues = z.infer<typeof FormSchema>;
@@ -87,7 +89,7 @@ export default function CalculatorForm() {
                     name="floorPlanFile"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Floor Plan Document</FormLabel>
+                            <FormLabel>Floor Plan Document (PDF or Image)</FormLabel>
                             <FormControl>
                                 <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
                             </FormControl>
@@ -103,7 +105,7 @@ export default function CalculatorForm() {
                         <FormItem>
                             <FormLabel>Project Type</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                <FormControl><SelectTrigger><SelectValue placeholder="Select a project type..." /></SelectTrigger></FormControl>
                                 <SelectContent>
                                     <SelectItem value="Residential Villa">Residential Villa</SelectItem>
                                     <SelectItem value="Commercial Building">Commercial Building</SelectItem>
@@ -132,7 +134,7 @@ export default function CalculatorForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Additional Specifications (Optional)</FormLabel>
-                            <FormControl><Textarea placeholder="e.g., 'Use high-strength concrete for foundations. Include basic electrical wiring and plumbing fixtures in the BoQ.'" {...field} /></FormControl>
+                            <FormControl><Textarea placeholder="e.g., 'Use high-strength concrete for foundations. Include basic electrical wiring and plumbing fixtures in the BoQ.'" rows={4} {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )}

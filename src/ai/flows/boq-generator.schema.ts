@@ -5,8 +5,10 @@ import { z } from 'zod';
 
 export const BoQGeneratorInputSchema = z.object({
   floorPlanUri: z.string().describe("The building floor plan document, as a data URI."),
-  projectType: z.enum(['Residential Villa', 'Commercial Building', 'Industrial Warehouse']).describe("The type of building project."),
-  numberOfFloors: z.coerce.number().min(1).describe("The total number of floors."),
+  projectType: z.enum(['Residential Villa', 'Commercial Building', 'Industrial Warehouse'], {
+    required_error: "Please select a project type.",
+  }).describe("The type of building project."),
+  numberOfFloors: z.coerce.number().min(1, "Please enter at least one floor."),
   additionalSpecs: z.string().optional().describe("Any additional specifications or materials to consider."),
 });
 export type BoQGeneratorInput = z.infer<typeof BoQGeneratorInputSchema>;
