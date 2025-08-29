@@ -13,8 +13,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Agency } from "@/lib/raaha-agencies";
 import { store } from "@/lib/global-store";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
+import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
+
 
 export const useAgenciesData = () => {
     const [data, setData] = useState(store.get());
@@ -52,12 +54,14 @@ const AgencySchema = z.object({
   contactPhone: z.string().min(5, "A valid phone number is required"),
   logoUrl: z.string().url().optional().or(z.literal('')),
   logoFile: z.any().optional(),
+  crDocument: z.any().optional(),
 });
 type AgencyValues = z.infer<typeof AgencySchema>;
 
 export function AgencySettings({ agency, setAgencies }: { agency: Agency; setAgencies: (updater: (agencies: Agency[]) => void) => void }) {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(agency.logo);
 
     const form = useForm<AgencyValues>({
@@ -83,6 +87,40 @@ export function AgencySettings({ agency, setAgencies }: { agency: Agency; setAge
             setImagePreview(agency.logo);
         }
     }, [watchLogoUrl, watchLogoFile, agency.logo]);
+
+    const handleCrAnalysis = async () => {
+        const crFile = form.getValues('crDocument');
+        if (!crFile || crFile.length === 0) {
+            toast({ title: 'Please select a CR document first.', variant: 'destructive' });
+            return;
+        }
+
+        setIsAnalyzing(true);
+        try {
+            const uri = await fileToDataURI(crFile[0]);
+            const result = await analyzeCrDocument({ documentDataUri: uri });
+            
+            if (result.companyInfo?.companyNameEnglish) {
+                form.setValue('name', result.companyInfo.companyNameEnglish);
+            }
+            if (result.summary) {
+                form.setValue('description', result.summary);
+            }
+            if (result.companyInfo?.contactEmail) {
+                form.setValue('contactEmail', result.companyInfo.contactEmail);
+            }
+            if (result.companyInfo?.contactMobile) {
+                form.setValue('contactPhone', result.companyInfo.contactMobile);
+            }
+            toast({ title: "Analysis Complete", description: "Agency details have been pre-filled from your CR." });
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Analysis Failed", description: "Could not analyze the document.", variant: "destructive" });
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
 
     const onSubmit: SubmitHandler<AgencyValues> = async (data) => {
         setIsLoading(true);
@@ -110,6 +148,27 @@ export function AgencySettings({ agency, setAgencies }: { agency: Agency; setAge
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <CardContent className="space-y-6">
+                        <Card className="bg-muted/50 p-4">
+                            <FormField
+                                control={form.control}
+                                name="crDocument"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Onboarding Assistant</FormLabel>
+                                        <div className="flex gap-2">
+                                            <FormControl className="flex-1">
+                                                <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                            </FormControl>
+                                            <Button type="button" variant="secondary" onClick={handleCrAnalysis} disabled={isAnalyzing}>
+                                                {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                                Analyze CR & Pre-fill
+                                            </Button>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </Card>
                         <div className="grid md:grid-cols-2 gap-6">
                              <FormField
                                 control={form.control}
