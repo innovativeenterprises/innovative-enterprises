@@ -32,3 +32,12 @@ export async function annotateImage(input: ImageAnnotationInput): Promise<ImageA
     
     return { imageDataUri: media.url };
 }
+
+ai.defineFlow(
+    {
+        name: 'annotateImageFlow',
+        inputSchema: ImageAnnotationInput,
+        outputSchema: ImageAnnotationOutputSchema,
+    },
+    async (input) => annotateImage(input)
+);
