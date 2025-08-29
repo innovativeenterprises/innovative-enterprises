@@ -27,7 +27,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
 
 const FormSchema = z.object({
-  projectName: z.string().min(3, "Project name is required."),
+  projectName: z.string().min(3, "Project name, institution ID, or event name is required."),
   projectType: z.enum([
     'Temporary Office Setup',
     'Training Program or Workshop',
@@ -37,7 +37,8 @@ const FormSchema = z.object({
     'Other'
   ]),
   numberOfUsers: z.coerce.number().min(1, "Please specify the number of users/attendees."),
-  projectDurationMonths: z.coerce.number().min(1, "Minimum duration is 1 month."),
+  rentalPeriod: z.enum(['daily', 'weekly', 'monthly', 'annually']),
+  projectDuration: z.coerce.number().min(1, "Duration must be at least 1."),
   primaryGoal: z.string().min(10, "Please briefly describe the main goal."),
   
   includeSurveillance: z.boolean().default(false),
@@ -65,7 +66,8 @@ export default function QuotationForm() {
       projectName: '',
       projectType: 'Temporary Office Setup',
       numberOfUsers: 10,
-      projectDurationMonths: 3,
+      rentalPeriod: 'monthly',
+      projectDuration: 3,
       primaryGoal: '',
       includeSurveillance: false,
       surveillanceDetails: '',
@@ -73,11 +75,26 @@ export default function QuotationForm() {
     },
   });
 
+  // Convert various durations to months for the AI flow
+  const getDurationInMonths = (duration: number, period: 'daily' | 'weekly' | 'monthly' | 'annually') => {
+      switch(period) {
+          case 'daily': return duration / 30;
+          case 'weekly': return duration / 4;
+          case 'monthly': return duration;
+          case 'annually': return duration * 12;
+          default: return duration;
+      }
+  }
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setPageState('loading');
     setResponse(null);
     try {
-      const result = await generateIctProposal(data);
+      const durationInMonths = getDurationInMonths(data.projectDuration, data.rentalPeriod);
+      const result = await generateIctProposal({
+          ...data,
+          projectDurationMonths: durationInMonths,
+      });
       setResponse(result);
       setPageState('result');
       toast({
@@ -106,7 +123,7 @@ export default function QuotationForm() {
             title: response.proposalTitle,
             description: response.executiveSummary,
             budget: `Approx. OMR ${response.totalEstimatedCost.toFixed(2)}`,
-            timeline: `${form.getValues('projectDurationMonths')} months`,
+            timeline: `${form.getValues('projectDuration')} ${form.getValues('rentalPeriod')}`,
         });
         
         const newOpportunity: Opportunity = {
@@ -310,7 +327,7 @@ By checking the "Accept Terms & Conditions" box, you acknowledge that you have r
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
              <FormField control={form.control} name="projectName" render={({ field }) => (
-                <FormItem><FormLabel>Project or Event Name</FormLabel><FormControl><Input placeholder="e.g., 'Q4 Sales Kickoff Event'" {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Project / Event / Institution Name</FormLabel><FormControl><Input placeholder="e.g., 'Q4 Sales Kickoff' or 'Partner ID: 12345'" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
 
              <div className="grid md:grid-cols-2 gap-6">
@@ -329,9 +346,20 @@ By checking the "Accept Terms & Conditions" box, you acknowledge that you have r
                 )} />
             </div>
 
-             <FormField control={form.control} name="projectDurationMonths" render={({ field }) => (
-                <FormItem><FormLabel>Project Duration (Months)</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="rentalPeriod" render={({ field }) => (
+                    <FormItem><FormLabel>Rental Period</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                        <SelectItem value="daily">Daily</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                        <SelectItem value="annually">Annually</SelectItem>
+                    </SelectContent></Select><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="projectDuration" render={({ field }) => (
+                    <FormItem><FormLabel>Duration</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+            </div>
+
 
             <FormField control={form.control} name="primaryGoal" render={({ field }) => (
                 <FormItem>
@@ -414,4 +442,3 @@ By checking the "Accept Terms & Conditions" box, you acknowledge that you have r
     </Card>
   );
 }
-

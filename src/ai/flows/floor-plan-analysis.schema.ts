@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Schemas and types for the Floor Plan Analysis AI flow.
  */

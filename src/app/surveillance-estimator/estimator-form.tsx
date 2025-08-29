@@ -7,17 +7,28 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateIctProposal } from '@/ai/flows/cctv-quotation';
 import type { IctProposalOutput, IctProposalInput } from '@/ai/flows/cctv-quotation.schema';
+import { analyzeFloorPlan } from '@/ai/flows/floor-plan-analysis';
+import type { FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
+
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
 
 const FormSchema = z.object({
   projectName: z.string().min(3, "Project name is required."),
@@ -30,6 +41,7 @@ const FormSchema = z.object({
     'Other'
   ]),
   surveillanceDetails: z.string().min(10, "Please describe your security needs."),
+  floorPlanFile: z.any().optional(),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -38,7 +50,9 @@ type PageState = 'form' | 'loading' | 'result';
 
 export default function EstimatorForm() {
   const [pageState, setPageState] = useState<PageState>('form');
+  const [isAnalyzingPlan, setIsAnalyzingPlan] = useState(false);
   const [response, setResponse] = useState<IctProposalOutput | null>(null);
+  const [analysis, setAnalysis] = useState<FloorPlanAnalysisOutput | null>(null);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -51,16 +65,47 @@ export default function EstimatorForm() {
     },
   });
 
+  const handleFloorPlanAnalysis = async () => {
+    const floorPlanFile = form.getValues('floorPlanFile');
+    if (!floorPlanFile || floorPlanFile.length === 0) {
+        toast({ title: 'Please select a floor plan file first.', variant: 'destructive' });
+        return;
+    }
+    setIsAnalyzingPlan(true);
+    setAnalysis(null);
+    try {
+        const uri = await fileToDataURI(floorPlanFile[0]);
+        const result = await analyzeFloorPlan({ documentDataUri: uri });
+        setAnalysis(result);
+        
+        let details = form.getValues('surveillanceDetails') || '';
+        if (result.dimensions) {
+            details += `\nEstimated building dimensions: ${result.dimensions}.`;
+        }
+        if (result.suggestedDvrLocation) {
+            details += `\nConsider placing the main equipment in the ${result.suggestedDvrLocation}.`;
+        }
+        form.setValue('surveillanceDetails', details.trim());
+
+        toast({ title: 'Floor Plan Analyzed', description: 'AI has added its findings to your requirements.' });
+
+    } catch (e) {
+        toast({ title: 'Analysis Failed', description: 'Could not analyze the floor plan. Please describe your needs manually.', variant: 'destructive' });
+    } finally {
+        setIsAnalyzingPlan(false);
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setPageState('loading');
     setResponse(null);
     try {
       const input: IctProposalInput = {
         ...data,
-        numberOfUsers: 1, // Default value not relevant for surveillance only
-        projectDurationMonths: 1, // Default value not relevant for surveillance only
-        primaryGoal: 'Surveillance system installation', // Default value
-        includeSurveillance: true, // Always true for this form
+        numberOfUsers: 1,
+        projectDurationMonths: 1,
+        primaryGoal: 'Surveillance system installation',
+        includeSurveillance: true,
       };
       const result = await generateIctProposal(input);
       setResponse(result);
@@ -161,7 +206,7 @@ export default function EstimatorForm() {
     <Card>
       <CardHeader>
         <CardTitle>New Surveillance Proposal Request</CardTitle>
-        <CardDescription>Describe your project and security needs, and our AI will design a complete surveillance package for you.</CardDescription>
+        <CardDescription>Describe your project and security needs, or upload a floor plan, and our AI will design a complete surveillance package for you.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -181,6 +226,38 @@ export default function EstimatorForm() {
                   </SelectContent></Select><FormMessage /></FormItem>
               )} />
             </div>
+
+            <FormField
+                control={form.control}
+                name="floorPlanFile"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Building Floor Plan (Optional)</FormLabel>
+                        <div className="flex gap-2">
+                             <FormControl className="flex-1">
+                                <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                            </FormControl>
+                            <Button type="button" variant="secondary" onClick={handleFloorPlanAnalysis} disabled={isAnalyzingPlan}>
+                                {isAnalyzingPlan ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                Analyze
+                            </Button>
+                        </div>
+                        <FormDescription>Upload a floor plan, sketch, or photo and let our AI analyze it for you.</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+             {analysis && (
+                <Alert>
+                    <FileCheck2 className="h-4 w-4" />
+                    <AlertTitle>AI Analysis Complete</AlertTitle>
+                    <AlertDescription>
+                        {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
+                        {analysis.suggestedDvrLocation && <p><strong>Suggested DVR Location:</strong> {analysis.suggestedDvrLocation}</p>}
+                        <p className="text-xs mt-1">This information has been added to your requirements below.</p>
+                    </AlertDescription>
+                </Alert>
+            )}
             
             <FormField control={form.control} name="surveillanceDetails" render={({ field }) => (
                 <FormItem>
@@ -200,4 +277,3 @@ export default function EstimatorForm() {
     </Card>
   );
 }
-
