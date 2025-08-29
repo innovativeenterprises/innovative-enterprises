@@ -25,6 +25,7 @@ import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
 import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
+import jsPDF from 'jspdf';
 
 const FormSchema = z.object({
   projectName: z.string().min(3, "Project name, institution ID, or event name is required."),
@@ -219,13 +220,9 @@ All Assets must be returned in the same condition as they were received, barring
 
 By checking the "Accept Terms & Conditions" box, you acknowledge that you have read, understood, and agreed to these terms.
     `;
-    const element = document.createElement("a");
-    const file = new Blob([termsContent], {type: 'text/plain'});
-    element.href = URL.createObjectURL(file);
-    element.download = "InfraRent_Terms_and_Conditions.txt";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    const doc = new jsPDF();
+    doc.text(termsContent, 10, 10);
+    doc.save("InfraRent_Terms_and_Conditions.pdf");
   };
 
 

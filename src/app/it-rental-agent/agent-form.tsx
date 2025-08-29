@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import jsPDF from 'jspdf';
 
 export default function ItRentalAgentForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -60,13 +61,9 @@ export default function ItRentalAgentForm() {
   
   const handleDownloadAgreement = () => {
     if (!response?.serviceAgreement) return;
-    const element = document.createElement("a");
-    const file = new Blob([response.serviceAgreement], {type: 'text/markdown'});
-    element.href = URL.createObjectURL(file);
-    element.download = "Service-Agreement.md";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    const doc = new jsPDF();
+    doc.text(response.serviceAgreement, 10, 10);
+    doc.save("Service-Agreement.pdf");
   }
 
   if (isLoading) {
