@@ -1,6 +1,6 @@
 
+import { Cpu } from "lucide-react";
 import QuotationForm from "./quotation-form";
-import { Server } from "lucide-react";
 
 export default function IctEstimatorPage() {
   return (
@@ -8,7 +8,7 @@ export default function IctEstimatorPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-              <Server className="w-10 h-10 text-primary" />
+              <Cpu className="w-10 h-10 text-primary" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary">AI-Powered ICT Estimator</h1>
           <p className="mt-4 text-lg text-muted-foreground">

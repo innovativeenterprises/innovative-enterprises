@@ -94,10 +94,10 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     icon: FileText,
   },
   {
-    title: "CCTV / ICT Estimator",
+    title: "AI-Powered ICT Estimator",
     href: "/cctv-estimator",
-    description: "Get an AI-powered quotation for your surveillance system or IT rental needs, from design to installation.",
-    icon: Video,
+    description: "Get an AI-powered quotation for your IT and surveillance needs, from design to installation.",
+    icon: Cpu,
   },
   {
     title: "Surveillance Estimator",

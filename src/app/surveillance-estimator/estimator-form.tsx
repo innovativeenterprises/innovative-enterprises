@@ -152,7 +152,7 @@ export default function EstimatorForm() {
             </div>
             <div className="text-right">
               <p className="text-muted-foreground text-sm">Total Estimated Cost</p>
-              <p className="text-3xl font-bold text-primary">OMR {response.totalEstimatedCost.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-primary">OMR {response.costBreakdown.grandTotalForPurchaseOption.toFixed(2)}</p>
             </div>
           </div>
         </CardHeader>
