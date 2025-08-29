@@ -80,7 +80,7 @@ export default function WorkOrderForm() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Work Order Details</CardTitle>
+          <CardTitle>Submit Your Idea or Challenge</CardTitle>
           <CardDescription>Fill in the details below. Our AI will analyze your submission and suggest the best way to move forward.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -91,9 +91,9 @@ export default function WorkOrderForm() {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Work Order Title</FormLabel>
+                    <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 'New Mobile App for E-Commerce Store'" {...field} />
+                      <Input placeholder="e.g., 'New Mobile App for E-Commerce Store' or 'A Campaign to Reduce Plastic Waste'" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -124,9 +124,9 @@ export default function WorkOrderForm() {
                   name="budget"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Estimated Budget (Optional)</FormLabel>
+                      <FormLabel>Reward / Budget (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., '$10,000 - $15,000' or '5,000 OMR'" {...field} />
+                        <Input placeholder="e.g., '$10,000' or 'Non-monetary recognition'" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -171,7 +171,7 @@ export default function WorkOrderForm() {
                 ) : (
                    <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Analyze Work Order
+                    Analyze Submission
                    </>
                 )}
               </Button>
@@ -184,7 +184,7 @@ export default function WorkOrderForm() {
          <Card>
             <CardContent className="p-6 text-center">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                <p className="mt-4 text-muted-foreground">Our AI is analyzing your work order... This may take a moment.</p>
+                <p className="mt-4 text-muted-foreground">Our AI is analyzing your submission... This may take a moment.</p>
             </CardContent>
          </Card>
       )}
