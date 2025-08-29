@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -50,6 +50,12 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     href: "/business-hub",
     description: "A B2B and B2C marketplace connecting businesses with each other and with new clients for opportunities.",
     icon: Handshake,
+  },
+   {
+    title: "Construction Tech",
+    href: "/construction-tech",
+    description: "Explore our suite of SaaS solutions designed to automate and innovate the construction industry.",
+    icon: HardHat,
   },
   {
     title: "Nova Commerce",
