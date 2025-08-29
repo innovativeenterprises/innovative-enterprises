@@ -11,10 +11,18 @@ import {
     BoQGeneratorInputSchema,
     BoQGeneratorOutput,
     BoQGeneratorOutputSchema,
+    BoQCategoryGeneratorInputSchema,
+    BoQCategoryGeneratorInput,
+    BoQCategoryGeneratorOutput,
+    BoQCategoryGeneratorOutputSchema,
 } from './boq-generator.schema';
 
 export async function generateBoq(input: BoQGeneratorInput): Promise<BoQGeneratorOutput> {
   return boqGeneratorFlow(input);
+}
+
+export async function generateBoqCategory(input: BoQCategoryGeneratorInput): Promise<BoQCategoryGeneratorOutput> {
+    return boqCategoryGeneratorFlow(input);
 }
 
 const prompt = ai.definePrompt({
@@ -56,6 +64,45 @@ const boqGeneratorFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await prompt(input);
+    return output!;
+  }
+);
+
+
+const categoryPrompt = ai.definePrompt({
+  name: 'boqCategoryGeneratorPrompt',
+  input: { schema: BoQCategoryGeneratorInputSchema },
+  output: { schema: BoQCategoryGeneratorOutputSchema },
+  prompt: `You are a highly experienced Quantity Surveyor AI. Your task is to analyze a building floor plan for a specific category of work.
+
+**Project Details:**
+- **Category to Calculate:** {{{category}}}
+- **Project Type:** {{{projectType}}}
+- **Number of Floors:** {{{numberOfFloors}}}
+- **Floor Plan Document:** {{media url=floorPlanUri}}
+{{#if additionalSpecs}}
+- **Additional Specifications:** {{{additionalSpecs}}}
+{{/if}}
+
+**Instructions:**
+1.  **Focus ONLY on the requested category:** \`{{{category}}}\`.
+2.  **Analyze the Floor Plan:** Carefully study the provided floor plan to understand the layout and dimensions relevant to this category.
+3.  **Calculate Quantities:** Based on the plan, calculate the estimated quantities for items ONLY within the '{{{category}}}' category.
+4.  **Itemize:** For each item, provide a clear description, the correct unit of measurement (e.g., m³, m², kg, nos), and the calculated quantity.
+5.  **Assumptions:** If you have to make assumptions, state them clearly in the 'notes' for the relevant item.
+
+Return ONLY the items for the requested category. Do not calculate for other categories.
+`,
+});
+
+const boqCategoryGeneratorFlow = ai.defineFlow(
+  {
+    name: 'boqCategoryGeneratorFlow',
+    inputSchema: BoQCategoryGeneratorInputSchema,
+    outputSchema: BoQCategoryGeneratorOutputSchema,
+  },
+  async (input) => {
+    const { output } = await categoryPrompt(input);
     return output!;
   }
 );

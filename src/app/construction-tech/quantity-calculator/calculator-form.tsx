@@ -10,9 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2 } from 'lucide-react';
-import { generateBoq } from '@/ai/flows/boq-generator';
-import type { BoQGeneratorOutput } from '@/ai/flows/boq-generator.schema';
+import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, Bricks } from 'lucide-react';
+import { generateBoq, generateBoqCategory } from '@/ai/flows/boq-generator';
+import type { BoQGeneratorOutput, BoQItem } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -30,6 +30,7 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 const FormSchema = z.object({
   floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
+  floorPlanUri: z.string().optional(),
   projectType: z.enum(['Residential Villa', 'Commercial Building', 'Industrial Warehouse'], {
     required_error: "Please select a project type.",
   }),
@@ -38,11 +39,22 @@ const FormSchema = z.object({
 });
 type FormValues = z.infer<typeof FormSchema>;
 
+const calculationSteps = [
+    { id: 'Earthwork', label: 'Earthwork', icon: Hammer },
+    { id: 'Concrete Works', label: 'Concrete', icon: Layers },
+    { id: 'Masonry Works', label: 'Masonry', icon: Bricks },
+    { id: 'Plaster Works', label: 'Plastering', icon: Wand2 },
+    { id: 'Finishing Works', label: 'Finishing', icon: Sparkles },
+];
+
 export default function CalculatorForm() {
-  const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<FloorPlanAnalysisOutput | null>(null);
-  const [response, setResponse] = useState<BoQGeneratorOutput | null>(null);
+  const [isGenerating, setIsGenerating] = useState<string | null>(null);
+  const [boqItems, setBoqItems] = useState<BoQItem[]>([]);
+  const [generatedSummary, setGeneratedSummary] = useState<string | null>(null);
+  const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+  
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -50,6 +62,7 @@ export default function CalculatorForm() {
     defaultValues: {
         projectType: 'Residential Villa',
         numberOfFloors: 1,
+        additionalSpecs: '',
     },
   });
   
@@ -61,8 +74,13 @@ export default function CalculatorForm() {
     }
     setIsAnalyzing(true);
     setAnalysis(null);
+    setBoqItems([]);
+    setCompletedSteps([]);
+    setGeneratedSummary(null);
+
     try {
         const uri = await fileToDataURI(floorPlanFile[0]);
+        form.setValue('floorPlanUri', uri);
         const result = await analyzeFloorPlan({ documentDataUri: uri });
         setAnalysis(result);
         
@@ -70,7 +88,6 @@ export default function CalculatorForm() {
         if (result.dimensions) {
             specs += `\nEstimated building dimensions from plan: ${result.dimensions}.`;
             
-            // Try to parse number of floors from dimensions string
             const floorMatch = result.dimensions.match(/(\d+)\s*floors?/i);
             if (floorMatch && floorMatch[1]) {
                 form.setValue('numberOfFloors', parseInt(floorMatch[1], 10));
@@ -78,7 +95,7 @@ export default function CalculatorForm() {
         }
         form.setValue('additionalSpecs', specs.trim());
 
-        toast({ title: 'Floor Plan Analyzed', description: 'AI has added its findings to your project details.' });
+        toast({ title: 'Floor Plan Analyzed', description: 'AI has added its findings to your project details. You can now generate the BoQ step-by-step.' });
 
     } catch (e) {
         toast({ title: 'Analysis Failed', description: 'Could not analyze the floor plan. Please describe your needs manually.', variant: 'destructive' });
@@ -87,29 +104,36 @@ export default function CalculatorForm() {
     }
   };
 
+  const handleStepGeneration = async (category: string) => {
+    setIsGenerating(category);
+    const formData = form.getValues();
+    if (!formData.floorPlanUri) {
+        toast({title: "Error", description: "Please analyze a floor plan first.", variant: 'destructive'});
+        setIsGenerating(null);
+        return;
+    }
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setIsLoading(true);
-    setResponse(null);
     try {
-      const floorPlanUri = await fileToDataURI(data.floorPlanFile[0]);
-      const result = await generateBoq({ 
-          floorPlanUri,
-          projectType: data.projectType,
-          numberOfFloors: data.numberOfFloors,
-          additionalSpecs: data.additionalSpecs
-      });
-      setResponse(result);
-      toast({ title: 'Calculation Complete!', description: 'Your Bill of Quantities is ready.' });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'Failed to generate the BoQ. Please check the uploaded file and try again.',
-        variant: 'destructive',
-      });
+        const result = await generateBoqCategory({
+            category,
+            projectType: formData.projectType,
+            numberOfFloors: formData.numberOfFloors,
+            floorPlanUri: formData.floorPlanUri,
+            additionalSpecs: formData.additionalSpecs
+        });
+        
+        setBoqItems(prev => [...prev, ...result.boqItems]);
+        setCompletedSteps(prev => [...prev, category]);
+        
+        if (completedSteps.length + 1 === calculationSteps.length) {
+            setGeneratedSummary("All categories have been calculated. This provides a preliminary Bill of Quantities for your project.");
+        }
+
+    } catch (e) {
+        console.error(e);
+        toast({ title: "Calculation Failed", description: `Could not generate BoQ for ${category}.`, variant: 'destructive' });
     } finally {
-      setIsLoading(false);
+        setIsGenerating(null);
     }
   };
 
@@ -122,7 +146,7 @@ export default function CalculatorForm() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form className="space-y-6">
                 <FormField
                     control={form.control}
                     name="floorPlanFile"
@@ -131,7 +155,14 @@ export default function CalculatorForm() {
                             <FormLabel>Floor Plan Document (PDF or Image)</FormLabel>
                              <div className="flex gap-2">
                                 <FormControl className="flex-1">
-                                    <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                    <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => {
+                                        field.onChange(e.target.files);
+                                        // Reset state when a new file is chosen
+                                        setAnalysis(null);
+                                        setBoqItems([]);
+                                        setCompletedSteps([]);
+                                        setGeneratedSummary(null);
+                                    }} />
                                 </FormControl>
                                 <Button type="button" variant="secondary" onClick={handleFloorPlanAnalysis} disabled={isAnalyzing}>
                                     {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
@@ -149,7 +180,7 @@ export default function CalculatorForm() {
                         <AlertDescription>
                             {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
                             {analysis.suggestedDvrLocation && <p><strong>Suggested Equipment Room:</strong> {analysis.suggestedDvrLocation}</p>}
-                            <p className="text-xs mt-1">This information has been added to the specifications below.</p>
+                            <p className="text-xs mt-1">This information has been added to the specifications below. You can now generate the BoQ.</p>
                         </AlertDescription>
                     </Alert>
                 )}
@@ -195,33 +226,46 @@ export default function CalculatorForm() {
                         </FormItem>
                     )}
                 />
-
-              <Button type="submit" disabled={isLoading || isAnalyzing} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-                {isLoading ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Calculating Quantities...</>
-                ) : (
-                   <><Sparkles className="mr-2 h-4 w-4" />Generate BoQ</>
-                )}
-              </Button>
             </form>
           </Form>
         </CardContent>
       </Card>
-
-      {isLoading && (
-         <Card>
-            <CardContent className="p-6 text-center">
-                <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                <p className="mt-4 text-muted-foreground">Our AI is analyzing your floor plan and calculating quantities...</p>
+      
+       {analysis && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Generate Bill of Quantities</CardTitle>
+              <CardDescription>Calculate quantities for each category step-by-step. The results will appear in the table below.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                {calculationSteps.map(step => (
+                    <Button 
+                        key={step.id} 
+                        onClick={() => handleStepGeneration(step.id)} 
+                        disabled={!!isGenerating || completedSteps.includes(step.id)}
+                        variant={completedSteps.includes(step.id) ? 'default' : 'secondary'}
+                        className={completedSteps.includes(step.id) ? 'bg-green-600 hover:bg-green-700' : ''}
+                    >
+                        {isGenerating === step.id ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                        ) : (
+                            <step.icon className="mr-2 h-4 w-4" />
+                        )}
+                        {step.label}
+                    </Button>
+                ))}
+              </div>
             </CardContent>
-         </Card>
-      )}
+          </Card>
+       )}
 
-      {response && (
+
+      {boqItems.length > 0 && (
         <Card className="mt-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><ClipboardList className="h-6 w-6"/> Preliminary Bill of Quantities</CardTitle>
-            <CardDescription>{response.summary}</CardDescription>
+            {generatedSummary && <CardDescription>{generatedSummary}</CardDescription>}
           </CardHeader>
           <CardContent>
              <Table>
@@ -234,7 +278,7 @@ export default function CalculatorForm() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {response.boqItems.map((item, index) => (
+                    {boqItems.map((item, index) => (
                         <TableRow key={index}>
                             <TableCell className="font-medium">{item.category}</TableCell>
                             <TableCell>

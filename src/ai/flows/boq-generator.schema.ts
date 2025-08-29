@@ -14,15 +14,27 @@ export const BoQGeneratorInputSchema = z.object({
 export type BoQGeneratorInput = z.infer<typeof BoQGeneratorInputSchema>;
 
 const BoQItemSchema = z.object({
-    category: z.string().describe("The category of the work (e.g., 'Earthwork', 'Concrete', 'Masonry', 'Finishing')."),
+    category: z.string().describe("The category of the work (e.g., 'Earthwork', 'Concrete Works', 'Masonry Works')."),
     item: z.string().describe("The specific material or work item (e.g., 'Excavation', 'Reinforced Concrete for Slabs', '20cm Concrete Blocks')."),
     unit: z.string().describe("The unit of measurement (e.g., 'm³', 'm²', 'kg', 'nos')."),
     quantity: z.number().describe("The calculated quantity for this item."),
     notes: z.string().optional().describe("Any relevant notes or assumptions for this calculation."),
 });
+export type BoQItem = z.infer<typeof BoQItemSchema>;
 
 export const BoQGeneratorOutputSchema = z.object({
   summary: z.string().describe("A high-level summary of the generated Bill of Quantities."),
   boqItems: z.array(BoQItemSchema).describe("A detailed list of all items in the Bill of Quantities."),
 });
 export type BoQGeneratorOutput = z.infer<typeof BoQGeneratorOutputSchema>;
+
+// Schema for generating one category at a time
+export const BoQCategoryGeneratorInputSchema = BoQGeneratorInputSchema.extend({
+    category: z.string().describe("The specific category to calculate, e.g., 'Concrete Works'."),
+});
+export type BoQCategoryGeneratorInput = z.infer<typeof BoQCategoryGeneratorInputSchema>;
+
+export const BoQCategoryGeneratorOutputSchema = z.object({
+  boqItems: z.array(BoQItemSchema).describe("A detailed list of items for the requested category."),
+});
+export type BoQCategoryGeneratorOutput = z.infer<typeof BoQCategoryGeneratorOutputSchema>;
