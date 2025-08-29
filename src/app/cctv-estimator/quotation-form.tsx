@@ -16,13 +16,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Server, Laptop, Cpu, Users, Building } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Server, Laptop, Cpu, Users, Building, Download, ShieldCheck } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
+import { Checkbox } from '@/components/ui/checkbox';
+import Link from 'next/link';
 
 const FormSchema = z.object({
   projectName: z.string().min(3, "Project name is required."),
@@ -40,6 +42,7 @@ const FormSchema = z.object({
   
   includeSurveillance: z.boolean().default(false),
   surveillanceDetails: z.string().optional(),
+  termsAccepted: z.boolean().refine(val => val === true, { message: "You must accept the terms and conditions to proceed." }),
 });
 
 
@@ -66,6 +69,7 @@ export default function QuotationForm() {
       primaryGoal: '',
       includeSurveillance: false,
       surveillanceDetails: '',
+      termsAccepted: false,
     },
   });
 
@@ -144,6 +148,41 @@ export default function QuotationForm() {
         setIsPosting(false);
     }
   };
+
+  const handleDownloadTerms = () => {
+    // This is a placeholder for a real document.
+    const termsContent = `
+# INFRARENT - RENTAL AGREEMENT & TERMS OF SERVICE
+
+**Last Updated: ${new Date().toLocaleDateString()}**
+
+This document constitutes a binding agreement between you ("the Client") and Innovative Enterprises ("the Company") for the rental of IT equipment ("Assets").
+
+## 1. Rental Period
+The rental period begins on the date of delivery and continues for the duration specified in the proposal.
+
+## 2. Client Responsibilities
+- The Client is responsible for the safekeeping and proper use of all rented Assets.
+- Any loss or damage to the Assets due to negligence, misuse, or theft will be billed to the Client at full replacement cost.
+- The Client agrees not to perform any unauthorized repairs, modifications, or alterations to the Assets.
+
+## 3. Liability
+The Company is not liable for any data loss, business interruption, or consequential damages arising from the use or failure of the rented Assets. The Client is responsible for their own data backup and disaster recovery planning.
+
+## 4. Return of Assets
+All Assets must be returned in the same condition as they were received, barring normal wear and tear, at the end of the rental period.
+
+By checking the "Accept Terms & Conditions" box, you acknowledge that you have read, understood, and agreed to these terms.
+    `;
+    const element = document.createElement("a");
+    const file = new Blob([termsContent], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "InfraRent_Terms_and_Conditions.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
 
   if (pageState === 'loading') {
     return (
@@ -261,6 +300,11 @@ export default function QuotationForm() {
       <CardHeader>
         <CardTitle>New ICT & Surveillance Proposal Request</CardTitle>
         <CardDescription>Describe your project, and our AI will design a complete technology package for you.</CardDescription>
+        <div className="pt-2">
+            <Link href="/surveillance-estimator" className="text-sm text-primary hover:underline">
+               Looking only for a surveillance system? Click here for our dedicated estimator.
+            </Link>
+        </div>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -329,6 +373,36 @@ export default function QuotationForm() {
                     </FormItem>
                 )} />
             )}
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base">Terms & Conditions</CardTitle>
+                </CardHeader>
+                 <CardContent>
+                    <FormField
+                    control={form.control}
+                    name="termsAccepted"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                            <FormControl>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>
+                                I have read and agree to the Rental Agreement and Terms of Service.
+                                </FormLabel>
+                                <FormMessage />
+                            </div>
+                        </FormItem>
+                    )}
+                    />
+                 </CardContent>
+                 <CardFooter>
+                      <Button type="button" variant="outline" onClick={handleDownloadTerms}>
+                        <Download className="mr-2 h-4 w-4" /> Download Terms & Conditions
+                    </Button>
+                 </CardFooter>
+            </Card>
 
 
             <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
@@ -340,3 +414,4 @@ export default function QuotationForm() {
     </Card>
   );
 }
+

@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2 } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -94,10 +94,16 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     icon: FileText,
   },
   {
-    title: "Vision AI Estimator",
+    title: "CCTV / ICT Estimator",
     href: "/cctv-estimator",
-    description: "Get an AI-powered quotation for your surveillance system needs, from design to installation.",
+    description: "Get an AI-powered quotation for your surveillance system or IT rental needs, from design to installation.",
     icon: Video,
+  },
+  {
+    title: "Surveillance Estimator",
+    href: "/surveillance-estimator",
+    description: "A dedicated tool to quickly get a cost estimate for your CCTV and security system needs.",
+    icon: Camera,
   },
   {
     title: "Browse IT Rentals",
