@@ -23,10 +23,10 @@ const prompt = ai.definePrompt({
   name: 'ictProposalPrompt',
   input: { schema: IctProposalInputSchema },
   output: { schema: IctProposalOutputSchema },
-  prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal, recommending rental equipment, necessary software, and designing a surveillance system if needed.
+  prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal. You must provide options for both **renting** and **purchasing** the required IT assets.
 
-**Available IT Rental Asset Inventory:**
-You MUST only recommend assets from this list for the rental portion.
+**Available IT Asset Inventory (for Rent or Purchase):**
+You MUST only recommend assets from this list for the IT hardware portion.
 '''json
 {{{availableAssetsJson}}}
 '''
@@ -44,37 +44,35 @@ You MUST only recommend assets from this list for the rental portion.
 
 **Your Task:**
 1.  **Analyze and Design:**
-    *   **IT Rentals:** Based on the **Project Type** and **Primary Goal**, select the most appropriate rental assets from the **Available Asset Inventory**.
-        *   For a 'Training Program', you might need {{numberOfUsers}} laptops.
-        *   For a 'Special Event', you might need laptops, networking gear, and projectors.
-        *   For 'Data Analysis', you'd need powerful workstations or servers.
+    *   **IT Assets:** Based on the **Project Type** and **Primary Goal**, select the most appropriate assets from the **Available Asset Inventory**.
         *   The **quantity** for user-specific items (laptops, workstations) should match the **Number of Users**. For shared items (servers, routers), the quantity is usually 1.
-    *   **Software Recommendations:** Based on the project type and goal, recommend essential software. For example, a 'Temporary Office Setup' needs 'Windows 11 Pro' and 'Microsoft 365 Business'. A 'Software Dev' project might need 'JetBrains IDE Suite' or 'VS Code'. Assume standard one-time or subscription costs (e.g., M365 is ~OMR 8/user/month).
+    *   **Software Recommendations:** Based on the project type and goal, recommend essential software (e.g., 'Windows 11 Pro', 'Microsoft 365 Business').
     *   **Surveillance System (if includeSurveillance is true):**
         *   Design a basic but effective CCTV system suitable for the **Project Type**.
-        *   Determine the number and type of cameras (Dome, Bullet). A typical office might need 4-8 cameras. An event might need more.
-        *   Select an appropriate Network Video Recorder (NVR) and network switch.
-        *   If **Surveillance Details** are provided, use them to tailor the system. Otherwise, make reasonable assumptions.
+        *   Determine the number and type of cameras (Dome, Bullet), NVR, and switch. If **Surveillance Details** are provided, use them.
+        *   This system is ALWAYS a **purchase** item.
 
 2.  **Generate Proposal Content:**
     *   **proposalId:** Create a unique ID, e.g., 'QT-ICT-12345'.
     *   **proposalTitle:** Create a clear title, e.g., "ICT & Surveillance Proposal for {{{projectName}}}".
-    *   **executiveSummary:** Write a highly professional and concise paragraph explaining the proposed solution. It should sound like it was written by a senior solutions architect, highlighting how the recommended hardware and software package will effectively meet the client's stated goals and ensure a smooth, productive project execution.
-    *   **recommendedAssets:** Create a JSON array of the exact rental asset objects you selected from the inventory. Crucially, add a 'quantity' field to each asset object. If no rental assets are needed, return an empty array.
-    *   **recommendedSoftware:** Create a JSON array of recommended software, including name, purpose, and estimated cost.
+    *   **executiveSummary:** Write a professional paragraph explaining the proposed solution, highlighting its benefits.
+    *   **rentedAssets:** Create a JSON array of the IT assets you selected, formatted for the rental option. Include quantity.
+    *   **purchasedAssets:** Create a JSON array of the SAME IT assets, formatted for the purchase option. Include quantity.
+    *   **recommendedSoftware:** Create a JSON array of recommended software.
     *   **surveillanceSystem:**
-        *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below. If \`includeSurveillance\` is false, this list should be empty.
+        *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below.
         *   **CCTV Price List (OMR):** 4K Dome Camera: 45, 4K Bullet Camera: 55, 8-Channel NVR: 120, 16-Channel NVR: 200, 8-Port PoE Switch: 60, 16-Port PoE Switch: 100.
         *   Write a brief summary of the surveillance solution.
 
 3.  **Calculate Costs:**
-    *   **totalRentalCostPerMonth:** Sum up (asset.monthlyPrice * quantity) for all items in \`recommendedAssets\`.
+    *   **totalRentalCostPerMonth:** Sum up (\`asset.monthlyPrice * quantity\`) for all items in \`rentedAssets\`.
     *   **totalRentalCostForDuration:** Calculate \`totalRentalCostPerMonth * projectDurationMonths\`.
-    *   **oneTimePurchaseCost:** Sum up the total price for all items in the \`surveillanceSystem.equipmentList\`.
+    *   **totalPurchaseCost:** Sum up (\`asset.purchasePrice * quantity\`) for all items in \`purchasedAssets\`, PLUS the total cost of the surveillance system equipment.
     *   **softwareCost:** Sum up the total cost for all items in \`recommendedSoftware\`.
-    *   **totalEstimatedCost:** Calculate \`totalRentalCostForDuration + oneTimePurchaseCost + softwareCost\`.
+    *   **grandTotalForRentalOption:** Calculate \`totalRentalCostForDuration + surveillanceSystemCost + softwareCost\`.
+    *   **grandTotalForPurchaseOption:** Calculate \`totalPurchaseCost (IT assets) + surveillanceSystemCost + softwareCost\`.
 
-4.  **Next Steps:** Provide a brief, professional closing statement recommending the next steps for the client.
+4.  **Next Steps:** Provide a brief, professional closing statement.
 
 Return the complete response in the specified structured JSON format.
 `,
