@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -68,12 +68,40 @@ export default function QuotationForm() {
       numberOfUsers: 10,
       rentalPeriod: 'monthly',
       projectDuration: 3,
-      primaryGoal: '',
+      primaryGoal: 'To set up a fully functional temporary office space with reliable IT hardware and networking for the project team.',
       includeSurveillance: false,
       surveillanceDetails: '',
       termsAccepted: false,
     },
   });
+
+  const watchProjectType = form.watch('projectType');
+
+  useEffect(() => {
+    if (watchProjectType) {
+      let suggestion = '';
+      switch (watchProjectType) {
+        case 'Temporary Office Setup':
+          suggestion = 'To set up a fully functional temporary office space with reliable IT hardware and networking for the project team.';
+          break;
+        case 'Training Program or Workshop':
+          suggestion = 'To provide reliable laptops and high-speed networking for a technical training workshop for all attendees.';
+          break;
+        case 'Special Event (e.g., conference, hackathon)':
+          suggestion = 'To ensure robust Wi-Fi coverage, registration systems, and presentation equipment for a successful event.';
+          break;
+        case 'Short-term Project (e.g., data analysis, software dev)':
+          suggestion = 'To equip a project team with high-performance workstations and servers for intensive development/data analysis tasks.';
+          break;
+        case 'Hardware Evaluation or Testing':
+          suggestion = 'To provide specific hardware components for a defined period of performance testing and evaluation.';
+          break;
+        default:
+          suggestion = '';
+      }
+      form.setValue('primaryGoal', suggestion);
+    }
+  }, [watchProjectType, form]);
 
   // Convert various durations to months for the AI flow
   const getDurationInMonths = (duration: number, period: 'daily' | 'weekly' | 'monthly' | 'annually') => {
