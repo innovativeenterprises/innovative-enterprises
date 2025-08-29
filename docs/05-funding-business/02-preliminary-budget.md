@@ -15,8 +15,8 @@
 | - Freelancers/Contractors   | 1,000              | 12,000            | For specialized tasks (design, content, legal). |
 | *Subtotal*                  | *7,000*            | *84,000*          |                                                 |
 | **Technology & Software**   |                    |                   |                                                 |
-| - Cloud Hosting (Firebase)  | 250                | 3,000             | Scales with usage (Functions, Firestore, Hosting).|
-| - Genkit/AI API Costs       | 200                | 2,400             | Estimate, based on projected AI agent usage.    |
+| - Cloud Infrastructure (Firebase/GCP)  | 250                | 3,000             | Pay-as-you-go: App Hosting, Functions, Firestore. Scales with usage. |
+| - Genkit/AI API Costs (Vertex AI)       | 200                | 2,400             | Pay-as-you-go: Gemini model usage based on tokens/images. |
 | - Domain Names & SSL        | 10                 | 120               |                                                 |
 | - Software Licenses         | 150                | 1,800             | (e.g., Figma, GitHub Pro, Office 365)           |
 | *Subtotal*                  | *610*              | *7,320*           |                                                 |

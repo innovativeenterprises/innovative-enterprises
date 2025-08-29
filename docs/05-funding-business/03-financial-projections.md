@@ -15,7 +15,7 @@
 | **Total Revenue**           | **27,600**  | **150,000** | **670,000** |                                          |
 | **Expenses (OMR)**          |             |             |             |                                          |
 | Personnel                   | 84,000      | 130,000     | 220,000     | Team growth in development and sales.    |
-| Technology/Infrastructure   | 7,320       | 20,000      | 50,000      | Scales with usage (Cloud + AI APIs).     |
+| Technology/Infrastructure (GCP/Firebase) | 7,320       | 20,000      | 50,000      | Scales with usage (Hosting, AI APIs, Storage). Pay-as-you-go model. |
 | Sales & Marketing           | 12,000      | 40,000      | 100,000     | Increased spend to drive user acquisition.|
 | Operational & Admin         | 14,400      | 20,000      | 35,000      |                                          |
 | **Total Expenses**          | **117,720** | **210,000** | **405,000** |                                          |
