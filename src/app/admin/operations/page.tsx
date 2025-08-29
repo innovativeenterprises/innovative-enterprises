@@ -8,7 +8,8 @@ import TrainingForm from "@/app/admin/operations/training-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket } from "lucide-react";
+import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale } from "lucide-react";
+import KnowledgeTable from './knowledge-table';
 
 
 export default function AdminOperationsPage() {
@@ -35,10 +36,12 @@ export default function AdminOperationsPage() {
                 A suite of internal AI tools to enhance business operations.
             </p>
         </div>
+
+        <KnowledgeTable />
         
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Internal AI Tools</h2>
-            <Accordion type="single" collapsible className="w-full" defaultValue="pro">
+            <Accordion type="single" collapsible className="w-full">
               {internalTools.map(tool => (
                  <AccordionItem value={tool.id} key={tool.id}>
                     <AccordionTrigger>

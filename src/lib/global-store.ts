@@ -20,6 +20,7 @@ import { initialSettings, type AppSettings } from './settings';
 import { initialProviders, type Provider } from './providers';
 import { initialAssets, type Asset } from './assets';
 import { initialInvestors, type Investor } from './investors';
+import { initialKnowledgeBase, type KnowledgeDocument } from './knowledge';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -40,6 +41,7 @@ type AppState = {
   providers: Provider[];
   assets: Asset[];
   investors: Investor[];
+  knowledgeBase: KnowledgeDocument[];
   cart: CartItem[];
 };
 
@@ -59,6 +61,7 @@ let state: AppState = {
   providers: initialProviders,
   assets: initialAssets,
   investors: initialInvestors,
+  knowledgeBase: initialKnowledgeBase,
   cart: [],
 };
 
