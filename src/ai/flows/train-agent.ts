@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -33,6 +34,10 @@ Agent to Train: {{{agentId}}}
 
 {{#if knowledgeDocuments}}
 You have received {{knowledgeDocuments.length}} knowledge document(s) for training.
+File names:
+{{#each knowledgeDocuments}}
+- {{this.fileName}}
+{{/each}}
 {{/if}}
 {{#if knowledgeUrls}}
 You have received {{knowledgeUrls.length}} knowledge URL(s) for training.

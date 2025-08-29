@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -19,10 +20,16 @@ import { initialAgentCategories } from '@/lib/agents';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
 
-const fileToDataURI = (file: File): Promise<string> => {
+const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
+        reader.onload = () => {
+            const result = reader.result as string;
+            // The result includes the data URI prefix (e.g., "data:image/png;base64,"),
+            // so we'll strip that off to get just the Base64 content.
+            const base64Content = result.split(',')[1];
+            resolve(base64Content);
+        };
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
@@ -68,10 +75,14 @@ export default function TrainingForm() {
     setResponse(null);
 
     try {
-      let knowledgeDocuments: string[] | undefined;
+      let knowledgeDocuments: { fileName: string; content: string; }[] | undefined;
       if (data.knowledgeDocuments && data.knowledgeDocuments.length > 0) {
-        const docPromises = Array.from(data.knowledgeDocuments as FileList).map(fileToDataURI);
-        knowledgeDocuments = await Promise.all(docPromises);
+        knowledgeDocuments = await Promise.all(
+          Array.from(data.knowledgeDocuments as FileList).map(async (file) => ({
+            fileName: file.name,
+            content: await fileToBase64(file),
+          }))
+        );
       }
       
       const knowledgeUrls = data.knowledgeUrls ? data.knowledgeUrls.split('\n').filter(url => url.trim() !== '') : undefined;
