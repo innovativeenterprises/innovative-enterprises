@@ -120,19 +120,21 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const1/400/400",
         aiHint: "construction management software",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/smart-pm",
     },
     {
         id: 10,
         name: "BidWise Estimator",
         description: "Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing.",
-        stage: "Idea Phase",
+        stage: "Development Phase",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const2/400/400",
         aiHint: "construction bidding document",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/bid-estimator",
     },
     {
         id: 11,
@@ -144,19 +146,21 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const3/400/400",
         aiHint: "building information modeling",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/bim",
     },
     {
         id: 12,
         name: "SiteGuard Compliance",
         description: "Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking.",
-        stage: "Idea Phase",
+        stage: "Planning Phase",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const4/400/400",
         aiHint: "construction safety compliance",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/site-guard",
     },
     {
         id: 13,
@@ -168,19 +172,21 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const5/400/400",
         aiHint: "construction workforce management",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/workforce-flow",
     },
     {
         id: 14,
         name: "ProcureChain SaaS",
         description: "E-procurement platform with automated vendor approvals, predictive ordering, and blockchain smart contracts.",
-        stage: "Idea Phase",
+        stage: "Research Phase",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const6/400/400",
         aiHint: "supply chain logistics",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/procure-chain",
     },
     {
         id: 15,
@@ -192,7 +198,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const7/400/400",
         aiHint: "financial technology construction",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/construct-fin",
     },
     {
         id: 16,
@@ -204,19 +211,21 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const8/400/400",
         aiHint: "digital twin building",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/digital-twin",
     },
     {
         id: 17,
         name: "AeroSite AI (DaaS)",
         description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping.",
-        stage: "Idea Phase",
+        stage: "Planning Phase",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const9/400/400",
         aiHint: "construction drone survey",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/aerosite-ai",
     },
     {
         id: 18,
@@ -228,7 +237,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const10/400/400",
         aiHint: "client dashboard project",
         rating: 0,
-        enabled: false
+        enabled: true,
+        href: "/construction-tech/client-view",
     },
     {
         id: 19,

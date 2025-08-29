@@ -8,12 +8,6 @@ import Link from "next/link";
 import { useProductsData } from "@/app/admin/product-table";
 import type { Product } from "@/lib/products";
 
-const problems = [
-    { title: "High Upfront Costs", description: "Heavy capital expenditure (CAPEX) on IT hardware and software is a major barrier for construction SMEs." },
-    { title: "Lack of Flexibility", description: "Traditional methods are slow, rely on manual processes, and struggle to adapt to project changes." },
-    { title: "Complex Management", description: "Managing bids, compliance, safety, and workforce scheduling is time-consuming and prone to error." },
-];
-
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
         "Smart PM SaaS": GanttChartSquare,
@@ -55,7 +49,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 export default function ConstructionTechPage() {
     const { products } = useProductsData();
-    const contechProducts = products.filter(p => p.category === "Construction Tech");
+    const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -70,31 +64,7 @@ export default function ConstructionTechPage() {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto mt-20">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">The Industry Challenge</h2>
-                <p className="mt-4 text-lg text-muted-foreground">The construction sector is ripe for disruption.</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-                {problems.map((problem) => (
-                    <Card key={problem.title} className="text-center bg-muted/50 border-l-4 border-destructive/50">
-                        <CardHeader>
-                             <AlertTriangle className="w-8 h-8 mx-auto text-destructive" />
-                            <CardTitle className="pt-2">{problem.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{problem.description}</p>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        </div>
-
         <div className="max-w-6xl mx-auto mt-20">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Upcoming SaaS Platforms</h2>
-                <p className="mt-4 text-lg text-muted-foreground">A preview of our dedicated solutions for the construction industry.</p>
-            </div>
              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {contechProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
