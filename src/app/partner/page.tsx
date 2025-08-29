@@ -139,8 +139,8 @@ type PaymentValues = z.infer<typeof PaymentSchema>;
 type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted' | 'capture_id_front' | 'capture_id_back' | 'capture_rep_id_front' | 'capture_rep_id_back';
 type ApplicantType = 'individual' | 'company';
 
-const REGISTRATION_FEE = 1.0;
-const EXTRA_SERVICE_FEE = 0.15;
+const REGISTRATION_FEE = 2.5;
+const EXTRA_SERVICE_FEE = 1.5;
 
 const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDate, classification, services, partnerType, logoUrl }: {
     cardRef: React.RefObject<HTMLDivElement>,
@@ -934,7 +934,7 @@ export default function PartnerPage() {
     return (
         <>
         <CardHeader>
-            <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}><ArrowLeft className="mr-2 h-4 w-4"/> Back</Button>
+            <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}>&larr; Back</Button>
             <CardTitle className="text-center pt-8">Final Step: Registration Fee</CardTitle>
             <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
         </CardHeader>

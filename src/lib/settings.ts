@@ -31,16 +31,16 @@ export interface AppSettings {
 export const initialSettings: AppSettings = {
     translationAssignmentMode: 'direct',
     sanadOffice: {
-        registrationFee: 2.5,
-        monthlyFee: 1.6,
-        yearlyFee: 16,
-        lifetimeFee: 28,
+        registrationFee: 25.0,
+        monthlyFee: 16.0,
+        yearlyFee: 160.0,
+        lifetimeFee: 280.0,
         firstTimeDiscountPercentage: 0.60,
     },
     legalAgentPricing: {
-        b2cFee: 0.4,
-        b2bFee: 2.5,
-        b2gFee: 6.5,
+        b2cFee: 4.0,
+        b2bFee: 25.0,
+        b2gFee: 65.0,
     },
     voiceInteractionEnabled: true,
     vat: {

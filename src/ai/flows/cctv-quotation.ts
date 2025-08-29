@@ -61,7 +61,7 @@ You MUST only recommend assets from this list for the IT hardware portion.
     *   **recommendedSoftware:** Create a JSON array of recommended software.
     *   **surveillanceSystem:**
         *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below.
-        *   **CCTV Price List (OMR):** 4K Dome Camera: 45, 4K Bullet Camera: 55, 8-Channel NVR: 120, 16-Channel NVR: 200, 8-Port PoE Switch: 60, 16-Port PoE Switch: 100.
+        *   **CCTV Price List (OMR):** 4K Dome Camera: 4.5, 4K Bullet Camera: 5.5, 8-Channel NVR: 12.0, 16-Channel NVR: 20.0, 8-Port PoE Switch: 6.0, 16-Port PoE Switch: 10.0.
         *   Write a brief summary of the surveillance solution.
 
 3.  **Calculate Costs:**

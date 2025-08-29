@@ -88,8 +88,8 @@ const languageOptions = [
     "English", "Arabic", "French", "Spanish", "German", "Chinese", "Russian", "Japanese", "Portuguese", "Italian"
 ];
 
-const PRICE_PER_STAMPED_PAGE = 0.25;
-const MINIMUM_CHARGE = 0.30;
+const PRICE_PER_STAMPED_PAGE = 2.5;
+const MINIMUM_CHARGE = 3.0;
 
 type PageState = 'form' | 'payment' | 'translating' | 'result';
 
