@@ -35,23 +35,23 @@ export const useRequestsData = () => {
     };
 };
 
-export function RequestTable({ requests, setRequests }: { requests: HireRequest[], setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => void }) { 
+export function RequestTable({ requests, setRequests }: { requests: HireRequest[], setRequests: (updater: (requests: HireRequest[]) => void) => void }) { 
     const { toast } = useToast();
 
     const handleStatusChange = (requestId: string, newStatus: HireRequest['status']) => {
         setRequests(prev => prev.map(req => 
             req.id === requestId ? { ...req, status: newStatus } : req
         ));
-        toast({ title: "Status Updated", description: `Request ${requestId} has been updated to "${newStatus}".` });
+        toast({ title: "Status Updated", description: `Request has been updated to "${newStatus}".` });
     };
 
     const getStatusBadge = (status: HireRequest['status']) => {
         switch (status) {
-            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700">Pending</Badge>;
-            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700">Contacted</Badge>;
-            case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700">Interviewing</Badge>;
-            case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700">Hired</Badge>;
-            case 'Closed': return <Badge variant="destructive" className="bg-red-500/20 text-red-700">Closed</Badge>;
+            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
+            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
+            case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
+            case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
+            case 'Closed': return <Badge variant="destructive" className="bg-red-500/20 text-red-700 hover:bg-red-500/30">Closed</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
         }
     }
@@ -91,10 +91,11 @@ export function RequestTable({ requests, setRequests }: { requests: HireRequest[
                                 <TableCell>
                                      <Select onValueChange={(value: HireRequest['status']) => handleStatusChange(req.id, value)} defaultValue={req.status}>
                                         <SelectTrigger className="w-[180px]">
-                                             <div className="flex items-center gap-2">
-                                                {getStatusBadge(req.status)}
-                                                <span className="sr-only">{req.status}</span>
-                                             </div>
+                                            <SelectValue>
+                                                <div className="flex items-center gap-2">
+                                                    {getStatusBadge(req.status)}
+                                                </div>
+                                            </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="Pending">Pending</SelectItem>
