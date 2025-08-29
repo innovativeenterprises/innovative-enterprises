@@ -15,10 +15,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { KnowledgeDocument } from "@/lib/knowledge";
-import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link, ListChecks, FileUp, CheckCircle } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
 import { store } from "@/lib/global-store";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
-import { trainAgent, TrainAgentInputSchema } from "@/ai/flows/train-agent";
+import { trainAgent } from "@/ai/flows/train-agent";
+import { scrapeAndSummarize } from "@/ai/flows/web-scraper-agent";
 import { initialAgentCategories } from '@/lib/agents';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -60,7 +61,11 @@ export const useKnowledgeData = () => {
 };
 
 const UploadDocumentSchema = z.object({
-  documentFile: z.any().refine(file => file?.length == 1, 'A document file is required.'),
+  documentFile: z.any().optional(),
+  documentUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
+}).refine(data => data.documentFile?.length === 1 || data.documentUrl, {
+    message: "Either a document file or a URL is required.",
+    path: ["documentFile"],
 });
 type UploadDocumentValues = z.infer<typeof UploadDocumentSchema>;
 
@@ -69,7 +74,7 @@ const UploadDocumentDialog = ({
     documentToReplace,
     children,
 }: { 
-    onUpload: (file: File, docIdToReplace?: string) => Promise<void>,
+    onUpload: (source: { file?: File, url?: string }, docIdToReplace?: string) => Promise<void>,
     documentToReplace?: KnowledgeDocument,
     children: React.ReactNode
 }) => {
@@ -79,7 +84,7 @@ const UploadDocumentDialog = ({
 
     const onSubmit: SubmitHandler<UploadDocumentValues> = async (data) => {
         setIsLoading(true);
-        await onUpload(data.documentFile[0], documentToReplace?.id);
+        await onUpload({ file: data.documentFile?.[0], url: data.documentUrl }, documentToReplace?.id);
         setIsLoading(false);
         setIsOpen(false);
         form.reset();
@@ -90,24 +95,31 @@ const UploadDocumentDialog = ({
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{documentToReplace ? "Replace" : "Upload"} Knowledge Document</DialogTitle>
+                    <DialogTitle>{documentToReplace ? "Replace" : "Add"} Knowledge Source</DialogTitle>
                     <DialogDescription>
-                        {documentToReplace 
-                            ? `Upload a new version of "${documentToReplace.fileName}". The AI will analyze it and update the knowledge base.`
-                            : "Upload a new law, regulation, or knowledge document. The AI will analyze it and add it to the knowledge base."
-                        }
+                        Upload a new document or provide a URL. The AI will analyze it and add it to the knowledge base.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField control={form.control} name="documentFile" render={({ field }) => (
-                            <FormItem><FormLabel>Document File (.pdf, .txt)</FormLabel><FormControl><Input type="file" accept=".pdf,.txt" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Upload Document File (.pdf, .txt)</FormLabel><FormControl><Input type="file" accept=".pdf,.txt" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                         )} />
+                        
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                            <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+                        </div>
+
+                         <FormField control={form.control} name="documentUrl" render={({ field }) => (
+                            <FormItem><FormLabel>Import from URL</FormLabel><FormControl><Input placeholder="https://example.com/law.html" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit" disabled={isLoading}>
                                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                Analyze & {documentToReplace ? "Replace" : "Upload"}
+                                Analyze & {documentToReplace ? "Replace" : "Add"} Source
                             </Button>
                         </DialogFooter>
                     </form>
@@ -136,7 +148,7 @@ const allAgents = initialAgentCategories.flatMap(category => category.agents);
 const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [response, setResponse] = useState<z.infer<typeof TrainAgentInputSchema> | null>(null);
+    const [response, setResponse] = useState<z.infer<ReturnType<typeof trainAgent>['outputSchema']> | null>(null);
     const { toast } = useToast();
 
     const form = useForm<TrainingDialogValues>({
@@ -174,7 +186,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
             const result = await trainAgent({
                 agentId: data.agentId,
                 qaPairs: data.qaPairs,
-                knowledgeDocuments: knowledgeDocuments,
+                knowledgeDocuments: knowledgeDocuments.length > 0 ? knowledgeDocuments : undefined,
                 knowledgeUrls: knowledgeUrls,
             });
 
@@ -272,7 +284,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                             name="knowledgeUrls"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel className="flex items-center gap-2"><Link className="h-5 w-5"/> 3. Provide Knowledge URLs</FormLabel>
+                                <FormLabel className="flex items-center gap-2"><LinkIcon className="h-5 w-5"/> 3. Provide Knowledge URLs</FormLabel>
                                 <FormControl>
                                 <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={2} {...field} />
                                 </FormControl>
@@ -314,11 +326,28 @@ export default function KnowledgeTable() {
     const { knowledgeBase, setKnowledgeBase } = useKnowledgeData();
     const { toast } = useToast();
 
-    const handleUpload = async (file: File, docIdToReplace?: string) => {
-        toast({ title: 'Analyzing Document...', description: 'Please wait while the AI extracts key information.' });
+    const handleUpload = async (source: { file?: File, url?: string }, docIdToReplace?: string) => {
+        toast({ title: 'Analyzing Source...', description: 'Please wait while the AI extracts key information.' });
         try {
-            const dataUri = await fileToDataURI(file);
-            const analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
+            let analysis;
+            let fileName = '';
+            let fileType = '';
+            let dataUri = '';
+
+            if (source.url) {
+                fileName = source.url;
+                fileType = 'url';
+                const scraped = await scrapeAndSummarize({ source: source.url, isUrl: true });
+                if (!scraped.summary) throw new Error("Could not scrape content from URL.");
+                analysis = await analyzeKnowledgeDocument({ documentContent: scraped.summary, sourceUrl: source.url });
+            } else if (source.file) {
+                fileName = source.file.name;
+                fileType = source.file.type;
+                dataUri = await fileToDataURI(source.file);
+                analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
+            } else {
+                throw new Error("No source provided.");
+            }
 
             const newDoc: KnowledgeDocument = {
                 id: docIdToReplace || `kb_${Date.now()}`,
@@ -327,22 +356,22 @@ export default function KnowledgeTable() {
                 version: analysis.version,
                 issueDate: analysis.issueDate,
                 uploadDate: new Date().toISOString().split('T')[0],
-                fileName: file.name,
-                fileType: file.type,
-                dataUri,
+                fileName: fileName,
+                fileType: fileType,
+                dataUri, // This will be empty for URLs
             };
 
             if (docIdToReplace) {
                 setKnowledgeBase(prev => prev.map(doc => doc.id === docIdToReplace ? newDoc : doc));
-                 toast({ title: 'Document Replaced!', description: `"${file.name}" has been analyzed and updated.` });
+                 toast({ title: 'Document Replaced!', description: `"${newDoc.documentName}" has been analyzed and updated.` });
             } else {
                 setKnowledgeBase(prev => [newDoc, ...prev]);
-                 toast({ title: 'Document Uploaded!', description: `"${file.name}" has been analyzed and added.` });
+                 toast({ title: 'Document Added!', description: `"${newDoc.documentName}" has been analyzed and added.` });
             }
             
         } catch (error) {
             console.error("Failed to analyze or upload document:", error);
-            toast({ title: "Operation Failed", description: "Could not analyze or upload the document. Please try again.", variant: 'destructive' });
+            toast({ title: "Operation Failed", description: "Could not analyze or add the source. Please check the URL or file.", variant: 'destructive' });
         }
     };
 
@@ -361,7 +390,7 @@ export default function KnowledgeTable() {
                 <div className="flex gap-2">
                     <TrainAgentDialog knowledgeBase={knowledgeBase} />
                     <UploadDocumentDialog onUpload={handleUpload}>
-                        <Button><Upload className="mr-2 h-4 w-4" /> Upload Document</Button>
+                        <Button><Upload className="mr-2 h-4 w-4" /> Add Source</Button>
                     </UploadDocumentDialog>
                 </div>
             </CardHeader>
@@ -372,7 +401,7 @@ export default function KnowledgeTable() {
                             <TableHead>Document Name</TableHead>
                             <TableHead>Number / Version</TableHead>
                             <TableHead>Issue Date</TableHead>
-                            <TableHead>Upload Date</TableHead>
+                            <TableHead>Source</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -381,14 +410,21 @@ export default function KnowledgeTable() {
                             <TableRow key={doc.id}>
                                 <TableCell>
                                     <p className="font-medium">{doc.documentName}</p>
-                                    <p className="text-sm text-muted-foreground">{doc.fileName}</p>
                                 </TableCell>
                                 <TableCell>
                                     <p className="font-mono text-xs">{doc.documentNumber}</p>
                                     {doc.version && <p className="text-xs text-muted-foreground">v{doc.version}</p>}
                                 </TableCell>
                                 <TableCell>{doc.issueDate}</TableCell>
-                                <TableCell>{doc.uploadDate}</TableCell>
+                                <TableCell>
+                                    {doc.fileType === 'url' ? (
+                                        <a href={doc.fileName} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:opacity-80 text-sm truncate max-w-xs block">
+                                            {doc.fileName}
+                                        </a>
+                                    ) : (
+                                        <p className="text-sm text-muted-foreground">{doc.fileName}</p>
+                                    )}
+                                </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <UploadDocumentDialog onUpload={handleUpload} documentToReplace={doc}>

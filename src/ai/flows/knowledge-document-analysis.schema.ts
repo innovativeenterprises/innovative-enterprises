@@ -10,9 +10,21 @@ import { z } from 'zod';
 export const KnowledgeDocumentAnalysisInputSchema = z.object({
   documentDataUri: z
     .string()
+    .optional()
     .describe(
       "The legal or knowledge document, as a data URI that must include a MIME type and use Base64 encoding."
     ),
+  documentContent: z
+    .string()
+    .optional()
+    .describe(
+      "The text content of the document, used if a data URI is not provided."
+    ),
+  sourceUrl: z
+    .string()
+    .url()
+    .optional()
+    .describe("The original URL if the content was scraped from the web."),
 });
 export type KnowledgeDocumentAnalysisInput = z.infer<typeof KnowledgeDocumentAnalysisInputSchema>;
 
