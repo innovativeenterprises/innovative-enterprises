@@ -41,7 +41,7 @@ export default function CartPage() {
     };
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const shipping = subtotal > 0 ? 5.00 : 0; // Flat shipping rate
+    const shipping = subtotal > 0 ? 0.50 : 0; // Flat shipping rate
     const vatAmount = settings.vat.enabled ? (subtotal + shipping) * settings.vat.rate : 0;
     const total = subtotal + shipping + vatAmount;
 
