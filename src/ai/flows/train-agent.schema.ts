@@ -18,6 +18,7 @@ export const TrainAgentInputSchema = z.object({
   knowledgeDocuments: z.array(z.string()).optional().describe(
     "A list of knowledge documents as data URIs. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
   ),
+  knowledgeUrls: z.array(z.string().url()).optional().describe('A list of URLs containing knowledge content.'),
   qaPairs: z.array(QaPairSchema).optional().describe('A list of question-answer pairs for fine-tuning.'),
 });
 export type TrainAgentInput = z.infer<typeof TrainAgentInputSchema>;

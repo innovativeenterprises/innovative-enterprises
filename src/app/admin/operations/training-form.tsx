@@ -9,11 +9,11 @@ import { trainAgent } from '@/ai/flows/train-agent';
 import { type TrainAgentInput, type TrainAgentOutput } from '@/ai/flows/train-agent.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Bot, PlusCircle, Trash2, CheckCircle, FileUp, ListChecks } from 'lucide-react';
+import { Loader2, Sparkles, Bot, PlusCircle, Trash2, CheckCircle, FileUp, ListChecks, Link } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { initialAgentCategories } from '@/lib/agents';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -36,6 +36,7 @@ const QaPairSchema = z.object({
 const FormSchema = z.object({
   agentId: z.string().min(1, "Please select an agent to train."),
   knowledgeDocuments: z.any().optional(),
+  knowledgeUrls: z.string().optional(),
   qaPairs: z.array(QaPairSchema).optional(),
 });
 type FormValues = z.infer<typeof FormSchema>;
@@ -51,6 +52,7 @@ export default function TrainingForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       agentId: '',
+      knowledgeUrls: '',
       qaPairs: [{ question: '', answer: '' }],
     },
   });
@@ -72,10 +74,13 @@ export default function TrainingForm() {
         knowledgeDocuments = await Promise.all(docPromises);
       }
       
+      const knowledgeUrls = data.knowledgeUrls ? data.knowledgeUrls.split('\n').filter(url => url.trim() !== '') : undefined;
+      
       const result = await trainAgent({ 
         agentId: data.agentId,
         qaPairs: data.qaPairs,
         knowledgeDocuments: knowledgeDocuments,
+        knowledgeUrls: knowledgeUrls,
       });
 
       setResponse(result);
@@ -98,7 +103,7 @@ export default function TrainingForm() {
       <Card>
         <CardHeader>
           <CardTitle>AI Agent Training Center</CardTitle>
-          <CardDescription>Fine-tune your AI agents by providing them with new knowledge documents or specific question-answer pairs.</CardDescription>
+          <CardDescription>Fine-tune your AI agents by providing them with new knowledge from local documents, web pages, or specific question-answer pairs.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -130,10 +135,25 @@ export default function TrainingForm() {
                     name="knowledgeDocuments"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel className="flex items-center gap-2"><FileUp className="h-5 w-5"/> Upload Knowledge Documents (Optional)</FormLabel>
+                        <FormLabel className="flex items-center gap-2"><FileUp className="h-5 w-5"/> Upload Knowledge Documents (e.g., PDFs, TXT files)</FormLabel>
                         <FormControl>
                             <Input type="file" multiple onChange={(e) => field.onChange(e.target.files)} />
                         </FormControl>
+                        <FormDescription>Upload one or more files containing laws, regulations, or other knowledge.</FormDescription>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="knowledgeUrls"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel className="flex items-center gap-2"><Link className="h-5 w-5"/> Provide Knowledge URLs</FormLabel>
+                        <FormControl>
+                           <Textarea placeholder="https://example.com/law1.html&#10;https://example.com/regulation2.pdf" rows={4} {...field} />
+                        </FormControl>
+                        <FormDescription>Enter one URL per line. The AI will scrape the content from these pages.</FormDescription>
                         <FormMessage />
                         </FormItem>
                     )}

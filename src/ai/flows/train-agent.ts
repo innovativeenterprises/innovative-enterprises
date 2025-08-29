@@ -16,6 +16,7 @@ import {
     TrainAgentOutput,
     TrainAgentOutputSchema,
 } from './train-agent.schema';
+import { scrapeAndSummarize } from './web-scraper-agent';
 
 export async function trainAgent(input: TrainAgentInput): Promise<TrainAgentOutput> {
   return trainAgentFlow(input);
@@ -33,7 +34,9 @@ Agent to Train: {{{agentId}}}
 {{#if knowledgeDocuments}}
 You have received {{knowledgeDocuments.length}} knowledge document(s) for training.
 {{/if}}
-
+{{#if knowledgeUrls}}
+You have received {{knowledgeUrls.length}} knowledge URL(s) for training.
+{{/if}}
 {{#if qaPairs}}
 You have received {{qaPairs.length}} Question/Answer pair(s) for training.
 {{/if}}
@@ -41,7 +44,7 @@ You have received {{qaPairs.length}} Question/Answer pair(s) for training.
 Based on this, generate a response:
 1.  Create a unique 'jobId' for this training request. A random UUID-like string is fine.
 2.  Set the 'status' to "Queued".
-3.  Write a 'message' confirming that the training job for agent '{{{agentId}}}' has been received and is now in the queue. Mention the number of documents and Q&A pairs received.
+3.  Write a 'message' confirming that the training job for agent '{{{agentId}}}' has been received and is now in the queue. Mention the number of documents, URLs, and Q&A pairs received.
 `,
 });
 
@@ -52,9 +55,24 @@ const trainAgentFlow = ai.defineFlow(
     outputSchema: TrainAgentOutputSchema,
   },
   async (input) => {
+    let scrapedContent: string[] = [];
+
+    // If URLs are provided, scrape them using the web-scraper agent.
+    if (input.knowledgeUrls && input.knowledgeUrls.length > 0) {
+        console.log(`Scraping ${input.knowledgeUrls.length} URLs for training data...`);
+        const scrapingJobs = input.knowledgeUrls.map(url => scrapeAndSummarize({ source: url, isUrl: true }));
+        const results = await Promise.all(scrapingJobs);
+        scrapedContent = results.map(r => r.summary);
+        console.log(`Scraped content:`, scrapedContent);
+    }
+    
     // In a real application, you would connect this to a fine-tuning service
-    // or a vector database ingestion pipeline.
-    // For this prototype, we just pass the info to an LLM to get a confirmation.
+    // or a vector database ingestion pipeline. The `scrapedContent` and the
+    // content from `input.knowledgeDocuments` would be processed and stored.
+    console.log('Received training job for agent:', input.agentId);
+    console.log('Number of uploaded documents:', input.knowledgeDocuments?.length || 0);
+    console.log('Number of Q&A pairs:', input.qaPairs?.length || 0);
+    
     const { output } = await prompt(input);
     return output!;
   }
