@@ -9,17 +9,19 @@ import { generateIctProposal } from '@/ai/flows/cctv-quotation';
 import type { IctProposalOutput, IctProposalInput } from '@/ai/flows/cctv-quotation.schema';
 import { analyzeFloorPlan } from '@/ai/flows/floor-plan-analysis';
 import type { FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis.schema';
+import { annotateImage } from '@/ai/flows/image-annotation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2 } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -51,8 +53,10 @@ type PageState = 'form' | 'loading' | 'result';
 export default function EstimatorForm() {
   const [pageState, setPageState] = useState<PageState>('form');
   const [isAnalyzingPlan, setIsAnalyzingPlan] = useState(false);
+  const [isAnnotating, setIsAnnotating] = useState(false);
   const [response, setResponse] = useState<IctProposalOutput | null>(null);
   const [analysis, setAnalysis] = useState<FloorPlanAnalysisOutput | null>(null);
+  const [annotatedImageUrl, setAnnotatedImageUrl] = useState<string | null>(null);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -99,6 +103,7 @@ export default function EstimatorForm() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setPageState('loading');
     setResponse(null);
+    setAnnotatedImageUrl(null);
     try {
       const input: IctProposalInput = {
         ...data,
@@ -124,6 +129,36 @@ export default function EstimatorForm() {
       });
     }
   };
+  
+  const handleGenerateAnnotatedPlan = async () => {
+      const floorPlanFile = form.getValues('floorPlanFile');
+      if (!response || !floorPlanFile || floorPlanFile.length === 0) {
+          toast({ title: 'Missing Information', description: 'A floor plan and generated proposal are required.', variant: 'destructive' });
+          return;
+      }
+      setIsAnnotating(true);
+      setAnnotatedImageUrl(null);
+      toast({ title: 'Placing Equipment...', description: 'The AI is generating your annotated floor plan. This can take a moment.' });
+      
+      try {
+          const floorPlanUri = await fileToDataURI(floorPlanFile[0]);
+          const equipmentList = response.surveillanceSystem.equipmentList.map(item => `${item.quantity}x ${item.item}`).join(', ');
+          
+          const result = await annotateImage({
+              baseImageUri: floorPlanUri,
+              prompt: `Overlay professional, semi-transparent icons on this floor plan to show the placement of the following surveillance equipment: ${equipmentList}. Place cameras logically to cover entrances and main areas. Place the NVR/switch near the suggested location: ${analysis?.suggestedDvrLocation || 'a secure, central location'}.`
+          });
+          
+          setAnnotatedImageUrl(result.imageDataUri);
+          toast({ title: 'Annotated Plan Ready!', description: 'Your visual installation plan is complete.' });
+
+      } catch(e) {
+          console.error(e);
+          toast({ title: 'Annotation Failed', description: 'Could not generate the annotated plan.', variant: 'destructive' });
+      } finally {
+          setIsAnnotating(false);
+      }
+  }
 
   if (pageState === 'loading') {
     return (
@@ -162,6 +197,27 @@ export default function EstimatorForm() {
             <AlertTitle>Executive Summary</AlertTitle>
             <AlertDescription>{response.executiveSummary}</AlertDescription>
           </Alert>
+            
+          {annotatedImageUrl ? (
+               <div>
+                  <h3 className="text-lg font-semibold mb-2">Annotated Installation Plan</h3>
+                  <div className="relative aspect-video w-full overflow-hidden rounded-md border bg-black">
+                        <Image src={annotatedImageUrl} alt="Annotated Floor Plan" layout="fill" objectFit="contain" />
+                  </div>
+                  <div className="flex justify-end mt-2">
+                     <Button asChild variant="outline" size="sm">
+                        <a href={annotatedImageUrl} download="annotated_plan.png"><Download className="mr-2 h-4 w-4" /> Download Plan</a>
+                    </Button>
+                  </div>
+              </div>
+          ) : (
+             form.getValues('floorPlanFile')?.[0] && (
+                 <Button onClick={handleGenerateAnnotatedPlan} disabled={isAnnotating} className="w-full">
+                     {isAnnotating ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <ImageIcon className="mr-2 h-4 w-4" />}
+                     Generate Annotated Plan
+                 </Button>
+             )
+          )}
 
           {response.surveillanceSystem.equipmentList.length > 0 && (
             <div>

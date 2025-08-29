@@ -43,4 +43,5 @@ import '@/ai/flows/video-generator.ts';
 import '@/ai/flows/coupon-generator.ts';
 import '@/ai/flows/knowledge-document-analysis.ts';
 import '@/ai/flows/knowledge-document-analysis.schema.ts';
+import '@/ai/flows/image-annotation.ts';
     
