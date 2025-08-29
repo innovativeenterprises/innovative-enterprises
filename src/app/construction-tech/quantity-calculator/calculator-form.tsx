@@ -87,15 +87,17 @@ export default function CalculatorForm() {
         let specs = form.getValues('additionalSpecs') || '';
         if (result.dimensions) {
             specs += `\nEstimated building dimensions from plan: ${result.dimensions}.`;
-            
-            const floorMatch = result.dimensions.match(/(\d+)\s*floors?/i);
-            if (floorMatch && floorMatch[1]) {
-                form.setValue('numberOfFloors', parseInt(floorMatch[1], 10));
-            }
         }
+        if (result.projectType) {
+            form.setValue('projectType', result.projectType);
+        }
+        if(result.numberOfFloors) {
+            form.setValue('numberOfFloors', result.numberOfFloors);
+        }
+
         form.setValue('additionalSpecs', specs.trim());
 
-        toast({ title: 'Floor Plan Analyzed', description: 'AI has added its findings to your project details. You can now generate the BoQ step-by-step.' });
+        toast({ title: 'Floor Plan Analyzed', description: 'AI has pre-filled the project details. Please review and continue.' });
 
     } catch (e) {
         toast({ title: 'Analysis Failed', description: 'Could not analyze the floor plan. Please describe your needs manually.', variant: 'destructive' });
@@ -191,7 +193,7 @@ export default function CalculatorForm() {
                         render={({ field }) => (
                         <FormItem>
                             <FormLabel>Project Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                                 <FormControl><SelectTrigger><SelectValue placeholder="Select a project type..." /></SelectTrigger></FormControl>
                                 <SelectContent>
                                     <SelectItem value="Residential Villa">Residential Villa</SelectItem>
