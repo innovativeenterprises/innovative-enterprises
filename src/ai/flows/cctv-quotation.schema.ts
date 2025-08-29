@@ -31,20 +31,29 @@ const EquipmentSchema = z.object({
   totalPrice: z.number().describe("The total estimated price for this line item (quantity * unitPrice)."),
 });
 
+const SoftwareSchema = z.object({
+  name: z.string().describe("The name of the software (e.g., 'Windows 11 Pro', 'Microsoft 365 Business')."),
+  purpose: z.string().describe("The purpose of this software in the project."),
+  estimatedCost: z.number().describe("The estimated one-time or total subscription cost for the project duration in OMR."),
+});
+
+
 export const IctProposalOutputSchema = z.object({
   proposalId: z.string().describe("A unique ID for this proposal (e.g., 'QT-ICT-12345')."),
   proposalTitle: z.string().describe("A clear and descriptive title for the proposal."),
-  executiveSummary: z.string().describe("A single, concise paragraph summarizing the proposed technology solution."),
+  executiveSummary: z.string().describe("A professional, one-paragraph executive summary of the proposed technology solution, highlighting its benefits."),
   recommendedAssets: z.array(AssetSchema.extend({ quantity: z.number().describe("The number of units recommended for this asset.") })).describe("A list of recommended IT assets for rental from the available inventory, including quantity."),
+  recommendedSoftware: z.array(SoftwareSchema).describe("A list of recommended software to be purchased or subscribed to."),
   surveillanceSystem: z.object({
     summary: z.string().optional().describe("A brief summary of the proposed surveillance solution."),
     equipmentList: z.array(EquipmentSchema).describe("A detailed list of all required equipment for the surveillance system purchase."),
   }).describe("Details of the surveillance system to be purchased."),
-  totalEstimatedCost: z.number().describe("The grand total estimated cost for the project. This should be the sum of all one-time purchase costs (like CCTV) and the total rental cost over the project duration."),
+  totalEstimatedCost: z.number().describe("The grand total estimated cost for the project. This should be the sum of all one-time purchase costs (like CCTV and software) and the total rental cost over the project duration."),
   costBreakdown: z.object({
     totalRentalCostPerMonth: z.number().describe("The total monthly cost for all rented assets."),
     totalRentalCostForDuration: z.number().describe("The total rental cost over the entire project duration."),
     oneTimePurchaseCost: z.number().describe("The total cost for all purchased items (e.g., surveillance system)."),
+    softwareCost: z.number().describe("The total estimated cost for all recommended software."),
   }),
   nextSteps: z.string().describe("Recommended next steps for the user to take after reviewing the proposal."),
 });

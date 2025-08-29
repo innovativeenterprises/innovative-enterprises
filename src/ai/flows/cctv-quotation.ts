@@ -23,13 +23,13 @@ const prompt = ai.definePrompt({
   name: 'ictProposalPrompt',
   input: { schema: IctProposalInputSchema },
   output: { schema: IctProposalOutputSchema },
-  prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a comprehensive ICT proposal, recommending rental equipment and designing a surveillance system if needed.
+  prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal, recommending rental equipment, necessary software, and designing a surveillance system if needed.
 
 **Available IT Rental Asset Inventory:**
 You MUST only recommend assets from this list for the rental portion.
-\'\'\'json
+'''json
 {{{availableAssetsJson}}}
-\'\'\'
+'''
 
 **Client Project Requirements:**
 - **Project Name:** {{{projectName}}}
@@ -49,6 +49,7 @@ You MUST only recommend assets from this list for the rental portion.
         *   For a 'Special Event', you might need laptops, networking gear, and projectors.
         *   For 'Data Analysis', you'd need powerful workstations or servers.
         *   The **quantity** for user-specific items (laptops, workstations) should match the **Number of Users**. For shared items (servers, routers), the quantity is usually 1.
+    *   **Software Recommendations:** Based on the project type and goal, recommend essential software. For example, a 'Temporary Office Setup' needs 'Windows 11 Pro' and 'Microsoft 365 Business'. A 'Software Dev' project might need 'JetBrains IDE Suite' or 'VS Code'. Assume standard one-time or subscription costs (e.g., M365 is ~OMR 8/user/month).
     *   **Surveillance System (if includeSurveillance is true):**
         *   Design a basic but effective CCTV system suitable for the **Project Type**.
         *   Determine the number and type of cameras (Dome, Bullet). A typical office might need 4-8 cameras. An event might need more.
@@ -58,18 +59,20 @@ You MUST only recommend assets from this list for the rental portion.
 2.  **Generate Proposal Content:**
     *   **proposalId:** Create a unique ID, e.g., 'QT-ICT-12345'.
     *   **proposalTitle:** Create a clear title, e.g., "ICT & Surveillance Proposal for {{{projectName}}}".
-    *   **executiveSummary:** Write a concise paragraph explaining the proposed solution.
+    *   **executiveSummary:** Write a highly professional and concise paragraph explaining the proposed solution. It should sound like it was written by a senior solutions architect, highlighting how the recommended hardware and software package will effectively meet the client's stated goals and ensure a smooth, productive project execution.
     *   **recommendedAssets:** Create a JSON array of the exact rental asset objects you selected from the inventory. Crucially, add a 'quantity' field to each asset object. If no rental assets are needed, return an empty array.
+    *   **recommendedSoftware:** Create a JSON array of recommended software, including name, purpose, and estimated cost.
     *   **surveillanceSystem:**
-        *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below. If \`includeSurveillance\` is false, this list should be empty.
+        *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below. If `includeSurveillance` is false, this list should be empty.
         *   **CCTV Price List (OMR):** 4K Dome Camera: 45, 4K Bullet Camera: 55, 8-Channel NVR: 120, 16-Channel NVR: 200, 8-Port PoE Switch: 60, 16-Port PoE Switch: 100.
         *   Write a brief summary of the surveillance solution.
 
 3.  **Calculate Costs:**
-    *   **totalRentalCostPerMonth:** Sum up (asset.monthlyPrice * quantity) for all items in \`recommendedAssets\`.
-    *   **totalRentalCostForDuration:** Calculate \`totalRentalCostPerMonth * projectDurationMonths\`.
-    *   **oneTimePurchaseCost:** Sum up the total price for all items in the \`surveillanceSystem.equipmentList\`.
-    *   **totalEstimatedCost:** Calculate \`totalRentalCostForDuration + oneTimePurchaseCost\`.
+    *   **totalRentalCostPerMonth:** Sum up (asset.monthlyPrice * quantity) for all items in `recommendedAssets`.
+    *   **totalRentalCostForDuration:** Calculate `totalRentalCostPerMonth * projectDurationMonths`.
+    *   **oneTimePurchaseCost:** Sum up the total price for all items in the `surveillanceSystem.equipmentList`.
+    *   **softwareCost:** Sum up the total cost for all items in `recommendedSoftware`.
+    *   **totalEstimatedCost:** Calculate `totalRentalCostForDuration + oneTimePurchaseCost + softwareCost`.
 
 4.  **Next Steps:** Provide a brief, professional closing statement recommending the next steps for the client.
 
