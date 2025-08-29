@@ -28,7 +28,8 @@ import Link from 'next/link';
 import jsPDF from 'jspdf';
 
 const FormSchema = z.object({
-  projectName: z.string().min(3, "Project name, institution ID, or event name is required."),
+  institutionName: z.string().min(3, "Institution name or Partner ID is required."),
+  eventName: z.string().optional(),
   projectType: z.enum([
     'Temporary Office Setup',
     'Training Program or Workshop',
@@ -64,7 +65,8 @@ export default function QuotationForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      projectName: '',
+      institutionName: '',
+      eventName: '',
       projectType: 'Temporary Office Setup',
       numberOfUsers: 10,
       rentalPeriod: 'monthly',
@@ -120,9 +122,16 @@ export default function QuotationForm() {
     setResponse(null);
     try {
       const durationInMonths = getDurationInMonths(data.projectDuration, data.rentalPeriod);
+      const fullProjectName = data.eventName ? `${data.institutionName} - ${data.eventName}` : data.institutionName;
+      
       const result = await generateIctProposal({
-          ...data,
+          projectName: fullProjectName,
+          projectType: data.projectType,
+          numberOfUsers: data.numberOfUsers,
           projectDurationMonths: durationInMonths,
+          primaryGoal: data.primaryGoal,
+          includeSurveillance: data.includeSurveillance,
+          surveillanceDetails: data.surveillanceDetails
       });
       setResponse(result);
       setPageState('result');
@@ -221,7 +230,32 @@ All Assets must be returned in the same condition as they were received, barring
 By checking the "Accept Terms & Conditions" box, you acknowledge that you have read, understood, and agreed to these terms.
     `;
     const doc = new jsPDF();
-    doc.text(termsContent, 10, 10);
+    
+    // Set properties for the PDF
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+
+    // Add header
+    // In a real app, you might fetch a logo image and add it here.
+    doc.setFontSize(18);
+    doc.setTextColor(41, 52, 98); // #293462
+    doc.text("Innovative Enterprises - InfraRent", 105, 20, { align: 'center' });
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+
+    // Split text into lines to fit the page width
+    const splitText = doc.splitTextToSize(termsContent, 180);
+    doc.text(splitText, 15, 35);
+    
+    // Add a footer
+    const pageCount = doc.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text(`Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
+    }
+
     doc.save("InfraRent_Terms_and_Conditions.pdf");
   };
 
@@ -351,9 +385,14 @@ By checking the "Accept Terms & Conditions" box, you acknowledge that you have r
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-             <FormField control={form.control} name="projectName" render={({ field }) => (
-                <FormItem><FormLabel>Project / Event / Institution Name</FormLabel><FormControl><Input placeholder="e.g., 'Q4 Sales Kickoff' or 'Partner ID: 12345'" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
+             <div className="grid md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="institutionName" render={({ field }) => (
+                    <FormItem><FormLabel>Institution Name / Partner ID</FormLabel><FormControl><Input placeholder="e.g., 'Ministry of Education' or 'PID-12345'" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+                 <FormField control={form.control} name="eventName" render={({ field }) => (
+                    <FormItem><FormLabel>Project / Event Name (Optional)</FormLabel><FormControl><Input placeholder="e.g., 'Q4 Sales Kickoff Event'" {...field} /></FormControl><FormMessage /></FormItem>
+                )} />
+             </div>
 
              <div className="grid md:grid-cols-2 gap-6">
                  <FormField control={form.control} name="projectType" render={({ field }) => (
