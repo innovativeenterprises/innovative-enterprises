@@ -64,6 +64,12 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     icon: Building2,
   },
   {
+    title: "3D Virtual Tour SaaS",
+    href: "/real-estate-tech/virtual-tour",
+    description: "Upload a floor plan and get an AI-powered virtual staging of the property.",
+    icon: Camera,
+  },
+  {
     title: "SmartLease Manager",
     href: "/real-estate-tech/smart-lease-manager",
     description: "View and manage all your digitally signed lease and sale agreements in one place.",

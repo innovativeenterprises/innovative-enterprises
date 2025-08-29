@@ -269,13 +269,14 @@ export const initialProducts: Product[] = [
         id: 21,
         name: "3D Virtual Tour SaaS",
         description: "Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties.",
-        stage: "Idea Phase",
+        stage: "Development Phase",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re3/400/400",
         aiHint: "virtual reality home",
         rating: 0,
-        enabled: true
+        enabled: true,
+        href: "/real-estate-tech/virtual-tour",
     },
     {
         id: 22,
