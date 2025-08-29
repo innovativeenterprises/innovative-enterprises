@@ -149,7 +149,7 @@ export default function OpportunityTable({
     setOpportunities,
 }: {
     opportunities: Opportunity[],
-    setOpportunities: (updater: (opportunities: Opportunity[]) => Opportunity[]) => void,
+    setOpportunities: (updater: (opportunities: Opportunity[]) => void) => void,
 }) {
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
