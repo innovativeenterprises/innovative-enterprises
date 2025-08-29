@@ -23,6 +23,7 @@ import { initialAssets, type Asset } from './assets';
 import { initialInvestors, type Investor } from './investors';
 import { initialKnowledgeBase, type KnowledgeDocument } from './knowledge';
 import { initialWorkers, type Worker as RaahaWorker } from './raaha-workers';
+import { initialRequests, type HireRequest } from './raaha-requests';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -45,6 +46,7 @@ type AppState = {
   investors: Investor[];
   knowledgeBase: KnowledgeDocument[];
   raahaWorkers: RaahaWorker[];
+  raahaRequests: HireRequest[];
   cart: CartItem[];
 };
 
@@ -66,6 +68,7 @@ let state: AppState = {
   investors: initialInvestors,
   knowledgeBase: initialKnowledgeBase,
   raahaWorkers: initialWorkers,
+  raahaRequests: initialRequests,
   cart: [],
 };
 
