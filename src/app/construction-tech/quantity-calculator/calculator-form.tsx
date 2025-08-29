@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, Bricks } from 'lucide-react';
+import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall } from 'lucide-react';
 import { generateBoq, generateBoqCategory } from '@/ai/flows/boq-generator';
 import type { BoQGeneratorOutput, BoQItem } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -42,7 +42,7 @@ type FormValues = z.infer<typeof FormSchema>;
 const calculationSteps = [
     { id: 'Earthwork', label: 'Earthwork', icon: Hammer },
     { id: 'Concrete Works', label: 'Concrete', icon: Layers },
-    { id: 'Masonry Works', label: 'Masonry', icon: Bricks },
+    { id: 'Masonry Works', label: 'Masonry', icon: BrickWall },
     { id: 'Plaster Works', label: 'Plastering', icon: Wand2 },
     { id: 'Finishing Works', label: 'Finishing', icon: Sparkles },
 ];
