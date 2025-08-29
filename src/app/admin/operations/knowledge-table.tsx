@@ -187,6 +187,14 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
         control: form.control,
         name: "qaPairs"
     });
+    
+    const handleSelectAll = (checked: boolean) => {
+        if (checked) {
+            form.setValue('knowledgeDocuments', knowledgeBase.map(doc => doc.id));
+        } else {
+            form.setValue('knowledgeDocuments', []);
+        }
+    };
 
     const onSubmit: SubmitHandler<TrainingDialogValues> = async (data) => {
         setIsLoading(true);
@@ -269,6 +277,10 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                                 <div className="mb-4">
                                      <FormLabel>2. Select Knowledge Documents</FormLabel>
                                      <FormDescription>Choose documents from your knowledge base to include in this training session.</FormDescription>
+                                </div>
+                                <div className="flex items-center space-x-2 mb-2 pl-2">
+                                     <Checkbox id="select-all" onCheckedChange={handleSelectAll} />
+                                     <Label htmlFor="select-all">Select All</Label>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 rounded-md border">
                                 {knowledgeBase.map((item) => (
@@ -363,6 +375,7 @@ export default function KnowledgeTable() {
                     id: `kb_${Date.now()}_${index}`,
                     documentName: analysis.documentName,
                     documentNumber: analysis.documentNumber,
+                    institutionName: analysis.institutionName,
                     version: analysis.version,
                     issueDate: analysis.issueDate,
                     uploadDate: new Date().toISOString().split('T')[0],
@@ -384,6 +397,7 @@ export default function KnowledgeTable() {
                     id: docIdToReplace || `kb_${Date.now()}`,
                     documentName: analysis.documentName,
                     documentNumber: analysis.documentNumber,
+                    institutionName: analysis.institutionName,
                     version: analysis.version,
                     issueDate: analysis.issueDate,
                     uploadDate: new Date().toISOString().split('T')[0],
@@ -433,6 +447,7 @@ export default function KnowledgeTable() {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Document Name</TableHead>
+                            <TableHead>Institution</TableHead>
                             <TableHead>Number / Version</TableHead>
                             <TableHead>Issue Date</TableHead>
                             <TableHead>Source</TableHead>
@@ -444,6 +459,9 @@ export default function KnowledgeTable() {
                             <TableRow key={doc.id}>
                                 <TableCell>
                                     <p className="font-medium">{doc.documentName}</p>
+                                </TableCell>
+                                <TableCell>
+                                     <p className="text-sm text-muted-foreground">{doc.institutionName}</p>
                                 </TableCell>
                                 <TableCell>
                                     <p className="font-mono text-xs">{doc.documentNumber}</p>

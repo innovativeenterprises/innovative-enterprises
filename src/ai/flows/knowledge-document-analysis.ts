@@ -37,6 +37,7 @@ const prompt = ai.definePrompt({
 2.  **Extract Key Metadata:** Identify and extract the following specific pieces of information. If a piece of information is not present, leave the field empty.
     *   **documentName:** The main, official title of the law. (e.g., "The Labour Law", "Commercial Companies Law"). If there's no clear title, create one from the content.
     *   **documentNumber:** The official identifying number. This is often in the format of a Royal Decree or Ministerial Decision number (e.g., "Royal Decree 35/2003", "MD 112/2021").
+    *   **institutionName:** The name of the government body, ministry, or institution that issued the document.
     *   **version:** Any version number or amendment number explicitly stated in the document.
     *   **issueDate:** The date the law was issued, published in the official gazette, or became effective. Format this as YYYY-MM-DD.
 

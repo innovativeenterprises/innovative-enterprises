@@ -31,7 +31,8 @@ export type KnowledgeDocumentAnalysisInput = z.infer<typeof KnowledgeDocumentAna
 
 export const KnowledgeDocumentAnalysisOutputSchema = z.object({
     documentName: z.string().describe("The official name or title of the law or regulation."),
-    documentNumber: z.string().optional().describe("The official number of the document, if available (e.g., 'Royal Decree 35/2003')."),
+    documentNumber: z.string().optional().describe("The official number of the document, e.g., 'Royal Decree 35/2003'."),
+    institutionName: z.string().optional().describe("The name of the institution that issued the document, e.g., 'Ministry of Commerce'."),
     version: z.string().optional().describe("The version number, if mentioned in the document."),
     issueDate: z.string().optional().describe("The date the document was issued or became effective, in YYYY-MM-DD format."),
 });

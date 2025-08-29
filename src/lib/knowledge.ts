@@ -2,6 +2,7 @@ export interface KnowledgeDocument {
   id: string;
   documentName: string;
   documentNumber?: string;
+  institutionName?: string;
   version?: string;
   issueDate?: string;
   uploadDate: string;
@@ -15,6 +16,7 @@ export const initialKnowledgeBase: KnowledgeDocument[] = [
     id: 'kb_1',
     documentName: 'Oman Labour Law',
     documentNumber: 'Royal Decree 35/2003',
+    institutionName: 'Ministry of Labour',
     version: '2.1',
     issueDate: '2003-04-06',
     uploadDate: '2024-07-15',
@@ -26,6 +28,7 @@ export const initialKnowledgeBase: KnowledgeDocument[] = [
     id: 'kb_2',
     documentName: 'Commercial Companies Law',
     documentNumber: 'Royal Decree 18/2019',
+    institutionName: 'Ministry of Commerce, Industry & Investment Promotion',
     version: '1.0',
     issueDate: '2019-02-13',
     uploadDate: '2024-07-20',
