@@ -4,19 +4,22 @@
 import { useState } from 'react';
 import { useWorkersData, WorkerTable } from './worker-table';
 import { useRequestsData, RequestTable } from './request-table';
+import { useAgenciesData, AgencySettings } from './agency-settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader } from '@/components/ui/card';
-
-const agencies = ["Happy Homes Agency", "Premier Maids"];
+import Image from 'next/image';
 
 export default function AgencyDashboardPage() {
     const { workers, setWorkers } = useWorkersData();
     const { requests, setRequests } = useRequestsData();
-    const [selectedAgency, setSelectedAgency] = useState(agencies[0]);
+    const { agencies, setAgencies } = useAgenciesData();
 
-    const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency);
-    const filteredRequests = requests.filter(r => r.agencyId === selectedAgency);
+    const [selectedAgencyId, setSelectedAgencyId] = useState(agencies[0].id);
+
+    const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
+    const filteredWorkers = workers.filter(w => w.agencyId === selectedAgencyId);
+    const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
     
     return (
          <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -30,29 +33,43 @@ export default function AgencyDashboardPage() {
                     <Card className="p-4 bg-muted/50">
                         <div className="flex items-center gap-4">
                             <label htmlFor="agency-select" className="font-medium text-sm">Viewing Dashboard For:</label>
-                             <Select value={selectedAgency} onValueChange={setSelectedAgency}>
+                             <Select value={selectedAgencyId} onValueChange={setSelectedAgencyId}>
                                 <SelectTrigger className="w-[280px]" id="agency-select">
-                                    <SelectValue placeholder="Select an agency..." />
+                                     <SelectValue>
+                                        <div className="flex items-center gap-2">
+                                            {selectedAgency?.logo && <Image src={selectedAgency.logo} alt={selectedAgency.name} width={20} height={20} className="rounded-sm object-contain" />}
+                                            <span>{selectedAgency?.name}</span>
+                                        </div>
+                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {agencies.map(agency => (
-                                        <SelectItem key={agency} value={agency}>{agency}</SelectItem>
+                                        <SelectItem key={agency.id} value={agency.id}>
+                                             <div className="flex items-center gap-2">
+                                                {agency.logo && <Image src={agency.logo} alt={agency.name} width={20} height={20} className="rounded-sm object-contain" />}
+                                                <span>{agency.name}</span>
+                                            </div>
+                                        </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                         </div>
                     </Card>
 
-                     <Tabs defaultValue="requests">
-                        <TabsList className="grid w-full grid-cols-2">
+                     <Tabs defaultValue="requests" className="w-full">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="requests">Client Requests ({filteredRequests.length})</TabsTrigger>
                             <TabsTrigger value="workers">My Candidates ({filteredWorkers.length})</TabsTrigger>
+                            <TabsTrigger value="settings">Agency Settings</TabsTrigger>
                         </TabsList>
                         <TabsContent value="requests" className="mt-6">
                             <RequestTable requests={filteredRequests} setRequests={setRequests} />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} />
+                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgencyId} />
+                        </TabsContent>
+                        <TabsContent value="settings" className="mt-6">
+                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
                         </TabsContent>
                     </Tabs>
                 </div>
