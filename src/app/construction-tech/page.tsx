@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu } from "lucide-react";
+import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/app/admin/product-table";
 import type { Product } from "@/lib/products";
@@ -25,7 +25,8 @@ const ProductCard = ({ product }: { product: Product }) => {
         "ConstructFin": DollarSign,
         "Digital Twin Ops": Cpu,
         "AeroSite AI (DaaS)": Cpu,
-        "ClientView Portal": Search
+        "ClientView Portal": Search,
+        "BoQ Generator": Calculator,
     };
     const Icon = iconMap[product.name] || HardHat;
 
@@ -41,7 +42,13 @@ const ProductCard = ({ product }: { product: Product }) => {
             <CardDescription>{product.description}</CardDescription>
         </CardContent>
         <CardFooter>
-            <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
+            {product.href ? (
+                 <Button asChild className="w-full">
+                    <Link href={product.href}>Use Tool</Link>
+                </Button>
+            ) : (
+                <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
+            )}
         </CardFooter>
     </Card>
 )};

@@ -10,6 +10,7 @@ export interface Product {
     aiHint: string;
     rating: number;
     enabled: boolean;
+    href?: string;
 }
 
 export const initialProducts: Product[] = [
@@ -348,5 +349,18 @@ export const initialProducts: Product[] = [
         aiHint: "green building energy",
         rating: 0,
         enabled: false
+    },
+    {
+        id: 29,
+        name: "BoQ Generator",
+        description: "Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re11/400/400",
+        aiHint: "bill of quantities document",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/quantity-calculator",
     }
 ];
