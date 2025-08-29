@@ -78,7 +78,7 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
    {
     title: "RAAHA Platform",
     href: "/raaha",
-    description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
+    description: "An AI-powered white-label SaaS platform to connect domestic work agencies with clients.",
     icon: HomeWorkforceIcon,
   },
    {
