@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI agent that generates video from text prompts using the Veo model.
@@ -51,42 +52,48 @@ async function getVideoAsDataUri(videoUrl: string): Promise<{ videoDataUri: stri
 }
 
 
-export async function generateVideo(input: GenerateVideoInput): Promise<GenerateVideoOutput> {
-  
-  let { operation } = await ai.generate({
-    model: googleAI.model('veo-2.0-generate-001'),
-    prompt: input.prompt,
-    config: {
-      durationSeconds: 5,
-      aspectRatio: '16:9',
+export const generateVideo = ai.defineFlow(
+    {
+        name: 'generateVideo',
+        inputSchema: GenerateVideoInputSchema,
+        outputSchema: GenerateVideoOutputSchema,
     },
-  });
+    async (input) => {
+        let { operation } = await ai.generate({
+            model: googleAI.model('veo-2.0-generate-001'),
+            prompt: input.prompt,
+            config: {
+            durationSeconds: 5,
+            aspectRatio: '16:9',
+            },
+        });
 
-  if (!operation) {
-    throw new Error('Expected the model to return an operation for video generation.');
-  }
+        if (!operation) {
+            throw new Error('Expected the model to return an operation for video generation.');
+        }
 
-  // Poll the operation status until it's done. This can take up to a minute.
-  while (!operation.done) {
-    // Wait for 5 seconds before checking the status again.
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    operation = await ai.checkOperation(operation);
-    console.log(`Checking video generation status... Done: ${operation.done}`);
-  }
+        // Poll the operation status until it's done. This can take up to a minute.
+        while (!operation.done) {
+            // Wait for 5 seconds before checking the status again.
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            operation = await ai.checkOperation(operation);
+            console.log(`Checking video generation status... Done: ${operation.done}`);
+        }
 
-  if (operation.error) {
-    throw new Error(`Failed to generate video: ${operation.error.message}`);
-  }
+        if (operation.error) {
+            throw new Error(`Failed to generate video: ${operation.error.message}`);
+        }
 
-  const videoPart = operation.output?.message?.content.find((p): p is MediaPart => !!p.media);
+        const videoPart = operation.output?.message?.content.find((p): p is MediaPart => !!p.media);
 
-  if (!videoPart || !videoPart.media?.url) {
-    throw new Error('Failed to find the generated video in the operation result.');
-  }
-  
-  // The returned URL is temporary and requires the API key for access.
-  // We fetch it and convert to a data URI to send to the client.
-  const { videoDataUri, contentType } = await getVideoAsDataUri(videoPart.media.url);
-  
-  return { videoDataUri, contentType };
-}
+        if (!videoPart || !videoPart.media?.url) {
+            throw new Error('Failed to find the generated video in the operation result.');
+        }
+        
+        // The returned URL is temporary and requires the API key for access.
+        // We fetch it and convert to a data URI to send to the client.
+        const { videoDataUri, contentType } = await getVideoAsDataUri(videoPart.media.url);
+        
+        return { videoDataUri, contentType };
+    }
+);

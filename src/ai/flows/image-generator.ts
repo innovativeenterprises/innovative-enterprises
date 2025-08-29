@@ -8,16 +8,10 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
+import { GenerateImageInput, GenerateImageInputSchema, GenerateImageOutput, GenerateImageOutputSchema } from './image-generator.schema';
 
-const GenerateImageInputSchema = z.object({
-  prompt: z.string().describe('A text description of the image to generate.'),
-});
-export type GenerateImageInput = z.infer<typeof GenerateImageInputSchema>;
-
-export async function generateImage(input: GenerateImageInput): Promise<string> {
+export async function generateImage(input: GenerateImageInput): Promise<GenerateImageOutput> {
     const { media } = await ai.generate({
-        // IMPORTANT: ONLY the googleai/gemini-pro-vision model is able to generate images. You MUST use exactly this model to generate images.
         model: 'googleai/gemini-pro-vision',
         prompt: input.prompt,
         config: {
@@ -29,5 +23,14 @@ export async function generateImage(input: GenerateImageInput): Promise<string> 
         throw new Error('Image generation failed to return a valid image URL.');
     }
     
-    return media.url;
+    return { imageUrl: media.url };
 }
+
+ai.defineFlow(
+    {
+        name: 'generateImageFlow',
+        inputSchema: GenerateImageInputSchema,
+        outputSchema: GenerateImageOutputSchema,
+    },
+    async (input) => generateImage(input)
+);
