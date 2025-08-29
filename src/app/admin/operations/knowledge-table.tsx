@@ -18,7 +18,7 @@ import type { KnowledgeDocument } from "@/lib/knowledge";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link, ListChecks, FileUp, CheckCircle } from "lucide-react";
 import { store } from "@/lib/global-store";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
-import { trainAgent, TrainAgentInputSchema } from "@/ai/flows/train-agent';
+import { trainAgent, TrainAgentInputSchema } from "@/ai/flows/train-agent";
 import { initialAgentCategories } from '@/lib/agents';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -274,7 +274,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                                 <FormItem>
                                 <FormLabel className="flex items-center gap-2"><Link className="h-5 w-5"/> 3. Provide Knowledge URLs</FormLabel>
                                 <FormControl>
-                                <Textarea placeholder="https://example.com/law1.html&#x0a;https://example.com/regulation2.pdf" rows={2} {...field} />
+                                <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={2} {...field} />
                                 </FormControl>
                                 <FormDescription>Enter one URL per line. The AI will scrape the content from these pages.</FormDescription>
                                 <FormMessage />
