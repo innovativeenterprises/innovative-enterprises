@@ -313,7 +313,7 @@ export default function AssetTable({
     setAssets,
 }: {
     assets: Asset[],
-    setAssets: (updater: (assets: Asset[]) => Asset[]) => void,
+    setAssets: (updater: (assets: Asset[]) => void) => void,
 }) {
     const { toast } = useToast();
     
@@ -423,5 +423,3 @@ export default function AssetTable({
         </Card>
     );
 }
-
-    
