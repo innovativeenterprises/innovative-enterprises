@@ -52,8 +52,9 @@ type PageState = 'form' | 'loading' | 'result';
 
 export default function EstimatorForm() {
   const [pageState, setPageState] = useState<PageState>('form');
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Designing Your System...');
   const [isAnalyzingPlan, setIsAnalyzingPlan] = useState(false);
-  const [isAnnotating, setIsAnnotating] = useState(false);
   const [response, setResponse] = useState<IctProposalOutput | null>(null);
   const [analysis, setAnalysis] = useState<FloorPlanAnalysisOutput | null>(null);
   const [annotatedImageUrl, setAnnotatedImageUrl] = useState<string | null>(null);
@@ -102,23 +103,43 @@ export default function EstimatorForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setPageState('loading');
+    setLoadingMessage('Generating Equipment Proposal...');
     setResponse(null);
     setAnnotatedImageUrl(null);
+
     try {
-      const input: IctProposalInput = {
+      const proposalInput: IctProposalInput = {
         ...data,
         numberOfUsers: 1,
         projectDurationMonths: 1,
         primaryGoal: 'Surveillance system installation',
         includeSurveillance: true,
       };
-      const result = await generateIctProposal(input);
-      setResponse(result);
+      
+      // Step 1: Generate the text-based proposal (equipment list, cost).
+      const proposalResult = await generateIctProposal(proposalInput);
+      setResponse(proposalResult);
+      
+      // Step 2: If a floor plan was provided, automatically generate the annotated image.
+      if (data.floorPlanFile && data.floorPlanFile.length > 0) {
+        setLoadingMessage('Placing Equipment on Floor Plan...');
+        const floorPlanUri = await fileToDataURI(data.floorPlanFile[0]);
+        const equipmentList = proposalResult.surveillanceSystem.equipmentList.map(item => `${item.quantity}x ${item.item}`).join(', ');
+        
+        const annotationResult = await annotateImage({
+            baseImageUri: floorPlanUri,
+            prompt: `Overlay professional, semi-transparent icons on this floor plan to show the placement of the following surveillance equipment: ${equipmentList}. Place cameras logically to cover entrances and main areas. Place the NVR/switch near the suggested location: ${analysis?.suggestedDvrLocation || 'a secure, central location'}.`
+        });
+        
+        setAnnotatedImageUrl(annotationResult.imageDataUri);
+      }
+
       setPageState('result');
       toast({
         title: 'Proposal Generated!',
         description: 'Your custom surveillance proposal is ready for review.',
       });
+
     } catch (error) {
       console.error(error);
       setPageState('form');
@@ -127,38 +148,10 @@ export default function EstimatorForm() {
         description: 'An unexpected error occurred. Please try again.',
         variant: 'destructive',
       });
+    } finally {
+        setIsLoading(false);
     }
   };
-  
-  const handleGenerateAnnotatedPlan = async () => {
-      const floorPlanFile = form.getValues('floorPlanFile');
-      if (!response || !floorPlanFile || floorPlanFile.length === 0) {
-          toast({ title: 'Missing Information', description: 'A floor plan and generated proposal are required.', variant: 'destructive' });
-          return;
-      }
-      setIsAnnotating(true);
-      setAnnotatedImageUrl(null);
-      toast({ title: 'Placing Equipment...', description: 'The AI is generating your annotated floor plan. This can take a moment.' });
-      
-      try {
-          const floorPlanUri = await fileToDataURI(floorPlanFile[0]);
-          const equipmentList = response.surveillanceSystem.equipmentList.map(item => `${item.quantity}x ${item.item}`).join(', ');
-          
-          const result = await annotateImage({
-              baseImageUri: floorPlanUri,
-              prompt: `Overlay professional, semi-transparent icons on this floor plan to show the placement of the following surveillance equipment: ${equipmentList}. Place cameras logically to cover entrances and main areas. Place the NVR/switch near the suggested location: ${analysis?.suggestedDvrLocation || 'a secure, central location'}.`
-          });
-          
-          setAnnotatedImageUrl(result.imageDataUri);
-          toast({ title: 'Annotated Plan Ready!', description: 'Your visual installation plan is complete.' });
-
-      } catch(e) {
-          console.error(e);
-          toast({ title: 'Annotation Failed', description: 'Could not generate the annotated plan.', variant: 'destructive' });
-      } finally {
-          setIsAnnotating(false);
-      }
-  }
 
   if (pageState === 'loading') {
     return (
@@ -167,8 +160,8 @@ export default function EstimatorForm() {
           <div className="flex flex-col items-center gap-6">
             <Loader2 className="h-12 w-12 text-primary animate-spin" />
             <div className="space-y-2">
-              <CardTitle className="text-2xl">Designing Your System...</CardTitle>
-              <CardDescription>Our AI Solutions Architect is designing your surveillance system. This may take a moment.</CardDescription>
+              <CardTitle className="text-2xl">{loadingMessage}</CardTitle>
+              <CardDescription>Our AI Architect is working. This may take up to a minute.</CardDescription>
             </div>
           </div>
         </CardContent>
@@ -198,7 +191,7 @@ export default function EstimatorForm() {
             <AlertDescription>{response.executiveSummary}</AlertDescription>
           </Alert>
             
-          {annotatedImageUrl ? (
+          {annotatedImageUrl && (
                <div>
                   <h3 className="text-lg font-semibold mb-2">Annotated Installation Plan</h3>
                   <div className="relative aspect-video w-full overflow-hidden rounded-md border bg-black">
@@ -210,13 +203,6 @@ export default function EstimatorForm() {
                     </Button>
                   </div>
               </div>
-          ) : (
-             form.getValues('floorPlanFile')?.[0] && (
-                 <Button onClick={handleGenerateAnnotatedPlan} disabled={isAnnotating} className="w-full">
-                     {isAnnotating ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <ImageIcon className="mr-2 h-4 w-4" />}
-                     Generate Annotated Plan
-                 </Button>
-             )
           )}
 
           {response.surveillanceSystem.equipmentList.length > 0 && (
@@ -324,8 +310,9 @@ export default function EstimatorForm() {
                 </FormItem>
             )} />
 
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-              <Sparkles className="mr-2 h-4 w-4" /> Get AI Proposal
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg" disabled={isLoading || isAnalyzingPlan}>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                Get AI Proposal
             </Button>
           </form>
         </Form>
