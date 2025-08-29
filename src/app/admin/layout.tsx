@@ -54,7 +54,7 @@ export default function AdminLayout({
         <SidebarHeader>
           <Button asChild variant="ghost" className="h-auto w-auto p-1">
             <Link href="/" className="flex items-center gap-2">
-               <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-32 h-auto object-contain group-data-[collapsible=icon]:hidden" />
+               <Image src="https://placehold.co/400x100/293462/F0F4F8?text=INNOVATIVE%0AENTERPRISES&font=inter" alt="Innovative Enterprises Logo" width={160} height={40} className="w-32 h-auto object-contain group-data-[collapsible=icon]:hidden" />
                <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png" alt="Innovative Enterprises Logo" width={32} height={32} className="w-8 h-8 object-contain hidden group-data-[collapsible=icon]:block" />
             </Link>
           </Button>
