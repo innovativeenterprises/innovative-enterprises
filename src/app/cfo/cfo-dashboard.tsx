@@ -23,6 +23,26 @@ const transactionData = [
   { invoice: "INV005", type: 'Project', status: "Pending", total: 550.00, client: "KHIDMAAI Platform Development" },
   { invoice: "INV006", type: 'Expense', status: "Paid", total: 200.00, client: "Cloud Hosting - AWS" },
   { invoice: "INV007", type: 'Service', status: "Unpaid", total: 300.00, client: "Aegis Security Audit" },
+  { invoice: "INV008", type: 'Subscription', status: "Paid", total: 99.00, client: "GENIUS Career Platform - Yearly Plan" },
+  { invoice: "INV009", type: 'Project', status: "Paid", total: 1200.00, client: "AI Property Valuator - Proof of Concept" },
+  { invoice: "INV010", type: 'Expense', status: "Paid", total: 75.00, client: "Software Licenses - Figma" },
+  { invoice: "INV011", type: 'Service', status: "Paid", total: 50.00, client: "AI-Powered FAQ Setup" },
+  { invoice: "INV012", type: 'Project', status: "Pending", total: 3000.00, client: "SmartLease Manager - Phase 1" },
+  { invoice: "INV013", type: 'Expense', status: "Paid", total: 150.00, client: "Freelancer Payment - Design Work" },
+  { invoice: "INV014", type: 'Subscription', status: "Paid", total: 49.00, client: "Nova Commerce - Basic Plan" },
+  { invoice: "INV015", type: 'Service', status: "Paid", total: 250.00, client: "CCTV Installation - Residential" },
+  { invoice: "INV016", type: 'Expense', status: "Paid", total: 500.00, client: "Legal Consultation Fees" },
+  { invoice: "INV017", type: 'Project', status: "Unpaid", total: 800.00, client: "RAAHA Platform - White-Label Setup" },
+  { invoice: "INV018", type: 'Subscription', status: "Paid", total: 25.00, client: "InfraRent - Server Rental" },
+  { invoice: "INV019", type: 'Service', status: "Paid", total: 180.00, client: "Tender Response Assistance" },
+  { invoice: "INV020", type: 'Expense', status: "Paid", total: 300.00, client: "Office Supplies" },
+  { invoice: "INV021", type: 'Project', status: "Paid", total: 450.00, client: "ConstructFin - UI Mockups" },
+  { invoice: "INV022", type: 'Subscription', status: "Unpaid", total: 150.00, client: "Sanad Hub - Yearly Renewal" },
+  { invoice: "INV023", type: 'Service', status: "Paid", total: 75.00, client: "Document Translation - Marketing Copy" },
+  { invoice: "INV024", type: 'Expense', status: "Paid", total: 120.00, client: "Transportation & Fuel" },
+  { invoice: "INV025", type: 'Project', status: "Pending", total: 1500.00, client: "BidWise Estimator - Database Setup" },
+  { invoice: "INV026", type: 'Subscription', status: "Paid", total: 299.00, client: "AI Legal Agent - Premium Access" },
+  { invoice: "INV027", type: 'Service', status: "Paid", total: 90.00, client: "CV Enhancement & Cover Letter" },
 ];
 
 const upcomingPayments = [
@@ -30,6 +50,13 @@ const upcomingPayments = [
     { source: "Cloud Services (AWS)", amount: 450.50, dueDate: "2024-08-28" },
     { source: "Office Rent", amount: 800.00, dueDate: "2024-09-01" },
     { source: "Software Licenses", amount: 250.00, dueDate: "2024-09-05" },
+    { source: "Salaries - August", amount: 7500.00, dueDate: "2024-08-28" },
+    { source: "Marketing Agency Retainer", amount: 1500.00, dueDate: "2024-09-01" },
+    { source: "Internet & Telecom Bills", amount: 120.00, dueDate: "2024-09-10" },
+    { source: "Insurance Renewal", amount: 600.00, dueDate: "2024-09-15" },
+    { source: "Hardware Lease Payment", amount: 750.00, dueDate: "2024-09-18" },
+    { source: "Freelancer Payments - August", amount: 1800.00, dueDate: "2024-09-05" },
+    { source: "Domain Name Renewals", amount: 50.00, dueDate: "2024-09-20" },
 ];
 
 const vatPayment = { source: "VAT Filing & Payment", amount: 2153.52, dueDate: "2024-09-30" };
