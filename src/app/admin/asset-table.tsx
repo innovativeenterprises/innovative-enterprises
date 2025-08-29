@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Asset } from "@/lib/assets";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon, Search } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
 
@@ -316,6 +316,7 @@ export default function AssetTable({
     setAssets: (updater: (assets: Asset[]) => void) => void,
 }) {
     const { toast } = useToast();
+    const [searchTerm, setSearchTerm] = useState('');
     
     const handleSave = (values: AssetValues, id?: string) => {
         if (id) {
@@ -349,20 +350,34 @@ export default function AssetTable({
         }
     }
 
+    const filteredAssets = useMemo(() => {
+        return assets.filter(asset =>
+            asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            asset.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            asset.specs.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [assets, searchTerm]);
+
 
     return (
         <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
                     <CardTitle>InfraRent Asset Management</CardTitle>
                     <CardDescription>Manage IT hardware and infrastructure available for rent.</CardDescription>
                 </div>
-                <div className="flex gap-2">
-                    <ImportAssetsDialog onImport={handleBulkImport}>
-                         <Button variant="outline"><Upload className="mr-2 h-4 w-4" /> Import from CSV</Button>
-                    </ImportAssetsDialog>
+                <div className="flex w-full md:w-auto items-center gap-2">
+                    <div className="relative flex-grow">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search assets..."
+                            className="pl-8"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
                      <AddEditAssetDialog onSave={handleSave}>
-                        <Button><PlusCircle /> Add Asset</Button>
+                        <Button className="shrink-0"><PlusCircle /> Add Asset</Button>
                     </AddEditAssetDialog>
                 </div>
             </CardHeader>
@@ -379,18 +394,18 @@ export default function AssetTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {assets.map(asset => (
-                            <TableRow key={asset.id} className="cursor-pointer">
+                        {filteredAssets.map(asset => (
+                            <TableRow key={asset.id}>
                                 <TableCell>
                                      <AddEditAssetDialog asset={asset} onSave={handleSave}>
-                                        <div className="p-1 -m-1 rounded-md hover:bg-muted w-fit">
+                                        <div className="p-1 -m-1 rounded-md hover:bg-muted w-fit cursor-pointer">
                                             <Image src={asset.image} alt={asset.name} width={60} height={45} className="rounded-md object-cover" />
                                         </div>
                                     </AddEditAssetDialog>
                                 </TableCell>
                                 <TableCell>
                                     <AddEditAssetDialog asset={asset} onSave={handleSave}>
-                                        <div className="p-2 -m-2 rounded-md hover:bg-muted">
+                                        <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">
                                             <p className="font-medium">{asset.name}</p>
                                             <p className="text-sm text-muted-foreground truncate max-w-xs">{asset.specs}</p>
                                         </div>

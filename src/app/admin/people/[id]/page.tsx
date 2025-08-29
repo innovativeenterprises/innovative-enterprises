@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useParams } from 'next/navigation';
@@ -6,7 +7,7 @@ import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Mail, Phone, Globe, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
 
@@ -35,7 +36,11 @@ export default function ProviderDetailPage() {
             return <Badge variant="secondary">No Subscription</Badge>;
         }
         if (tier === 'Lifetime') {
-            return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Lifetime</Badge>;
+            return (
+                 <div className="flex items-center gap-2 text-purple-700 font-semibold">
+                    <Star className="h-5 w-5 fill-purple-500 text-purple-500" /> Lifetime
+                 </div>
+            )
         }
 
         const expiryDate = new Date(expiry);

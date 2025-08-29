@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Client, Testimonial } from "@/lib/clients";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { store } from "@/lib/global-store";
@@ -239,6 +239,8 @@ export default function ClientTable({
     setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => void 
 }) {
     const { toast } = useToast();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [activeTab, setActiveTab] = useState('clients');
 
     // Handlers
     const handleSaveClient = (values: ClientValues, id?: string) => {
@@ -273,6 +275,21 @@ export default function ClientTable({
         toast({ title: "Testimonial removed.", variant: "destructive" });
     };
 
+    const filteredClients = useMemo(() => {
+        return clients.filter(client =>
+            client.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [clients, searchTerm]);
+
+    const filteredTestimonials = useMemo(() => {
+        return testimonials.filter(t =>
+            t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            t.company.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [testimonials, searchTerm]);
+
+
     return (
         <Card>
             <CardHeader>
@@ -280,28 +297,38 @@ export default function ClientTable({
                 <CardDescription>Manage the logos and testimonials on your homepage.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Tabs defaultValue="clients">
-                    <div className="flex justify-between items-end">
+                <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-4">
                         <TabsList>
                             <TabsTrigger value="clients">Client Logos</TabsTrigger>
                             <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="clients" className="m-0 p-0">
-                            <AddEditClientDialog onSave={handleSaveClient}>
-                                <Button><PlusCircle /> Add Client</Button>
-                            </AddEditClientDialog>
-                        </TabsContent>
-                         <TabsContent value="testimonials" className="m-0 p-0">
-                            <AddEditTestimonialDialog onSave={handleSaveTestimonial}>
-                                <Button><PlusCircle /> Add Testimonial</Button>
-                            </AddEditTestimonialDialog>
-                        </TabsContent>
+                        <div className="flex w-full md:w-auto items-center gap-2">
+                            <div className="relative flex-grow">
+                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search..."
+                                    className="pl-8 w-full"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                            {activeTab === 'clients' ? (
+                                <AddEditClientDialog onSave={handleSaveClient}>
+                                    <Button className="shrink-0"><PlusCircle /> Add Client</Button>
+                                </AddEditClientDialog>
+                            ) : (
+                                <AddEditTestimonialDialog onSave={handleSaveTestimonial}>
+                                    <Button className="shrink-0"><PlusCircle /> Add Testimonial</Button>
+                                </AddEditTestimonialDialog>
+                            )}
+                        </div>
                     </div>
                     <TabsContent value="clients">
                         <Table>
                              <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {clients.map(client => (
+                                {filteredClients.map(client => (
                                     <TableRow key={client.id} className="cursor-pointer">
                                         <TableCell>
                                             <AddEditClientDialog client={client} onSave={handleSaveClient}>
@@ -331,7 +358,7 @@ export default function ClientTable({
                          <Table>
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {testimonials.map(t => (
+                                {filteredTestimonials.map(t => (
                                     <TableRow key={t.id} className="cursor-pointer">
                                         <TableCell className="italic max-w-md truncate">
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
