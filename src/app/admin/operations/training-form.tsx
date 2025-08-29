@@ -151,7 +151,7 @@ export default function TrainingForm() {
                         <FormItem>
                         <FormLabel className="flex items-center gap-2"><Link className="h-5 w-5"/> Provide Knowledge URLs</FormLabel>
                         <FormControl>
-                           <Textarea placeholder="https://example.com/law1.html&#10;https://example.com/regulation2.pdf" rows={4} {...field} />
+                           <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={4} {...field} />
                         </FormControl>
                         <FormDescription>Enter one URL per line. The AI will scrape the content from these pages.</FormDescription>
                         <FormMessage />

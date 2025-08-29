@@ -56,6 +56,7 @@ const InvestorSchema = z.object({
   subType: z.enum(['Personal/Private', 'Angel', 'Institute/Government', 'VC Fund']),
   profile: z.string().min(10, "A brief profile/description is required"),
   focusArea: z.string().min(3, "Focus area is required"),
+  country: z.string().min(2, "Country is required"),
   investmentValue: z.coerce.number().optional(),
   sharePercentage: z.coerce.number().optional(),
   // Document fields
@@ -86,6 +87,7 @@ const AddEditInvestorDialog = ({
             subType: "Personal/Private",
             profile: "",
             focusArea: "",
+            country: "",
             investmentValue: 0,
             sharePercentage: 0,
         },
@@ -93,7 +95,7 @@ const AddEditInvestorDialog = ({
 
     useEffect(() => {
         if(isOpen) {
-           form.reset(investor || { name: "", type: "Investor", subType: "Personal/Private", profile: "", focusArea: "", investmentValue: 0, sharePercentage: 0 });
+           form.reset(investor || { name: "", type: "Investor", subType: "Personal/Private", profile: "", focusArea: "", country: "", investmentValue: 0, sharePercentage: 0 });
         }
     }, [investor, form, isOpen]);
 
@@ -135,10 +137,14 @@ const AddEditInvestorDialog = ({
                         <FormField control={form.control} name="profile" render={({ field }) => (
                             <FormItem><FormLabel>Profile & Description</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <FormField control={form.control} name="focusArea" render={({ field }) => (
-                            <FormItem><FormLabel>Investment Sector / Focus Area</FormLabel><FormControl><Input placeholder="e.g., AI Projects, Real Estate Tech, General Growth" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-
+                        <div className="grid grid-cols-2 gap-4">
+                             <FormField control={form.control} name="focusArea" render={({ field }) => (
+                                <FormItem><FormLabel>Investment Sector / Focus Area</FormLabel><FormControl><Input placeholder="e.g., AI Projects, Real Estate Tech" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField control={form.control} name="country" render={({ field }) => (
+                                <FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="e.g., Oman" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name="investmentValue" render={({ field }) => (
@@ -213,6 +219,7 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                 subType: values.subType,
                 profile: values.profile,
                 focusArea: values.focusArea,
+                country: values.country,
                 investmentValue: values.investmentValue,
                 sharePercentage: values.sharePercentage,
                 documents: uploadedDocs,
@@ -249,6 +256,7 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                     <TableHeader>
                         <TableRow>
                             <TableHead>Name / Institute</TableHead>
+                            <TableHead>Country</TableHead>
                             <TableHead>Focus Area</TableHead>
                             <TableHead>Value (OMR)</TableHead>
                             <TableHead>Share</TableHead>
@@ -270,6 +278,7 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                                         </div>
                                     </div>
                                 </TableCell>
+                                <TableCell>{inv.country}</TableCell>
                                 <TableCell>
                                      <Badge variant="secondary">{inv.focusArea}</Badge>
                                 </TableCell>

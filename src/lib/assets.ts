@@ -18,7 +18,7 @@ export const initialAssets: Asset[] = [
         type: 'Server',
         status: 'Available',
         specs: '2x Intel Xeon Silver, 128GB RAM, 4TB SSD',
-        monthlyPrice: 150,
+        monthlyPrice: 15,
         purchasePrice: 2500,
         image: 'https://picsum.photos/seed/asset1/600/400',
         aiHint: 'server rack'
@@ -29,7 +29,7 @@ export const initialAssets: Asset[] = [
         type: 'Laptop',
         status: 'Rented',
         specs: 'M3 Max, 32GB RAM, 1TB SSD',
-        monthlyPrice: 90,
+        monthlyPrice: 9,
         purchasePrice: 2800,
         image: 'https://picsum.photos/seed/asset2/600/400',
         aiHint: 'laptop computer'
@@ -40,7 +40,7 @@ export const initialAssets: Asset[] = [
         type: 'Workstation',
         status: 'Available',
         specs: 'Intel Core i9, 64GB RAM, NVIDIA RTX 4000',
-        monthlyPrice: 120,
+        monthlyPrice: 12,
         purchasePrice: 2200,
         image: 'https://picsum.photos/seed/asset3/600/400',
         aiHint: 'desktop computer'
@@ -51,7 +51,7 @@ export const initialAssets: Asset[] = [
         type: 'Networking',
         status: 'Available',
         specs: '48-port PoE+ Switch',
-        monthlyPrice: 80,
+        monthlyPrice: 8,
         purchasePrice: 1500,
         image: 'https://picsum.photos/seed/asset4/600/400',
         aiHint: 'network switch'
@@ -62,7 +62,7 @@ export const initialAssets: Asset[] = [
         type: 'Storage',
         status: 'Maintenance',
         specs: '4-Bay NAS, 16TB Capacity',
-        monthlyPrice: 60,
+        monthlyPrice: 6,
         purchasePrice: 850,
         image: 'https://picsum.photos/seed/asset5/600/400',
         aiHint: 'network storage'
@@ -73,7 +73,7 @@ export const initialAssets: Asset[] = [
         type: 'Laptop',
         status: 'Available',
         specs: 'Intel Core i7, 16GB RAM, 512GB SSD',
-        monthlyPrice: 75,
+        monthlyPrice: 7.5,
         purchasePrice: 1400,
         image: 'https://picsum.photos/seed/asset6/600/400',
         aiHint: 'business laptop'
@@ -84,7 +84,7 @@ export const initialAssets: Asset[] = [
         type: 'Server',
         status: 'Available',
         specs: '2x Intel Xeon Gold, 256GB RAM, 8TB SAS',
-        monthlyPrice: 220,
+        monthlyPrice: 22,
         purchasePrice: 4500,
         image: 'https://picsum.photos/seed/asset7/600/400',
         aiHint: 'data center server'
@@ -95,7 +95,7 @@ export const initialAssets: Asset[] = [
         type: 'Workstation',
         status: 'Rented',
         specs: 'Intel Xeon Gold, 128GB RAM, NVIDIA RTX 6000',
-        monthlyPrice: 250,
+        monthlyPrice: 25,
         purchasePrice: 5500,
         image: 'https://picsum.photos/seed/asset8/600/400',
         aiHint: 'powerful workstation'
@@ -106,7 +106,7 @@ export const initialAssets: Asset[] = [
         type: 'Storage',
         status: 'Available',
         specs: 'All-Flash Array, 50TB effective capacity',
-        monthlyPrice: 400,
+        monthlyPrice: 40,
         purchasePrice: 12000,
         image: 'https://picsum.photos/seed/asset9/600/400',
         aiHint: 'enterprise storage'
@@ -117,7 +117,7 @@ export const initialAssets: Asset[] = [
         type: 'Networking',
         status: 'Available',
         specs: '24-port GbE PoE+ & 2-port 10G SFP+',
-        monthlyPrice: 50,
+        monthlyPrice: 5,
         purchasePrice: 900,
         image: 'https://picsum.photos/seed/asset10/600/400',
         aiHint: 'poe switch'
@@ -128,7 +128,7 @@ export const initialAssets: Asset[] = [
         type: 'Peripheral',
         status: 'Available',
         specs: '27-inch 4K UHD (3840 x 2160) IPS Display',
-        monthlyPrice: 25,
+        monthlyPrice: 2.5,
         purchasePrice: 450,
         image: 'https://picsum.photos/seed/asset31/600/400',
         aiHint: '4k monitor'
@@ -139,7 +139,7 @@ export const initialAssets: Asset[] = [
         type: 'Peripheral',
         status: 'Available',
         specs: 'Wireless Performance Mouse with Quiet Clicks',
-        monthlyPrice: 10,
+        monthlyPrice: 1,
         purchasePrice: 90,
         image: 'https://picsum.photos/seed/asset32/600/400',
         aiHint: 'computer mouse'
@@ -150,7 +150,7 @@ export const initialAssets: Asset[] = [
         type: 'Peripheral',
         status: 'Maintenance',
         specs: '17-Inch Professional Photographic Printer',
-        monthlyPrice: 70,
+        monthlyPrice: 7,
         purchasePrice: 1200,
         image: 'https://picsum.photos/seed/asset33/600/400',
         aiHint: 'large printer'
@@ -161,7 +161,7 @@ export const initialAssets: Asset[] = [
         type: 'Networking',
         status: 'Available',
         specs: 'Wi-Fi 6E Tri-Band, supports up to 100 devices',
-        monthlyPrice: 30,
+        monthlyPrice: 3,
         purchasePrice: 350,
         image: 'https://picsum.photos/seed/asset34/600/400',
         aiHint: 'wifi router'
@@ -172,7 +172,7 @@ export const initialAssets: Asset[] = [
         type: 'Peripheral',
         status: 'Available',
         specs: '4000 Lumens, 1080p Full HD Resolution',
-        monthlyPrice: 45,
+        monthlyPrice: 4.5,
         purchasePrice: 600,
         image: 'https://picsum.photos/seed/asset35/600/400',
         aiHint: 'video projector'
@@ -183,7 +183,7 @@ export const initialAssets: Asset[] = [
         type: 'Networking',
         status: 'Available',
         specs: '5G Connectivity, supports up to 20 devices',
-        monthlyPrice: 20,
+        monthlyPrice: 2,
         purchasePrice: 250,
         image: 'https://picsum.photos/seed/asset36/600/400',
         aiHint: 'mobile hotspot'
