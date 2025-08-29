@@ -7,11 +7,11 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { 
+import type { 
     ImageAnnotationInput, 
     ImageAnnotationOutput,
-    ImageAnnotationOutputSchema
 } from './image-annotation.schema';
+import { ImageAnnotationInputSchema, ImageAnnotationOutputSchema } from './image-annotation.schema';
 
 
 export async function annotateImage(input: ImageAnnotationInput): Promise<ImageAnnotationOutput> {
@@ -36,7 +36,7 @@ export async function annotateImage(input: ImageAnnotationInput): Promise<ImageA
 ai.defineFlow(
     {
         name: 'annotateImageFlow',
-        inputSchema: ImageAnnotationInput,
+        inputSchema: ImageAnnotationInputSchema,
         outputSchema: ImageAnnotationOutputSchema,
     },
     async (input) => annotateImage(input)
