@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -13,7 +14,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, Download, Copy } from 'lucide-react';
+import { Loader2, Sparkles, FileText, Download, Copy, Mic } from 'lucide-react';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -116,7 +118,7 @@ export default function TenderForm() {
                   <FormItem>
                     <FormLabel>Project Requirements Summary</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <VoiceEnabledTextarea
                         placeholder="Summarize the key requirements, scope, and deliverables mentioned in the tender documents."
                         rows={8}
                         {...field}

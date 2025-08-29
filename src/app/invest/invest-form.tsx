@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -13,9 +14,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Mail, Download, Briefcase, Calendar, CheckCircle, Bot, FileUp, ShieldCheck, Phone } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Mail, Download, Briefcase, Calendar, CheckCircle, Bot, FileUp, ShieldCheck, Phone, ArrowLeft, Star, Mic } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const FormSchema = z.object({
   fullName: z.string().min(3, 'Full name is required.'),
@@ -297,7 +299,7 @@ export default function InvestForm() {
                                 <FormItem>
                                     <FormLabel>Area of Interest</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder="Please provide a brief introduction and your area of interest (e.g., 'Interested in early-stage AI projects and cybersecurity ventures')." rows={6} {...field}/>
+                                        <VoiceEnabledTextarea placeholder="Please provide a brief introduction and your area of interest (e.g., 'Interested in early-stage AI projects and cybersecurity ventures')." rows={6} {...field}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -11,8 +12,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Download, Image as ImageIcon } from 'lucide-react';
+import { Loader2, Sparkles, Download, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const FormSchema = z.object({
   prompt: z.string().min(10, 'Please enter a more descriptive prompt (at least 10 characters).'),
@@ -78,7 +80,7 @@ export default function ImageForm() {
                   <FormItem>
                     <FormLabel>Prompt</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <VoiceEnabledTextarea
                         placeholder="e.g., A photorealistic image of a futuristic city in the Omani desert at sunset, with flying vehicles and glowing buildings."
                         rows={5}
                         {...field}

@@ -11,13 +11,14 @@ import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput,
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download, Twitter, Linkedin, FacebookIcon, Send, FileText, MessageSquare } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Megaphone, Image as ImageIcon, Download, Twitter, Linkedin, FacebookIcon, Send, FileText, MessageSquare, Mic } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 
 const platformOptions = [
@@ -109,7 +110,7 @@ export default function SocialMediaForm() {
                   <FormItem>
                     <FormLabel>Topic / Prompt</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <VoiceEnabledTextarea
                         placeholder="e.g., Announce a new partnership with a major tech company."
                         rows={6}
                         {...field}

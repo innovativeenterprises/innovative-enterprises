@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -12,7 +13,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Download, Video } from 'lucide-react';
+import { Loader2, Sparkles, Download, Video, Mic } from 'lucide-react';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const FormSchema = z.object({
   prompt: z.string().min(10, 'Please enter a more descriptive prompt (at least 10 characters).'),
@@ -94,7 +96,7 @@ export default function VideoGeneratorPage() {
                         <FormItem>
                             <FormLabel>Prompt</FormLabel>
                             <FormControl>
-                            <Textarea
+                            <VoiceEnabledTextarea
                                 placeholder="e.g., A cinematic drone shot of a futuristic city in the Omani desert at sunset, with flying vehicles and glowing buildings."
                                 rows={5}
                                 {...field}

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -13,8 +14,9 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, FileText, ClipboardList, Milestone, CircleDollarSign, Calendar } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, FileText, ClipboardList, Milestone, CircleDollarSign, Calendar, Mic } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -107,7 +109,7 @@ export default function WorkOrderForm() {
                   <FormItem>
                     <FormLabel>Detailed Description</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <VoiceEnabledTextarea
                         placeholder="Describe the project scope, objectives, key features, target audience, and any other relevant details."
                         rows={8}
                         {...field}
