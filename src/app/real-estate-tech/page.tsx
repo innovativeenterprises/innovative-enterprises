@@ -48,7 +48,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 export default function RealEstateTechPage() {
     const { products } = useProductsData();
-    const realEstateProducts = products.filter(p => p.category === "Real Estate Tech");
+    const realEstateProducts = products.filter(p => p.category === "Real Estate Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

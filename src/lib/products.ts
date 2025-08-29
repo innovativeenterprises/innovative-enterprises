@@ -20,7 +20,7 @@ export const initialProducts: Product[] = [
         description: "High-fidelity audio with noise cancellation.",
         stage: "Live & Operating",
         category: "Electronics",
-        price: 12.99,
+        price: 1.30,
         image: "https://picsum.photos/seed/p1/400/400",
         aiHint: "headphones product",
         rating: 4.5,
@@ -32,7 +32,7 @@ export const initialProducts: Product[] = [
         description: "Oak wood with a minimalist design for modern living.",
         stage: "Live & Operating",
         category: "Home Goods",
-        price: 24.90,
+        price: 2.49,
         image: "https://picsum.photos/seed/p2/400/400",
         aiHint: "coffee table",
         rating: 4.8,
@@ -44,7 +44,7 @@ export const initialProducts: Product[] = [
         description: "Lightweight and responsive for your daily run.",
         stage: "Live & Operating",
         category: "Sports",
-        price: 8.99,
+        price: 0.90,
         image: "https://picsum.photos/seed/p3/400/400",
         aiHint: "running shoes",
         rating: 4.7,
@@ -56,7 +56,7 @@ export const initialProducts: Product[] = [
         description: "Soft, breathable, and sustainably made.",
         stage: "Live & Operating",
         category: "Apparel",
-        price: 2.45,
+        price: 0.25,
         image: "https://picsum.photos/seed/p4/400/400",
         aiHint: "cotton t-shirt",
         rating: 4.9,
@@ -68,7 +68,7 @@ export const initialProducts: Product[] = [
         description: "Track your fitness and stay connected on the go.",
         stage: "Live & Operating",
         category: "Electronics",
-        price: 39.90,
+        price: 3.99,
         image: "https://picsum.photos/seed/p5/400/400",
         aiHint: "smartwatch product",
         rating: 4.9,
@@ -80,7 +80,7 @@ export const initialProducts: Product[] = [
         description: "Stylish and durable for work or travel.",
         stage: "Live & Operating",
         category: "Apparel",
-        price: 15.00,
+        price: 1.50,
         image: "https://picsum.photos/seed/p6/400/400",
         aiHint: "leather backpack",
         rating: 4.6,
@@ -92,7 +92,7 @@ export const initialProducts: Product[] = [
         description: "A complete set for all your cooking needs.",
         stage: "Live & Operating",
         category: "Home Goods",
-        price: 19.99,
+        price: 2.00,
         image: "https://picsum.photos/seed/p7/400/400",
         aiHint: "cookware set",
         rating: 4.7,
@@ -104,7 +104,7 @@ export const initialProducts: Product[] = [
         description: "A bestselling novel by Paulo Coelho.",
         stage: "Live & Operating",
         category: "Books",
-        price: 1.29,
+        price: 0.13,
         image: "https://picsum.photos/seed/p8/400/400",
         aiHint: "book cover",
         rating: 4.8,
@@ -250,7 +250,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re1/400/400",
         aiHint: "property value graph",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 20,
@@ -262,7 +262,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re2/400/400",
         aiHint: "house search map",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 21,
@@ -274,7 +274,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re3/400/400",
         aiHint: "virtual reality home",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 22,
@@ -286,7 +286,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re4/400/400",
         aiHint: "legal document agreement",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 23,
@@ -298,7 +298,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re5/400/400",
         aiHint: "online payment rent",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 24,
@@ -310,7 +310,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re6/400/400",
         aiHint: "investment analysis chart",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 25,
@@ -322,7 +322,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re7/400/400",
         aiHint: "maintenance service ticket",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 26,
@@ -334,7 +334,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re8/400/400",
         aiHint: "blockchain property ownership",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 27,
@@ -346,7 +346,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re9/400/400",
         aiHint: "digital document wallet",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 28,
@@ -358,7 +358,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re10/400/400",
         aiHint: "green building energy",
         rating: 0,
-        enabled: false
+        enabled: true
     },
     {
         id: 29,
