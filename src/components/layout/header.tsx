@@ -4,7 +4,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -387,11 +387,18 @@ export default function Header() {
                 </Button>
                 </SheetTrigger>
                 <SheetContent side="right">
-                <div className="flex flex-col gap-4 py-8">
-                    <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary mb-4 px-2" onClick={handleLinkClick}>
-                        <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-40 h-auto object-contain" />
-                    </Link>
-                    <nav className="flex flex-col gap-2">
+                 <SheetHeader className="p-4 border-b">
+                    <SheetTitle>
+                        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" onClick={handleLinkClick}>
+                            <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-40 h-auto object-contain" />
+                        </Link>
+                    </SheetTitle>
+                    <SheetDescription className="sr-only">
+                        Main navigation menu.
+                    </SheetDescription>
+                 </SheetHeader>
+                <div className="flex flex-col gap-4 py-4">
+                    <nav className="flex flex-col gap-2 px-2">
                       {mobileNavLinks}
                       <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Services</p>
                       {serviceLinks.map((link) => (
@@ -459,7 +466,7 @@ export default function Header() {
                           <Link href="/admin">Admin Dashboard</Link>
                         </Button>
                     </nav>
-                    <Button className="mt-4">Log Out</Button>
+                    <Button className="mt-4 mx-4">Log Out</Button>
                 </div>
                 </SheetContent>
             </Sheet>
