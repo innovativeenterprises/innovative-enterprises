@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -80,6 +80,12 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     href: "/raaha",
     description: "An AI-powered white-label SaaS platform to connect domestic work agencies with clients.",
     icon: HomeWorkforceIcon,
+  },
+   {
+    title: "RAAHA Agency Dashboard",
+    href: "/raaha/agency-dashboard",
+    description: "Manage your agency's candidates and client requests on the RAAHA platform.",
+    icon: UserCog,
   },
    {
     title: "GENIUS Career Platform",

@@ -48,9 +48,12 @@ export default function RaahaPage() {
           <p className="mt-4 text-lg text-muted-foreground">
             An AI-powered, white-label platform designed to empower home workforce agencies, streamline recruitment, and build trust with clients.
           </p>
-           <div className="mt-8">
+           <div className="mt-8 flex justify-center gap-4">
                <Button asChild size="lg">
-                    <Link href="/raaha/find-a-helper">Try the AI Matcher</Link>
+                    <Link href="/raaha/find-a-helper">Find a Helper (Client View)</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                    <Link href="/raaha/agency-dashboard">Agency Dashboard</Link>
                 </Button>
            </div>
         </div>
