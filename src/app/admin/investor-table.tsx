@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Investor } from "@/lib/investors";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent } from "lucide-react";
 import { store } from "@/lib/global-store";
 
 // Hook to connect to the global store
@@ -55,6 +55,8 @@ const InvestorSchema = z.object({
   type: z.enum(['Investor', 'Funder']),
   subType: z.enum(['Personal/Private', 'Angel', 'Institute/Government', 'VC Fund']),
   profile: z.string().min(10, "A brief profile/description is required"),
+  investmentValue: z.coerce.number().optional(),
+  sharePercentage: z.coerce.number().optional(),
   // Document fields
   crDoc: z.any().optional(),
   vatIdDoc: z.any().optional(),
@@ -82,12 +84,14 @@ const AddEditInvestorDialog = ({
             type: "Investor",
             subType: "Personal/Private",
             profile: "",
+            investmentValue: 0,
+            sharePercentage: 0,
         },
     });
 
     useEffect(() => {
         if(isOpen) {
-           form.reset(investor || { name: "", type: "Investor", subType: "Personal/Private", profile: "" });
+           form.reset(investor || { name: "", type: "Investor", subType: "Personal/Private", profile: "", investmentValue: 0, sharePercentage: 0 });
         }
     }, [investor, form, isOpen]);
 
@@ -129,6 +133,15 @@ const AddEditInvestorDialog = ({
                         <FormField control={form.control} name="profile" render={({ field }) => (
                             <FormItem><FormLabel>Profile & Description</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="investmentValue" render={({ field }) => (
+                                <FormItem><FormLabel>Investment Value (OMR)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="sharePercentage" render={({ field }) => (
+                                <FormItem><FormLabel>Share (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
                         
                         <Card className="bg-muted/50">
                             <CardHeader><CardTitle className="text-base">Upload Documents (Optional)</CardTitle></CardHeader>
@@ -193,6 +206,8 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                 type: values.type,
                 subType: values.subType,
                 profile: values.profile,
+                investmentValue: values.investmentValue,
+                sharePercentage: values.sharePercentage,
                 documents: uploadedDocs,
             };
             setInvestors(prev => [newInvestor, ...prev]);
@@ -228,6 +243,8 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                         <TableRow>
                             <TableHead>Name / Institute</TableHead>
                             <TableHead>Type</TableHead>
+                            <TableHead>Value (OMR)</TableHead>
+                            <TableHead>Share</TableHead>
                             <TableHead>Documents</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
@@ -248,6 +265,14 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                                 </TableCell>
                                 <TableCell>
                                     <Badge variant="outline">{inv.subType}</Badge>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="font-medium">{inv.investmentValue?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '-'}</div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center gap-1 font-medium">
+                                        {inv.sharePercentage ? `${inv.sharePercentage}%` : '-'}
+                                    </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex gap-2 flex-wrap">

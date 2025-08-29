@@ -17,6 +17,8 @@ export interface Investor {
     civilId?: InvestorDocument;
     incomeProof?: InvestorDocument;
   };
+  investmentValue?: number;
+  sharePercentage?: number;
 }
 
 export const initialInvestors: Investor[] = [
@@ -27,6 +29,8 @@ export const initialInvestors: Investor[] = [
         subType: "Institute/Government",
         profile: "A government-backed fund focused on nurturing technology startups and innovation within the Sultanate of Oman.",
         documents: {},
+        investmentValue: 50000,
+        sharePercentage: 0,
     },
     {
         id: "inv_2",
@@ -35,6 +39,8 @@ export const initialInvestors: Investor[] = [
         subType: "VC Fund",
         profile: "A Dubai-based Venture Capital fund investing in early-stage SaaS and AI companies across the GCC.",
         documents: {},
+        investmentValue: 150000,
+        sharePercentage: 15,
     },
     {
         id: "inv_3",
@@ -43,6 +49,8 @@ export const initialInvestors: Investor[] = [
         subType: "Angel",
         profile: "An individual angel investor with a background in logistics and supply chain technology.",
         documents: {},
+        investmentValue: 25000,
+        sharePercentage: 5,
     },
      {
         id: "inv_4",
@@ -51,5 +59,7 @@ export const initialInvestors: Investor[] = [
         subType: "Institute/Government",
         profile: "Provides financial solutions and support for the growth and development of Small and Medium Enterprises in Oman.",
         documents: {},
+        investmentValue: 75000,
+        sharePercentage: 0,
     }
 ];
