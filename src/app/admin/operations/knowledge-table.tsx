@@ -31,6 +31,20 @@ const fileToBase64 = (file: File): Promise<string> => {
         const reader = new FileReader();
         reader.onload = () => {
             const result = reader.result as string;
+            // The result includes the full data URI prefix, which we want here
+            resolve(result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
+
+const fileToBase64ContentOnly = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result as string;
             const base64Content = result.split(',')[1];
             resolve(base64Content);
         };
@@ -343,7 +357,7 @@ export default function KnowledgeTable() {
             } else if (source.file) {
                 fileName = source.file.name;
                 fileType = source.file.type;
-                dataUri = await fileToDataURI(source.file);
+                dataUri = await fileToBase64(source.file);
                 analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
             } else {
                 throw new Error("No source provided.");
@@ -417,13 +431,13 @@ export default function KnowledgeTable() {
                                 </TableCell>
                                 <TableCell>{doc.issueDate}</TableCell>
                                 <TableCell>
-                                    {doc.fileType === 'url' ? (
-                                        <a href={doc.fileName} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:opacity-80 text-sm truncate max-w-xs block">
-                                            {doc.fileName}
-                                        </a>
-                                    ) : (
-                                        <p className="text-sm text-muted-foreground">{doc.fileName}</p>
-                                    )}
+                                    <a 
+                                        href={doc.fileType === 'url' ? doc.fileName : doc.dataUri} 
+                                        target="_blank" rel="noopener noreferrer" 
+                                        className="text-primary underline hover:opacity-80 text-sm truncate max-w-xs block"
+                                    >
+                                        {doc.fileName}
+                                    </a>
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
