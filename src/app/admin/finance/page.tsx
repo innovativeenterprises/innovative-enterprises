@@ -2,7 +2,7 @@
 'use client';
 
 import CfoDashboard from "@/app/cfo/cfo-dashboard";
-import InvestorTable, { useInvestorsData } from "./investor-table";
+import InvestorTable, { useInvestorsData } from "../investor-table";
 
 export default function AdminFinancePage() {
   const investorData = useInvestorsData();
