@@ -55,6 +55,7 @@ const InvestorSchema = z.object({
   type: z.enum(['Investor', 'Funder']),
   subType: z.enum(['Personal/Private', 'Angel', 'Institute/Government', 'VC Fund']),
   profile: z.string().min(10, "A brief profile/description is required"),
+  focusArea: z.string().min(3, "Focus area is required"),
   investmentValue: z.coerce.number().optional(),
   sharePercentage: z.coerce.number().optional(),
   // Document fields
@@ -84,6 +85,7 @@ const AddEditInvestorDialog = ({
             type: "Investor",
             subType: "Personal/Private",
             profile: "",
+            focusArea: "",
             investmentValue: 0,
             sharePercentage: 0,
         },
@@ -91,7 +93,7 @@ const AddEditInvestorDialog = ({
 
     useEffect(() => {
         if(isOpen) {
-           form.reset(investor || { name: "", type: "Investor", subType: "Personal/Private", profile: "", investmentValue: 0, sharePercentage: 0 });
+           form.reset(investor || { name: "", type: "Investor", subType: "Personal/Private", profile: "", focusArea: "", investmentValue: 0, sharePercentage: 0 });
         }
     }, [investor, form, isOpen]);
 
@@ -133,6 +135,10 @@ const AddEditInvestorDialog = ({
                         <FormField control={form.control} name="profile" render={({ field }) => (
                             <FormItem><FormLabel>Profile & Description</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
+                        <FormField control={form.control} name="focusArea" render={({ field }) => (
+                            <FormItem><FormLabel>Investment Sector / Focus Area</FormLabel><FormControl><Input placeholder="e.g., AI Projects, Real Estate Tech, General Growth" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+
 
                         <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name="investmentValue" render={({ field }) => (
@@ -206,6 +212,7 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                 type: values.type,
                 subType: values.subType,
                 profile: values.profile,
+                focusArea: values.focusArea,
                 investmentValue: values.investmentValue,
                 sharePercentage: values.sharePercentage,
                 documents: uploadedDocs,
@@ -242,7 +249,7 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                     <TableHeader>
                         <TableRow>
                             <TableHead>Name / Institute</TableHead>
-                            <TableHead>Type</TableHead>
+                            <TableHead>Focus Area</TableHead>
                             <TableHead>Value (OMR)</TableHead>
                             <TableHead>Share</TableHead>
                             <TableHead>Documents</TableHead>
@@ -259,12 +266,12 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                                         </div>
                                         <div>
                                             <p className="font-medium">{inv.name}</p>
-                                            <p className="text-sm text-muted-foreground">{inv.profile}</p>
+                                            <p className="text-sm text-muted-foreground">{inv.subType}</p>
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant="outline">{inv.subType}</Badge>
+                                     <Badge variant="secondary">{inv.focusArea}</Badge>
                                 </TableCell>
                                 <TableCell>
                                     <div className="font-medium">{inv.investmentValue?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '-'}</div>
