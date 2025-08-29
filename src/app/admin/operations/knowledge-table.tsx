@@ -76,9 +76,9 @@ export const useKnowledgeData = () => {
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
-  documentUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
-}).refine(data => data.documentFile?.length === 1 || data.documentUrl, {
-    message: "Either a document file or a URL is required.",
+  documentUrls: z.string().optional(),
+}).refine(data => (data.documentFile && data.documentFile.length > 0) || data.documentUrls, {
+    message: "Either a document file or one or more URLs are required.",
     path: ["documentFile"],
 });
 type UploadDocumentValues = z.infer<typeof UploadDocumentSchema>;
@@ -88,7 +88,7 @@ const UploadDocumentDialog = ({
     documentToReplace,
     children,
 }: { 
-    onUpload: (source: { file?: File, url?: string }, docIdToReplace?: string) => Promise<void>,
+    onUpload: (source: { file?: File, urls?: string[] }, docIdToReplace?: string) => Promise<void>,
     documentToReplace?: KnowledgeDocument,
     children: React.ReactNode
 }) => {
@@ -98,7 +98,8 @@ const UploadDocumentDialog = ({
 
     const onSubmit: SubmitHandler<UploadDocumentValues> = async (data) => {
         setIsLoading(true);
-        await onUpload({ file: data.documentFile?.[0], url: data.documentUrl }, documentToReplace?.id);
+        const urls = data.documentUrls?.split('\n').filter(url => url.trim() !== '');
+        await onUpload({ file: data.documentFile?.[0], urls }, documentToReplace?.id);
         setIsLoading(false);
         setIsOpen(false);
         form.reset();
@@ -111,7 +112,7 @@ const UploadDocumentDialog = ({
                 <DialogHeader>
                     <DialogTitle>{documentToReplace ? "Replace" : "Add"} Knowledge Source</DialogTitle>
                     <DialogDescription>
-                        Upload a new document or provide a URL. The AI will analyze it and add it to the knowledge base.
+                        Upload a new document or provide URLs. The AI will analyze it and add it to the knowledge base.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -125,15 +126,22 @@ const UploadDocumentDialog = ({
                             <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
                         </div>
 
-                         <FormField control={form.control} name="documentUrl" render={({ field }) => (
-                            <FormItem><FormLabel>Import from URL</FormLabel><FormControl><Input placeholder="https://example.com/law.html" {...field} /></FormControl><FormMessage /></FormItem>
+                         <FormField control={form.control} name="documentUrls" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Import from URL(s)</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="https://example.com/law1.html&#x0a;https://example.com/regulation2.pdf" rows={3} {...field} />
+                                </FormControl>
+                                <FormDescription>Enter one URL per line to add multiple sources at once.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
                         )} />
 
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit" disabled={isLoading}>
                                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                Analyze & {documentToReplace ? "Replace" : "Add"} Source
+                                Analyze & {documentToReplace ? "Replace" : "Add"} Source(s)
                             </Button>
                         </DialogFooter>
                     </form>
@@ -300,7 +308,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                                 <FormItem>
                                 <FormLabel className="flex items-center gap-2"><LinkIcon className="h-5 w-5"/> 3. Provide Knowledge URLs</FormLabel>
                                 <FormControl>
-                                <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={2} {...field} />
+                                <Textarea placeholder="https://example.com/law1.html&#x0a;https://example.com/regulation2.pdf" rows={3} {...field} />
                                 </FormControl>
                                 <FormDescription>Enter one URL per line. The AI will scrape the content from these pages.</FormDescription>
                                 <FormMessage />
@@ -340,52 +348,64 @@ export default function KnowledgeTable() {
     const { knowledgeBase, setKnowledgeBase } = useKnowledgeData();
     const { toast } = useToast();
 
-    const handleUpload = async (source: { file?: File, url?: string }, docIdToReplace?: string) => {
-        toast({ title: 'Analyzing Source...', description: 'Please wait while the AI extracts key information.' });
+    const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {
+        toast({ title: 'Analyzing Source(s)...', description: 'Please wait while the AI extracts key information.' });
         try {
-            let analysis;
-            let fileName = '';
-            let fileType = '';
-            let dataUri = '';
+            if (source.urls && source.urls.length > 0) {
+                const urlPromises = source.urls.map(async (url) => {
+                    const scraped = await scrapeAndSummarize({ source: url, isUrl: true });
+                    if (!scraped.summary) throw new Error(`Could not scrape content from ${url}.`);
+                    return await analyzeKnowledgeDocument({ documentContent: scraped.summary, sourceUrl: url });
+                });
 
-            if (source.url) {
-                fileName = source.url;
-                fileType = 'url';
-                const scraped = await scrapeAndSummarize({ source: source.url, isUrl: true });
-                if (!scraped.summary) throw new Error("Could not scrape content from URL.");
-                analysis = await analyzeKnowledgeDocument({ documentContent: scraped.summary, sourceUrl: source.url });
+                const results = await Promise.all(urlPromises);
+                const newDocs = results.map((analysis, index) => ({
+                    id: `kb_${Date.now()}_${index}`,
+                    documentName: analysis.documentName,
+                    documentNumber: analysis.documentNumber,
+                    version: analysis.version,
+                    issueDate: analysis.issueDate,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    fileName: source.urls![index],
+                    fileType: 'url',
+                    dataUri: '',
+                }));
+
+                setKnowledgeBase(prev => [...newDocs, ...prev]);
+                toast({ title: `${newDocs.length} URLs Added!`, description: `Successfully analyzed and added all sources.` });
+
             } else if (source.file) {
-                fileName = source.file.name;
-                fileType = source.file.type;
-                dataUri = await fileToBase64(source.file);
-                analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
+                const fileName = source.file.name;
+                const fileType = source.file.type;
+                const dataUri = await fileToBase64(source.file);
+                const analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
+
+                const newDoc: KnowledgeDocument = {
+                    id: docIdToReplace || `kb_${Date.now()}`,
+                    documentName: analysis.documentName,
+                    documentNumber: analysis.documentNumber,
+                    version: analysis.version,
+                    issueDate: analysis.issueDate,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    fileName: fileName,
+                    fileType: fileType,
+                    dataUri,
+                };
+
+                if (docIdToReplace) {
+                    setKnowledgeBase(prev => prev.map(doc => doc.id === docIdToReplace ? newDoc : doc));
+                    toast({ title: 'Document Replaced!', description: `"${newDoc.documentName}" has been analyzed and updated.` });
+                } else {
+                    setKnowledgeBase(prev => [newDoc, ...prev]);
+                    toast({ title: 'Document Added!', description: `"${newDoc.documentName}" has been analyzed and added.` });
+                }
             } else {
                 throw new Error("No source provided.");
-            }
-
-            const newDoc: KnowledgeDocument = {
-                id: docIdToReplace || `kb_${Date.now()}`,
-                documentName: analysis.documentName,
-                documentNumber: analysis.documentNumber,
-                version: analysis.version,
-                issueDate: analysis.issueDate,
-                uploadDate: new Date().toISOString().split('T')[0],
-                fileName: fileName,
-                fileType: fileType,
-                dataUri, // This will be empty for URLs
-            };
-
-            if (docIdToReplace) {
-                setKnowledgeBase(prev => prev.map(doc => doc.id === docIdToReplace ? newDoc : doc));
-                 toast({ title: 'Document Replaced!', description: `"${newDoc.documentName}" has been analyzed and updated.` });
-            } else {
-                setKnowledgeBase(prev => [newDoc, ...prev]);
-                 toast({ title: 'Document Added!', description: `"${newDoc.documentName}" has been analyzed and added.` });
             }
             
         } catch (error) {
             console.error("Failed to analyze or upload document:", error);
-            toast({ title: "Operation Failed", description: "Could not analyze or add the source. Please check the URL or file.", variant: 'destructive' });
+            toast({ title: "Operation Failed", description: String(error) || "Could not analyze or add the source(s).", variant: 'destructive' });
         }
     };
 

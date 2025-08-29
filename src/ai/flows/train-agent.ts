@@ -41,6 +41,10 @@ File names:
 {{/if}}
 {{#if knowledgeUrls}}
 You have received {{knowledgeUrls.length}} knowledge URL(s) for training.
+URLs:
+{{#each knowledgeUrls}}
+- {{this}}
+{{/each}}
 {{/if}}
 {{#if qaPairs}}
 You have received {{qaPairs.length}} Question/Answer pair(s) for training.
