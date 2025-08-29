@@ -294,13 +294,14 @@ export const initialProducts: Product[] = [
         id: 23,
         name: "SmartLease Manager",
         description: "Automates online rent collection, reminders, and late fee calculations, including tenant background checks.",
-        stage: "Idea Phase",
+        stage: "Development Phase",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re5/400/400",
         aiHint: "online payment rent",
         rating: 0,
-        enabled: true
+        enabled: true,
+        href: "/real-estate-tech/smart-lease-manager",
     },
     {
         id: 24,

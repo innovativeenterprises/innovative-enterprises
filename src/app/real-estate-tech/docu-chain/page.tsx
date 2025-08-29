@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, ClipboardCheck, Download, Copy, FileText, CalendarIcon } from 'lucide-react';
+import { Loader2, Sparkles, ClipboardCheck, Download, Copy, FileText, CalendarIcon, FileSignature } from 'lucide-react';
 import { RealEstateContractInputSchema, type RealEstateContractInput, type RealEstateContractOutput } from '@/ai/flows/real-estate-contract-generator.schema';
 import { generateRealEstateContract } from '@/ai/flows/real-estate-contract-generator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -18,6 +18,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { store } from '@/lib/global-store';
+import type { SignedLease } from '@/lib/leases';
 
 const FormSchema = RealEstateContractInputSchema.omit({ 
     startDate: true, 
@@ -33,6 +36,7 @@ export default function DocuChainPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<RealEstateContractOutput | null>(null);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -95,6 +99,33 @@ export default function DocuChainPage() {
     element.click();
     document.body.removeChild(element);
   };
+  
+  const handleSignAndFinalize = () => {
+    if (!response) return;
+
+    setIsLoading(true);
+    toast({ title: 'Finalizing Document...', description: 'Simulating digital signatures and securing the document.' });
+
+    const newLease: SignedLease = {
+        id: `lease_${Date.now()}`,
+        ...form.getValues(),
+        status: 'Active',
+        content: response.contractContent,
+    };
+    
+    // In a real app, this would be an API call. For the prototype, we use global state.
+    store.set(state => ({
+        ...state,
+        signedLeases: [newLease, ...state.signedLeases],
+    }));
+
+    setTimeout(() => {
+        setIsLoading(false);
+        toast({ title: 'Document Finalized!', description: 'Redirecting to your SmartLease Manager dashboard.' });
+        router.push('/real-estate-tech/smart-lease-manager');
+    }, 1500);
+
+  }
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -206,7 +237,7 @@ export default function DocuChainPage() {
                                 </FormItem>
                             )}/>
 
-                        <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
+                        <Button type="submit" disabled={isLoading} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-base" size="lg">
                             {isLoading ? (
                             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Contract...</>
                             ) : (
@@ -243,6 +274,11 @@ export default function DocuChainPage() {
                             {response.contractContent}
                         </div>
                     </CardContent>
+                    <CardFooter>
+                        <Button className="w-full bg-accent hover:bg-accent/90" size="lg" onClick={handleSignAndFinalize} disabled={isLoading}>
+                             {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Finalizing...</> : <><FileSignature className="mr-2 h-4 w-4" /> Sign & Finalize Document</>}
+                        </Button>
+                    </CardFooter>
                 </Card>
             )}
 

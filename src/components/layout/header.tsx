@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog, DollarSign } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -62,6 +62,12 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     href: "/real-estate-tech",
     description: "A suite of automated SaaS platforms for property valuation, management, and investment.",
     icon: Building2,
+  },
+  {
+    title: "SmartLease Manager",
+    href: "/real-estate-tech/smart-lease-manager",
+    description: "View and manage all your digitally signed lease and sale agreements in one place.",
+    icon: DollarSign,
   },
   {
     title: "Nova Commerce",

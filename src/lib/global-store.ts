@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -24,6 +25,7 @@ import { initialKnowledgeBase, type KnowledgeDocument } from './knowledge';
 import { initialWorkers, type Worker as RaahaWorker } from './raaha-workers';
 import { initialRequests, type HireRequest } from './raaha-requests';
 import { initialAgencies, type Agency } from './raaha-agencies';
+import { initialLeases, type SignedLease } from './leases';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -48,6 +50,7 @@ type AppState = {
   raahaWorkers: RaahaWorker[];
   raahaRequests: HireRequest[];
   raahaAgencies: Agency[];
+  signedLeases: SignedLease[];
   cart: CartItem[];
 };
 
@@ -71,6 +74,7 @@ let state: AppState = {
   raahaWorkers: initialWorkers,
   raahaRequests: initialRequests,
   raahaAgencies: initialAgencies,
+  signedLeases: initialLeases,
   cart: [],
 };
 
