@@ -7,15 +7,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, ClipboardList } from 'lucide-react';
+import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2 } from 'lucide-react';
 import { generateBoq } from '@/ai/flows/boq-generator';
 import type { BoQGeneratorOutput } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { analyzeFloorPlan, type FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -38,6 +40,8 @@ type FormValues = z.infer<typeof FormSchema>;
 
 export default function CalculatorForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState<FloorPlanAnalysisOutput | null>(null);
   const [response, setResponse] = useState<BoQGeneratorOutput | null>(null);
   const { toast } = useToast();
 
@@ -48,6 +52,41 @@ export default function CalculatorForm() {
         numberOfFloors: 1,
     },
   });
+  
+  const handleFloorPlanAnalysis = async () => {
+    const floorPlanFile = form.getValues('floorPlanFile');
+    if (!floorPlanFile || floorPlanFile.length === 0) {
+        toast({ title: 'Please select a floor plan file first.', variant: 'destructive' });
+        return;
+    }
+    setIsAnalyzing(true);
+    setAnalysis(null);
+    try {
+        const uri = await fileToDataURI(floorPlanFile[0]);
+        const result = await analyzeFloorPlan({ documentDataUri: uri });
+        setAnalysis(result);
+        
+        let specs = form.getValues('additionalSpecs') || '';
+        if (result.dimensions) {
+            specs += `\nEstimated building dimensions from plan: ${result.dimensions}.`;
+            
+            // Try to parse number of floors from dimensions string
+            const floorMatch = result.dimensions.match(/(\d+)\s*floors?/i);
+            if (floorMatch && floorMatch[1]) {
+                form.setValue('numberOfFloors', parseInt(floorMatch[1], 10));
+            }
+        }
+        form.setValue('additionalSpecs', specs.trim());
+
+        toast({ title: 'Floor Plan Analyzed', description: 'AI has added its findings to your project details.' });
+
+    } catch (e) {
+        toast({ title: 'Analysis Failed', description: 'Could not analyze the floor plan. Please describe your needs manually.', variant: 'destructive' });
+    } finally {
+        setIsAnalyzing(false);
+    }
+  };
+
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
@@ -79,7 +118,7 @@ export default function CalculatorForm() {
       <Card>
         <CardHeader>
           <CardTitle>Project Details</CardTitle>
-          <CardDescription>Provide your project information and upload the floor plan.</CardDescription>
+          <CardDescription>Provide your project information and upload the floor plan. Use the AI Analyzer for assistance.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -90,13 +129,30 @@ export default function CalculatorForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Floor Plan Document (PDF or Image)</FormLabel>
-                            <FormControl>
-                                <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
-                            </FormControl>
+                             <div className="flex gap-2">
+                                <FormControl className="flex-1">
+                                    <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                </FormControl>
+                                <Button type="button" variant="secondary" onClick={handleFloorPlanAnalysis} disabled={isAnalyzing}>
+                                    {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                    Analyze
+                                </Button>
+                            </div>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+                 {analysis && (
+                    <Alert>
+                        <FileCheck2 className="h-4 w-4" />
+                        <AlertTitle>AI Analysis Complete</AlertTitle>
+                        <AlertDescription>
+                            {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
+                            {analysis.suggestedDvrLocation && <p><strong>Suggested Equipment Room:</strong> {analysis.suggestedDvrLocation}</p>}
+                            <p className="text-xs mt-1">This information has been added to the specifications below.</p>
+                        </AlertDescription>
+                    </Alert>
+                )}
                 <div className="grid md:grid-cols-2 gap-6">
                      <FormField
                         control={form.control}
@@ -140,7 +196,7 @@ export default function CalculatorForm() {
                     )}
                 />
 
-              <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
+              <Button type="submit" disabled={isLoading || isAnalyzing} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
                 {isLoading ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Calculating Quantities...</>
                 ) : (
