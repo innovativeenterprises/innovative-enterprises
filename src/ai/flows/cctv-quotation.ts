@@ -61,15 +61,15 @@ You MUST only recommend assets from this list for the rental portion.
     *   **executiveSummary:** Write a concise paragraph explaining the proposed solution.
     *   **recommendedAssets:** Create a JSON array of the exact rental asset objects you selected from the inventory. Crucially, add a 'quantity' field to each asset object. If no rental assets are needed, return an empty array.
     *   **surveillanceSystem:**
-        *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below. If `includeSurveillance` is false, this list should be empty.
+        *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below. If \`includeSurveillance\` is false, this list should be empty.
         *   **CCTV Price List (OMR):** 4K Dome Camera: 45, 4K Bullet Camera: 55, 8-Channel NVR: 120, 16-Channel NVR: 200, 8-Port PoE Switch: 60, 16-Port PoE Switch: 100.
         *   Write a brief summary of the surveillance solution.
 
 3.  **Calculate Costs:**
-    *   **totalRentalCostPerMonth:** Sum up (asset.monthlyPrice * quantity) for all items in `recommendedAssets`.
-    *   **totalRentalCostForDuration:** Calculate `totalRentalCostPerMonth * projectDurationMonths`.
-    *   **oneTimePurchaseCost:** Sum up the total price for all items in the `surveillanceSystem.equipmentList`.
-    *   **totalEstimatedCost:** Calculate `totalRentalCostForDuration + oneTimePurchaseCost`.
+    *   **totalRentalCostPerMonth:** Sum up (asset.monthlyPrice * quantity) for all items in \`recommendedAssets\`.
+    *   **totalRentalCostForDuration:** Calculate \`totalRentalCostPerMonth * projectDurationMonths\`.
+    *   **oneTimePurchaseCost:** Sum up the total price for all items in the \`surveillanceSystem.equipmentList\`.
+    *   **totalEstimatedCost:** Calculate \`totalRentalCostForDuration + oneTimePurchaseCost\`.
 
 4.  **Next Steps:** Provide a brief, professional closing statement recommending the next steps for the client.
 
