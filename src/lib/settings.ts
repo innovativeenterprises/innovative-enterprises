@@ -1,5 +1,6 @@
 
 
+
 export interface SanadOfficeSettings {
     registrationFee: number;
     monthlyFee: number;
@@ -23,6 +24,8 @@ export interface AppSettings {
         enabled: boolean;
         rate: number; // Stored as a decimal, e.g., 0.05 for 5%
     };
+    headerImageUrl?: string;
+    footerImageUrl?: string;
 }
 
 export const initialSettings: AppSettings = {
@@ -44,4 +47,6 @@ export const initialSettings: AppSettings = {
         enabled: true,
         rate: 0.05, // 5%
     },
+    headerImageUrl: "https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png",
+    footerImageUrl: "",
 };

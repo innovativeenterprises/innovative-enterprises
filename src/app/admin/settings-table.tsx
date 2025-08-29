@@ -1,5 +1,6 @@
 
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -17,8 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Edit } from "lucide-react";
+import { Edit, Upload } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import Image from "next/image";
 
 
 // This hook now connects to the global store.
@@ -55,6 +57,110 @@ const LegalPricingSchema = z.object({
   b2bFee: z.coerce.number().min(0),
   b2gFee: z.coerce.number().min(0),
 });
+
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
+const BrandingSchema = z.object({
+  headerImageFile: z.any().optional(),
+  footerImageFile: z.any().optional(),
+});
+type BrandingValues = z.infer<typeof BrandingSchema>;
+
+
+const EditBrandingDialog = ({
+    settings,
+    onSave,
+}: {
+    settings: AppSettings,
+    onSave: (headerUri?: string, footerUri?: string) => void,
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [headerPreview, setHeaderPreview] = useState(settings.headerImageUrl);
+    const [footerPreview, setFooterPreview] = useState(settings.footerImageUrl);
+
+    const form = useForm<BrandingValues>({
+        resolver: zodResolver(BrandingSchema),
+        defaultValues: {},
+    });
+
+    useEffect(() => {
+        if(isOpen) {
+            setHeaderPreview(settings.headerImageUrl);
+            setFooterPreview(settings.footerImageUrl);
+            form.reset();
+        }
+    }, [settings, isOpen, form]);
+
+    const handleFileChange = async (file: File | undefined, setter: (uri: string) => void) => {
+        if (file) {
+            const uri = await fileToDataURI(file);
+            setter(uri);
+        }
+    };
+
+    const onSubmit: SubmitHandler<BrandingValues> = async (data) => {
+        let headerUri = settings.headerImageUrl;
+        if (data.headerImageFile && data.headerImageFile[0]) {
+            headerUri = await fileToDataURI(data.headerImageFile[0]);
+        }
+
+        let footerUri = settings.footerImageUrl;
+        if (data.footerImageFile && data.footerImageFile[0]) {
+            footerUri = await fileToDataURI(data.footerImageFile[0]);
+        }
+
+        onSave(headerUri, footerUri);
+        setIsOpen(false);
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Branding</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Edit Document Branding</DialogTitle>
+                    <DialogDescription>
+                        Upload a header and footer image for generated PDF documents.
+                    </DialogDescription>
+                </DialogHeader>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="headerImageFile" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Header Image</FormLabel>
+                                <FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                {headerPreview && <Image src={headerPreview} alt="Header Preview" width={200} height={50} className="object-contain border rounded-md p-2 mt-2" />}
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                         <FormField control={form.control} name="footerImageFile" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Footer Image</FormLabel>
+                                <FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                {footerPreview && <Image src={footerPreview} alt="Footer Preview" width={200} height={50} className="object-contain border rounded-md p-2 mt-2" />}
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Save Branding</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 
 const EditSanadPricingDialog = ({
@@ -229,6 +335,15 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
             toast({ title: `VAT rate updated to ${newRate}%.` });
         }
     }
+    
+    const handleSaveBranding = (headerUri?: string, footerUri?: string) => {
+        setSettings(prev => ({
+            ...prev,
+            headerImageUrl: headerUri,
+            footerImageUrl: footerUri,
+        }));
+        toast({ title: "Document branding updated successfully." });
+    };
 
 
     return (
@@ -327,6 +442,32 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
                         </TableRow>
                         </TableBody>
                     </Table>
+                </CardContent>
+            </Card>
+            
+             <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Document Branding</CardTitle>
+                        <CardDescription>Manage the header and footer for generated PDFs.</CardDescription>
+                    </div>
+                    <EditBrandingDialog settings={settings} onSave={handleSaveBranding} />
+                </CardHeader>
+                 <CardContent>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label>Header Image</Label>
+                            <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
+                                {settings.headerImageUrl ? <Image src={settings.headerImageUrl} alt="Header Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No header image set</p>}
+                            </div>
+                        </div>
+                         <div>
+                            <Label>Footer Image</Label>
+                             <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
+                                {settings.footerImageUrl ? <Image src={settings.footerImageUrl} alt="Footer Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No footer image set</p>}
+                            </div>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
 

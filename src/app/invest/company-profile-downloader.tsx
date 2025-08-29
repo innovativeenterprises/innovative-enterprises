@@ -1,9 +1,11 @@
 
+
 'use client';
 
 import { useRef, useState, useEffect } from "react";
 import { useStaffData } from "@/app/admin/staff-table";
 import { useServicesData } from "@/app/admin/service-table";
+import { useSettingsData } from "@/app/admin/settings-table";
 import { initialProducts } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Download, Lightbulb, Loader2, Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
@@ -13,7 +15,7 @@ import html2canvas from 'html2canvas';
 import Image from "next/image";
 
 // This is the hidden component that will be rendered to generate the PDF
-const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => {
+const ProfileTemplate = ({ leadership, services, products, settings, innerRef }: any) => {
     const [generatedDate, setGeneratedDate] = useState('');
 
     useEffect(() => {
@@ -25,9 +27,13 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => {
         <div ref={innerRef} className="bg-white text-gray-900" style={{ width: '210mm', minHeight: '297mm', fontFamily: 'Inter, sans-serif' }}>
             <div className="p-12">
                 <header className="flex items-start justify-between pb-6 border-b-4 border-primary">
-                    <div className="flex items-center gap-4">
-                        <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={240} height={60} className="h-16 w-auto object-contain" />
-                    </div>
+                    {settings.headerImageUrl ? (
+                        <Image src={settings.headerImageUrl} alt="Company Header" width={240} height={80} className="h-20 w-auto object-contain" />
+                    ) : (
+                         <div className="flex items-center gap-4">
+                            <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={240} height={60} className="h-16 w-auto object-contain" />
+                        </div>
+                    )}
                     <div className="text-right text-xs text-gray-500">
                         <p className="font-semibold">Generated On</p>
                         <p>{generatedDate || '...'}</p>
@@ -111,10 +117,16 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => {
                     </div>
                 </section>
             </div>
-            <footer className="mt-8 p-4 bg-gray-100 text-center text-xs text-gray-600">
-                <p className="font-semibold">INNOVATIVE ENTERPRISES</p>
-                <p>Your Partner in Digital Transformation</p>
-            </footer>
+            {settings.footerImageUrl ? (
+                 <footer className="mt-8 p-4 bg-gray-100 text-center text-xs text-gray-600">
+                    <Image src={settings.footerImageUrl} alt="Company Footer" width={500} height={50} className="object-contain mx-auto" />
+                </footer>
+            ) : (
+                <footer className="mt-8 p-4 bg-gray-100 text-center text-xs text-gray-600">
+                    <p className="font-semibold">INNOVATIVE ENTERPRISES</p>
+                    <p>Your Partner in Digital Transformation</p>
+                </footer>
+            )}
         </div>
     );
 };
@@ -123,6 +135,7 @@ const ProfileTemplate = ({ leadership, services, products, innerRef }: any) => {
 export default function CompanyProfileDownloader() {
     const { leadership } = useStaffData();
     const { services } = useServicesData();
+    const { settings } = useSettingsData();
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
@@ -189,6 +202,7 @@ export default function CompanyProfileDownloader() {
                     leadership={enabledLeadership}
                     services={enabledServices}
                     products={products}
+                    settings={settings}
                 />
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
