@@ -40,4 +40,5 @@ import '@/ai/flows/coupon-generator';
 import '@/ai/flows/knowledge-document-analysis';
 import '@/ai/flows/image-annotation';
 import '@/ai/flows/boq-generator';
+import '@/ai/flows/raaha-matcher';
     
