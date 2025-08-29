@@ -19,6 +19,7 @@ import { initialStages, type ProjectStage } from './stages';
 import { initialSettings, type AppSettings } from './settings';
 import { initialProviders, type Provider } from './providers';
 import { initialAssets, type Asset } from './assets';
+import { initialInvestors, type Investor } from './investors';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -38,6 +39,7 @@ type AppState = {
   settings: AppSettings;
   providers: Provider[];
   assets: Asset[];
+  investors: Investor[];
   cart: CartItem[];
 };
 
@@ -56,6 +58,7 @@ let state: AppState = {
   settings: initialSettings,
   providers: initialProviders,
   assets: initialAssets,
+  investors: initialInvestors,
   cart: [],
 };
 
