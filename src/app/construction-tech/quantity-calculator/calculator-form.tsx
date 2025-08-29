@@ -10,8 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall } from 'lucide-react';
-import { generateBoq, generateBoqCategory } from '@/ai/flows/boq-generator';
-import type { BoQGeneratorOutput, BoQItem } from '@/ai/flows/boq-generator.schema';
+import { generateBoqCategory } from '@/ai/flows/boq-generator';
+import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';

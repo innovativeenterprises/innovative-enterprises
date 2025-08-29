@@ -23,8 +23,7 @@ const BoQItemSchema = z.object({
 export type BoQItem = z.infer<typeof BoQItemSchema>;
 
 export const BoQGeneratorOutputSchema = z.object({
-  summary: z.string().describe("A high-level summary of the generated Bill of Quantities."),
-  boqItems: z.array(BoQItemSchema).describe("A detailed list of all items in the Bill of Quantities."),
+  boqItems: z.array(BoQItemSchema).describe("A detailed list of items for the requested category."),
 });
 export type BoQGeneratorOutput = z.infer<typeof BoQGeneratorOutputSchema>;
 
