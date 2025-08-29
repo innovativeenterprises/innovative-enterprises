@@ -43,7 +43,7 @@ The output of this plan should be highly structured, using objects for features 
     *   **Value Proposition:** What is the unique benefit this project delivers to its users?
     *   **Target Audience:** Describe the ideal user or customer for this product.
     *   **Core Features (MVP):** Identify the 3-5 most essential features for the first version (Minimum Viable Product). For each feature, provide a structured object with a 'title', 'description', and 'acceptanceCriteria'. The acceptance criteria should be a concise statement of what is needed to consider the feature done.
-    *   **Risks:** Identify 3 potential risks (e.g., market competition, technical challenges, user adoption). For each risk, provide a structured object with the 'risk' itself, a 'mitigation' plan, and its 'likelihood' ('High', 'Medium', or 'Low').
+    *   **Risks:** Identify 3 potential risks (e.g., market competition, technical challenges, user adoption). For each risk, provide a structured object with the 'risk' itself, a 'mitigation' plan, and its 'likelihood' ('High', 'Medium', 'Low').
     *   **Recommended Agents:** From the list of available AI agents below, select the most relevant agents that should be assigned to this project to ensure its success.
     *   **Image Prompt:** Based on the project idea, create a simple, two-word prompt suitable for an AI image generator. The prompt should capture the essence of the project visually (e.g., "virtual reality", "community safety", "data analytics").
 

@@ -11,19 +11,8 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { scrapeAndSummarize } from './web-scraper-agent';
 import { generateAgreement } from './generate-agreement';
+import { LegalAgentInputSchema, LegalAgentOutputSchema, type LegalAgentOutput } from './legal-agent.schema';
 
-// Define the schema for the final output that the chat component will receive.
-const LegalAgentOutputSchema = z.object({
-  response: z.string().describe('The primary text response to the user.'),
-  disclaimer: z.string().optional().describe('An optional disclaimer, e.g., for legal advice.'),
-  isFinalResponse: z.boolean().default(true).describe('Indicates if this is the final message or if more processing is happening.'),
-});
-type LegalAgentOutput = z.infer<typeof LegalAgentOutputSchema>;
-
-// Define the input for the router
-const LegalAgentInputSchema = z.object({
-  query: z.string().describe("The user's query or instruction."),
-});
 
 /**
  * == SPECIALIST AGENT 1: Contract Analyzer ==

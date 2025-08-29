@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Schemas and types for the AI Legal Agent flow.
  *
@@ -9,14 +10,15 @@
 
 import { z } from 'zod';
 
+// Define the input for the router
 export const LegalAgentInputSchema = z.object({
-  question: z.string().describe('The user\'s legal question or topic for analysis.'),
-  contractType: z.enum(['B2C', 'B2B', 'B2G']).describe('The type of contract or context for the legal question.'),
+  query: z.string().describe("The user's query or instruction."),
 });
-export type LegalAgentInput = z.infer<typeof LegalAgentInputSchema>;
 
+// Define the schema for the final output that the chat component will receive.
 export const LegalAgentOutputSchema = z.object({
-  analysis: z.string().describe('The generated legal analysis or answer.'),
-  disclaimer: z.string().describe('A disclaimer stating this is not real legal advice.'),
+  response: z.string().describe('The primary text response to the user.'),
+  disclaimer: z.string().optional().describe('An optional disclaimer, e.g., for legal advice.'),
+  isFinalResponse: z.boolean().default(true).describe('Indicates if this is the final message or if more processing is happening.'),
 });
 export type LegalAgentOutput = z.infer<typeof LegalAgentOutputSchema>;
