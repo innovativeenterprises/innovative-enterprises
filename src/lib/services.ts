@@ -37,7 +37,7 @@ export const initialServices: Service[] = [
   {
     icon: ShoppingCart,
     title: "Nova Commerce",
-    description: "End-to-end services for building, managing, and scaling your online store, from development to marketing.",
+    description: "End-to-end solutions to build, manage, and scale your online business.",
     enabled: true,
     href: "/ecommerce",
   },
@@ -58,7 +58,7 @@ export const initialServices: Service[] = [
    {
     icon: HomeWorkforceIcon,
     title: "RAAHA Platform",
-    description: "An AI-powered white-label platform to connect domestic work agencies with clients.",
+    description: "An AI-powered white-label SaaS platform to connect domestic work agencies with clients.",
     enabled: true,
     href: "/raaha",
   },
