@@ -281,13 +281,14 @@ export const initialProducts: Product[] = [
         id: 22,
         name: "DocuChain Compliance",
         description: "Auto-generates sale agreements and tenancy contracts, tracking compliance with local laws and renewal dates.",
-        stage: "Idea Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re4/400/400",
         aiHint: "legal document agreement",
         rating: 0,
-        enabled: true
+        enabled: true,
+        href: "/real-estate-tech/docu-chain",
     },
     {
         id: 23,
