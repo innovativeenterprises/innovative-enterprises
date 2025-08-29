@@ -7,6 +7,7 @@ export interface HireRequest {
   clientContact: string;
   requestDate: string; // ISO date string
   status: 'Pending' | 'Contacted' | 'Interviewing' | 'Hired' | 'Closed';
+  agencyId: 'Happy Homes Agency' | 'Premier Maids';
 }
 
 export const initialRequests: HireRequest[] = [
@@ -17,7 +18,8 @@ export const initialRequests: HireRequest[] = [
         clientName: 'Ahmed Al-Farsi',
         clientContact: '+968 99123456',
         requestDate: '2024-07-28T10:00:00Z',
-        status: 'Pending'
+        status: 'Pending',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_02',
@@ -26,7 +28,8 @@ export const initialRequests: HireRequest[] = [
         clientName: 'Fatima Al-Balushi',
         clientContact: 'fatima.b@example.com',
         requestDate: '2024-07-27T15:30:00Z',
-        status: 'Contacted'
+        status: 'Contacted',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_03',
@@ -35,7 +38,8 @@ export const initialRequests: HireRequest[] = [
         clientName: 'Expat Family Residences',
         clientContact: 'manager@expatres.com',
         requestDate: '2024-07-26T11:00:00Z',
-        status: 'Interviewing'
+        status: 'Interviewing',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_04',
@@ -45,6 +49,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: '+971 50 123 4567',
         requestDate: '2024-07-29T09:00:00Z',
         status: 'Pending',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_05',
@@ -54,6 +59,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'hr@bustanpalace.com',
         requestDate: '2024-07-29T12:00:00Z',
         status: 'Interviewing',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_06',
@@ -63,6 +69,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'nasser.k@gmail.com',
         requestDate: '2024-07-28T18:00:00Z',
         status: 'Contacted',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_07',
@@ -72,6 +79,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: '+968 98765432',
         requestDate: '2024-07-25T14:00:00Z',
         status: 'Hired',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_08',
@@ -81,6 +89,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'info@petcareoman.com',
         requestDate: '2024-07-24T10:30:00Z',
         status: 'Closed',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_09',
@@ -90,6 +99,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'salim.rahbi@yahoo.com',
         requestDate: '2024-07-30T11:00:00Z',
         status: 'Pending',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_10',
@@ -99,6 +109,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: '+1 202 555 0192',
         requestDate: '2024-07-29T16:20:00Z',
         status: 'Pending',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_11',
@@ -108,6 +119,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'principal@ismoman.com',
         requestDate: '2024-07-22T09:00:00Z',
         status: 'Hired',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_12',
@@ -117,6 +129,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: '+968 91112222',
         requestDate: '2024-07-28T13:45:00Z',
         status: 'Contacted',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_13',
@@ -126,6 +139,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'facilities@britishembassy.om',
         requestDate: '2024-07-27T10:00:00Z',
         status: 'Interviewing',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_14',
@@ -135,6 +149,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'careers@seniorcare.om',
         requestDate: '2024-07-26T17:00:00Z',
         status: 'Interviewing',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_15',
@@ -144,6 +159,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'maryam.z@gmail.com',
         requestDate: '2024-07-25T19:00:00Z',
         status: 'Closed',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'req_16',
@@ -153,6 +169,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'housekeeping@qurumresort.com',
         requestDate: '2024-07-30T08:30:00Z',
         status: 'Pending',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'req_17',
@@ -162,6 +179,7 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'hr@tis.edu.om',
         requestDate: '2024-07-29T14:00:00Z',
         status: 'Contacted',
+        agencyId: 'Happy Homes Agency',
     },
      {
         id: 'req_18',
@@ -171,5 +189,6 @@ export const initialRequests: HireRequest[] = [
         clientContact: 'vip-services@rohmuscat.org.om',
         requestDate: '2024-07-23T12:00:00Z',
         status: 'Hired',
+        agencyId: 'Premier Maids',
     }
 ];

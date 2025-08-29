@@ -68,7 +68,7 @@ const WorkerSchema = z.object({
 type WorkerValues = z.infer<typeof WorkerSchema> & { photo: string };
 
 
-const AddEditWorkerDialog = ({ worker, onSave, children }: { worker?: Worker, onSave: (v: WorkerValues, id?: string) => void, children: React.ReactNode }) => {
+const AddEditWorkerDialog = ({ worker, onSave, children, agencyId }: { worker?: Worker, onSave: (v: WorkerValues, id?: string) => void, children: React.ReactNode, agencyId: string }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(worker?.photo || null);
 
@@ -223,8 +223,7 @@ const AddEditWorkerDialog = ({ worker, onSave, children }: { worker?: Worker, on
     );
 };
 
-export function WorkerTable() { 
-    const { workers, setWorkers } = useWorkersData();
+export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => Worker[]) => void, agencyId: string }) { 
     const { toast } = useToast();
 
     const handleSave = (values: WorkerValues, id?: string) => {
@@ -234,7 +233,7 @@ export function WorkerTable() {
             setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
             toast({ title: "Candidate updated." });
         } else {
-            const newWorker: Worker = { ...values, id: `worker_${Date.now()}`, skills: skillsArray };
+            const newWorker: Worker = { ...values, id: `worker_${Date.now()}`, skills: skillsArray, agencyId };
             setWorkers(prev => [newWorker, ...prev]);
             toast({ title: "Candidate added." });
         }
@@ -252,7 +251,7 @@ export function WorkerTable() {
                     <CardTitle>Agency Candidate Management</CardTitle>
                     <CardDescription>Manage the domestic worker candidates in your agency's database.</CardDescription>
                 </div>
-                <AddEditWorkerDialog onSave={handleSave}>
+                <AddEditWorkerDialog onSave={handleSave} agencyId={agencyId}>
                     <Button><PlusCircle /> Add Candidate</Button>
                 </AddEditWorkerDialog>
             </CardHeader>
@@ -268,6 +267,13 @@ export function WorkerTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                         {workers.length === 0 && (
+                             <TableRow>
+                                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                                    No candidates for this agency yet.
+                                </TableCell>
+                            </TableRow>
+                        )}
                         {workers.map(worker => (
                             <TableRow key={worker.id}>
                                 <TableCell>
@@ -293,7 +299,7 @@ export function WorkerTable() {
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <AddEditWorkerDialog worker={worker} onSave={handleSave}>
+                                        <AddEditWorkerDialog worker={worker} onSave={handleSave} agencyId={agencyId}>
                                             <Button variant="ghost" size="icon"><Edit /></Button>
                                         </AddEditWorkerDialog>
                                         <AlertDialog>
@@ -313,4 +319,3 @@ export function WorkerTable() {
         </Card>
     );
 }
-

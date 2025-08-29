@@ -9,6 +9,7 @@ export interface Worker {
     availability: 'Available' | 'Not Available';
     rating: number;
     photo: string;
+    agencyId: 'Happy Homes Agency' | 'Premier Maids';
 }
 
 export const initialWorkers: Worker[] = [
@@ -21,7 +22,8 @@ export const initialWorkers: Worker[] = [
         experience: 'Over 8 years of experience working as a housemaid and nanny for families in the UAE and Oman. Excellent with young children and infants.',
         availability: 'Available',
         rating: 4.8,
-        photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop'
+        photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_002',
@@ -32,7 +34,8 @@ export const initialWorkers: Worker[] = [
         experience: '5 years of experience as a caregiver for an elderly couple in Muscat. Patient and compassionate.',
         availability: 'Available',
         rating: 4.6,
-        photo: 'https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?q=80&w=600&auto=format&fit=crop'
+        photo: 'https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?q=80&w=600&auto=format&fit=crop',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_003',
@@ -43,7 +46,8 @@ export const initialWorkers: Worker[] = [
         experience: '10 years of experience managing large households in India and Bahrain. Expert in deep cleaning and home organization.',
         availability: 'Not Available',
         rating: 4.9,
-        photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop'
+        photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_004',
@@ -54,7 +58,8 @@ export const initialWorkers: Worker[] = [
         experience: '3 years of experience in Oman as a general housemaid. Learns quickly and is very diligent.',
         availability: 'Available',
         rating: 4.4,
-        photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'
+        photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop',
+        agencyId: 'Premier Maids',
     },
      {
         id: 'worker_005',
@@ -65,7 +70,8 @@ export const initialWorkers: Worker[] = [
         experience: '4 years of experience with a family in Sohar. Known for being reliable and efficient.',
         availability: 'Available',
         rating: 4.5,
-        photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop'
+        photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop',
+        agencyId: 'Happy Homes Agency',
     },
      {
         id: 'worker_006',
@@ -76,7 +82,8 @@ export const initialWorkers: Worker[] = [
         experience: '15 years of experience as a nanny and house manager for expatriate families in Dubai. Highly recommended.',
         availability: 'Available',
         rating: 5.0,
-        photo: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=600&auto=format&fit=crop'
+        photo: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=600&auto=format&fit=crop',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_007',
@@ -88,6 +95,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.7,
         photo: 'https://picsum.photos/seed/worker7/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_008',
@@ -99,6 +107,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.2,
         photo: 'https://picsum.photos/seed/worker8/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_009',
@@ -110,6 +119,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Not Available',
         rating: 4.8,
         photo: 'https://picsum.photos/seed/worker9/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_010',
@@ -121,6 +131,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.6,
         photo: 'https://picsum.photos/seed/worker10/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_011',
@@ -132,6 +143,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.9,
         photo: 'https://picsum.photos/seed/worker11/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_012',
@@ -143,6 +155,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.5,
         photo: 'https://picsum.photos/seed/worker12/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_013',
@@ -154,6 +167,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Not Available',
         rating: 4.7,
         photo: 'https://picsum.photos/seed/worker13/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_014',
@@ -165,6 +179,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.9,
         photo: 'https://picsum.photos/seed/worker14/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_015',
@@ -176,6 +191,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.5,
         photo: 'https://picsum.photos/seed/worker15/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_016',
@@ -187,6 +203,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.8,
         photo: 'https://picsum.photos/seed/worker16/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_017',
@@ -198,6 +215,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Not Available',
         rating: 4.9,
         photo: 'https://picsum.photos/seed/worker17/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_018',
@@ -209,6 +227,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.3,
         photo: 'https://picsum.photos/seed/worker18/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_019',
@@ -220,6 +239,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.5,
         photo: 'https://picsum.photos/seed/worker19/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_020',
@@ -231,6 +251,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.6,
         photo: 'https://picsum.photos/seed/worker20/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_021',
@@ -242,6 +263,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.9,
         photo: 'https://picsum.photos/seed/worker21/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_022',
@@ -253,6 +275,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Not Available',
         rating: 5.0,
         photo: 'https://picsum.photos/seed/worker22/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_023',
@@ -264,6 +287,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.5,
         photo: 'https://picsum.photos/seed/worker23/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_024',
@@ -275,6 +299,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.8,
         photo: 'https://picsum.photos/seed/worker24/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_025',
@@ -286,6 +311,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.3,
         photo: 'https://picsum.photos/seed/worker25/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_026',
@@ -297,6 +323,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.7,
         photo: 'https://picsum.photos/seed/worker26/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_027',
@@ -308,6 +335,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Not Available',
         rating: 4.9,
         photo: 'https://picsum.photos/seed/worker27/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_028',
@@ -319,6 +347,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.2,
         photo: 'https://picsum.photos/seed/worker28/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_029',
@@ -330,6 +359,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.7,
         photo: 'https://picsum.photos/seed/worker29/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_030',
@@ -341,6 +371,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 5.0,
         photo: 'https://picsum.photos/seed/worker30/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_031',
@@ -352,6 +383,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.5,
         photo: 'https://picsum.photos/seed/worker31/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_032',
@@ -363,6 +395,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Not Available',
         rating: 4.6,
         photo: 'https://picsum.photos/seed/worker32/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_033',
@@ -374,6 +407,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.7,
         photo: 'https://picsum.photos/seed/worker33/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_034',
@@ -385,6 +419,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.9,
         photo: 'https://picsum.photos/seed/worker34/600/600',
+        agencyId: 'Premier Maids',
     },
     {
         id: 'worker_035',
@@ -396,6 +431,7 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 4.4,
         photo: 'https://picsum.photos/seed/worker35/600/600',
+        agencyId: 'Happy Homes Agency',
     },
     {
         id: 'worker_036',
@@ -407,7 +443,6 @@ export const initialWorkers: Worker[] = [
         availability: 'Available',
         rating: 5.0,
         photo: 'https://picsum.photos/seed/worker36/600/600',
+        agencyId: 'Premier Maids',
     }
 ];
-
-    

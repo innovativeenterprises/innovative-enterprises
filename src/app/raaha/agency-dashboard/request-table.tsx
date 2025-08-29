@@ -35,8 +35,7 @@ export const useRequestsData = () => {
     };
 };
 
-export function RequestTable() { 
-    const { requests, setRequests } = useRequestsData();
+export function RequestTable({ requests, setRequests }: { requests: HireRequest[], setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => void }) { 
     const { toast } = useToast();
 
     const handleStatusChange = (requestId: string, newStatus: HireRequest['status']) => {
@@ -74,6 +73,13 @@ export function RequestTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        {requests.length === 0 && (
+                             <TableRow>
+                                <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                                    No requests for this agency yet.
+                                </TableCell>
+                            </TableRow>
+                        )}
                         {requests.map(req => (
                             <TableRow key={req.id}>
                                 <TableCell className="font-medium">{req.workerName}</TableCell>
