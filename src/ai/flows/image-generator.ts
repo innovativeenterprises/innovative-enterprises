@@ -10,9 +10,10 @@
 import { ai } from '@/ai/genkit';
 import { GenerateImageInput, GenerateImageInputSchema, GenerateImageOutput, GenerateImageOutputSchema } from './image-generator.schema';
 
-export async function generateImage(input: GenerateImageInput): Promise<GenerateImageOutput> {
+
+export async function generateImage(input: GenerateImageInput): Promise<string> {
     const { media } = await ai.generate({
-        model: 'googleai/gemini-pro-vision',
+        model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: input.prompt,
         config: {
             responseModalities: ['IMAGE'],
@@ -23,7 +24,7 @@ export async function generateImage(input: GenerateImageInput): Promise<Generate
         throw new Error('Image generation failed to return a valid image URL.');
     }
     
-    return { imageUrl: media.url };
+    return media.url;
 }
 
 ai.defineFlow(
@@ -32,5 +33,8 @@ ai.defineFlow(
         inputSchema: GenerateImageInputSchema,
         outputSchema: GenerateImageOutputSchema,
     },
-    async (input) => generateImage(input)
+    async (input) => {
+        const imageUrl = await generateImage(input);
+        return { imageUrl };
+    }
 );
