@@ -224,5 +224,3 @@ export const AddEditProductDialog = ({
         </Dialog>
     )
 }
-
-    
