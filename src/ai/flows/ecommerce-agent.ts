@@ -13,32 +13,8 @@ import {
     EcommerceAgentInputSchema,
     EcommerceAgentOutput,
     EcommerceAgentOutputSchema,
+    addProductToCartTool,
 } from './ecommerce-agent.schema';
-import { initialProducts } from '@/lib/products';
-import { ProductSchema } from '@/lib/products.schema';
-
-const allProducts = initialProducts;
-
-const addProductToCartTool = ai.defineTool(
-    {
-        name: 'addProductToCart',
-        description: 'Use this tool when the user wants to buy, purchase, or add a specific product to their cart.',
-        inputSchema: z.object({
-            productName: z.string().describe("The exact name of the product to add to the cart."),
-        }),
-        outputSchema: z.object({
-            product: ProductSchema.optional(),
-            error: z.string().optional(),
-        })
-    },
-    async ({ productName }) => {
-        const product = allProducts.find(p => p.name.toLowerCase() === productName.toLowerCase());
-        if (product) {
-            return { product };
-        }
-        return { error: 'Product not found.' };
-    }
-);
 
 
 export async function answerEcommerceQuery(input: EcommerceAgentInput): Promise<EcommerceAgentOutput> {

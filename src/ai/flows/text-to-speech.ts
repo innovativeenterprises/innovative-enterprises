@@ -9,7 +9,7 @@
 import { ai } from '@/ai/genkit';
 import wav from 'wav';
 import { googleAI } from '@genkit-ai/googleai';
-import { TextToSpeechInput, TextToSpeechOutput } from './text-to-speech.schema';
+import { TextToSpeechInput, TextToSpeechOutput, TextToSpeechInputSchema, TextToSpeechOutputSchema } from './text-to-speech.schema';
 
 /**
  * Converts PCM audio data to WAV format as a Base64 string.
@@ -78,3 +78,12 @@ export async function textToSpeech(input: TextToSpeechInput): Promise<TextToSpee
         audioUrl: `data:audio/wav;base64,${wavBase64}`
     };
 }
+
+const textToSpeechFlow = ai.defineFlow(
+    {
+        name: 'textToSpeechFlow',
+        inputSchema: TextToSpeechInputSchema,
+        outputSchema: TextToSpeechOutputSchema,
+    },
+    async (input) => textToSpeech(input)
+);

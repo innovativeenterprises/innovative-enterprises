@@ -1,9 +1,12 @@
+
 /**
  * @fileOverview Schemas and types for the E-commerce AI Agent flow.
  */
 
 import { z } from 'zod';
 import { ProductSchema } from '@/lib/products.schema';
+import { ai } from '@/ai/genkit';
+import { initialProducts } from '@/lib/products';
 
 export const EcommerceAgentInputSchema = z.object({
   query: z.string().describe("The user's query about products, categories, or store information."),
@@ -20,3 +23,26 @@ export const EcommerceAgentOutputSchema = z.object({
   suggestedReplies: z.array(z.string()).optional().describe("A list of relevant follow-up questions or actions."),
 });
 export type EcommerceAgentOutput = z.infer<typeof EcommerceAgentOutputSchema>;
+
+const allProducts = initialProducts;
+
+export const addProductToCartTool = ai.defineTool(
+    {
+        name: 'addProductToCart',
+        description: 'Use this tool when the user wants to buy, purchase, or add a specific product to their cart.',
+        inputSchema: z.object({
+            productName: z.string().describe("The exact name of the product to add to the cart."),
+        }),
+        outputSchema: z.object({
+            product: ProductSchema.optional(),
+            error: z.string().optional(),
+        })
+    },
+    async ({ productName }) => {
+        const product = allProducts.find(p => p.name.toLowerCase() === productName.toLowerCase());
+        if (product) {
+            return { product };
+        }
+        return { error: 'Product not found.' };
+    }
+);
