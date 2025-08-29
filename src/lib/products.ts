@@ -250,7 +250,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re1/400/400",
         aiHint: "property value graph",
         rating: 0,
-        enabled: true
+        enabled: true,
+        href: "/real-estate-tech/property-valuator",
     },
     {
         id: 20,

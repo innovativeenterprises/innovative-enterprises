@@ -41,4 +41,5 @@ import '@/ai/flows/knowledge-document-analysis';
 import '@/ai/flows/image-annotation';
 import '@/ai/flows/boq-generator';
 import '@/ai/flows/raaha-matcher';
+import '@/ai/flows/property-valuation';
     

@@ -41,7 +41,13 @@ const ProductCard = ({ product }: { product: Product }) => {
             <CardDescription>{product.description}</CardDescription>
         </CardContent>
         <CardFooter>
-            <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
+            {product.href ? (
+                 <Button asChild className="w-full">
+                    <Link href={product.href}>Use Tool</Link>
+                </Button>
+            ) : (
+                <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
+            )}
         </CardFooter>
     </Card>
 )};
