@@ -360,10 +360,6 @@ export default function ProviderTable({
         const expiryDate = new Date(expiry);
         const now = new Date();
         const daysUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
-
-        let progressColor = "bg-green-500";
-        if (daysUntilExpiry <= 0) progressColor = "bg-red-500";
-        else if (daysUntilExpiry < 30) progressColor = "bg-yellow-500";
         
         const totalDuration = tier === 'Yearly' ? 365 : 30;
         const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
