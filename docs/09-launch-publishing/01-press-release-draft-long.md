@@ -1,4 +1,4 @@
-# Press Release - DRAFT
+# Press Release - DRAFT (Long Version)
 
 **FOR IMMEDIATE RELEASE**
 
