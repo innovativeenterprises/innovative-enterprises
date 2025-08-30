@@ -168,7 +168,7 @@ export default function CfoDashboard() {
                 <CardContent>
                      <ChartContainer config={chartConfig} className="h-[200px] w-full">
                         <BarChart data={cashFlowData} accessibilityLayer>
-                            <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(value) => value.slice(0, 3)} />
+                            <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
                             <Tooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
                             <Bar dataKey="income" fill="var(--color-income)" radius={4} />
                             <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />

@@ -3,7 +3,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Users, Bot, Zap, CheckCircle, FolderKanban, Network } from "lucide-react";
+import { Users, Bot, Zap, CheckCircle, FolderKanban, Network, CircleDollarSign, Percent, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "./product-table";
 import { useProvidersData } from "./provider-table";
@@ -14,6 +14,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 const overviewStats = [
+    { title: "Net Revenue", value: "OMR 45,231", icon: CircleDollarSign, href: "/admin/finance" },
+    { title: "Subscriptions", value: "+2,350", icon: Users, href: "/admin/finance" },
+    { title: "Operational Cost", value: "OMR 9,231", icon: TrendingUp, href: "/admin/finance" },
+    { title: "VAT Collected", value: "OMR 2,153", icon: Percent, href: "/admin/finance" },
     { title: "Total Staff (Human + AI)", value: "26", icon: Users, href: "/admin/people" },
     { title: "Active Projects", value: "14", icon: FolderKanban, href: "/admin/projects" },
     { title: "Active Opportunities", value: "5", icon: Zap, href: "/admin/opportunities" },
