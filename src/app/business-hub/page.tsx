@@ -53,15 +53,10 @@ export default function BusinessHubPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const businessCategoriesList = useMemo(() => {
-    const allServices = providers.flatMap(p => p.services.split(',').map(s => s.trim()));
-    return ["All", ...Array.from(new Set(allServices))];
-  }, [providers]);
-
   const hubQueryFlow = async (input: { [key: string]: any }) => {
     return await answerHubQuery({
         query: input.message,
-        businessCategories: businessCategoriesList.filter(c => c !== 'All'),
+        businessCategories: categories.filter(c => c !== 'All'),
     });
   };
   
@@ -112,7 +107,7 @@ export default function BusinessHubPage() {
                     </div>
                  </div>
                  <div className="flex gap-2 overflow-x-auto pb-4 mb-4">
-                    {businessCategoriesList.slice(0, 6).map((cat) => (
+                    {categories.map((cat) => (
                         <Button
                             key={cat}
                             variant={selectedCategory === cat ? 'default' : 'outline'}
