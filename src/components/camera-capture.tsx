@@ -7,9 +7,10 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Camera, X, RefreshCw, Upload, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { cn } from '@/lib/utils';
 
 
-export function CameraCapture({ title, onCapture, onCancel }: { title: string, onCapture: (imageUri: string) => void, onCancel: () => void }) {
+export function CameraCapture({ title, onCapture, onCancel, isFlipping }: { title: string, onCapture: (imageUri: string) => void, onCancel: () => void, isFlipping?: boolean }) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
@@ -112,8 +113,8 @@ export function CameraCapture({ title, onCapture, onCancel }: { title: string, o
 
         return (
             <div className="p-4 space-y-4">
-                <div className="relative w-full aspect-[16/10] bg-black rounded-lg overflow-hidden">
-                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                <div className={cn("relative w-full aspect-[16/10] bg-black rounded-lg overflow-hidden transition-transform duration-500", isFlipping && "transform-gpu [transform:rotateY(180deg)]")}>
+                    <video ref={videoRef} className={cn("w-full h-full object-cover", isFlipping && "transform-gpu [transform:rotateY(-180deg)]")} autoPlay muted playsInline />
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div className="w-[85%] h-[80%] border-4 border-dashed border-white/50 rounded-lg" style={{
                             mask: 'radial-gradient(circle at center, transparent 0%, transparent 98%, black 100%), linear-gradient(black, black)',
@@ -135,7 +136,7 @@ export function CameraCapture({ title, onCapture, onCancel }: { title: string, o
             <CardHeader>
                 <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={onCancel}>&larr; Back</Button>
                 <CardTitle className="text-center pt-8">{title}</CardTitle>
-                <CardDescription className="text-center">Position your card inside the frame and capture.</CardDescription>
+                <CardDescription className="text-center">Position your document inside the frame and capture.</CardDescription>
             </CardHeader>
             <CardContent>
                 {renderContent()}

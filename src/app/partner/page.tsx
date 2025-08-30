@@ -102,7 +102,8 @@ const pricingTemplates: Record<string, string[][]> = {
 };
 
 const CompanyUploadSchema = z.object({
-  crDocument: z.any().refine(file => file?.length == 1, 'Commercial Record is required.'),
+  crDocument: z.any().optional(),
+  crDocumentUri: z.string().optional(),
   logoFile: z.any().optional(),
   address: z.string().optional(),
   city: z.string().optional(),
@@ -112,6 +113,9 @@ const CompanyUploadSchema = z.object({
   primaryBusinessCategory: z.string().min(1, "Please select your primary business category."),
   additionalBusinessCategories: z.array(z.string()).optional(),
   serviceChargesFile: z.any().optional(),
+}).refine(data => data.crDocumentUri || (data.crDocument && data.crDocument.length > 0), {
+    message: "A Commercial Record is required.",
+    path: ["crDocument"],
 });
 type CompanyUploadValues = z.infer<typeof CompanyUploadSchema>;
 
@@ -136,7 +140,7 @@ const PaymentSchema = z.object({
 });
 type PaymentValues = z.infer<typeof PaymentSchema>;
 
-type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted' | 'capture_id_front' | 'capture_id_back' | 'capture_rep_id_front' | 'capture_rep_id_back';
+type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted' | 'capture_id_front' | 'capture_id_back' | 'capture_rep_id_front' | 'capture_rep_id_back' | 'capture_cr';
 type ApplicantType = 'individual' | 'company';
 
 const REGISTRATION_FEE = 2.5;
@@ -260,9 +264,13 @@ export default function PartnerPage() {
     setAnalysisResult(null);
     setRepAnalysisResult(null);
     try {
-        const crFile = data.crDocument[0];
+        let crUri = data.crDocumentUri;
+        if (!crUri && data.crDocument && data.crDocument.length > 0) {
+            crUri = await fileToDataURI(data.crDocument[0]);
+        }
+        if (!crUri) throw new Error("Commercial Record data is missing.");
 
-        const crPromise = fileToDataURI(crFile).then(uri => analyzeCrDocument({ documentDataUri: uri }));
+        const crPromise = analyzeCrDocument({ documentDataUri: crUri });
         
         let repIdPromise: Promise<IdentityAnalysisOutput | null> = Promise.resolve(null);
         if (data.repIdDocumentFrontUri) {
@@ -372,6 +380,12 @@ export default function PartnerPage() {
     setPageState('upload');
     toast({ title: "Representative's ID Back Captured!", description: "You can now proceed with the analysis."});
   }
+
+  const onCrCaptured = (imageUri: string) => {
+    companyUploadForm.setValue('crDocumentUri', imageUri);
+    setPageState('upload');
+    toast({ title: 'Commercial Record Captured!', description: 'You can now proceed with the analysis.' });
+  };
 
 
   const handleProceedToPayment: SubmitHandler<z.infer<typeof PartnershipInquiryInputSchema>> = async (data) => {
@@ -640,13 +654,28 @@ export default function PartnerPage() {
              {applicantType === 'company' ? (
                 <Form {...companyUploadForm}>
                     <form onSubmit={companyUploadForm.handleSubmit(handleCrAnalysis)} className="space-y-6">
-                        <FormField control={companyUploadForm.control} name="crDocument" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>1. Company Commercial Record (CR)</FormLabel>
-                                <FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={companyUploadForm.control} name="crDocument" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>1. Company CR (File)</FormLabel>
+                                    <FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                            <div className="flex flex-col">
+                                <FormLabel>Or Scan Live</FormLabel>
+                                <Button type="button" onClick={() => setPageState('capture_cr')} className="w-full mt-2">
+                                <Camera className="mr-2 h-4 w-4" /> Scan CR Document
+                                </Button>
+                                 {(companyUploadForm.getValues('crDocumentUri')) && (
+                                <Alert variant="default" className="text-green-800 bg-green-50 border-green-200 dark:text-green-200 dark:bg-green-900/30 dark:border-green-800 mt-2 text-xs">
+                                    <ScanLine className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                    <AlertTitle className="font-semibold">CR Scanned</AlertTitle>
+                                </Alert>
+                                )}
+                            </div>
+                        </div>
+
                         <FormField control={companyUploadForm.control} name="logoFile" render={({ field }) => (
                            <FormItem><FormLabel>2. Company Logo (Optional)</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)}/></FormControl><FormMessage/></FormItem>
                         )}/>
@@ -1097,6 +1126,7 @@ export default function PartnerPage() {
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
+        case 'capture_cr': return <CameraCapture title="Scan Commercial Record" onCapture={onCrCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         default: return <SelectionScreen />;
     }
   };
