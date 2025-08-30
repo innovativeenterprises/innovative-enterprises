@@ -19,6 +19,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
+import { answerQuestion } from './ai-powered-faq';
 
 // Initialize Firebase Admin SDK if not already initialized
 if (!admin.apps.length) {
@@ -240,17 +241,25 @@ export const whatsappWebhook = ai.defineFlow({
                     timestamp: admin.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Auto-reply
-                await axios.post(
-                    `https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages`,
-                    {
-                        messaging_product: "whatsapp",
-                        to: from,
-                        type: "text",
-                        text: { body: "Hello! Thank you for messaging Ameen. We will respond shortly." }
-                    },
-                    { headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}` } }
-                );
+                // Get AI response
+                if(text) {
+                    const aiResponse = await answerQuestion({ question: text });
+                    let responseText = aiResponse.answer;
+
+                    // Append meeting link or contact info if available
+                    if (aiResponse.meetingUrl) {
+                        responseText += `\n\nYou can book a meeting here: ${aiResponse.meetingUrl}`;
+                    } else if (aiResponse.contactOptions) {
+                        responseText += `\n\nYou can also contact them directly:\nEmail: ${aiResponse.contactOptions.email}\nWhatsApp: ${aiResponse.contactOptions.whatsapp}`;
+                    }
+
+                    // Append suggested replies as a numbered list
+                    if (aiResponse.suggestedReplies && aiResponse.suggestedReplies.length > 0) {
+                        responseText += `\n\nOr, you can reply with:\n` + aiResponse.suggestedReplies.map((r, i) => `${i + 1}. ${r}`).join('\n');
+                    }
+                    
+                    await sendWhatsAppMessage({ to: from, message: responseText });
+                }
             }
             res.sendStatus(200);
         } catch (err) {
