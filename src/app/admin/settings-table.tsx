@@ -9,18 +9,19 @@ import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import type { AppSettings } from "@/lib/settings";
+import type { AppSettings, WhatsAppSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { store } from "@/lib/global-store";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Edit, Upload } from "lucide-react";
+import { Edit, Upload, Copy, Save, MessageSquare } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 
 // This hook now connects to the global store.
@@ -73,6 +74,13 @@ const BrandingSchema = z.object({
 });
 type BrandingValues = z.infer<typeof BrandingSchema>;
 
+
+const WhatsAppSettingsSchema = z.object({
+    businessAccountId: z.string().min(1, 'Business Account ID is required'),
+    phoneNumberId: z.string().min(1, 'Phone Number ID is required'),
+    accessToken: z.string().describe("This is for display only and should be securely stored."),
+});
+type WhatsAppSettingsValues = z.infer<typeof WhatsAppSettingsSchema>;
 
 const EditBrandingDialog = ({
     settings,
@@ -281,6 +289,80 @@ const EditLegalPricingDialog = ({
     )
 }
 
+const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onSave: (values: WhatsAppSettings) => void }) => {
+    const { toast } = useToast();
+    const form = useForm<WhatsAppSettingsValues>({
+        resolver: zodResolver(WhatsAppSettingsSchema),
+        defaultValues: {
+            ...settings.whatsapp,
+            accessToken: '******************', // Mask the token
+        }
+    });
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        toast({ title: 'Copied to Clipboard' });
+    }
+
+    const onSubmit: SubmitHandler<WhatsAppSettingsValues> = (data) => {
+        onSave({
+            ...data,
+            // Never save the masked value, keep the real one from settings.
+            accessToken: settings.whatsapp.accessToken,
+        });
+        toast({ title: "WhatsApp Settings Saved" });
+    }
+
+    // In a real app, the webhook URL would be dynamically generated based on the deployment environment.
+    const webhookUrl = "https://your-deployed-app-url.com/api/genkit/flow/whatsappWebhook";
+    const webhookVerifyToken = "ameen_verify_token";
+
+    return (
+        <Card>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><MessageSquare /> WhatsApp Integration</CardTitle>
+                        <CardDescription>Manage your Meta Business API credentials and webhook settings.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <Alert>
+                            <AlertTitle>Webhook Configuration</AlertTitle>
+                            <AlertDescription>
+                                To receive messages, you must configure a webhook in your Meta for Developers App settings. Use the values below.
+                            </AlertDescription>
+                            <div className="space-y-2 mt-4">
+                                <div className="flex items-center justify-between">
+                                    <Label>Callback URL</Label>
+                                    <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(webhookUrl)}><Copy className="mr-2 h-3 w-3"/>Copy</Button>
+                                </div>
+                                <Input readOnly value={webhookUrl} />
+
+                                <div className="flex items-center justify-between">
+                                    <Label>Verify Token</Label>
+                                    <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(webhookVerifyToken)}><Copy className="mr-2 h-3 w-3"/>Copy</Button>
+                                </div>
+                                <Input readOnly value={webhookVerifyToken} />
+                            </div>
+                        </Alert>
+                         <FormField control={form.control} name="businessAccountId" render={({ field }) => (
+                            <FormItem><FormLabel>Business Account ID</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="phoneNumberId" render={({ field }) => (
+                            <FormItem><FormLabel>Phone Number ID</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="accessToken" render={({ field }) => (
+                            <FormItem><FormLabel>Access Token</FormLabel><FormControl><Input {...field} readOnly /></FormControl><FormDescription>This token is stored securely as an environment variable and cannot be changed from here.</FormDescription><FormMessage /></FormItem>
+                        )} />
+                    </CardContent>
+                    <CardFooter>
+                        <Button type="submit"><Save className="mr-2 h-4 w-4"/> Save WhatsApp Settings</Button>
+                    </CardFooter>
+                </form>
+            </Form>
+        </Card>
+    );
+}
 
 export default function SettingsTable({ settings, setSettings }: { settings: AppSettings, setSettings: (updater: (settings: AppSettings) => AppSettings) => void}) {
     const { toast } = useToast();
@@ -356,10 +438,15 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
         setSettings(prev => ({ ...prev, aiToolsMenuColumns: numValue }));
         toast({ title: `AI Tools menu layout updated to ${numValue} columns.` });
     };
+    
+    const handleSaveWhatsAppSettings = (values: WhatsAppSettings) => {
+        setSettings(prev => ({ ...prev, whatsapp: { ...prev.whatsapp, ...values } }));
+    };
 
 
     return (
         <div className="space-y-8">
+            <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} />
             <Card>
                 <CardHeader>
                     <CardTitle>Operational & Layout Settings</CardTitle>

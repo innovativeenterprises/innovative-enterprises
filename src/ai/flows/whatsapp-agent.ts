@@ -20,17 +20,13 @@ import { z } from 'zod';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
 import { answerQuestion } from './ai-powered-faq';
+import { store } from '@/lib/global-store';
 
 // Initialize Firebase Admin SDK if not already initialized
 if (!admin.apps.length) {
     admin.initializeApp();
 }
 const db = admin.firestore();
-
-// IMPORTANT: These should be stored securely, e.g., in environment variables or a secret manager.
-const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN || 'YOUR_META_ACCESS_TOKEN';
-const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || 'YOUR_PHONE_NUMBER_ID';
-const WEBHOOK_VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN || 'ameen_verify_token';
 
 
 // Schemas for input validation
@@ -54,6 +50,21 @@ const VerifyOtpSchema = z.object({
   otp: z.string(),
 });
 
+// Helper to get credentials. In a real app, these would be managed more robustly.
+const getWhatsappCredentials = () => {
+    // Attempt to get from environment variables first (most secure)
+    const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN || store.get().settings.whatsapp.accessToken;
+    const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || store.get().settings.whatsapp.phoneNumberId;
+    const WEBHOOK_VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN || 'ameen_verify_token';
+
+    if (WHATSAPP_TOKEN === 'YOUR_META_ACCESS_TOKEN' || PHONE_NUMBER_ID === 'YOUR_PHONE_NUMBER_ID') {
+        console.warn("WhatsApp credentials are not configured. Using placeholder values.");
+    }
+    
+    return { WHATSAPP_TOKEN, PHONE_NUMBER_ID, WEBHOOK_VERIFY_TOKEN };
+};
+
+
 /**
  * Sends a regular text message. Can only be used within 24 hours of a user's last message.
  */
@@ -64,6 +75,7 @@ export const sendWhatsAppMessage = ai.defineFlow(
     outputSchema: z.object({ success: z.boolean(), data: z.any().optional(), error: z.any().optional() }),
   },
   async ({ to, message }) => {
+    const { WHATSAPP_TOKEN, PHONE_NUMBER_ID } = getWhatsappCredentials();
     try {
       const response = await axios.post(
         `https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages`,
@@ -98,6 +110,7 @@ export const sendTemplateMessage = ai.defineFlow({
     inputSchema: SendTemplateMessageSchema,
     outputSchema: z.any(),
 }, async ({ to, templateName, variables }) => {
+     const { WHATSAPP_TOKEN, PHONE_NUMBER_ID } = getWhatsappCredentials();
      try {
         const response = await axios.post(
             `https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages`,
@@ -204,6 +217,8 @@ export const whatsappWebhook = ai.defineFlow({
     outputSchema: z.any(),
     middleware: ['express'],
 }, async (req, res) => {
+    const { WEBHOOK_VERIFY_TOKEN } = getWhatsappCredentials();
+    
     if (req.method === "GET") {
         const mode = req.query["hub.mode"];
         const token = req.query["hub.verify_token"];

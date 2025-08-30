@@ -1,6 +1,5 @@
 
 
-
 export interface SanadOfficeSettings {
     registrationFee: number;
     monthlyFee: number;
@@ -15,6 +14,12 @@ export interface LegalAgentPricing {
     b2gFee: number;
 }
 
+export interface WhatsAppSettings {
+    businessAccountId: string;
+    phoneNumberId: string;
+    accessToken: string; // Note: For display only, actual value from env.
+}
+
 export interface AppSettings {
     translationAssignmentMode: 'direct' | 'tender' | 'builtin';
     sanadOffice: SanadOfficeSettings;
@@ -26,9 +31,9 @@ export interface AppSettings {
     };
     headerImageUrl?: string;
     footerImageUrl?: string;
-    // New fields for menu layout control
     servicesMenuColumns: number;
     aiToolsMenuColumns: number;
+    whatsapp: WhatsAppSettings;
 }
 
 export const initialSettings: AppSettings = {
@@ -52,7 +57,11 @@ export const initialSettings: AppSettings = {
     },
     headerImageUrl: "https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png",
     footerImageUrl: "",
-    // Set new defaults to 4 columns
     servicesMenuColumns: 4,
     aiToolsMenuColumns: 4,
+    whatsapp: {
+        businessAccountId: 'YOUR_WHATSAPP_BUSINESS_ACCOUNT_ID',
+        phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID || 'YOUR_PHONE_NUMBER_ID',
+        accessToken: 'STORED_SECURELY_IN_ENV',
+    }
 };
