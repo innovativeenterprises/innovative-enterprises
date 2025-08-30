@@ -43,6 +43,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import InterviewCoachForm from '@/app/interview-coach/coach-form';
+import Link from 'next/link';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -712,7 +713,10 @@ export default function CvForm() {
                             <span>{generatedCv.newOverallScore}</span>
                         </div>
                     </div>
-                     <CardDescription>Your CV and Cover Letter are now highly optimized and ready for the next step.</CardDescription>
+                     <CardDescription>Your CV and Cover Letter are now highly optimized. The next step is to prepare for the interview.</CardDescription>
+                       <Button asChild variant="secondary" className="mt-2">
+                        <Link href="/interview-coach">Practice for Interview <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                      </Button>
                 </div>
             </CardHeader>
             <CardContent>
@@ -727,10 +731,9 @@ export default function CvForm() {
                  )}
 
                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
+                    <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="cv" disabled={!isUnlocked}>Enhanced CV</TabsTrigger>
                         <TabsTrigger value="letter" disabled={!isUnlocked}>Cover Letter</TabsTrigger>
-                        <TabsTrigger value="interview">Interview Prep</TabsTrigger>
                     </TabsList>
                     <TabsContent value="cv">
                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
@@ -741,9 +744,6 @@ export default function CvForm() {
                          <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
                              {isUnlocked ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
                         </div>
-                    </TabsContent>
-                    <TabsContent value="interview" className="pt-4">
-                        <InterviewCoachForm />
                     </TabsContent>
                 </Tabs>
 
@@ -780,17 +780,15 @@ export default function CvForm() {
                         onUnlock={handleUnlock}
                     />
                  ) : (
-                    activeTab !== 'interview' && (
-                        <div className="p-6 w-full space-y-4">
-                            <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
-                            <FinalActions 
-                                onDownload={handleDownload}
-                                onCopy={handleCopy}
-                                onEmail={handleEmail}
-                                onSave={() => {}}
-                            />
-                        </div>
-                    )
+                    <div className="p-6 w-full space-y-4">
+                        <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
+                        <FinalActions 
+                            onDownload={handleDownload}
+                            onCopy={handleCopy}
+                            onEmail={handleEmail}
+                            onSave={() => {}}
+                        />
+                    </div>
                  )}
             </CardFooter>
          </Card>
