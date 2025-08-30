@@ -75,7 +75,7 @@ export default function TimetableForm() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>AI Smart Timetable Generator</CardTitle>
+          <CardTitle>Define Your School's Constraints</CardTitle>
           <CardDescription>Define your subjects, teachers, and classrooms. Our AI will generate an optimized, conflict-free schedule.</CardDescription>
         </CardHeader>
         <CardContent>
