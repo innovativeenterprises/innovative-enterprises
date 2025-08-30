@@ -1,4 +1,3 @@
-
 # Employment Contract - DRAFT
 
 **This Employment Agreement** is made on `[Date]`

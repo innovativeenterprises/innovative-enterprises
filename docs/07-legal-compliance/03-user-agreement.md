@@ -1,4 +1,3 @@
-
 # User Agreement - DRAFT
 
 **This User Agreement ("Agreement") governs your use of the Innovative Enterprises platform ("Platform").**

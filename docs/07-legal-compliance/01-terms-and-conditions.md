@@ -1,4 +1,3 @@
-
 # Terms & Conditions - DRAFT
 
 **Last Updated:** 2024-08-01
@@ -39,4 +38,3 @@ By accessing this website, we assume you accept these terms and conditions. Do n
 
 ---
 ***Disclaimer:** This is a basic template. It is crucial to have it reviewed by a qualified legal professional.*
-

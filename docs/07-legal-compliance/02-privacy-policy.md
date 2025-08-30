@@ -1,4 +1,3 @@
-
 # Privacy Policy - DRAFT
 
 **Last Updated:** 2024-08-01
@@ -37,4 +36,3 @@ We may update our Privacy Policy from time to time. We will notify you of any ch
 
 ---
 ***Disclaimer:** This is a basic template. It is crucial to have it reviewed by a qualified legal professional to ensure compliance with all applicable laws.*
-
