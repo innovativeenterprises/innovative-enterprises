@@ -103,7 +103,7 @@ const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleT
     );
 };
 
-export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (updater: (products: Product[]) => Product[]) => void }) {
+export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (updater: (products: Product[]) => void) => void }) {
     const { toast } = useToast();
     const { stages } = useProjectStagesData();
     const [isMounted, setIsMounted] = useState(false);

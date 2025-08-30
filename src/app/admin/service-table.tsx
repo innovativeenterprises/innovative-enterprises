@@ -45,9 +45,9 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     };
 
     return (
-        <TableRow ref={setNodeRef} style={style} onClick={() => handleToggle(service.title)} className="cursor-pointer">
+        <TableRow ref={setNodeRef} style={style}>
             <TableCell>
-                 <Button variant="ghost" size="icon" {...attributes} {...listeners} onClick={(e) => e.stopPropagation()} className="cursor-grab">
+                 <Button variant="ghost" size="icon" {...attributes} {...listeners} className="cursor-grab">
                     <GripVertical className="h-4 w-4" />
                 </Button>
             </TableCell>
@@ -57,10 +57,7 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
                 <div className="flex flex-col items-center gap-1">
                     <Switch
                         checked={service.enabled}
-                        onCheckedChange={(e) => {
-                            e.stopPropagation(); // prevent row click from firing as well
-                            handleToggle(service.title)
-                        }}
+                        onCheckedChange={() => handleToggle(service.title)}
                         aria-label={`Enable/disable ${service.title}`}
                     />
                     <Badge variant={service.enabled ? "default" : "secondary"}>
@@ -72,7 +69,7 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     );
 };
 
-export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (updater: (services: Service[]) => Service[]) => void }) {
+export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (updater: (services: Service[]) => void) => void }) {
     const { toast } = useToast();
     const [isMounted, setIsMounted] = useState(false);
 
