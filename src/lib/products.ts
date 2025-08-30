@@ -443,7 +443,8 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
-        adminNotes: "Generated from Education Playbook. Addresses Pillar 3: Student Experience & Wellbeing."
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 3: Student Experience & Wellbeing.",
+        href: "/education-tech/guardian-ai",
     },
     {
         id: 38,
@@ -583,3 +584,4 @@ export const initialStoreProducts: Product[] = [
         adminStatus: 'Completed',
     },
 ];
+

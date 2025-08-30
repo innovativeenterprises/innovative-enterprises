@@ -28,6 +28,7 @@ import { initialAgencies, type Agency } from './raaha-agencies';
 import { initialLeases, type SignedLease } from './leases';
 import { initialProperties, type Property } from './properties';
 import { initialAuditSubmissions, type AuditSubmission } from './audit-submissions';
+import { initialStudents, type Student } from './students';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -55,6 +56,7 @@ type AppState = {
   signedLeases: SignedLease[];
   properties: Property[];
   auditSubmissions: AuditSubmission[];
+  students: Student[];
   cart: CartItem[];
 };
 
@@ -81,6 +83,7 @@ let state: AppState = {
   signedLeases: initialLeases,
   properties: initialProperties,
   auditSubmissions: initialAuditSubmissions,
+  students: initialStudents,
   cart: [],
 };
 
