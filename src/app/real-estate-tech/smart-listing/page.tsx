@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Search, BedDouble, Bath, MapPin } from 'lucide-react';
+import { Loader2, Sparkles, Search, BedDouble, Bath, MapPin, Filter } from 'lucide-react';
 import { PropertyMatcherInputSchema, type PropertyMatcherInput, type PropertyMatcherOutput } from '@/ai/flows/property-matcher.schema';
 import { findBestPropertyMatch } from '@/ai/flows/property-matcher';
 import { initialProperties } from '@/lib/properties';
@@ -19,6 +19,8 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+
+const propertyCategories = ['All', 'Villa', 'Apartment', 'Townhouse'];
 
 const PropertyCard = ({ property }: { property: Property }) => (
     <Link href={`/real-estate-tech/listings/${property.id}`}>
@@ -47,6 +49,7 @@ const PropertyCard = ({ property }: { property: Property }) => (
 export default function SmartListingPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [response, setResponse] = useState<PropertyMatcherOutput | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState('All');
     const { toast } = useToast();
 
     const form = useForm<PropertyMatcherInput>({
@@ -55,6 +58,15 @@ export default function SmartListingPage() {
             userRequirements: 'I am looking for a 3-bedroom villa for sale in Al Mouj with a garden.',
         },
     });
+    
+    const filteredProperties = useMemo(() => {
+        const availableProperties = initialProperties.filter(p => p.status === 'Available');
+        if (selectedCategory === 'All') {
+            return availableProperties;
+        }
+        return availableProperties.filter(p => p.propertyType === selectedCategory);
+    }, [selectedCategory]);
+
 
     const onSubmit: SubmitHandler<PropertyMatcherInput> = async (data) => {
         setIsLoading(true);
@@ -160,9 +172,21 @@ export default function SmartListingPage() {
                 )}
 
                 <div className="pt-8">
-                    <h2 className="text-2xl font-bold text-center mb-6">Browse All Listings</h2>
+                    <h2 className="text-2xl font-bold text-center mb-6">Browse All Available Listings</h2>
+                    <div className="flex justify-center flex-wrap gap-2 mb-8">
+                        {propertyCategories.map(category => (
+                            <Button
+                                key={category}
+                                variant={selectedCategory === category ? 'default' : 'outline'}
+                                onClick={() => setSelectedCategory(category)}
+                            >
+                                <Filter className="mr-2 h-4 w-4" />
+                                {category}
+                            </Button>
+                        ))}
+                    </div>
                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {initialProperties.filter(p => p.status === 'Available').map(property => (
+                        {filteredProperties.map(property => (
                             <PropertyCard key={property.id} property={property} />
                         ))}
                     </div>
