@@ -105,7 +105,7 @@ export default function TenderForm() {
                   <FormItem>
                     <FormLabel>Tender Documents</FormLabel>
                     <FormControl>
-                      <Input type="file" multiple onChange={(e) => field.onChange(e.target.files)} />
+                      <Input type="file" multiple accept=".pdf,.doc,.docx,.txt,.md,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
