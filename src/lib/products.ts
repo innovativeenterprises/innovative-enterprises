@@ -267,6 +267,7 @@ export const initialProducts: Product[] = [
         aiHint: "maintenance service ticket",
         rating: 0,
         enabled: true,
+        href: "/real-estate-tech/facility-flow",
         adminStatus: 'On Track',
         adminNotes: "Finalizing technical specifications and architecture design."
     },
@@ -295,6 +296,7 @@ export const initialProducts: Product[] = [
         aiHint: "digital document wallet",
         rating: 0,
         enabled: true,
+        href: "/briefcase",
         adminStatus: 'On Track',
         adminNotes: "Concept is solid. Needs a dedicated project manager to move forward."
     },
