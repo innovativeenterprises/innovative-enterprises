@@ -17,8 +17,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Investor } from "@/lib/investors";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent, Wand2 } from "lucide-react";
 import { store } from "@/lib/global-store";
+import { analyzeCrDocument } from "@/ai/flows/cr-analysis";
 
 // Hook to connect to the global store
 export const useInvestorsData = () => {
@@ -79,6 +80,8 @@ const AddEditInvestorDialog = ({
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
     const form = useForm<InvestorValues>({
         resolver: zodResolver(InvestorSchema),
         defaultValues: investor || {
@@ -93,11 +96,45 @@ const AddEditInvestorDialog = ({
         },
     });
 
+    const { toast } = useToast();
+
     useEffect(() => {
         if(isOpen) {
            form.reset(investor || { name: "", type: "Investor", subType: "Personal/Private", profile: "", focusArea: "", country: "", investmentValue: 0, sharePercentage: 0 });
         }
     }, [investor, form, isOpen]);
+
+    const handleCrAnalysis = async () => {
+        const crFile = form.getValues('crDoc');
+        if (!crFile || crFile.length === 0) {
+            toast({ title: 'Please select a CR document first.', variant: 'destructive' });
+            return;
+        }
+
+        setIsAnalyzing(true);
+        toast({ title: 'Analyzing Document...', description: 'Please wait while the AI extracts information.' });
+
+        try {
+            const uri = await fileToDataURI(crFile[0]);
+            const result = await analyzeCrDocument({ documentDataUri: uri });
+            
+            if (result.companyInfo?.companyNameEnglish) {
+                form.setValue('name', result.companyInfo.companyNameEnglish);
+            } else if (result.companyInfo?.companyNameArabic) {
+                form.setValue('name', result.companyInfo.companyNameArabic);
+            }
+             if (result.summary) {
+                form.setValue('profile', result.summary);
+            }
+
+            toast({ title: "Analysis Complete", description: "Investor details have been pre-filled from the CR." });
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Analysis Failed", description: "Could not analyze the document.", variant: "destructive" });
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
 
     const onSubmit: SubmitHandler<InvestorValues> = async (data) => {
         setIsLoading(true);
@@ -159,7 +196,17 @@ const AddEditInvestorDialog = ({
                             <CardHeader><CardTitle className="text-base">Upload Documents (Optional)</CardTitle></CardHeader>
                             <CardContent className="space-y-4">
                                 <FormField control={form.control} name="crDoc" render={({ field }) => (
-                                    <FormItem><FormLabel>Commercial Record (CR)</FormLabel><FormControl><Input type="file" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                                    <FormItem>
+                                        <FormLabel>Commercial Record (CR)</FormLabel>
+                                        <div className="flex gap-2">
+                                            <FormControl className="flex-1"><Input type="file" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                                            <Button type="button" variant="secondary" onClick={handleCrAnalysis} disabled={isAnalyzing}>
+                                                {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                                Analyze
+                                            </Button>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
                                 )}/>
                                 <FormField control={form.control} name="vatIdDoc" render={({ field }) => (
                                     <FormItem><FormLabel>VAT ID Document</FormLabel><FormControl><Input type="file" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
