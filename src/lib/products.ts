@@ -259,7 +259,7 @@ export const initialProducts: Product[] = [
     {
         id: 25,
         name: "FacilityFlow SaaS",
-        description: "A platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking.",
+        description: "A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking.",
         stage: "Planning Phase",
         category: "Real Estate Tech",
         price: 0,
@@ -458,7 +458,8 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
-        adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification."
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification.",
+        href: "/education-tech/certitrust",
     },
     {
         id: 39,
