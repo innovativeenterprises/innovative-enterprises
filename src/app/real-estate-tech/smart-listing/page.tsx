@@ -87,18 +87,18 @@ export default function SmartListingPage() {
         <div className="bg-background min-h-[calc(100vh-8rem)]">
         <div className="container mx-auto px-4 py-16">
             <div className="max-w-3xl mx-auto text-center">
-            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                <Search className="w-10 h-10 text-primary" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-primary">Smart Listing &amp; Matching</h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-                Describe your dream property, and let our AI search our listings to find the perfect match for you.
-            </p>
+                <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                    <Search className="w-10 h-10 text-primary" />
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold text-primary">Smart Listing &amp; Matching</h1>
+                <p className="mt-4 text-lg text-muted-foreground">
+                    Describe your dream property, and let our AI search our listings to find the perfect match for you. Or, browse all available listings below.
+                </p>
             </div>
             <div className="max-w-4xl mx-auto mt-12 space-y-8">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Find Your Perfect Property</CardTitle>
+                        <CardTitle>Find Your Perfect Property with AI</CardTitle>
                         <CardDescription>Tell us what you're looking for. Be as specific as you like.</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -141,11 +141,11 @@ export default function SmartListingPage() {
                 {response && bestMatchProperty && (
                     <Card>
                         <CardHeader>
-                            <CardTitle>We Found a Match For You!</CardTitle>
+                            <CardTitle>AI Recommendation</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <Alert>
-                                <AlertTitle className="font-semibold">AI Recommendation</AlertTitle>
+                                <AlertTitle className="font-semibold">AI Analysis</AlertTitle>
                                 <AlertDescription>
                                     {response.bestMatch.reasoning}
                                 </AlertDescription>
@@ -158,6 +158,15 @@ export default function SmartListingPage() {
                         </CardContent>
                     </Card>
                 )}
+
+                <div className="pt-8">
+                    <h2 className="text-2xl font-bold text-center mb-6">Browse All Listings</h2>
+                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {initialProperties.filter(p => p.status === 'Available').map(property => (
+                            <PropertyCard key={property.id} property={property} />
+                        ))}
+                    </div>
+                </div>
 
             </div>
         </div>
