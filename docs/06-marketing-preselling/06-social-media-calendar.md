@@ -1,4 +1,3 @@
-
 # Social Media Content Calendar - DRAFT
 
 ## Platform: LinkedIn

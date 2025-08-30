@@ -1,4 +1,3 @@
-
 # Marketing Strategy Document
 
 ## Project: Innovative Enterprises

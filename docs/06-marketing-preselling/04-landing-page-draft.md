@@ -1,4 +1,3 @@
-
 # Landing Page Copy - DRAFT
 
 ---

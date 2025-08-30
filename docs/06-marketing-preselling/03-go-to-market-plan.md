@@ -1,4 +1,3 @@
-
 # Go-To-Market (GTM) Plan
 
 ## Project: Innovative Enterprises - AI Business Platform
@@ -54,5 +53,4 @@
 - **First 3 Months:**
   - Analyze launch data and user behavior to inform the V1.1 roadmap.
   - Develop in-depth case studies with our most successful users.
-  - Launch a referral program to incentivize word-of-mouth growth.
   - Pitch a story to a major regional business publication like Forbes Middle East.

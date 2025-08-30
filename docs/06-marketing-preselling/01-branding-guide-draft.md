@@ -1,4 +1,3 @@
-
 # Branding Guide - DRAFT
 
 ## Project: Innovative Enterprises

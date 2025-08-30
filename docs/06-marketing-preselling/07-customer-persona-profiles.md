@@ -1,4 +1,3 @@
-
 # Customer Persona Profiles
 
 ---
