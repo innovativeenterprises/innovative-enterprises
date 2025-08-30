@@ -252,6 +252,7 @@ export const initialProducts: Product[] = [
         aiHint: "investment analysis chart",
         rating: 0,
         enabled: true,
+        href: "/real-estate-tech/investisight",
         adminStatus: 'On Hold',
         adminNotes: "Project is on hold pending new market data for the forecasting models."
     },

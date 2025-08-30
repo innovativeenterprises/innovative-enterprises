@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -32,6 +32,19 @@ export const initialServices: Service[] = [
     title: "Aegis Security",
     description: "Protect your digital assets with our comprehensive cybersecurity services.",
     enabled: true,
+  },
+   {
+    icon: BrainCircuit,
+    title: "AI & Machine Learning",
+    description: "Custom AI/ML model development, training, and deployment to solve your specific business challenges.",
+    enabled: true,
+  },
+  {
+    icon: Database,
+    title: "Data Scraping & Automation",
+    description: "Automated data extraction from web sources to provide you with the insights you need.",
+    enabled: true,
+    href: "/researcher",
   },
   {
     icon: ShoppingCart,
