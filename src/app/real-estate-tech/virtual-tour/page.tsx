@@ -11,9 +11,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Download, Image as ImageIcon, Wand2, ArrowLeft } from 'lucide-react';
+import { Loader2, Sparkles, Download, ImageIcon, Wand2, ArrowLeft, ArrowRight, Building } from 'lucide-react';
 import Image from 'next/image';
-import { annotateImage } from '@/ai/flows/image-annotation';
+import { transformImage } from '@/ai/flows/image-transformer';
 import Link from 'next/link';
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -34,31 +34,31 @@ type FormValues = z.infer<typeof FormSchema>;
 export default function VirtualTourPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [baseImage, setBaseImage] = useState<string | null>(null);
-  const [annotatedImage, setAnnotatedImage] = useState<string | null>(null);
+  const [transformedImage, setTransformedImage] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      prompt: 'Place standard furniture icons on this floor plan. Include beds in bedrooms, sofas in the living room, a dining table in the dining area, and kitchen appliances.',
+      prompt: 'Create a photorealistic 3D architectural rendering of a modern luxury villa based on this 2D floor plan. Show the exterior with a clean, white facade, large glass windows, a swimming pool, and landscaped garden. The lighting should be bright daylight.',
     },
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-    setAnnotatedImage(null);
+    setTransformedImage(null);
     try {
       const baseImageUri = await fileToDataURI(data.floorPlanFile[0]);
       setBaseImage(baseImageUri);
 
-      const result = await annotateImage({ baseImageUri, prompt: data.prompt });
-      setAnnotatedImage(result.imageDataUri);
-      toast({ title: "Virtual Staging Complete!", description: "Your floor plan has been annotated." });
+      const result = await transformImage({ baseImageUri, prompt: data.prompt });
+      setTransformedImage(result.imageDataUri);
+      toast({ title: "Rendering Complete!", description: "Your 3D floor plan has been generated." });
     } catch (error) {
       console.error(error);
       toast({
         title: 'Error',
-        description: 'Failed to generate annotated image. The model may be unavailable. Please try again later.',
+        description: 'Failed to generate the image. The model may be unavailable. Please try again later.',
         variant: 'destructive',
       });
     } finally {
@@ -67,14 +67,14 @@ export default function VirtualTourPage() {
   };
 
   const handleDownload = () => {
-    if (!annotatedImage) return;
+    if (!transformedImage) return;
     const link = document.createElement('a');
-    link.href = annotatedImage;
-    link.download = 'staged-floor-plan.png';
+    link.href = transformedImage;
+    link.download = '3d-floor-plan.png';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast({ title: "Downloaded!", description: "The staged floor plan has been downloaded." });
+    toast({ title: "Downloaded!", description: "The 3D plan has been downloaded." });
   }
 
   return (
@@ -82,18 +82,18 @@ export default function VirtualTourPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-              <ImageIcon className="w-10 h-10 text-primary" />
+              <Building className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Virtual Staging</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Floor Plan Renderer & Staging</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Upload a floor plan and tell our AI how to furnish it. Generate professionally staged layouts in seconds to help clients visualize the space.
+            Transform your 2D floor plans into stunning 3D architectural renderings or virtually staged layouts. Upload a plan, describe your vision, and let our AI bring it to life.
           </p>
         </div>
         <div className="max-w-4xl mx-auto mt-12 space-y-8">
             <Card>
                 <CardHeader>
-                <CardTitle>Create a Staged Floor Plan</CardTitle>
-                <CardDescription>Upload a floor plan image and provide a prompt for the AI.</CardDescription>
+                <CardTitle>Create a 3D Render</CardTitle>
+                <CardDescription>Upload a 2D floor plan image and provide a prompt for the AI.</CardDescription>
                 </CardHeader>
                 <CardContent>
                 <Form {...form}>
@@ -103,7 +103,7 @@ export default function VirtualTourPage() {
                             name="floorPlanFile"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Floor Plan Image</FormLabel>
+                                    <FormLabel>2D Floor Plan Image</FormLabel>
                                     <FormControl>
                                         <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                     </FormControl>
@@ -116,10 +116,10 @@ export default function VirtualTourPage() {
                             name="prompt"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Staging Instructions</FormLabel>
+                                <FormLabel>Transformation Instructions</FormLabel>
                                 <FormControl>
                                 <Textarea
-                                    placeholder="e.g., 'Place modern, minimalist furniture icons on this floor plan. Add a king-sized bed in the master bedroom...'"
+                                    placeholder="e.g., 'Create a photorealistic 3D architectural rendering of a modern luxury villa based on this 2D floor plan...'"
                                     rows={5}
                                     {...field}
                                 />
@@ -130,9 +130,9 @@ export default function VirtualTourPage() {
                         />
                         <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
                             {isLoading ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Staging Floor Plan...</>
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating 3D Render...</>
                             ) : (
-                            <><Wand2 className="mr-2 h-4 w-4" /> Generate Staged Plan</>
+                            <><Wand2 className="mr-2 h-4 w-4" /> Generate 3D Plan</>
                             )}
                         </Button>
                     </form>
@@ -144,34 +144,37 @@ export default function VirtualTourPage() {
                 <Card>
                 <CardContent className="p-6 text-center space-y-4">
                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                    <p className="text-muted-foreground">The AI is virtually staging your floor plan...</p>
+                    <p className="text-muted-foreground">The AI is rendering your 3D visualization...</p>
                     <p className="text-sm text-muted-foreground/80">This can take up to 30 seconds. Please be patient.</p>
                 </CardContent>
                 </Card>
             )}
 
-            {annotatedImage && baseImage && (
+            {transformedImage && baseImage && (
                  <Card>
                     <CardHeader>
-                        <CardTitle>Virtual Staging Result</CardTitle>
+                        <CardTitle>AI Rendering Result</CardTitle>
                     </CardHeader>
-                    <CardContent className="grid md:grid-cols-2 gap-6">
+                    <CardContent className="grid md:grid-cols-2 gap-6 items-center">
                         <div>
-                            <h3 className="font-semibold text-center mb-2">Before</h3>
+                            <h3 className="font-semibold text-center mb-2">Before (2D Plan)</h3>
                             <div className="relative aspect-video w-full overflow-hidden rounded-md border">
                                 <Image src={baseImage} alt="Original Floor Plan" layout="fill" objectFit="contain" />
                             </div>
                         </div>
+                        <div className="hidden md:block">
+                            <ArrowRight className="w-12 h-12 text-muted-foreground mx-auto" />
+                        </div>
                         <div>
-                            <h3 className="font-semibold text-center mb-2">After</h3>
+                            <h3 className="font-semibold text-center mb-2">After (3D Render)</h3>
                             <div className="relative aspect-video w-full overflow-hidden rounded-md border">
-                                <Image src={annotatedImage} alt="Staged Floor Plan" layout="fill" objectFit="contain" />
+                                <Image src={transformedImage} alt="Staged Floor Plan" layout="fill" objectFit="contain" />
                             </div>
                         </div>
                     </CardContent>
                      <CardFooter className="justify-end">
                         <Button onClick={handleDownload} variant="outline">
-                        <Download className="mr-2 h-4 w-4" /> Download Staged Plan
+                        <Download className="mr-2 h-4 w-4" /> Download 3D Render
                         </Button>
                     </CardFooter>
                 </Card>
