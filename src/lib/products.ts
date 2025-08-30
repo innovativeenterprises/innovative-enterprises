@@ -282,6 +282,7 @@ export const initialProducts: Product[] = [
         aiHint: "blockchain property ownership",
         rating: 0,
         enabled: true,
+        href: "/real-estate-tech/proptoken-platform",
         adminStatus: 'On Track',
         adminNotes: "Assessing legal and regulatory hurdles for tokenization in the region."
     },
