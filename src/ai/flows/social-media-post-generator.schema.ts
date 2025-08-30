@@ -11,7 +11,7 @@
 
 import {z} from 'zod';
 
-const platformEnum = z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp', 'Tender Response']);
+const platformEnum = z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp']);
 export type Platform = z.infer<typeof platformEnum>;
 
 export const GenerateSocialMediaPostInputSchema = z.object({

@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Edit, Upload } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 
 // This hook now connects to the global store.
@@ -344,13 +345,25 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
         toast({ title: "Document branding updated successfully." });
     };
 
+    const handleServicesMenuColumnChange = (value: string) => {
+        const numValue = parseInt(value, 10);
+        setSettings(prev => ({ ...prev, servicesMenuColumns: numValue }));
+        toast({ title: `Services menu layout updated to ${numValue} columns.` });
+    };
+
+    const handleAiToolsMenuColumnChange = (value: string) => {
+        const numValue = parseInt(value, 10);
+        setSettings(prev => ({ ...prev, aiToolsMenuColumns: numValue }));
+        toast({ title: `AI Tools menu layout updated to ${numValue} columns.` });
+    };
+
 
     return (
         <div className="space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle>Operational Settings</CardTitle>
-                    <CardDescription>Manage core operational settings for your application.</CardDescription>
+                    <CardTitle>Operational & Layout Settings</CardTitle>
+                    <CardDescription>Manage core operational and visual settings for your application.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -437,6 +450,50 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
                                         <span className="text-muted-foreground">%</span>
                                      </div>
                                 </div>
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                             <TableCell>
+                                <p className="font-medium">Services Menu Layout</p>
+                                <p className="text-sm text-muted-foreground">Number of columns in the 'Services' header dropdown.</p>
+                            </TableCell>
+                             <TableCell>
+                                 <Select
+                                    value={String(settings.servicesMenuColumns)}
+                                    onValueChange={handleServicesMenuColumnChange}
+                                >
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="1">1 Column</SelectItem>
+                                        <SelectItem value="2">2 Columns</SelectItem>
+                                        <SelectItem value="3">3 Columns</SelectItem>
+                                        <SelectItem value="4">4 Columns</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                             <TableCell>
+                                <p className="font-medium">AI Tools Menu Layout</p>
+                                <p className="text-sm text-muted-foreground">Number of columns in the 'AI Tools' header dropdown.</p>
+                            </TableCell>
+                             <TableCell>
+                               <Select
+                                    value={String(settings.aiToolsMenuColumns)}
+                                    onValueChange={handleAiToolsMenuColumnChange}
+                                >
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="1">1 Column</SelectItem>
+                                        <SelectItem value="2">2 Columns</SelectItem>
+                                        <SelectItem value="3">3 Columns</SelectItem>
+                                        <SelectItem value="4">4 Columns</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </TableCell>
                         </TableRow>
                         </TableBody>

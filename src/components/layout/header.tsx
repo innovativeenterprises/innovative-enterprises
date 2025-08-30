@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -30,6 +31,7 @@ import Image from 'next/image';
 import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
+import { useSettingsData } from '@/app/admin/settings-table';
 
 const navLinks = [
   { href: '/#products', label: 'Products' },
@@ -237,6 +239,7 @@ const networkLinks: { title: string; href: string; description: string, icon: Lu
 
 export default function Header() {
   const pathname = usePathname();
+  const { settings } = useSettingsData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
@@ -299,7 +302,10 @@ export default function Header() {
                <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-base font-medium">Services</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[1200px] md:grid-cols-4 lg:w-[1200px] ">
+                  <ul className={cn(
+                    "grid w-[400px] gap-3 p-4 md:w-[1200px]",
+                    `md:grid-cols-${settings.servicesMenuColumns}`
+                  )}>
                     {serviceLinks.map((component) => (
                       <ListItem
                         key={component.title}
@@ -319,7 +325,10 @@ export default function Header() {
                   <Sparkles className="mr-2 h-4 w-4" /> AI Tools
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                   <ul className="grid w-[400px] gap-3 p-4 md:w-[1200px] md:grid-cols-4 lg:w-[1200px] ">
+                   <ul className={cn(
+                    "grid w-[400px] gap-3 p-4 md:w-[1200px]",
+                    `md:grid-cols-${settings.aiToolsMenuColumns}`
+                   )}>
                     {aiToolsLinks.map((component) => (
                       <ListItem
                         key={component.title}

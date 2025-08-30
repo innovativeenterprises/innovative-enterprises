@@ -49,9 +49,8 @@ For each platform listed above, create a post that is engaging and perfectly tai
 - **Facebook:** Casual and engaging, can be longer, ask questions to encourage comments.
 - **Instagram:** Visually focused caption, use plenty of relevant hashtags. Should be shorter and more personal.
 - **WhatsApp:** Very casual, conversational, and direct, like a message to a friend. No hashtags.
-- **Tender Response:** Formal, professional, detailed, and structured like a proposal summary. No hashtags.
 
-For each platform, also provide a list of relevant hashtags to maximize reach (except for WhatsApp and Tender Response). Return the results as an array of 'posts' objects.
+For each platform, also provide a list of relevant hashtags to maximize reach (except for WhatsApp). Return the results as an array of 'posts' objects.
 `,
 });
 
