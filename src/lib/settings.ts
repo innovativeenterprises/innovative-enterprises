@@ -31,8 +31,8 @@ export interface AppSettings {
     };
     headerImageUrl?: string;
     footerImageUrl?: string;
-    servicesMenuColumns: number;
-    aiToolsMenuColumns: number;
+    servicesMenuColumns: 1 | 2 | 3 | 4;
+    aiToolsMenuColumns: 1 | 2 | 3 | 4;
     whatsapp: WhatsAppSettings;
 }
 

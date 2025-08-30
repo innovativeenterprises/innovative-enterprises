@@ -12,6 +12,7 @@ export interface Product {
     enabled: boolean;
     href?: string;
     adminStatus?: 'On Track' | 'At Risk' | 'On Hold' | 'Completed';
+    adminNotes?: string;
 }
 
 export const initialProducts: Product[] = [
@@ -28,6 +29,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/smart-pm",
         adminStatus: 'On Track',
+        adminNotes: "Core feature development is on schedule for this quarter."
     },
     {
         id: 10,
@@ -42,6 +44,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/bid-estimator",
         adminStatus: 'On Track',
+        adminNotes: "User acceptance testing is underway with pilot partners."
     },
     {
         id: 11,
@@ -56,6 +59,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/bim",
         adminStatus: 'On Track',
+        adminNotes: "Project scope and feature list finalized. Awaiting resource allocation."
     },
     {
         id: 12,
@@ -70,6 +74,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/site-guard",
         adminStatus: 'On Track',
+        adminNotes: "UI/UX wireframes are being developed."
     },
     {
         id: 13,
@@ -84,6 +89,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/workforce-flow",
         adminStatus: 'On Track',
+        adminNotes: "Currently analyzing market viability and competitor landscape."
     },
     {
         id: 14,
@@ -98,6 +104,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/procure-chain",
         adminStatus: 'On Track',
+        adminNotes: "Initial concept approved. Awaiting further research."
     },
     {
         id: 15,
@@ -112,6 +119,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/construct-fin",
         adminStatus: 'On Track',
+        adminNotes: "Defining MVP features and technical requirements."
     },
     {
         id: 16,
@@ -126,6 +134,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/digital-twin",
         adminStatus: 'On Track',
+        adminNotes: "Core idea is promising. Needs market validation."
     },
     {
         id: 17,
@@ -140,6 +149,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/aerosite-ai",
         adminStatus: 'At Risk',
+        adminNotes: "Integration with drone hardware vendor API is causing delays."
     },
     {
         id: 18,
@@ -154,6 +164,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/client-view",
         adminStatus: 'On Track',
+        adminNotes: "High-fidelity mockups are complete. Awaiting feedback from pilot client."
     },
     {
         id: 19,
@@ -168,6 +179,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/real-estate-tech/property-valuator",
         adminStatus: 'Completed',
+        adminNotes: "Service is live and performing within expected parameters."
     },
     {
         id: 20,
@@ -181,6 +193,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
+        adminNotes: "Core matching algorithm is complete. Now working on the agent dashboard."
     },
     {
         id: 21,
@@ -195,6 +208,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/real-estate-tech/virtual-tour",
         adminStatus: 'On Track',
+        adminNotes: "Public launch scheduled for next month. Marketing campaign is active."
     },
     {
         id: 22,
@@ -209,6 +223,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/real-estate-tech/docu-chain",
         adminStatus: 'Completed',
+        adminNotes: "Service is live. Monitoring for user feedback on contract templates."
     },
     {
         id: 23,
@@ -223,6 +238,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/real-estate-tech/smart-lease-manager",
         adminStatus: 'Completed',
+        adminNotes: "Stable and operational. No major issues reported."
     },
     {
         id: 24,
@@ -236,6 +252,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Hold',
+        adminNotes: "Project is on hold pending new market data for the forecasting models."
     },
     {
         id: 25,
@@ -249,6 +266,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
+        adminNotes: "Finalizing technical specifications and architecture design."
     },
     {
         id: 26,
@@ -262,6 +280,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
+        adminNotes: "Assessing legal and regulatory hurdles for tokenization in the region."
     },
     {
         id: 27,
@@ -275,6 +294,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
+        adminNotes: "Concept is solid. Needs a dedicated project manager to move forward."
     },
     {
         id: 28,
@@ -288,6 +308,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
+        adminNotes: "Awaiting government regulations on green building standards before proceeding."
     },
     {
         id: 29,
@@ -302,6 +323,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/quantity-calculator",
         adminStatus: 'Completed',
+        adminNotes: "Live and integrated with the main construction tech portal."
     },
     {
         id: 30,
@@ -316,6 +338,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/interior-designer",
         adminStatus: 'Completed',
+        adminNotes: "Feature is popular. Consider expanding with furniture shopping integration."
     },
     {
         id: 31,
@@ -329,6 +352,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: false,
         adminStatus: 'On Track',
+        adminNotes: "New idea submitted. Requires initial research and validation."
     }
 ];
 
