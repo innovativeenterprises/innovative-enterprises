@@ -4,7 +4,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Briefcase, Percent, ShieldAlert } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Briefcase, Percent, ShieldAlert, FolderKanban, Network } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
@@ -13,6 +13,8 @@ const kpiData = [
     { title: "Subscriptions", value: "+2,350", change: "+180.1% from last month", icon: Users },
     { title: "VAT Collected", value: "OMR 2,153.52", change: "+22% from last month", icon: Percent },
     { title: "Operational Cost", value: "OMR 9,231.89", change: "+2% from last month", icon: TrendingUp },
+    { title: "Total Projects", value: "14", change: "+3 since last month", icon: FolderKanban },
+    { title: "Provider Network", value: "36", change: "+5 since last month", icon: Network },
 ];
 
 const transactionData = [
@@ -111,7 +113,7 @@ export default function CfoDashboard() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {kpiData.map((kpi, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
