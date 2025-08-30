@@ -14,7 +14,7 @@ import type {
 import { ImageTransformerInputSchema, ImageTransformerOutputSchema } from './image-transformer.schema';
 
 
-export async function transformImage(input: ImageTransformerInput): Promise<ImageTransformerOutput> {
+export async function annotateImage(input: ImageTransformerInput): Promise<ImageTransformerOutput> {
     const { media } = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: [
@@ -35,9 +35,9 @@ export async function transformImage(input: ImageTransformerInput): Promise<Imag
 
 ai.defineFlow(
     {
-        name: 'transformImageFlow',
+        name: 'annotateImageFlow',
         inputSchema: ImageTransformerInputSchema,
         outputSchema: ImageTransformerOutputSchema,
     },
-    async (input) => transformImage(input)
+    async (input) => annotateImage(input)
 );
