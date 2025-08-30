@@ -11,6 +11,7 @@ export interface Product {
     rating: number;
     enabled: boolean;
     href?: string;
+    adminStatus?: 'On Track' | 'At Risk' | 'On Hold' | 'Completed';
 }
 
 export const initialProducts: Product[] = [
@@ -25,6 +26,7 @@ export const initialProducts: Product[] = [
         aiHint: "headphones product",
         rating: 4.5,
         enabled: true,
+        adminStatus: 'Completed',
     },
     {
         id: 2,
@@ -37,6 +39,7 @@ export const initialProducts: Product[] = [
         aiHint: "coffee table",
         rating: 4.8,
         enabled: true,
+        adminStatus: 'Completed',
     },
     {
         id: 3,
@@ -49,6 +52,7 @@ export const initialProducts: Product[] = [
         aiHint: "running shoes",
         rating: 4.7,
         enabled: true,
+        adminStatus: 'Completed',
     },
     {
         id: 4,
@@ -61,6 +65,7 @@ export const initialProducts: Product[] = [
         aiHint: "cotton t-shirt",
         rating: 4.9,
         enabled: true,
+        adminStatus: 'Completed',
     },
      {
         id: 5,
@@ -73,6 +78,7 @@ export const initialProducts: Product[] = [
         aiHint: "smartwatch product",
         rating: 4.9,
         enabled: true,
+        adminStatus: 'Completed',
     },
     {
         id: 6,
@@ -85,6 +91,7 @@ export const initialProducts: Product[] = [
         aiHint: "leather backpack",
         rating: 4.6,
         enabled: true,
+        adminStatus: 'Completed',
     },
     {
         id: 7,
@@ -97,6 +104,7 @@ export const initialProducts: Product[] = [
         aiHint: "cookware set",
         rating: 4.7,
         enabled: true,
+        adminStatus: 'Completed',
     },
     {
         id: 8,
@@ -109,6 +117,7 @@ export const initialProducts: Product[] = [
         aiHint: "book cover",
         rating: 4.8,
         enabled: true,
+        adminStatus: 'Completed',
     },
     {
         id: 9,
@@ -122,6 +131,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/smart-pm",
+        adminStatus: 'On Track',
     },
     {
         id: 10,
@@ -135,6 +145,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/bid-estimator",
+        adminStatus: 'On Track',
     },
     {
         id: 11,
@@ -148,6 +159,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/bim",
+        adminStatus: 'On Track',
     },
     {
         id: 12,
@@ -161,6 +173,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/site-guard",
+        adminStatus: 'On Track',
     },
     {
         id: 13,
@@ -174,6 +187,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/workforce-flow",
+        adminStatus: 'On Track',
     },
     {
         id: 14,
@@ -187,6 +201,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/procure-chain",
+        adminStatus: 'On Track',
     },
     {
         id: 15,
@@ -200,6 +215,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/construct-fin",
+        adminStatus: 'On Track',
     },
     {
         id: 16,
@@ -213,6 +229,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/digital-twin",
+        adminStatus: 'On Track',
     },
     {
         id: 17,
@@ -226,6 +243,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/aerosite-ai",
+        adminStatus: 'At Risk',
     },
     {
         id: 18,
@@ -239,6 +257,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/client-view",
+        adminStatus: 'On Track',
     },
     {
         id: 19,
@@ -252,6 +271,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/property-valuator",
+        adminStatus: 'Completed',
     },
     {
         id: 20,
@@ -263,7 +283,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re2/400/400",
         aiHint: "house search map",
         rating: 0,
-        enabled: true
+        enabled: true,
+        adminStatus: 'On Track',
     },
     {
         id: 21,
@@ -277,6 +298,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/virtual-tour",
+        adminStatus: 'On Track',
     },
     {
         id: 22,
@@ -290,6 +312,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/docu-chain",
+        adminStatus: 'Completed',
     },
     {
         id: 23,
@@ -303,6 +326,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/smart-lease-manager",
+        adminStatus: 'Completed',
     },
     {
         id: 24,
@@ -314,7 +338,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re6/400/400",
         aiHint: "investment analysis chart",
         rating: 0,
-        enabled: true
+        enabled: true,
+        adminStatus: 'On Hold',
     },
     {
         id: 25,
@@ -326,7 +351,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re7/400/400",
         aiHint: "maintenance service ticket",
         rating: 0,
-        enabled: true
+        enabled: true,
+        adminStatus: 'On Track',
     },
     {
         id: 26,
@@ -338,7 +364,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re8/400/400",
         aiHint: "blockchain property ownership",
         rating: 0,
-        enabled: true
+        enabled: true,
+        adminStatus: 'On Track',
     },
     {
         id: 27,
@@ -350,7 +377,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re9/400/400",
         aiHint: "digital document wallet",
         rating: 0,
-        enabled: true
+        enabled: true,
+        adminStatus: 'On Track',
     },
     {
         id: 28,
@@ -362,7 +390,8 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/re10/400/400",
         aiHint: "green building energy",
         rating: 0,
-        enabled: true
+        enabled: true,
+        adminStatus: 'On Track',
     },
     {
         id: 29,
@@ -376,6 +405,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/quantity-calculator",
+        adminStatus: 'Completed',
     },
     {
         id: 30,
@@ -389,5 +419,6 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/interior-designer",
+        adminStatus: 'Completed',
     }
 ];

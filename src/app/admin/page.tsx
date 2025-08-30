@@ -1,13 +1,15 @@
 
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, CheckCircle, FolderKanban, Network } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "./product-table";
 import { useProvidersData } from "./provider-table";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users, href: "/admin/people" },
@@ -43,6 +45,16 @@ export default function AdminDashboardPage() {
   const chartConfig = {
       count: { label: "Count" },
   };
+  
+  const getAdminStatusBadge = (status?: string) => {
+    switch (status) {
+        case "On Track": return <Badge className="bg-green-500/20 text-green-700 hover:bg-green-500/30">{status}</Badge>;
+        case "At Risk": return <Badge className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">{status}</Badge>;
+        case "On Hold": return <Badge className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">{status}</Badge>;
+        case "Completed": return <Badge variant="secondary">{status}</Badge>;
+        default: return <Badge variant="outline">N/A</Badge>;
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -105,6 +117,50 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+       <Card>
+            <CardHeader>
+                <CardTitle>All Projects</CardTitle>
+                <CardDescription>An overview of all projects currently in the pipeline.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Project Name</TableHead>
+                            <TableHead>Stage</TableHead>
+                            <TableHead>Visibility</TableHead>
+                            <TableHead>Admin Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {products.slice(0, 10).map((product) => (
+                            <TableRow key={product.id}>
+                                <TableCell className="font-medium">{product.name}</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">{product.stage}</Badge>
+                                </TableCell>
+                                <TableCell>
+                                     <Badge variant={product.enabled ? "default" : "secondary"}>
+                                        {product.enabled ? "Enabled" : "Disabled"}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell>
+                                    {getAdminStatusBadge(product.adminStatus)}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+            <CardFooter>
+                 <Button asChild variant="outline">
+                    <Link href="/admin/projects">
+                        View All Projects
+                    </Link>
+                 </Button>
+            </CardFooter>
+        </Card>
     </div>
   );
 }
