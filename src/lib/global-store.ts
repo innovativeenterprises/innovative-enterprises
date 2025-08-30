@@ -26,6 +26,7 @@ import { initialWorkers, type Worker as RaahaWorker } from './raaha-workers';
 import { initialRequests, type HireRequest } from './raaha-requests';
 import { initialAgencies, type Agency } from './raaha-agencies';
 import { initialLeases, type SignedLease } from './leases';
+import { initialProperties, type Property } from './properties';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -51,6 +52,7 @@ type AppState = {
   raahaRequests: HireRequest[];
   raahaAgencies: Agency[];
   signedLeases: SignedLease[];
+  properties: Property[];
   cart: CartItem[];
 };
 
@@ -75,6 +77,7 @@ let state: AppState = {
   raahaRequests: initialRequests,
   raahaAgencies: initialAgencies,
   signedLeases: initialLeases,
+  properties: initialProperties,
   cart: [],
 };
 

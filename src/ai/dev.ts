@@ -43,3 +43,4 @@ import '@/ai/flows/boq-generator';
 import '@/ai/flows/raaha-matcher';
 import '@/ai/flows/property-valuation';
 import '@/ai/flows/real-estate-contract-generator';
+import '@/ai/flows/property-matcher';
