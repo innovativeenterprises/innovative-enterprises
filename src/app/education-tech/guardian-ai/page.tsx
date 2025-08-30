@@ -117,7 +117,7 @@ export default function GuardianAiPage() {
                                                 <Dialog>
                                                     <div className="flex justify-end gap-2">
                                                         <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer"><FileText className="mr-2 h-4 w-4"/>CV</Link></Button>
-                                                        <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer?tab=interview"><Mic className="mr-2 h-4 w-4"/>Interview</Link></Button>
+                                                        <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer"><Mic className="mr-2 h-4 w-4"/>Interview</Link></Button>
                                                         <DialogTrigger asChild><Button variant="secondary" size="sm"><MessageSquare className="mr-2 h-4 w-4"/>Check-in</Button></DialogTrigger>
                                                     </div>
                                                     <WellbeingChat studentName={student.name} />
