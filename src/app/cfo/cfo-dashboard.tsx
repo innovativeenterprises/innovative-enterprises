@@ -139,18 +139,18 @@ export default function CfoDashboard() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Client/Vendor</TableHead>
-                  <TableHead>Type</TableHead>
+                  <TableHead className="hidden sm:table-cell">Type</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactionData.map((transaction, index) => (
+                {transactionData.slice(0, 10).map((transaction, index) => (
                   <TableRow key={index}>
                     <TableCell>
                       <div className="font-medium">{transaction.client}</div>
                     </TableCell>
-                    <TableCell>{transaction.type}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{transaction.type}</TableCell>
                     <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                     <TableCell className="text-right">OMR {transaction.total.toFixed(2)}</TableCell>
                   </TableRow>
@@ -202,7 +202,7 @@ export default function CfoDashboard() {
                            </TableRow>
                         </TableHeader>
                         <TableBody>
-                           {upcomingPayments.map((payment, index) => {
+                           {upcomingPayments.slice(0, 5).map((payment, index) => {
                                const daysRemaining = getDaysRemaining(payment.dueDate);
                                return (
                                    <TableRow key={index}>
