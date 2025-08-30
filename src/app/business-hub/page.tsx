@@ -86,24 +86,32 @@ export default function BusinessHubPage() {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto mt-20">
-            <div className="text-center mb-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Find a Service Provider</h2>
-                <p className="mt-2 text-muted-foreground">Search our network of vetted freelancers and partner companies.</p>
+        <div className="grid lg:grid-cols-5 gap-12 mt-20">
+            <div className="lg:col-span-2">
+                 <ChatComponent
+                    agentName="Hubert"
+                    agentIcon={Handshake}
+                    agentDescription="Your AI Business Hub Assistant"
+                    welcomeMessage="Hello! I'm Hubert. I can help you find the right service provider. What are you looking for today?"
+                    placeholder="e.g., 'I need a company for logo design' or 'Find me a vetted React developer'"
+                    aiFlow={hubQueryFlow}
+                    settings={settings}
+                />
             </div>
-            
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-                 <div className="relative flex-grow">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input
-                        type="search"
-                        placeholder="Search by name or service (e.g., 'Web Development')"
-                        className="w-full pl-10"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-                 <div className="flex gap-2 overflow-x-auto pb-2">
+            <div className="lg:col-span-3">
+                 <div className="flex flex-col md:flex-row gap-4 mb-4">
+                    <div className="relative flex-grow">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                            type="search"
+                            placeholder="Search by name or service..."
+                            className="w-full pl-10"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                 </div>
+                 <div className="flex gap-2 overflow-x-auto pb-4 mb-4">
                     {businessCategoriesList.slice(0, 6).map((cat) => (
                         <Button
                             key={cat}
@@ -115,12 +123,11 @@ export default function BusinessHubPage() {
                         </Button>
                     ))}
                  </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProviders.map((provider) => (
-                    <ProviderCard key={provider.id} provider={provider} />
-                ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredProviders.map((provider) => (
+                        <ProviderCard key={provider.id} provider={provider} />
+                    ))}
+                </div>
             </div>
         </div>
 
