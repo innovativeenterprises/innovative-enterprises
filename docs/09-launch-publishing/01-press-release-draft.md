@@ -19,10 +19,13 @@ Anwar Ahmed Sharif, the CTO and chief architect behind the company's technology,
 
 INNOVATIVE ENTERPRISES is launching with a powerful suite of platforms aimed at solving key challenges for businesses in Oman and the GCC, including:
 
--   **Sanad Hub & Business Hub:** Digital marketplaces connecting clients with a network of vetted service providers.
+-   **Sanad Hub & Business Hub:** Digital marketplaces connecting clients with a network of vetted government service (Sanad) and B2B providers.
+-   **Nova Commerce:** An e-commerce platform offering end-to-end solutions to build, manage, and scale online businesses.
 -   **GENIUS Career Platform:** An AI-powered suite for CV enhancement and interview coaching.
--   **RAAHA Platform:** A white-label solution for domestic workforce agencies.
+-   **RAAHA Platform:** A white-label SaaS solution for domestic workforce agencies to connect with clients.
 -   **Specialized Tech Hubs:** Dedicated solution portfolios for the **Real Estate** and **Construction** industries, featuring tools for AI property valuation and bid estimation.
+
+Financially, the company is on a strong growth trajectory. Based on its diversified revenue model—which includes SaaS subscriptions, transaction fees, and premium AI tool access—Innovative Enterprises is projected to achieve profitability within three years, with revenue forecasts exceeding **OMR 670,000** in its third year of operation.
 
 By leveraging its AI-powered operational model, INNOVATIVE ENTERPRISES is set to become a key player in Oman's digital transformation, aligning with the goals of Oman Vision 2040 to foster a diversified, knowledge-based economy.
 
