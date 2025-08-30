@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -172,7 +173,7 @@ export default function ProductTable({ products, setProducts }: { products: Prod
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                     <CardTitle>Digital Product Management</CardTitle>
-                    <CardDescription>Manage the products showcased on your homepage and e-commerce store.</CardDescription>
+                    <CardDescription>Manage the projects and SaaS platforms displayed on your homepage.</CardDescription>
                 </div>
                 <Button onClick={() => handleOpenDialog()}><PlusCircle /> Add Product</Button>
             </CardHeader>

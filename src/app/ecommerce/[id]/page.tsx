@@ -3,8 +3,8 @@
 'use client';
 
 import { notFound, useRouter } from 'next/navigation';
+import { initialStoreProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
-import { useProductsData } from '@/app/admin/product-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -40,7 +40,7 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 
 
 export default function ProductDetailPage({ params }: { params: { id: string }}) {
-    const { products } = useProductsData();
+    const products = initialStoreProducts;
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
     const router = useRouter();

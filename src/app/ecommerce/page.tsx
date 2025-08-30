@@ -2,13 +2,13 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, Star, Filter, Bot, ShoppingCart } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
-import { useProductsData } from '@/app/admin/product-table';
+import { initialStoreProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
@@ -84,7 +84,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 export default function EcommercePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const { products } = useProductsData();
+  const products = initialStoreProducts;
 
   const filteredProducts = selectedCategory === 'All'
     ? products.filter(p => p.enabled)
