@@ -1,4 +1,3 @@
-
 # User Onboarding Guide
 
 *This document outlines the initial experience for a new **Service Provider (Freelancer/Sanad Office)**, intended to guide them to their "Aha!" moment—receiving their first task—as quickly as possible.*

@@ -1,4 +1,3 @@
-
 # Launch Day Marketing Assets Checklist
 
 ## Project: Innovative Enterprises Platform

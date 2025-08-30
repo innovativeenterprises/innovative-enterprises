@@ -1,4 +1,3 @@
-
 # App Store / Marketplace Submission Checklist
 
 ## App Name: Innovative Enterprises
@@ -61,4 +60,3 @@
 - [ ] **Target Audience and Content:** Set target age group (18+).
 - [ ] **Data Safety:** Complete the data safety form accurately, disclosing the use of user data for core functionality.
 - [ ] **App Release:** Upload the signed AAB (Android App Bundle).
-
