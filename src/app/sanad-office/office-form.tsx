@@ -432,7 +432,7 @@ export default function OfficeForm() {
                                 {watchSubscriptionTier === 'monthly' && <div className="flex justify-between"><span>Monthly Subscription:</span><span>OMR {sanadSettings.monthlyFee.toFixed(2)}</span></div>}
                                 {watchSubscriptionTier === 'yearly' && <div className="flex justify-between"><span>Yearly Subscription:</span><span>OMR {sanadSettings.yearlyFee.toFixed(2)}</span></div>}
                                 {watchSubscriptionTier !== 'lifetime' && <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>First-time Discount ({sanadSettings.firstTimeDiscountPercentage * 100}%):</span><span>- OMR {( (watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee) * sanadSettings.firstTimeDiscountPercentage).toFixed(2)}</span></div>}
-                                <hr className="my-2" />
+                                <hr className="my-2 border-dashed" />
                                 <div className="flex justify-between font-bold text-lg"><span>Total Due Today:</span><span className="text-primary">OMR {totalPrice.toFixed(2)}</span></div>
                             </CardContent>
                              <CardFooter>
