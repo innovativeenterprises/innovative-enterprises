@@ -10,6 +10,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, L
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users, href: "/admin/people" },
