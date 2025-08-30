@@ -474,7 +474,8 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
-        adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management."
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management.",
+        href: "/education-tech/campus-os",
     }
 ];
 
