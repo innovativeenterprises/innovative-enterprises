@@ -406,7 +406,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/eduflow/400/400",
         aiHint: "education administration software",
         rating: 0,
-        enabled: false,
+        enabled: true,
         adminStatus: 'On Track',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 1: Administration & Operations."
     },
@@ -420,7 +420,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/cognita/400/400",
         aiHint: "personalized learning ai",
         rating: 0,
-        enabled: false,
+        enabled: true,
         adminStatus: 'On Track',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 2: Teaching & Learning Innovation."
     },
@@ -434,7 +434,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/guardian/400/400",
         aiHint: "student success wellbeing",
         rating: 0,
-        enabled: false,
+        enabled: true,
         adminStatus: 'On Track',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 3: Student Experience & Wellbeing."
     },
@@ -448,7 +448,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/certitrust/400/400",
         aiHint: "blockchain certificate security",
         rating: 0,
-        enabled: false,
+        enabled: true,
         adminStatus: 'On Track',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification."
     },
@@ -462,7 +462,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/campusos/400/400",
         aiHint: "smart campus iot",
         rating: 0,
-        enabled: false,
+        enabled: true,
         adminStatus: 'On Track',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management."
     }

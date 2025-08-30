@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog, DollarSign, Home } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog, DollarSign, Home, GraduationCap } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -63,6 +63,12 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     href: "/real-estate-tech",
     description: "A suite of automated SaaS platforms for property valuation, management, and investment.",
     icon: Building2,
+  },
+  {
+    title: "Education Tech",
+    href: "/education-tech",
+    description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
+    icon: GraduationCap,
   },
   {
     title: "3D Virtual Tour SaaS",
