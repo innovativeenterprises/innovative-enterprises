@@ -17,6 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { auditOffices } from '@/lib/audit-offices';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import { store } from '@/lib/global-store';
+import { type AuditSubmission } from '@/lib/audit-submissions';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -82,6 +84,21 @@ export default function AuditForm() {
 
   const handleSubmitToOffice = () => {
     setIsLoading(true);
+    
+    // Create a new submission object
+    const newSubmission: AuditSubmission = {
+      id: `audit_${Date.now()}`,
+      ...form.getValues(),
+      submissionDate: new Date().toISOString(),
+      status: 'Submitted',
+    };
+    
+    // Update the global store
+    store.set(state => ({
+        ...state,
+        auditSubmissions: [newSubmission, ...state.auditSubmissions]
+    }));
+
     // Simulate API call to send the report
     setTimeout(() => {
         setIsLoading(false);

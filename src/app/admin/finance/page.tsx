@@ -1,7 +1,6 @@
 
 'use client';
 
-import CfoDashboard from "@/app/cfo/cfo-dashboard";
 import InvestorTable, { useInvestorsData } from "../investor-table";
 
 export default function AdminFinancePage() {
@@ -9,7 +8,12 @@ export default function AdminFinancePage() {
 
   return (
     <div className="space-y-8">
-        <CfoDashboard />
+        <div>
+            <h1 className="text-3xl font-bold">Platform Finance</h1>
+            <p className="text-muted-foreground">
+                Manage all financial partners, investors, and funding sources for the platform.
+            </p>
+        </div>
         <InvestorTable {...investorData} />
     </div>
   );
