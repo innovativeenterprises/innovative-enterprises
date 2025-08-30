@@ -55,3 +55,4 @@
 ### Slide 11: Contact Information
 - **Content:** Jumaa Salim Al Hadidi, CEO | invest@innovativeenterprises.tech | +968 78492280 | innovativeenterprises.tech
 
+

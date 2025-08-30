@@ -11,3 +11,4 @@
 | **Cost Structure** | **Revenue Streams** |
 | - Cloud Hosting & Development Costs (Firebase, Next.js) <br> - AI Model API Costs (Google AI) <br> - Salaries (Core Team) <br> - Marketing & Sales Expenses <br> - Partner Commission Payouts | - **Subscription Fees:** (e.g., Sanad Hub annual registration) <br> - **Commission/Service Fees:** (A percentage of each transaction on the marketplaces) <br> - **Premium AI Tool Access:** (Pay-per-use or monthly fee for advanced tools like Voxi Translator) <br> - **White-Labeling:** (Licensing our platforms like RAAHA to other businesses) |
 
+
