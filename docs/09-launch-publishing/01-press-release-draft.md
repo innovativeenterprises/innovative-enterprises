@@ -1,4 +1,3 @@
-
 # Press Release - DRAFT
 
 **FOR IMMEDIATE RELEASE**
@@ -17,13 +16,12 @@ This unique structure is made possible by a team of over 20 specialized AI agent
 
 Anwar Ahmed Sharif, the CTO and chief architect behind the company's technology, elaborated on the model. "We have engineered an ecosystem where our AI agents are not just tools, but collaborators. They analyze market data, draft contracts, write code, generate marketing campaigns, and even help us design the next wave of products. This synergy between human talent and a digital workforce is our core competitive advantage."
 
-INNOVATIVE ENTERPRISES is launching with a powerful suite of platforms aimed at solving key challenges for businesses in Oman and the GCC, including:
+INNOVATIVE ENTERPRISES is launching with a powerful suite of platforms aimed at solving key challenges for businesses in Oman and the GCC. The company's diverse portfolio includes:
 
--   **Sanad Hub & Business Hub:** Digital marketplaces connecting clients with a network of vetted government service (Sanad) and B2B providers.
--   **Nova Commerce:** An e-commerce platform offering end-to-end solutions to build, manage, and scale online businesses.
--   **GENIUS Career Platform:** An AI-powered suite for CV enhancement and interview coaching.
--   **RAAHA Platform:** A white-label SaaS solution for domestic workforce agencies to connect with clients.
--   **Specialized Tech Hubs:** Dedicated solution portfolios for the **Real Estate** and **Construction** industries, featuring tools for AI property valuation and bid estimation.
+-   **Live Platforms:** Flagship services like **Sanad Hub** (for government service delegation), **Business Hub** (a B2B marketplace), **Nova Commerce** (e-commerce solutions), and the **GENIUS Career Platform**.
+-   **Platforms in Development:** Projects nearing completion, such as **APPI** (an AI-powered utility management app) and **KHIDMA** (a dynamic service provider marketplace).
+-   **Industry-Specific Hubs:** Dedicated solution portfolios for the **Real Estate** and **Construction** industries, featuring tools like the AI Property Valuator and the BidWise Estimator.
+-   **Early-Stage Innovations (Idea & Research):** A glimpse into the future with projects like **Fintech Super-App**, **Smart City OS**, a gamified AR social app (**MATCH CUP GAME**), and an AI-driven **Smart-POS** system for small businesses.
 
 Financially, the company is on a strong growth trajectory. Based on its diversified revenue model—which includes SaaS subscriptions, transaction fees, and premium AI tool access—Innovative Enterprises is projected to achieve profitability within three years, with revenue forecasts exceeding **OMR 670,000** in its third year of operation.
 
