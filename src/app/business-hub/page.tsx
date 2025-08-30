@@ -14,13 +14,19 @@ import { useProvidersData } from "@/app/admin/provider-table";
 import type { Provider } from "@/lib/providers";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 const categories = [
     "All", "Tech & IT Services", "Creative & Design", "Consulting & Professional Services", "Legal Services", "Financial & Banking"
 ];
 
-const ProviderCard = ({ provider }: { provider: Provider }) => (
-    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
+const ProviderCard = ({ provider }: { provider: Provider }) => {
+    const router = useRouter();
+    return (
+    <Card 
+        className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col cursor-pointer"
+        onClick={() => router.push(`/provider/${provider.id}`)}
+    >
         <CardHeader>
              <div className="flex justify-between items-start">
                 <CardTitle className="text-xl">{provider.name}</CardTitle>
@@ -43,7 +49,7 @@ const ProviderCard = ({ provider }: { provider: Provider }) => (
             </Button>
         </CardFooter>
     </Card>
-);
+)};
 
 
 export default function BusinessHubPage() {
