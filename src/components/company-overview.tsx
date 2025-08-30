@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -19,13 +20,13 @@ export default function CompanyOverview() {
             <p className="text-lg text-foreground/80 max-w-xl">
               Innovative Enterprises is a leading Omani SME dedicated to delivering cutting-edge solutions in emerging technology and digital transformation. We empower businesses and government entities to thrive in the digital age.
             </p>
-            <div className="flex items-center gap-4">
-                <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg w-full sm:w-auto">
                   <Link href="#services">
                     Explore Our Services <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="rounded-full shadow-lg">
+                <Button asChild size="lg" variant="outline" className="rounded-full shadow-lg w-full sm:w-auto">
                     <Link href="#testimonials">
                         Our Clients
                     </Link>

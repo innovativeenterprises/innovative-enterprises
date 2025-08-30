@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import * as React from 'react';
@@ -23,7 +24,8 @@ import {
   WalletCards,
   Network,
   Zap,
-  GanttChartSquare
+  GanttChartSquare,
+  Home,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -84,6 +86,11 @@ export default function AdminLayout({
         </SidebarContent>
         <SidebarFooter>
            <SidebarMenu>
+             <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={{ children: 'View Live Site', side: 'right', align: 'center' }}>
+                     <Link href="/"><Home /><span>View Live Site</span></Link>
+                 </SidebarMenuButton>
+             </SidebarMenuItem>
              <SidebarMenuItem>
                  <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right', align: 'center' }} isActive={pathname === '/admin/settings'}>
                      <Link href="/admin/settings"><Settings /><span>Settings</span></Link>

@@ -1,5 +1,6 @@
 
 
+
 'use client';
 
 import Link from 'next/link';
@@ -410,7 +411,7 @@ export default function Header() {
                     <span className="sr-only">Open navigation menu</span>
                 </Button>
                 </SheetTrigger>
-                <SheetContent side="right">
+                <SheetContent side="right" className="w-[300px] sm:w-[340px]">
                  <SheetHeader className="p-4 border-b">
                     <SheetTitle>
                         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" onClick={handleLinkClick}>
