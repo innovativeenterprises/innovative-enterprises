@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Search, Globe, FileText, ListChecks } from 'lucide-react';
+import { Loader2, Sparkles, Search, Globe, FileText, ListChecks, Link as LinkIcon } from 'lucide-react';
 import { WebScraperInputSchema, type WebScraperInput, type WebScraperOutput } from '@/ai/flows/web-scraper-agent.schema';
 import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -87,7 +87,7 @@ export default function ResearcherPage() {
                             <FormItem>
                                 <FormLabel>URL or Search Query</FormLabel>
                                 <FormControl>
-                                <Input placeholder="e.g., 'vetted UI/UX designers' or 'market trends in AI'" {...field} />
+                                <Input placeholder="e.g., 'vetted UI/UX designers' or 'https://www.omanobserver.om'" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -143,6 +143,19 @@ export default function ResearcherPage() {
                                         </ul>
                                     </AlertDescription>
                                 </Alert>
+                            </div>
+                        )}
+                        {response.extractedLinks && response.extractedLinks.length > 0 && (
+                             <div>
+                                <h3 className="font-semibold text-lg mb-2 flex items-center gap-2"><LinkIcon className="h-5 w-5"/> Extracted Links</h3>
+                                <div className="space-y-3">
+                                    {response.extractedLinks.map((link, index) => (
+                                        <div key={index} className="p-3 border rounded-md bg-muted/50">
+                                            <a href={link.url} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline break-all">{link.text}</a>
+                                            <p className="text-xs text-muted-foreground italic mt-1">{link.description}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </CardContent>

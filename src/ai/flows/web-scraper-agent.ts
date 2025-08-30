@@ -6,16 +6,22 @@
  */
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { WebScraperInputSchema, WebScraperOutputSchema, type WebScraperInput, type WebScraperOutput } from './web-scraper-agent.schema';
+import { WebScraperInputSchema, WebScraperOutputSchema, type WebScraperInput, type WebScraperOutput, type ExtractedLink } from './web-scraper-agent.schema';
 import { initialProviders } from '@/lib/providers';
 import * as cheerio from 'cheerio';
 
 const fetchWebPageTool = ai.defineTool(
     {
         name: 'fetchWebPage',
-        description: 'Fetches and parses the content of a given URL, extracting main text and table data.',
+        description: 'Fetches and parses the content of a given URL, extracting main text, table data, and all hyperlinks.',
         inputSchema: z.object({ url: z.string().url() }),
-        outputSchema: z.object({ content: z.string() }),
+        outputSchema: z.object({ 
+            content: z.string(),
+            links: z.array(z.object({
+                text: z.string(),
+                href: z.string().url(),
+            })).optional(),
+        }),
     },
     async ({ url }) => {
         try {
@@ -25,6 +31,24 @@ const fetchWebPageTool = ai.defineTool(
             }
             const html = await response.text();
             const $ = cheerio.load(html);
+
+            const baseUrl = new URL(url);
+
+            // Extract and absolutize links
+            const links: { text: string; href: string }[] = [];
+            $('a').each((i, el) => {
+                const href = $(el).attr('href');
+                const text = $(el).text().trim();
+                if (href && text) {
+                    try {
+                        const absoluteUrl = new URL(href, baseUrl.origin).href;
+                        links.push({ text, href: absoluteUrl });
+                    } catch (e) {
+                       // Ignore invalid URLs
+                    }
+                }
+            });
+
 
             // Remove script, style, nav, header, footer tags to clean up the content
             $('script, style, nav, header, footer, noscript, [aria-hidden="true"]').remove();
@@ -45,7 +69,7 @@ const fetchWebPageTool = ai.defineTool(
             // Extract text from the body, collapsing whitespace
             const bodyText = $('body').text().replace(/\s\s+/g, ' ').trim();
             
-            return { content: bodyText.substring(0, 30000) }; // Limit content size
+            return { content: bodyText.substring(0, 30000), links }; // Limit content size
         } catch (error: any) {
             return { content: `Error: Could not fetch or parse the page. ${error.message}` };
         }
@@ -91,22 +115,33 @@ const queryProviderDatabaseTool = ai.defineTool(
 
 const summarizeWebPagePrompt = ai.definePrompt({
     name: 'summarizeWebPagePrompt',
-    input: { schema: z.object({ content: z.string(), sourceUrl: z.string() }) },
+    input: { schema: z.object({ 
+        content: z.string(), 
+        sourceUrl: z.string(),
+        links: z.array(z.object({ text: z.string(), href: z.string() })).optional(),
+    }) },
     output: { schema: WebScraperOutputSchema },
     tools: [queryProviderDatabaseTool],
-    prompt: `You are an expert research analyst. You have been given the parsed text content from a webpage.
-    The content may include data tables formatted in plain text.
+    prompt: `You are an expert research analyst. You have been given the parsed text content from a webpage, along with all the hyperlinks found on that page.
 
 Webpage Content:
 """
 {{{content}}}
 """
 
+{{#if links}}
+Extracted Links:
+{{#each links}}
+- {{this.text}} ({{this.href}})
+{{/each}}
+{{/if}}
+
 Your task is to analyze this content and provide a structured summary.
 1.  **Title**: Extract the most likely title of the page from the content.
 2.  **Summary**: Write a comprehensive, multi-paragraph summary of the page's main topic and arguments. If tables are present, incorporate key data points from them into your summary.
 3.  **Key Points**: List the 5-7 most important facts, findings, or conclusions from the text.
-4.  **Source**: Return the original source URL: {{{sourceUrl}}}
+4.  **Extracted Links**: For each link provided in the input, analyze its anchor text and URL. Provide a brief, one-sentence description of what the link likely points to. Classify its purpose (e.g., "Internal Navigation," "External Resource," "Download Link").
+5.  **Source**: Return the original source URL: {{{sourceUrl}}}
 
 Return the response in the specified JSON format.
 `,
@@ -145,8 +180,8 @@ export const scrapeAndSummarize = ai.defineFlow(
   async (input) => {
 
     if (input.isUrl) {
-      const pageContent = await fetchWebPageTool({ url: input.source });
-      const { output } = await summarizeWebPagePrompt({ content: pageContent.content, sourceUrl: input.source });
+      const pageData = await fetchWebPageTool({ url: input.source });
+      const { output } = await summarizeWebPagePrompt({ content: pageData.content, sourceUrl: input.source, links: pageData.links });
       return output!;
     } else {
       const llmResponse = await searchSummaryPrompt({ query: input.source });
