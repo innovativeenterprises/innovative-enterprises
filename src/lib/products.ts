@@ -414,7 +414,8 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
-        adminNotes: "Generated from Education Playbook. Addresses Pillar 1: Administration & Operations."
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 1: Administration & Operations.",
+        href: "/education-tech/eduflow",
     },
     {
         id: 36,
