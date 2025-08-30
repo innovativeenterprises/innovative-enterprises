@@ -181,9 +181,6 @@ export default function ProjectsPage() {
         
         try {
             const plan = await generateProjectPlan({ idea: data.idea });
-            toast({ title: "Plan Generated!", description: "Now creating a project image..." });
-
-            const imageUrl = await generateImage({ prompt: plan.imagePrompt });
             
             const newProduct: Product = {
                 id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
@@ -194,7 +191,7 @@ export default function ProjectsPage() {
                 price: 0,
                 rating: 0,
                 enabled: false, // Start as disabled
-                image: imageUrl,
+                image: "https://placehold.co/400/400.png",
                 aiHint: plan.imagePrompt,
             };
 
