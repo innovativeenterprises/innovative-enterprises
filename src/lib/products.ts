@@ -353,6 +353,48 @@ export const initialProducts: Product[] = [
         enabled: false,
         adminStatus: 'On Track',
         adminNotes: "New idea submitted. Requires initial research and validation."
+    },
+    {
+        id: 32,
+        name: "AlumniConnect",
+        description: "A comprehensive digital platform for universities, colleges, and schools to engage their alumni network, fostering connections and professional opportunities.",
+        stage: "Research Phase",
+        category: "SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/alumni/400/400",
+        aiHint: "university alumni network",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Market research in progress to identify target institutions."
+    },
+    {
+        id: 33,
+        name: "Hadeeya",
+        description: "A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.",
+        stage: "Research Phase",
+        category: "Fintech",
+        price: 0,
+        image: "https://picsum.photos/seed/giftcard/400/400",
+        aiHint: "digital gift card",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Assessing potential merchant partnerships."
+    },
+    {
+        id: 34,
+        name: "AI-POS for Education",
+        description: "A smart, AI-driven Point-of-Sale system for university canteens or school stores, featuring inventory management and student spending analytics.",
+        stage: "Research Phase",
+        category: "SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/pos/400/400",
+        aiHint: "point of sale system",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Evaluating hardware requirements and potential suppliers."
     }
 ];
 
@@ -464,4 +506,3 @@ export const initialStoreProducts: Product[] = [
         adminStatus: 'Completed',
     },
 ];
-
