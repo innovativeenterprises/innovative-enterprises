@@ -429,7 +429,8 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         adminStatus: 'On Track',
-        adminNotes: "Generated from Education Playbook. Addresses Pillar 2: Teaching & Learning Innovation."
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 2: Teaching & Learning Innovation.",
+        href: "/education-tech/cognita-learn"
     },
     {
         id: 37,
@@ -585,4 +586,3 @@ export const initialStoreProducts: Product[] = [
         adminStatus: 'Completed',
     },
 ];
-
