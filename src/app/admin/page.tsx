@@ -12,8 +12,8 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 const overviewStats = [
     { title: "Total Staff (Human + AI)", value: "26", icon: Users, href: "/admin/people" },
     { title: "Active Projects", value: "14", icon: FolderKanban, href: "/admin/projects" },
-    { title: "Active Opportunities", value: "5", icon: Zap, href: "/admin/operations" },
-    { title: "Provider Network", value: "36", icon: Network, href: "/admin/people" },
+    { title: "Active Opportunities", value: "5", icon: Zap, href: "/admin/opportunities" },
+    { title: "Provider Network", value: "36", icon: Network, href: "/admin/network" },
 ];
 
 export default function AdminDashboardPage() {
