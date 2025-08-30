@@ -395,6 +395,76 @@ export const initialProducts: Product[] = [
         enabled: false,
         adminStatus: 'On Track',
         adminNotes: "Evaluating hardware requirements and potential suppliers."
+    },
+    {
+        id: 35,
+        name: "EduFlow Suite",
+        description: "An all-in-one administrative automation platform for schools, featuring smart timetabling, automated admissions workflows, and AI-powered resource allocation.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/eduflow/400/400",
+        aiHint: "education administration software",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 1: Administration & Operations."
+    },
+    {
+        id: 36,
+        name: "CognitaLearn",
+        description: "A personalized adaptive learning platform that uses AI to create custom learning paths, gamified modules, and automated grading for students.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/cognita/400/400",
+        aiHint: "personalized learning ai",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 2: Teaching & Learning Innovation."
+    },
+    {
+        id: 37,
+        name: "Guardian AI",
+        description: "A student wellbeing and success platform offering risk profiling for early dropout prevention, AI career advisory, and mental health support chatbots.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/guardian/400/400",
+        aiHint: "student success wellbeing",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 3: Student Experience & Wellbeing."
+    },
+    {
+        id: 38,
+        name: "CertiTrust",
+        description: "A blockchain-based digital credentialing system combined with AI proctoring to ensure the integrity of exams and provide secure, verifiable certificates.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/certitrust/400/400",
+        aiHint: "blockchain certificate security",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification."
+    },
+    {
+        id: 39,
+        name: "CampusOS",
+        description: "A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance for a sustainable and cost-effective campus.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/campusos/400/400",
+        aiHint: "smart campus iot",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management."
     }
 ];
 
