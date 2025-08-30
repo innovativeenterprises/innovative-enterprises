@@ -308,7 +308,7 @@ export default function Header() {
                 <NavigationMenuContent>
                   <ul className={cn(
                     "grid w-[400px] gap-3 p-4 md:w-[1200px]",
-                    `md:grid-cols-${settings.servicesMenuColumns}`
+                    `md:grid-cols-4`
                   )}>
                     {serviceLinks.map((component) => (
                       <ListItem
@@ -331,7 +331,7 @@ export default function Header() {
                 <NavigationMenuContent>
                    <ul className={cn(
                     "grid w-[400px] gap-3 p-4 md:w-[1200px]",
-                    `md:grid-cols-${settings.aiToolsMenuColumns}`
+                    `md:grid-cols-4`
                    )}>
                     {aiToolsLinks.map((component) => (
                       <ListItem
