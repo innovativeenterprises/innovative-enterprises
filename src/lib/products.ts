@@ -420,5 +420,18 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/interior-designer",
         adminStatus: 'Completed',
+    },
+    {
+        id: 31,
+        name: "AI PDF Form Filler",
+        description: "Upload any PDF form (bank, school, visa) and let our AI intelligently fill it out based on your profile data, saving you time and effort.",
+        stage: "Idea Phase",
+        category: "AI Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/formfiller/400/400",
+        aiHint: "pdf document form",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
     }
 ];
