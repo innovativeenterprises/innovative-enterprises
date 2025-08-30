@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -90,8 +91,7 @@ export default function OfficeForm() {
   });
 
   const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
-
-  useEffect(() => {
+  const subtotal = useMemo(() => {
     let currentSubtotal = 0;
     if (watchSubscriptionTier === 'lifetime') {
         currentSubtotal = sanadSettings.lifetimeFee;
@@ -100,9 +100,12 @@ export default function OfficeForm() {
         const discountedSubscription = subscriptionFee * (1 - sanadSettings.firstTimeDiscountPercentage);
         currentSubtotal = sanadSettings.registrationFee + discountedSubscription;
     }
-    
-    setTotalPrice(currentSubtotal);
+    return currentSubtotal;
   }, [watchSubscriptionTier, sanadSettings]);
+
+  useEffect(() => {
+    setTotalPrice(subtotal);
+  }, [subtotal]);
   
   const handleCrAnalysis = async () => {
     const crFile = form.getValues('crDocument');
@@ -212,14 +215,7 @@ export default function OfficeForm() {
       setTotalPrice(0);
       toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
     } else if (coupon === 'AGENT50') {
-      let currentSubtotal = 0;
-      if (watchSubscriptionTier === 'lifetime') {
-        currentSubtotal = sanadSettings.lifetimeFee;
-      } else {
-        const subscriptionFee = watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
-        currentSubtotal = sanadSettings.registrationFee + subscriptionFee;
-      }
-      setTotalPrice(currentSubtotal * 0.5);
+      setTotalPrice(subtotal / 2);
       toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
     } else {
       toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });

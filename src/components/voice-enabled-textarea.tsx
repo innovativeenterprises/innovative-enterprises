@@ -1,23 +1,23 @@
 
+
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, forwardRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Mic, Square } from 'lucide-react';
 import { Textarea, type TextareaProps } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
 import { useFormContext } from 'react-hook-form';
 
 interface VoiceEnabledTextareaProps extends TextareaProps {
   name: string;
 }
 
-export const VoiceEnabledTextarea = ({ name, ...props }: VoiceEnabledTextareaProps) => {
+export const VoiceEnabledTextarea = forwardRef<HTMLTextAreaElement, VoiceEnabledTextareaProps>(({ name, ...props }, ref) => {
   const [isRecording, setIsRecording] = useState(false);
   const recognitionRef = useRef<any>(null);
   const { toast } = useToast();
-  const { setValue } = useFormContext();
+  const { setValue, getValues } = useFormContext();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -28,16 +28,16 @@ export const VoiceEnabledTextarea = ({ name, ...props }: VoiceEnabledTextareaPro
       recognitionRef.current.lang = 'en-US';
 
       recognitionRef.current.onresult = (event: any) => {
-        let interimTranscript = '';
+        const existingText = getValues(name) || '';
         let finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
             finalTranscript += event.results[i][0].transcript;
-          } else {
-            interimTranscript += event.results[i][0].transcript;
           }
         }
-        setValue(name, props.value + finalTranscript + interimTranscript, { shouldValidate: true });
+        if (finalTranscript) {
+          setValue(name, existingText + finalTranscript + ' ', { shouldValidate: true });
+        }
       };
 
       recognitionRef.current.onerror = (event: any) => {
@@ -50,7 +50,7 @@ export const VoiceEnabledTextarea = ({ name, ...props }: VoiceEnabledTextareaPro
         setIsRecording(false);
       };
     }
-  }, [name, props.value, setValue, toast]);
+  }, [name, setValue, toast, getValues]);
 
   const handleToggleRecording = () => {
     if (!recognitionRef.current) {
@@ -68,7 +68,7 @@ export const VoiceEnabledTextarea = ({ name, ...props }: VoiceEnabledTextareaPro
   
   return (
     <div className="relative">
-      <Textarea {...props} name={name} />
+      <Textarea {...props} name={name} ref={ref} />
       {recognitionRef.current && (
           <Button
             type="button"
@@ -83,4 +83,5 @@ export const VoiceEnabledTextarea = ({ name, ...props }: VoiceEnabledTextareaPro
       )}
     </div>
   );
-};
+});
+VoiceEnabledTextarea.displayName = 'VoiceEnabledTextarea';

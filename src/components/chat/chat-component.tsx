@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -20,6 +21,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { store } from '@/lib/global-store';
 import { type Product } from '@/lib/products';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 interface Message {
   role: 'user' | 'bot';
@@ -58,11 +60,9 @@ export const ChatComponent = ({
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
 
-  const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -92,43 +92,10 @@ export const ChatComponent = ({
 
   useEffect(() => {
     setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
-
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.lang = 'en-US'; // This could be made dynamic
-
-      recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        form.setValue('message', transcript);
-        setIsRecording(false);
-        toast({ title: "Voice input captured!", description: "Press send to submit."});
-      };
-      recognitionRef.current.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
-        toast({ title: 'Voice Error', description: 'Could not recognize speech. Please try again.', variant: 'destructive'});
-        setIsRecording(false);
-      };
-       recognitionRef.current.onend = () => {
-        setIsRecording(false);
-      };
-    }
-    
     return () => {
       stopAudio();
     }
-  }, [form, toast, welcomeMessage, stopAudio]);
-  
-  const handleToggleRecording = () => {
-    if (isRecording) {
-      recognitionRef.current?.stop();
-    } else {
-      recognitionRef.current?.start();
-      setIsRecording(true);
-    }
-  };
+  }, [welcomeMessage, stopAudio]);
 
   const handleTextToSpeech = async (text: string) => {
       stopAudio();
@@ -312,10 +279,10 @@ export const ChatComponent = ({
                     )}
                     </>
                     )}
-                    <div className="relative w-full">
-                        <Textarea
+                     <div className="relative w-full">
+                        <VoiceEnabledTextarea
                             placeholder={placeholder}
-                            className="pr-24"
+                            className="pr-12"
                             rows={1}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -324,14 +291,10 @@ export const ChatComponent = ({
                                 }
                             }}
                             {...form.register("message")}
+                            name="message" // Pass name for react-hook-form
                         />
                          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                             {settings.voiceInteractionEnabled && recognitionRef.current && (
-                                <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'ghost'} onClick={handleToggleRecording} disabled={isLoading}>
-                                    <Mic className="h-5 w-5" />
-                                </Button>
-                             )}
-                            <Button type="submit" size="icon" disabled={isLoading}><Send className="h-5 w-5" /></Button>
+                            <Button type="submit" size="icon" disabled={isLoading} variant="ghost"><Send className="h-5 w-5" /></Button>
                          </div>
                     </div>
                 </form>

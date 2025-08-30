@@ -384,9 +384,9 @@ export default function SettingsTable({ settings, setSettings }: { settings: App
         toast({ title: "Setting updated.", description: `Translation assignment mode set to ${description}.`});
     };
     
-    const handleVoiceChange = (value: boolean) => {
-        setSettings(prev => ({...prev, voiceInteractionEnabled: value }));
-        toast({ title: "Setting updated.", description: `Voice interaction has been ${value ? 'enabled' : 'disabled'}.`});
+    const handleVoiceChange = (enabled: boolean) => {
+        setSettings(prev => ({...prev, voiceInteractionEnabled: enabled }));
+        toast({ title: "Setting updated.", description: `Voice interaction has been ${enabled ? 'enabled' : 'disabled'}.`});
     };
     
     const handleSaveSanadPricing = (values: z.infer<typeof SanadPricingSchema>) => {
