@@ -26,6 +26,7 @@ import {
   Zap,
   GanttChartSquare,
   Home,
+  Building2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -48,6 +49,7 @@ export default function AdminLayout({
     { href: '/admin/network', label: 'Network', icon: Network },
     { href: '/admin/opportunities', label: 'Opportunities', icon: Zap },
     { href: '/admin/people', label: 'People', icon: Users },
+    { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
     { href: '/admin/operations', label: 'Operations', icon: GanttChartSquare },
   ];
 

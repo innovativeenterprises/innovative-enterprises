@@ -1,0 +1,20 @@
+
+'use client';
+
+import PropertyTable from "../property-table";
+
+export default function AdminRealEstatePage() {
+
+  return (
+    <div className="space-y-8">
+        <div>
+            <h1 className="text-3xl font-bold">Real Estate Management</h1>
+            <p className="text-muted-foreground">
+                Manage property listings for the Smart Listing platform.
+            </p>
+        </div>
+
+        <PropertyTable />
+    </div>
+  );
+}
