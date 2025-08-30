@@ -26,6 +26,9 @@ export interface AppSettings {
     };
     headerImageUrl?: string;
     footerImageUrl?: string;
+    // New fields for menu layout control
+    servicesMenuColumns: number;
+    aiToolsMenuColumns: number;
 }
 
 export const initialSettings: AppSettings = {
@@ -49,4 +52,7 @@ export const initialSettings: AppSettings = {
     },
     headerImageUrl: "https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png",
     footerImageUrl: "",
+    // Set new defaults to 4 columns
+    servicesMenuColumns: 4,
+    aiToolsMenuColumns: 4,
 };
