@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, ShieldCheck, Search, SlidersHorizontal, Bot, Briefcase } from "lucide-react";
+import { CheckCircle, ShieldCheck, Search, SlidersHorizontal, Bot, Briefcase, UserCheck } from "lucide-react";
 import Link from "next/link";
 import HomeWorkforceIcon from "@/components/icons/home-workforce-icon";
 
@@ -48,9 +48,12 @@ export default function RaahaPage() {
           <p className="mt-4 text-lg text-muted-foreground">
             An AI-powered, white-label platform designed to empower home workforce agencies, streamline recruitment, and build trust with clients.
           </p>
-           <div className="mt-8 flex justify-center gap-4">
+           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
                <Button asChild size="lg">
                     <Link href="/raaha/find-a-helper">Find a Helper (Client View)</Link>
+                </Button>
+                <Button asChild size="lg" variant="secondary">
+                    <Link href="/raaha/my-requests">Track My Requests</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
                     <Link href="/raaha/agency-dashboard">Agency Dashboard</Link>
