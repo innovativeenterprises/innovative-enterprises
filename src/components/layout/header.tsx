@@ -1,6 +1,5 @@
 
 
-
 'use client';
 
 import Link from 'next/link';
@@ -301,7 +300,7 @@ export default function Header() {
                <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-base font-medium">Services</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[800px] md:grid-cols-3 lg:w-[900px] ">
                     {serviceLinks.map((component) => (
                       <ListItem
                         key={component.title}
@@ -321,7 +320,7 @@ export default function Header() {
                   <Sparkles className="mr-2 h-4 w-4" /> AI Tools
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                   <ul className="grid w-[400px] gap-3 p-4 md:w-[800px] md:grid-cols-3 lg:w-[900px] ">
                     {aiToolsLinks.map((component) => (
                       <ListItem
                         key={component.title}
