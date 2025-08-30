@@ -45,7 +45,7 @@ export default function AdminDashboardPage() {
   ];
 
   const chartConfig = {
-      count: { label: "Count" },
+      count: { label: "Providers" },
   };
   
   const getAdminStatusBadge = (status?: string) => {
@@ -112,8 +112,8 @@ export default function AdminDashboardPage() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="count" stroke="var(--color-primary)" strokeWidth={2} dot={false} />
+                    <Tooltip content={<ChartTooltipContent indicator="dot" />} />
+                    <Line type="monotone" dataKey="count" stroke="var(--color-primary)" strokeWidth={2} dot={{ r: 4, fill: "var(--color-primary)" }} activeDot={{ r: 8 }} />
                 </LineChart>
             </ChartContainer>
           </CardContent>
