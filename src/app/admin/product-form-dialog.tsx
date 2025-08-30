@@ -16,6 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import { generateImage } from "@/ai/flows/image-generator";
+import { useToast } from "@/hooks/use-toast";
+import { Sparkles, Loader2 } from "lucide-react";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -60,6 +63,8 @@ export const AddEditProductDialog = ({
     onOpenChange: (open: boolean) => void;
 }) => {
     const [imagePreview, setImagePreview] = useState<string | null>(product?.image || null);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof ProductSchema>>({
         resolver: zodResolver(ProductSchema),
@@ -107,6 +112,27 @@ export const AddEditProductDialog = ({
             setImagePreview(product?.image || null);
         }
     }, [product, form, isOpen]);
+
+    const handleGenerateImage = async () => {
+        const hint = form.getValues('aiHint');
+        if (!hint) {
+            toast({ title: "AI Hint is empty", description: "Please provide a hint for the AI.", variant: "destructive" });
+            return;
+        }
+        setIsGenerating(true);
+        toast({ title: "Generating Image...", description: "Lina is creating your image. This might take a moment."});
+        try {
+            const newImageUrl = await generateImage({ prompt: hint });
+            form.setValue('imageUrl', newImageUrl, { shouldValidate: true });
+            setImagePreview(newImageUrl);
+             toast({ title: "Image Generated!", description: "The new image has been added."});
+        } catch (e) {
+            console.error(e);
+            toast({ title: "Image Generation Failed", description: "The AI model might be busy. Please try again.", variant: "destructive"});
+        } finally {
+            setIsGenerating(false);
+        }
+    }
 
     const onSubmit: SubmitHandler<z.infer<typeof ProductSchema>> = async (data) => {
         let imageValue = "";
@@ -183,6 +209,19 @@ export const AddEditProductDialog = ({
                                         <Image src={imagePreview} alt="Image Preview" fill className="object-contain"/>
                                     </div>
                                 )}
+                                <FormField control={form.control} name="aiHint" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>AI Image Hint</FormLabel>
+                                        <div className="flex gap-2">
+                                            <FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl>
+                                            <Button type="button" variant="secondary" onClick={handleGenerateImage} disabled={isGenerating}>
+                                                {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Sparkles className="mr-2 h-4 w-4" />}
+                                                Generate
+                                            </Button>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
                                 <FormField control={form.control} name="imageUrl" render={({ field }) => (
                                     <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
                                 )} />
@@ -198,10 +237,6 @@ export const AddEditProductDialog = ({
                             </CardContent>
                         </Card>
 
-
-                         <FormField control={form.control} name="aiHint" render={({ field }) => (
-                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., virtual reality" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
 
                          <FormField control={form.control} name="enabled" render={({ field }) => (
                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
