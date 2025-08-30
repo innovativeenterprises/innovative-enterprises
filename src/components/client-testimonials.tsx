@@ -25,6 +25,13 @@ export default function ClientTestimonials({
     if (managedTestimonials) setTestimonials(managedTestimonials);
   }, [managedTestimonials]);
 
+  const renderQuote = (quote: string) => {
+    const parts = quote.split(/\*\*(.*?)\*\*/g);
+    return parts.map((part, index) => 
+      index % 2 === 1 ? <strong key={index} className="font-semibold text-foreground">{part}</strong> : part
+    );
+  };
+
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -53,8 +60,8 @@ export default function ClientTestimonials({
             {testimonials.map((testimonial) => (
                 <Card key={testimonial.id} className="bg-card">
                     <CardContent className="p-6">
-                        <blockquote className="border-l-4 border-accent pl-4 italic text-muted-foreground">
-                            {testimonial.quote}
+                        <blockquote className="border-l-4 border-accent pl-4 italic text-foreground/80">
+                           {renderQuote(testimonial.quote)}
                         </blockquote>
                         <p className="mt-4 font-semibold text-primary">{testimonial.author}</p>
                         <p className="text-sm text-muted-foreground">{testimonial.company}</p>
