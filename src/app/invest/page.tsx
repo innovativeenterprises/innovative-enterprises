@@ -34,6 +34,11 @@ const combinedProjects = [
     { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
 ];
 
+const standaloneSolutions = [
+    { name: "RAAHA", description: "An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment, management, and client communication.", status: "Live" },
+    { name: "Ameen", description: "A standalone digital identity solution offering secure, password-free authentication via WhatsApp OTP and other methods, ready for integration into any application.", status: "Live" },
+];
+
 
 const comingProjects = [
     { name: "Fintech Super-App", description: "An integrated financial services application for the Omani market.", status: "Research Phase" },
@@ -107,6 +112,15 @@ export default function InvestPage() {
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {combinedProjects.map(p => <ProjectCard key={p.name} {...p} />)}
+                </div>
+            </div>
+            
+            <div>
+                <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
+                    <PackageCheck className="w-8 h-8" /> Standalone Solutions & Spinoffs
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                    {standaloneSolutions.map(p => <ProjectCard key={p.name} {...p} />)}
                 </div>
             </div>
 
