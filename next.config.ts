@@ -37,6 +37,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Resolve 'async_hooks' to an empty module on the client side
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        "async_hooks": false,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
