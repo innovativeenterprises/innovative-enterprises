@@ -376,5 +376,18 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/quantity-calculator",
+    },
+    {
+        id: 30,
+        name: "AI Interior Designer",
+        description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
+        stage: "Live & Operating",
+        category: "Creative Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/re12/400/400",
+        aiHint: "modern living room",
+        rating: 0,
+        enabled: true,
+        href: "/interior-designer",
     }
 ];

@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog, DollarSign } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog, DollarSign, Home } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -156,6 +156,12 @@ const aiToolsLinks: { title: string; href: string; description: string, icon: Lu
     href: "/image-generator",
     description: "Create stunning visuals from text descriptions in seconds.",
     icon: Lightbulb,
+  },
+  {
+    title: "AI Interior Designer",
+    href: "/interior-designer",
+    description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
+    icon: Home,
   },
   {
     title: "VEO Video Factory",
