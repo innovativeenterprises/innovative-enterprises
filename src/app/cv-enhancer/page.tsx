@@ -1,18 +1,36 @@
 
-import CvForm from "./cv-form";
+'use client';
 
-export default function CvEnhancerPage() {
+import { useState } from 'react';
+import CvForm from "./cv-form";
+import InterviewCoachForm from "../interview-coach/coach-form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { FileText, Mic } from "lucide-react";
+
+
+export default function GeniusPlatformPage() {
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">GENIUS - AI-Powered Career Management Platform</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">GENIUS Career Platform</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Leveraging cutting-edge AI to offer an end-to-end solution for career development—from document parsing to interview preparation—all within a seamless mobile and web experience.
+            Your end-to-end AI partner for career development. Enhance your CV to beat applicant tracking systems, then practice for your interview with our AI coach.
           </p>
         </div>
-        <div className="max-w-3xl mx-auto mt-12">
-            <CvForm />
+        <div className="max-w-4xl mx-auto mt-12">
+            <Tabs defaultValue="cv" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="cv"><FileText className="mr-2 h-4 w-4"/> CV Enhancer</TabsTrigger>
+                <TabsTrigger value="interview"><Mic className="mr-2 h-4 w-4"/> AI Interview Coach</TabsTrigger>
+              </TabsList>
+              <TabsContent value="cv" className="mt-6">
+                <CvForm />
+              </TabsContent>
+              <TabsContent value="interview" className="mt-6">
+                 <InterviewCoachForm />
+              </TabsContent>
+            </Tabs>
         </div>
       </div>
     </div>

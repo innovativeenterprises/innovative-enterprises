@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { generateInterviewQuestions } from '@/ai/flows/interview-coach';
 import type { InterviewQuestion } from '@/ai/flows/interview-coach.schema';
@@ -40,7 +40,7 @@ export default function InterviewCoachForm() {
   useEffect(() => {
     // This effect will run when `questions` has been populated.
     const getCameraPermission = async () => {
-      if (questions.length > 0 && !hasCameraPermission) {
+      if (questions.length > 0 && hasCameraPermission === null) {
          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             console.error('Camera API not available.');
             setHasCameraPermission(false);
@@ -79,6 +79,7 @@ export default function InterviewCoachForm() {
     setIsLoading(true);
     setQuestions([]);
     setCurrentQuestionIndex(0);
+    setHasCameraPermission(null);
 
     try {
         toast({ title: "Preparing your session...", description: "Generating questions for your interview practice." });
@@ -109,14 +110,19 @@ export default function InterviewCoachForm() {
 
   const handlePrevQuestion = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex(prev => prev - 1);
     }
   };
 
   const startOver = () => {
       setQuestions([]);
       setCurrentQuestionIndex(0);
-      setHasCameraPermission(false);
+      setHasCameraPermission(null);
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
       form.reset();
   }
 
@@ -156,7 +162,7 @@ export default function InterviewCoachForm() {
                         </div>
                         <div className="relative aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center">
                             <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
-                            {!hasCameraPermission && (
+                            {hasCameraPermission === false && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white p-4 text-center">
                                     <VideoOff className="w-10 h-10 mb-2" />
                                     <h3 className="font-semibold">Camera Not Found</h3>

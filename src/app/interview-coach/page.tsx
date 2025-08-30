@@ -1,24 +1,19 @@
 
-import InterviewCoachForm from "./coach-form";
-import { Mic } from "lucide-react";
+// This page is now obsolete as the coach form is integrated into the /cv-enhancer page.
+// We will redirect users or update links to point to /cv-enhancer?tab=interview
+// For now, we'll keep a simple component here.
 
-export default function InterviewCoachPage() {
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+export default function InterviewCoachRedirectPage() {
   return (
-    <div className="bg-background min-h-[calc(100vh-8rem)]">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-              <Mic className="w-10 h-10 text-primary" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Interview Coach</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Practice for your next job interview. Our AI coach will generate relevant questions based on the job title and help you prepare to impress.
-          </p>
-        </div>
-        <div className="max-w-3xl mx-auto mt-12">
-            <InterviewCoachForm />
-        </div>
-      </div>
+    <div className="container mx-auto text-center py-20">
+      <h1 className="text-2xl font-bold">This page has moved.</h1>
+      <p className="text-muted-foreground">The AI Interview Coach is now part of the GENIUS Career Platform.</p>
+      <Button asChild className="mt-4">
+        <Link href="/cv-enhancer">Go to GENIUS Platform</Link>
+      </Button>
     </div>
   );
 }
