@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients';
 import { initialClients, initialTestimonials } from '@/lib/clients';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function ClientTestimonials({ 
     clients: managedClients, 
@@ -63,8 +64,16 @@ export default function ClientTestimonials({
                         <blockquote className="border-l-4 border-accent pl-4 italic text-foreground/80">
                            {renderQuote(testimonial.quote)}
                         </blockquote>
-                        <p className="mt-4 font-semibold text-primary">{testimonial.author}</p>
-                        <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                        <div className="flex items-center gap-4 mt-6">
+                           <Avatar>
+                                {testimonial.avatar && <AvatarImage src={testimonial.avatar} alt={testimonial.author} />}
+                                <AvatarFallback>{testimonial.author.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <p className="font-semibold text-primary">{testimonial.author}</p>
+                                <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             ))}
