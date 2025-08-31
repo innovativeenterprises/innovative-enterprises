@@ -7,7 +7,6 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
 import { initialAssets } from '@/lib/assets';
 import {
     IctProposalInput,
@@ -22,26 +21,33 @@ export async function generateIctProposal(input: IctProposalInput): Promise<IctP
 
 const prompt = ai.definePrompt({
   name: 'ictProposalPrompt',
-  input: { schema: IctProposalInputSchema.extend({ availableAssetsJson: z.string() }) },
+  input: { schema: IctProposalInputSchema },
   output: { schema: IctProposalOutputSchema },
-  prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal. You must provide options for both **renting** and **purchasing** the required IT assets.
+  prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal. You must provide options for both **renting** and **purchasing** the required IT assets if applicable.
 
 **Available IT Asset Inventory (for Rent or Purchase):**
 You MUST only recommend assets from this list for the IT hardware portion.
 '''json
-{{{availableAssetsJson}}}
+{{{json availableAssetsJson}}}
 '''
 
 **Client Project Requirements:**
 - **Project Name:** {{{projectName}}}
+{{#if purpose}}
+- **Purpose of Surveillance:** {{{purpose}}}
+{{/if}}
+{{#if projectType}}
 - **Project Type:** {{{projectType}}}
+{{/if}}
 {{#if (ne numberOfUsers 1)}}
 - **Number of Users:** {{{numberOfUsers}}}
 {{/if}}
 {{#if (ne projectDurationMonths 1)}}
 - **Project Duration:** {{{projectDurationMonths}}} months
 {{/if}}
+{{#if primaryGoal}}
 - **Primary Goal/Task:** {{{primaryGoal}}}
+{{/if}}
 - **Include Surveillance System:** {{#if includeSurveillance}}Yes{{else}}No{{/if}}
 {{#if surveillanceDetails}}
 - **Surveillance Details:** {{{surveillanceDetails}}}
@@ -54,10 +60,10 @@ You MUST only recommend assets from this list for the IT hardware portion.
 
 **Your Task:**
 1.  **Analyze and Design:**
-    *   **IT Assets:** Based on the **Project Type** and **Primary Goal**, select the most appropriate assets from the **Available Asset Inventory**. The quantity for user-specific items (laptops, workstations) should match the **Number of Users**. For shared items (servers, routers), the quantity is usually 1.
-    *   **Software Recommendations:** Based on the project type and goal, recommend essential software (e.g., 'Windows 11 Pro', 'Microsoft 365 Business').
+    *   **IT Assets (If Applicable):** If the project type is NOT 'Surveillance System Only', select appropriate assets from the inventory. The quantity for user-specific items should match the **Number of Users**.
+    *   **Software Recommendations (If Applicable):** Recommend essential software if IT assets are included.
     *   **Surveillance System (if includeSurveillance is true):**
-        *   Design a basic but effective CCTV system suitable for the **Project Type** and **Surveillance Details**.
+        *   Design a basic but effective CCTV system suitable for the **Purpose of Surveillance** and **Surveillance Details**.
         *   If 'coverageType' is 'Exterior', recommend 'Bullet Cameras'. If 'Interior', recommend 'Dome Cameras'. If not specified, use a mix.
         *   If 'audioRecording' is true, specify that the cameras should have built-in microphones.
         *   If 'remoteViewing' is true, ensure the NVR selected is a "Network Video Recorder" capable of IP access.
@@ -77,11 +83,11 @@ You MUST only recommend assets from this list for the IT hardware portion.
 
 3.  **Calculate Costs:**
     *   **totalRentalCostPerMonth:** Sum up (\`asset.monthlyPrice * quantity\`) for all items in \`rentedAssets\`.
-    *   **totalRentalCostForDuration:** Calculate \`totalRentalCostPerMonth * projectDurationMonths\`.
+    *   **totalRentalCostForDuration:** Calculate \`totalRentalCostPerMonth * (projectDurationMonths || 1)\`.
     *   **totalPurchaseCost:** Sum up (\`asset.purchasePrice * quantity\`) for all items in \`purchasedAssets\`, PLUS the total cost of the surveillance system equipment.
     *   **softwareCost:** Sum up the total cost for all items in \`recommendedSoftware\`.
     *   **grandTotalForRentalOption:** Calculate \`totalRentalCostForDuration + (response.surveillanceSystem.equipmentList.reduce((acc, item) => acc + item.totalPrice, 0)) + softwareCost\`.
-    *   **grandTotalForPurchaseOption:** Calculate \`totalPurchaseCost + (response.surveillanceSystem.equipmentList.reduce((acc, item) => acc + item.totalPrice, 0)) + softwareCost\`.
+    *   **grandTotalForPurchaseOption:** Calculate \`totalPurchaseCost + softwareCost\`. Note: The surveillance system is already included in totalPurchaseCost.
 
 4.  **Next Steps:** Provide a brief, professional closing statement.
 
@@ -108,6 +114,22 @@ const IctProposalFlow = ai.defineFlow(
     if (!output) {
       throw new Error("The AI model failed to return a valid proposal.");
     }
+    
+    // Recalculate totals to ensure accuracy, as LLMs can make math errors.
+    const rentalCostPerMonth = output.rentedAssets?.reduce((sum, item) => sum + (item.monthlyPrice * item.quantity), 0) || 0;
+    const rentalCostForDuration = rentalCostPerMonth * (input.projectDurationMonths || 1);
+    const itPurchaseCost = output.purchasedAssets?.reduce((sum, item) => sum + ((item.purchasePrice || 0) * item.quantity), 0) || 0;
+    const surveillancePurchaseCost = output.surveillanceSystem?.equipmentList.reduce((sum, item) => sum + item.totalPrice, 0) || 0;
+    const softwareCost = output.recommendedSoftware?.reduce((sum, item) => sum + item.estimatedCost, 0) || 0;
+    
+    output.costBreakdown.totalRentalCostPerMonth = rentalCostPerMonth;
+    output.costBreakdown.totalRentalCostForDuration = rentalCostForDuration;
+    output.costBreakdown.totalPurchaseCost = itPurchaseCost + surveillancePurchaseCost;
+    output.costBreakdown.softwareCost = softwareCost;
+    output.costBreakdown.grandTotalForRentalOption = rentalCostForDuration + surveillancePurchaseCost + softwareCost;
+    output.costBreakdown.grandTotalForPurchaseOption = itPurchaseCost + surveillancePurchaseCost + softwareCost;
+
+
     return output;
   }
 );

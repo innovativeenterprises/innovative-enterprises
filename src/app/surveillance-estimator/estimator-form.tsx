@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video, Building, Eye, Mic, MicOff } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video, Building, Eye, Mic, MicOff, Users, Briefcase } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
@@ -35,6 +35,7 @@ const FormSchema = z.object({
   coverage: z.enum(['Full', 'Partial']).default('Full'),
   coverageType: z.enum(['Interior', 'Exterior']).optional(),
   connectivity: z.enum(['WiFi', 'Wired']).default('Wired'),
+  purpose: z.enum(['General Security', 'Employee Monitoring', 'Asset Protection', 'Customer Traffic Analysis']).default('General Security'),
   remoteViewing: z.boolean().default(true),
   audioRecording: z.boolean().default(false),
   recordingDays: z.coerce.number().min(7).default(30),
@@ -58,6 +59,7 @@ export default function EstimatorForm() {
     defaultValues: {
       coverage: 'Full',
       connectivity: 'Wired',
+      purpose: 'General Security',
       remoteViewing: true,
       audioRecording: false,
       recordingDays: 30,
@@ -78,6 +80,7 @@ export default function EstimatorForm() {
 
     try {
       let surveillanceDetails = `
+        - Purpose: ${data.purpose}
         - Coverage Level: ${data.coverage}
         - Connectivity: ${data.connectivity}
         - Recording Storage: ${data.recordingDays} days
@@ -91,10 +94,6 @@ export default function EstimatorForm() {
 
       const proposalInput: IctProposalInput = {
         projectName: floorPlanFile.name,
-        projectType: 'Other',
-        numberOfUsers: 1, 
-        projectDurationMonths: 1,
-        primaryGoal: 'Surveillance system installation',
         includeSurveillance: true,
         surveillanceDetails: surveillanceDetails,
         coverageType: data.coverageType,
@@ -132,7 +131,7 @@ export default function EstimatorForm() {
     }
   };
 
-  const CardSelector = ({ name, options }: { name: "coverage" | "connectivity" | "remoteViewing" | "audioRecording" | "coverageType", options: {value: any, label: string, icon: React.ElementType, description: string}[]}) => (
+  const CardSelector = ({ name, options }: { name: "coverage" | "connectivity" | "remoteViewing" | "audioRecording" | "coverageType" | "purpose", options: {value: any, label: string, icon: React.ElementType, description: string}[]}) => (
     <FormField
       control={form.control}
       name={name}
@@ -304,9 +303,21 @@ export default function EstimatorForm() {
                   />
               </div>
             )}
+             <div className="space-y-3">
+                <FormLabel>3. Select Purpose of Surveillance</FormLabel>
+                <CardSelector
+                    name="purpose"
+                    options={[
+                        { value: 'General Security', label: 'General Security', icon: ShieldCheck, description: "Deterrence and incident review." },
+                        { value: 'Employee Monitoring', label: 'Employee Monitoring', icon: Users, description: "Monitor staff activity and productivity." },
+                        { value: 'Asset Protection', label: 'Asset Protection', icon: Briefcase, description: "Protect valuable equipment or stock." },
+                        { value: 'Customer Traffic Analysis', label: 'Traffic Analysis', icon: Eye, description: "Analyze customer flow and behavior." },
+                    ]}
+                />
+            </div>
             
             <div className="space-y-3">
-                <FormLabel>3. Select Connectivity Type</FormLabel>
+                <FormLabel>4. Select Connectivity Type</FormLabel>
                 <CardSelector
                     name="connectivity"
                     options={[
@@ -317,7 +328,7 @@ export default function EstimatorForm() {
             </div>
             
             <div className="space-y-3">
-                <FormLabel>4. Select Viewing & Audio Options</FormLabel>
+                <FormLabel>5. Select Viewing & Audio Options</FormLabel>
                  <CardSelector
                     name="remoteViewing"
                     options={[
@@ -341,7 +352,7 @@ export default function EstimatorForm() {
               name="recordingDays"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2"><History className="h-5 w-5"/> 5. Recording Storage Duration</FormLabel>
+                  <FormLabel className="flex items-center gap-2"><History className="h-5 w-5"/> 6. Recording Storage Duration</FormLabel>
                   <FormControl><Input type="number" {...field} /></FormControl>
                   <FormDescription>How many days of continuous recording do you need to store?</FormDescription>
                   <FormMessage />
@@ -351,7 +362,7 @@ export default function EstimatorForm() {
             
             <FormField control={form.control} name="areasToMonitor" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Video className="h-5 w-5"/> 6. Specific Areas to Monitor (Optional)</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><Video className="h-5 w-5"/> 7. Specific Areas to Monitor (Optional)</FormLabel>
                     <FormControl><Textarea placeholder="e.g., 'Main entrance, back door, parking lot, and server room.'" {...field} rows={3} /></FormControl>
                 </FormItem>
             )} />
