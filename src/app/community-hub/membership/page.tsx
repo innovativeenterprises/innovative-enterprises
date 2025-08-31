@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -185,7 +185,9 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
                             )} />
                             <FormField control={form.control} name="memberType" render={({ field }) => (
                                 <FormItem><FormLabel>Member Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                    <SelectItem value="Head of Family">Head of Family</SelectItem><SelectItem value="Spouse">Spouse</SelectItem><SelectItem value="Child">Child</SelectItem>
+                                    <SelectItem value="Head of Family">Head of Family</SelectItem>
+                                    <SelectItem value="Spouse">Spouse</SelectItem>
+                                    <SelectItem value="Child">Child</SelectItem>
                                 </SelectContent></Select><FormMessage /></FormItem>
                             )} />
                         </div>
@@ -224,7 +226,9 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
                         </Card>
                          <FormField control={form.control} name="status" render={({ field }) => (
                             <FormItem><FormLabel>Status</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                <SelectItem value="Active">Active</SelectItem><SelectItem value="Inactive">Inactive</SelectItem><SelectItem value="Pending Review">Pending Review</SelectItem>
+                                <SelectItem value="Active">Active</SelectItem>
+                                <SelectItem value="Inactive">Inactive</SelectItem>
+                                <SelectItem value="Pending Review">Pending Review</SelectItem>
                             </SelectContent></Select><FormMessage /></FormItem>
                         )} />
                         <DialogFooter>
