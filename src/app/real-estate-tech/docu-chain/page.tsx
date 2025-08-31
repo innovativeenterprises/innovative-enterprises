@@ -149,23 +149,41 @@ export default function DocuChainPage() {
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                             <FormField
-                                control={form.control}
-                                name="contractType"
-                                render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Contract Type</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="Tenancy Agreement">Tenancy Agreement</SelectItem>
-                                        <SelectItem value="Sale Agreement">Sale Agreement</SelectItem>
-                                    </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                                )}
-                            />
+                            <Card className="flex flex-col md:flex-row gap-4 p-4 items-center bg-muted/50">
+                                <p className="font-semibold flex-shrink-0">I want to generate a:</p>
+                                <FormField
+                                    control={form.control}
+                                    name="contractType"
+                                    render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormControl>
+                                            <RadioGroup
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                                className="grid grid-cols-2 gap-4"
+                                                >
+                                                <FormItem className="flex items-center">
+                                                    <FormControl>
+                                                        <RadioGroupItem value="Tenancy Agreement" id="tenancy" className="sr-only" />
+                                                    </FormControl>
+                                                     <FormLabel htmlFor="tenancy" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Tenancy Agreement' && 'border-primary')}>
+                                                        Tenancy Agreement
+                                                    </FormLabel>
+                                                </FormItem>
+                                                 <FormItem className="flex items-center">
+                                                    <FormControl>
+                                                        <RadioGroupItem value="Sale Agreement" id="sale" className="sr-only" />
+                                                    </FormControl>
+                                                     <FormLabel htmlFor="sale" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Sale Agreement' && 'border-primary')}>
+                                                        Sale Agreement
+                                                    </FormLabel>
+                                                </FormItem>
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </FormItem>
+                                    )}
+                                />
+                            </Card>
                             <div className="grid md:grid-cols-2 gap-6">
                                 <FormField control={form.control} name="lessorName" render={({ field }) => (
                                     <FormItem><FormLabel>{watchContractType === 'Tenancy Agreement' ? 'Landlord / Lessor Name' : 'Seller Name'}</FormLabel><FormControl><Input placeholder="First Party Name" {...field} /></FormControl><FormMessage /></FormItem>

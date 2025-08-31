@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,6 +21,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useSettingsData } from '@/app/admin/settings-table';
 import { sanadServiceGroups } from '@/lib/sanad-services';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -251,10 +251,10 @@ export default function OfficeForm() {
             <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-8">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Step 1: AI-Powered Onboarding</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><Building className="h-6 w-6"/> Step 1: Office Details</CardTitle>
                         <CardDescription>Upload your Commercial Record (CR) and let our AI assist you with the form.</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-6">
                         <FormField
                         control={form.control}
                         name="crDocument"
@@ -275,7 +275,7 @@ export default function OfficeForm() {
                         )}
                         />
                         {analysisResult && (
-                        <Alert className="mt-4">
+                        <Alert>
                             <FileCheck2 className="h-4 w-4" />
                             <AlertTitle>Analysis Complete</AlertTitle>
                             <AlertDescription>
@@ -283,48 +283,40 @@ export default function OfficeForm() {
                             </AlertDescription>
                         </Alert>
                         )}
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={form.control} name="officeName" render={({ field }) => (
+                                <FormItem><FormLabel>Sanad Office Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="crNumber" render={({ field }) => (
+                                <FormItem><FormLabel>CR Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={form.control} name="contactName" render={({ field }) => (
+                                <FormItem><FormLabel>Main Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="phone" render={({ field }) => (
+                                <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={form.control} name="email" render={({ field }) => (
+                                <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="whatsapp" render={({ field }) => (
+                                <FormItem><FormLabel>WhatsApp Number</FormLabel><FormControl><Input placeholder="+968 99123456" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
+                        <FormField control={form.control} name="services" render={({ field }) => (
+                        <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
                     </CardContent>
                 </Card>
 
                 <Card>
-                <CardHeader>
-                    <CardTitle>Step 2: Verify Office Details</CardTitle>
-                    <CardDescription>Please review the pre-filled information or enter your details manually.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                    <FormField control={form.control} name="officeName" render={({ field }) => (
-                        <FormItem><FormLabel>Sanad Office Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="crNumber" render={({ field }) => (
-                        <FormItem><FormLabel>CR Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-4">
-                    <FormField control={form.control} name="contactName" render={({ field }) => (
-                        <FormItem><FormLabel>Main Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="phone" render={({ field }) => (
-                        <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <FormField control={form.control} name="email" render={({ field }) => (
-                            <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <FormField control={form.control} name="whatsapp" render={({ field }) => (
-                            <FormItem><FormLabel>WhatsApp Number</FormLabel><FormControl><Input placeholder="+968 99123456" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                    </div>
-                    <FormField control={form.control} name="services" render={({ field }) => (
-                    <FormItem><FormLabel>Services Offered</FormLabel><FormControl><Textarea placeholder="List your key services, e.g., Visa Processing, CR Renewal, Bill Payments..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
-                </CardContent>
-                </Card>
-
-                <Card>
                     <CardHeader>
-                        <CardTitle>Step 3: Service Charges & Branding</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><Handshake className="h-6 w-6"/> Step 2: Branding & Pricing</CardTitle>
                         <CardDescription>Upload your list of service charges and your office logo.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -379,7 +371,7 @@ export default function OfficeForm() {
                  <Card>
                     <CardHeader>
                         <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('form')}>&larr; Back</Button>
-                        <CardTitle className="text-center pt-8">Step 4: Subscription & Payment</CardTitle>
+                        <CardTitle className="text-center pt-8 flex items-center justify-center gap-2"><CreditCard className="h-6 w-6"/> Step 3: Subscription & Payment</CardTitle>
                         <CardDescription className="text-center">Choose your plan and complete the payment to join the network.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -395,19 +387,19 @@ export default function OfficeForm() {
                                     defaultValue={field.value}
                                     className="grid grid-cols-1 md:grid-cols-3 gap-4"
                                     >
-                                    <Label htmlFor="monthly" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer', field.value === 'monthly' && 'border-primary ring-2 ring-primary')}>
+                                    <Label htmlFor="monthly" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer hover:bg-accent/10 transition-colors', field.value === 'monthly' && 'border-primary ring-2 ring-primary')}>
                                         <RadioGroupItem value="monthly" id="monthly" className="sr-only" />
                                         <span className="font-bold text-lg">Monthly</span>
                                         <span className="text-2xl font-extrabold">OMR {sanadSettings.monthlyFee.toFixed(2)}<span className="text-sm font-normal text-muted-foreground">/month</span></span>
                                         <span className="text-xs text-muted-foreground mt-2">Billed every month.</span>
                                     </Label>
-                                    <Label htmlFor="yearly" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer', field.value === 'yearly' && 'border-primary ring-2 ring-primary')}>
+                                    <Label htmlFor="yearly" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer hover:bg-accent/10 transition-colors', field.value === 'yearly' && 'border-primary ring-2 ring-primary')}>
                                         <RadioGroupItem value="yearly" id="yearly" className="sr-only" />
                                         <span className="font-bold text-lg">Yearly</span>
                                         <span className="text-2xl font-extrabold">OMR {sanadSettings.yearlyFee.toFixed(2)}<span className="text-sm font-normal text-muted-foreground">/year</span></span>
                                         <span className="text-xs text-muted-foreground mt-2">Save over 15%!</span>
                                     </Label>
-                                    <Label htmlFor="lifetime" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer', field.value === 'lifetime' && 'border-primary ring-2 ring-primary')}>
+                                    <Label htmlFor="lifetime" className={cn('flex flex-col rounded-lg border p-4 cursor-pointer hover:bg-accent/10 transition-colors', field.value === 'lifetime' && 'border-primary ring-2 ring-primary')}>
                                         <RadioGroupItem value="lifetime" id="lifetime" className="sr-only" />
                                         <span className="font-bold text-lg">Lifetime</span>
                                         <span className="text-2xl font-extrabold">OMR {sanadSettings.lifetimeFee.toFixed(2)}<span className="text-sm font-normal text-muted-foreground">/once</span></span>
@@ -446,27 +438,28 @@ export default function OfficeForm() {
                                 )}/>
                             </CardFooter>
                         </Card>
-
-                        <div>
-                            <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
-                            <div className="space-y-4">
-                                <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
-                                    <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
-                                )}/>
-                                <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
-                                    <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
-                                )}/>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
-                                        <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                       
+                        {totalPrice > 0 && (
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
+                                <div className="space-y-4">
+                                    <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                                        <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
                                     )}/>
-                                    <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
-                                        <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                                    <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                                        <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
                                     )}/>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                                            <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                                        )}/>
+                                        <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                                            <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                                        )}/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        )}
                     </CardContent>
                     <CardFooter>
                         <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>

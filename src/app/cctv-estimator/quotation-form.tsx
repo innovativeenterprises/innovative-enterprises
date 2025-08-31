@@ -1,508 +1,307 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { generateIctProposal } from '@/ai/flows/cctv-quotation';
-import type { IctProposalOutput, IctProposalInput } from '@/ai/flows/cctv-quotation.schema';
-import { analyzeWorkOrder } from '@/ai/flows/work-order-analysis';
-import type { Opportunity } from '@/lib/opportunities';
-import { useOpportunitiesData } from '@/app/admin/opportunity-table';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Server, Laptop, Cpu, Users, Building, Download, ShieldCheck } from 'lucide-react';
+import { Loader2, Sparkles, ClipboardCheck, Download, Copy, FileText, CalendarIcon, FileSignature } from 'lucide-react';
+import { RealEstateContractInputSchema, type RealEstateContractInput, type RealEstateContractOutput } from '@/ai/flows/real-estate-contract-generator.schema';
+import { generateRealEstateContract } from '@/ai/flows/real-estate-contract-generator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import { Switch } from '@/components/ui/switch';
-import Image from 'next/image';
-import { Checkbox } from '@/components/ui/checkbox';
-import Link from 'next/link';
-import jsPDF from 'jspdf';
+import { store } from '@/lib/global-store';
+import type { SignedLease } from '@/lib/leases';
 
-const FormSchema = z.object({
-  institutionName: z.string().min(3, "Institution name or Partner ID is required."),
-  eventName: z.string().optional(),
-  projectType: z.enum([
-    'Temporary Office Setup',
-    'Training Program or Workshop',
-    'Special Event (e.g., conference, hackathon)',
-    'Short-term Project (e.g., data analysis, software dev)',
-    'Hardware Evaluation or Testing',
-    'Other'
-  ]),
-  numberOfUsers: z.coerce.number().min(1, "Please specify the number of users/attendees."),
-  rentalPeriod: z.enum(['daily', 'weekly', 'monthly', 'annually']),
-  projectDuration: z.coerce.number().min(1, "Duration must be at least 1."),
-  primaryGoal: z.string().min(10, "Please briefly describe the main goal."),
-  
-  includeSurveillance: z.boolean().default(false),
-  surveillanceDetails: z.string().optional(),
-  termsAccepted: z.boolean().refine(val => val === true, { message: "You must accept the terms and conditions to proceed." }),
+const FormSchema = RealEstateContractInputSchema.omit({ 
+    startDate: true, 
+    endDate: true 
+}).extend({
+    startDate: z.date().optional(),
+    endDate: z.date().optional(),
 });
-
 
 type FormValues = z.infer<typeof FormSchema>;
 
-type PageState = 'form' | 'loading' | 'result';
-
-export default function QuotationForm() {
-  const [pageState, setPageState] = useState<PageState>('form');
-  const [isPosting, setIsPosting] = useState(false);
-  const [response, setResponse] = useState<IctProposalOutput | null>(null);
+export default function DocuChainPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState<RealEstateContractOutput | null>(null);
   const { toast } = useToast();
-  const { setOpportunities } = useOpportunitiesData();
   const router = useRouter();
-
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      institutionName: '',
-      eventName: '',
-      projectType: 'Temporary Office Setup',
-      numberOfUsers: 10,
-      rentalPeriod: 'monthly',
-      projectDuration: 3,
-      primaryGoal: 'To set up a fully functional temporary office space with reliable IT hardware and networking for the project team.',
-      includeSurveillance: false,
-      surveillanceDetails: '',
-      termsAccepted: false,
+        contractType: 'Tenancy Agreement',
+        lessorName: '',
+        lesseeName: '',
+        propertyAddress: '',
+        propertyType: '2-bedroom apartment',
+        price: 0,
+        pricePeriod: 'per month',
+        additionalClauses: '',
     },
   });
-
-  const watchProjectType = form.watch('projectType');
-
-  useEffect(() => {
-    if (watchProjectType) {
-      let suggestion = '';
-      switch (watchProjectType) {
-        case 'Temporary Office Setup':
-          suggestion = 'To set up a fully functional temporary office space with reliable IT hardware and networking for the project team.';
-          break;
-        case 'Training Program or Workshop':
-          suggestion = 'To provide reliable laptops and high-speed networking for a technical training workshop for all attendees.';
-          break;
-        case 'Special Event (e.g., conference, hackathon)':
-          suggestion = 'To ensure robust Wi-Fi coverage, registration systems, and presentation equipment for a successful event.';
-          break;
-        case 'Short-term Project (e.g., data analysis, software dev)':
-          suggestion = 'To equip a project team with high-performance workstations and servers for intensive development/data analysis tasks.';
-          break;
-        case 'Hardware Evaluation or Testing':
-          suggestion = 'To provide specific hardware components for a defined period of performance testing and evaluation.';
-          break;
-        default:
-          suggestion = '';
-      }
-      form.setValue('primaryGoal', suggestion);
-    }
-  }, [watchProjectType, form]);
-
-  // Convert various durations to months for the AI flow
-  const getDurationInMonths = (duration: number, period: 'daily' | 'weekly' | 'monthly' | 'annually') => {
-      switch(period) {
-          case 'daily': return duration / 30;
-          case 'weekly': return duration / 4;
-          case 'monthly': return duration;
-          case 'annually': return duration * 12;
-          default: return duration;
-      }
-  }
+  
+  const watchContractType = form.watch('contractType');
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setPageState('loading');
+    setIsLoading(true);
     setResponse(null);
+    
+    const submissionData: RealEstateContractInput = {
+        ...data,
+        startDate: data.startDate ? format(data.startDate, 'yyyy-MM-dd') : undefined,
+        endDate: data.endDate ? format(data.endDate, 'yyyy-MM-dd') : undefined,
+    }
+
     try {
-      const durationInMonths = getDurationInMonths(data.projectDuration, data.rentalPeriod);
-      const fullProjectName = data.eventName ? `${data.institutionName} - ${data.eventName}` : data.institutionName;
-      
-      const result = await generateIctProposal({
-          projectName: fullProjectName,
-          projectType: data.projectType,
-          numberOfUsers: data.numberOfUsers,
-          projectDurationMonths: durationInMonths,
-          primaryGoal: data.primaryGoal,
-          includeSurveillance: data.includeSurveillance,
-          surveillanceDetails: data.surveillanceDetails
-      });
+      const result = await generateRealEstateContract(submissionData);
       setResponse(result);
-      setPageState('result');
       toast({
-        title: 'Proposal Generated!',
-        description: 'Your custom ICT proposal is ready for review.',
+        title: 'Contract Generated!',
+        description: 'Your legal document draft is ready for review.',
       });
     } catch (error) {
       console.error(error);
-      setPageState('form');
       toast({
-        title: 'Error Generating Proposal',
-        description: 'An unexpected error occurred. Please try again.',
+        title: 'Error',
+        description: 'Failed to generate the contract. Please try again.',
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleCopy = () => {
+    if (!response?.contractContent) return;
+    navigator.clipboard.writeText(response.contractContent);
+    toast({ title: "Copied!", description: "The contract content has been copied to your clipboard." });
+  };
+
+  const handleDownload = () => {
+    if (!response?.contractContent) return;
+    const element = document.createElement("a");
+    const file = new Blob([response.contractContent], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `${form.getValues('contractType').replace(' ', '_')}.md`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   };
   
-  const handlePostAsWorkOrder = async () => {
+  const handleSignAndFinalize = () => {
     if (!response) return;
 
-    setIsPosting(true);
-    toast({ title: 'Posting Work Order...', description: 'Please wait while we convert your proposal into an opportunity.' });
+    setIsLoading(true);
+    toast({ title: 'Finalizing Document...', description: 'Simulating digital signatures and securing the document.' });
 
-    try {
-        const workOrderAnalysis = await analyzeWorkOrder({
-            title: response.proposalTitle,
-            description: response.executiveSummary,
-            budget: `Approx. OMR ${response.totalEstimatedCost.toFixed(2)}`,
-            timeline: `${form.getValues('projectDuration')} ${form.getValues('rentalPeriod')}`,
-        });
-        
-        const newOpportunity: Opportunity = {
-            id: `ICT-${Date.now()}`,
-            title: response.proposalTitle,
-            type: workOrderAnalysis.category,
-            prize: `OMR ${response.totalEstimatedCost.toFixed(2)}`,
-            deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            description: workOrderAnalysis.summary,
-            iconName: 'Server',
-            badgeVariant: 'outline',
-            status: 'Open',
-        };
-
-        setOpportunities(prev => [newOpportunity, ...prev]);
-        
-        toast({
-            title: 'Work Order Posted!',
-            description: 'Your project is now listed in our opportunities network.',
-            variant: 'default',
-            duration: 9000,
-            action: (
-                <Button variant="outline" size="sm" asChild>
-                  <a href="/opportunities">View Opportunities</a>
-                </Button>
-            ),
-        });
-
-        router.push('/opportunities');
-
-    } catch (error) {
-        console.error("Failed to post work order:", error);
-        toast({
-            title: 'Posting Failed',
-            description: 'There was an error posting your work order. Please try again.',
-            variant: 'destructive',
-        });
-    } finally {
-        setIsPosting(false);
-    }
-  };
-
-  const handleDownloadTerms = () => {
-    // This is a placeholder for a real document.
-    const termsContent = `
-# INFRARENT - RENTAL AGREEMENT & TERMS OF SERVICE
-
-**Last Updated: ${new Date().toLocaleDateString()}**
-
-This document constitutes a binding agreement between you ("the Client") and Innovative Enterprises ("the Company") for the rental of IT equipment ("Assets").
-
-## 1. Rental Period
-The rental period begins on the date of delivery and continues for the duration specified in the proposal.
-
-## 2. Client Responsibilities
-- The Client is responsible for the safekeeping and proper use of all rented Assets.
-- Any loss or damage to the Assets due to negligence, misuse, or theft will be billed to the Client at full replacement cost.
-- The Client agrees not to perform any unauthorized repairs, modifications, or alterations to the Assets.
-
-## 3. Liability
-The Company is not liable for any data loss, business interruption, or consequential damages arising from the use or failure of the rented Assets. The Client is responsible for their own data backup and disaster recovery planning.
-
-## 4. Return of Assets
-All Assets must be returned in the same condition as they were received, barring normal wear and tear, at the end of the rental period.
-
-By checking the "Accept Terms & Conditions" box, you acknowledge that you have read, understood, and agreed to these terms.
-    `;
-    const doc = new jsPDF();
+    const newLease: SignedLease = {
+        id: `lease_${Date.now()}`,
+        ...form.getValues(),
+        status: 'Active',
+        content: response.contractContent,
+    };
     
-    // Set properties for the PDF
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
+    // In a real app, this would be an API call. For the prototype, we use global state.
+    store.set(state => ({
+        ...state,
+        signedLeases: [newLease, ...state.signedLeases],
+    }));
 
-    // Add header
-    // In a real app, you might fetch a logo image and add it here.
-    doc.setFontSize(18);
-    doc.setTextColor(41, 52, 98); // #293462
-    doc.text("Innovative Enterprises - InfraRent", 105, 20, { align: 'center' });
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
+    setTimeout(() => {
+        setIsLoading(false);
+        toast({ title: 'Document Finalized!', description: 'Redirecting to your SmartLease Manager dashboard.' });
+        router.push('/real-estate-tech/smart-lease-manager');
+    }, 1500);
 
-    // Split text into lines to fit the page width
-    const splitText = doc.splitTextToSize(termsContent, 180);
-    doc.text(splitText, 15, 35);
-    
-    // Add a footer
-    const pageCount = doc.getNumberOfPages();
-    for(let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        doc.setTextColor(150);
-        doc.text(`Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
-    }
-
-    doc.save("InfraRent_Terms_and_Conditions.pdf");
-  };
-
-
-  if (pageState === 'loading') {
-    return (
-      <Card>
-        <CardContent className="p-10 text-center">
-          <div className="flex flex-col items-center gap-6">
-            <Loader2 className="h-12 w-12 text-primary animate-spin" />
-            <div className="space-y-2">
-              <CardTitle className="text-2xl">Designing Your Solution...</CardTitle>
-              <CardDescription>Our AI Solutions Architect is analyzing your requirements to build the perfect technology package. This may take a moment.</CardDescription>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
   }
-
-  if (pageState === 'result' && response) {
-    return (
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <div>
-              <CardTitle>{response.proposalTitle}</CardTitle>
-              <CardDescription>Generated Proposal ID: <span className="font-mono">{response.proposalId}</span></CardDescription>
-            </div>
-            <div className="text-right">
-              <p className="text-muted-foreground text-sm">Total Estimated Cost</p>
-              <p className="text-3xl font-bold text-primary">OMR {response.totalEstimatedCost.toFixed(2)}</p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Alert>
-            <ClipboardCheck className="h-4 w-4" />
-            <AlertTitle>Executive Summary</AlertTitle>
-            <AlertDescription>{response.executiveSummary}</AlertDescription>
-          </Alert>
-
-            {response.recommendedAssets.length > 0 && (
-                 <div>
-                    <h3 className="text-lg font-semibold mb-2">Recommended IT Rental Package</h3>
-                    <div className="space-y-4">
-                        {response.recommendedAssets.map(asset => (
-                            <Card key={asset.id} className="flex items-start gap-4 p-3 bg-muted/50">
-                                <Image src={asset.image} alt={asset.name} width={60} height={60} className="rounded-md object-cover" />
-                                <div className="space-y-1 flex-grow">
-                                    <div className="flex justify-between">
-                                      <p className="font-semibold text-sm">{asset.name}</p>
-                                      <p className="font-bold text-base text-primary">x {asset.quantity}</p>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground">{asset.specs}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-bold text-primary">OMR {asset.monthlyPrice.toFixed(2)}</p>
-                                    <p className="text-xs text-muted-foreground">/mo each</p>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            )}
-            
-            {response.surveillanceSystem.equipmentList.length > 0 && (
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Proposed Surveillance System (Purchase)</h3>
-                    <Table>
-                    <TableHeader>
-                        <TableRow>
-                        <TableHead>Item</TableHead>
-                        <TableHead className="text-center">Qty</TableHead>
-                        <TableHead className="text-right">Unit Price (OMR)</TableHead>
-                        <TableHead className="text-right">Total (OMR)</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {response.surveillanceSystem.equipmentList.map((item, index) => (
-                        <TableRow key={index}>
-                            <TableCell>{item.item}</TableCell>
-                            <TableCell className="text-center">{item.quantity}</TableCell>
-                            <TableCell className="text-right">{item.unitPrice.toFixed(2)}</TableCell>
-                            <TableCell className="text-right font-medium">{item.totalPrice.toFixed(2)}</TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                    </Table>
-                </div>
-            )}
-          
-          <Alert variant="default" className="bg-green-50 border-green-200 dark:bg-green-900/30 dark:border-green-800">
-            <Info className="h-4 w-4 text-green-600" />
-            <AlertTitle>Next Steps</AlertTitle>
-            <AlertDescription className="text-green-800 dark:text-green-200">{response.nextSteps}</AlertDescription>
-          </Alert>
-
-        </CardContent>
-        <CardFooter className="flex-col sm:flex-row gap-2">
-          <Button onClick={() => { setResponse(null); setPageState('form'); }} variant="outline" className="w-full sm:w-auto">Request a New Proposal</Button>
-          <Button onClick={handlePostAsWorkOrder} className="w-full sm:w-auto flex-grow" disabled={isPosting}>
-            {isPosting ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Posting...</>
-            ) : (
-                <><CircleDollarSign className="mr-2 h-4 w-4" /> Approve & Post as Work Order</>
-            )}
-            </Button>
-        </CardFooter>
-      </Card>
-    )
-  }
-
-  const watchIncludeSurveillance = form.watch('includeSurveillance');
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>New ICT & Surveillance Proposal Request</CardTitle>
-        <CardDescription>Describe your project, and our AI will design a complete technology package for you.</CardDescription>
-        <div className="pt-2">
-            <Link href="/surveillance-estimator" className="text-sm text-primary hover:underline">
-               Looking only for a surveillance system? Click here for our dedicated estimator.
-            </Link>
+    <div className="bg-background min-h-[calc(100vh-8rem)]">
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+              <ClipboardCheck className="w-10 h-10 text-primary" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">DocuChain Compliance</h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Automate your real estate paperwork. Fill in the details below to generate a professional Tenancy or Sale Agreement tailored to your needs.
+          </p>
         </div>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-             <div className="grid md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="institutionName" render={({ field }) => (
-                    <FormItem><FormLabel>Institution Name / Partner ID</FormLabel><FormControl><Input placeholder="e.g., 'Ministry of Education' or 'PID-12345'" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                 <FormField control={form.control} name="eventName" render={({ field }) => (
-                    <FormItem><FormLabel>Project / Event Name (Optional)</FormLabel><FormControl><Input placeholder="e.g., 'Q4 Sales Kickoff Event'" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-             </div>
-
-             <div className="grid md:grid-cols-2 gap-6">
-                 <FormField control={form.control} name="projectType" render={({ field }) => (
-                    <FormItem><FormLabel>Project Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                        <SelectItem value="Temporary Office Setup">Temporary Office Setup</SelectItem>
-                        <SelectItem value="Training Program or Workshop">Training Program or Workshop</SelectItem>
-                        <SelectItem value="Special Event (e.g., conference, hackathon)">Special Event</SelectItem>
-                        <SelectItem value="Short-term Project (e.g., data analysis, software dev)">Short-term Project</SelectItem>
-                        <SelectItem value="Hardware Evaluation or Testing">Hardware Evaluation/Testing</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent></Select><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="numberOfUsers" render={({ field }) => (
-                    <FormItem><FormLabel>Number of Attendees / Users</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="rentalPeriod" render={({ field }) => (
-                    <FormItem><FormLabel>Rental Period</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                        <SelectItem value="daily">Daily</SelectItem>
-                        <SelectItem value="weekly">Weekly</SelectItem>
-                        <SelectItem value="monthly">Monthly</SelectItem>
-                        <SelectItem value="annually">Annually</SelectItem>
-                    </SelectContent></Select><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="projectDuration" render={({ field }) => (
-                    <FormItem><FormLabel>Duration</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-            </div>
-
-
-            <FormField control={form.control} name="primaryGoal" render={({ field }) => (
-                <FormItem>
-                    <FormLabel>Primary Goal / Task Description</FormLabel>
-                    <FormControl><Textarea placeholder="Describe what the users will be doing. e.g., 'Users will be running data analysis software that requires powerful machines.' or 'We need a reliable network for a 3-day conference with 200 attendees.'" {...field} /></FormControl>
-                    <FormDescription>The more detail you provide, the better the AI's recommendation will be.</FormDescription>
-                    <FormMessage />
-                </FormItem>
-            )} />
-            
-             <FormField
-              control={form.control}
-              name="includeSurveillance"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Include Surveillance System?</FormLabel>
-                    <FormDescription>
-                      Add a one-time purchase CCTV system to your proposal.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {watchIncludeSurveillance && (
-                 <FormField control={form.control} name="surveillanceDetails" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Surveillance Requirements (Optional)</FormLabel>
-                        <FormControl><Textarea placeholder="Describe your security needs. e.g., 'Cover all entrances and the main event hall. Night vision is required for external doors.'" {...field} /></FormControl>
-                        <FormDescription>If left blank, the AI will design a standard security package based on your project type.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )} />
-            )}
-            
+        <div className="max-w-4xl mx-auto mt-12 space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-base">Terms & Conditions</CardTitle>
+                    <CardTitle>Contract Generator</CardTitle>
+                    <CardDescription>Enter the details for your agreement.</CardDescription>
                 </CardHeader>
-                 <CardContent>
-                    <FormField
-                    control={form.control}
-                    name="termsAccepted"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-                            <FormControl>
-                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                                <FormLabel>
-                                I have read and agree to the Rental Agreement and Terms of Service.
-                                </FormLabel>
-                                <FormMessage />
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <Card className="flex flex-col md:flex-row gap-4 p-4 items-center bg-muted/50">
+                                <p className="font-semibold flex-shrink-0">I want to generate a:</p>
+                                <FormField
+                                    control={form.control}
+                                    name="contractType"
+                                    render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormControl>
+                                            <RadioGroup
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                                className="grid grid-cols-2 gap-4"
+                                                >
+                                                <FormItem className="flex items-center">
+                                                    <FormControl>
+                                                        <RadioGroupItem value="Tenancy Agreement" id="tenancy" className="sr-only" />
+                                                    </FormControl>
+                                                     <FormLabel htmlFor="tenancy" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Tenancy Agreement' && 'border-primary')}>
+                                                        Tenancy Agreement
+                                                    </FormLabel>
+                                                </FormItem>
+                                                 <FormItem className="flex items-center">
+                                                    <FormControl>
+                                                        <RadioGroupItem value="Sale Agreement" id="sale" className="sr-only" />
+                                                    </FormControl>
+                                                     <FormLabel htmlFor="sale" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Sale Agreement' && 'border-primary')}>
+                                                        Sale Agreement
+                                                    </FormLabel>
+                                                </FormItem>
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </FormItem>
+                                    )}
+                                />
+                            </Card>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="lessorName" render={({ field }) => (
+                                    <FormItem><FormLabel>{watchContractType === 'Tenancy Agreement' ? 'Landlord / Lessor Name' : 'Seller Name'}</FormLabel><FormControl><Input placeholder="First Party Name" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                <FormField control={form.control} name="lesseeName" render={({ field }) => (
+                                    <FormItem><FormLabel>{watchContractType === 'Tenancy Agreement' ? 'Tenant / Lessee Name' : 'Buyer Name'}</FormLabel><FormControl><Input placeholder="Second Party Name" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
                             </div>
-                        </FormItem>
-                    )}
-                    />
-                 </CardContent>
-                 <CardFooter>
-                      <Button type="button" variant="outline" onClick={handleDownloadTerms}>
-                        <Download className="mr-2 h-4 w-4" /> Download Terms & Conditions
-                    </Button>
-                 </CardFooter>
+                            <FormField control={form.control} name="propertyAddress" render={({ field }) => (
+                                <FormItem><FormLabel>Property Address</FormLabel><FormControl><Input placeholder="e.g., Villa 123, Al Mouj Street, Muscat" {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="propertyType" render={({ field }) => (
+                                    <FormItem><FormLabel>Property Type</FormLabel><FormControl><Input placeholder="e.g., Two-bedroom apartment" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                <FormField control={form.control} name="price" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>{watchContractType === 'Tenancy Agreement' ? 'Rent Amount (OMR)' : 'Sale Price (OMR)'}</FormLabel>
+                                        <div className="flex gap-2">
+                                            <FormControl><Input type="number" {...field} /></FormControl>
+                                            {watchContractType === 'Tenancy Agreement' && (
+                                                 <FormField control={form.control} name="pricePeriod" render={({ field }) => (
+                                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <FormControl><SelectTrigger className="w-[150px]"><SelectValue /></SelectTrigger></FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem value="per month">per month</SelectItem>
+                                                            <SelectItem value="per year">per year</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                )}/>
+                                            )}
+                                        </div>
+                                         <FormMessage />
+                                    </FormItem>
+                                )}/>
+                            </div>
+                            {watchContractType === 'Tenancy Agreement' && (
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <FormField control={form.control} name="startDate" render={({ field }) => (
+                                        <FormItem className="flex flex-col"><FormLabel>Start Date</FormLabel><Popover>
+                                        <PopoverTrigger asChild><FormControl>
+                                            <Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl></PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus/>
+                                        </PopoverContent></Popover><FormMessage /></FormItem>
+                                    )}/>
+                                    <FormField control={form.control} name="endDate" render={({ field }) => (
+                                        <FormItem className="flex flex-col"><FormLabel>End Date</FormLabel><Popover>
+                                        <PopoverTrigger asChild><FormControl>
+                                            <Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl></PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus/>
+                                        </PopoverContent></Popover><FormMessage /></FormItem>
+                                    )}/>
+                                </div>
+                            )}
+                            <FormField control={form.control} name="additionalClauses" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Additional Clauses (Optional)</FormLabel>
+                                    <FormControl><Textarea placeholder="e.g., 'The tenant is responsible for all utility bills.' or 'Property is sold as-is.'" rows={4} {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}/>
+
+                        <Button type="submit" disabled={isLoading} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-base" size="lg">
+                            {isLoading ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Contract...</>
+                            ) : (
+                            <><Sparkles className="mr-2 h-4 w-4" /> Generate Document</>
+                            )}
+                        </Button>
+                        </form>
+                    </Form>
+                </CardContent>
             </Card>
 
+            {isLoading && (
+                <Card>
+                    <CardContent className="p-6 text-center">
+                        <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+                        <p className="mt-4 text-muted-foreground">Lexi, our AI Legal Assistant, is drafting your document...</p>
+                    </CardContent>
+                </Card>
+            )}
 
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-                <Sparkles className="mr-2 h-4 w-4" /> Get AI Proposal
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+            {response && (
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                           <FileText className="h-6 w-6"/> AI-Generated {form.getValues('contractType')}
+                        </CardTitle>
+                        <div className="flex justify-end gap-2">
+                            <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                            <Button variant="outline" size="sm" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-6 whitespace-pre-wrap h-[60vh] overflow-y-auto">
+                            {response.contractContent}
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        <Button className="w-full bg-accent hover:bg-accent/90" size="lg" onClick={handleSignAndFinalize} disabled={isLoading}>
+                             {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Finalizing...</> : <><FileSignature className="mr-2 h-4 w-4" /> Sign & Finalize Document</>}
+                        </Button>
+                    </CardFooter>
+                </Card>
+            )}
+
+        </div>
+      </div>
+    </div>
   );
 }

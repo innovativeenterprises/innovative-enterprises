@@ -6,7 +6,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
-import { GenerateTenderResponseInputSchema, type GenerateTenderResponseOutput } from '@/ai/flows/tender-response-assistant.schema';
+import { type GenerateTenderResponseOutput, GenerateTenderResponseInputSchema } from '@/ai/flows/tender-response-assistant.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
