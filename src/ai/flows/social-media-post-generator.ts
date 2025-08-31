@@ -41,6 +41,12 @@ const textGenerationPrompt = ai.definePrompt({
 {{{promotionUrl}}}
 {{/if}}
 
+{{#if beforeScore}}
+**Performance Metrics to Highlight:**
+- **Before ATS Score:** {{{beforeScore}}}
+- **After ATS Score:** {{{afterScore}}}
+{{/if}}
+
 **Platforms to generate content for:**
 {{#each platforms}}
 - {{this}}
@@ -54,6 +60,8 @@ For each platform listed above, create a post that is engaging and perfectly tai
 - **Facebook:** Casual and engaging, can be longer, ask questions to encourage comments.
 - **Instagram:** Visually focused caption, use plenty of relevant hashtags. Should be shorter and more personal.
 - **WhatsApp:** Very casual, conversational, and direct, like a message to a friend. No hashtags.
+
+**Crucially, if performance metrics are provided, you MUST incorporate them naturally.** For example: "Thrilled to share that my new CV is ready! My ATS score jumped from {{{beforeScore}}} to a whopping {{{afterScore}}} thanks to the AI tools at Innovative Enterprises."
 
 **Crucially, if a 'Promotional URL' is provided, you MUST naturally weave it into the post content.** For example, you could add a sentence like "Check out the tool I used: {{{promotionUrl}}}" or "Want to create your own? Visit {{{promotionUrl}}}".
 

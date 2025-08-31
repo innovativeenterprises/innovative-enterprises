@@ -20,6 +20,8 @@ export const GenerateSocialMediaPostInputSchema = z.object({
   tone: z.enum(['Professional', 'Casual', 'Witty', 'Enthusiastic']).describe('The desired tone of the post.'),
   generateImage: z.boolean().optional().describe('Whether to generate a suggested image for the post.'),
   promotionUrl: z.string().url().optional().describe("An optional URL to promote within the post."),
+  beforeScore: z.number().optional().describe("The user's ATS score before using the tool."),
+  afterScore: z.number().optional().describe("The user's ATS score after using the tool."),
 });
 export type GenerateSocialMediaPostInput = z.infer<typeof GenerateSocialMediaPostInputSchema>;
 

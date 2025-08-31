@@ -45,6 +45,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import InterviewCoachForm from '@/app/interview-coach/coach-form';
 import Link from 'next/link';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -120,7 +121,17 @@ const SuggestionSection = ({ title, data }: { title: string; data: { isCompliant
     )
 }
 
-const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: string, onGenerate: (output: GenerateSocialMediaPostOutput) => void }) => {
+const SocialPostDialog = ({ 
+    targetPosition, 
+    onGenerate,
+    beforeScore,
+    afterScore,
+}: { 
+    targetPosition: string, 
+    onGenerate: (output: GenerateSocialMediaPostOutput) => void,
+    beforeScore?: number,
+    afterScore?: number,
+}) => {
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 
@@ -131,14 +142,14 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
             platforms: ['LinkedIn'],
             tone: "Professional",
             generateImage: true,
-            promotionUrl: "https://innovative.om/genius" // This could be dynamically generated
+            promotionUrl: "https://innovative.om/genius"
         }
     });
 
     const handleSocialPost: SubmitHandler<z.infer<typeof GenerateSocialMediaPostInputSchema>> = async (data) => {
         setIsLoading(true);
         try {
-            const result = await generateSocialMediaPost(data);
+            const result = await generateSocialMediaPost({...data, beforeScore, afterScore});
             onGenerate(result);
         } catch (error) {
              toast({
@@ -783,7 +794,12 @@ export default function CvForm() {
                     />
                  ) : (
                     <div className="p-6 w-full space-y-4">
-                        <SocialPostDialog targetPosition={targetPosition} onGenerate={handleGeneratedSocialPost} />
+                        <SocialPostDialog 
+                            targetPosition={targetPosition}
+                            onGenerate={handleGeneratedSocialPost}
+                            beforeScore={analysis.overallScore}
+                            afterScore={generatedCv.newOverallScore}
+                        />
                         <FinalActions 
                             onDownload={handleDownload}
                             onCopy={handleCopy}
