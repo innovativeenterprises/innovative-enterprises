@@ -33,6 +33,8 @@ import { initialMembers, type CommunityMember } from './community-members';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { type CostRate } from './cost-settings.schema';
 import { initialCostSettings } from './cost-settings';
+import { initialEvents, type CommunityEvent } from './community-events';
+import { initialFinances, type CommunityFinance } from './community-finances';
 
 
 export interface CartItem extends Product {
@@ -70,6 +72,8 @@ type AppState = {
   auditSubmissions: AuditSubmission[];
   students: Student[];
   communityMembers: CommunityMember[];
+  communityEvents: CommunityEvent[];
+  communityFinances: CommunityFinance[];
   savedBoqs: SavedBoQ[];
   cart: CartItem[];
   costSettings: CostRate[];
@@ -100,6 +104,8 @@ let state: AppState = {
   auditSubmissions: initialAuditSubmissions,
   students: initialStudents,
   communityMembers: initialMembers,
+  communityEvents: initialEvents,
+  communityFinances: initialFinances,
   savedBoqs: [],
   cart: [],
   costSettings: initialCostSettings,

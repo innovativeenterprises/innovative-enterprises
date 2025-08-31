@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Users, Heart, PieChart, Landmark, UserCog } from "lucide-react";
+import { ArrowRight, Users, Heart, PieChart, Landmark, UserCog, HandCoins } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
 
@@ -21,14 +21,16 @@ const platformPillars = [
         href: "/community-hub/elections"
     },
     {
-        icon: Heart,
-        title: "Charity & Event Coordination",
-        description: "Organize community events, manage charitable funds, and coordinate volunteer efforts seamlessly."
+        icon: HandCoins,
+        title: "Events & Financials",
+        description: "Organize community events, manage charitable funds, and coordinate volunteer efforts seamlessly.",
+        href: "/community-hub/events-finance"
     },
     {
         icon: PieChart,
         title: "Financial Transparency",
-        description: "Manage membership fees and donations with clear, accessible financial reporting for all members."
+        description: "Manage membership fees and donations with clear, accessible financial reporting for all members.",
+        href: "/community-hub/events-finance"
     }
 ];
 
