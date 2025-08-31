@@ -16,7 +16,7 @@ export async function generateImage(input: GenerateImageInput): Promise<string> 
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: input.prompt,
         config: {
-            responseModalities: ['IMAGE'],
+            responseModalities: ['IMAGE', 'TEXT'], // MUST provide both TEXT and IMAGE
         },
     });
 

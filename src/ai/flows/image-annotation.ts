@@ -22,7 +22,7 @@ export async function annotateImage(input: ImageTransformerInput): Promise<Image
             { text: input.prompt },
         ],
         config: {
-            responseModalities: ['IMAGE'], // Only expect an image back
+            responseModalities: ['IMAGE', 'TEXT'], // MUST provide both TEXT and IMAGE
         },
     });
 
