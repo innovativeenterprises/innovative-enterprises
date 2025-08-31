@@ -7,25 +7,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { generateInterviewQuestions } from '@/ai/flows/interview-coach';
 import type { InterviewQuestion } from '@/ai/flows/interview-coach.schema';
+import { getInterviewFeedback } from '@/ai/flows/interview-feedback';
+import type { InterviewFeedbackOutput } from '@/ai/flows/interview-feedback.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight, VideoOff } from 'lucide-react';
+import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight, VideoOff, ThumbsUp, Lightbulb, GraduationCap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from 'next/image';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const FormSchema = z.object({
   jobTitle: z.string().min(3, 'Please enter a valid job title.'),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
+const AnswerSchema = z.object({
+    answer: z.string().min(10, 'Please provide an answer of at least 10 characters.'),
+});
+type AnswerValues = z.infer<typeof AnswerSchema>;
+
+
 export default function InterviewCoachForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isGettingFeedback, setIsGettingFeedback] = useState(false);
   const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [feedback, setFeedback] = useState<InterviewFeedbackOutput | null>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
@@ -35,6 +47,11 @@ export default function InterviewCoachForm() {
     defaultValues: {
       jobTitle: '',
     },
+  });
+  
+  const answerForm = useForm<AnswerValues>({
+      resolver: zodResolver(AnswerSchema),
+      defaultValues: { answer: '' }
   });
 
   useEffect(() => {
@@ -80,16 +97,14 @@ export default function InterviewCoachForm() {
     setQuestions([]);
     setCurrentQuestionIndex(0);
     setHasCameraPermission(null);
+    setFeedback(null);
+    answerForm.reset();
 
     try {
         toast({ title: "Preparing your session...", description: "Generating questions for your interview practice." });
-
         const questionsResult = await generateInterviewQuestions(data);
-        
         setQuestions(questionsResult.questions);
-
         toast({ title: "Session Ready!", description: "Your interview practice session is ready to begin." });
-
     } catch (error) {
         console.error(error);
         toast({
@@ -101,16 +116,37 @@ export default function InterviewCoachForm() {
         setIsLoading(false);
     }
   };
+  
+  const handleGetFeedback: SubmitHandler<AnswerValues> = async (data) => {
+    setIsGettingFeedback(true);
+    setFeedback(null);
+    try {
+        const result = await getInterviewFeedback({
+            question: questions[currentQuestionIndex].question,
+            answer: data.answer,
+        });
+        setFeedback(result);
+    } catch (error) {
+         toast({ title: 'Error Getting Feedback', description: 'Could not analyze your answer.', variant: 'destructive' });
+    } finally {
+        setIsGettingFeedback(false);
+    }
+  };
+
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
+      setFeedback(null);
+      answerForm.reset();
     }
   };
 
   const handlePrevQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
+      setFeedback(null);
+      answerForm.reset();
     }
   };
 
@@ -118,6 +154,8 @@ export default function InterviewCoachForm() {
       setQuestions([]);
       setCurrentQuestionIndex(0);
       setHasCameraPermission(null);
+      setFeedback(null);
+      answerForm.reset();
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
@@ -187,6 +225,59 @@ export default function InterviewCoachForm() {
                             {currentQuestion.question}
                         </AlertDescription>
                     </Alert>
+
+                     <Form {...answerForm}>
+                        <form onSubmit={answerForm.handleSubmit(handleGetFeedback)} className="space-y-4">
+                            <FormField
+                                control={answerForm.control}
+                                name="answer"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Your Answer</FormLabel>
+                                        <FormControl>
+                                             <VoiceEnabledTextarea
+                                                placeholder="Type or speak your answer here..."
+                                                rows={5}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <Button type="submit" disabled={isGettingFeedback} className="w-full">
+                                {isGettingFeedback ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <GraduationCap className="mr-2 h-4 w-4"/>}
+                                Get Feedback
+                             </Button>
+                        </form>
+                     </Form>
+
+                    {isGettingFeedback && (
+                        <div className="text-center text-muted-foreground p-4"><Loader2 className="inline-block mr-2 h-4 w-4 animate-spin"/> Analyzing your answer...</div>
+                    )}
+                    
+                    {feedback && (
+                        <div className="space-y-4 pt-4 border-t">
+                             <h3 className="font-semibold text-lg text-center">AI Feedback</h3>
+                             <div className="grid md:grid-cols-2 gap-4">
+                                <Alert className="bg-green-50 border-green-200 dark:bg-green-900/30 dark:border-green-800">
+                                    <ThumbsUp className="h-4 w-4 text-green-600 dark:text-green-400"/>
+                                    <AlertTitle>What Went Well</AlertTitle>
+                                    <AlertDescription className="text-green-800 dark:text-green-200">{feedback.positiveFeedback}</AlertDescription>
+                                </Alert>
+                                 <Alert className="bg-yellow-50 border-yellow-200 dark:bg-yellow-900/30 dark:border-yellow-800">
+                                    <Lightbulb className="h-4 w-4 text-yellow-600 dark:text-yellow-400"/>
+                                    <AlertTitle>Areas for Improvement</AlertTitle>
+                                    <AlertDescription className="text-yellow-800 dark:text-yellow-200">{feedback.improvementSuggestions}</AlertDescription>
+                                </Alert>
+                             </div>
+                             <Alert>
+                                <Sparkles className="h-4 w-4 text-primary"/>
+                                <AlertTitle>Suggested Answer</AlertTitle>
+                                <AlertDescription className="prose prose-sm max-w-none">{feedback.suggestedAnswer}</AlertDescription>
+                            </Alert>
+                        </div>
+                    )}
 
                 </CardContent>
                 <CardFooter className="flex-col gap-4">
