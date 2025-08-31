@@ -5,7 +5,9 @@ import { z } from 'zod';
 
 export const ScholarshipFinderInputSchema = z.object({
   fieldOfStudy: z.string().describe('The student\'s desired field of study (e.g., Engineering, Medicine, Computer Science).'),
-  studyLevel: z.enum(['Bachelors', 'Masters', 'PhD']).describe("The level of study for the scholarship."),
+  studyLevel: z.enum(['Bachelors', 'Masters', 'PhD'], {
+    required_error: "Please select a study level."
+  }).describe("The level of study for the scholarship."),
   country: z.string().optional().describe('An optional specific country to search for scholarships in.'),
 });
 export type ScholarshipFinderInput = z.infer<typeof ScholarshipFinderInputSchema>;

@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, BrainCircuit, BookOpen, MapPin, Calendar, Check, Link as LinkIcon } from 'lucide-react';
+import { Loader2, Sparkles, BrainCircuit, BookOpen, MapPin, Calendar, Check, Link as LinkIcon, AlertTriangle } from 'lucide-react';
 import { ScholarshipFinderInputSchema, type ScholarshipFinderInput, type ScholarshipFinderOutput } from '@/ai/flows/scholarship-agent.schema';
 import { findScholarships } from '@/ai/flows/scholarship-agent';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -150,6 +150,7 @@ export default function ScholarshipPage() {
                     <CardContent className="space-y-4">
                         {response.scholarships.length === 0 && (
                              <Alert variant="destructive">
+                                <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle>No Results</AlertTitle>
                                 <AlertDescription>We couldn't find any scholarships matching your specific criteria at this time. Please try a broader search.</AlertDescription>
                             </Alert>
