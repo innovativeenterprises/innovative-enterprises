@@ -12,7 +12,7 @@ export default function InterviewCoachRedirectPage() {
       <h1 className="text-2xl font-bold">This page has moved.</h1>
       <p className="text-muted-foreground">The AI Interview Coach is now part of the GENIUS Career Platform.</p>
       <Button asChild className="mt-4">
-        <Link href="/cv-enhancer">Go to GENIUS Platform</Link>
+        <Link href="/cv-enhancer?tab=interview">Go to GENIUS Platform</Link>
       </Button>
     </div>
   );
