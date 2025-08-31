@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
+import { analyzeFloorPlan, type FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -51,6 +52,8 @@ export default function EstimatorForm() {
   const [response, setResponse] = useState<IctProposalOutput | null>(null);
   const [annotatedImageUrl, setAnnotatedImageUrl] = useState<string | null>(null);
   const [baseImageUrl, setBaseImageUrl] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState<FloorPlanAnalysisOutput | null>(null);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -63,7 +66,7 @@ export default function EstimatorForm() {
       remoteViewing: true,
       audioRecording: false,
       recordingDays: 30,
-      areasToMonitor: 'All entrances, main halls, and parking areas.',
+      areasToMonitor: '',
     },
   });
 
@@ -72,7 +75,6 @@ export default function EstimatorForm() {
     setLoadingMessage('Generating Equipment Proposal...');
     setResponse(null);
     setAnnotatedImageUrl(null);
-    setBaseImageUrl(null);
 
     const floorPlanFile = data.floorPlanFile[0];
     const floorPlanUri = await fileToDataURI(floorPlanFile);
@@ -96,6 +98,7 @@ export default function EstimatorForm() {
         projectName: floorPlanFile.name,
         includeSurveillance: true,
         surveillanceDetails: surveillanceDetails,
+        purpose: data.purpose,
         coverageType: data.coverageType,
         remoteViewing: data.remoteViewing,
         audioRecording: data.audioRecording,
@@ -162,6 +165,43 @@ export default function EstimatorForm() {
       )}
     />
   );
+
+  const handleFloorPlanAnalysis = async () => {
+    const floorPlanFile = form.getValues('floorPlanFile');
+    if (!floorPlanFile || floorPlanFile.length === 0) {
+        toast({ title: 'Please select a floor plan file first.', variant: 'destructive' });
+        return;
+    }
+    setIsAnalyzing(true);
+    setAnalysis(null);
+
+    try {
+        const uri = await fileToDataURI(floorPlanFile[0]);
+        const result = await analyzeFloorPlan({ documentDataUri: uri });
+        setAnalysis(result);
+        
+        let specs = form.getValues('areasToMonitor') || '';
+        if (result.dimensions) {
+            specs += `\nEstimated building dimensions from plan: ${result.dimensions}.`;
+        }
+        if (result.suggestedDvrLocation) {
+            specs += `\nConsider placing the main equipment in the ${result.suggestedDvrLocation}.`;
+        }
+        form.setValue('areasToMonitor', specs.trim());
+
+        toast({ title: 'Floor Plan Analyzed', description: 'AI has provided insights. Review the pre-filled "Areas to Monitor" section.' });
+
+    } catch (e) {
+        console.error("Floor plan analysis failed:", e);
+        toast({
+          title: "Analysis Failed",
+          description: "Could not analyze the floor plan. Please check the file and try again.",
+          variant: "destructive",
+        });
+    } finally {
+        setIsAnalyzing(false);
+    }
+  };
   
   const watchCoverage = form.watch('coverage');
 
@@ -272,14 +312,34 @@ export default function EstimatorForm() {
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>1. Upload your Building Floor Plan</FormLabel>
-                        <FormControl>
-                            <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
-                        </FormControl>
-                        <FormDescription>Upload a floor plan, sketch, or photo. Our AI will do the rest.</FormDescription>
+                         <div className="flex gap-2">
+                            <FormControl className="flex-1">
+                                <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => {
+                                    field.onChange(e.target.files);
+                                    setAnalysis(null); // Reset analysis if file changes
+                                }} />
+                            </FormControl>
+                            <Button type="button" variant="secondary" onClick={handleFloorPlanAnalysis} disabled={isAnalyzing}>
+                                {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                Analyze
+                            </Button>
+                        </div>
+                        <FormDescription>Upload a floor plan, sketch, or photo. Our AI will analyze it to assist you.</FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}
             />
+            {analysis && (
+                <Alert>
+                    <FileCheck2 className="h-4 w-4" />
+                    <AlertTitle>AI Analysis Complete</AlertTitle>
+                    <AlertDescription>
+                        {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
+                        {analysis.suggestedDvrLocation && <p><strong>Suggested Equipment Room:</strong> {analysis.suggestedDvrLocation}</p>}
+                        <p className="text-xs mt-1">This information has been added to the "Specific Areas to Monitor" section below. You can edit it if needed.</p>
+                    </AlertDescription>
+                </Alert>
+            )}
             <div className="space-y-3">
                 <FormLabel>2. Select Coverage Level</FormLabel>
                 <CardSelector
@@ -367,8 +427,8 @@ export default function EstimatorForm() {
                 </FormItem>
             )} />
 
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg" disabled={pageState === 'loading'}>
-                {pageState === 'loading' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg" disabled={pageState === 'loading' || isAnalyzing}>
+                {pageState === 'loading' || isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                 Get AI Proposal
             </Button>
           </form>
