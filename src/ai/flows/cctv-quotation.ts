@@ -35,8 +35,12 @@ You MUST only recommend assets from this list for the IT hardware portion.
 **Client Project Requirements:**
 - **Project Name:** {{{projectName}}}
 - **Project Type:** {{{projectType}}}
+{{#if (ne numberOfUsers 1)}}
 - **Number of Users:** {{{numberOfUsers}}}
+{{/if}}
+{{#if (ne projectDurationMonths 1)}}
 - **Project Duration:** {{{projectDurationMonths}}} months
+{{/if}}
 - **Primary Goal/Task:** {{{primaryGoal}}}
 - **Include Surveillance System:** {{#if includeSurveillance}}Yes{{else}}No{{/if}}
 {{#if surveillanceDetails}}
@@ -45,24 +49,23 @@ You MUST only recommend assets from this list for the IT hardware portion.
 
 **Your Task:**
 1.  **Analyze and Design:**
-    *   **IT Assets:** Based on the **Project Type** and **Primary Goal**, select the most appropriate assets from the **Available Asset Inventory**.
-        *   The **quantity** for user-specific items (laptops, workstations) should match the **Number of Users**. For shared items (servers, routers), the quantity is usually 1.
+    *   **IT Assets:** Based on the **Project Type** and **Primary Goal**, select the most appropriate assets from the **Available Asset Inventory**. The quantity for user-specific items (laptops, workstations) should match the **Number of Users**. For shared items (servers, routers), the quantity is usually 1.
     *   **Software Recommendations:** Based on the project type and goal, recommend essential software (e.g., 'Windows 11 Pro', 'Microsoft 365 Business').
     *   **Surveillance System (if includeSurveillance is true):**
-        *   Design a basic but effective CCTV system suitable for the **Project Type**.
-        *   Determine the number and type of cameras (Dome, Bullet), NVR, and switch. If **Surveillance Details** are provided, use them.
+        *   Design a basic but effective CCTV system suitable for the **Project Type** and **Surveillance Details**.
+        *   Determine the number and type of cameras (Dome, Bullet), NVR, and switch. 
         *   This system is ALWAYS a **purchase** item.
 
 2.  **Generate Proposal Content:**
-    *   **proposalId:** Create a unique ID, e.g., 'QT-ICT-12345'.
-    *   **proposalTitle:** Create a clear title, e.g., "ICT & Surveillance Proposal for {{{projectName}}}".
+    *   **proposalId:** Create a unique ID, e.g., 'QT-SEC-12345'.
+    *   **proposalTitle:** Create a clear title, e.g., "Surveillance System Proposal for {{{projectName}}}".
     *   **executiveSummary:** Write a professional paragraph explaining the proposed solution, highlighting its benefits.
-    *   **rentedAssets:** Create a JSON array of the IT assets you selected, formatted for the rental option. Include quantity.
-    *   **purchasedAssets:** Create a JSON array of the SAME IT assets, formatted for the purchase option. Include quantity.
+    *   **rentedAssets:** Create a JSON array of any IT assets selected for rental. Include quantity.
+    *   **purchasedAssets:** Create a JSON array of the SAME IT assets, formatted for purchase. Include quantity.
     *   **recommendedSoftware:** Create a JSON array of recommended software.
     *   **surveillanceSystem:**
         *   Create an equipment list for the CCTV system to be **purchased**. Use the price list below.
-        *   **CCTV Price List (OMR):** 4K Dome Camera: 4.5, 4K Bullet Camera: 5.5, 8-Channel NVR: 12.0, 16-Channel NVR: 20.0, 8-Port PoE Switch: 6.0, 16-Port PoE Switch: 10.0.
+        *   **CCTV Price List (OMR):** 4K Dome Camera: 45, 4K Bullet Camera: 55, 8-Channel NVR: 120, 16-Channel NVR: 200, 8-Port PoE Switch: 60, 16-Port PoE Switch: 100.
         *   Write a brief summary of the surveillance solution.
 
 3.  **Calculate Costs:**
