@@ -56,6 +56,7 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 const MemberSchema = z.object({
   name: z.string().min(2, "Name is required"),
+  nickname: z.string().optional(),
   contact: z.string().min(5, "Contact info is required"),
   memberType: z.enum(['Head of Family', 'Spouse', 'Child']),
   status: z.enum(['Active', 'Inactive', 'Pending Review']),
@@ -81,7 +82,7 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
     
     const form = useForm<z.infer<typeof MemberSchema>>({
         resolver: zodResolver(MemberSchema),
-        defaultValues: member || { name: "", contact: "", memberType: 'Head of Family', status: 'Active', joinDate: new Date().toISOString().split('T')[0] },
+        defaultValues: member || { name: "", nickname: "", contact: "", memberType: 'Head of Family', status: 'Active', joinDate: new Date().toISOString().split('T')[0] },
     });
 
     const watchPhotoUrl = form.watch('photoUrl');
@@ -99,7 +100,7 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
     
     useEffect(() => {
         if (isOpen) {
-            form.reset(member || { name: "", contact: "", memberType: 'Head of Family', status: 'Active', joinDate: new Date().toISOString().split('T')[0] });
+            form.reset(member || { name: "", nickname: "", contact: "", memberType: 'Head of Family', status: 'Active', joinDate: new Date().toISOString().split('T')[0] });
             setImagePreview(member?.photo || null);
         }
     }, [member, isOpen, form]);
@@ -124,7 +125,7 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
             if (result.personalDetails?.phone) {
                 form.setValue('contact', result.personalDetails.phone);
             }
-             if (result.personalDetails?.email) {
+             else if (result.personalDetails?.email) {
                 form.setValue('contact', result.personalDetails.email);
             }
 
@@ -176,9 +177,14 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
                             )}/>
                         </Card>
 
-                        <FormField control={form.control} name="name" render={({ field }) => (
-                            <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="name" render={({ field }) => (
+                                <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField control={form.control} name="nickname" render={({ field }) => (
+                                <FormItem><FormLabel>Nickname (Optional)</FormLabel><FormControl><Input placeholder="e.g., Abu Ahmed" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
                         <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name="contact" render={({ field }) => (
                                 <FormItem><FormLabel>Contact (Phone/Email)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -313,7 +319,7 @@ export default function MembershipPage() {
                                      <div className="flex items-center gap-3">
                                         <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover"/>
                                         <div>
-                                          <p className="font-medium">{member.name}</p>
+                                          <p className="font-medium">{member.nickname || member.name}</p>
                                           <p className="text-sm text-muted-foreground">{member.contact}</p>
                                         </div>
                                     </div>

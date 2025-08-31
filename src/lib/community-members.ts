@@ -2,6 +2,7 @@
 export interface CommunityMember {
   id: string;
   name: string;
+  nickname?: string;
   joinDate: string; // ISO Date string 'YYYY-MM-DD'
   status: 'Active' | 'Inactive' | 'Pending Review';
   memberType: 'Head of Family' | 'Spouse' | 'Child';
@@ -16,6 +17,7 @@ export const initialMembers: CommunityMember[] = [
     {
         id: "mem_1",
         name: "Ahmed Al-Farsi",
+        nickname: "Abu Abdullah",
         joinDate: "2022-01-15",
         status: "Active",
         memberType: "Head of Family",
@@ -40,6 +42,7 @@ export const initialMembers: CommunityMember[] = [
     {
         id: "mem_3",
         name: "John Smith",
+        nickname: "John S.",
         joinDate: "2023-05-20",
         status: "Active",
         memberType: "Head of Family",

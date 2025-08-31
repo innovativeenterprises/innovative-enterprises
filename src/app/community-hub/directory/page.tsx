@@ -16,7 +16,7 @@ const MemberCard = ({ member }: { member: CommunityMember }) => {
     return (
         <Card className="flex flex-col text-center items-center p-6">
             <Image src={member.photo} alt={member.name} width={96} height={96} className="rounded-full object-cover border-4 border-primary/20" />
-            <CardTitle className="mt-4 text-xl">{member.name}</CardTitle>
+            <CardTitle className="mt-4 text-xl">{member.nickname || member.name}</CardTitle>
             <CardDescription>{member.memberType}</CardDescription>
             <CardContent className="p-0 mt-4 flex-grow">
                  <Badge variant="outline">Joined: {new Date(member.joinDate).toLocaleDateString()}</Badge>
@@ -35,7 +35,7 @@ export default function MemberDirectoryPage() {
     const activeMembers = useMemo(() => {
         return members.filter(member => 
             member.status === 'Active' &&
-            member.name.toLowerCase().includes(searchTerm.toLowerCase())
+            (member.name.toLowerCase().includes(searchTerm.toLowerCase()) || (member.nickname && member.nickname.toLowerCase().includes(searchTerm.toLowerCase())))
         );
     }, [members, searchTerm]);
 
@@ -62,7 +62,7 @@ export default function MemberDirectoryPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="search"
-                    placeholder="Search by name..."
+                    placeholder="Search by name or nickname..."
                     className="w-full pl-10"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
