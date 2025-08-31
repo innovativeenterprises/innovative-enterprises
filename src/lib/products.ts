@@ -476,6 +476,21 @@ export const initialProducts: Product[] = [
         adminStatus: 'On Track',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management.",
         href: "/education-tech/campus-os",
+    },
+    {
+        id: 40,
+        name: "AI Scholarship Finder",
+        description: "An AI agent that searches the web for relevant scholarship opportunities based on a student's field of study, academic level, and preferred country.",
+        stage: "Live & Operating",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/scholarship/400/400",
+        aiHint: "scholarship graduation cap",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'Completed',
+        adminNotes: "A new tool to help students find funding.",
+        href: "/education-tech/scholarships"
     }
 ];
 

@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap } from "lucide-react";
+import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap, BrainCircuit } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/app/admin/product-table";
 import type { Product } from "@/lib/products";
@@ -21,6 +21,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "Guardian AI": ClipboardCheck,
         "CertiTrust": Check,
         "CampusOS": Users,
+        "AI Scholarship Finder": BrainCircuit,
     };
     const Icon = iconMap[product.name] || GraduationCap;
 
