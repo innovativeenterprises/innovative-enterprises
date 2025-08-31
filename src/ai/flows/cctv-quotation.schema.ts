@@ -52,7 +52,6 @@ export const IctProposalOutputSchema = z.object({
     summary: z.string().optional().describe("A brief summary of the proposed surveillance solution."),
     equipmentList: z.array(EquipmentSchema).describe("A detailed list of all required equipment for the surveillance system purchase."),
   }).describe("Details of the surveillance system to be purchased."),
-  totalEstimatedCost: z.number().describe("DEPRECATED. Use costBreakdown instead."),
   costBreakdown: z.object({
     totalRentalCostPerMonth: z.number().describe("The total monthly cost for all rented assets."),
     totalRentalCostForDuration: z.number().describe("The total rental cost over the entire project duration."),

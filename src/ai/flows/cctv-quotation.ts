@@ -21,7 +21,7 @@ export async function generateIctProposal(input: IctProposalInput): Promise<IctP
 
 const prompt = ai.definePrompt({
   name: 'ictProposalPrompt',
-  input: { schema: IctProposalInputSchema },
+  input: { schema: IctProposalInputSchema.extend({ availableAssetsJson: z.string() }) },
   output: { schema: IctProposalOutputSchema },
   prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal. You must provide options for both **renting** and **purchasing** the required IT assets.
 

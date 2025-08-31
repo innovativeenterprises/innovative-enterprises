@@ -110,7 +110,9 @@ export default function EstimatorForm() {
     try {
       const proposalInput: IctProposalInput = {
         ...data,
-        numberOfUsers: 1,
+        // These fields are required by the flow but not relevant for this specific form.
+        // We provide sensible defaults.
+        numberOfUsers: 1, 
         projectDurationMonths: 1,
         primaryGoal: 'Surveillance system installation',
         includeSurveillance: true,
