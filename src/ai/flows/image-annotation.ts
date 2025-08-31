@@ -3,18 +3,19 @@
 
 /**
  * @fileOverview An AI agent that annotates or transforms an image based on a text prompt.
- * - transformImage - A function that overlays text, icons, or generates a new image based on a base image.
+ * - annotateImage - A function that overlays text, icons, or generates a new image based on a base image.
  */
 
 import { ai } from '@/ai/genkit';
-import type { 
-    ImageTransformerInput, 
-    ImageTransformerOutput,
-} from './image-transformer.schema';
-import { ImageTransformerInputSchema, ImageTransformerOutputSchema } from './image-transformer.schema';
+import { 
+    ImageAnnotatorInput, 
+    ImageAnnotatorOutput,
+    ImageAnnotatorInputSchema,
+    ImageAnnotatorOutputSchema
+} from './image-annotation.schema';
 
 
-export async function annotateImage(input: ImageTransformerInput): Promise<ImageTransformerOutput> {
+export async function annotateImage(input: ImageAnnotatorInput): Promise<ImageAnnotatorOutput> {
     const { media } = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: [
@@ -36,8 +37,8 @@ export async function annotateImage(input: ImageTransformerInput): Promise<Image
 ai.defineFlow(
     {
         name: 'annotateImageFlow',
-        inputSchema: ImageTransformerInputSchema,
-        outputSchema: ImageTransformerOutputSchema,
+        inputSchema: ImageAnnotatorInputSchema,
+        outputSchema: ImageAnnotatorOutputSchema,
     },
     async (input) => annotateImage(input)
 );

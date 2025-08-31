@@ -1,17 +1,17 @@
 
 /**
- * @fileOverview Schemas and types for the Image Transformation AI flow.
+ * @fileOverview Schemas and types for the Image Annotation AI flow.
  */
 
 import { z } from 'zod';
 
-export const ImageTransformerInputSchema = z.object({
+export const ImageAnnotatorInputSchema = z.object({
   baseImageUri: z.string().describe("The base image to be transformed, as a data URI."),
   prompt: z.string().describe('A detailed text description of the transformation to apply.'),
 });
-export type ImageTransformerInput = z.infer<typeof ImageTransformerInputSchema>;
+export type ImageAnnotatorInput = z.infer<typeof ImageAnnotatorInputSchema>;
 
-export const ImageTransformerOutputSchema = z.object({
+export const ImageAnnotatorOutputSchema = z.object({
   imageDataUri: z.string().describe("The new, transformed image as a data URI."),
 });
-export type ImageTransformerOutput = z.infer<typeof ImageTransformerOutputSchema>;
+export type ImageAnnotatorOutput = z.infer<typeof ImageAnnotatorOutputSchema>;

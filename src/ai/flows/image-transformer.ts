@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -6,11 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import type { 
-    ImageTransformerInput, 
-    ImageTransformerOutput,
-} from './image-transformer.schema';
-import { ImageTransformerInputSchema, ImageTransformerOutputSchema } from './image-transformer.schema';
+import { ImageTransformerInput, ImageTransformerInputSchema, ImageTransformerOutputSchema, type ImageTransformerOutput } from './image-transformer.schema';
 
 
 export async function transformImage(input: ImageTransformerInput): Promise<ImageTransformerOutput> {

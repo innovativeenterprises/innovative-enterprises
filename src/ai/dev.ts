@@ -39,7 +39,7 @@ import '@/ai/flows/ameen-smart-lock';
 import '@/ai/flows/video-generator';
 import '@/ai/flows/coupon-generator';
 import '@/ai/flows/knowledge-document-analysis';
-import '@/ai/flows/image-transformer';
+import '@/ai/flows/image-annotation';
 import '@/ai/flows/boq-generator';
 import '@/ai/flows/raaha-matcher';
 import '@/ai/flows/property-valuation';
@@ -52,3 +52,4 @@ import '@/ai/flows/admissions-agent';
 import '@/ai/flows/scholarship-agent';
 import '@/ai/flows/scholarship-essay-assistant';
 import '@/ai/flows/community-elections-agent';
+
