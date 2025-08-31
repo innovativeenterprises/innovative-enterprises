@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer } from 'lucide-react';
 import { estimateBoq } from '@/ai/flows/boq-estimator';
-import { BoQEstimatorInputSchema, type BoQEstimatorOutput } from '@/ai/flows/boq-estimator.schema';
+import { BoQEstimatorInputSchema, type BoQEstimatorOutput, type CostedBoQItem } from '@/ai/flows/boq-estimator.schema';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useCostSettingsData } from '@/app/admin/cost-settings-table';
@@ -48,6 +48,7 @@ export default function EstimatorForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingTender, setIsGeneratingTender] = useState(false);
   const [response, setResponse] = useState<BoQEstimatorOutput | null>(null);
+  const [editableItems, setEditableItems] = useState<CostedBoQItem[]>([]);
   const [tenderResponse, setTenderResponse] = useState<string | null>(null);
   const { costSettings } = useCostSettingsData();
   const boqTableRef = useRef(null);
@@ -71,7 +72,6 @@ export default function EstimatorForm() {
         dataTransfer.items.add(file);
         fileInputRef.current.files = dataTransfer.files;
         
-        // Trigger react-hook-form's change event
         const changeEvent = new Event('change', { bubbles: true });
         fileInputRef.current.dispatchEvent(changeEvent);
 
@@ -80,17 +80,49 @@ export default function EstimatorForm() {
             description: "Your generated Bill of Quantities has been automatically loaded."
         });
         
-        // Clean up session storage
         sessionStorage.removeItem('boqDataForEstimator');
       }
     } catch(e) {
       console.error("Could not load BoQ from session storage:", e);
     }
   }, [toast]);
+
+  const recalculateSummary = (items: CostedBoQItem[]) => {
+      const { contingencyPercentage, profitMarginPercentage } = form.getValues();
+      const totalDirectCosts = items.reduce((sum, item) => sum + item.totalItemCost, 0);
+      const contingencyAmount = totalDirectCosts * (contingencyPercentage / 100);
+      const subtotal = totalDirectCosts + contingencyAmount;
+      const profitAmount = subtotal * (profitMarginPercentage / 100);
+      const grandTotal = subtotal + profitAmount;
+      
+      setResponse(prev => {
+          if (!prev) return null;
+          return {
+              ...prev,
+              summary: {
+                  totalDirectCosts,
+                  contingencyAmount,
+                  subtotal,
+                  profitAmount,
+                  grandTotal,
+              }
+          };
+      });
+  };
+
+  const handleCostChange = (index: number, field: 'materialUnitCost' | 'laborUnitCost', value: number) => {
+    const newItems = [...editableItems];
+    const item = newItems[index];
+    item[field] = value;
+    item.totalItemCost = (item.materialUnitCost + item.laborUnitCost) * item.quantity;
+    setEditableItems(newItems);
+    recalculateSummary(newItems);
+  };
   
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
+    setEditableItems([]);
     setTenderResponse(null);
     try {
         const boqCsvText = await fileToText(data.boqFile[0]);
@@ -101,6 +133,7 @@ export default function EstimatorForm() {
             marketRates: costSettings,
         });
         setResponse(result);
+        setEditableItems(result.costedItems);
         toast({ title: "Estimation Complete!", description: "Your BoQ has been analyzed and costed." });
     } catch(e) {
         console.error(e);
@@ -129,6 +162,7 @@ export default function EstimatorForm() {
         const result = await generateTenderResponse({
             tenderDocuments: [boqDataUri],
             projectRequirements,
+            estimatedCost: response.summary.grandTotal,
         });
 
         setTenderResponse(result.draftResponse);
@@ -143,9 +177,9 @@ export default function EstimatorForm() {
   };
   
     const handleDownloadCsv = () => {
-    if (!response) return;
+    if (!response || !editableItems) return;
     const headers = ["Category", "Item Description", "Unit", "Quantity", "Material Unit Cost", "Labor Unit Cost", "Total Item Cost"];
-    const rows = response.costedItems.map(item => [
+    const rows = editableItems.map(item => [
       `"${item.category}"`,
       `"${item.item}"`,
       `"${item.unit}"`,
@@ -157,7 +191,6 @@ export default function EstimatorForm() {
 
     let csvContent = headers.join(',') + '\n' + rows.join('\n');
     
-    // Add summary
     csvContent += `\n\n\nSummary\n`;
     csvContent += `Direct Costs,${response.summary.totalDirectCosts.toFixed(2)}\n`;
     csvContent += `Contingency,${response.summary.contingencyAmount.toFixed(2)}\n`;
@@ -293,31 +326,45 @@ export default function EstimatorForm() {
           </CardHeader>
           <CardContent>
              <div className="overflow-x-auto">
-                <Table ref={boqTableRef}>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Item</TableHead>
-                            <TableHead className="text-right">Quantity</TableHead>
-                            <TableHead className="text-right">Material Cost</TableHead>
-                            <TableHead className="text-right">Labor Cost</TableHead>
-                            <TableHead className="text-right">Total Cost (OMR)</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {response.costedItems.map((item, index) => (
-                            <TableRow key={index}>
-                                <TableCell>
+                <table className="w-full" ref={boqTableRef}>
+                    <thead className="[&_tr]:border-b">
+                        <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Item</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Quantity</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Material Cost</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Labor Cost</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Total Cost (OMR)</th>
+                        </tr>
+                    </thead>
+                    <tbody className="[&_tr:last-child]:border-0">
+                        {editableItems.map((item, index) => (
+                            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                <td className="p-4 align-middle">
                                     <p className="font-medium">{item.item}</p>
                                     <p className="text-xs text-muted-foreground">{item.category}</p>
-                                </TableCell>
-                                <TableCell className="text-right">{item.quantity} {item.unit}</TableCell>
-                                <TableCell className="text-right font-mono">{item.materialUnitCost.toFixed(2)}</TableCell>
-                                <TableCell className="text-right font-mono">{item.laborUnitCost.toFixed(2)}</TableCell>
-                                <TableCell className="text-right font-bold">{item.totalItemCost.toFixed(2)}</TableCell>
-                            </TableRow>
+                                </td>
+                                <td className="p-4 align-middle text-right">{item.quantity} {item.unit}</td>
+                                <td className="p-4 align-middle text-right">
+                                     <Input 
+                                        type="number" 
+                                        value={item.materialUnitCost.toFixed(2)} 
+                                        onChange={(e) => handleCostChange(index, 'materialUnitCost', parseFloat(e.target.value))}
+                                        className="w-28 text-right font-mono"
+                                    />
+                                </td>
+                                <td className="p-4 align-middle text-right">
+                                     <Input 
+                                        type="number" 
+                                        value={item.laborUnitCost.toFixed(2)} 
+                                        onChange={(e) => handleCostChange(index, 'laborUnitCost', parseFloat(e.target.value))}
+                                        className="w-28 text-right font-mono"
+                                    />
+                                </td>
+                                <td className="p-4 align-middle text-right font-bold">{item.totalItemCost.toFixed(2)}</td>
+                            </tr>
                         ))}
-                    </TableBody>
-                </Table>
+                    </tbody>
+                </table>
              </div>
              <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div></div>
