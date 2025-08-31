@@ -102,7 +102,7 @@ export default function EducationTechPage() {
                 <CardHeader>
                     <CardTitle className="text-2xl text-accent">Partner with Us to Innovate Education</CardTitle>
                     <CardDescription className="text-accent-foreground/80">
-                       Are you a school, university, or training center? Partner with us to pilot these solutions and lead the transformation of education in the region.
+                       Are you a school, university, or training center? Partner with us to pilot these solutions and shape the future of personalized education.
                     </CardDescription>
                 </CardHeader>
                 <CardFooter className="justify-center">
