@@ -172,6 +172,7 @@ export default function EstimatorForm() {
   }
 
   if (pageState === 'result' && response) {
+    const totalPurchaseCost = response.costBreakdown.grandTotalForPurchaseOption || response.costBreakdown.totalPurchaseCost;
     return (
       <Card>
         <CardHeader>
@@ -182,7 +183,7 @@ export default function EstimatorForm() {
             </div>
             <div className="text-right">
               <p className="text-muted-foreground text-sm">Total Estimated Cost</p>
-              <p className="text-3xl font-bold text-primary">OMR {response.costBreakdown.grandTotalForPurchaseOption.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-primary">OMR {totalPurchaseCost.toFixed(2)}</p>
             </div>
           </div>
         </CardHeader>
