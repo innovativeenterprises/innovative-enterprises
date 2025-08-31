@@ -19,6 +19,7 @@ export const GenerateSocialMediaPostInputSchema = z.object({
   platforms: z.array(platformEnum).min(1, 'Please select at least one platform.'),
   tone: z.enum(['Professional', 'Casual', 'Witty', 'Enthusiastic']).describe('The desired tone of the post.'),
   generateImage: z.boolean().optional().describe('Whether to generate a suggested image for the post.'),
+  promotionUrl: z.string().url().optional().describe("An optional URL to promote within the post."),
 });
 export type GenerateSocialMediaPostInput = z.infer<typeof GenerateSocialMediaPostInputSchema>;
 

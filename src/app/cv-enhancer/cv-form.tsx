@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -126,10 +127,11 @@ const SocialPostDialog = ({ targetPosition, onGenerate }: { targetPosition: stri
     const socialForm = useForm<z.infer<typeof GenerateSocialMediaPostInputSchema>>({
         resolver: zodResolver(GenerateSocialMediaPostInputSchema),
         defaultValues: {
-            topic: `I just enhanced my CV for a ${targetPosition} role using Innovative Enterprises' AI tool!`,
+            topic: `I just enhanced my CV for a ${targetPosition} role using Innovative Enterprises' AI tool! Check it out.`,
             platforms: ['LinkedIn'],
             tone: "Professional",
             generateImage: true,
+            promotionUrl: "https://innovative.om/genius" // This could be dynamically generated
         }
     });
 
@@ -752,16 +754,16 @@ export default function CvForm() {
                         <h4 className="font-semibold text-lg">Your Generated Social Media Post:</h4>
                          {socialPost.imageUrl && (
                             <div className="relative aspect-video w-full my-4 rounded-md overflow-hidden border">
-                                <img src={socialPost.imageUrl} alt="Social media post" className="object-cover"/>
+                                <img src={socialPost.imageUrl} alt="Social media post" className="object-cover w-full h-full"/>
                             </div>
                         )}
                         <div className="mt-2 prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
-                            <p>{socialPost.postContent}</p>
-                            <p className="font-semibold">{socialPost.suggestedHashtags.join(' ')}</p>
+                            <p>{socialPost.posts[0].postContent}</p>
+                            <p className="font-semibold">{socialPost.posts[0].suggestedHashtags.join(' ')}</p>
                         </div>
                         <div className="flex justify-end mt-2">
                             <Button variant="ghost" onClick={() => { 
-                                navigator.clipboard.writeText(socialPost.postContent + '\n\n' + socialPost.suggestedHashtags.join(' '));
+                                navigator.clipboard.writeText(socialPost.posts[0].postContent + '\n\n' + socialPost.posts[0].suggestedHashtags.join(' '));
                                 toast({ title: 'Copied!', description: 'Social post content copied to clipboard.'});
                             }}>
                                 <Copy className="mr-2 h-4 w-4" /> Copy Post
