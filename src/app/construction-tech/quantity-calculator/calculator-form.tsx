@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall, Download, Printer, Briefcase, User, HardHat } from 'lucide-react';
+import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall, Download, Printer, Briefcase, User, HardHat, DollarSign, ArrowRight } from 'lucide-react';
 import { generateBoqCategory, generateFullBoq } from '@/ai/flows/boq-generator';
 import { BoQGeneratorInputSchema, type BoQItem } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -20,6 +20,7 @@ import { analyzeFloorPlan, type FloorPlanAnalysisOutput } from '@/ai/flows/floor
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import Link from 'next/link';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -404,6 +405,45 @@ export default function CalculatorForm() {
              <Button onClick={handleDownloadCsv} variant="outline"><Download className="mr-2 h-4 w-4" /> Download CSV</Button>
              <Button onClick={handlePrintPdf}><Printer className="mr-2 h-4 w-4" /> Print to PDF</Button>
           </CardFooter>
+        </Card>
+      )}
+
+      {boqItems.length > 0 && (
+        <Card className="mt-8">
+            <CardHeader>
+                <CardTitle className="text-2xl flex items-center gap-3"><ArrowRight className="h-6 w-6 text-primary"/> Next Steps</CardTitle>
+                <CardDescription>Now that you have your Bill of Quantities, take the next step in your project.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="grid md:grid-cols-2 gap-6">
+                    <Card className="bg-muted/50">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2"><DollarSign className="h-5 w-5"/> Cost Estimation</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">Use our BidWise Estimator to get a detailed cost breakdown and generate a professional tender response based on your BoQ.</p>
+                        </CardContent>
+                        <CardFooter>
+                            <Button asChild>
+                                <Link href="/construction-tech/bid-estimator">Go to BidWise Estimator</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                     <Card className="bg-muted/50">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2"><HardHat className="h-5 w-5"/> Find a Contractor</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                             <p className="text-sm text-muted-foreground">Post this project to our Business Hub to receive competitive bids from our network of vetted contractors and service providers.</p>
+                        </CardContent>
+                        <CardFooter>
+                             <Button asChild>
+                                <Link href="/submit-work">Post a Job on Business Hub</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </CardContent>
         </Card>
       )}
     </div>
