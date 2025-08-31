@@ -46,6 +46,11 @@ You MUST only recommend assets from this list for the IT hardware portion.
 {{#if surveillanceDetails}}
 - **Surveillance Details:** {{{surveillanceDetails}}}
 {{/if}}
+{{#if coverageType}}
+- **Coverage Type:** {{{coverageType}}}
+{{/if}}
+- **Remote Viewing:** {{#if remoteViewing}}Yes{{else}}No{{/if}}
+- **Audio Recording:** {{#if audioRecording}}Yes{{else}}No{{/if}}
 
 **Your Task:**
 1.  **Analyze and Design:**
@@ -53,7 +58,9 @@ You MUST only recommend assets from this list for the IT hardware portion.
     *   **Software Recommendations:** Based on the project type and goal, recommend essential software (e.g., 'Windows 11 Pro', 'Microsoft 365 Business').
     *   **Surveillance System (if includeSurveillance is true):**
         *   Design a basic but effective CCTV system suitable for the **Project Type** and **Surveillance Details**.
-        *   Determine the number and type of cameras (Dome, Bullet), NVR, and switch. 
+        *   If 'coverageType' is 'Exterior', recommend 'Bullet Cameras'. If 'Interior', recommend 'Dome Cameras'. If not specified, use a mix.
+        *   If 'audioRecording' is true, specify that the cameras should have built-in microphones.
+        *   If 'remoteViewing' is true, ensure the NVR selected is a "Network Video Recorder" capable of IP access.
         *   This system is ALWAYS a **purchase** item.
 
 2.  **Generate Proposal Content:**
@@ -98,6 +105,9 @@ const IctProposalFlow = ai.defineFlow(
         availableAssetsJson
     });
     
-    return output!;
+    if (!output) {
+      throw new Error("The AI model failed to return a valid proposal.");
+    }
+    return output;
   }
 );

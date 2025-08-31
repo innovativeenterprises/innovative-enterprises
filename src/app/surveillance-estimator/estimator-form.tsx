@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video, Building, Eye, Mic, MicOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
@@ -33,7 +33,10 @@ const fileToDataURI = (file: File): Promise<string> => {
 const FormSchema = z.object({
   floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
   coverage: z.enum(['Full', 'Partial']).default('Full'),
+  coverageType: z.enum(['Interior', 'Exterior']).optional(),
   connectivity: z.enum(['WiFi', 'Wired']).default('Wired'),
+  remoteViewing: z.boolean().default(true),
+  audioRecording: z.boolean().default(false),
   recordingDays: z.coerce.number().min(7).default(30),
   areasToMonitor: z.string().optional(),
 });
@@ -55,6 +58,8 @@ export default function EstimatorForm() {
     defaultValues: {
       coverage: 'Full',
       connectivity: 'Wired',
+      remoteViewing: true,
+      audioRecording: false,
       recordingDays: 30,
       areasToMonitor: 'All entrances, main halls, and parking areas.',
     },
@@ -72,12 +77,17 @@ export default function EstimatorForm() {
     setBaseImageUrl(floorPlanUri);
 
     try {
-      const surveillanceDetails = `
+      let surveillanceDetails = `
         - Coverage Level: ${data.coverage}
         - Connectivity: ${data.connectivity}
         - Recording Storage: ${data.recordingDays} days
         - Key Areas to Monitor: ${data.areasToMonitor || 'General coverage'}
+        - Remote Viewing: ${data.remoteViewing ? 'Required' : 'Not Required'}
+        - Audio Recording: ${data.audioRecording ? 'Required' : 'Not Required'}
       `;
+      if (data.coverage === 'Partial' && data.coverageType) {
+        surveillanceDetails += `\n- Partial Coverage Area: ${data.coverageType}`;
+      }
 
       const proposalInput: IctProposalInput = {
         projectName: floorPlanFile.name,
@@ -87,6 +97,9 @@ export default function EstimatorForm() {
         primaryGoal: 'Surveillance system installation',
         includeSurveillance: true,
         surveillanceDetails: surveillanceDetails,
+        coverageType: data.coverageType,
+        remoteViewing: data.remoteViewing,
+        audioRecording: data.audioRecording,
       };
       
       const proposalResult = await generateIctProposal(proposalInput);
@@ -119,7 +132,7 @@ export default function EstimatorForm() {
     }
   };
 
-  const CardSelector = ({ name, options }: { name: "coverage" | "connectivity", options: {value: string, label: string, icon: React.ElementType, description: string}[]}) => (
+  const CardSelector = ({ name, options }: { name: "coverage" | "connectivity" | "remoteViewing" | "audioRecording" | "coverageType", options: {value: any, label: string, icon: React.ElementType, description: string}[]}) => (
     <FormField
       control={form.control}
       name={name}
@@ -127,7 +140,7 @@ export default function EstimatorForm() {
         <FormItem className="space-y-3">
           <div className="grid grid-cols-2 gap-4">
             {options.map((option) => (
-              <FormItem key={option.value}>
+              <FormItem key={String(option.value)}>
                 <FormControl>
                   <Card
                     onClick={() => field.onChange(option.value)}
@@ -150,6 +163,8 @@ export default function EstimatorForm() {
       )}
     />
   );
+  
+  const watchCoverage = form.watch('coverage');
 
 
   if (pageState === 'loading') {
@@ -266,8 +281,7 @@ export default function EstimatorForm() {
                     </FormItem>
                 )}
             />
-
-            <div>
+            <div className="space-y-3">
                 <FormLabel>2. Select Coverage Level</FormLabel>
                 <CardSelector
                     name="coverage"
@@ -278,8 +292,21 @@ export default function EstimatorForm() {
                 />
             </div>
 
-            <div>
-                 <FormLabel>3. Select Connectivity Type</FormLabel>
+             {watchCoverage === 'Partial' && (
+              <div className="space-y-3">
+                  <FormLabel>2a. Specify Partial Coverage Area</FormLabel>
+                   <CardSelector
+                      name="coverageType"
+                      options={[
+                          { value: 'Interior', label: 'Interior', icon: Building, description: 'Monitor inside rooms and hallways.' },
+                          { value: 'Exterior', label: 'Exterior', icon: Camera, description: 'Monitor outdoor areas and building perimeter.' },
+                      ]}
+                  />
+              </div>
+            )}
+            
+            <div className="space-y-3">
+                <FormLabel>3. Select Connectivity Type</FormLabel>
                 <CardSelector
                     name="connectivity"
                     options={[
@@ -288,13 +315,33 @@ export default function EstimatorForm() {
                     ]}
                 />
             </div>
+            
+            <div className="space-y-3">
+                <FormLabel>4. Select Viewing & Audio Options</FormLabel>
+                 <CardSelector
+                    name="remoteViewing"
+                    options={[
+                        { value: true, label: 'Remote Viewing', icon: Eye, description: "Access live feed from your mobile." },
+                        { value: false, label: 'Local Only', icon: Shield, description: "Viewing only available on-site." },
+                    ]}
+                />
+                 <div className="pt-4">
+                  <CardSelector
+                      name="audioRecording"
+                      options={[
+                          { value: true, label: 'With Audio', icon: Mic, description: "Cameras will record audio." },
+                          { value: false, label: 'No Audio', icon: MicOff, description: "Video only, no audio recording." },
+                      ]}
+                  />
+                 </div>
+            </div>
 
             <FormField
               control={form.control}
               name="recordingDays"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2"><History className="h-5 w-5"/> 4. Recording Storage Duration</FormLabel>
+                  <FormLabel className="flex items-center gap-2"><History className="h-5 w-5"/> 5. Recording Storage Duration</FormLabel>
                   <FormControl><Input type="number" {...field} /></FormControl>
                   <FormDescription>How many days of continuous recording do you need to store?</FormDescription>
                   <FormMessage />
@@ -304,7 +351,7 @@ export default function EstimatorForm() {
             
             <FormField control={form.control} name="areasToMonitor" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Video className="h-5 w-5"/> 5. Specific Areas to Monitor (Optional)</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><Video className="h-5 w-5"/> 6. Specific Areas to Monitor (Optional)</FormLabel>
                     <FormControl><Textarea placeholder="e.g., 'Main entrance, back door, parking lot, and server room.'" {...field} rows={3} /></FormControl>
                 </FormItem>
             )} />

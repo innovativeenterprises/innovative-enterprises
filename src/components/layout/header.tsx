@@ -31,6 +31,7 @@ import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import { useSettingsData } from '@/app/admin/settings-table';
+import { ScrollArea } from '../ui/scroll-area';
 
 const navLinks = [
   { href: '/#products', label: 'Products' },
@@ -307,22 +308,24 @@ export default function Header() {
                <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-base font-medium">Services</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className={cn(
-                    "grid w-[400px] gap-3 p-4 md:w-[1200px]",
-                    `md:grid-cols-4`
-                  )}>
-                    {serviceLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                        icon={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
+                  <ScrollArea className="h-[60vh] w-[1200px]">
+                    <ul className={cn(
+                      "grid gap-3 p-4",
+                      `grid-cols-4`
+                    )}>
+                      {serviceLinks.map((component) => (
+                        <ListItem
+                          key={component.title}
+                          title={component.title}
+                          href={component.href}
+                          onClick={handleLinkClick}
+                          icon={component.icon}
+                        >
+                          {component.description}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </ScrollArea>
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -330,22 +333,24 @@ export default function Header() {
                   <Sparkles className="mr-2 h-4 w-4" /> AI Tools
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                   <ul className={cn(
-                    "grid w-[400px] gap-3 p-4 md:w-[1200px]",
-                    `md:grid-cols-4`
-                   )}>
-                    {aiToolsLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                        icon={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
+                   <ScrollArea className="h-[60vh] w-[1200px]">
+                      <ul className={cn(
+                        "grid gap-3 p-4",
+                        `md:grid-cols-4`
+                      )}>
+                        {aiToolsLinks.map((component) => (
+                          <ListItem
+                            key={component.title}
+                            title={component.title}
+                            href={component.href}
+                            onClick={handleLinkClick}
+                            icon={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        ))}
+                      </ul>
+                   </ScrollArea>
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>

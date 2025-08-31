@@ -22,6 +22,9 @@ export const IctProposalInputSchema = z.object({
   primaryGoal: z.string().describe("A description of what the users will be doing, which informs the type of hardware needed."),
   includeSurveillance: z.boolean().describe("Whether the client also needs a quote for a surveillance system."),
   surveillanceDetails: z.string().optional().describe("Specific requirements for the surveillance system, if requested."),
+  coverageType: z.enum(['Interior', 'Exterior']).optional().describe("The specific area to be covered if coverage is partial."),
+  remoteViewing: z.boolean().default(false).describe("Whether remote viewing via mobile is required."),
+  audioRecording: z.boolean().default(false).describe("Whether audio recording capabilities are required."),
 });
 export type IctProposalInput = z.infer<typeof IctProposalInputSchema>;
 
