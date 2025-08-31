@@ -4,11 +4,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Camera, X, RefreshCw, Upload, CheckCircle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Loader2, Camera, X, RefreshCw, CheckCircle } from 'lucide-react';
+import { CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { cn } from '@/lib/utils';
-
 
 export function CameraCapture({ title, onCapture, onCancel, isFlipping }: { title: string, onCapture: (imageUri: string) => void, onCancel: () => void, isFlipping?: boolean }) {
     const videoRef = useRef<HTMLVideoElement>(null);
