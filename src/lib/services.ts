@@ -75,6 +75,13 @@ export const initialServices: Service[] = [
     href: "/raaha",
   },
   {
+    icon: Users,
+    title: "Community Hub",
+    description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
+    enabled: true,
+    href: "/community-hub",
+  },
+  {
     icon: BarChart,
     title: "Momentum BI",
     description: "Turn your data into actionable insights with our business intelligence and data visualization services.",

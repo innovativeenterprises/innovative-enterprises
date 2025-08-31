@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog, DollarSign, Home, GraduationCap } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, Camera, UserCog, DollarSign, Home, GraduationCap, Users } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -51,6 +51,12 @@ const serviceLinks: { title: string; href: string; description: string, icon: Lu
     href: "/business-hub",
     description: "A B2B and B2C marketplace connecting businesses with each other and with new clients for opportunities.",
     icon: Handshake,
+  },
+   {
+    title: "Community Hub",
+    href: "/community-hub",
+    description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
+    icon: Users,
   },
    {
     title: "Construction Tech",
@@ -547,3 +553,5 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
+
+    
