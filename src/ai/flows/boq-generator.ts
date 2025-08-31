@@ -22,6 +22,10 @@ export async function generateBoqCategory(input: BoQCategoryGeneratorInput): Pro
     return boqCategoryGeneratorFlow(input);
 }
 
+export async function generateFullBoq(input: BoQGeneratorInput): Promise<BoQGeneratorOutput> {
+    return fullBoqGeneratorFlow(input);
+}
+
 const categoryPrompt = ai.definePrompt({
   name: 'boqCategoryGeneratorPrompt',
   input: { schema: BoQCategoryGeneratorInputSchema },
@@ -58,4 +62,34 @@ const boqCategoryGeneratorFlow = ai.defineFlow(
     const { output } = await categoryPrompt(input);
     return output!;
   }
+);
+
+
+const fullBoqGeneratorFlow = ai.defineFlow(
+    {
+        name: 'fullBoqGeneratorFlow',
+        inputSchema: BoQGeneratorInputSchema,
+        outputSchema: BoQGeneratorOutputSchema,
+    },
+    async (input) => {
+        const categoriesToGenerate = [
+            'Earthwork',
+            'Concrete Works',
+            'Masonry Works',
+            'Plaster Works',
+            'Finishing Works',
+        ];
+
+        // Generate BoQ for all categories in parallel
+        const categoryPromises = categoriesToGenerate.map(category =>
+            generateBoqCategory({ ...input, category })
+        );
+
+        const results = await Promise.all(categoryPromises);
+
+        // Consolidate all items into a single list
+        const allBoqItems = results.flatMap(result => result.boqItems);
+
+        return { boqItems: allBoqItems };
+    }
 );

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -10,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall } from 'lucide-react';
-import { generateBoqCategory } from '@/ai/flows/boq-generator';
+import { generateBoqCategory, generateFullBoq } from '@/ai/flows/boq-generator';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -87,8 +88,11 @@ export default function CalculatorForm() {
         if (result.dimensions) {
             specs += `\nEstimated building dimensions from plan: ${result.dimensions}.`;
         }
+        if (result.suggestedDvrLocation) {
+            specs += `\nConsider placing the main equipment in the ${result.suggestedDvrLocation}.`;
+        }
         if (result.projectType) {
-            form.setValue('projectType', result.projectType);
+            form.setValue('projectType', result.projectType as any);
         }
         if(result.numberOfFloors) {
             form.setValue('numberOfFloors', result.numberOfFloors);
@@ -133,6 +137,37 @@ export default function CalculatorForm() {
     } catch (e) {
         console.error(e);
         toast({ title: "Calculation Failed", description: `Could not generate BoQ for ${category}.`, variant: 'destructive' });
+    } finally {
+        setIsGenerating(null);
+    }
+  };
+
+  const handleFullBoqGeneration = async () => {
+    setIsGenerating('all');
+    setBoqItems([]);
+    setCompletedSteps([]);
+    const formData = form.getValues();
+     if (!formData.floorPlanUri) {
+        toast({title: "Error", description: "Please analyze a floor plan first.", variant: 'destructive'});
+        setIsGenerating(null);
+        return;
+    }
+
+    try {
+        const result = await generateFullBoq({
+            projectType: formData.projectType,
+            numberOfFloors: formData.numberOfFloors,
+            floorPlanUri: formData.floorPlanUri,
+            additionalSpecs: formData.additionalSpecs
+        });
+
+        setBoqItems(result.boqItems);
+        setCompletedSteps(calculationSteps.map(s => s.id));
+        setGeneratedSummary("All categories have been calculated. This provides a preliminary Bill of Quantities for your project.");
+
+    } catch (e) {
+         console.error(e);
+        toast({ title: "Calculation Failed", description: `Could not generate the full BoQ. Please try again.`, variant: 'destructive' });
     } finally {
         setIsGenerating(null);
     }
@@ -236,10 +271,10 @@ export default function CalculatorForm() {
           <Card>
             <CardHeader>
               <CardTitle>Generate Bill of Quantities</CardTitle>
-              <CardDescription>Calculate quantities for each category step-by-step. The results will appear in the table below.</CardDescription>
+              <CardDescription>Generate quantities for each category step-by-step, or generate the full BoQ at once.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
                 {calculationSteps.map(step => (
                     <Button 
                         key={step.id} 
@@ -257,6 +292,20 @@ export default function CalculatorForm() {
                     </Button>
                 ))}
               </div>
+                <div className="pt-4 border-t">
+                     <Button 
+                        onClick={handleFullBoqGeneration} 
+                        disabled={!!isGenerating}
+                        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                        size="lg"
+                    >
+                        {isGenerating === 'all' ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating Full BoQ...</>
+                        ) : (
+                           <><Sparkles className="mr-2 h-4 w-4" /> Generate Full BoQ (All Categories)</>
+                        )}
+                    </Button>
+                </div>
             </CardContent>
           </Card>
        )}
