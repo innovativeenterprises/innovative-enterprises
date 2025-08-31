@@ -7,6 +7,9 @@ export interface CommunityMember {
   memberType: 'Head of Family' | 'Spouse' | 'Child';
   contact: string;
   photo: string;
+  position?: string;
+  employer?: string;
+  address?: string;
 }
 
 export const initialMembers: CommunityMember[] = [
@@ -17,7 +20,10 @@ export const initialMembers: CommunityMember[] = [
         status: "Active",
         memberType: "Head of Family",
         contact: "+968 99123456",
-        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop"
+        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
+        position: "Senior Engineer",
+        employer: "Petroleum Development Oman",
+        address: "Al-Khuwair, Muscat"
     },
     {
         id: "mem_2",
@@ -26,7 +32,10 @@ export const initialMembers: CommunityMember[] = [
         status: "Active",
         memberType: "Spouse",
         contact: "fatima.b@example.com",
-        photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop"
+        photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
+        position: "Marketing Manager",
+        employer: "Omantel",
+        address: "Al-Khuwair, Muscat"
     },
     {
         id: "mem_3",
@@ -35,7 +44,10 @@ export const initialMembers: CommunityMember[] = [
         status: "Active",
         memberType: "Head of Family",
         contact: "+971 50 123 4567",
-        photo: "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format&fit=crop"
+        photo: "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format&fit=crop",
+        position: "Architect",
+        employer: "AECOM",
+        address: "Shatti Al-Qurum, Muscat"
     },
     {
         id: "mem_4",
@@ -53,6 +65,9 @@ export const initialMembers: CommunityMember[] = [
         status: "Inactive",
         memberType: "Head of Family",
         contact: "+968 98765432",
-        photo: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=400&auto=format&fit=crop"
+        photo: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=400&auto=format&fit=crop",
+        position: "Consultant",
+        employer: "Self-Employed",
+        address: "Madinat Al-Sultan Qaboos, Muscat"
     }
 ];

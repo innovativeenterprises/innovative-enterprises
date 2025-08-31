@@ -16,10 +16,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { CommunityMember } from "@/lib/community-members";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
+import { PlusCircle, Edit, Trash2, ArrowLeft, Users, Wand2, Loader2, FileCheck2 } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
 import Link from 'next/link';
+import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
+import { Alert, AlertTitle } from "@/components/ui/alert";
+
 
 // Hook to connect to the global store for members
 export const useMembersData = () => {
@@ -59,6 +62,10 @@ const MemberSchema = z.object({
   joinDate: z.string(), // Will be handled as ISO string
   photoUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   photoFile: z.any().optional(),
+  position: z.string().optional(),
+  employer: z.string().optional(),
+  address: z.string().optional(),
+  identityDocument: z.any().optional(),
 }).refine(data => data.photoUrl || (data.photoFile && data.photoFile.length > 0), {
     message: "A Photo URL or a Photo File is required.",
     path: ["photoUrl"],
@@ -69,6 +76,8 @@ type MemberValues = z.infer<typeof MemberSchema> & { photo: string };
 const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityMember, onSave: (v: MemberValues, id?: string) => void, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(member?.photo || null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const { toast } = useToast();
     
     const form = useForm<z.infer<typeof MemberSchema>>({
         resolver: zodResolver(MemberSchema),
@@ -87,6 +96,47 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
             setImagePreview(member?.photo || null);
         }
     }, [watchPhotoUrl, watchPhotoFile, member?.photo]);
+    
+    useEffect(() => {
+        if (isOpen) {
+            form.reset(member || { name: "", contact: "", memberType: 'Head of Family', status: 'Active', joinDate: new Date().toISOString().split('T')[0] });
+            setImagePreview(member?.photo || null);
+        }
+    }, [member, isOpen, form]);
+
+    const handleIdAnalysis = async () => {
+        const idFile = form.getValues('identityDocument');
+        if (!idFile || idFile.length === 0) {
+            toast({ title: 'Please select an identity document first.', variant: 'destructive' });
+            return;
+        }
+
+        setIsAnalyzing(true);
+        toast({ title: 'Analyzing Document...', description: 'Please wait while the AI extracts information.' });
+
+        try {
+            const uri = await fileToDataURI(idFile[0]);
+            const result = await analyzeIdentity({ idDocumentFrontUri: uri });
+            
+            if (result.personalDetails?.fullName) {
+                form.setValue('name', result.personalDetails.fullName);
+            }
+            if (result.personalDetails?.phone) {
+                form.setValue('contact', result.personalDetails.phone);
+            }
+             if (result.personalDetails?.email) {
+                form.setValue('contact', result.personalDetails.email);
+            }
+
+            toast({ title: "Analysis Complete", description: "Member details have been pre-filled." });
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Analysis Failed", description: "Could not analyze the document.", variant: "destructive" });
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
 
     const onSubmit: SubmitHandler<z.infer<typeof MemberSchema>> = async (data) => {
         let photoValue = "";
@@ -107,6 +157,25 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
                 <DialogHeader><DialogTitle>{member ? "Edit" : "Add"} Member</DialogTitle></DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <Card className="bg-muted/50 p-4">
+                             <FormField control={form.control} name="identityDocument" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>AI-Powered Onboarding</FormLabel>
+                                    <div className="flex gap-2">
+                                        <FormControl className="flex-1">
+                                            <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <Button type="button" variant="secondary" onClick={handleIdAnalysis} disabled={isAnalyzing}>
+                                            {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                            Analyze & Pre-fill
+                                        </Button>
+                                    </div>
+                                    <FormDescription className="text-xs">Upload a passport or ID card. This document is NOT saved.</FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}/>
+                        </Card>
+
                         <FormField control={form.control} name="name" render={({ field }) => (
                             <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
@@ -120,6 +189,18 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
                                 </SelectContent></Select><FormMessage /></FormItem>
                             )} />
                         </div>
+                        
+                         <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="position" render={({ field }) => (
+                                <FormItem><FormLabel>Position (Optional)</FormLabel><FormControl><Input placeholder="e.g., Software Engineer" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="employer" render={({ field }) => (
+                                <FormItem><FormLabel>Employer (Optional)</FormLabel><FormControl><Input placeholder="e.g., Google" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
+                         <FormField control={form.control} name="address" render={({ field }) => (
+                            <FormItem><FormLabel>Current Address (Optional)</FormLabel><FormControl><Input placeholder="e.g., Al-Khuwair, Muscat" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
                         
                         <Card>
                             <CardContent className="p-4 space-y-4">
@@ -162,11 +243,12 @@ export default function MembershipPage() {
     const { toast } = useToast();
 
     const handleSave = (values: MemberValues, id?: string) => {
+        const { identityDocument, ...restOfValues } = values; // Exclude identityDocument from saving
         if (id) {
-            setMembers(prev => prev.map(m => m.id === id ? { ...m, ...values } : m));
+            setMembers(prev => prev.map(m => m.id === id ? { ...m, ...restOfValues } : m));
             toast({ title: "Member updated." });
         } else {
-            const newMember: CommunityMember = { ...values, id: `member_${Date.now()}` };
+            const newMember: CommunityMember = { ...restOfValues, id: `member_${Date.now()}` };
             setMembers(prev => [newMember, ...prev]);
             toast({ title: "Member added." });
         }
@@ -219,17 +301,25 @@ export default function MembershipPage() {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Contact</TableHead><TableHead>Type</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Position / Employer</TableHead><TableHead>Type</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {members.map(member => (
                             <TableRow key={member.id}>
                                 <TableCell>
                                      <div className="flex items-center gap-3">
                                         <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover"/>
-                                        <p className="font-medium">{member.name}</p>
+                                        <div>
+                                          <p className="font-medium">{member.name}</p>
+                                          <p className="text-sm text-muted-foreground">{member.contact}</p>
+                                        </div>
                                     </div>
                                 </TableCell>
-                                <TableCell>{member.contact}</TableCell>
+                                <TableCell>
+                                  {member.position && <div>
+                                    <p className="font-medium">{member.position}</p>
+                                    {member.employer && <p className="text-sm text-muted-foreground">{member.employer}</p>}
+                                  </div>}
+                                </TableCell>
                                 <TableCell><Badge variant="outline">{member.memberType}</Badge></TableCell>
                                 <TableCell>{getStatusBadge(member.status)}</TableCell>
                                 <TableCell className="text-right">
