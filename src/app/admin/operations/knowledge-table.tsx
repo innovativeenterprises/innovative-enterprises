@@ -130,7 +130,7 @@ const UploadDocumentDialog = ({
                             <FormItem>
                                 <FormLabel>Import from URL(s)</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="https://example.com/law1.html&#x0a;https://example.com/regulation2.pdf" rows={3} {...field} />
+                                    <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={3} {...field} />
                                 </FormControl>
                                 <FormDescription>Enter one URL per line to add multiple sources at once.</FormDescription>
                                 <FormMessage />
@@ -320,7 +320,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                                 <FormItem>
                                 <FormLabel className="flex items-center gap-2"><LinkIcon className="h-5 w-5"/> 3. Provide Knowledge URLs</FormLabel>
                                 <FormControl>
-                                <Textarea placeholder="https://example.com/law1.html&#x0a;https://example.com/regulation2.pdf" rows={3} {...field} />
+                                <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={3} {...field} />
                                 </FormControl>
                                 <FormDescription>Enter one URL per line. The AI will scrape the content from these pages.</FormDescription>
                                 <FormMessage />
@@ -488,10 +488,7 @@ export default function KnowledgeTable() {
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{doc.documentName}". This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(doc.id)}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
+                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(doc.id)}>Delete</AlertDialogAction></AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
                                     </div>

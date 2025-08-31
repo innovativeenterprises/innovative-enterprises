@@ -5,7 +5,7 @@
  * @fileOverview An AI flow that simulates the training of another AI agent.
  *
  * This file contains the server-side logic for submitting training data.
- * - trainAgent - A function that handles the training data submission.
+ * - trainAgent - a function that handles the training data submission.
  */
 
 import { ai } from '@/ai/genkit';
