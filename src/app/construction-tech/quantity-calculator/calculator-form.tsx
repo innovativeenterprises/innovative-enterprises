@@ -1,16 +1,16 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall } from 'lucide-react';
+import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall, Download, Printer, Briefcase } from 'lucide-react';
 import { generateBoqCategory, generateFullBoq } from '@/ai/flows/boq-generator';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -18,6 +18,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { analyzeFloorPlan, type FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -36,6 +39,7 @@ const FormSchema = z.object({
   }),
   numberOfFloors: z.coerce.number().min(1, "Number of floors must be at least 1."),
   additionalSpecs: z.string().optional(),
+  projectName: z.string().min(3, "Please enter a project name or reference."),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
@@ -54,12 +58,14 @@ export default function CalculatorForm() {
   const [boqItems, setBoqItems] = useState<BoQItem[]>([]);
   const [generatedSummary, setGeneratedSummary] = useState<string | null>(null);
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+  const boqTableRef = useRef(null);
   
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+        projectName: '',
         projectType: 'Residential Villa',
         numberOfFloors: 1,
         additionalSpecs: '',
@@ -96,6 +102,9 @@ export default function CalculatorForm() {
         }
         if(result.numberOfFloors) {
             form.setValue('numberOfFloors', result.numberOfFloors);
+        }
+        if(!form.getValues('projectName')) {
+            form.setValue('projectName', `Project for ${floorPlanFile[0].name}`);
         }
 
         form.setValue('additionalSpecs', specs.trim());
@@ -172,6 +181,58 @@ export default function CalculatorForm() {
         setIsGenerating(null);
     }
   };
+  
+   const handleDownloadCsv = () => {
+    const headers = ["Category", "Item Description", "Unit", "Quantity", "Notes"];
+    const rows = boqItems.map(item => [
+      `"${item.category}"`,
+      `"${item.item}"`,
+      `"${item.unit}"`,
+      item.quantity.toFixed(2),
+      `"${item.notes || ''}"`
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.join('\n')].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `BoQ_${form.getValues('projectName').replace(/\s+/g, '_')}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handlePrintPdf = () => {
+    const doc = new jsPDF();
+    doc.text(`Bill of Quantities for: ${form.getValues('projectName')}`, 14, 20);
+    (doc as any).autoTable({
+        html: boqTableRef.current,
+        startY: 30,
+        headStyles: { fillColor: [41, 52, 98] },
+    });
+    doc.save(`BoQ_${form.getValues('projectName').replace(/\s+/g, '_')}.pdf`);
+  };
+
+  const handleSaveToBriefcase = () => {
+    const projectName = form.getValues('projectName');
+    const newBoq = {
+        id: `boq_${Date.now()}`,
+        name: projectName,
+        date: new Date().toISOString(),
+        items: boqItems,
+    };
+    try {
+        const existingBoqs = JSON.parse(localStorage.getItem('saved_boqs') || '[]');
+        localStorage.setItem('saved_boqs', JSON.stringify([...existingBoqs, newBoq]));
+        toast({ title: "Saved!", description: `BoQ for "${projectName}" has been saved to your E-Briefcase.`});
+    } catch(e) {
+         toast({ title: "Error", description: "Could not save BoQ to E-Briefcase.", variant: "destructive" });
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -183,6 +244,9 @@ export default function CalculatorForm() {
         <CardContent>
           <Form {...form}>
             <form className="space-y-6">
+                <FormField control={form.control} name="projectName" render={({ field }) => (
+                    <FormItem><FormLabel>Project Name / Reference</FormLabel><FormControl><Input placeholder="e.g., Al Amerat Villa Project" {...field} /></FormControl><FormMessage/></FormItem>
+                )}/>
                 <FormField
                     control={form.control}
                     name="floorPlanFile"
@@ -193,11 +257,7 @@ export default function CalculatorForm() {
                                 <FormControl className="flex-1">
                                     <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => {
                                         field.onChange(e.target.files);
-                                        // Reset state when a new file is chosen
-                                        setAnalysis(null);
-                                        setBoqItems([]);
-                                        setCompletedSteps([]);
-                                        setGeneratedSummary(null);
+                                        setAnalysis(null); setBoqItems([]); setCompletedSteps([]); setGeneratedSummary(null);
                                     }} />
                                 </FormControl>
                                 <Button type="button" variant="secondary" onClick={handleFloorPlanAnalysis} disabled={isAnalyzing}>
@@ -221,47 +281,21 @@ export default function CalculatorForm() {
                     </Alert>
                 )}
                 <div className="grid md:grid-cols-2 gap-6">
-                     <FormField
-                        control={form.control}
-                        name="projectType"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Project Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                                <FormControl><SelectTrigger><SelectValue placeholder="Select a project type..." /></SelectTrigger></FormControl>
-                                <SelectContent>
-                                    <SelectItem value="Residential Villa">Residential Villa</SelectItem>
-                                    <SelectItem value="Commercial Building">Commercial Building</SelectItem>
-                                    <SelectItem value="Industrial Warehouse">Industrial Warehouse</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
+                     <FormField control={form.control} name="projectType" render={({ field }) => (
+                        <FormItem><FormLabel>Project Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a project type..." /></SelectTrigger></FormControl><SelectContent>
+                            <SelectItem value="Residential Villa">Residential Villa</SelectItem>
+                            <SelectItem value="Commercial Building">Commercial Building</SelectItem>
+                            <SelectItem value="Industrial Warehouse">Industrial Warehouse</SelectItem>
+                        </SelectContent></Select><FormMessage /></FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="numberOfFloors"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Number of Floors</FormLabel>
-                                <FormControl><Input type="number" min="1" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    <FormField control={form.control} name="numberOfFloors" render={({ field }) => (
+                        <FormItem><FormLabel>Number of Floors</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
+                    )}/>
                 </div>
-                <FormField
-                    control={form.control}
-                    name="additionalSpecs"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Additional Specifications (Optional)</FormLabel>
-                            <FormControl><Textarea placeholder="e.g., 'Use high-strength concrete for foundations. Include basic electrical wiring and plumbing fixtures in the BoQ.'" rows={4} {...field} /></FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <FormField control={form.control} name="additionalSpecs" render={({ field }) => (
+                    <FormItem><FormLabel>Additional Specifications (Optional)</FormLabel><FormControl><Textarea placeholder="e.g., 'Use high-strength concrete for foundations. Include basic electrical wiring and plumbing fixtures in the BoQ.'" rows={4} {...field} /></FormControl><FormMessage /></FormItem>
+                )}/>
             </form>
           </Form>
         </CardContent>
@@ -318,30 +352,37 @@ export default function CalculatorForm() {
             {generatedSummary && <CardDescription>{generatedSummary}</CardDescription>}
           </CardHeader>
           <CardContent>
-             <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Category</TableHead>
-                        <TableHead>Item Description</TableHead>
-                        <TableHead className="text-center">Unit</TableHead>
-                        <TableHead className="text-right">Quantity</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {boqItems.map((item, index) => (
-                        <TableRow key={index}>
-                            <TableCell className="font-medium">{item.category}</TableCell>
-                            <TableCell>
-                                {item.item}
-                                {item.notes && <p className="text-xs text-muted-foreground italic">Note: {item.notes}</p>}
-                            </TableCell>
-                            <TableCell className="text-center">{item.unit}</TableCell>
-                            <TableCell className="text-right font-mono">{item.quantity.toFixed(2)}</TableCell>
+             <div className="overflow-x-auto">
+                <Table ref={boqTableRef}>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Category</TableHead>
+                            <TableHead>Item Description</TableHead>
+                            <TableHead className="text-center">Unit</TableHead>
+                            <TableHead className="text-right">Quantity</TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-             </Table>
+                    </TableHeader>
+                    <TableBody>
+                        {boqItems.map((item, index) => (
+                            <TableRow key={index}>
+                                <TableCell className="font-medium">{item.category}</TableCell>
+                                <TableCell>
+                                    {item.item}
+                                    {item.notes && <p className="text-xs text-muted-foreground italic">Note: {item.notes}</p>}
+                                </TableCell>
+                                <TableCell className="text-center">{item.unit}</TableCell>
+                                <TableCell className="text-right font-mono">{item.quantity.toFixed(2)}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+             </div>
           </CardContent>
+          <CardFooter className="flex-col sm:flex-row gap-2 justify-end">
+             <Button onClick={handleSaveToBriefcase} variant="outline"><Briefcase className="mr-2 h-4 w-4" /> Save to Briefcase</Button>
+             <Button onClick={handleDownloadCsv} variant="outline"><Download className="mr-2 h-4 w-4" /> Download CSV</Button>
+             <Button onClick={handlePrintPdf}><Printer className="mr-2 h-4 w-4" /> Print to PDF</Button>
+          </CardFooter>
         </Card>
       )}
     </div>

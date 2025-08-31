@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2, User, Wand2 } from 'lucide-react';
+import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2, User, Wand2, ClipboardList } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -17,6 +17,8 @@ import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -61,6 +63,13 @@ interface UserDocument {
     analysis?: CrAnalysisOutput | IdentityAnalysisOutput | null;
 }
 
+interface SavedBoQ {
+    id: string;
+    name: string;
+    date: string;
+    items: BoQItem[];
+}
+
 interface BriefcaseData {
     recordNumber: string;
     applicantName: string;
@@ -68,6 +77,7 @@ interface BriefcaseData {
     date: string;
     registrations: ServiceRegistration[];
     userDocuments: UserDocument[];
+    savedBoqs: SavedBoQ[];
 }
 
 const NewServiceSchema = z.object({
@@ -317,6 +327,7 @@ const createEmptyBriefcase = (): BriefcaseData => ({
     date: new Date().toISOString(),
     registrations: [],
     userDocuments: [],
+    savedBoqs: [],
 });
 
 const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | IdentityAnalysisOutput }) => {
@@ -347,23 +358,30 @@ export default function BriefcasePage() {
     useEffect(() => {
         try {
             const storedData = localStorage.getItem('user_briefcase');
+            const storedBoqs = JSON.parse(localStorage.getItem('saved_boqs') || '[]');
+            
+            let dataToSet;
             if (storedData) {
-                const parsedData = JSON.parse(storedData);
-                // Backwards compatibility for old data structure
-                if (parsedData.serviceChargesDataUri && !parsedData.registrations) {
-                    parsedData.registrations = [{ category: 'General Services', priceListUrl: parsedData.serviceChargesDataUri, priceListFilename: 'service-charges.csv' }];
-                    delete parsedData.serviceChargesDataUri;
-                }
-                if (!parsedData.registrations) parsedData.registrations = [];
-                if (!parsedData.userDocuments) parsedData.userDocuments = [];
-                setBriefcaseData(parsedData);
+                dataToSet = JSON.parse(storedData);
             } else {
-                // If no data, create an empty briefcase for the new user
-                const emptyBriefcase = createEmptyBriefcase();
-                setBriefcaseData(emptyBriefcase);
-                // Optionally save it immediately so it persists on refresh
-                localStorage.setItem('user_briefcase', JSON.stringify(emptyBriefcase));
+                dataToSet = createEmptyBriefcase();
             }
+
+            // Always sync BoQs
+            dataToSet.savedBoqs = storedBoqs;
+            
+            // Backwards compatibility for old data structures
+            if (dataToSet.serviceChargesDataUri && !dataToSet.registrations) {
+                dataToSet.registrations = [{ category: 'General Services', priceListUrl: dataToSet.serviceChargesDataUri, priceListFilename: 'service-charges.csv' }];
+                delete dataToSet.serviceChargesDataUri;
+            }
+            if (!dataToSet.registrations) dataToSet.registrations = [];
+            if (!dataToSet.userDocuments) dataToSet.userDocuments = [];
+            
+            setBriefcaseData(dataToSet);
+            // Optionally re-save to update structure
+            localStorage.setItem('user_briefcase', JSON.stringify(dataToSet));
+
         } catch (error) {
             console.error("Failed to load briefcase data from localStorage", error);
             toast({ title: 'Error Loading Data', description: 'Could not retrieve your saved documents.', variant: 'destructive'});
@@ -478,6 +496,32 @@ export default function BriefcasePage() {
                                 Welcome, <span className="font-semibold text-primary">{briefcaseData.applicantName}</span>. Manage your documents, agreements, and services here.
                             </p>
                         </div>
+                         <Card>
+                            <CardHeader className="flex-row justify-between items-center">
+                                <div>
+                                    <CardTitle className="flex items-center gap-2"><ClipboardList className="h-5 w-5"/> Saved BoQ Projects</CardTitle>
+                                    <CardDescription>Review your saved Bill of Quantities projects.</CardDescription>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                {briefcaseData.savedBoqs && briefcaseData.savedBoqs.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {briefcaseData.savedBoqs.map(boq => (
+                                            <Card key={boq.id} className="p-4 bg-muted/50">
+                                                <div className="flex justify-between items-center">
+                                                    <div>
+                                                        <p className="font-semibold">{boq.name}</p>
+                                                        <p className="text-sm text-muted-foreground">Saved on: {new Date(boq.date).toLocaleDateString()}</p>
+                                                    </div>
+                                                </div>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground text-center py-4">You have no saved BoQ projects.</p>
+                                )}
+                            </CardContent>
+                        </Card>
                         <Card>
                             <CardHeader className="flex-row justify-between items-center">
                                 <div>

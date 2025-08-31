@@ -29,9 +29,17 @@ import { initialLeases, type SignedLease } from './leases';
 import { initialProperties, type Property } from './properties';
 import { initialAuditSubmissions, type AuditSubmission } from './audit-submissions';
 import { initialStudents, type Student } from './students';
+import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 
 export interface CartItem extends Product {
   quantity: number;
+}
+
+export interface SavedBoQ {
+    id: string;
+    name: string;
+    date: string;
+    items: BoQItem[];
 }
 
 type AppState = {
@@ -57,6 +65,7 @@ type AppState = {
   properties: Property[];
   auditSubmissions: AuditSubmission[];
   students: Student[];
+  savedBoqs: SavedBoQ[];
   cart: CartItem[];
 };
 
@@ -84,6 +93,7 @@ let state: AppState = {
   properties: initialProperties,
   auditSubmissions: initialAuditSubmissions,
   students: initialStudents,
+  savedBoqs: [],
   cart: [],
 };
 

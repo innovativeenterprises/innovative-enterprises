@@ -1,6 +1,10 @@
 
+'use client'
+
 import { Calculator } from "lucide-react";
 import CalculatorForm from "./calculator-form";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default function QuantityCalculatorPage() {
   return (
