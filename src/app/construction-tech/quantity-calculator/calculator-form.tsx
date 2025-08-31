@@ -98,6 +98,15 @@ export default function CalculatorForm() {
         if(result.numberOfFloors) {
             form.setValue('numberOfFloors', result.numberOfFloors);
         }
+        if(result.projectName) {
+            form.setValue('projectName', result.projectName);
+        }
+        if(result.ownerName) {
+            form.setValue('ownerName', result.ownerName);
+        }
+        if(result.contractorName) {
+            form.setValue('contractorName', result.contractorName);
+        }
         if(!form.getValues('projectName')) {
             form.setValue('projectName', `Project for ${floorPlanFile[0].name}`);
         }

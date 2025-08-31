@@ -32,6 +32,10 @@ const prompt = ai.definePrompt({
 2.  **Suggest DVR Location:** Based on the layout, suggest a logical, secure, and central location for the main DVR/NVR and network switch. Common locations include "IT Room," "Storage closet under stairs," or "Main office utility closet." If no obvious location is visible, return an empty string.
 3.  **Determine Number of Floors:** Examine the image and any text (like "Ground Floor Plan", "First Floor Plan") to determine the number of floors. If you see plans for Ground and First floor, the number is 2. If it's not clear, return 0.
 4.  **Determine Project Type:** Look for clues in the image (room labels like "Bedroom", "Office", "Warehouse Bay", "Retail Space") to classify the project into one of the following: 'Residential Villa', 'Commercial Building', or 'Industrial Warehouse'. If you cannot determine the type, return an empty string.
+5.  **Extract Names:** Look for a title block or text on the document to identify the following. If they are not present, leave the fields blank.
+    *   **projectName:** The title or name of the project.
+    *   **ownerName:** The name of the client or owner.
+    *   **contractorName:** The name of the main contractor or construction company.
 
 Return all extracted information in the specified structured JSON format. It is critical that all fields are present in the final JSON object.
 `,
