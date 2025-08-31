@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, Info, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video, Building, Eye, Mic, MicOff, Users, Briefcase } from 'lucide-react';
+import { Loader2, Sparkles, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video, Building, Eye, Mic, MicOff, Users, Briefcase } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
@@ -96,6 +96,7 @@ export default function EstimatorForm() {
 
       const proposalInput: IctProposalInput = {
         projectName: floorPlanFile.name,
+        projectType: analysis?.projectType as any,
         includeSurveillance: true,
         surveillanceDetails: surveillanceDetails,
         purpose: data.purpose,
@@ -187,7 +188,16 @@ export default function EstimatorForm() {
         if (result.suggestedDvrLocation) {
             specs += `\nConsider placing the main equipment in the ${result.suggestedDvrLocation}.`;
         }
-        form.setValue('areasToMonitor', specs.trim());
+        
+        if (result.projectType) {
+            const currentValues = form.getValues();
+            form.reset({
+                ...currentValues,
+                areasToMonitor: specs.trim(),
+            });
+        } else {
+             form.setValue('areasToMonitor', specs.trim());
+        }
 
         toast({ title: 'Floor Plan Analyzed', description: 'AI has provided insights. Review the pre-filled "Areas to Monitor" section.' });
 
@@ -334,6 +344,7 @@ export default function EstimatorForm() {
                     <FileCheck2 className="h-4 w-4" />
                     <AlertTitle>AI Analysis Complete</AlertTitle>
                     <AlertDescription>
+                        {analysis.projectType && <p><strong>Inferred Project Type:</strong> {analysis.projectType}</p>}
                         {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
                         {analysis.suggestedDvrLocation && <p><strong>Suggested Equipment Room:</strong> {analysis.suggestedDvrLocation}</p>}
                         <p className="text-xs mt-1">This information has been added to the "Specific Areas to Monitor" section below. You can edit it if needed.</p>

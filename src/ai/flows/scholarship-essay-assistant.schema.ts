@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview Schemas and types for the Scholarship Essay Assistant AI flow.
  */

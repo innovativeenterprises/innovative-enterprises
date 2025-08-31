@@ -15,6 +15,9 @@ export const IctProposalInputSchema = z.object({
     'Special Event (e.g., conference, hackathon)',
     'Short-term Project (e.g., data analysis, software dev)',
     'Hardware Evaluation or Testing',
+    'Residential Villa',
+    'Commercial Building',
+    'Industrial Warehouse',
     'Other'
   ]).optional().describe("The type of project the client is undertaking."),
   purpose: z.enum(['General Security', 'Employee Monitoring', 'Asset Protection', 'Customer Traffic Analysis']).optional().describe("The primary purpose of the surveillance system."),
