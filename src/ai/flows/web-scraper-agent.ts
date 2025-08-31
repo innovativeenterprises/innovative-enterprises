@@ -140,7 +140,7 @@ Your task is to analyze this content and provide a structured summary.
 1.  **Title**: Extract the most likely title of the page from the content.
 2.  **Summary**: Write a comprehensive, multi-paragraph summary of the page's main topic and arguments. If tables are present, incorporate key data points from them into your summary.
 3.  **Key Points**: List the 5-7 most important facts, findings, or conclusions from the text.
-4.  **Extracted Links**: For each link provided in the input, analyze its anchor text and URL. Provide a brief, one-sentence description of what the link likely points to. Classify its purpose (e.g., "Internal Navigation," "External Resource," "Download Link").
+4.  **Extracted Links**: For each link provided in the input, analyze its anchor text and URL. Provide a brief, one-sentence description of what the link likely points to.
 5.  **Source**: Return the original source URL: {{{sourceUrl}}}
 
 Return the response in the specified JSON format.

@@ -27,10 +27,10 @@ const platformPillars = [
         href: "/community-hub/events-finance"
     },
     {
-        icon: PieChart,
-        title: "Financial Transparency",
-        description: "Manage membership fees and donations with clear, accessible financial reporting for all members.",
-        href: "/community-hub/events-finance"
+        icon: Users,
+        title: "Public Member Directory",
+        description: "A public directory for community members to connect and network with each other.",
+        href: "/community-hub/directory"
     }
 ];
 
