@@ -3,20 +3,22 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Users, Heart, PieChart, Landmark } from "lucide-react";
+import { ArrowRight, Users, Heart, PieChart, Landmark, UserCog } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
 
 const platformPillars = [
     {
-        icon: Users,
+        icon: UserCog,
         title: "Membership Management",
-        description: "Maintain a secure and up-to-date registry of all community members and their families."
+        description: "Maintain a secure and up-to-date registry of all community members and their families.",
+        href: "/community-hub/membership"
     },
     {
         icon: Landmark,
         title: "Committee Governance",
-        description: "Run fair and transparent elections for committee members with our AI-powered election tools."
+        description: "Run fair and transparent elections for committee members with our AI-powered election tools.",
+        href: "/community-hub/elections"
     },
     {
         icon: Heart,
@@ -42,13 +44,6 @@ export default function CommunityHubPage() {
           <p className="mt-4 text-lg text-muted-foreground">
             A comprehensive digital solution for expatriate communities and charitable organizations to manage their affairs, foster engagement, and build a stronger, self-sufficient network.
           </p>
-           <div className="mt-8">
-               <Button asChild size="lg">
-                    <Link href="/community-hub/elections">
-                        Launch Elections Manager <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
-                </Button>
-           </div>
         </div>
 
         <div className="max-w-6xl mx-auto mt-20">
@@ -58,16 +53,23 @@ export default function CommunityHubPage() {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {platformPillars.map((pillar) => (
-                    <Card key={pillar.title} className="text-center bg-card flex flex-col">
-                         <CardHeader className="items-center">
-                            <div className="bg-primary/10 p-3 rounded-full">
-                                <pillar.icon className="w-8 h-8 text-primary" />
-                            </div>
-                            <CardTitle className="pt-2">{pillar.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex-grow">
-                            <p className="text-muted-foreground">{pillar.description}</p>
-                        </CardContent>
+                    <Card key={pillar.title} className="text-center bg-card flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <Link href={pillar.href || '#'} className="flex flex-col flex-grow">
+                            <CardHeader className="items-center">
+                                <div className="bg-primary/10 p-3 rounded-full">
+                                    <pillar.icon className="w-8 h-8 text-primary" />
+                                </div>
+                                <CardTitle className="pt-2">{pillar.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex-grow">
+                                <p className="text-muted-foreground">{pillar.description}</p>
+                            </CardContent>
+                             {pillar.href && (
+                                <CardFooter className="justify-center">
+                                    <Button variant="ghost" className="text-primary">Launch Tool <ArrowRight className="ml-2 h-4 w-4"/></Button>
+                                </CardFooter>
+                            )}
+                        </Link>
                     </Card>
                 ))}
             </div>

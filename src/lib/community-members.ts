@@ -1,0 +1,58 @@
+
+export interface CommunityMember {
+  id: string;
+  name: string;
+  joinDate: string; // ISO Date string 'YYYY-MM-DD'
+  status: 'Active' | 'Inactive' | 'Pending Review';
+  memberType: 'Head of Family' | 'Spouse' | 'Child';
+  contact: string;
+  photo: string;
+}
+
+export const initialMembers: CommunityMember[] = [
+    {
+        id: "mem_1",
+        name: "Ahmed Al-Farsi",
+        joinDate: "2022-01-15",
+        status: "Active",
+        memberType: "Head of Family",
+        contact: "+968 99123456",
+        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop"
+    },
+    {
+        id: "mem_2",
+        name: "Fatima Al-Balushi",
+        joinDate: "2022-01-15",
+        status: "Active",
+        memberType: "Spouse",
+        contact: "fatima.b@example.com",
+        photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop"
+    },
+    {
+        id: "mem_3",
+        name: "John Smith",
+        joinDate: "2023-05-20",
+        status: "Active",
+        memberType: "Head of Family",
+        contact: "+971 50 123 4567",
+        photo: "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format&fit=crop"
+    },
+    {
+        id: "mem_4",
+        name: "Priya Sharma",
+        joinDate: "2023-09-10",
+        status: "Pending Review",
+        memberType: "Head of Family",
+        contact: "priya.sharma@example.com",
+        photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop"
+    },
+    {
+        id: "mem_5",
+        name: "Khaled Ibrahim",
+        joinDate: "2021-11-01",
+        status: "Inactive",
+        memberType: "Head of Family",
+        contact: "+968 98765432",
+        photo: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=400&auto=format&fit=crop"
+    }
+];
