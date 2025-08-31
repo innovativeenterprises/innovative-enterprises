@@ -21,6 +21,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -53,6 +54,7 @@ export default function CalculatorForm() {
   const [generatedSummary, setGeneratedSummary] = useState<string | null>(null);
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const boqTableRef = useRef(null);
+  const router = useRouter();
   
   const { toast } = useToast();
 
@@ -185,6 +187,7 @@ export default function CalculatorForm() {
   };
   
    const handleDownloadCsv = () => {
+    if (!boqItems.length) return;
     const headers = ["Category", "Item Description", "Unit", "Quantity", "Notes"];
     const rows = boqItems.map(item => [
       `"${item.category}"`,
@@ -194,7 +197,7 @@ export default function CalculatorForm() {
       `"${item.notes || ''}"`
     ]);
 
-    const csvContent = [headers.join(','), ...rows.join('\n')].join('\n');
+    const csvContent = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     if (link.download !== undefined) {
@@ -209,6 +212,7 @@ export default function CalculatorForm() {
   };
 
   const handlePrintPdf = () => {
+    if (!boqItems.length) return;
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.text(`Bill of Quantities for: ${form.getValues('projectName')}`, 14, 22);
@@ -229,19 +233,29 @@ export default function CalculatorForm() {
   };
 
   const handleSaveToBriefcase = () => {
-    const projectName = form.getValues('projectName');
-    const newBoq = {
-        id: `boq_${Date.now()}`,
-        name: projectName,
-        date: new Date().toISOString(),
-        items: boqItems,
-    };
+    toast({ title: "Coming Soon!", description: "Saving to E-Briefcase will be implemented in a future update." });
+  }
+
+  const handleProceedToEstimator = () => {
+    if (!boqItems.length) {
+      toast({ title: "No BoQ Data", description: "Please generate a BoQ before proceeding.", variant: "destructive" });
+      return;
+    }
+    const headers = ["Category", "Item Description", "Unit", "Quantity", "Notes"];
+    const rows = boqItems.map(item => [
+      `"${item.category}"`,
+      `"${item.item}"`,
+      `"${item.unit}"`,
+      item.quantity.toFixed(2),
+      `"${item.notes || ''}"`
+    ].join(','));
+    const csvContent = headers.join(',') + '\n' + rows.join('\n');
+    
     try {
-        const existingBoqs = JSON.parse(localStorage.getItem('saved_boqs') || '[]');
-        localStorage.setItem('saved_boqs', JSON.stringify([...existingBoqs, newBoq]));
-        toast({ title: "Saved!", description: `BoQ for "${projectName}" has been saved to your E-Briefcase.`});
+        sessionStorage.setItem('boqDataForEstimator', csvContent);
+        router.push('/construction-tech/bid-estimator');
     } catch(e) {
-         toast({ title: "Error", description: "Could not save BoQ to E-Briefcase.", variant: "destructive" });
+        toast({ title: "Error", description: "Could not pass data to the estimator.", variant: 'destructive' });
     }
   }
 
@@ -424,9 +438,7 @@ export default function CalculatorForm() {
                             <p className="text-sm text-muted-foreground">Use our BidWise Estimator to get a detailed cost breakdown and generate a professional tender response based on your BoQ.</p>
                         </CardContent>
                         <CardFooter>
-                            <Button asChild>
-                                <Link href="/construction-tech/bid-estimator">Go to BidWise Estimator</Link>
-                            </Button>
+                            <Button onClick={handleProceedToEstimator}>Go to BidWise Estimator</Button>
                         </CardFooter>
                     </Card>
                      <Card className="bg-muted/50">

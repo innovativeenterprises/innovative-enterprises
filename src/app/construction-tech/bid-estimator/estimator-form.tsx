@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -53,6 +52,7 @@ export default function EstimatorForm() {
   const { costSettings } = useCostSettingsData();
   const boqTableRef = useRef(null);
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -61,6 +61,32 @@ export default function EstimatorForm() {
       profitMarginPercentage: 15,
     },
   });
+
+  useEffect(() => {
+    try {
+      const boqData = sessionStorage.getItem('boqDataForEstimator');
+      if (boqData && fileInputRef.current) {
+        const dataTransfer = new DataTransfer();
+        const file = new File([boqData], "boq-from-generator.csv", { type: "text/csv" });
+        dataTransfer.items.add(file);
+        fileInputRef.current.files = dataTransfer.files;
+        
+        // Trigger react-hook-form's change event
+        const changeEvent = new Event('change', { bubbles: true });
+        fileInputRef.current.dispatchEvent(changeEvent);
+
+        toast({
+            title: "BoQ Pre-loaded!",
+            description: "Your generated Bill of Quantities has been automatically loaded."
+        });
+        
+        // Clean up session storage
+        sessionStorage.removeItem('boqDataForEstimator');
+      }
+    } catch(e) {
+      console.error("Could not load BoQ from session storage:", e);
+    }
+  }, [toast]);
   
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
@@ -205,7 +231,12 @@ export default function EstimatorForm() {
                         <FormItem>
                             <FormLabel>BoQ Document (.csv)</FormLabel>
                             <FormControl>
-                                <Input type="file" accept=".csv" onChange={(e) => field.onChange(e.target.files)} />
+                                <Input 
+                                  type="file" 
+                                  accept=".csv" 
+                                  onChange={(e) => field.onChange(e.target.files)}
+                                  ref={fileInputRef} 
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
