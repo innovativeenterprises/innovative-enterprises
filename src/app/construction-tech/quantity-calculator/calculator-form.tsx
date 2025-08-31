@@ -233,7 +233,29 @@ export default function CalculatorForm() {
   };
 
   const handleSaveToBriefcase = () => {
-    toast({ title: "Coming Soon!", description: "Saving to E-Briefcase will be implemented in a future update." });
+    if (!boqItems.length) {
+      toast({ title: 'No Data', description: 'Please generate a BoQ first.', variant: 'destructive'});
+      return;
+    }
+
+    try {
+      const newBoq = {
+        id: `boq_${Date.now()}`,
+        name: form.getValues('projectName'),
+        date: new Date().toISOString(),
+        items: boqItems,
+      };
+
+      const existingBoqs = JSON.parse(localStorage.getItem('saved_boqs') || '[]');
+      const updatedBoqs = [newBoq, ...existingBoqs];
+      localStorage.setItem('saved_boqs', JSON.stringify(updatedBoqs));
+      
+      toast({ title: 'Saved to E-Briefcase!', description: `${newBoq.name} has been saved.` });
+
+    } catch (e) {
+      console.error("Failed to save to briefcase:", e);
+      toast({ title: 'Error', description: 'Could not save the BoQ to your briefcase.', variant: 'destructive'});
+    }
   }
 
   const handleProceedToEstimator = () => {
