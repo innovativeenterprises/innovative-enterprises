@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -114,5 +114,26 @@ export const initialServices: Service[] = [
     description: "Secure, password-free login using your WhatsApp account and other advanced authentication solutions.",
     enabled: true,
     href: "/ameen",
+  },
+   {
+    icon: HardHat,
+    title: "Construction Tech",
+    description: "Explore our suite of SaaS solutions designed to automate and innovate the construction industry.",
+    enabled: true,
+    href: "/construction-tech",
+  },
+  {
+    icon: Building2,
+    title: "Real Estate Tech",
+    description: "A suite of automated SaaS platforms for property valuation, management, and investment.",
+    enabled: true,
+    href: "/real-estate-tech",
+  },
+  {
+    icon: GraduationCap,
+    title: "Education Tech",
+    description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
+    enabled: true,
+    href: "/education-tech",
   },
 ];
