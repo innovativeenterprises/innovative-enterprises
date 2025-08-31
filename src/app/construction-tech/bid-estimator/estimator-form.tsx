@@ -10,10 +10,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText } from 'lucide-react';
+import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download } from 'lucide-react';
 import { estimateBoq } from '@/ai/flows/boq-estimator';
 import { BoQEstimatorInputSchema, type BoQEstimatorOutput } from '@/ai/flows/boq-estimator.schema';
+import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
 
 const fileToText = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -33,7 +43,9 @@ type FormValues = z.infer<typeof FormSchema>;
 
 export default function EstimatorForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingTender, setIsGeneratingTender] = useState(false);
   const [response, setResponse] = useState<BoQEstimatorOutput | null>(null);
+  const [tenderResponse, setTenderResponse] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -47,6 +59,7 @@ export default function EstimatorForm() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
+    setTenderResponse(null);
     try {
         const boqCsvText = await fileToText(data.boqFile[0]);
         const result = await estimateBoq({
@@ -62,6 +75,55 @@ export default function EstimatorForm() {
     } finally {
         setIsLoading(false);
     }
+  };
+
+  const handleGenerateTender = async () => {
+    if (!response) return;
+
+    const boqFile = form.getValues('boqFile');
+    if (!boqFile || boqFile.length === 0) {
+        toast({ title: "Error", description: "Could not find the original BoQ file.", variant: "destructive"});
+        return;
+    }
+
+    setIsGeneratingTender(true);
+    setTenderResponse(null);
+
+    try {
+        const boqDataUri = await fileToDataURI(boqFile[0]);
+        const projectRequirements = `Generate a tender response for a project with an estimated cost of OMR ${response.summary.grandTotal.toFixed(2)}. The project involves the following main categories: ${[...new Set(response.costedItems.map(item => item.category))].join(', ')}.`;
+
+        const result = await generateTenderResponse({
+            tenderDocuments: [boqDataUri],
+            projectRequirements,
+        });
+
+        setTenderResponse(result.draftResponse);
+        toast({ title: "Tender Response Drafted", description: "A draft response has been generated below." });
+
+    } catch(e) {
+        console.error(e);
+        toast({ title: 'Tender Generation Failed', description: 'Could not generate the tender response.', variant: 'destructive' });
+    } finally {
+        setIsGeneratingTender(false);
+    }
+  };
+
+  const handleCopy = () => {
+    if (!tenderResponse) return;
+    navigator.clipboard.writeText(tenderResponse);
+    toast({ title: "Copied!", description: "The draft response has been copied to your clipboard." });
+  };
+
+  const handleDownload = () => {
+    if (!tenderResponse) return;
+    const element = document.createElement("a");
+    const file = new Blob([tenderResponse], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "tender_draft_response.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   };
 
   return (
@@ -172,6 +234,26 @@ export default function EstimatorForm() {
                 </Card>
              </div>
           </CardContent>
+           <CardFooter>
+                <Button onClick={handleGenerateTender} disabled={isGeneratingTender} className="w-full">
+                    {isGeneratingTender ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Drafting...</> : <><FileText className="mr-2 h-4 w-4" /> Generate Tender Response</>}
+                </Button>
+            </CardFooter>
+        </Card>
+      )}
+
+      {tenderResponse && (
+        <Card className="mt-8">
+            <CardHeader>
+                <CardTitle>AI-Generated Draft Response</CardTitle>
+                <div className="flex justify-end gap-2">
+                    <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                    <Button variant="outline" size="sm" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                </div>
+            </CardHeader>
+            <CardContent className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap p-4 bg-muted rounded-md border">
+                {tenderResponse}
+            </CardContent>
         </Card>
       )}
     </div>
