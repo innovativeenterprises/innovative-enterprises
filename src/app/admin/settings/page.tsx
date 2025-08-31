@@ -1,10 +1,13 @@
 
+
 'use client';
 
 import SettingsTable, { useSettingsData } from "../settings-table";
+import { useCostSettingsData } from "../cost-settings-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 
 export default function AdminSettingsPage() {
-  const settingsData = useSettingsData();
   
   return (
     <div className="space-y-8">
@@ -14,7 +17,7 @@ export default function AdminSettingsPage() {
                 Manage core operational settings for your application.
             </p>
         </div>
-        <SettingsTable {...settingsData} />
+        <SettingsTable />
     </div>
   );
 }

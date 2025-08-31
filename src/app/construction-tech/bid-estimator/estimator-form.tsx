@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,11 +11,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download } from 'lucide-react';
+import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer } from 'lucide-react';
 import { estimateBoq } from '@/ai/flows/boq-estimator';
 import { BoQEstimatorInputSchema, type BoQEstimatorOutput } from '@/ai/flows/boq-estimator.schema';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useCostSettingsData } from '@/app/admin/cost-settings-table';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -46,6 +50,8 @@ export default function EstimatorForm() {
   const [isGeneratingTender, setIsGeneratingTender] = useState(false);
   const [response, setResponse] = useState<BoQEstimatorOutput | null>(null);
   const [tenderResponse, setTenderResponse] = useState<string | null>(null);
+  const { costSettings } = useCostSettingsData();
+  const boqTableRef = useRef(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -66,6 +72,7 @@ export default function EstimatorForm() {
             boqCsvText,
             contingencyPercentage: data.contingencyPercentage,
             profitMarginPercentage: data.profitMarginPercentage,
+            marketRates: costSettings,
         });
         setResponse(result);
         toast({ title: "Estimation Complete!", description: "Your BoQ has been analyzed and costed." });
@@ -108,6 +115,61 @@ export default function EstimatorForm() {
         setIsGeneratingTender(false);
     }
   };
+  
+    const handleDownloadCsv = () => {
+    if (!response) return;
+    const headers = ["Category", "Item Description", "Unit", "Quantity", "Material Unit Cost", "Labor Unit Cost", "Total Item Cost"];
+    const rows = response.costedItems.map(item => [
+      `"${item.category}"`,
+      `"${item.item}"`,
+      `"${item.unit}"`,
+      item.quantity.toFixed(2),
+      item.materialUnitCost.toFixed(2),
+      item.laborUnitCost.toFixed(2),
+      item.totalItemCost.toFixed(2)
+    ].join(','));
+
+    let csvContent = headers.join(',') + '\n' + rows.join('\n');
+    
+    // Add summary
+    csvContent += `\n\n\nSummary\n`;
+    csvContent += `Direct Costs,${response.summary.totalDirectCosts.toFixed(2)}\n`;
+    csvContent += `Contingency,${response.summary.contingencyAmount.toFixed(2)}\n`;
+    csvContent += `Subtotal,${response.summary.subtotal.toFixed(2)}\n`;
+    csvContent += `Profit Margin,${response.summary.profitAmount.toFixed(2)}\n`;
+    csvContent += `Grand Total,${response.summary.grandTotal.toFixed(2)}\n`;
+
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `BoQ_Cost_Estimate.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handlePrintPdf = () => {
+    if (!response) return;
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text(`Cost Estimation for BoQ`, 14, 22);
+
+    (doc as any).autoTable({
+        html: boqTableRef.current,
+        startY: 35,
+        headStyles: { fillColor: [41, 52, 98] },
+    });
+    doc.save(`BoQ_Cost_Estimate.pdf`);
+  };
+
+  const handleSaveToBriefcase = () => {
+    toast({ title: "Coming Soon!", description: "Saving to E-Briefcase will be implemented in a future update." });
+  }
 
   const handleCopy = () => {
     if (!tenderResponse) return;
@@ -115,7 +177,7 @@ export default function EstimatorForm() {
     toast({ title: "Copied!", description: "The draft response has been copied to your clipboard." });
   };
 
-  const handleDownload = () => {
+  const handleDownloadTender = () => {
     if (!tenderResponse) return;
     const element = document.createElement("a");
     const file = new Blob([tenderResponse], {type: 'text/plain'});
@@ -183,7 +245,7 @@ export default function EstimatorForm() {
             <Card>
                 <CardContent className="p-6 text-center">
                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                    <p className="mt-4 text-muted-foreground">The AI Quantity Surveyor is calculating costs based on current market rates...</p>
+                    <p className="mt-4 text-muted-foreground">The AI Quantity Surveyor is calculating costs based on your configured market rates...</p>
                 </CardContent>
             </Card>
         )}
@@ -192,10 +254,15 @@ export default function EstimatorForm() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><FileText className="h-6 w-6"/> Detailed Cost Estimation</CardTitle>
+             <div className="flex justify-end gap-2">
+                <Button onClick={handleSaveToBriefcase} variant="outline" size="sm"><Briefcase className="mr-2 h-4 w-4" /> Save to Briefcase</Button>
+                <Button onClick={handleDownloadCsv} variant="outline" size="sm"><Download className="mr-2 h-4 w-4" /> Download CSV</Button>
+                <Button onClick={handlePrintPdf} variant="outline" size="sm"><Printer className="mr-2 h-4 w-4" /> Print to PDF</Button>
+            </div>
           </CardHeader>
           <CardContent>
              <div className="overflow-x-auto">
-                <Table>
+                <Table ref={boqTableRef}>
                     <TableHeader>
                         <TableRow>
                             <TableHead>Item</TableHead>
@@ -248,7 +315,7 @@ export default function EstimatorForm() {
                 <CardTitle>AI-Generated Draft Response</CardTitle>
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                    <Button variant="outline" size="sm" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                    <Button variant="outline" size="sm" onClick={handleDownloadTender}><Download className="mr-2 h-4 w-4"/> Download</Button>
                 </div>
             </CardHeader>
             <CardContent className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap p-4 bg-muted rounded-md border">

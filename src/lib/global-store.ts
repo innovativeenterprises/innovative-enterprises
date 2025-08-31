@@ -30,6 +30,9 @@ import { initialProperties, type Property } from './properties';
 import { initialAuditSubmissions, type AuditSubmission } from './audit-submissions';
 import { initialStudents, type Student } from './students';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
+import { type CostRate } from './cost-settings.schema';
+import { initialCostSettings } from './cost-settings';
+
 
 export interface CartItem extends Product {
   quantity: number;
@@ -67,6 +70,7 @@ type AppState = {
   students: Student[];
   savedBoqs: SavedBoQ[];
   cart: CartItem[];
+  costSettings: CostRate[];
 };
 
 // The single source of truth for our application's shared state.
@@ -95,6 +99,7 @@ let state: AppState = {
   students: initialStudents,
   savedBoqs: [],
   cart: [],
+  costSettings: initialCostSettings,
 };
 
 // A list of all component update functions to call when state changes.
