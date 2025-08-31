@@ -14,6 +14,17 @@ export const GenerateTenderResponseInputSchema = z.object({
       'A list of tender documents as data URIs. Each must include a MIME type and use Base64 encoding.' 
     ),
   projectRequirements: z.string().describe('The specific requirements for the project.'),
+  // Optional detailed fields
+  companyName: z.string().optional().describe("The user's company name."),
+  projectName: z.string().optional().describe("The name of the project from the tender."),
+  tenderingAuthority: z.string().optional().describe("The name of the organization that issued the tender."),
+  companyOverview: z.string().optional().describe("A brief description of the user's company."),
+  relevantExperience: z.string().optional().describe("Details of relevant past projects or experience."),
+  projectTeam: z.string().optional().describe("Key members of the proposed project team."),
+  estimatedCost: z.number().optional().describe("The estimated cost for the project."),
+  priceValidityDays: z.coerce.number().optional().describe("How many days the financial proposal is valid for."),
+  estimatedSchedule: z.string().optional().describe("The estimated time to complete the project (e.g., '6 months')."),
+  contactInfo: z.string().optional().describe("The contact person's name, title, and contact details for the proposal."),
 });
 export type GenerateTenderResponseInput = z.infer<typeof GenerateTenderResponseInputSchema>;
 
