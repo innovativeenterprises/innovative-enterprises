@@ -10,9 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall, Download, Printer, Briefcase } from 'lucide-react';
+import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall, Download, Printer, Briefcase, User, HardHat } from 'lucide-react';
 import { generateBoqCategory, generateFullBoq } from '@/ai/flows/boq-generator';
-import type { BoQItem } from '@/ai/flows/boq-generator.schema';
+import { BoQGeneratorInputSchema, type BoQItem } from '@/ai/flows/boq-generator.schema';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -31,15 +31,8 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
-const FormSchema = z.object({
-  floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
-  floorPlanUri: z.string().optional(),
-  projectType: z.enum(['Residential Villa', 'Commercial Building', 'Industrial Warehouse'], {
-    required_error: "Please select a project type.",
-  }),
-  numberOfFloors: z.coerce.number().min(1, "Number of floors must be at least 1."),
-  additionalSpecs: z.string().optional(),
-  projectName: z.string().min(3, "Please enter a project name or reference."),
+const FormSchema = BoQGeneratorInputSchema.extend({
+    floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
@@ -66,6 +59,8 @@ export default function CalculatorForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
         projectName: '',
+        ownerName: '',
+        contractorName: '',
         projectType: 'Residential Villa',
         numberOfFloors: 1,
         additionalSpecs: '',
@@ -112,7 +107,12 @@ export default function CalculatorForm() {
         toast({ title: 'Floor Plan Analyzed', description: 'AI has pre-filled the project details. Please review and continue.' });
 
     } catch (e) {
-        toast({ title: 'Analysis Failed', description: 'Could not analyze the floor plan. Please describe your needs manually.', variant: 'destructive' });
+        console.error("Floor plan analysis failed:", e);
+        toast({
+          title: "Analysis Failed",
+          description: "Could not analyze the floor plan. Please check the file and try again, or describe your needs manually.",
+          variant: "destructive",
+        });
     } finally {
         setIsAnalyzing(false);
     }
@@ -129,11 +129,8 @@ export default function CalculatorForm() {
 
     try {
         const result = await generateBoqCategory({
+            ...formData,
             category,
-            projectType: formData.projectType,
-            numberOfFloors: formData.numberOfFloors,
-            floorPlanUri: formData.floorPlanUri,
-            additionalSpecs: formData.additionalSpecs
         });
         
         setBoqItems(prev => [...prev, ...result.boqItems]);
@@ -163,12 +160,7 @@ export default function CalculatorForm() {
     }
 
     try {
-        const result = await generateFullBoq({
-            projectType: formData.projectType,
-            numberOfFloors: formData.numberOfFloors,
-            floorPlanUri: formData.floorPlanUri,
-            additionalSpecs: formData.additionalSpecs
-        });
+        const result = await generateFullBoq(formData);
 
         setBoqItems(result.boqItems);
         setCompletedSteps(calculationSteps.map(s => s.id));
@@ -208,10 +200,19 @@ export default function CalculatorForm() {
 
   const handlePrintPdf = () => {
     const doc = new jsPDF();
-    doc.text(`Bill of Quantities for: ${form.getValues('projectName')}`, 14, 20);
+    doc.setFontSize(18);
+    doc.text(`Bill of Quantities for: ${form.getValues('projectName')}`, 14, 22);
+    
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    const ownerName = form.getValues('ownerName');
+    const contractorName = form.getValues('contractorName');
+    if (ownerName) doc.text(`Owner: ${ownerName}`, 14, 30);
+    if (contractorName) doc.text(`Contractor: ${contractorName}`, 120, 30);
+
     (doc as any).autoTable({
         html: boqTableRef.current,
-        startY: 30,
+        startY: 35,
         headStyles: { fillColor: [41, 52, 98] },
     });
     doc.save(`BoQ_${form.getValues('projectName').replace(/\s+/g, '_')}.pdf`);
@@ -244,9 +245,17 @@ export default function CalculatorForm() {
         <CardContent>
           <Form {...form}>
             <form className="space-y-6">
-                <FormField control={form.control} name="projectName" render={({ field }) => (
-                    <FormItem><FormLabel>Project Name / Reference</FormLabel><FormControl><Input placeholder="e.g., Al Amerat Villa Project" {...field} /></FormControl><FormMessage/></FormItem>
-                )}/>
+                <div className="grid md:grid-cols-3 gap-6">
+                     <FormField control={form.control} name="projectName" render={({ field }) => (
+                        <FormItem><FormLabel>Project Name / Reference</FormLabel><FormControl><Input placeholder="e.g., Al Amerat Villa" {...field} /></FormControl><FormMessage/></FormItem>
+                    )}/>
+                     <FormField control={form.control} name="ownerName" render={({ field }) => (
+                        <FormItem><FormLabel>Owner Name</FormLabel><FormControl><Input placeholder="e.g., Mr. Ahmed Al-Habsi" {...field} /></FormControl><FormMessage/></FormItem>
+                    )}/>
+                    <FormField control={form.control} name="contractorName" render={({ field }) => (
+                        <FormItem><FormLabel>Contractor Name</FormLabel><FormControl><Input placeholder="e.g., Innovative Builders LLC" {...field} /></FormControl><FormMessage/></FormItem>
+                    )}/>
+                </div>
                 <FormField
                     control={form.control}
                     name="floorPlanFile"
@@ -286,6 +295,9 @@ export default function CalculatorForm() {
                             <SelectItem value="Residential Villa">Residential Villa</SelectItem>
                             <SelectItem value="Commercial Building">Commercial Building</SelectItem>
                             <SelectItem value="Industrial Warehouse">Industrial Warehouse</SelectItem>
+                            <SelectItem value="Mixed-Use Building">Mixed-Use Building</SelectItem>
+                            <SelectItem value="Renovation Project">Renovation Project</SelectItem>
+                            <SelectItem value="Landscaping Project">Landscaping Project</SelectItem>
                         </SelectContent></Select><FormMessage /></FormItem>
                         )}
                     />
@@ -301,7 +313,7 @@ export default function CalculatorForm() {
         </CardContent>
       </Card>
       
-       {analysis && (
+       {(analysis || form.getValues('floorPlanUri')) && (
           <Card>
             <CardHeader>
               <CardTitle>Generate Bill of Quantities</CardTitle>
