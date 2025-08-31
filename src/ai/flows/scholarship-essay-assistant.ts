@@ -57,9 +57,9 @@ Return only the generated essay in the 'essay' field.
 `,
 });
 
-export const generateScholarshipEssay = ai.defineFlow(
+const generateScholarshipEssayFlow = ai.defineFlow(
     {
-        name: 'generateScholarshipEssay',
+        name: 'generateScholarshipEssayFlow',
         inputSchema: ScholarshipEssayInputSchema,
         outputSchema: ScholarshipEssayOutputSchema,
     },
@@ -68,3 +68,7 @@ export const generateScholarshipEssay = ai.defineFlow(
         return output!;
     }
 );
+
+export async function generateScholarshipEssay(input: ScholarshipEssayInput): Promise<ScholarshipEssayOutput> {
+    return generateScholarshipEssayFlow(input);
+}
