@@ -7,6 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod';
 import { initialAssets } from '@/lib/assets';
 import {
     IctProposalInput,
@@ -69,8 +70,8 @@ You MUST only recommend assets from this list for the IT hardware portion.
     *   **totalRentalCostForDuration:** Calculate \`totalRentalCostPerMonth * projectDurationMonths\`.
     *   **totalPurchaseCost:** Sum up (\`asset.purchasePrice * quantity\`) for all items in \`purchasedAssets\`, PLUS the total cost of the surveillance system equipment.
     *   **softwareCost:** Sum up the total cost for all items in \`recommendedSoftware\`.
-    *   **grandTotalForRentalOption:** Calculate \`totalRentalCostForDuration + surveillanceSystemCost + softwareCost\`.
-    *   **grandTotalForPurchaseOption:** Calculate \`totalPurchaseCost (IT assets) + surveillanceSystemCost + softwareCost\`.
+    *   **grandTotalForRentalOption:** Calculate \`totalRentalCostForDuration + (response.surveillanceSystem.equipmentList.reduce((acc, item) => acc + item.totalPrice, 0)) + softwareCost\`.
+    *   **grandTotalForPurchaseOption:** Calculate \`totalPurchaseCost + (response.surveillanceSystem.equipmentList.reduce((acc, item) => acc + item.totalPrice, 0)) + softwareCost\`.
 
 4.  **Next Steps:** Provide a brief, professional closing statement.
 
