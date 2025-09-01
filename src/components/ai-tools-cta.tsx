@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { FileText, MessageSquareQuote, Bot, Scale } from "lucide-react";
+import { FileText, MessageSquareQuote, Bot, Scale, BrainCircuit } from "lucide-react";
 import Link from "next/link";
 
 export default function AiToolsCta() {
@@ -54,18 +54,18 @@ export default function AiToolsCta() {
                     <Card className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                         <CardHeader>
                              <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
-                                <Scale className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
+                                <BrainCircuit className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <CardTitle>AI Legal Agent</CardTitle>
+                            <CardTitle>Feasibility Studies</CardTitle>
                             <CardDescription className="mt-2">
-                                Get preliminary legal analysis and insights from our AI agent.
+                               Let our AI research and generate a comprehensive feasibility study for your next big idea.
                             </CardDescription>
                         </CardContent>
                         <CardFooter className="justify-center">
                             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                <Link href="/legal-agent">Consult the Agent</Link>
+                                <Link href="/feasibility-study">Build a Study</Link>
                             </Button>
                         </CardFooter>
                     </Card>
