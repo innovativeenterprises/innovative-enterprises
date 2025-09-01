@@ -51,7 +51,7 @@ export const initialProducts: Product[] = [
         id: 12,
         name: "SiteGuard Compliance",
         description: "Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking.",
-        stage: "Design Phase",
+        stage: "Live & Operating",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const4/400/400",
@@ -59,8 +59,8 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/construction-tech/site-guard",
-        adminStatus: 'On Track',
-        adminNotes: "UI/UX wireframes are being developed."
+        adminStatus: 'Completed',
+        adminNotes: "Live and operational. Core feature for PPE scanning is complete."
     },
     {
         id: 13,
@@ -81,7 +81,7 @@ export const initialProducts: Product[] = [
         id: 14,
         name: "ProcureChain SaaS",
         description: "E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
-        stage: "Idea Phase",
+        stage: "Live & Operating",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const6/400/400",
