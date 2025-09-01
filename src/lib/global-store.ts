@@ -30,6 +30,7 @@ import { initialProperties, type Property } from './properties';
 import { initialAuditSubmissions, type AuditSubmission } from './audit-submissions';
 import { initialStudents, type Student } from './students';
 import { initialMembers, type CommunityMember } from './community-members';
+import { initialCommunities, type Community } from './communities';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { type CostRate } from './cost-settings.schema';
 import { initialCostSettings } from './cost-settings';
@@ -71,6 +72,7 @@ type AppState = {
   properties: Property[];
   auditSubmissions: AuditSubmission[];
   students: Student[];
+  communities: Community[];
   communityMembers: CommunityMember[];
   communityEvents: CommunityEvent[];
   communityFinances: CommunityFinance[];
@@ -103,6 +105,7 @@ let state: AppState = {
   properties: initialProperties,
   auditSubmissions: initialAuditSubmissions,
   students: initialStudents,
+  communities: initialCommunities,
   communityMembers: initialMembers,
   communityEvents: initialEvents,
   communityFinances: initialFinances,

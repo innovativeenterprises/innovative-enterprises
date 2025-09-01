@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import * as React from 'react';
@@ -27,6 +26,7 @@ import {
   GanttChartSquare,
   Home,
   Building2,
+  UserCog,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -47,8 +47,8 @@ export default function AdminLayout({
     { href: '/admin/finance', label: 'Finance', icon: WalletCards },
     { href: '/admin/content', label: 'Site Content', icon: FileText },
     { href: '/admin/network', label: 'Network', icon: Network },
-    { href: '/admin/opportunities', label: 'Opportunities', icon: Zap },
-    { href: '/admin/people', label: 'People', icon: Users },
+    { href: '/admin/communities', label: 'Communities', icon: Users },
+    { href: '/admin/people', label: 'People', icon: UserCog },
     { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
     { href: '/admin/operations', label: 'Operations', icon: GanttChartSquare },
   ];
