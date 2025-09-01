@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -82,10 +82,11 @@ export const initialServices: Service[] = [
     href: "/community-hub",
   },
   {
-    icon: BarChart,
-    title: "Momentum BI",
-    description: "Turn your data into actionable insights with our business intelligence and data visualization services.",
-    enabled: false,
+    icon: Gem,
+    title: "The Majlis (VIP Hub)",
+    description: "An exclusive, AI-managed ecosystem for VIPs, executives, and their trusted networks, focusing on discreet problem-solving and curated opportunities.",
+    enabled: true,
+    href: "/vip-hub",
   },
   {
     icon: Server,
