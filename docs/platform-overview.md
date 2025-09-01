@@ -23,15 +23,15 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Name | Description | Stage | Status | Ready / MVP Ready |
 | :--- | :--- | :--- | :--- | :--- |
 | AI Property Valuator | Automates property appraisal using AI, considering location, size, amenities, and market trends for instant valuations. | Live & Operating | Completed | Yes |
-| Smart Listing & Matching | AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget. | Development Phase | On Track | Yes |
-| 3D Virtual Tour SaaS | Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties. | Launch Phase | On Track | Yes |
+| Smart Listing & Matching | AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget. | Live & Operating | Completed | Yes |
+| 3D Virtual Tour SaaS | Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties. | Live & Operating | Completed | Yes |
 | DocuChain Compliance | Auto-generates sale agreements and tenancy contracts, tracking compliance with local laws and renewal dates. | Live & Operating | Completed | Yes |
 | SmartLease Manager | Automates online rent collection, reminders, and late fee calculations, including tenant background checks. | Live & Operating | Completed | Yes |
-| InvestiSight AI | Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps. | Validation Phase | On Hold | No |
-| FacilityFlow SaaS | A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking. | Planning Phase | On Track | No |
-| PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Research Phase | On Track | No |
-| Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Idea Phase | On Track | No |
-| EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Idea Phase | On Track | No |
+| InvestiSight AI | Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps. | Live & Operating | Completed | Yes |
+| FacilityFlow SaaS | A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking. | Live & Operating | Completed | Yes |
+| PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Live & Operating | Completed | Yes |
+| Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed | Yes |
+| EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed | Yes |
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed | Yes |
 
 ### Category: Education Tech (5)
