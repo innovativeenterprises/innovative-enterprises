@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap, BrainCircuit } from "lucide-react";
+import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap, BrainCircuit, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/app/admin/product-table";
 import type { Product } from "@/lib/products";
@@ -21,7 +21,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "EduFlow Suite": GanttChartSquare,
         "CognitaLearn": Cpu,
         "Guardian AI": ClipboardCheck,
-        "CertiTrust": Check,
+        "CertiTrust": ShieldCheck,
         "CampusOS": Users,
         "AI Scholarship Finder": BrainCircuit,
     };

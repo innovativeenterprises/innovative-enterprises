@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -70,6 +70,15 @@ export default function TimetableForm() {
       setIsLoading(false);
     }
   };
+  
+  const scheduleGrid: Record<string, Record<string, (typeof response.schedule)[0]>> | undefined = response?.schedule.reduce((acc, entry) => {
+    if (!acc[entry.timeSlot]) {
+      acc[entry.timeSlot] = {};
+    }
+    acc[entry.timeSlot][entry.day] = entry;
+    return acc;
+  }, {} as Record<string, Record<string, any>>);
+
 
   return (
     <div className="space-y-8">
@@ -148,7 +157,7 @@ export default function TimetableForm() {
                            <TableRow key={slot}>
                              <TableCell className="font-medium border-r">{slot}</TableCell>
                              {days.map(day => {
-                                const entry = response.schedule?.[day]?.[slot];
+                                const entry = scheduleGrid?.[slot]?.[day];
                                 const subject = entry ? form.getValues('subjects').find(s => s.id === entry.subjectId) : null;
                                 const classroom = entry ? form.getValues('classrooms').find(c => c.id === entry.classroomId) : null;
                                 return (
