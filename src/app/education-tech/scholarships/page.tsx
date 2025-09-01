@@ -10,130 +10,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, BrainCircuit, BookOpen, MapPin, Calendar, Check, Link as LinkIcon, AlertTriangle, Download, Copy, PenSquare } from 'lucide-react';
+import { Loader2, Sparkles, BrainCircuit, BookOpen, MapPin, Calendar, Check, Link as LinkIcon, AlertTriangle } from 'lucide-react';
 import { ScholarshipFinderInputSchema, type ScholarshipFinderInput, type ScholarshipFinderOutput, type Scholarship } from '@/ai/flows/scholarship-agent.schema';
 import { findScholarships } from '@/ai/flows/scholarship-agent';
-import { generateScholarshipEssay } from '@/ai/flows/scholarship-essay-assistant';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
-
-const EssayFormSchema = z.object({
-  cvFile: z.any().refine(file => file?.length == 1, 'CV document is required.'),
-});
-type EssayFormValues = z.infer<typeof EssayFormSchema>;
-
-
-const EssayAssistantDialog = ({ scholarship }: { scholarship: Scholarship }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [essay, setEssay] = useState<string | null>(null);
-    const { toast } = useToast();
-
-    const form = useForm<EssayFormValues>({
-        resolver: zodResolver(EssayFormSchema),
-    });
-
-    const onSubmit: SubmitHandler<EssayFormValues> = async (data) => {
-        setIsGenerating(true);
-        setEssay(null);
-        try {
-            const cvDataUri = await fileToDataURI(data.cvFile[0]);
-            const result = await generateScholarshipEssay({ scholarship, cvDataUri });
-            setEssay(result.essay);
-            toast({ title: 'Essay Draft Generated!' });
-        } catch (error) {
-            console.error(error);
-            toast({ title: 'Error', description: 'Failed to generate essay.', variant: 'destructive' });
-        } finally {
-            setIsGenerating(false);
-        }
-    };
-    
-    const handleCopy = () => {
-        if (!essay) return;
-        navigator.clipboard.writeText(essay);
-        toast({ title: 'Copied!', description: 'Essay content copied to clipboard.' });
-    };
-
-    const handleDownload = () => {
-        if (!essay) return;
-        const element = document.createElement("a");
-        const file = new Blob([essay], {type: 'text/plain'});
-        element.href = URL.createObjectURL(file);
-        element.download = `personal_statement_for_${scholarship.scholarshipName}.txt`;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    };
-
-    return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button variant="secondary" size="sm" className="w-full">
-                    <PenSquare className="mr-2 h-4 w-4" /> Draft Essay with AI
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[625px]">
-                <DialogHeader>
-                    <DialogTitle>Personal Statement Assistant</DialogTitle>
-                    <DialogDescription>
-                        Upload your CV to generate a tailored personal statement for the "{scholarship.scholarshipName}".
-                    </DialogDescription>
-                </DialogHeader>
-                {!essay ? (
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="cvFile"
-                                render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Your CV/Resume</FormLabel>
-                                    <FormControl>
-                                        <Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                                )}
-                            />
-                            <DialogFooter>
-                                <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                                <Button type="submit" disabled={isGenerating}>
-                                    {isGenerating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : <><Sparkles className="mr-2 h-4 w-4"/>Generate Essay</>}
-                                </Button>
-                            </DialogFooter>
-                        </form>
-                    </Form>
-                ) : (
-                    <div>
-                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
-                            {essay}
-                        </div>
-                        <DialogFooter className="mt-4">
-                             <Button type="button" variant="ghost" onClick={() => setEssay(null)}>Start Over</Button>
-                             <div className="flex gap-2">
-                                <Button type="button" variant="outline" onClick={handleDownload}><Download className="mr-2 h-4 w-4"/>Download</Button>
-                                <Button type="button" variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/>Copy</Button>
-                             </div>
-                        </DialogFooter>
-                    </div>
-                )}
-            </DialogContent>
-        </Dialog>
-    )
-}
 
 export default function ScholarshipPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -286,13 +168,12 @@ export default function ScholarshipPage() {
                                     <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary"/><span><strong>Deadline:</strong> {scholarship.deadline}</span></div>
                                     <div className="flex items-start gap-2"><Check className="h-4 w-4 text-primary mt-1 flex-shrink-0"/><span><strong>Eligibility:</strong> {scholarship.eligibilitySummary}</span></div>
                                 </CardContent>
-                                <CardFooter className="flex-col items-stretch gap-2">
+                                <CardFooter>
                                      {scholarship.sourceUrl && (
-                                        <Button asChild variant="outline" size="sm" className="w-full">
+                                        <Button asChild variant="outline" size="sm">
                                             <a href={scholarship.sourceUrl} target="_blank" rel="noopener noreferrer"><LinkIcon className="mr-2 h-4 w-4"/> View Official Source</a>
                                         </Button>
                                     )}
-                                    <EssayAssistantDialog scholarship={scholarship} />
                                 </CardFooter>
                             </Card>
                         ))}
@@ -305,3 +186,5 @@ export default function ScholarshipPage() {
     </div>
   );
 }
+
+    

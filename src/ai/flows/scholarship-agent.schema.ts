@@ -28,3 +28,5 @@ export const ScholarshipFinderOutputSchema = z.object({
   scholarships: z.array(ScholarshipSchema).describe("A list of found scholarship opportunities."),
 });
 export type ScholarshipFinderOutput = z.infer<typeof ScholarshipFinderOutputSchema>;
+
+    
