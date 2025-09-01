@@ -230,7 +230,7 @@ export const initialProducts: Product[] = [
         id: 24,
         name: "InvestiSight AI",
         description: "Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps.",
-        stage: "Validation Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re6/400/400",
@@ -238,8 +238,8 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/investisight",
-        adminStatus: 'On Hold',
-        adminNotes: "Project is on hold pending new market data for the forecasting models."
+        adminStatus: 'Completed',
+        adminNotes: "Initial version with ROI and Mortgage calculators is now live."
     },
     {
         id: 25,
@@ -588,4 +588,3 @@ export const initialStoreProducts: Product[] = [
     },
 ];
 
-    
