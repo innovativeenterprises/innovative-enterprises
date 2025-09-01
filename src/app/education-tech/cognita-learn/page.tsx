@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, Cpu, Gamepad2, BarChart, BookOpen, User, Target } from "lucide-react";
+import { Check, Cpu, Gamepad2, BarChart, BookOpen, User, Target, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const features = [
@@ -36,6 +36,11 @@ export default function CognitaLearnPage() {
                     <p className="mt-4 text-lg text-muted-foreground">
                         Moving beyond one-size-fits-all education. CognitaLearn uses AI to create personalized, engaging, and effective learning experiences for every student.
                     </p>
+                    <Button asChild size="lg" className="mt-8">
+                        <Link href="/education-tech/cognita-learn/learning-path">
+                            Generate a Learning Path <ArrowRight className="ml-2 h-4 w-4"/>
+                        </Link>
+                    </Button>
                 </div>
 
                 <div className="max-w-5xl mx-auto mt-20">
