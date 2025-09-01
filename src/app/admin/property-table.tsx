@@ -35,7 +35,7 @@ export const usePropertiesData = () => {
 
     return {
         properties: data.properties,
-        setProperties: (updater: (properties: Property[]) => Property[]) => {
+        setProperties: (updater: (properties: Property[]) => void) => {
             const currentProperties = store.get().properties;
             const newProperties = updater(currentProperties);
             store.set(state => ({ ...state, properties: newProperties }));
