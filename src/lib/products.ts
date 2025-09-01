@@ -87,9 +87,9 @@ export const initialProducts: Product[] = [
         aiHint: "construction workforce management",
         rating: 0,
         enabled: true,
-        href: "/education-tech/eduflow/timetable-generator",
+        href: "/admin/network",
         adminStatus: 'Completed',
-        adminNotes: "Initial version live, focusing on the AI timetabling feature."
+        adminNotes: "Core features are represented in the Network Management dashboard."
     },
     {
         id: 14,
@@ -102,9 +102,9 @@ export const initialProducts: Product[] = [
         aiHint: "supply chain logistics",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/procure-chain",
+        href: "/partner",
         adminStatus: 'On Track',
-        adminNotes: "Initial concept approved. Awaiting further research."
+        adminNotes: "Initial concept approved. Represented by the Partner Onboarding flow."
     },
     {
         id: 15,
