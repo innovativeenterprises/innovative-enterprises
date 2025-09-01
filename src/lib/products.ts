@@ -47,21 +47,6 @@ export const initialProducts: Product[] = [
         adminNotes: "User acceptance testing is underway with pilot partners."
     },
     {
-        id: 11,
-        name: "StructurAI BIM",
-        description: "AI-powered BIM for automated clash detection, material optimization, and AutoCAD-to-BIM conversions. (Conceptual)",
-        stage: "Planning Phase",
-        category: "Construction Tech",
-        price: 0,
-        image: "https://picsum.photos/seed/const3/400/400",
-        aiHint: "building information modeling",
-        rating: 0,
-        enabled: true,
-        href: undefined,
-        adminStatus: 'On Hold',
-        adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
-    },
-    {
         id: 12,
         name: "SiteGuard Compliance",
         description: "Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking.",
@@ -94,7 +79,7 @@ export const initialProducts: Product[] = [
     {
         id: 14,
         name: "ProcureChain SaaS",
-        description: "E-procurement platform with automated vendor approvals, predictive ordering, and blockchain smart contracts. (Conceptual)",
+        description: "E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
         stage: "Idea Phase",
         category: "Construction Tech",
         price: 0,
@@ -102,9 +87,9 @@ export const initialProducts: Product[] = [
         aiHint: "supply chain logistics",
         rating: 0,
         enabled: true,
-        href: undefined,
-        adminStatus: 'On Track',
-        adminNotes: "Initial concept approved. Represented by the Partner Onboarding flow."
+        href: "/construction-tech/asset-rentals",
+        adminStatus: 'Completed',
+        adminNotes: "Asset rental feature is live. Predictive ordering and blockchain are on hold."
     },
     {
         id: 15,
@@ -124,7 +109,7 @@ export const initialProducts: Product[] = [
     {
         id: 16,
         name: "Digital Twin Ops",
-        description: "IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual)",
+        description: "IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual - Requires hardware integration)",
         stage: "Idea Phase",
         category: "Construction Tech",
         price: 0,
@@ -139,7 +124,7 @@ export const initialProducts: Product[] = [
     {
         id: 17,
         name: "AeroSite AI (DaaS)",
-        description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual)",
+        description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual - Requires hardware integration)",
         stage: "Development Phase",
         category: "Construction Tech",
         price: 0,
@@ -476,7 +461,22 @@ export const initialProducts: Product[] = [
         adminStatus: 'On Track',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management.",
         href: "/education-tech/campus-os",
-    }
+    },
+    {
+        id: 11,
+        name: "StructurAI BIM",
+        description: "AI-powered BIM for automated clash detection and material optimization. (Conceptual - Requires specialized backend).",
+        stage: "Planning Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const3/400/400",
+        aiHint: "building information modeling",
+        rating: 0,
+        enabled: true,
+        href: undefined,
+        adminStatus: 'On Hold',
+        adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
+    },
 ];
 
 // This is where e-commerce products should live in a real application,

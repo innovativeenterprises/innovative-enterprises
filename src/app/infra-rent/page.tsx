@@ -1,115 +1,588 @@
-
-'use client';
-
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, Server, Laptop, Network, Database, Cloud } from "lucide-react";
-import Link from "next/link";
-
-const problems = [
-    { title: "High Upfront Costs", description: "Heavy capital expenditure (CAPEX) on IT hardware is a major barrier for startups and SMEs." },
-    { title: "Lack of Flexibility", description: "Purchasing equipment locks businesses into technology that may quickly become outdated or unsuitable for new projects." },
-    { title: "Complex Management", description: "Procuring, setting up, and maintaining IT infrastructure is time-consuming and requires specialized expertise." },
-];
-
-const services = [
-    {
-        icon: Server,
-        title: "Hardware Rentals",
-        description: "Access a wide range of hardware, including laptops, workstations, servers, storage units, and networking gear.",
-    },
-    {
-        icon: Cloud,
-        title: "Cloud & Virtual Infrastructure",
-        description: "Rent virtual machines, development/test environments, and backup or disaster recovery solutions on demand.",
-    },
-    {
-        icon: Laptop,
-        title: "Specialized Equipment",
-        description: "Get access to high-performance hardware for specific needs like AI/ML, big data processing, and security.",
-    },
-    {
-        icon: CheckCircle,
-        title: "Value-Added Services",
-        description: "We offer installation, delivery, remote support, monitoring, and insurance for all rented assets.",
-    },
-];
-
-export default function InfraRentPage() {
-  return (
-    <div className="bg-background min-h-[calc(100vh-8rem)]">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center">
-            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                <Server className="w-12 h-12 text-primary" />
-            </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">InfraRent: On-Demand IT Infrastructure</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Your digital platform for renting IT equipment and cloud solutions. Reduce costs, increase flexibility, and scale your business without the burden of ownership.
-          </p>
-        </div>
-
-        <div className="max-w-5xl mx-auto mt-20">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">The Challenge with Traditional IT</h2>
-                <p className="mt-4 text-lg text-muted-foreground">Owning IT infrastructure comes with significant hurdles.</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-                {problems.map((problem) => (
-                    <Card key={problem.title} className="text-center bg-muted/50 border-l-4 border-destructive/50">
-                        <CardHeader>
-                            <CardTitle>{problem.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{problem.description}</p>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        </div>
-
-        <div className="max-w-5xl mx-auto mt-20">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Services</h2>
-                <p className="mt-4 text-lg text-muted-foreground">A comprehensive rental marketplace for all your IT needs.</p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-8">
-                {services.map((solution) => (
-                    <Card key={solution.title} className="bg-card border-l-4 border-primary/50">
-                        <CardHeader className="flex flex-row items-center gap-4">
-                            <div className="bg-primary/10 p-3 rounded-full">
-                                <solution.icon className="w-6 h-6 text-primary" />
-                            </div>
-                            <CardTitle>{solution.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{solution.description}</p>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        </div>
-
-        <div className="max-w-3xl mx-auto mt-20 text-center">
-            <Card className="bg-accent/10 border-accent">
-                <CardHeader>
-                    <CardTitle className="text-2xl text-accent">Become a Partner or Start Renting</CardTitle>
-                    <CardDescription className="text-accent-foreground/80">
-                       Whether you have IT assets to lease or need equipment for your next project, InfraRent is the platform for you.
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter className="justify-center gap-4">
-                    <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                        <Link href="/partner">Become a Vendor</Link>
-                    </Button>
-                     <Button asChild size="lg" variant="outline" >
-                        <Link href="/rentals">Browse Rentals</Link>
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
-
-      </div>
-    </div>
-  );
+export interface Product {
+    id: number;
+    name: string;
+    description: string;
+    stage: string;
+    category: string;
+    price: number;
+    image: string;
+    aiHint: string;
+    rating: number;
+    enabled: boolean;
+    href?: string;
+    adminStatus?: 'On Track' | 'At Risk' | 'On Hold' | 'Completed';
+    adminNotes?: string;
 }
+
+export const initialProducts: Product[] = [
+    {
+        id: 9,
+        name: "Smart PM SaaS",
+        description: "AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management.",
+        stage: "Development Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const1/400/400",
+        aiHint: "construction management software",
+        rating: 0,
+        enabled: true,
+        href: "/admin/projects",
+        adminStatus: 'Completed',
+        adminNotes: "Core features are live in the admin panel's Projects page."
+    },
+    {
+        id: 10,
+        name: "BidWise Estimator",
+        description: "Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing.",
+        stage: "Testing Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const2/400/400",
+        aiHint: "construction bidding document",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/bid-estimator",
+        adminStatus: 'On Track',
+        adminNotes: "User acceptance testing is underway with pilot partners."
+    },
+    {
+        id: 12,
+        name: "SiteGuard Compliance",
+        description: "Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking.",
+        stage: "Design Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const4/400/400",
+        aiHint: "construction safety compliance",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/site-guard",
+        adminStatus: 'On Track',
+        adminNotes: "UI/UX wireframes are being developed."
+    },
+    {
+        id: 13,
+        name: "WorkforceFlow",
+        description: "AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const5/400/400",
+        aiHint: "construction workforce management",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/workforce-scheduler",
+        adminStatus: 'Completed',
+        adminNotes: "The AI Workforce Scheduler is live and functional."
+    },
+    {
+        id: 14,
+        name: "ProcureChain SaaS",
+        description: "E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
+        stage: "Idea Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const6/400/400",
+        aiHint: "supply chain logistics",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/asset-rentals",
+        adminStatus: 'Completed',
+        adminNotes: "Asset rental feature is live. Predictive ordering and blockchain are on hold."
+    },
+    {
+        id: 15,
+        name: "ConstructFin",
+        description: "Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const7/400/400",
+        aiHint: "financial technology construction",
+        rating: 0,
+        enabled: true,
+        href: "/cfo",
+        adminStatus: 'Completed',
+        adminNotes: "CFO Dashboard and AI Audit features are live."
+    },
+    {
+        id: 16,
+        name: "Digital Twin Ops",
+        description: "IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual - Requires hardware integration)",
+        stage: "Idea Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const8/400/400",
+        aiHint: "digital twin building",
+        rating: 0,
+        enabled: true,
+        href: undefined,
+        adminStatus: 'On Track',
+        adminNotes: "This feature requires hardware (IoT) integration and is on hold for the prototype."
+    },
+    {
+        id: 17,
+        name: "AeroSite AI (DaaS)",
+        description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual - Requires hardware integration)",
+        stage: "Development Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const9/400/400",
+        aiHint: "construction drone survey",
+        rating: 0,
+        enabled: true,
+        href: undefined,
+        adminStatus: 'At Risk',
+        adminNotes: "This feature requires hardware (drone) integration and is on hold for the prototype."
+    },
+    {
+        id: 18,
+        name: "ClientView Portal",
+        description: "White-label dashboards for clients to see live project status, track payment milestones, and manage warranties.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const10/400/400",
+        aiHint: "client dashboard project",
+        rating: 0,
+        enabled: true,
+        href: "/admin/projects",
+        adminStatus: 'Completed',
+        adminNotes: "Core features (Kanban, AI Inception) are live in the admin panel."
+    },
+    {
+        id: 19,
+        name: "AI Property Valuator",
+        description: "Automates property appraisal using AI, considering location, size, amenities, and market trends for instant valuations.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re1/400/400",
+        aiHint: "property value graph",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/property-valuator",
+        adminStatus: 'Completed',
+        adminNotes: "Service is live and performing within expected parameters."
+    },
+    {
+        id: 20,
+        name: "Smart Listing & Matching",
+        description: "AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget, with automated lead routing to agents.",
+        stage: "Development Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re2/400/400",
+        aiHint: "house search map",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/smart-listing",
+        adminStatus: 'On Track',
+        adminNotes: "Core matching algorithm is complete. Now working on the agent dashboard."
+    },
+    {
+        id: 21,
+        name: "3D Virtual Tour SaaS",
+        description: "Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties.",
+        stage: "Launch Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re3/400/400",
+        aiHint: "virtual reality home",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/virtual-tour",
+        adminStatus: 'On Track',
+        adminNotes: "Public launch scheduled for next month. Marketing campaign is active."
+    },
+    {
+        id: 22,
+        name: "DocuChain Compliance",
+        description: "Auto-generates sale agreements and tenancy contracts, tracking compliance with local laws and renewal dates.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re4/400/400",
+        aiHint: "legal document agreement",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/docu-chain",
+        adminStatus: 'Completed',
+        adminNotes: "Service is live. Monitoring for user feedback on contract templates."
+    },
+    {
+        id: 23,
+        name: "SmartLease Manager",
+        description: "Automates online rent collection, reminders, and late fee calculations, including tenant background checks.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re5/400/400",
+        aiHint: "online payment rent",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/smart-lease-manager",
+        adminStatus: 'Completed',
+        adminNotes: "Stable and operational. No major issues reported."
+    },
+    {
+        id: 24,
+        name: "InvestiSight AI",
+        description: "Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps.",
+        stage: "Validation Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re6/400/400",
+        aiHint: "investment analysis chart",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/investisight",
+        adminStatus: 'On Hold',
+        adminNotes: "Project is on hold pending new market data for the forecasting models."
+    },
+    {
+        id: 25,
+        name: "FacilityFlow SaaS",
+        description: "A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking.",
+        stage: "Planning Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re7/400/400",
+        aiHint: "maintenance service ticket",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/facility-flow",
+        adminStatus: 'On Track',
+        adminNotes: "Finalizing technical specifications and architecture design."
+    },
+    {
+        id: 26,
+        name: "PropToken Platform",
+        description: "Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer.",
+        stage: "Research Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re8/400/400",
+        aiHint: "blockchain property ownership",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/proptoken-platform",
+        adminStatus: 'On Track',
+        adminNotes: "Assessing legal and regulatory hurdles for tokenization in the region."
+    },
+    {
+        id: 27,
+        name: "Tenant Digital Briefcase",
+        description: "A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals.",
+        stage: "Idea Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re9/400/400",
+        aiHint: "digital document wallet",
+        rating: 0,
+        enabled: true,
+        href: "/briefcase",
+        adminStatus: 'On Track',
+        adminNotes: "Concept is solid. Needs a dedicated project manager to move forward."
+    },
+    {
+        id: 28,
+        name: "EcoBuild Certify",
+        description: "Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance.",
+        stage: "Idea Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re10/400/400",
+        aiHint: "green building energy",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/ecobuild-certify",
+        adminStatus: 'On Track',
+        adminNotes: "Awaiting government regulations on green building standards before proceeding."
+    },
+    {
+        id: 29,
+        name: "BoQ Generator",
+        description: "Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re11/400/400",
+        aiHint: "bill of quantities document",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/quantity-calculator",
+        adminStatus: 'Completed',
+        adminNotes: "Live and integrated with the main construction tech portal."
+    },
+    {
+        id: 30,
+        name: "AI Interior Designer",
+        description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
+        stage: "Live & Operating",
+        category: "Creative Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/re12/400/400",
+        aiHint: "modern living room",
+        rating: 0,
+        enabled: true,
+        href: "/interior-designer",
+        adminStatus: 'Completed',
+        adminNotes: "Feature is popular. Consider expanding with furniture shopping integration."
+    },
+    {
+        id: 31,
+        name: "AI PDF Form Filler",
+        description: "Upload any PDF form (bank, school, visa) and let our AI intelligently fill it out based on your profile data, saving you time and effort.",
+        stage: "Idea Phase",
+        category: "AI Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/formfiller/400/400",
+        aiHint: "pdf document form",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "New idea submitted. Requires initial research and validation."
+    },
+    {
+        id: 32,
+        name: "AlumniConnect",
+        description: "A comprehensive digital platform for universities, colleges, and schools to engage their alumni network, fostering connections and professional opportunities.",
+        stage: "Research Phase",
+        category: "SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/alumni/400/400",
+        aiHint: "university alumni network",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Market research in progress to identify target institutions."
+    },
+    {
+        id: 33,
+        name: "Hadeeya",
+        description: "A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.",
+        stage: "Research Phase",
+        category: "Fintech",
+        price: 0,
+        image: "https://picsum.photos/seed/giftcard/400/400",
+        aiHint: "digital gift card",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Assessing potential merchant partnerships."
+    },
+    {
+        id: 34,
+        name: "AI-POS for Education",
+        description: "A smart, AI-driven Point-of-Sale system for university canteens or school stores, featuring inventory management and student spending analytics.",
+        stage: "Research Phase",
+        category: "SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/pos/400/400",
+        aiHint: "point of sale system",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Evaluating hardware requirements and potential suppliers."
+    },
+    {
+        id: 35,
+        name: "EduFlow Suite",
+        description: "An all-in-one administrative automation platform for schools, featuring smart timetabling, automated admissions workflows, and AI-powered resource allocation.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/eduflow/400/400",
+        aiHint: "education administration software",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 1: Administration & Operations.",
+        href: "/education-tech/eduflow",
+    },
+    {
+        id: 36,
+        name: "CognitaLearn",
+        description: "A personalized adaptive learning platform that uses AI to create custom learning paths, gamified modules, and automated grading for students.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/cognita/400/400",
+        aiHint: "personalized learning ai",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 2: Teaching & Learning Innovation.",
+        href: "/education-tech/cognita-learn"
+    },
+    {
+        id: 37,
+        name: "Guardian AI",
+        description: "A student wellbeing and success platform offering risk profiling for early dropout prevention, AI career advisory, and mental health support chatbots.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/guardian/400/400",
+        aiHint: "student success wellbeing",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 3: Student Experience & Wellbeing.",
+        href: "/education-tech/guardian-ai",
+    },
+    {
+        id: 38,
+        name: "CertiTrust",
+        description: "A blockchain-based digital credentialing system combined with AI proctoring to ensure the integrity of exams and provide secure, verifiable certificates.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/certitrust/400/400",
+        aiHint: "blockchain certificate security",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification.",
+        href: "/education-tech/certitrust",
+    },
+    {
+        id: 39,
+        name: "CampusOS",
+        description: "A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance for a sustainable and cost-effective campus.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/campusos/400/400",
+        aiHint: "smart campus iot",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management.",
+        href: "/education-tech/campus-os",
+    },
+    {
+        id: 11,
+        name: "StructurAI BIM",
+        description: "AI-powered BIM for automated clash detection and material optimization. (Conceptual - Requires specialized backend).",
+        stage: "Planning Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const3/400/400",
+        aiHint: "building information modeling",
+        rating: 0,
+        enabled: true,
+        href: undefined,
+        adminStatus: 'On Hold',
+        adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
+    },
+];
+
+// This is where e-commerce products should live in a real application,
+// separate from the company's internal projects.
+export const initialStoreProducts: Product[] = [
+    {
+        id: 1,
+        name: "Wireless Headphones",
+        description: "High-fidelity audio with noise cancellation.",
+        stage: "Live & Operating",
+        category: "Electronics",
+        price: 1.3,
+        image: "https://picsum.photos/seed/p1/400/400",
+        aiHint: "headphones product",
+        rating: 4.5,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 2,
+        name: "Modern Coffee Table",
+        description: "Oak wood with a minimalist design for modern living.",
+        stage: "Live & Operating",
+        category: "Home Goods",
+        price: 2.5,
+        image: "https://picsum.photos/seed/p2/400/400",
+        aiHint: "coffee table",
+        rating: 4.8,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 3,
+        name: "Performance Running Shoes",
+        description: "Lightweight and responsive for your daily run.",
+        stage: "Live & Operating",
+        category: "Sports",
+        price: 0.9,
+        image: "https://picsum.photos/seed/p3/400/400",
+        aiHint: "running shoes",
+        rating: 4.7,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 4,
+        name: "Organic Cotton T-Shirt",
+        description: "Soft, breathable, and sustainably made.",
+        stage: "Live & Operating",
+        category: "Apparel",
+        price: 0.25,
+        image: "https://picsum.photos/seed/p4/400/400",
+        aiHint: "cotton t-shirt",
+        rating: 4.9,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+     {
+        id: 5,
+        name: "Smartwatch Series 8",
+        description: "Track your fitness and stay connected on the go.",
+        stage: "Live & Operating",
+        category: "Electronics",
+        price: 4.0,
+        image: "https://picsum.photos/seed/p5/400/400",
+        aiHint: "smartwatch product",
+        rating: 4.9,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 6,
+        name: "Leather Backpack",
+        description: "Stylish and durable for work or travel.",
+        stage: "Live & Operating",
+        category: "Apparel",
+        price: 1.5,
+        image: "https://picsum.photos/seed/p6/400/400",
+        aiHint: "leather backpack",
+        rating: 4.6,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 7,
+        name: "Non-stick Cookware Set",
+        description: "A complete set for all your cooking needs.",
+        stage: "Live & Operating",
+        category: "Home Goods",
+        price: 2.0,
+        image: "https://picsum.photos/seed/p7/400/400",
+        aiHint: "cookware set",
+        rating: 4.7,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 8,
+        name: "The Alchemist",
+        description: "A bestselling novel by Paulo Coelho.",
+        stage: "Live & Operating",
+        category: "Books",
+        price: 0.13,
+        image: "https://picsum.photos/seed/p8/400/400",
+        aiHint: "book cover",
+        rating: 4.8,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+];

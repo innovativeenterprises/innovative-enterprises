@@ -53,7 +53,7 @@ export const useAssetsData = () => {
 
 const AssetSchema = z.object({
   name: z.string().min(3, "Asset name is required"),
-  type: z.enum(['Server', 'Laptop', 'Workstation', 'Networking', 'Storage', 'Peripheral']),
+  type: z.enum(['Heavy Machinery', 'Power Tools', 'Vehicles', 'Scaffolding', 'Server', 'Laptop', 'Workstation', 'Networking', 'Storage', 'Peripheral']),
   specs: z.string().min(5, "Specifications are required"),
   monthlyPrice: z.coerce.number().min(1, "Monthly price is required"),
   status: z.enum(['Available', 'Rented', 'Maintenance']),
@@ -162,6 +162,10 @@ const AddEditAssetDialog = ({
                         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                              <FormField control={form.control} name="type" render={({ field }) => (
                                 <FormItem><FormLabel>Asset Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                    <SelectItem value="Heavy Machinery">Heavy Machinery</SelectItem>
+                                    <SelectItem value="Power Tools">Power Tools</SelectItem>
+                                    <SelectItem value="Vehicles">Vehicles</SelectItem>
+                                    <SelectItem value="Scaffolding">Scaffolding</SelectItem>
                                     <SelectItem value="Server">Server</SelectItem>
                                     <SelectItem value="Laptop">Laptop</SelectItem>
                                     <SelectItem value="Workstation">Workstation</SelectItem>
@@ -363,8 +367,8 @@ export default function AssetTable({
         <Card>
             <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
-                    <CardTitle>InfraRent Asset Management</CardTitle>
-                    <CardDescription>Manage IT hardware and infrastructure available for rent.</CardDescription>
+                    <CardTitle>Asset Rental Management</CardTitle>
+                    <CardDescription>Manage construction and IT hardware available for rent.</CardDescription>
                 </div>
                 <div className="flex w-full md:w-auto items-center gap-2">
                     <div className="relative flex-grow">

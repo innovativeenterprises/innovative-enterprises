@@ -1,208 +1,588 @@
-
-'use client';
-
-import { useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { generateItRentalProposal } from '@/ai/flows/it-rental-agent';
-import { ItRentalInquiryInputSchema, type ItRentalInquiryInput, type ItRentalProposalOutput } from '@/ai/flows/it-rental-agent.schema';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileText, Briefcase, Download, CheckCircle, Mail } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
-import jsPDF from 'jspdf';
-
-export default function ItRentalAgentForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [response, setResponse] = useState<ItRentalProposalOutput | null>(null);
-  const { toast } = useToast();
-
-  const form = useForm<ItRentalInquiryInput>({
-    resolver: zodResolver(ItRentalInquiryInputSchema),
-    defaultValues: {
-      projectName: '',
-      purposeOfRental: 'Training Program or Workshop',
-      numberOfAttendees: 10,
-      existingInfrastructure: '',
-      missingComponents: '',
-      rentalDurationMonths: 1,
-      budget: undefined,
-    },
-  });
-
-  const onSubmit: SubmitHandler<ItRentalInquiryInput> = async (data) => {
-    setIsLoading(true);
-    setResponse(null);
-    try {
-      const result = await generateItRentalProposal(data);
-      setResponse(result);
-      toast({
-        title: 'Proposal Generated!',
-        description: 'Your custom infrastructure proposal is ready for review.',
-      });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error Generating Proposal',
-        description: 'An unexpected error occurred. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const handleDownloadAgreement = () => {
-    if (!response?.serviceAgreement) return;
-    const doc = new jsPDF();
-    doc.text(response.serviceAgreement, 10, 10);
-    doc.save("Service-Agreement.pdf");
-  }
-
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent className="p-10 text-center">
-          <div className="flex flex-col items-center gap-6">
-            <Loader2 className="h-12 w-12 text-primary animate-spin" />
-            <div className="space-y-2">
-              <CardTitle className="text-2xl">Designing Your Solution...</CardTitle>
-              <CardDescription>Our AI Architect is analyzing your requirements to build the perfect package.</CardDescription>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-  
-  if (response) {
-      return (
-         <Card>
-            <CardHeader className="text-center">
-                <div className="mx-auto bg-green-100 dark:bg-green-900/50 p-4 rounded-full w-fit mb-4">
-                    <CheckCircle className="h-12 w-12 text-green-500" />
-                </div>
-                <CardTitle className="text-2xl">{response.proposalTitle}</CardTitle>
-                <CardDescription>{response.executiveSummary}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Recommended Hardware Package</h3>
-                    <div className="space-y-4">
-                        {response.recommendedAssets.map(asset => (
-                            <Card key={asset.id} className="flex items-start gap-4 p-4">
-                                <Image src={asset.image} alt={asset.name} width={80} height={80} className="rounded-md object-cover" />
-                                <div className="space-y-1 flex-grow">
-                                    <div className="flex justify-between">
-                                      <p className="font-semibold">{asset.name}</p>
-                                      <p className="font-bold text-lg text-primary">x {asset.quantity}</p>
-                                    </div>
-                                    <Badge variant="outline">{asset.type}</Badge>
-                                    <p className="text-xs text-muted-foreground">{asset.specs}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-bold text-primary">OMR {asset.monthlyPrice.toFixed(2)}</p>
-                                    <p className="text-xs text-muted-foreground">/mo per unit</p>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="p-4 rounded-md border bg-muted/50 flex justify-between items-center">
-                    <span className="text-muted-foreground font-semibold">Total Estimated Monthly Cost</span>
-                    <span className="text-2xl font-bold text-primary">OMR {response.totalMonthlyCost.toFixed(2)}</span>
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Draft Service Agreement</h3>
-                    <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-80 overflow-y-auto">
-                        {response.serviceAgreement}
-                    </div>
-                </div>
-            </CardContent>
-            <CardFooter className="flex-col gap-4">
-                 <div className="flex justify-between w-full">
-                    <Button variant="outline" onClick={() => setResponse(null)} className="w-full sm:w-auto">Request a New Proposal</Button>
-                    <div className="flex gap-2">
-                        <Button variant="outline" onClick={handleDownloadAgreement}><Download className="mr-2 h-4 w-4"/> Download Agreement</Button>
-                        <Button asChild><Link href="/partner"><Mail className="mr-2 h-4 w-4"/> Accept & Proceed</Link></Button>
-                    </div>
-                 </div>
-            </CardFooter>
-        </Card>
-      )
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>New Infrastructure Request</CardTitle>
-        <CardDescription>Describe your event or project, and our AI will recommend a complete rental package.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField control={form.control} name="projectName" render={({ field }) => (
-                <FormItem><FormLabel>Project or Event Name</FormLabel><FormControl><Input placeholder="e.g., 'Q4 Sales Kickoff Event'" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-
-            <div className="grid md:grid-cols-2 gap-6">
-                 <FormField control={form.control} name="purposeOfRental" render={({ field }) => (
-                    <FormItem><FormLabel>Purpose of Rental</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                        <SelectItem value="Temporary Office Setup">Temporary Office Setup</SelectItem>
-                        <SelectItem value="Training Program or Workshop">Training Program or Workshop</SelectItem>
-                        <SelectItem value="Special Event (e.g., conference, hackathon)">Special Event</SelectItem>
-                        <SelectItem value="Short-term Project (e.g., data analysis, software dev)">Short-term Project</SelectItem>
-                        <SelectItem value="Hardware Evaluation or Testing">Hardware Evaluation/Testing</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent></Select><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="numberOfAttendees" render={({ field }) => (
-                    <FormItem><FormLabel>Number of Attendees / Users</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-            </div>
-
-            <FormField control={form.control} name="existingInfrastructure" render={({ field }) => (
-                <FormItem>
-                    <FormLabel>Existing Infrastructure (Optional)</FormLabel>
-                    <FormControl><Textarea placeholder="List any equipment you already have available, e.g., 'Our office provides monitors, keyboards, mice, and a stable internet connection.'" {...field} /></FormControl>
-                    <FormDescription>This helps the AI avoid recommending items you don't need.</FormDescription>
-                    <FormMessage />
-                </FormItem>
-            )} />
-
-             <FormField control={form.control} name="missingComponents" render={({ field }) => (
-                <FormItem>
-                    <FormLabel>Specific Missing Components (Optional)</FormLabel>
-                    <FormControl><Textarea placeholder="If you know exactly what you're missing, list it here. e.g., 'We need 15 laptops with at least 16GB RAM and one powerful server for processing data.'" {...field} /></FormControl>
-                    <FormDescription>Provide this if you have specific hardware in mind.</FormDescription>
-                    <FormMessage />
-                </FormItem>
-            )} />
-            
-            <div className="grid md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="rentalDurationMonths" render={({ field }) => (
-                    <FormItem><FormLabel>Rental Duration (Months)</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                 <FormField control={form.control} name="budget" render={({ field }) => (
-                    <FormItem><FormLabel>Estimated Monthly Budget (OMR, Optional)</FormLabel><FormControl><Input type="number" placeholder="e.g., 1500" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-            </div>
-
-            <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-              {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</> : <><Sparkles className="mr-2 h-4 w-4" /> Generate Proposal</>}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
-  );
+export interface Product {
+    id: number;
+    name: string;
+    description: string;
+    stage: string;
+    category: string;
+    price: number;
+    image: string;
+    aiHint: string;
+    rating: number;
+    enabled: boolean;
+    href?: string;
+    adminStatus?: 'On Track' | 'At Risk' | 'On Hold' | 'Completed';
+    adminNotes?: string;
 }
+
+export const initialProducts: Product[] = [
+    {
+        id: 9,
+        name: "Smart PM SaaS",
+        description: "AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management.",
+        stage: "Development Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const1/400/400",
+        aiHint: "construction management software",
+        rating: 0,
+        enabled: true,
+        href: "/admin/projects",
+        adminStatus: 'Completed',
+        adminNotes: "Core features are live in the admin panel's Projects page."
+    },
+    {
+        id: 10,
+        name: "BidWise Estimator",
+        description: "Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing.",
+        stage: "Testing Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const2/400/400",
+        aiHint: "construction bidding document",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/bid-estimator",
+        adminStatus: 'On Track',
+        adminNotes: "User acceptance testing is underway with pilot partners."
+    },
+    {
+        id: 12,
+        name: "SiteGuard Compliance",
+        description: "Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking.",
+        stage: "Design Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const4/400/400",
+        aiHint: "construction safety compliance",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/site-guard",
+        adminStatus: 'On Track',
+        adminNotes: "UI/UX wireframes are being developed."
+    },
+    {
+        id: 13,
+        name: "WorkforceFlow",
+        description: "AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const5/400/400",
+        aiHint: "construction workforce management",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/workforce-scheduler",
+        adminStatus: 'Completed',
+        adminNotes: "The AI Workforce Scheduler is live and functional."
+    },
+    {
+        id: 14,
+        name: "ProcureChain SaaS",
+        description: "E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
+        stage: "Idea Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const6/400/400",
+        aiHint: "supply chain logistics",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/asset-rentals",
+        adminStatus: 'Completed',
+        adminNotes: "Asset rental feature is live. Predictive ordering and blockchain are on hold."
+    },
+    {
+        id: 15,
+        name: "ConstructFin",
+        description: "Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const7/400/400",
+        aiHint: "financial technology construction",
+        rating: 0,
+        enabled: true,
+        href: "/cfo",
+        adminStatus: 'Completed',
+        adminNotes: "CFO Dashboard and AI Audit features are live."
+    },
+    {
+        id: 16,
+        name: "Digital Twin Ops",
+        description: "IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual - Requires hardware integration)",
+        stage: "Idea Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const8/400/400",
+        aiHint: "digital twin building",
+        rating: 0,
+        enabled: true,
+        href: undefined,
+        adminStatus: 'On Track',
+        adminNotes: "This feature requires hardware (IoT) integration and is on hold for the prototype."
+    },
+    {
+        id: 17,
+        name: "AeroSite AI (DaaS)",
+        description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual - Requires hardware integration)",
+        stage: "Development Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const9/400/400",
+        aiHint: "construction drone survey",
+        rating: 0,
+        enabled: true,
+        href: undefined,
+        adminStatus: 'At Risk',
+        adminNotes: "This feature requires hardware (drone) integration and is on hold for the prototype."
+    },
+    {
+        id: 18,
+        name: "ClientView Portal",
+        description: "White-label dashboards for clients to see live project status, track payment milestones, and manage warranties.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const10/400/400",
+        aiHint: "client dashboard project",
+        rating: 0,
+        enabled: true,
+        href: "/admin/projects",
+        adminStatus: 'Completed',
+        adminNotes: "Core features (Kanban, AI Inception) are live in the admin panel."
+    },
+    {
+        id: 19,
+        name: "AI Property Valuator",
+        description: "Automates property appraisal using AI, considering location, size, amenities, and market trends for instant valuations.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re1/400/400",
+        aiHint: "property value graph",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/property-valuator",
+        adminStatus: 'Completed',
+        adminNotes: "Service is live and performing within expected parameters."
+    },
+    {
+        id: 20,
+        name: "Smart Listing & Matching",
+        description: "AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget, with automated lead routing to agents.",
+        stage: "Development Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re2/400/400",
+        aiHint: "house search map",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/smart-listing",
+        adminStatus: 'On Track',
+        adminNotes: "Core matching algorithm is complete. Now working on the agent dashboard."
+    },
+    {
+        id: 21,
+        name: "3D Virtual Tour SaaS",
+        description: "Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties.",
+        stage: "Launch Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re3/400/400",
+        aiHint: "virtual reality home",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/virtual-tour",
+        adminStatus: 'On Track',
+        adminNotes: "Public launch scheduled for next month. Marketing campaign is active."
+    },
+    {
+        id: 22,
+        name: "DocuChain Compliance",
+        description: "Auto-generates sale agreements and tenancy contracts, tracking compliance with local laws and renewal dates.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re4/400/400",
+        aiHint: "legal document agreement",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/docu-chain",
+        adminStatus: 'Completed',
+        adminNotes: "Service is live. Monitoring for user feedback on contract templates."
+    },
+    {
+        id: 23,
+        name: "SmartLease Manager",
+        description: "Automates online rent collection, reminders, and late fee calculations, including tenant background checks.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re5/400/400",
+        aiHint: "online payment rent",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/smart-lease-manager",
+        adminStatus: 'Completed',
+        adminNotes: "Stable and operational. No major issues reported."
+    },
+    {
+        id: 24,
+        name: "InvestiSight AI",
+        description: "Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps.",
+        stage: "Validation Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re6/400/400",
+        aiHint: "investment analysis chart",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/investisight",
+        adminStatus: 'On Hold',
+        adminNotes: "Project is on hold pending new market data for the forecasting models."
+    },
+    {
+        id: 25,
+        name: "FacilityFlow SaaS",
+        description: "A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking.",
+        stage: "Planning Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re7/400/400",
+        aiHint: "maintenance service ticket",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/facility-flow",
+        adminStatus: 'On Track',
+        adminNotes: "Finalizing technical specifications and architecture design."
+    },
+    {
+        id: 26,
+        name: "PropToken Platform",
+        description: "Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer.",
+        stage: "Research Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re8/400/400",
+        aiHint: "blockchain property ownership",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/proptoken-platform",
+        adminStatus: 'On Track',
+        adminNotes: "Assessing legal and regulatory hurdles for tokenization in the region."
+    },
+    {
+        id: 27,
+        name: "Tenant Digital Briefcase",
+        description: "A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals.",
+        stage: "Idea Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re9/400/400",
+        aiHint: "digital document wallet",
+        rating: 0,
+        enabled: true,
+        href: "/briefcase",
+        adminStatus: 'On Track',
+        adminNotes: "Concept is solid. Needs a dedicated project manager to move forward."
+    },
+    {
+        id: 28,
+        name: "EcoBuild Certify",
+        description: "Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance.",
+        stage: "Idea Phase",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re10/400/400",
+        aiHint: "green building energy",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/ecobuild-certify",
+        adminStatus: 'On Track',
+        adminNotes: "Awaiting government regulations on green building standards before proceeding."
+    },
+    {
+        id: 29,
+        name: "BoQ Generator",
+        description: "Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/re11/400/400",
+        aiHint: "bill of quantities document",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/quantity-calculator",
+        adminStatus: 'Completed',
+        adminNotes: "Live and integrated with the main construction tech portal."
+    },
+    {
+        id: 30,
+        name: "AI Interior Designer",
+        description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
+        stage: "Live & Operating",
+        category: "Creative Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/re12/400/400",
+        aiHint: "modern living room",
+        rating: 0,
+        enabled: true,
+        href: "/interior-designer",
+        adminStatus: 'Completed',
+        adminNotes: "Feature is popular. Consider expanding with furniture shopping integration."
+    },
+    {
+        id: 31,
+        name: "AI PDF Form Filler",
+        description: "Upload any PDF form (bank, school, visa) and let our AI intelligently fill it out based on your profile data, saving you time and effort.",
+        stage: "Idea Phase",
+        category: "AI Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/formfiller/400/400",
+        aiHint: "pdf document form",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "New idea submitted. Requires initial research and validation."
+    },
+    {
+        id: 32,
+        name: "AlumniConnect",
+        description: "A comprehensive digital platform for universities, colleges, and schools to engage their alumni network, fostering connections and professional opportunities.",
+        stage: "Research Phase",
+        category: "SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/alumni/400/400",
+        aiHint: "university alumni network",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Market research in progress to identify target institutions."
+    },
+    {
+        id: 33,
+        name: "Hadeeya",
+        description: "A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.",
+        stage: "Research Phase",
+        category: "Fintech",
+        price: 0,
+        image: "https://picsum.photos/seed/giftcard/400/400",
+        aiHint: "digital gift card",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Assessing potential merchant partnerships."
+    },
+    {
+        id: 34,
+        name: "AI-POS for Education",
+        description: "A smart, AI-driven Point-of-Sale system for university canteens or school stores, featuring inventory management and student spending analytics.",
+        stage: "Research Phase",
+        category: "SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/pos/400/400",
+        aiHint: "point of sale system",
+        rating: 0,
+        enabled: false,
+        adminStatus: 'On Track',
+        adminNotes: "Evaluating hardware requirements and potential suppliers."
+    },
+    {
+        id: 35,
+        name: "EduFlow Suite",
+        description: "An all-in-one administrative automation platform for schools, featuring smart timetabling, automated admissions workflows, and AI-powered resource allocation.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/eduflow/400/400",
+        aiHint: "education administration software",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 1: Administration & Operations.",
+        href: "/education-tech/eduflow",
+    },
+    {
+        id: 36,
+        name: "CognitaLearn",
+        description: "A personalized adaptive learning platform that uses AI to create custom learning paths, gamified modules, and automated grading for students.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/cognita/400/400",
+        aiHint: "personalized learning ai",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 2: Teaching & Learning Innovation.",
+        href: "/education-tech/cognita-learn"
+    },
+    {
+        id: 37,
+        name: "Guardian AI",
+        description: "A student wellbeing and success platform offering risk profiling for early dropout prevention, AI career advisory, and mental health support chatbots.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/guardian/400/400",
+        aiHint: "student success wellbeing",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 3: Student Experience & Wellbeing.",
+        href: "/education-tech/guardian-ai",
+    },
+    {
+        id: 38,
+        name: "CertiTrust",
+        description: "A blockchain-based digital credentialing system combined with AI proctoring to ensure the integrity of exams and provide secure, verifiable certificates.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/certitrust/400/400",
+        aiHint: "blockchain certificate security",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification.",
+        href: "/education-tech/certitrust",
+    },
+    {
+        id: 39,
+        name: "CampusOS",
+        description: "A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance for a sustainable and cost-effective campus.",
+        stage: "Idea Phase",
+        category: "EdTech",
+        price: 0,
+        image: "https://picsum.photos/seed/campusos/400/400",
+        aiHint: "smart campus iot",
+        rating: 0,
+        enabled: true,
+        adminStatus: 'On Track',
+        adminNotes: "Generated from Education Playbook. Addresses Pillar 9: Infrastructure & Campus Management.",
+        href: "/education-tech/campus-os",
+    },
+    {
+        id: 11,
+        name: "StructurAI BIM",
+        description: "AI-powered BIM for automated clash detection and material optimization. (Conceptual - Requires specialized backend).",
+        stage: "Planning Phase",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const3/400/400",
+        aiHint: "building information modeling",
+        rating: 0,
+        enabled: true,
+        href: undefined,
+        adminStatus: 'On Hold',
+        adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
+    },
+];
+
+// This is where e-commerce products should live in a real application,
+// separate from the company's internal projects.
+export const initialStoreProducts: Product[] = [
+    {
+        id: 1,
+        name: "Wireless Headphones",
+        description: "High-fidelity audio with noise cancellation.",
+        stage: "Live & Operating",
+        category: "Electronics",
+        price: 1.3,
+        image: "https://picsum.photos/seed/p1/400/400",
+        aiHint: "headphones product",
+        rating: 4.5,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 2,
+        name: "Modern Coffee Table",
+        description: "Oak wood with a minimalist design for modern living.",
+        stage: "Live & Operating",
+        category: "Home Goods",
+        price: 2.5,
+        image: "https://picsum.photos/seed/p2/400/400",
+        aiHint: "coffee table",
+        rating: 4.8,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 3,
+        name: "Performance Running Shoes",
+        description: "Lightweight and responsive for your daily run.",
+        stage: "Live & Operating",
+        category: "Sports",
+        price: 0.9,
+        image: "https://picsum.photos/seed/p3/400/400",
+        aiHint: "running shoes",
+        rating: 4.7,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 4,
+        name: "Organic Cotton T-Shirt",
+        description: "Soft, breathable, and sustainably made.",
+        stage: "Live & Operating",
+        category: "Apparel",
+        price: 0.25,
+        image: "https://picsum.photos/seed/p4/400/400",
+        aiHint: "cotton t-shirt",
+        rating: 4.9,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+     {
+        id: 5,
+        name: "Smartwatch Series 8",
+        description: "Track your fitness and stay connected on the go.",
+        stage: "Live & Operating",
+        category: "Electronics",
+        price: 4.0,
+        image: "https://picsum.photos/seed/p5/400/400",
+        aiHint: "smartwatch product",
+        rating: 4.9,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 6,
+        name: "Leather Backpack",
+        description: "Stylish and durable for work or travel.",
+        stage: "Live & Operating",
+        category: "Apparel",
+        price: 1.5,
+        image: "https://picsum.photos/seed/p6/400/400",
+        aiHint: "leather backpack",
+        rating: 4.6,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 7,
+        name: "Non-stick Cookware Set",
+        description: "A complete set for all your cooking needs.",
+        stage: "Live & Operating",
+        category: "Home Goods",
+        price: 2.0,
+        image: "https://picsum.photos/seed/p7/400/400",
+        aiHint: "cookware set",
+        rating: 4.7,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+    {
+        id: 8,
+        name: "The Alchemist",
+        description: "A bestselling novel by Paulo Coelho.",
+        stage: "Live & Operating",
+        category: "Books",
+        price: 0.13,
+        image: "https://picsum.photos/seed/p8/400/400",
+        aiHint: "book cover",
+        rating: 4.8,
+        enabled: true,
+        adminStatus: 'Completed',
+    },
+];

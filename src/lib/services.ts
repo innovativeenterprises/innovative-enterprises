@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -89,11 +89,11 @@ export const initialServices: Service[] = [
     href: "/vip-hub",
   },
   {
-    icon: Server,
-    title: "InfraRent",
-    description: "On-demand rental of IT equipment like servers, workstations, and networking gear for events and projects.",
+    icon: Package,
+    title: "ProcureChain SaaS",
+    description: "E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
     enabled: true,
-    href: "/rentals",
+    href: "/construction-tech/asset-rentals",
   },
    {
     icon: Languages,
@@ -114,7 +114,7 @@ export const initialServices: Service[] = [
     title: "WorkforceFlow",
     description: "AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking.",
     enabled: true,
-    href: "/education-tech/eduflow/timetable-generator",
+    href: "/construction-tech/workforce-scheduler",
   },
   {
     icon: Lock,

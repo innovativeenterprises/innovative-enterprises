@@ -25,7 +25,7 @@ import '@/ai/flows/project-inception';
 import '@/ai/flows/financial-document-analysis';
 import '@/ai/flows/cctv-quotation';
 import '@/ai/flows/floor-plan-analysis';
-import '@/ai/flows/it-rental-agent';
+import '@/ai/flows/asset-rental-agent';
 import '@/ai/flows/sanad-task-analysis';
 import '@/ai/flows/sanad-office-registration';
 import '@/ai/flows/business-hub-agent';
