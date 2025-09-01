@@ -53,7 +53,6 @@ import '@/ai/flows/wellbeing-checkin';
 import '@/ai/flows/scholarship-agent';
 import '@/ai/flows/scholarship-essay-assistant';
 import '@/ai/flows/quiz-generator';
-import '@/ai/flows/learning-path-generator';
     
 
     
