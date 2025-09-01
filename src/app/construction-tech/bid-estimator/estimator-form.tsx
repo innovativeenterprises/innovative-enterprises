@@ -70,29 +70,10 @@ export default function EstimatorForm() {
 
   useEffect(() => {
     if (response) {
-        const { contingencyPercentage, profitMarginPercentage } = form.getValues();
-        const totalDirectCosts = response.costedItems.reduce((sum, item) => sum + item.totalItemCost, 0);
-        const contingencyAmount = totalDirectCosts * (contingencyPercentage / 100);
-        const subtotal = totalDirectCosts + contingencyAmount;
-        const profitAmount = subtotal * (profitMarginPercentage / 100);
-        const grandTotal = subtotal + profitAmount;
-        
-        setResponse(prev => {
-            if (!prev) return null;
-            return {
-                ...prev,
-                summary: {
-                    totalDirectCosts,
-                    contingencyAmount,
-                    subtotal,
-                    profitAmount,
-                    grandTotal,
-                }
-            };
-        });
+      updateSummary();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contingencyPercentage, profitMarginPercentage]);
+  }, [contingencyPercentage, profitMarginPercentage, response?.costedItems]);
 
 
   useEffect(() => {
@@ -144,6 +125,46 @@ export default function EstimatorForm() {
         setIsLoading(false);
     }
   };
+
+  const updateSummary = () => {
+    if (!response) return;
+    const { contingencyPercentage, profitMarginPercentage } = form.getValues();
+    const totalDirectCosts = response.costedItems.reduce((sum, item) => sum + item.totalItemCost, 0);
+    const contingencyAmount = totalDirectCosts * (contingencyPercentage / 100);
+    const subtotal = totalDirectCosts + contingencyAmount;
+    const profitAmount = subtotal * (profitMarginPercentage / 100);
+    const grandTotal = subtotal + profitAmount;
+    
+    setResponse(prev => {
+        if (!prev) return null;
+        return {
+            ...prev,
+            summary: {
+                totalDirectCosts,
+                contingencyAmount,
+                subtotal,
+                profitAmount,
+                grandTotal,
+            }
+        };
+    });
+  }
+
+  const handleCostChange = (index: number, field: 'materialUnitCost' | 'laborUnitCost', value: number) => {
+    setResponse(prev => {
+        if (!prev) return null;
+        
+        const newItems = [...prev.costedItems];
+        const itemToUpdate = { ...newItems[index] };
+
+        itemToUpdate[field] = value;
+        itemToUpdate.totalItemCost = (itemToUpdate.materialUnitCost + itemToUpdate.laborUnitCost) * itemToUpdate.quantity;
+
+        newItems[index] = itemToUpdate;
+
+        return { ...prev, costedItems: newItems };
+    });
+  }
 
   const handleGenerateTender = async () => {
     if (!response) return;
@@ -249,29 +270,6 @@ export default function EstimatorForm() {
     document.body.removeChild(element);
   };
 
-  const handleProceedToEstimator = () => {
-    if (!boqItems.length) {
-      toast({ title: "No BoQ Data", description: "Please generate a BoQ before proceeding.", variant: "destructive" });
-      return;
-    }
-    const headers = ["Category", "Item Description", "Unit", "Quantity", "Notes"];
-    const rows = boqItems.map(item => [
-      `"${item.category}"`,
-      `"${item.item}"`,
-      `"${item.unit}"`,
-      item.quantity.toFixed(2),
-      `"${item.notes || ''}"`
-    ].join(','));
-    const csvContent = headers.join(',') + '\n' + rows.join('\n');
-    
-    try {
-        sessionStorage.setItem('boqDataForEstimator', csvContent);
-        router.push('/construction-tech/bid-estimator');
-    } catch(e) {
-        toast({ title: "Error", description: "Could not pass data to the estimator.", variant: 'destructive' });
-    }
-  }
-
   return (
     <div className="space-y-8">
       <Card>
@@ -358,8 +356,8 @@ export default function EstimatorForm() {
                             <TableHead>Item</TableHead>
                             <TableHead className="text-right">Quantity</TableHead>
                             <TableHead className="text-right">Unit</TableHead>
-                            <TableHead className="text-right">Material Unit Cost</TableHead>
-                            <TableHead className="text-right">Labor Unit Cost</TableHead>
+                            <TableHead className="text-right w-36">Material Unit Cost</TableHead>
+                            <TableHead className="text-right w-36">Labor Unit Cost</TableHead>
                             <TableHead className="text-right font-semibold">Total Cost (OMR)</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -370,8 +368,22 @@ export default function EstimatorForm() {
                                 <TableCell>{item.item}</TableCell>
                                 <TableCell className="text-right font-mono">{item.quantity}</TableCell>
                                 <TableCell className="text-right">{item.unit}</TableCell>
-                                <TableCell className="text-right font-mono">{item.materialUnitCost.toFixed(2)}</TableCell>
-                                <TableCell className="text-right font-mono">{item.laborUnitCost.toFixed(2)}</TableCell>
+                                <TableCell className="text-right font-mono">
+                                    <Input
+                                        type="number"
+                                        defaultValue={item.materialUnitCost.toFixed(2)}
+                                        onBlur={(e) => handleCostChange(index, 'materialUnitCost', parseFloat(e.target.value) || 0)}
+                                        className="h-8 text-right"
+                                    />
+                                </TableCell>
+                                 <TableCell className="text-right font-mono">
+                                    <Input
+                                        type="number"
+                                        defaultValue={item.laborUnitCost.toFixed(2)}
+                                        onBlur={(e) => handleCostChange(index, 'laborUnitCost', parseFloat(e.target.value) || 0)}
+                                        className="h-8 text-right"
+                                    />
+                                </TableCell>
                                 <TableCell className="text-right font-semibold">{item.totalItemCost.toFixed(2)}</TableCell>
                             </TableRow>
                         ))}
