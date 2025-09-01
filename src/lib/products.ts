@@ -87,7 +87,7 @@ export const initialProducts: Product[] = [
         aiHint: "construction workforce management",
         rating: 0,
         enabled: true,
-        href: "/admin/network",
+        href: "/construction-tech/workforce-scheduler",
         adminStatus: 'Completed',
         adminNotes: "Core features are represented in the Network Management dashboard."
     },

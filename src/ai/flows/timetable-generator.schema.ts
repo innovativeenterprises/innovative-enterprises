@@ -1,26 +1,26 @@
 /**
- * @fileOverview Schemas for the AI Timetable Generator flow.
+ * @fileOverview Schemas for the AI Timetable/Schedule Generator flow.
  */
 import { z } from 'zod';
 
 const SubjectSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, "Subject name cannot be empty."),
-  teacher: z.string().min(1, "Teacher name cannot be empty."),
+  name: z.string().min(1, "Task name cannot be empty."),
+  teacher: z.string().min(1, "Worker/Team name cannot be empty."),
   requiredSlots: z.coerce.number().min(1, "Required slots must be at least 1."),
 });
 export type Subject = z.infer<typeof SubjectSchema>;
 
 const ClassroomSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, "Classroom name cannot be empty."),
+  name: z.string().min(1, "Site name cannot be empty."),
 });
 export type Classroom = z.infer<typeof ClassroomSchema>;
 
 
 export const TimetableGeneratorInputSchema = z.object({
-  subjects: z.array(SubjectSchema).min(1, "At least one subject is required."),
-  classrooms: z.array(ClassroomSchema).min(1, "At least one classroom is required."),
+  subjects: z.array(SubjectSchema).min(1, "At least one task is required."),
+  classrooms: z.array(ClassroomSchema).min(1, "At least one job site is required."),
   timeSlots: z.array(z.string()).min(1, "At least one time slot is required."),
   days: z.array(z.string()).min(1, "At least one day is required."),
 });
