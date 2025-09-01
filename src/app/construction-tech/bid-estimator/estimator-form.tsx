@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -7,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer } from 'lucide-react';
@@ -18,6 +19,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useCostSettingsData } from '@/app/admin/cost-settings-table';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -52,6 +55,7 @@ export default function EstimatorForm() {
   const [tenderResponse, setTenderResponse] = useState<string | null>(null);
   const { costSettings } = useCostSettingsData();
   const boqTableRef = useRef(null);
+  const router = useRouter();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -62,6 +66,17 @@ export default function EstimatorForm() {
       profitMarginPercentage: 15,
     },
   });
+
+  const contingencyPercentage = form.watch('contingencyPercentage');
+  const profitMarginPercentage = form.watch('profitMarginPercentage');
+
+  useEffect(() => {
+    if (response) {
+      recalculateSummary(editableItems);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contingencyPercentage, profitMarginPercentage, editableItems]);
+
 
   useEffect(() => {
     try {
@@ -74,6 +89,8 @@ export default function EstimatorForm() {
         
         const changeEvent = new Event('change', { bubbles: true });
         fileInputRef.current.dispatchEvent(changeEvent);
+        form.setValue('boqFile', fileInputRef.current.files);
+
 
         toast({
             title: "BoQ Pre-loaded!",
@@ -85,6 +102,7 @@ export default function EstimatorForm() {
     } catch(e) {
       console.error("Could not load BoQ from session storage:", e);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toast]);
 
   const recalculateSummary = (items: CostedBoQItem[]) => {
@@ -116,7 +134,7 @@ export default function EstimatorForm() {
     item[field] = value;
     item.totalItemCost = (item.materialUnitCost + item.laborUnitCost) * item.quantity;
     setEditableItems(newItems);
-    recalculateSummary(newItems);
+    // Recalculation is now handled by the useEffect hook
   };
   
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -247,6 +265,29 @@ export default function EstimatorForm() {
     document.body.removeChild(element);
   };
 
+  const handleProceedToEstimator = () => {
+    if (!boqItems.length) {
+      toast({ title: "No BoQ Data", description: "Please generate a BoQ before proceeding.", variant: "destructive" });
+      return;
+    }
+    const headers = ["Category", "Item Description", "Unit", "Quantity", "Notes"];
+    const rows = boqItems.map(item => [
+      `"${item.category}"`,
+      `"${item.item}"`,
+      `"${item.unit}"`,
+      item.quantity.toFixed(2),
+      `"${item.notes || ''}"`
+    ].join(','));
+    const csvContent = headers.join(',') + '\n' + rows.join('\n');
+    
+    try {
+        sessionStorage.setItem('boqDataForEstimator', csvContent);
+        router.push('/construction-tech/bid-estimator');
+    } catch(e) {
+        toast({ title: "Error", description: "Could not pass data to the estimator.", variant: 'destructive' });
+    }
+  }
+
   return (
     <div className="space-y-8">
       <Card>
@@ -371,9 +412,39 @@ export default function EstimatorForm() {
                 <Card className="bg-muted/50">
                     <CardContent className="p-4 space-y-2 text-sm">
                         <div className="flex justify-between"><span>Direct Costs</span><span className="font-mono">{response.summary.totalDirectCosts.toFixed(2)}</span></div>
-                        <div className="flex justify-between"><span>Contingency ({form.getValues('contingencyPercentage')}%)</span><span className="font-mono">{response.summary.contingencyAmount.toFixed(2)}</span></div>
+                        <div className="flex justify-between items-center">
+                            <Label htmlFor="contingency-inline">Contingency (%)</Label>
+                            <FormField
+                                control={form.control}
+                                name="contingencyPercentage"
+                                render={({ field }) => (
+                                    <Input 
+                                        id="contingency-inline"
+                                        type="number" 
+                                        {...field}
+                                        className="w-24 h-8 text-right font-mono"
+                                    />
+                                )}
+                            />
+                            <span className="font-mono">{response.summary.contingencyAmount.toFixed(2)}</span>
+                        </div>
                         <div className="flex justify-between font-semibold border-t pt-2"><span>Subtotal</span><span className="font-mono">{response.summary.subtotal.toFixed(2)}</span></div>
-                         <div className="flex justify-between"><span>Profit Margin ({form.getValues('profitMarginPercentage')}%)</span><span className="font-mono">{response.summary.profitAmount.toFixed(2)}</span></div>
+                         <div className="flex justify-between items-center">
+                            <Label htmlFor="profit-inline">Profit Margin (%)</Label>
+                             <FormField
+                                control={form.control}
+                                name="profitMarginPercentage"
+                                render={({ field }) => (
+                                    <Input 
+                                        id="profit-inline"
+                                        type="number" 
+                                        {...field}
+                                        className="w-24 h-8 text-right font-mono"
+                                    />
+                                )}
+                            />
+                            <span className="font-mono">{response.summary.profitAmount.toFixed(2)}</span>
+                         </div>
                          <div className="flex justify-between text-lg font-bold text-primary border-t pt-2 mt-2"><span>Grand Total (OMR)</span><span className="font-mono">{response.summary.grandTotal.toFixed(2)}</span></div>
                     </CardContent>
                 </Card>
