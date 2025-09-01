@@ -4,7 +4,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowLeft, Users, Search, Mail, Phone } from "lucide-react";
+import { ArrowLeft, Users, Search, Mail, Phone, Home, User } from "lucide-react";
 import Link from "next/link";
 import { useMembersData } from '@/app/community-hub/membership/page';
 import type { CommunityMember } from "@/lib/community-members";
@@ -12,18 +12,32 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 
-const MemberCard = ({ member }: { member: CommunityMember }) => {
+const FamilyCard = ({ familyHead, members }: { familyHead: CommunityMember, members: CommunityMember[] }) => {
     return (
-        <Card className="flex flex-col text-center items-center p-6">
-            <Image src={member.photo} alt={member.name} width={96} height={96} className="rounded-full object-cover border-4 border-primary/20" />
-            <CardTitle className="mt-4 text-xl">{member.nickname || member.name}</CardTitle>
-            <CardDescription>{member.memberType}</CardDescription>
-            <CardContent className="p-0 mt-4 flex-grow">
-                 <Badge variant="outline">Joined: {new Date(member.joinDate).toLocaleDateString()}</Badge>
+        <Card>
+            <CardHeader className="flex flex-row items-start gap-4 bg-muted/50">
+                 <Image src={familyHead.photo} alt={familyHead.name} width={64} height={64} className="rounded-full object-cover border-2 border-primary/20" />
+                 <div>
+                    <CardTitle className="text-xl">{familyHead.nickname || familyHead.name}'s Family</CardTitle>
+                    <CardDescription>{familyHead.address || 'Address not specified'}</CardDescription>
+                 </div>
+            </CardHeader>
+            <CardContent className="p-4">
+                 <div className="space-y-3">
+                    {[familyHead, ...members].map(member => (
+                         <div key={member.id} className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50">
+                            <div className="flex items-center gap-3">
+                                 <User className="h-4 w-4 text-muted-foreground"/>
+                                 <div>
+                                     <p className="font-medium text-sm">{member.nickname || member.name}</p>
+                                     <p className="text-xs text-muted-foreground">{member.householdRole === 'Head' ? 'Head of Family' : member.householdRole}</p>
+                                 </div>
+                            </div>
+                            <a href={`mailto:${member.contact}`} className="text-muted-foreground hover:text-primary"><Mail className="h-5 w-5"/></a>
+                        </div>
+                    ))}
+                 </div>
             </CardContent>
-            <CardFooter className="p-0 mt-4">
-                 <a href={`mailto:${member.contact}`} className="text-muted-foreground hover:text-primary"><Mail className="h-5 w-5"/></a>
-            </CardFooter>
         </Card>
     )
 }
@@ -32,11 +46,38 @@ export default function MemberDirectoryPage() {
     const { members } = useMembersData();
     const [searchTerm, setSearchTerm] = useState('');
     
-    const activeMembers = useMemo(() => {
-        return members.filter(member => 
-            member.status === 'Active' &&
-            (member.name.toLowerCase().includes(searchTerm.toLowerCase()) || (member.nickname && member.nickname.toLowerCase().includes(searchTerm.toLowerCase())))
+    const families = useMemo(() => {
+        const familyMap: Record<string, { head: CommunityMember, members: CommunityMember[] }> = {};
+        
+        const activeMembers = members.filter(m => m.status === 'Active');
+
+        // First, find all heads of families
+        activeMembers.forEach(member => {
+            if (member.householdRole === 'Head' && member.familyId) {
+                familyMap[member.familyId] = { head: member, members: [] };
+            }
+        });
+        
+        // Then, assign other members to their families
+        activeMembers.forEach(member => {
+            if (member.householdRole !== 'Head' && member.familyId && familyMap[member.familyId]) {
+                familyMap[member.familyId].members.push(member);
+            }
+        });
+
+        const familyArray = Object.values(familyMap);
+
+        if (!searchTerm) {
+            return familyArray;
+        }
+
+        const lowercasedFilter = searchTerm.toLowerCase();
+        return familyArray.filter(({ head, members }) => 
+            head.name.toLowerCase().includes(lowercasedFilter) ||
+            (head.nickname && head.nickname.toLowerCase().includes(lowercasedFilter)) ||
+            members.some(m => m.name.toLowerCase().includes(lowercasedFilter) || (m.nickname && m.nickname.toLowerCase().includes(lowercasedFilter)))
         );
+
     }, [members, searchTerm]);
 
     return (
@@ -62,16 +103,16 @@ export default function MemberDirectoryPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="search"
-                    placeholder="Search by name or nickname..."
+                    placeholder="Search by family or member name..."
                     className="w-full pl-10"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {activeMembers.map(member => (
-                    <MemberCard key={member.id} member={member} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {families.map(({ head, members }) => (
+                    <FamilyCard key={head.familyId} familyHead={head} members={members} />
                 ))}
             </div>
 

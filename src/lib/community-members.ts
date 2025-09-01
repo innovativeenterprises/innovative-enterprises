@@ -5,7 +5,7 @@ export interface CommunityMember {
   nickname?: string;
   joinDate: string; // ISO Date string 'YYYY-MM-DD'
   status: 'Active' | 'Inactive' | 'Pending Review';
-  householdRole: 'Head' | 'Member';
+  householdRole: 'Head' | 'Spouse' | 'Child' | 'Other';
   familyId?: string; // Links members of the same family
   contact: string;
   photo: string;
@@ -34,12 +34,25 @@ export const initialMembers: CommunityMember[] = [
         name: "Fatima Al-Balushi",
         joinDate: "2022-01-15",
         status: "Active",
-        householdRole: 'Member',
+        householdRole: 'Spouse',
         familyId: "fam_1",
         contact: "fatima.b@example.com",
         photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
         position: "Marketing Manager",
         employer: "Omantel",
+        address: "Al-Khuwair, Muscat"
+    },
+     {
+        id: "mem_6",
+        name: "Abdullah Al-Farsi",
+        joinDate: "2022-01-15",
+        status: "Active",
+        householdRole: 'Child',
+        familyId: "fam_1",
+        contact: "N/A",
+        photo: "https://images.unsplash.com/photo-1503443207922-dff7d54379e9?q=80&w=400&auto=format&fit=crop",
+        position: "Student",
+        employer: "The International School",
         address: "Al-Khuwair, Muscat"
     },
     {
