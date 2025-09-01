@@ -1,7 +1,7 @@
 
 'use client';
 
-import { GanttChartSquare, UserCheck, ArrowRight } from "lucide-react";
+import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
@@ -19,7 +19,7 @@ export default function EduFlowPage() {
             An all-in-one administrative automation platform for schools, featuring smart timetabling, automated admissions workflows, and AI-powered resource allocation.
           </p>
         </div>
-        <div className="max-w-4xl mx-auto mt-12 grid md:grid-cols-2 gap-8">
+        <div className="max-w-4xl mx-auto mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="flex flex-col">
                 <CardHeader>
                     <div className="flex items-center gap-3 mb-2">
@@ -51,7 +51,25 @@ export default function EduFlowPage() {
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
                         <Link href="/education-tech/admissions">
-                            Try the Admissions Tool <ArrowRight className="ml-2 h-4 w-4"/>
+                            Launch Admissions Tool <ArrowRight className="ml-2 h-4 w-4"/>
+                        </Link>
+                    </Button>
+                </CardFooter>
+            </Card>
+             <Card className="flex flex-col">
+                <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                        <ClipboardCheck className="h-8 w-8 text-primary" />
+                        <CardTitle className="text-2xl">AI Quiz Generator</CardTitle>
+                    </div>
+                    <CardDescription>
+                       Instantly create engaging multiple-choice quizzes on any topic, complete with answers and explanations, for any difficulty level.
+                    </CardDescription>
+                </CardHeader>
+                <CardFooter className="mt-auto">
+                    <Button asChild className="w-full">
+                        <Link href="/education-tech/quiz-generator">
+                            Launch Quiz Generator <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
                 </CardFooter>
