@@ -18,7 +18,7 @@ export default function AgencyDashboardPage() {
     const [selectedAgencyId, setSelectedAgencyId] = useState(agencies[0].id);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
-    const filteredWorkers = workers.filter(w => w.agencyId === selectedAgencyId);
+    const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
     const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
     
     return (

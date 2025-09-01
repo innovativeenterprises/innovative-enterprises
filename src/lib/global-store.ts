@@ -32,7 +32,7 @@ import { initialStudents, type Student } from './students';
 import { initialMembers, type CommunityMember } from './community-members';
 import { initialCommunities, type Community } from './communities';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
-import { type CostRate } from './cost-settings.schema';
+import { type CostRate } from './cost-settings';
 import { initialCostSettings } from './cost-settings';
 import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
