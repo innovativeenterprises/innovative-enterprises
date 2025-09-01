@@ -27,9 +27,9 @@ export const initialProducts: Product[] = [
         aiHint: "construction management software",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/smart-pm",
-        adminStatus: 'On Track',
-        adminNotes: "Core feature development is on schedule for this quarter."
+        href: "/admin/projects",
+        adminStatus: 'Completed',
+        adminNotes: "Core features are live in the admin panel's Projects page."
     },
     {
         id: 10,
@@ -49,7 +49,7 @@ export const initialProducts: Product[] = [
     {
         id: 11,
         name: "StructurAI BIM",
-        description: "AI-powered BIM for automated clash detection, material optimization, and AutoCAD-to-BIM conversions.",
+        description: "AI-powered BIM for automated clash detection, material optimization, and AutoCAD-to-BIM conversions. (Conceptual)",
         stage: "Planning Phase",
         category: "Construction Tech",
         price: 0,
@@ -57,9 +57,9 @@ export const initialProducts: Product[] = [
         aiHint: "building information modeling",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/bim",
-        adminStatus: 'On Track',
-        adminNotes: "Project scope and feature list finalized. Awaiting resource allocation."
+        href: undefined,
+        adminStatus: 'On Hold',
+        adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
     },
     {
         id: 12,
@@ -89,12 +89,12 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/construction-tech/workforce-scheduler",
         adminStatus: 'Completed',
-        adminNotes: "Core features are represented in the Network Management dashboard."
+        adminNotes: "The AI Workforce Scheduler is live and functional."
     },
     {
         id: 14,
         name: "ProcureChain SaaS",
-        description: "E-procurement platform with automated vendor approvals, predictive ordering, and blockchain smart contracts.",
+        description: "E-procurement platform with automated vendor approvals, predictive ordering, and blockchain smart contracts. (Conceptual)",
         stage: "Idea Phase",
         category: "Construction Tech",
         price: 0,
@@ -102,7 +102,7 @@ export const initialProducts: Product[] = [
         aiHint: "supply chain logistics",
         rating: 0,
         enabled: true,
-        href: "/partner",
+        href: undefined,
         adminStatus: 'On Track',
         adminNotes: "Initial concept approved. Represented by the Partner Onboarding flow."
     },
@@ -124,7 +124,7 @@ export const initialProducts: Product[] = [
     {
         id: 16,
         name: "Digital Twin Ops",
-        description: "IoT platform for ongoing monitoring of building performance and predictive maintenance.",
+        description: "IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual)",
         stage: "Idea Phase",
         category: "Construction Tech",
         price: 0,
@@ -132,14 +132,14 @@ export const initialProducts: Product[] = [
         aiHint: "digital twin building",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/digital-twin",
+        href: undefined,
         adminStatus: 'On Track',
-        adminNotes: "Core idea is promising. Needs market validation."
+        adminNotes: "This feature requires hardware (IoT) integration and is on hold for the prototype."
     },
     {
         id: 17,
         name: "AeroSite AI (DaaS)",
-        description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping.",
+        description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual)",
         stage: "Development Phase",
         category: "Construction Tech",
         price: 0,
@@ -147,9 +147,9 @@ export const initialProducts: Product[] = [
         aiHint: "construction drone survey",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/aerosite-ai",
+        href: undefined,
         adminStatus: 'At Risk',
-        adminNotes: "Integration with drone hardware vendor API is causing delays."
+        adminNotes: "This feature requires hardware (drone) integration and is on hold for the prototype."
     },
     {
         id: 18,
