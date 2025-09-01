@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview Schemas and types for the Real Estate Contract Generator AI flow.
  */
