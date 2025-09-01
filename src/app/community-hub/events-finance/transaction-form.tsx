@@ -59,7 +59,8 @@ export const AddEditTransactionDialog = ({
                         <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name="type" render={({ field }) => (
                                 <FormItem><FormLabel>Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                    <SelectItem value="Income">Income</SelectItem><SelectItem value="Expense">Expense</SelectItem>
+                                    <SelectItem value="Income">Income</SelectItem>
+                                    <SelectItem value="Expense">Expense</SelectItem>
                                 </SelectContent></Select><FormMessage /></FormItem>
                             )} />
                             <FormField control={form.control} name="category" render={({ field }) => (
