@@ -1,9 +1,10 @@
 
 'use client';
 
-import PropertyTable from "../property-table";
+import PropertyTable, { usePropertiesData } from "../property-table";
 
 export default function AdminRealEstatePage() {
+  const propertyData = usePropertiesData();
 
   return (
     <div className="space-y-8">
@@ -14,7 +15,7 @@ export default function AdminRealEstatePage() {
             </p>
         </div>
 
-        <PropertyTable />
+        <PropertyTable {...propertyData} />
     </div>
   );
 }

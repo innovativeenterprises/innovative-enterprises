@@ -214,8 +214,7 @@ const AddEditPropertyDialog = ({
     )
 }
 
-export default function PropertyTable() {
-    const { properties, setProperties } = usePropertiesData();
+export default function PropertyTable({ properties, setProperties }: { properties: Property[], setProperties: (updater: (properties: Property[]) => void) => void }) {
     const { toast } = useToast();
 
     const handleSave = (values: PropertyValues, id?: string) => {

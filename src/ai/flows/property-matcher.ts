@@ -21,7 +21,7 @@ export async function findBestPropertyMatch(input: PropertyMatcherInput): Promis
 
 const prompt = ai.definePrompt({
   name: 'propertyMatcherPrompt',
-  input: { schema: PropertyMatcherInputSchema },
+  input: { schema: PropertyMatcherInputSchema.extend({ availablePropertiesJson: z.string() }) },
   output: { schema: PropertyMatcherOutputSchema },
   prompt: `You are an expert real estate agent AI. Your task is to analyze a user's requirements and find the best matching property from the provided list of available listings.
 
