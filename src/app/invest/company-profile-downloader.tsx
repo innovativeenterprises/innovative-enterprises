@@ -138,13 +138,17 @@ export default function CompanyProfileDownloader() {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const enabledServices = services.filter(s => s.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
     // Use the initialProducts directly to avoid hydration issues.
     // This data is static and consistent on both server and client.
     const products = initialProducts.filter(p => p.enabled);
-
 
     const handleDownload = async () => {
         if (!profileRef.current) return;
@@ -192,6 +196,11 @@ export default function CompanyProfileDownloader() {
             setIsGenerating(false);
         }
     };
+    
+    if (!isMounted) {
+        return null; // Don't render anything on the server or initial client render
+    }
+
 
     return (
         <>
