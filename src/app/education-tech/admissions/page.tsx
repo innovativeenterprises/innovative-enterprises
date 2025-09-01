@@ -7,17 +7,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, UserCheck, PlusCircle, Trash2, CheckCircle, ShieldAlert, BadgeInfo } from 'lucide-react';
+import { Loader2, Sparkles, UserCheck, PlusCircle, Trash2, CheckCircle, ShieldAlert, BadgeInfo, Wand2, FileCheck2 } from 'lucide-react';
 import { AdmissionsAgentInputSchema, type AdmissionsAgentInput, type AdmissionsAgentOutput } from '@/ai/flows/admissions-agent.schema';
 import { analyzeApplication } from '@/ai/flows/admissions-agent';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { analyzeIdentity } from '@/ai/flows/identity-analysis';
+
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -30,11 +32,13 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 const FormSchema = AdmissionsAgentInputSchema.extend({
     transcriptFile: z.any().optional(),
+    identityDocument: z.any().optional(),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
 export default function AdmissionsPage() {
     const [isLoading, setIsLoading] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [response, setResponse] = useState<AdmissionsAgentOutput | null>(null);
     const { toast } = useToast();
 
@@ -54,6 +58,40 @@ export default function AdmissionsPage() {
         control: form.control,
         name: 'academicHistory'
     });
+
+    const handleIdAnalysis = async () => {
+        const idFile = form.getValues('identityDocument');
+        if (!idFile || idFile.length === 0) {
+            toast({ title: 'Please select an identity document first.', variant: 'destructive' });
+            return;
+        }
+
+        setIsAnalyzing(true);
+        toast({ title: 'Analyzing Document...', description: 'Please wait while the AI extracts information.' });
+
+        try {
+            const uri = await fileToDataURI(idFile[0]);
+            const result = await analyzeIdentity({ idDocumentFrontUri: uri });
+            
+            if (result.personalDetails?.fullName) {
+                form.setValue('fullName', result.personalDetails.fullName);
+            }
+            if (result.personalDetails?.dateOfBirth) {
+                form.setValue('dateOfBirth', result.personalDetails.dateOfBirth);
+            }
+            if (result.personalDetails?.nationality) {
+                form.setValue('nationality', result.personalDetails.nationality);
+            }
+
+            toast({ title: "Analysis Complete", description: "Applicant details have been pre-filled from the document." });
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Analysis Failed", description: "Could not analyze the document.", variant: "destructive" });
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         setIsLoading(true);
@@ -96,6 +134,29 @@ export default function AdmissionsPage() {
                         <CardContent>
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                    <Card className="bg-muted/50 p-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="identityDocument"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>AI-Powered Onboarding</FormLabel>
+                                                    <div className="flex gap-2">
+                                                        <FormControl className="flex-1">
+                                                            <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                                        </FormControl>
+                                                        <Button type="button" variant="secondary" onClick={handleIdAnalysis} disabled={isAnalyzing}>
+                                                            {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                                            Analyze & Pre-fill
+                                                        </Button>
+                                                    </div>
+                                                     <FormDescription className="text-xs">Upload an ID card or Passport. This document is NOT saved.</FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </Card>
+
                                     {/* Personal Details */}
                                     <h3 className="text-lg font-semibold border-b pb-2">Personal Details</h3>
                                     <div className="grid md:grid-cols-3 gap-6">
@@ -126,7 +187,7 @@ export default function AdmissionsPage() {
                                      <FormField control={form.control} name="personalStatement" render={({ field }) => (<FormItem><FormLabel>Personal Statement</FormLabel><FormControl><Textarea placeholder="Tell us why you are interested in this program..." rows={6} {...field} /></FormControl><FormMessage/></FormItem>)} />
                                       <FormField control={form.control} name="transcriptFile" render={({ field }) => (<FormItem><FormLabel>Upload Transcript (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage/></FormItem>)} />
 
-                                    <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
+                                    <Button type="submit" disabled={isLoading || isAnalyzing} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
                                         {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Analyzing Application...</> : <><Sparkles className="mr-2 h-4 w-4" /> Analyze Application</>}
                                     </Button>
                                 </form>
