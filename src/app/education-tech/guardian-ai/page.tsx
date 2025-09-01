@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot } from 'lucide-react';
+import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot, PenSquare } from 'lucide-react';
 import Link from 'next/link';
 import { initialStudents } from '@/lib/students';
 import type { Student } from '@/lib/students';
@@ -22,6 +22,7 @@ import {
 import { ChatComponent } from '@/components/chat/chat-component';
 import { wellbeingCheckin } from '@/ai/flows/wellbeing-checkin';
 import { useSettingsData } from '@/app/admin/settings-table';
+import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
@@ -117,7 +118,11 @@ export default function GuardianAiPage() {
                                                 <Dialog>
                                                     <div className="flex justify-end gap-2">
                                                         <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer"><FileText className="mr-2 h-4 w-4"/>CV</Link></Button>
-                                                        <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer"><Mic className="mr-2 h-4 w-4"/>Interview</Link></Button>
+                                                        <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer?tab=interview"><Mic className="mr-2 h-4 w-4"/>Interview</Link></Button>
+                                                        <Dialog>
+                                                          <DialogTrigger asChild><Button variant="outline" size="sm"><PenSquare className="mr-2 h-4 w-4"/>Essay</Button></DialogTrigger>
+                                                          <ScholarshipEssayAssistant student={student} />
+                                                        </Dialog>
                                                         <DialogTrigger asChild><Button variant="secondary" size="sm"><MessageSquare className="mr-2 h-4 w-4"/>Check-in</Button></DialogTrigger>
                                                     </div>
                                                     <WellbeingChat studentName={student.name} />
