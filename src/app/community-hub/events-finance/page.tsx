@@ -24,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { AddEditTransactionDialog, type TransactionValues } from './transaction-form';
 
 const EventSchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -125,6 +126,21 @@ export default function EventsFinancePage() {
         toast({ title: "Event removed.", variant: "destructive" });
     };
 
+    const handleSaveTransaction = (values: TransactionValues, id?: string) => {
+        if (id) {
+            setFinances(prev => prev.map(f => f.id === id ? { ...f, ...values, date: new Date().toISOString() } : f));
+            toast({ title: "Transaction updated." });
+        } else {
+            const newTransaction: CommunityFinance = { ...values, id: `fin_${Date.now()}`, date: new Date().toISOString() };
+            setFinances(prev => [newTransaction, ...prev]);
+            toast({ title: "Transaction added." });
+        }
+    };
+     const handleDeleteTransaction = (id: string) => {
+        setFinances(prev => prev.filter(f => f.id !== id));
+        toast({ title: "Transaction removed.", variant: "destructive" });
+    };
+
     const totalIncome = finances.filter(f => f.type === 'Income').reduce((sum, item) => sum + item.amount, 0);
     const totalExpenses = finances.filter(f => f.type === 'Expense').reduce((sum, item) => sum + item.amount, 0);
     const netBalance = totalIncome - totalExpenses;
@@ -146,22 +162,82 @@ export default function EventsFinancePage() {
                         </div>
                     </div>
                     <Card>
-                        <CardHeader><CardTitle>Financial Overview</CardTitle></CardHeader>
+                        <CardHeader>
+                            <CardTitle>Financial Overview</CardTitle>
+                        </CardHeader>
                         <CardContent className="grid md:grid-cols-3 gap-4">
                              <Card className="p-4 bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800">
                                 <p className="text-sm font-medium text-green-700 dark:text-green-300 flex items-center gap-2"><ArrowUpRight/> Total Income</p>
-                                <p className="text-2xl font-bold text-green-800 dark:text-green-200">OMR {totalIncome.toLocaleString()}</p>
+                                <p className="text-2xl font-bold text-green-800 dark:text-green-200">OMR {totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                             </Card>
                              <Card className="p-4 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800">
                                 <p className="text-sm font-medium text-red-700 dark:text-red-300 flex items-center gap-2"><ArrowDownRight/> Total Expenses</p>
-                                <p className="text-2xl font-bold text-red-800 dark:text-red-200">OMR {totalExpenses.toLocaleString()}</p>
+                                <p className="text-2xl font-bold text-red-800 dark:text-red-200">OMR {totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                             </Card>
                              <Card className="p-4 bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800">
                                 <p className="text-sm font-medium text-blue-700 dark:text-blue-300 flex items-center gap-2"><DollarSign/> Net Balance</p>
-                                <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">OMR {netBalance.toLocaleString()}</p>
+                                <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">OMR {netBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                             </Card>
                         </CardContent>
                     </Card>
+
+                    <Card>
+                        <CardHeader className="flex-row items-center justify-between">
+                            <div>
+                                <CardTitle>Financial Ledger</CardTitle>
+                                <CardDescription>A log of all community income and expenses.</CardDescription>
+                            </div>
+                            <AddEditTransactionDialog onSave={handleSaveTransaction}>
+                                <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Transaction</Button>
+                            </AddEditTransactionDialog>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Description</TableHead>
+                                        <TableHead>Category</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead className="text-right">Amount (OMR)</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {finances.map(item => (
+                                        <TableRow key={item.id}>
+                                            <TableCell className="font-medium">{item.description}</TableCell>
+                                            <TableCell><Badge variant="outline">{item.category}</Badge></TableCell>
+                                            <TableCell>
+                                                <span className={cn('font-semibold', item.type === 'Income' ? 'text-green-600' : 'text-red-600')}>
+                                                    {item.type}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>{format(new Date(item.date), "PPP")}</TableCell>
+                                            <TableCell className="text-right font-mono">{item.amount.toFixed(2)}</TableCell>
+                                             <TableCell className="text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <AddEditTransactionDialog transaction={item} onSave={handleSaveTransaction}>
+                                                        <Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button>
+                                                    </AddEditTransactionDialog>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader><AlertDialogTitle>Delete Transaction?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this financial record.</AlertDialogDescription></AlertDialogHeader>
+                                                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteTransaction(item.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+
                     <Card>
                         <CardHeader className="flex-row items-center justify-between">
                             <div>
