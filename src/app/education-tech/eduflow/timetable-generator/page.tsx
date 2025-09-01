@@ -2,7 +2,7 @@
 'use client';
 
 import { GanttChartSquare } from "lucide-react";
-import TimetableForm from "./timetable-form";
+import TimetableForm from "../timetable-form";
 
 export default function TimetableGeneratorPage() {
   return (
