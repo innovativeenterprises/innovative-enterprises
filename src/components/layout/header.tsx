@@ -198,8 +198,10 @@ export default function Header() {
   const { settings } = useSettingsData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const updateCartCount = () => {
         const currentCart = store.get().cart;
         setCartCount(currentCart.reduce((sum, item) => sum + item.quantity, 0));
@@ -212,6 +214,18 @@ export default function Header() {
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
   };
+  
+  if (!isClient) {
+    return (
+        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+             <div className="container flex h-20 items-center justify-between">
+                <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
+                <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-40 h-auto object-contain" />
+                </Link>
+             </div>
+        </header>
+    );
+  }
 
   const renderNavLinks = () => (
     navLinks.map((link) => (
@@ -472,7 +486,3 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
-
-    
-
-    

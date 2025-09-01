@@ -5,6 +5,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Inter as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,10 +30,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <Toaster />
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <Toaster />
+        </React.Suspense>
       </body>
     </html>
   );
