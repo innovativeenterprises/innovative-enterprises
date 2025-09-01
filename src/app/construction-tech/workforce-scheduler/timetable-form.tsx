@@ -71,6 +71,15 @@ export default function TimetableForm() {
     }
   };
 
+  const scheduleGrid = response?.schedule.reduce((acc, entry) => {
+    if (!acc[entry.timeSlot]) {
+      acc[entry.timeSlot] = {};
+    }
+    acc[entry.timeSlot][entry.day] = entry;
+    return acc;
+  }, {} as Record<string, Record<string, (typeof response.schedule)[0]>>);
+
+
   return (
     <div className="space-y-8">
       <Card>
@@ -148,7 +157,7 @@ export default function TimetableForm() {
                            <TableRow key={slot}>
                              <TableCell className="font-medium border-r">{slot}</TableCell>
                              {days.map(day => {
-                                const entry = response.schedule?.[day]?.[slot];
+                                const entry = scheduleGrid?.[slot]?.[day];
                                 const task = entry ? form.getValues('subjects').find(s => s.id === entry.subjectId) : null;
                                 const site = entry ? form.getValues('classrooms').find(c => c.id === entry.classroomId) : null;
                                 return (

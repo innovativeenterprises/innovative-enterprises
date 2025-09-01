@@ -38,7 +38,7 @@ const prompt = ai.definePrompt({
 4.  **Optimal Distribution:** Spread the work for each task as evenly as possible throughout the week. Avoid scheduling the same task back-to-back on the same day if possible.
 
 **Output Generation:**
-*   **Schedule:** Generate a JSON object representing the schedule. The top-level keys should be the days of the week. Each day should be an object where keys are the time slots. The value for each slot should be an object containing the \`subjectId\` (representing the task), \`classroomId\` (representing the site), and \`teacher\` (representing the worker/team).
+*   **Schedule:** Generate a flat JSON array of schedule entry objects. Each object in the array represents one scheduled block and must contain the \`day\`, \`timeSlot\`, \`subjectId\`, \`classroomId\`, and \`teacher\`.
 *   **Diagnostics:**
     *   Set \`isPossible\` to \`true\` if a valid schedule that meets all constraints can be created. If not, set it to \`false\`.
     *   Provide a \`message\` summarizing the result. If impossible, explain why (e.g., "Not enough time slots available to schedule all required tasks.").
@@ -61,7 +61,7 @@ const timetableGeneratorFlow = ai.defineFlow(
 
     if (totalRequiredSlots > totalAvailableSlots) {
         return {
-            schedule: {},
+            schedule: [],
             diagnostics: {
                 isPossible: false,
                 message: `Scheduling is impossible. There are ${totalRequiredSlots} required work slots but only ${totalAvailableSlots} available slots in the schedule. Please add more job sites or time slots.`,

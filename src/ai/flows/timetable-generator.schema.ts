@@ -27,36 +27,16 @@ export const TimetableGeneratorInputSchema = z.object({
 export type TimetableGeneratorInput = z.infer<typeof TimetableGeneratorInputSchema>;
 
 const ScheduleEntrySchema = z.object({
+    day: z.string().describe("The day of the week for this entry (e.g., 'Sunday')."),
+    timeSlot: z.string().describe("The time slot for this entry (e.g., '08:00 - 10:00')."),
     subjectId: z.string(),
     classroomId: z.string(),
     teacher: z.string(),
 });
-
-// A more specific schema for the schedule object to satisfy the AI model's requirement for non-empty object types.
-const DailyScheduleSchema = z.object({
-    "08:00 - 10:00": ScheduleEntrySchema.optional(),
-    "10:00 - 12:00": ScheduleEntrySchema.optional(),
-    "13:00 - 15:00": ScheduleEntrySchema.optional(),
-    "15:00 - 17:00": ScheduleEntrySchema.optional(),
-    "08:00 - 09:00": ScheduleEntrySchema.optional(),
-    "09:00 - 10:00": ScheduleEntrySchema.optional(),
-    "10:00 - 11:00": ScheduleEntrySchema.optional(),
-    "11:00 - 12:00": ScheduleEntrySchema.optional(),
-    "12:00 - 13:00": ScheduleEntrySchema.optional(),
-    "13:00 - 14:00": ScheduleEntrySchema.optional(),
-}).describe("An object where keys are time slots and values are schedule entries.");
-
+export type ScheduleEntry = z.infer<typeof ScheduleEntrySchema>
 
 export const TimetableGeneratorOutputSchema = z.object({
-  schedule: z.object({
-      Sunday: DailyScheduleSchema.optional(),
-      Monday: DailyScheduleSchema.optional(),
-      Tuesday: DailyScheduleSchema.optional(),
-      Wednesday: DailyScheduleSchema.optional(),
-      Thursday: DailyScheduleSchema.optional(),
-      Friday: DailyScheduleSchema.optional(),
-      Saturday: DailyScheduleSchema.optional(),
-  }).describe("The generated schedule, with days as keys."),
+  schedule: z.array(ScheduleEntrySchema).describe("A flat list of all scheduled appointments."),
   diagnostics: z.object({
     isPossible: z.boolean(),
     message: z.string(),
