@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -9,9 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer } from 'lucide-react';
+import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer, PlusCircle } from 'lucide-react';
 import { estimateBoq } from '@/ai/flows/boq-estimator';
-import { BoQEstimatorInputSchema, type BoQEstimatorOutput } from '@/ai/flows/boq-estimator.schema';
+import { BoQEstimatorInputSchema, type BoQEstimatorOutput, type CostedBoQItem } from '@/ai/flows/boq-estimator.schema';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useCostSettingsData } from '@/app/admin/cost-settings-table';
@@ -150,21 +151,44 @@ export default function EstimatorForm() {
     });
   }
 
-  const handleCostChange = (index: number, field: 'materialUnitCost' | 'laborUnitCost', value: number) => {
+  const handleCostChange = (index: number, field: keyof CostedBoQItem, value: string | number) => {
     setResponse(prev => {
         if (!prev) return null;
         
         const newItems = [...prev.costedItems];
         const itemToUpdate = { ...newItems[index] };
+        
+        // Update the specific field
+        (itemToUpdate as any)[field] = value;
 
-        itemToUpdate[field] = value;
-        itemToUpdate.totalItemCost = (itemToUpdate.materialUnitCost + itemToUpdate.laborUnitCost) * itemToUpdate.quantity;
-
+        // If a cost or quantity field changed, recalculate the total for that item
+        const quantity = Number(itemToUpdate.quantity) || 0;
+        const materialCost = Number(itemToUpdate.materialUnitCost) || 0;
+        const laborCost = Number(itemToUpdate.laborUnitCost) || 0;
+        itemToUpdate.totalItemCost = (materialCost + laborCost) * quantity;
+        
         newItems[index] = itemToUpdate;
 
         return { ...prev, costedItems: newItems };
     });
   }
+  
+  const handleAddItem = () => {
+    const newItem: CostedBoQItem = {
+      category: '',
+      item: '',
+      unit: '',
+      quantity: 0,
+      materialUnitCost: 0,
+      laborUnitCost: 0,
+      totalItemCost: 0,
+    };
+    setResponse(prev => {
+      if (!prev) return null;
+      return { ...prev, costedItems: [...prev.costedItems, newItem] };
+    });
+  };
+
 
   const handleGenerateTender = async () => {
     if (!response) return;
@@ -352,10 +376,10 @@ export default function EstimatorForm() {
                 <Table ref={boqTableRef}>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Category</TableHead>
+                            <TableHead className="w-[150px]">Category</TableHead>
                             <TableHead>Item</TableHead>
-                            <TableHead className="text-right">Quantity</TableHead>
-                            <TableHead className="text-right">Unit</TableHead>
+                            <TableHead className="w-24">Unit</TableHead>
+                            <TableHead className="text-right w-28">Quantity</TableHead>
                             <TableHead className="text-right w-36">Material Unit Cost</TableHead>
                             <TableHead className="text-right w-36">Labor Unit Cost</TableHead>
                             <TableHead className="text-right font-semibold">Total Cost (OMR)</TableHead>
@@ -364,10 +388,18 @@ export default function EstimatorForm() {
                     <TableBody>
                         {response.costedItems.map((item, index) => (
                             <TableRow key={index}>
-                                <TableCell>{item.category}</TableCell>
-                                <TableCell>{item.item}</TableCell>
-                                <TableCell className="text-right font-mono">{item.quantity}</TableCell>
-                                <TableCell className="text-right">{item.unit}</TableCell>
+                                <TableCell>
+                                    <Input defaultValue={item.category} onBlur={(e) => handleCostChange(index, 'category', e.target.value)} className="h-8"/>
+                                </TableCell>
+                                 <TableCell>
+                                    <Input defaultValue={item.item} onBlur={(e) => handleCostChange(index, 'item', e.target.value)} className="h-8"/>
+                                </TableCell>
+                                <TableCell>
+                                    <Input defaultValue={item.unit} onBlur={(e) => handleCostChange(index, 'unit', e.target.value)} className="h-8 text-center"/>
+                                </TableCell>
+                                <TableCell className="text-right font-mono">
+                                    <Input type="number" defaultValue={item.quantity} onBlur={(e) => handleCostChange(index, 'quantity', parseFloat(e.target.value) || 0)} className="h-8 text-right"/>
+                                </TableCell>
                                 <TableCell className="text-right font-mono">
                                     <Input
                                         type="number"
@@ -389,6 +421,9 @@ export default function EstimatorForm() {
                         ))}
                     </TableBody>
                 </Table>
+             </div>
+             <div className="flex justify-end mt-4">
+                <Button variant="outline" size="sm" onClick={handleAddItem}><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
              </div>
              <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div></div>
