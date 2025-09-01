@@ -1,10 +1,19 @@
 
+'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
 
 export default function Footer() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto py-8 px-4">
@@ -14,7 +23,7 @@ export default function Footer() {
              <span className="font-bold text-lg">INNOVATIVE ENTERPRISES</span>
           </div>
           <div className="flex flex-col gap-4 items-center">
-             <CompanyProfileDownloader />
+             {isClient && <CompanyProfileDownloader />}
              <p className="text-sm text-muted-foreground text-center">
                 © {new Date().getFullYear()} Innovative Enterprises. All rights reserved.
               </p>
