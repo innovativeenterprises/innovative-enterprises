@@ -15,6 +15,7 @@ import { Loader2, Sparkles, Download, ImageIcon, Wand2, ArrowLeft, ArrowRight, B
 import Image from 'next/image';
 import { transformImage } from '@/ai/flows/image-transformer';
 import Link from 'next/link';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -118,7 +119,7 @@ export default function VirtualTourPage() {
                             <FormItem>
                                 <FormLabel>Transformation Instructions</FormLabel>
                                 <FormControl>
-                                <Textarea
+                                <VoiceEnabledTextarea
                                     placeholder="e.g., 'Create a photorealistic 3D architectural rendering of a modern luxury villa based on this 2D floor plan...'"
                                     rows={5}
                                     {...field}
