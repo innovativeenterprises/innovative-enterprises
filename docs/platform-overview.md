@@ -7,7 +7,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 ### Category: Construction Tech (11)
 | Name | Description | Stage | Status | Ready / MVP Ready |
 | :--- | :--- | :--- | :--- | :--- |
-| Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Development Phase | Completed | Yes |
+| Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Live & Operating | Completed | Yes |
 | BidWise Estimator | Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing. | Live & Operating | Completed | Yes |
 | SiteGuard Compliance | Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking. | Live & Operating | Completed | Yes |
 | WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed | Yes |
