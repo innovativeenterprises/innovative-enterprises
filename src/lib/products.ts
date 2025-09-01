@@ -117,7 +117,7 @@ export const initialProducts: Product[] = [
         aiHint: "digital twin building",
         rating: 0,
         enabled: true,
-        href: undefined,
+        href: "/measurement-analyzer",
         adminStatus: 'On Track',
         adminNotes: "This feature requires hardware (IoT) integration and is on hold for the prototype."
     },
