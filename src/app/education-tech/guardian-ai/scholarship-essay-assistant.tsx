@@ -200,4 +200,3 @@ export function ScholarshipEssayAssistant({ student }: { student: Student }) {
         </DialogContent>
     );
 }
-
