@@ -2,10 +2,11 @@
  * @fileOverview Schemas for the Bill of Quantities (BoQ) Cost Estimator AI flow.
  */
 import { z } from 'zod';
+import { CostRateSchema as ExternalCostRateSchema } from '@/lib/cost-settings.schema';
 
-export const CostRateSchema = z.object({
-  name: z.string(),
-  rate: z.number(),
+export const CostRateSchema = ExternalCostRateSchema.pick({
+  name: true,
+  rate: true,
 });
 export type CostRate = z.infer<typeof CostRateSchema>;
 

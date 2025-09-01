@@ -30,7 +30,7 @@ export const useCostSettingsData = () => {
 
     return {
         costSettings: data.costSettings,
-        setCostSettings: (updater: (costSettings: CostRate[]) => CostRate[]) => {
+        setCostSettings: (updater: (costSettings: CostRate[]) => void) => {
             const currentCostSettings = store.get().costSettings;
             const newCostSettings = updater(currentCostSettings);
             store.set(state => ({ ...state, costSettings: newCostSettings }));
