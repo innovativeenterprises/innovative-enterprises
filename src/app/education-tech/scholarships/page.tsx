@@ -186,5 +186,3 @@ export default function ScholarshipPage() {
     </div>
   );
 }
-
-    
