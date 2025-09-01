@@ -32,8 +32,31 @@ const ScheduleEntrySchema = z.object({
     teacher: z.string(),
 });
 
+// A more specific schema for the schedule object to satisfy the AI model's requirement for non-empty object types.
+const DailyScheduleSchema = z.object({
+    "08:00 - 10:00": ScheduleEntrySchema.optional(),
+    "10:00 - 12:00": ScheduleEntrySchema.optional(),
+    "13:00 - 15:00": ScheduleEntrySchema.optional(),
+    "15:00 - 17:00": ScheduleEntrySchema.optional(),
+    "08:00 - 09:00": ScheduleEntrySchema.optional(),
+    "09:00 - 10:00": ScheduleEntrySchema.optional(),
+    "10:00 - 11:00": ScheduleEntrySchema.optional(),
+    "11:00 - 12:00": ScheduleEntrySchema.optional(),
+    "12:00 - 13:00": ScheduleEntrySchema.optional(),
+    "13:00 - 14:00": ScheduleEntrySchema.optional(),
+}).describe("An object where keys are time slots and values are schedule entries.");
+
+
 export const TimetableGeneratorOutputSchema = z.object({
-  schedule: z.record(z.string(), z.record(z.string(), ScheduleEntrySchema.optional())),
+  schedule: z.object({
+      Sunday: DailyScheduleSchema.optional(),
+      Monday: DailyScheduleSchema.optional(),
+      Tuesday: DailyScheduleSchema.optional(),
+      Wednesday: DailyScheduleSchema.optional(),
+      Thursday: DailyScheduleSchema.optional(),
+      Friday: DailyScheduleSchema.optional(),
+      Saturday: DailyScheduleSchema.optional(),
+  }).describe("The generated schedule, with days as keys."),
   diagnostics: z.object({
     isPossible: z.boolean(),
     message: z.string(),
