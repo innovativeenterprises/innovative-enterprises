@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -11,9 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer, Trash2, PlusCircle } from 'lucide-react';
+import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer } from 'lucide-react';
 import { estimateBoq } from '@/ai/flows/boq-estimator';
-import { BoQEstimatorInputSchema, type BoQEstimatorOutput, type CostedBoQItem } from '@/ai/flows/boq-estimator.schema';
+import { BoQEstimatorInputSchema, type BoQEstimatorOutput } from '@/ai/flows/boq-estimator.schema';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useCostSettingsData } from '@/app/admin/cost-settings-table';
@@ -52,7 +50,6 @@ export default function EstimatorForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingTender, setIsGeneratingTender] = useState(false);
   const [response, setResponse] = useState<BoQEstimatorOutput | null>(null);
-  const [editableItems, setEditableItems] = useState<CostedBoQItem[]>([]);
   const [tenderResponse, setTenderResponse] = useState<string | null>(null);
   const { costSettings } = useCostSettingsData();
   const boqTableRef = useRef(null);
@@ -73,10 +70,29 @@ export default function EstimatorForm() {
 
   useEffect(() => {
     if (response) {
-      recalculateSummary(editableItems);
+        const { contingencyPercentage, profitMarginPercentage } = form.getValues();
+        const totalDirectCosts = response.costedItems.reduce((sum, item) => sum + item.totalItemCost, 0);
+        const contingencyAmount = totalDirectCosts * (contingencyPercentage / 100);
+        const subtotal = totalDirectCosts + contingencyAmount;
+        const profitAmount = subtotal * (profitMarginPercentage / 100);
+        const grandTotal = subtotal + profitAmount;
+        
+        setResponse(prev => {
+            if (!prev) return null;
+            return {
+                ...prev,
+                summary: {
+                    totalDirectCosts,
+                    contingencyAmount,
+                    subtotal,
+                    profitAmount,
+                    grandTotal,
+                }
+            };
+        });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contingencyPercentage, profitMarginPercentage, editableItems]);
+  }, [contingencyPercentage, profitMarginPercentage]);
 
 
   useEffect(() => {
@@ -106,62 +122,10 @@ export default function EstimatorForm() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toast]);
 
-  const recalculateSummary = (items: CostedBoQItem[]) => {
-      const { contingencyPercentage, profitMarginPercentage } = form.getValues();
-      const totalDirectCosts = items.reduce((sum, item) => sum + item.totalItemCost, 0);
-      const contingencyAmount = totalDirectCosts * (contingencyPercentage / 100);
-      const subtotal = totalDirectCosts + contingencyAmount;
-      const profitAmount = subtotal * (profitMarginPercentage / 100);
-      const grandTotal = subtotal + profitAmount;
-      
-      setResponse(prev => {
-          if (!prev) return null;
-          return {
-              ...prev,
-              summary: {
-                  totalDirectCosts,
-                  contingencyAmount,
-                  subtotal,
-                  profitAmount,
-                  grandTotal,
-              }
-          };
-      });
-  };
-
-  const handleItemChange = (index: number, field: keyof CostedBoQItem, value: string | number) => {
-    const newItems = [...editableItems];
-    const item = newItems[index];
-    (item[field] as any) = value;
-
-    if (field === 'quantity' || field === 'materialUnitCost' || field === 'laborUnitCost') {
-        item.totalItemCost = (item.materialUnitCost + item.laborUnitCost) * item.quantity;
-    }
-    setEditableItems(newItems);
-  };
-  
-  const handleAddNewItem = () => {
-    const newItem: CostedBoQItem = {
-        category: 'New Item',
-        item: 'Please describe the new item',
-        unit: 'unit',
-        quantity: 1,
-        materialUnitCost: 0,
-        laborUnitCost: 0,
-        totalItemCost: 0,
-    };
-    setEditableItems(prev => [...prev, newItem]);
-  }
-
-  const handleDeleteItem = (index: number) => {
-    setEditableItems(prev => prev.filter((_, i) => i !== index));
-    toast({ title: 'Item removed.', variant: 'destructive'});
-  }
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
-    setEditableItems([]);
     setTenderResponse(null);
     try {
         const boqCsvText = await fileToText(data.boqFile[0]);
@@ -172,7 +136,6 @@ export default function EstimatorForm() {
             marketRates: costSettings,
         });
         setResponse(result);
-        setEditableItems(result.costedItems);
         toast({ title: "Estimation Complete!", description: "Your BoQ has been analyzed and costed." });
     } catch(e) {
         console.error(e);
@@ -216,9 +179,9 @@ export default function EstimatorForm() {
   };
   
     const handleDownloadCsv = () => {
-    if (!response || !editableItems) return;
+    if (!response) return;
     const headers = ["Category", "Item Description", "Unit", "Quantity", "Material Unit Cost", "Labor Unit Cost", "Total Item Cost"];
-    const rows = editableItems.map(item => [
+    const rows = response.costedItems.map(item => [
       `"${item.category}"`,
       `"${item.item}"`,
       `"${item.unit}"`,
@@ -388,59 +351,32 @@ export default function EstimatorForm() {
           </CardHeader>
           <CardContent>
              <div className="overflow-x-auto">
-                <table className="w-full" ref={boqTableRef}>
-                    <thead className="[&_tr]:border-b">
-                        <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground min-w-[250px]">Item</th>
-                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground min-w-[150px]">Category</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[100px]">Quantity</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[100px]">Unit</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[150px]">Material Unit Cost</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[150px]">Labor Unit Cost</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[150px]">Total Cost (OMR)</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[50px]"></th>
-                        </tr>
-                    </thead>
-                    <tbody className="[&_tr:last-child]:border-0">
-                        {editableItems.map((item, index) => (
-                            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                <td className="p-1 align-middle">
-                                    <Input value={item.item} onChange={(e) => handleItemChange(index, 'item', e.target.value)} className="w-full" />
-                                </td>
-                                 <td className="p-1 align-middle">
-                                    <Input value={item.category} onChange={(e) => handleItemChange(index, 'category', e.target.value)} className="w-full" />
-                                </td>
-                                <td className="p-1 align-middle text-right">
-                                    <Input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value))} className="w-full text-right font-mono" />
-                                </td>
-                                 <td className="p-1 align-middle text-right">
-                                    <Input value={item.unit} onChange={(e) => handleItemChange(index, 'unit', e.target.value)} className="w-full text-right" />
-                                </td>
-                                <td className="p-1 align-middle text-right">
-                                     <Input 
-                                        type="number" 
-                                        value={item.materialUnitCost} 
-                                        onChange={(e) => handleItemChange(index, 'materialUnitCost', parseFloat(e.target.value))}
-                                        className="w-full text-right font-mono"
-                                    />
-                                </td>
-                                <td className="p-1 align-middle text-right">
-                                     <Input 
-                                        type="number" 
-                                        value={item.laborUnitCost} 
-                                        onChange={(e) => handleItemChange(index, 'laborUnitCost', parseFloat(e.target.value))}
-                                        className="w-full text-right font-mono"
-                                    />
-                                </td>
-                                <td className="p-4 align-middle text-right font-bold">{item.totalItemCost.toFixed(2)}</td>
-                                <td className="p-1 align-middle text-right">
-                                    <Button variant="ghost" size="icon" onClick={() => handleDeleteItem(index)}><Trash2 className="h-4 w-4 text-destructive"/></Button>
-                                </td>
-                            </tr>
+                <Table ref={boqTableRef}>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Category</TableHead>
+                            <TableHead>Item</TableHead>
+                            <TableHead className="text-right">Quantity</TableHead>
+                            <TableHead className="text-right">Unit</TableHead>
+                            <TableHead className="text-right">Material Unit Cost</TableHead>
+                            <TableHead className="text-right">Labor Unit Cost</TableHead>
+                            <TableHead className="text-right font-semibold">Total Cost (OMR)</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {response.costedItems.map((item, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{item.category}</TableCell>
+                                <TableCell>{item.item}</TableCell>
+                                <TableCell className="text-right font-mono">{item.quantity}</TableCell>
+                                <TableCell className="text-right">{item.unit}</TableCell>
+                                <TableCell className="text-right font-mono">{item.materialUnitCost.toFixed(2)}</TableCell>
+                                <TableCell className="text-right font-mono">{item.laborUnitCost.toFixed(2)}</TableCell>
+                                <TableCell className="text-right font-semibold">{item.totalItemCost.toFixed(2)}</TableCell>
+                            </TableRow>
                         ))}
-                    </tbody>
-                </table>
-                 <Button onClick={handleAddNewItem} variant="outline" size="sm" className="mt-4"><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
+                    </TableBody>
+                </Table>
              </div>
              <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div></div>
