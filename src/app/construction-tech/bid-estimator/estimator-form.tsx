@@ -481,8 +481,10 @@ export default function EstimatorForm() {
             <CardHeader>
                 <CardTitle>AI-Generated Draft Response</CardTitle>
                 <div className="flex justify-end gap-2">
+                    <Button variant="outline" size="sm" onClick={handleSaveToBriefcase}><Briefcase className="mr-2 h-4 w-4"/> Save</Button>
                     <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                    <Button variant="outline" size="sm" onClick={handleDownloadTender}><Download className="mr-2 h-4 w-4"/> Download</Button>
+                    <Button variant="outline" size="sm" onClick={handleDownloadPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
+                    <Button variant="outline" size="sm" onClick={handleDownloadTender}><Download className="mr-2 h-4 w-4"/> TXT</Button>
                 </div>
             </CardHeader>
             <CardContent className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap p-4 bg-muted rounded-md border">

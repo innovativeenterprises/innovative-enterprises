@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview A simple global state management store for the prototype.
  *

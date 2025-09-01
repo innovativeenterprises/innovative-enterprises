@@ -8,10 +8,10 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Name | Description | Stage | Status | Ready / MVP Ready |
 | :--- | :--- | :--- | :--- | :--- |
 | Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Development Phase | Completed | Yes |
-| BidWise Estimator | Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing. | Testing Phase | On Track | Yes |
-| SiteGuard Compliance | Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking. | Design Phase | On Track | No |
+| BidWise Estimator | Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing. | Live & Operating | Completed | Yes |
+| SiteGuard Compliance | Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking. | Live & Operating | Completed | Yes |
 | WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed | Yes |
-| ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Idea Phase | Completed | No |
+| ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Live & Operating | Completed | Yes |
 | ConstructFin | Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects. | Live & Operating | Completed | Yes |
 | Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual) | Idea Phase | On Track | No |
 | AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual) | Development Phase | At Risk | No |
