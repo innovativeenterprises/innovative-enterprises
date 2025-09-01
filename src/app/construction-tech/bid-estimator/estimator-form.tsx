@@ -21,6 +21,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Label } from '@/components/ui/label';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -372,8 +373,8 @@ export default function EstimatorForm() {
                         <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                             <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Item</th>
                             <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Quantity</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Material Cost</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Labor Cost</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Material Unit Cost</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Labor Unit Cost</th>
                             <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Total Cost (OMR)</th>
                         </tr>
                     </thead>
@@ -475,3 +476,4 @@ export default function EstimatorForm() {
     </div>
   );
 }
+
