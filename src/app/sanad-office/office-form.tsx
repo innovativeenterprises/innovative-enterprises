@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake, Download, Building, CreditCard, Ticket, BadgePercent, Phone } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, UploadCloud, Wand2, FileCheck2, Send, Handshake, Download, Building, CreditCard, Ticket, BadgePercent, Phone, ArrowLeft, Star, Mic } from 'lucide-react';
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { handleSanadOfficeRegistration } from '@/ai/flows/sanad-office-registration';
@@ -66,7 +66,6 @@ export default function OfficeForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<CrAnalysisOutput | null>(null);
-  const [totalPrice, setTotalPrice] = useState(0);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -91,21 +90,32 @@ export default function OfficeForm() {
   });
 
   const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
-  const subtotal = useMemo(() => {
+
+  const { subtotal, discount, totalPrice } = useMemo(() => {
     let currentSubtotal = 0;
     if (watchSubscriptionTier === 'lifetime') {
         currentSubtotal = sanadSettings.lifetimeFee;
     } else {
         const subscriptionFee = watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
-        const discountedSubscription = subscriptionFee * (1 - sanadSettings.firstTimeDiscountPercentage);
-        currentSubtotal = sanadSettings.registrationFee + discountedSubscription;
+        const currentDiscount = subscriptionFee * sanadSettings.firstTimeDiscountPercentage;
+        currentSubtotal = sanadSettings.registrationFee + subscriptionFee - currentDiscount;
     }
-    return currentSubtotal;
-  }, [watchSubscriptionTier, sanadSettings]);
+    
+    // Apply coupon
+    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
+    let finalDiscount = 0;
+    if (couponCode === 'AGENT50') {
+      finalDiscount = currentSubtotal * 0.5;
+    } else if (couponCode === 'FREE100') {
+      finalDiscount = currentSubtotal;
+    }
 
-  useEffect(() => {
-    setTotalPrice(subtotal);
-  }, [subtotal]);
+    return {
+      subtotal: currentSubtotal,
+      discount: finalDiscount,
+      totalPrice: currentSubtotal - finalDiscount,
+    };
+  }, [watchSubscriptionTier, sanadSettings, paymentForm.watch('coupon')]);
   
   const handleCrAnalysis = async () => {
     const crFile = form.getValues('crDocument');
@@ -205,22 +215,51 @@ export default function OfficeForm() {
   }
 
   const handleApplyCoupon = () => {
-    const coupon = paymentForm.getValues('coupon')?.toUpperCase();
-    if (!coupon) {
-      toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
-      return;
-    }
-    // Dummy coupon logic
-    if (coupon === 'FREE100') {
-      setTotalPrice(0);
-      toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
-    } else if (coupon === 'AGENT50') {
-      setTotalPrice(subtotal / 2);
-      toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
+    paymentForm.trigger('coupon').then(() => {
+        const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
+        if (couponCode === 'AGENT50') {
+            toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
+        } else if (couponCode === 'FREE100') {
+            toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
+        } else if (couponCode) {
+            toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
+        }
+        // Re-calculate total price
+        const newTotal = calculateTotalPrice();
+        setTotalPrice(newTotal);
+    });
+  };
+
+  const calculateTotalPrice = () => {
+    let currentSubtotal = 0;
+    const tier = paymentForm.getValues('subscriptionTier');
+    if (tier === 'lifetime') {
+        currentSubtotal = sanadSettings.lifetimeFee;
     } else {
-      toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
+        const subscriptionFee = tier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
+        const currentDiscount = subscriptionFee * sanadSettings.firstTimeDiscountPercentage;
+        currentSubtotal = sanadSettings.registrationFee + subscriptionFee - currentDiscount;
     }
+
+    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
+    if (couponCode === 'AGENT50') {
+        return currentSubtotal / 2;
+    }
+    if (couponCode === 'FREE100') {
+        return 0;
+    }
+    return currentSubtotal;
   }
+
+  useEffect(() => {
+    const subscription = paymentForm.watch((value, { name }) => {
+        if (name === 'subscriptionTier' || name === 'coupon') {
+            setTotalPrice(calculateTotalPrice());
+        }
+    });
+    return () => subscription.unsubscribe();
+  }, [paymentForm, calculateTotalPrice]);
+
 
 
   if (isSubmitted) {
@@ -420,6 +459,7 @@ export default function OfficeForm() {
                                 {watchSubscriptionTier === 'monthly' && <div className="flex justify-between"><span>Monthly Subscription:</span><span>OMR {sanadSettings.monthlyFee.toFixed(2)}</span></div>}
                                 {watchSubscriptionTier === 'yearly' && <div className="flex justify-between"><span>Yearly Subscription:</span><span>OMR {sanadSettings.yearlyFee.toFixed(2)}</span></div>}
                                 {watchSubscriptionTier !== 'lifetime' && <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>First-time Discount ({sanadSettings.firstTimeDiscountPercentage * 100}%):</span><span>- OMR {( (watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee) * sanadSettings.firstTimeDiscountPercentage).toFixed(2)}</span></div>}
+                                {discount > 0 && <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>Coupon Discount:</span><span>- OMR {discount.toFixed(2)}</span></div>}
                                 <hr className="my-2 border-dashed" />
                                 <div className="flex justify-between font-bold text-lg"><span>Total Due Today:</span><span className="text-primary">OMR {totalPrice.toFixed(2)}</span></div>
                             </CardContent>
