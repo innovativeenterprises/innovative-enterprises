@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer } from 'lucide-react';
+import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer, Trash2, PlusCircle } from 'lucide-react';
 import { estimateBoq } from '@/ai/flows/boq-estimator';
 import { BoQEstimatorInputSchema, type BoQEstimatorOutput, type CostedBoQItem } from '@/ai/flows/boq-estimator.schema';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
@@ -129,15 +129,35 @@ export default function EstimatorForm() {
       });
   };
 
-  const handleCostChange = (index: number, field: 'materialUnitCost' | 'laborUnitCost', value: number) => {
+  const handleItemChange = (index: number, field: keyof CostedBoQItem, value: string | number) => {
     const newItems = [...editableItems];
     const item = newItems[index];
-    item[field] = value;
-    item.totalItemCost = (item.materialUnitCost + item.laborUnitCost) * item.quantity;
+    (item[field] as any) = value;
+
+    if (field === 'quantity' || field === 'materialUnitCost' || field === 'laborUnitCost') {
+        item.totalItemCost = (item.materialUnitCost + item.laborUnitCost) * item.quantity;
+    }
     setEditableItems(newItems);
-    // Recalculation is now handled by the useEffect hook
   };
   
+  const handleAddNewItem = () => {
+    const newItem: CostedBoQItem = {
+        category: 'New Item',
+        item: 'Please describe the new item',
+        unit: 'unit',
+        quantity: 1,
+        materialUnitCost: 0,
+        laborUnitCost: 0,
+        totalItemCost: 0,
+    };
+    setEditableItems(prev => [...prev, newItem]);
+  }
+
+  const handleDeleteItem = (index: number) => {
+    setEditableItems(prev => prev.filter((_, i) => i !== index));
+    toast({ title: 'Item removed.', variant: 'destructive'});
+  }
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
@@ -371,42 +391,56 @@ export default function EstimatorForm() {
                 <table className="w-full" ref={boqTableRef}>
                     <thead className="[&_tr]:border-b">
                         <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Item</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Quantity</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Material Unit Cost</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Labor Unit Cost</th>
-                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Total Cost (OMR)</th>
+                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground min-w-[250px]">Item</th>
+                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground min-w-[150px]">Category</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[100px]">Quantity</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[100px]">Unit</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[150px]">Material Unit Cost</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[150px]">Labor Unit Cost</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[150px]">Total Cost (OMR)</th>
+                            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground min-w-[50px]"></th>
                         </tr>
                     </thead>
                     <tbody className="[&_tr:last-child]:border-0">
                         {editableItems.map((item, index) => (
                             <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                <td className="p-4 align-middle">
-                                    <p className="font-medium">{item.item}</p>
-                                    <p className="text-xs text-muted-foreground">{item.category}</p>
+                                <td className="p-1 align-middle">
+                                    <Input value={item.item} onChange={(e) => handleItemChange(index, 'item', e.target.value)} className="w-full" />
                                 </td>
-                                <td className="p-4 align-middle text-right">{item.quantity} {item.unit}</td>
-                                <td className="p-4 align-middle text-right">
+                                 <td className="p-1 align-middle">
+                                    <Input value={item.category} onChange={(e) => handleItemChange(index, 'category', e.target.value)} className="w-full" />
+                                </td>
+                                <td className="p-1 align-middle text-right">
+                                    <Input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value))} className="w-full text-right font-mono" />
+                                </td>
+                                 <td className="p-1 align-middle text-right">
+                                    <Input value={item.unit} onChange={(e) => handleItemChange(index, 'unit', e.target.value)} className="w-full text-right" />
+                                </td>
+                                <td className="p-1 align-middle text-right">
                                      <Input 
                                         type="number" 
-                                        value={item.materialUnitCost.toFixed(2)} 
-                                        onChange={(e) => handleCostChange(index, 'materialUnitCost', parseFloat(e.target.value))}
-                                        className="w-28 text-right font-mono"
+                                        value={item.materialUnitCost} 
+                                        onChange={(e) => handleItemChange(index, 'materialUnitCost', parseFloat(e.target.value))}
+                                        className="w-full text-right font-mono"
                                     />
                                 </td>
-                                <td className="p-4 align-middle text-right">
+                                <td className="p-1 align-middle text-right">
                                      <Input 
                                         type="number" 
-                                        value={item.laborUnitCost.toFixed(2)} 
-                                        onChange={(e) => handleCostChange(index, 'laborUnitCost', parseFloat(e.target.value))}
-                                        className="w-28 text-right font-mono"
+                                        value={item.laborUnitCost} 
+                                        onChange={(e) => handleItemChange(index, 'laborUnitCost', parseFloat(e.target.value))}
+                                        className="w-full text-right font-mono"
                                     />
                                 </td>
                                 <td className="p-4 align-middle text-right font-bold">{item.totalItemCost.toFixed(2)}</td>
+                                <td className="p-1 align-middle text-right">
+                                    <Button variant="ghost" size="icon" onClick={() => handleDeleteItem(index)}><Trash2 className="h-4 w-4 text-destructive"/></Button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+                 <Button onClick={handleAddNewItem} variant="outline" size="sm" className="mt-4"><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
              </div>
              <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div></div>
@@ -476,4 +510,3 @@ export default function EstimatorForm() {
     </div>
   );
 }
-
