@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { store } from "@/lib/global-store";
 import CfoDashboard from "./cfo-dashboard";
