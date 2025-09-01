@@ -3,7 +3,7 @@
  */
 import { z } from 'zod';
 
-const CostRateSchema = z.object({
+export const CostRateSchema = z.object({
   name: z.string(),
   rate: z.number(),
 });

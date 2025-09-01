@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileText, ClipboardList, Wand2, FileCheck2, Hammer, Layers, BrickWall, Download, Printer, Briefcase, User, HardHat, DollarSign, ArrowRight } from 'lucide-react';
@@ -39,6 +39,7 @@ const FormSchema = BoQGeneratorInputSchema.extend({
 type FormValues = z.infer<typeof FormSchema>;
 
 const calculationSteps = [
+    { id: 'Preliminaries', label: 'Preliminaries', icon: Hammer },
     { id: 'Earthwork', label: 'Earthwork', icon: Hammer },
     { id: 'Concrete Works', label: 'Concrete', icon: Layers },
     { id: 'Masonry Works', label: 'Masonry', icon: BrickWall },
