@@ -40,10 +40,10 @@ You MUST only recommend assets from this list for the IT hardware portion.
 {{#if projectType}}
 - **Project Type:** {{{projectType}}}
 {{/if}}
-{{#if (ne numberOfUsers 1)}}
+{{#if numberOfUsers}}
 - **Number of Users:** {{{numberOfUsers}}}
 {{/if}}
-{{#if (ne projectDurationMonths 1)}}
+{{#if projectDurationMonths}}
 - **Project Duration:** {{{projectDurationMonths}}} months
 {{/if}}
 {{#if primaryGoal}}
