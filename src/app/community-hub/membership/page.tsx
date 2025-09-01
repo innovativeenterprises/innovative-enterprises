@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { CommunityMember } from "@/lib/community-members";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, ArrowLeft, Users, Wand2, Loader2, FileCheck2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, ArrowLeft, Users, Wand2, Loader2, FileCheck2, Link as LinkIcon, Link2Off, UserPlus, Home } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
 import Link from 'next/link';
@@ -58,7 +58,7 @@ const MemberSchema = z.object({
   name: z.string().min(2, "Name is required"),
   nickname: z.string().optional(),
   contact: z.string().min(5, "Contact info is required"),
-  memberType: z.enum(['Head of Family', 'Spouse', 'Child']),
+  householdRole: z.enum(['Head', 'Member']),
   status: z.enum(['Active', 'Inactive', 'Pending Review']),
   joinDate: z.string(), // Will be handled as ISO string
   photoUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
@@ -74,7 +74,21 @@ const MemberSchema = z.object({
 type MemberValues = z.infer<typeof MemberSchema> & { photo: string };
 
 
-const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityMember, onSave: (v: MemberValues, id?: string) => void, children: React.ReactNode }) => {
+const AddEditMemberDialog = ({ 
+    member, 
+    familyId,
+    onSave, 
+    children, 
+    members,
+    setMembers
+}: { 
+    member?: CommunityMember, 
+    familyId?: string,
+    onSave: (v: MemberValues, id?: string) => void, 
+    children: React.ReactNode,
+    members: CommunityMember[],
+    setMembers: (updater: (m: CommunityMember[]) => void) => void,
+}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(member?.photo || null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -82,7 +96,7 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
     
     const form = useForm<z.infer<typeof MemberSchema>>({
         resolver: zodResolver(MemberSchema),
-        defaultValues: member || { name: "", nickname: "", contact: "", memberType: 'Head of Family', status: 'Active', joinDate: new Date().toISOString().split('T')[0] },
+        defaultValues: member || { name: "", nickname: "", contact: "", householdRole: 'Head', status: 'Active', joinDate: new Date().toISOString().split('T')[0] },
     });
 
     const watchPhotoUrl = form.watch('photoUrl');
@@ -100,7 +114,7 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
     
     useEffect(() => {
         if (isOpen) {
-            form.reset(member || { name: "", nickname: "", contact: "", memberType: 'Head of Family', status: 'Active', joinDate: new Date().toISOString().split('T')[0] });
+            form.reset(member || { name: "", nickname: "", contact: "", householdRole: 'Head', status: 'Active', joinDate: new Date().toISOString().split('T')[0] });
             setImagePreview(member?.photo || null);
         }
     }, [member, isOpen, form]);
@@ -146,10 +160,51 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
         } else if (data.photoUrl) {
             photoValue = data.photoUrl;
         }
-        onSave({ ...data, photo: photoValue }, member?.id);
+        
+        const memberData: MemberValues = { ...data, photo: photoValue };
+        
+        let finalMemberData: CommunityMember;
+        
+        if (member) { // Editing existing member
+             finalMemberData = { ...member, ...memberData };
+        } else { // Adding new member
+            finalMemberData = {
+                ...memberData,
+                id: `member_${Date.now()}`,
+                familyId: familyId || (data.householdRole === 'Head' ? `fam_${Date.now()}` : undefined)
+            }
+        }
+        
+        // Logic to update family head if role changes
+        if (member && member.householdRole === 'Head' && data.householdRole === 'Member') {
+             // Find another member in the family to promote to Head, or clear familyId for all
+             const otherFamilyMembers = members.filter(m => m.familyId === member.familyId && m.id !== member.id);
+             if (otherFamilyMembers.length > 0) {
+                 // Promote the first other member to Head
+                 const newHead = otherFamilyMembers[0];
+                 setMembers(prev => prev.map(m => {
+                     if (m.id === newHead.id) return { ...m, householdRole: 'Head' };
+                     if (m.id === member.id) return { ...finalMemberData, familyId: undefined, householdRole: 'Head' };
+                     return m;
+                 }));
+             } else {
+                 // This was the only member, so just remove their familyId
+                 setMembers(prev => prev.map(m => m.id === member.id ? { ...finalMemberData, familyId: undefined, householdRole: 'Head' } : m));
+             }
+        } else {
+            onSave(finalMemberData, member?.id);
+        }
+        
         setImagePreview(null);
         setIsOpen(false);
     };
+    
+    const familyMembers = member?.familyId ? members.filter(m => m.familyId === member.familyId && m.id !== member.id) : [];
+
+    const unlinkMember = (memberIdToUnlink: string) => {
+        setMembers(prev => prev.map(m => m.id === memberIdToUnlink ? { ...m, familyId: undefined, householdRole: 'Head' } : m));
+        toast({ title: "Member Unlinked", description: "The member has been removed from the family." });
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -189,11 +244,10 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
                             <FormField control={form.control} name="contact" render={({ field }) => (
                                 <FormItem><FormLabel>Contact (Phone/Email)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
-                            <FormField control={form.control} name="memberType" render={({ field }) => (
-                                <FormItem><FormLabel>Member Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                    <SelectItem value="Head of Family">Head of Family</SelectItem>
-                                    <SelectItem value="Spouse">Spouse</SelectItem>
-                                    <SelectItem value="Child">Child</SelectItem>
+                            <FormField control={form.control} name="householdRole" render={({ field }) => (
+                                <FormItem><FormLabel>Household Role</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                    <SelectItem value="Head">Head of Family</SelectItem>
+                                    <SelectItem value="Member">Member</SelectItem>
                                 </SelectContent></Select><FormMessage /></FormItem>
                             )} />
                         </div>
@@ -237,6 +291,36 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
                                 <SelectItem value="Pending Review">Pending Review</SelectItem>
                             </SelectContent></Select><FormMessage /></FormItem>
                         )} />
+                        
+                         {member?.householdRole === 'Head' && (
+                            <Card className="bg-muted/50">
+                                <CardHeader>
+                                    <CardTitle className="text-base flex items-center justify-between">
+                                        Family Members
+                                        <AddEditMemberDialog onSave={onSave} familyId={member.familyId} members={members} setMembers={setMembers}>
+                                            <Button size="sm" variant="outline"><UserPlus className="mr-2 h-4 w-4"/>Add Family Member</Button>
+                                        </AddEditMemberDialog>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {familyMembers.length > 0 ? (
+                                        <ul className="space-y-2">
+                                            {familyMembers.map(fm => (
+                                                <li key={fm.id} className="flex items-center justify-between text-sm p-2 rounded-md bg-background">
+                                                    <span>{fm.name}</span>
+                                                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => unlinkMember(fm.id)}>
+                                                        <Link2Off className="h-4 w-4 text-destructive" />
+                                                    </Button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p className="text-sm text-muted-foreground text-center">No other family members linked.</p>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
+
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit">Save Member</Button>
@@ -254,12 +338,20 @@ export default function MembershipPage() {
 
     const handleSave = (values: MemberValues, id?: string) => {
         const { identityDocument, ...restOfValues } = values; // Exclude identityDocument from saving
+        let memberToSave: CommunityMember;
+
         if (id) {
-            setMembers(prev => prev.map(m => m.id === id ? { ...m, ...restOfValues } : m));
+            const existingMember = members.find(m => m.id === id)!;
+            memberToSave = { ...existingMember, ...restOfValues };
+            setMembers(prev => prev.map(m => (m.id === id ? memberToSave : m)));
             toast({ title: "Member updated." });
         } else {
-            const newMember: CommunityMember = { ...restOfValues, id: `member_${Date.now()}` };
-            setMembers(prev => [newMember, ...prev]);
+            memberToSave = { 
+                ...restOfValues, 
+                id: `member_${Date.now()}`,
+                familyId: values.familyId || (values.householdRole === 'Head' ? `fam_${Date.now()}` : undefined)
+            };
+            setMembers(prev => [memberToSave, ...prev]);
             toast({ title: "Member added." });
         }
     };
@@ -305,36 +397,39 @@ export default function MembershipPage() {
                     <CardTitle>Member Registry</CardTitle>
                     <CardDescription>View, add, or edit members of your community.</CardDescription>
                 </div>
-                <AddEditMemberDialog onSave={handleSave}>
+                <AddEditMemberDialog onSave={handleSave} members={members} setMembers={setMembers}>
                     <Button><PlusCircle /> Add Member</Button>
                 </AddEditMemberDialog>
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Position / Employer</TableHead><TableHead>Type</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Household Role</TableHead><TableHead>Position / Employer</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {members.map(member => (
-                            <TableRow key={member.id}>
+                            <TableRow key={member.id} className={member.householdRole === 'Member' ? 'bg-muted/50' : ''}>
                                 <TableCell>
                                      <div className="flex items-center gap-3">
-                                        <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover"/>
+                                        <div className="flex-shrink-0" style={{ paddingLeft: member.householdRole === 'Member' ? '20px' : '0' }}>
+                                         {member.householdRole === 'Member' && <span className="text-muted-foreground">- </span>}
+                                        <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover inline-block"/>
+                                        </div>
                                         <div>
                                           <p className="font-medium">{member.nickname || member.name}</p>
                                           <p className="text-sm text-muted-foreground">{member.contact}</p>
                                         </div>
                                     </div>
                                 </TableCell>
+                                 <TableCell><Badge variant={member.householdRole === 'Head' ? 'default' : 'outline'}>{member.householdRole === 'Head' ? 'Head of Family' : 'Member'}</Badge></TableCell>
                                 <TableCell>
                                   {member.position && <div>
                                     <p className="font-medium">{member.position}</p>
                                     {member.employer && <p className="text-sm text-muted-foreground">{member.employer}</p>}
                                   </div>}
                                 </TableCell>
-                                <TableCell><Badge variant="outline">{member.memberType}</Badge></TableCell>
                                 <TableCell>{getStatusBadge(member.status)}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <AddEditMemberDialog member={member} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditMemberDialog>
+                                        <AddEditMemberDialog member={member} onSave={handleSave} members={members} setMembers={setMembers}><Button variant="ghost" size="icon"><Edit /></Button></AddEditMemberDialog>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                             <AlertDialogContent>
