@@ -15,8 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { CommunityEvent } from "@/lib/community-events";
-import { initialEvents } from "@/lib/community-events";
-import { initialFinances, type CommunityFinance } from "@/lib/community-finances";
+import type { CommunityFinance } from "@/lib/community-finances";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, ArrowLeft, Users, Calendar, MapPin, DollarSign, HandCoins, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import Link from 'next/link';
@@ -25,6 +24,33 @@ import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { AddEditTransactionDialog, type TransactionValues } from './transaction-form';
+import { store } from "@/lib/global-store";
+
+export const useCommunityHubData = () => {
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        events: data.communityEvents,
+        setEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
+            const current = store.get().communityEvents;
+            const newItems = updater(current);
+            store.set(state => ({ ...state, communityEvents: newItems }));
+        },
+        finances: data.communityFinances,
+        setFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
+            const current = store.get().communityFinances;
+            const newItems = updater(current);
+            store.set(state => ({ ...state, communityFinances: newItems }));
+        }
+    };
+};
 
 const EventSchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -105,8 +131,7 @@ const AddEditEventDialog = ({ event, onSave, children }: { event?: CommunityEven
 };
 
 export default function EventsFinancePage() {
-    const [events, setEvents] = useState(initialEvents);
-    const [finances, setFinances] = useState(initialFinances);
+    const { events, setEvents, finances, setFinances } = useCommunityHubData();
     const { toast } = useToast();
 
     const handleSaveEvent = (values: EventValues, id?: string) => {
