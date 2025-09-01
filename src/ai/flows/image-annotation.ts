@@ -49,9 +49,12 @@ export async function annotateImage(input: ImageAnnotatorInput): Promise<ImageAn
             { media: { url: input.baseImageUri } },
             { text: "Analyze the image to estimate the object's dimensions. First, identify the main object. Then, estimate its height, width, and depth in metric units based on common real-world sizes. Finally, create a new image where you overlay clean, professional-looking bounding boxes and dimension labels onto the object." },
         ],
+        output: {
+            format: 'json',
+            schema: ImageAnnotatorOutputSchema,
+        },
         config: {
-            responseModalities: ['IMAGE', 'JSON'],
-            jsonOutput: { schema: ImageAnnotatorOutputSchema }
+            responseModalities: ['IMAGE', 'TEXT'], // Correctly asking for IMAGE and TEXT
         },
     });
 
