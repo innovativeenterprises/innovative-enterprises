@@ -53,4 +53,3 @@ import '@/ai/flows/scholarship-agent';
 import '@/ai/flows/scholarship-essay-assistant';
 import '@/ai/flows/community-elections-agent';
 import '@/ai/flows/image-transformer';
-
