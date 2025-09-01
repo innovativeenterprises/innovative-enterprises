@@ -47,5 +47,6 @@ import '@/ai/flows/real-estate-contract-generator';
 import '@/ai/flows/property-matcher';
 import '@/ai/flows/property-extraction';
 import '@/ai/flows/image-transformer';
+import '@/ai/flows/timetable-generator';
 
     
