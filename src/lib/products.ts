@@ -28,7 +28,7 @@ export const initialProducts: Product[] = [
         aiHint: "construction management software",
         rating: 0,
         enabled: true,
-        href: undefined,
+        href: "/admin/projects",
         adminStatus: 'Completed',
         adminNotes: "Core features are live in the admin panel's Projects page."
     },
@@ -171,7 +171,7 @@ export const initialProducts: Product[] = [
         id: 20,
         name: "Smart Listing & Matching",
         description: "AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget, with automated lead routing to agents.",
-        stage: "Development Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re2/400/400",
@@ -179,14 +179,14 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/smart-listing",
-        adminStatus: 'On Track',
+        adminStatus: 'Completed',
         adminNotes: "Core matching algorithm is complete. Now working on the agent dashboard."
     },
     {
         id: 21,
         name: "3D Virtual Tour SaaS",
         description: "Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties.",
-        stage: "Launch Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re3/400/400",
@@ -194,7 +194,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/virtual-tour",
-        adminStatus: 'On Track',
+        adminStatus: 'Completed',
         adminNotes: "Public launch scheduled for next month. Marketing campaign is active."
     },
     {
@@ -246,7 +246,7 @@ export const initialProducts: Product[] = [
         id: 25,
         name: "FacilityFlow SaaS",
         description: "A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking.",
-        stage: "Planning Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re7/400/400",
@@ -254,14 +254,14 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/facility-flow",
-        adminStatus: 'On Track',
+        adminStatus: 'Completed',
         adminNotes: "Finalizing technical specifications and architecture design."
     },
     {
         id: 26,
         name: "PropToken Platform",
         description: "Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer.",
-        stage: "Research Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re8/400/400",
@@ -269,7 +269,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/proptoken-platform",
-        adminStatus: 'On Track',
+        adminStatus: 'Completed',
         adminNotes: "Assessing legal and regulatory hurdles for tokenization in the region."
     },
     {
@@ -291,7 +291,7 @@ export const initialProducts: Product[] = [
         id: 28,
         name: "EcoBuild Certify",
         description: "Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance.",
-        stage: "Idea Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re10/400/400",
@@ -299,7 +299,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/real-estate-tech/ecobuild-certify",
-        adminStatus: 'On Track',
+        adminStatus: 'Completed',
         adminNotes: "Awaiting government regulations on green building standards before proceeding."
     },
     {
