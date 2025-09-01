@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, UserCheck, PlusCircle, Trash2, CheckCircle, ShieldAlert, BadgeInfo, Wand2, FileCheck2 } from 'lucide-react';
+import { Loader2, Sparkles, UserCheck, PlusCircle, Trash2, CheckCircle, ShieldAlert, BadgeInfo, Wand2, FileCheck2, LayoutDashboard } from 'lucide-react';
 import { AdmissionsAgentInputSchema, type AdmissionsAgentInput, type AdmissionsAgentOutput } from '@/ai/flows/admissions-agent.schema';
 import { analyzeApplication } from '@/ai/flows/admissions-agent';
 import { Progress } from '@/components/ui/progress';
@@ -124,6 +124,13 @@ export default function AdmissionsPage() {
                         <p className="mt-4 text-lg text-muted-foreground">
                             Streamline your admissions process. Submit an application below to see how our AI, "Admito," provides instant preliminary analysis for your admissions team.
                         </p>
+                         <div className="mt-4">
+                            <Button asChild variant="outline">
+                                <Link href="/education-tech/admissions/dashboard">
+                                    <LayoutDashboard className="mr-2 h-4 w-4" /> View Admissions Dashboard
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
 
                     <Card>
