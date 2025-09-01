@@ -3,7 +3,7 @@
  */
 import { z } from 'zod';
 
-const ScholarshipSchema = z.object({
+export const ScholarshipSchema = z.object({
     scholarshipName: z.string(),
     institution: z.string(),
     country: z.string(),

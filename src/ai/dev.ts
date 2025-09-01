@@ -50,5 +50,7 @@ import '@/ai/flows/image-transformer';
 import '@/ai/flows/timetable-generator';
 import '@/ai/flows/admissions-agent';
 import '@/ai/flows/wellbeing-checkin';
+import '@/ai/flows/scholarship-agent';
+import '@/ai/flows/scholarship-essay-assistant';
 
     
