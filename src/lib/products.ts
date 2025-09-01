@@ -148,7 +148,7 @@ export const initialProducts: Product[] = [
         aiHint: "client dashboard project",
         rating: 0,
         enabled: true,
-        href: undefined,
+        href: "/admin/projects",
         adminStatus: 'Completed',
         adminNotes: "Core features (Kanban, AI Inception) are live in the admin panel."
     },
@@ -276,7 +276,7 @@ export const initialProducts: Product[] = [
         id: 27,
         name: "Tenant Digital Briefcase",
         description: "A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals.",
-        stage: "Idea Phase",
+        stage: "Live & Operating",
         category: "Real Estate Tech",
         price: 0,
         image: "https://picsum.photos/seed/re9/400/400",
@@ -284,7 +284,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/briefcase",
-        adminStatus: 'On Track',
+        adminStatus: 'Completed',
         adminNotes: "Concept is solid. Needs a dedicated project manager to move forward."
     },
     {
