@@ -27,7 +27,7 @@ export const initialProducts: Product[] = [
         aiHint: "construction management software",
         rating: 0,
         enabled: true,
-        href: "/admin/projects",
+        href: undefined,
         adminStatus: 'Completed',
         adminNotes: "Core features are live in the admin panel's Projects page."
     },
@@ -147,7 +147,7 @@ export const initialProducts: Product[] = [
         aiHint: "client dashboard project",
         rating: 0,
         enabled: true,
-        href: "/admin/projects",
+        href: undefined,
         adminStatus: 'Completed',
         adminNotes: "Core features (Kanban, AI Inception) are live in the admin panel."
     },
