@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -93,7 +93,7 @@ export const initialServices: Service[] = [
     title: "InfraRent",
     description: "On-demand rental of IT equipment like servers, workstations, and networking gear for events and projects.",
     enabled: true,
-    href: "/infra-rent",
+    href: "/rentals",
   },
    {
     icon: Languages,
@@ -104,17 +104,17 @@ export const initialServices: Service[] = [
   },
   {
     icon: Scale,
-    title: "AI Legal Agent",
+    title: "Lexi Legal Assistant",
     description: "Leverage AI to analyze legal documents, identifying potential risks, liabilities, and ambiguities before you sign.",
     enabled: true,
     href: "/legal-agent",
   },
   {
-    icon: FileText,
-    title: "Certus Audit Hub",
-    description: "Connect with certified audit offices and leverage AI for a preliminary analysis of your financial documents.",
+    icon: GanttChartSquare,
+    title: "WorkforceFlow",
+    description: "AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking.",
     enabled: true,
-    href: "/financial-audit",
+    href: "/education-tech/eduflow/timetable-generator",
   },
   {
     icon: Lock,

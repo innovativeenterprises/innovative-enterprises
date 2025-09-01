@@ -80,16 +80,16 @@ export const initialProducts: Product[] = [
         id: 13,
         name: "WorkforceFlow",
         description: "AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking.",
-        stage: "Research Phase",
+        stage: "Live & Operating",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const5/400/400",
         aiHint: "construction workforce management",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/workforce-flow",
-        adminStatus: 'On Track',
-        adminNotes: "Currently analyzing market viability and competitor landscape."
+        href: "/education-tech/eduflow/timetable-generator",
+        adminStatus: 'Completed',
+        adminNotes: "Initial version live, focusing on the AI timetabling feature."
     },
     {
         id: 14,
@@ -110,16 +110,16 @@ export const initialProducts: Product[] = [
         id: 15,
         name: "ConstructFin",
         description: "Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects.",
-        stage: "Planning Phase",
+        stage: "Live & Operating",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const7/400/400",
         aiHint: "financial technology construction",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/construct-fin",
-        adminStatus: 'On Track',
-        adminNotes: "Defining MVP features and technical requirements."
+        href: "/cfo",
+        adminStatus: 'Completed',
+        adminNotes: "CFO Dashboard and AI Audit features are live."
     },
     {
         id: 16,
@@ -155,16 +155,16 @@ export const initialProducts: Product[] = [
         id: 18,
         name: "ClientView Portal",
         description: "White-label dashboards for clients to see live project status, track payment milestones, and manage warranties.",
-        stage: "Design Phase",
+        stage: "Live & Operating",
         category: "Construction Tech",
         price: 0,
         image: "https://picsum.photos/seed/const10/400/400",
         aiHint: "client dashboard project",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/client-view",
-        adminStatus: 'On Track',
-        adminNotes: "High-fidelity mockups are complete. Awaiting feedback from pilot client."
+        href: "/admin/projects",
+        adminStatus: 'Completed',
+        adminNotes: "Core features (Kanban, AI Inception) are live in the admin panel."
     },
     {
         id: 19,
