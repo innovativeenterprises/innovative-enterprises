@@ -1,12 +1,10 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import type { Product } from '@/lib/products';
-import { initialProducts } from '@/lib/products';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 
@@ -48,17 +46,8 @@ const StageBadge = ({ stage }: { stage: string }) => {
 
 
 export default function ProductShowcase({ products: managedProducts }: { products: Product[] }) {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-
-  useEffect(() => {
-    // In a real app, you'd fetch this from a database.
-    // Here, we simulate getting it from the admin page's state management.
-    if (managedProducts) {
-        setProducts(managedProducts);
-    }
-  }, [managedProducts]);
   
-  const enabledProducts = products.filter(p => p.enabled);
+  const enabledProducts = managedProducts.filter(p => p.enabled);
 
   return (
     <section id="products" className="py-16 md:py-24 bg-white">

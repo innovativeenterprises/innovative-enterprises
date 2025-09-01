@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import CompanyOverview from '@/components/company-overview';
 import ServiceCatalog from '@/components/service-catalog';
 import ProductShowcase from '@/components/product-showcase';
@@ -20,13 +21,25 @@ export default function Home() {
   const { services } = useServicesData();
   const { products } = useProductsData();
   const { clients, testimonials } = useClientsData();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <div className="flex flex-col">
       <CompanyOverview />
-      <ServiceCatalog services={services} />
-      <ProductShowcase products={products} />
-      <ClientTestimonials clients={clients} testimonials={testimonials} />
+      {isClient ? (
+        <>
+          <ServiceCatalog services={services} />
+          <ProductShowcase products={products} />
+          <ClientTestimonials clients={clients} testimonials={testimonials} />
+        </>
+      ) : (
+        // You can add skeleton loaders here if you want
+        <div className="h-[200vh]"></div>
+      )}
       <AiToolsCta />
       <ChatWidget />
     </div>

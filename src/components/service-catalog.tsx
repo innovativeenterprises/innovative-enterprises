@@ -1,9 +1,8 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { type Service, initialServices } from "@/lib/services";
+import { type Service } from "@/lib/services";
 import Link from "next/link";
 
 const ServiceCard = ({ service }: { service: Service }) => (
@@ -23,17 +22,8 @@ const ServiceCard = ({ service }: { service: Service }) => (
 );
 
 export default function ServiceCatalog({ services: managedServices }: { services: Service[] }) {
-  const [services, setServices] = useState<Service[]>(initialServices);
 
-  useEffect(() => {
-    // In a real app, you'd fetch this from a database.
-    // Here, we simulate getting it from the admin page's state management.
-    if (managedServices) {
-      setServices(managedServices);
-    }
-  }, [managedServices]);
-
-  const enabledServices = services.filter(s => s.enabled);
+  const enabledServices = managedServices.filter(s => s.enabled);
 
   return (
     <section id="services" className="py-16 md:py-24 bg-white">

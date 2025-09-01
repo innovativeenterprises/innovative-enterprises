@@ -1,12 +1,14 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, Building2, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/app/admin/product-table";
 import type { Product } from "@/lib/products";
+import { Skeleton } from '@/components/ui/skeleton';
 
 const problems = [
     { title: "Manual Valuation", description: "Property valuation is slow, subjective, and lacks data-driven accuracy." },
@@ -52,8 +54,34 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
+const ProductGridSkeleton = () => (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i} className="flex flex-col h-full">
+                <CardHeader className="flex-row items-center gap-4">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <Skeleton className="h-6 w-32" />
+                </CardHeader>
+                <CardContent className="flex-grow space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                </CardContent>
+                <CardFooter>
+                    <Skeleton className="h-10 w-full" />
+                </CardFooter>
+            </Card>
+        ))}
+    </div>
+);
+
 export default function RealEstateTechPage() {
     const { products } = useProductsData();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+    
     const realEstateProducts = products.filter(p => p.category === "Real Estate Tech" && p.enabled);
     
   return (
@@ -94,11 +122,13 @@ export default function RealEstateTechPage() {
                 <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Upcoming SaaS Platforms</h2>
                 <p className="mt-4 text-lg text-muted-foreground">A preview of our dedicated solutions for the real estate industry.</p>
             </div>
-             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {realEstateProducts.map(product => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
+            {isClient ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {realEstateProducts.map(product => (
+                        <ProductCard key={product.id} product={product} />
+                    ))}
+                </div>
+            ) : <ProductGridSkeleton />}
         </div>
 
         <div className="max-w-3xl mx-auto mt-20 text-center">

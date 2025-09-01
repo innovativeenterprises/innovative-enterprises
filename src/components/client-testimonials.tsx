@@ -1,30 +1,18 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients';
-import { initialClients, initialTestimonials } from '@/lib/clients';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function ClientTestimonials({ 
-    clients: managedClients, 
-    testimonials: managedTestimonials 
+    clients, 
+    testimonials, 
 }: { 
     clients: Client[], 
     testimonials: Testimonial[] 
 }) {
-  const [clients, setClients] = useState<Client[]>(initialClients);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
-
-  useEffect(() => {
-    if (managedClients) setClients(managedClients);
-  }, [managedClients]);
-
-  useEffect(() => {
-    if (managedTestimonials) setTestimonials(managedTestimonials);
-  }, [managedTestimonials]);
 
   const renderQuote = (quote: string) => {
     const parts = quote.split(/\*\*(.*?)\*\*/g);
