@@ -36,11 +36,18 @@ export default function CognitaLearnPage() {
                     <p className="mt-4 text-lg text-muted-foreground">
                         Moving beyond one-size-fits-all education. CognitaLearn uses AI to create personalized, engaging, and effective learning experiences for every student.
                     </p>
-                    <Button asChild size="lg" className="mt-8">
-                        <Link href="/education-tech/cognita-learn/learning-path">
-                            Generate a Learning Path <ArrowRight className="ml-2 h-4 w-4"/>
-                        </Link>
-                    </Button>
+                    <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+                        <Button asChild size="lg">
+                            <Link href="/education-tech/cognita-learn/learning-path">
+                                Generate a Learning Path <ArrowRight className="ml-2 h-4 w-4"/>
+                            </Link>
+                        </Button>
+                        <Button asChild size="lg" variant="secondary">
+                            <Link href="/education-tech/cognita-learn/adaptive-learning">
+                                AI Tutor <ArrowRight className="ml-2 h-4 w-4"/>
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="max-w-5xl mx-auto mt-20">
