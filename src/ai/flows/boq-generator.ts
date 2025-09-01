@@ -42,10 +42,10 @@ const categoryPrompt = ai.definePrompt({
 {{/if}}
 
 **Instructions:**
-1.  **Focus ONLY on the requested category:** \`{{{category}}}\`.
+1.  **Focus ONLY on the requested category:** \`{{{category}}}\`. If the category is 'Preliminaries', include items like Mobilization, Site Offices, Temporary Fencing, and Demobilization.
 2.  **Analyze the Floor Plan:** Carefully study the provided floor plan to understand the layout and dimensions relevant to this category.
-3.  **Calculate Quantities:** Based on the plan, calculate the estimated quantities for items ONLY within the '{{{category}}}' category.
-4.  **Itemize:** For each item, provide a clear description, the correct unit of measurement (e.g., m³, m², kg, nos), and the calculated quantity.
+3.  **Calculate Quantities:** Based on the plan, calculate the estimated quantities for items ONLY within the '{{{category}}}' category. For lump-sum items like Mobilization, use a quantity of 1 and a unit of 'L.S.'.
+4.  **Itemize:** For each item, provide a clear description, the correct unit of measurement (e.g., m³, m², kg, nos, L.S.), and the calculated quantity.
 5.  **Assumptions:** If you have to make assumptions, state them clearly in the 'notes' for the relevant item.
 
 Return ONLY the items for the requested category. Do not calculate for other categories.
@@ -73,6 +73,7 @@ const fullBoqGeneratorFlow = ai.defineFlow(
     },
     async (input) => {
         const categoriesToGenerate = [
+            'Preliminaries',
             'Earthwork',
             'Concrete Works',
             'Masonry Works',
