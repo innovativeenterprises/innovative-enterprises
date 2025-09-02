@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot, PenSquare } from 'lucide-react';
+import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot, PenSquare, Search } from 'lucide-react';
 import Link from 'next/link';
 import { initialStudents } from '@/lib/students';
 import type { Student } from '@/lib/students';
@@ -20,6 +20,8 @@ import { ChatComponent } from '@/components/chat/chat-component';
 import { wellbeingCheckin } from '@/ai/flows/wellbeing-checkin';
 import { useSettingsData } from '@/app/admin/settings-table';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ScholarshipFinder from '../scholarships/page';
 
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
@@ -78,60 +80,70 @@ export default function GuardianAiPage() {
                             </p>
                         </div>
                     </div>
-                    
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Student Success Overview</CardTitle>
-                            <CardDescription>Monitor student status and provide timely support and guidance.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                             <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Student</TableHead>
-                                        <TableHead>Major</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {students.map(student => (
-                                        <TableRow key={student.id}>
-                                            <TableCell>
-                                                 <div className="flex items-center gap-3">
-                                                    <Avatar>
-                                                        <AvatarImage src={student.photo} alt={student.name} />
-                                                        <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
-                                                    </Avatar>
-                                                    <div>
-                                                        <p className="font-medium">{student.name}</p>
-                                                        <p className="text-sm text-muted-foreground">ID: {student.id}</p>
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>{student.major}</TableCell>
-                                            <TableCell>{getStatusBadge(student.status)}</TableCell>
-                                            <TableCell className="text-right">
-                                                <Dialog>
-                                                    <div className="flex justify-end gap-2">
-                                                        <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer"><FileText className="mr-2 h-4 w-4"/>CV</Link></Button>
-                                                        <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer?tab=interview"><Mic className="mr-2 h-4 w-4"/>Interview</Link></Button>
-                                                        <Dialog>
-                                                          <DialogTrigger asChild><Button variant="outline" size="sm"><PenSquare className="mr-2 h-4 w-4"/>Essay</Button></DialogTrigger>
-                                                          <ScholarshipEssayAssistant student={student} />
-                                                        </Dialog>
-                                                        <DialogTrigger asChild><Button variant="secondary" size="sm"><MessageSquare className="mr-2 h-4 w-4"/>Check-in</Button></DialogTrigger>
-                                                    </div>
-                                                    <WellbeingChat studentName={student.name} />
-                                                </Dialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
 
+                    <Tabs defaultValue="dashboard" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="dashboard">Student Success Dashboard</TabsTrigger>
+                            <TabsTrigger value="scholarships">Scholarship Finder</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="dashboard" className="mt-6">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Student Success Overview</CardTitle>
+                                    <CardDescription>Monitor student status and provide timely support and guidance.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Student</TableHead>
+                                                <TableHead>Major</TableHead>
+                                                <TableHead>Status</TableHead>
+                                                <TableHead className="text-right">Actions</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {students.map(student => (
+                                                <TableRow key={student.id}>
+                                                    <TableCell>
+                                                        <div className="flex items-center gap-3">
+                                                            <Avatar>
+                                                                <AvatarImage src={student.photo} alt={student.name} />
+                                                                <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                                                            </Avatar>
+                                                            <div>
+                                                                <p className="font-medium">{student.name}</p>
+                                                                <p className="text-sm text-muted-foreground">ID: {student.id}</p>
+                                                            </div>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell>{student.major}</TableCell>
+                                                    <TableCell>{getStatusBadge(student.status)}</TableCell>
+                                                    <TableCell className="text-right">
+                                                        <Dialog>
+                                                            <div className="flex justify-end gap-2">
+                                                                <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer"><FileText className="mr-2 h-4 w-4"/>CV</Link></Button>
+                                                                <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer?tab=interview"><Mic className="mr-2 h-4 w-4"/>Interview</Link></Button>
+                                                                <Dialog>
+                                                                <DialogTrigger asChild><Button variant="outline" size="sm"><PenSquare className="mr-2 h-4 w-4"/>Essay</Button></DialogTrigger>
+                                                                <ScholarshipEssayAssistant student={student} />
+                                                                </Dialog>
+                                                                <DialogTrigger asChild><Button variant="secondary" size="sm"><MessageSquare className="mr-2 h-4 w-4"/>Check-in</Button></DialogTrigger>
+                                                            </div>
+                                                            <WellbeingChat studentName={student.name} />
+                                                        </Dialog>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                         <TabsContent value="scholarships" className="mt-6">
+                            <ScholarshipFinder />
+                        </TabsContent>
+                    </Tabs>
                 </div>
             </div>
         </div>
