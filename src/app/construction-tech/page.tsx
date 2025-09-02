@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package } from "lucide-react";
+import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/app/admin/product-table";
 import type { Product } from "@/lib/products";
@@ -23,6 +23,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "AeroSite AI (DaaS)": Cpu,
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
+        "Fire & Safety Estimator": Siren,
     };
     const Icon = iconMap[product.name] || HardHat;
 
