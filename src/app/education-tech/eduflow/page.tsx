@@ -1,7 +1,7 @@
 
 'use client';
 
-import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign } from "lucide-react";
+import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Users } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
@@ -88,6 +88,24 @@ export default function EduFlowPage() {
                     <Button asChild className="w-full">
                         <Link href="/education-tech/eduflow/student-financials">
                             Launch Financials <ArrowRight className="ml-2 h-4 w-4"/>
+                        </Link>
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card className="flex flex-col">
+                <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                        <Users className="h-8 w-8 text-primary" />
+                        <CardTitle className="text-2xl">Student Records</CardTitle>
+                    </div>
+                    <CardDescription>
+                       A central database to manage all student profiles, academic records, and contact information.
+                    </CardDescription>
+                </CardHeader>
+                <CardFooter className="mt-auto">
+                    <Button asChild className="w-full">
+                        <Link href="/education-tech/eduflow/student-records">
+                            Manage Records <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
                 </CardFooter>
