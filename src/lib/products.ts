@@ -72,7 +72,7 @@ export const initialProducts: Product[] = [
         aiHint: "construction workforce management",
         rating: 0,
         enabled: true,
-        href: "/construction-tech/workforce-scheduler",
+        href: "/education-tech/eduflow/timetable-generator",
         adminStatus: 'Completed',
         adminNotes: "The AI Workforce Scheduler is live and functional."
     },
