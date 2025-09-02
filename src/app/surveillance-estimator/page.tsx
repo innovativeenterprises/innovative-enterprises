@@ -12,12 +12,12 @@ export default function SurveillanceEstimatorPage() {
           <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
               <Server className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">Surveillance System Estimator</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">Smart Home &amp; Surveillance Estimator</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Get an instant, AI-powered proposal for your project's surveillance needs. Describe your project, and our AI Solutions Architect will design a system, list required equipment, and estimate the costs.
+            Get an instant, AI-powered proposal for your project's surveillance and smart home needs. Describe your project, and our AI Solutions Architect will design a system, list required equipment, and estimate the costs.
           </p>
         </div>
-        <div className="max-w-3xl mx-auto mt-12">
+        <div className="max-w-4xl mx-auto mt-12">
             <EstimatorForm />
         </div>
       </div>
