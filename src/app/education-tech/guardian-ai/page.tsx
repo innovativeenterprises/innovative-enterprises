@@ -22,6 +22,7 @@ import { useSettingsData } from '@/app/admin/settings-table';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ScholarshipFinder from '../scholarships/page';
+import InterviewCoachForm from '@/app/interview-coach/coach-form';
 
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
@@ -46,10 +47,9 @@ const WellbeingChat = ({ studentName }: { studentName: string }) => {
     )
 }
 
-export default function GuardianAiPage() {
+const StudentDashboard = () => {
     const [students, setStudents] = useState<Student[]>(initialStudents);
-    const { settings } = useSettingsData();
-
+    
     const getStatusBadge = (status: Student['status']) => {
         switch (status) {
             case 'On Track': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">On Track</Badge>;
@@ -58,7 +58,60 @@ export default function GuardianAiPage() {
             default: return <Badge variant="outline">{status}</Badge>;
         }
     };
+    
+    return (
+         <Card>
+            <CardHeader>
+                <CardTitle>Student Success Overview</CardTitle>
+                <CardDescription>Monitor student status and provide timely support and guidance.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Student</TableHead>
+                            <TableHead>Major</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {students.map(student => (
+                            <TableRow key={student.id}>
+                                <TableCell>
+                                    <div className="flex items-center gap-3">
+                                        <Avatar><AvatarImage src={student.photo} alt={student.name} /><AvatarFallback>{student.name.charAt(0)}</AvatarFallback></Avatar>
+                                        <div>
+                                            <p className="font-medium">{student.name}</p>
+                                            <p className="text-sm text-muted-foreground">ID: {student.id}</p>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell>{student.major}</TableCell>
+                                <TableCell>{getStatusBadge(student.status)}</TableCell>
+                                <TableCell className="text-right">
+                                    <Dialog>
+                                        <div className="flex justify-end gap-2">
+                                            <Dialog>
+                                                <DialogTrigger asChild><Button variant="outline" size="sm"><PenSquare className="mr-2 h-4 w-4"/>Essay</Button></DialogTrigger>
+                                                <ScholarshipEssayAssistant student={student} />
+                                            </Dialog>
+                                            <DialogTrigger asChild><Button variant="secondary" size="sm"><MessageSquare className="mr-2 h-4 w-4"/>Check-in</Button></DialogTrigger>
+                                        </div>
+                                        <WellbeingChat studentName={student.name} />
+                                    </Dialog>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+};
 
+
+export default function GuardianAiPage() {
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -82,66 +135,19 @@ export default function GuardianAiPage() {
                     </div>
 
                     <Tabs defaultValue="dashboard" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="dashboard">Student Success Dashboard</TabsTrigger>
                             <TabsTrigger value="scholarships">Scholarship Finder</TabsTrigger>
+                            <TabsTrigger value="interview">AI Interview Coach</TabsTrigger>
                         </TabsList>
                         <TabsContent value="dashboard" className="mt-6">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Student Success Overview</CardTitle>
-                                    <CardDescription>Monitor student status and provide timely support and guidance.</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Student</TableHead>
-                                                <TableHead>Major</TableHead>
-                                                <TableHead>Status</TableHead>
-                                                <TableHead className="text-right">Actions</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {students.map(student => (
-                                                <TableRow key={student.id}>
-                                                    <TableCell>
-                                                        <div className="flex items-center gap-3">
-                                                            <Avatar>
-                                                                <AvatarImage src={student.photo} alt={student.name} />
-                                                                <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
-                                                            </Avatar>
-                                                            <div>
-                                                                <p className="font-medium">{student.name}</p>
-                                                                <p className="text-sm text-muted-foreground">ID: {student.id}</p>
-                                                            </div>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell>{student.major}</TableCell>
-                                                    <TableCell>{getStatusBadge(student.status)}</TableCell>
-                                                    <TableCell className="text-right">
-                                                        <Dialog>
-                                                            <div className="flex justify-end gap-2">
-                                                                <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer"><FileText className="mr-2 h-4 w-4"/>CV</Link></Button>
-                                                                <Button asChild variant="outline" size="sm"><Link href="/cv-enhancer?tab=interview"><Mic className="mr-2 h-4 w-4"/>Interview</Link></Button>
-                                                                <Dialog>
-                                                                <DialogTrigger asChild><Button variant="outline" size="sm"><PenSquare className="mr-2 h-4 w-4"/>Essay</Button></DialogTrigger>
-                                                                <ScholarshipEssayAssistant student={student} />
-                                                                </Dialog>
-                                                                <DialogTrigger asChild><Button variant="secondary" size="sm"><MessageSquare className="mr-2 h-4 w-4"/>Check-in</Button></DialogTrigger>
-                                                            </div>
-                                                            <WellbeingChat studentName={student.name} />
-                                                        </Dialog>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                            </Card>
+                            <StudentDashboard />
                         </TabsContent>
                          <TabsContent value="scholarships" className="mt-6">
                             <ScholarshipFinder />
+                        </TabsContent>
+                         <TabsContent value="interview" className="mt-6">
+                            <InterviewCoachForm />
                         </TabsContent>
                     </Tabs>
                 </div>

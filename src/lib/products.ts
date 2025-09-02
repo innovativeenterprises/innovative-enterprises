@@ -420,7 +420,7 @@ export const initialProducts: Product[] = [
     {
         id: 37,
         name: "Guardian AI",
-        description: "A student wellbeing and success platform offering risk profiling for early dropout prevention, AI career advisory, and mental health support chatbots.",
+        description: "A student success platform offering risk profiling, AI career advisory & interview coaching, and wellbeing support.",
         stage: "Live & Operating",
         category: "EdTech",
         price: 0,
