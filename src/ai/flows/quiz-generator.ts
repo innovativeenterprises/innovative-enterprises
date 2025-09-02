@@ -34,10 +34,10 @@ const prompt = ai.definePrompt({
 2.  **Generate Questions:** Create {{{numQuestions}}} multiple-choice questions about the '{{{topic}}}'.
 3.  **Set Difficulty:** The questions should match the requested difficulty level ('{{{difficulty}}}'). 'Easy' questions should be definitional, 'Medium' questions should require some application of concepts, and 'Hard' questions should involve analysis or synthesis.
 4.  **For each question, you MUST provide:**
-    *   `questionText`: The question itself.
-    *   `options`: An array of exactly four possible answers. One must be correct.
-    *   `correctAnswer`: The correct answer string, which must exactly match one of the options.
-    *   `explanation`: A brief, clear explanation for why the correct answer is correct.
+    *   \`questionText\`: The question itself.
+    *   \`options\`: An array of exactly four possible answers. One must be correct.
+    *   \`correctAnswer\`: The correct answer string, which must exactly match one of the options.
+    *   \`explanation\`: A brief, clear explanation for why the correct answer is correct.
 
 Return the complete quiz in the specified structured JSON format.
 `,
