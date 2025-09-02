@@ -3,24 +3,30 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, Cpu, Gamepad2, BarChart, BookOpen, User, Target, ArrowRight } from "lucide-react";
+import { Cpu, Target, BrainCircuit, ClipboardCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-const features = [
+const platformPillars = [
     {
         icon: Target,
-        title: "Personalized Learning Paths",
-        description: "Our AI analyzes each student's learning style and pace to create a unique educational journey, ensuring no one is left behind."
+        title: "AI Learning Path Generator",
+        description: "Generate a custom, step-by-step curriculum for any subject, tailored to your skill level.",
+        href: "/education-tech/cognita-learn/learning-path",
+        cta: "Create a Path"
     },
     {
-        icon: Gamepad2,
-        title: "Gamified Modules",
-        description: "Boost engagement and knowledge retention with interactive, game-like lessons and challenges that make learning fun."
+        icon: BrainCircuit,
+        title: "Adaptive Learning Tutor",
+        description: "Struggling with a specific concept? Get a personalized explanation from our AI tutor.",
+        href: "/education-tech/cognita-learn/adaptive-learning",
+        cta: "Ask the Tutor"
     },
     {
-        icon: BarChart,
-        title: "Real-time Analytics",
-        description: "Teachers get a powerful dashboard to track student progress, identify learning gaps, and provide targeted support."
+        icon: ClipboardCheck,
+        title: "AI Quiz Generator",
+        description: "Instantly create practice quizzes on any topic to test your knowledge and prepare for exams.",
+        href: "/education-tech/quiz-generator",
+        cta: "Generate a Quiz"
     }
 ];
 
@@ -36,43 +42,32 @@ export default function CognitaLearnPage() {
                     <p className="mt-4 text-lg text-muted-foreground">
                         Moving beyond one-size-fits-all education. CognitaLearn uses AI to create personalized, engaging, and effective learning experiences for every student.
                     </p>
-                    <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                        <Button asChild size="lg">
-                            <Link href="/education-tech/cognita-learn/learning-path">
-                                Generate a Learning Path <ArrowRight className="ml-2 h-4 w-4"/>
-                            </Link>
-                        </Button>
-                        <Button asChild size="lg" variant="secondary">
-                            <Link href="/education-tech/cognita-learn/adaptive-learning">
-                                AI Tutor <ArrowRight className="ml-2 h-4 w-4"/>
-                            </Link>
-                        </Button>
-                    </div>
                 </div>
 
                 <div className="max-w-5xl mx-auto mt-20">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold text-primary">Key Features</h2>
-                        <p className="mt-4 text-lg text-muted-foreground">Building a smarter, more adaptive educational future.</p>
-                    </div>
                     <div className="grid md:grid-cols-3 gap-8">
-                        {features.map((feature) => (
-                            <Card key={feature.title} className="text-center bg-card">
-                                 <CardHeader className="items-center">
+                        {platformPillars.map((pillar) => (
+                             <Card key={pillar.title} className="text-center bg-card flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <CardHeader className="items-center">
                                     <div className="bg-primary/10 p-3 rounded-full">
-                                        <feature.icon className="w-8 h-8 text-primary" />
+                                        <pillar.icon className="w-8 h-8 text-primary" />
                                     </div>
-                                    <CardTitle className="pt-2">{feature.title}</CardTitle>
+                                    <CardTitle className="pt-2">{pillar.title}</CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-muted-foreground">{feature.description}</p>
+                                <CardContent className="flex-grow">
+                                    <p className="text-muted-foreground">{pillar.description}</p>
                                 </CardContent>
+                                <CardFooter>
+                                     <Button asChild className="w-full">
+                                        <Link href={pillar.href}>{pillar.cta} <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                                    </Button>
+                                </CardFooter>
                             </Card>
                         ))}
                     </div>
                 </div>
 
-                <div className="max-w-3xl mx-auto mt-20 text-center">
+                 <div className="max-w-3xl mx-auto mt-20 text-center">
                     <Card className="bg-accent/10 border-accent">
                         <CardHeader>
                             <CardTitle className="text-2xl text-accent">Transform Your Teaching Methodology</CardTitle>
