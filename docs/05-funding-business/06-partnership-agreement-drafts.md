@@ -1,4 +1,3 @@
-
 # Partnership / Shareholding Agreement - DRAFT
 
 **This Agreement** is made on `[Date]`
