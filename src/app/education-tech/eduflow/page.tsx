@@ -1,7 +1,7 @@
 
 'use client';
 
-import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck } from "lucide-react";
+import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
@@ -70,6 +70,24 @@ export default function EduFlowPage() {
                     <Button asChild className="w-full">
                         <Link href="/education-tech/quiz-generator">
                             Launch Quiz Generator <ArrowRight className="ml-2 h-4 w-4"/>
+                        </Link>
+                    </Button>
+                </CardFooter>
+            </Card>
+             <Card className="flex flex-col">
+                <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                        <DollarSign className="h-8 w-8 text-primary" />
+                        <CardTitle className="text-2xl">Student Financials</CardTitle>
+                    </div>
+                    <CardDescription>
+                       Manage tuition fees, scholarships, and payments in a centralized dashboard. Track revenue and outstanding balances.
+                    </CardDescription>
+                </CardHeader>
+                <CardFooter className="mt-auto">
+                    <Button asChild className="w-full">
+                        <Link href="/education-tech/eduflow/student-financials">
+                            Launch Financials <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
                 </CardFooter>
