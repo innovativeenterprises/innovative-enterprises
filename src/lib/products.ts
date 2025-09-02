@@ -444,7 +444,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: 'Completed',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification.",
-        href: "/education-tech/certitrust",
+        href: "/education-tech/certitrust/proctoring-session",
     },
     {
         id: 39,
