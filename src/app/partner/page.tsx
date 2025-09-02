@@ -936,9 +936,9 @@ export default function PartnerPage() {
                             </FormControl>
                             <div className="space-y-1 leading-none">
                                 <FormLabel>Information Validity Undertaking</FormLabel>
-                                <p className="text-sm text-muted-foreground">
+                                <FormDescription>
                                     I hereby declare that all the information provided is true and correct to the best of my knowledge.
-                                </p>
+                                </FormDescription>
                                 <FormMessage />
                             </div>
                             </FormItem>
@@ -964,8 +964,8 @@ export default function PartnerPage() {
         <>
         <CardHeader>
             <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('review')}>&larr; Back</Button>
-            <CardTitle className="text-center pt-8">Final Step: Registration Fee</CardTitle>
-            <CardDescription className="text-center">Please complete the payment to finalize your registration.</CardDescription>
+            <CardTitle className="text-center pt-8 flex items-center justify-center gap-2"><CreditCard className="h-6 w-6"/> Step 3: Subscription & Payment</CardTitle>
+            <CardDescription className="text-center">Choose your plan and complete the payment to join the network.</CardDescription>
         </CardHeader>
         <CardContent>
             <Form {...paymentForm}>
@@ -986,7 +986,7 @@ export default function PartnerPage() {
                             <span className="text-primary">OMR {calculatedTotal.toFixed(2)}</span>
                         </div>
                     </CardContent>
-                    <CardFooter>
+                     <CardFooter>
                         <FormField control={paymentForm.control} name="coupon" render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel>Coupon Code</FormLabel>
