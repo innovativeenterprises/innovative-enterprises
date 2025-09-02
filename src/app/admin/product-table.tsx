@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -20,27 +19,7 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities';
 import { store } from "@/lib/global-store";
 import { AddEditProductDialog, type ProductValues } from "./product-form-dialog";
-
-// This hook now connects to the global store.
-export const useProductsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        products: data.products,
-        setProducts: (updater: (products: Product[]) => Product[]) => {
-            const currentProducts = store.get().products;
-            const newProducts = updater(currentProducts);
-            store.set(state => ({ ...state, products: newProducts }));
-        }
-    };
-};
+import { useProductsData } from "@/hooks/use-global-store-data";
 
 const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleToggle, handleOpenDialog }: { 
     product: Product, 

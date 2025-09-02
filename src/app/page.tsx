@@ -13,9 +13,7 @@ import ChatWidget from '@/components/chat-widget';
 // We use these hooks to get the current state. In a real app, this might
 // come from a global state manager (like Redux or Zustand) or be fetched
 // from a database via an API.
-import { useServicesData } from './admin/service-table';
-import { useProductsData } from './admin/product-table';
-import { useClientsData } from './admin/client-table';
+import { useServicesData, useProductsData, useClientsData } from '@/hooks/use-global-store-data';
 
 export default function Home() {
   const { services } = useServicesData();

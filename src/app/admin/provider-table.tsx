@@ -26,28 +26,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-
-// This hook now connects to the global store.
-export const useProvidersData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        providers: data.providers,
-        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
-            const currentProviders = store.get().providers;
-            const newProviders = updater(currentProviders);
-            store.set(state => ({ ...state, providers: newProviders }));
-        }
-    };
-};
-
+import { useProvidersData } from "@/hooks/use-global-store-data";
 
 const ProviderSchema = z.object({
   name: z.string().min(3, "Name is required"),

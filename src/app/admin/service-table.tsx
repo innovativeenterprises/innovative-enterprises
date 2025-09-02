@@ -14,27 +14,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Button } from "@/components/ui/button";
 import { GripVertical } from 'lucide-react';
 import { store } from "@/lib/global-store";
-
-// This hook now connects to the global store.
-export const useServicesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        services: data.services,
-        setServices: (updater: (services: Service[]) => Service[]) => {
-            const currentServices = store.get().services;
-            const newServices = updater(currentServices);
-            store.set(state => ({ ...state, services: newServices }));
-        }
-    };
-};
+import { useServicesData } from "@/hooks/use-global-store-data";
 
 const SortableServiceRow = ({ service, handleToggle }: { service: Service, handleToggle: (title: string) => void }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: service.title });

@@ -19,6 +19,7 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { store } from "@/lib/global-store";
+import { useClientsData } from "@/hooks/use-global-store-data";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -48,34 +49,6 @@ const TestimonialSchema = z.object({
   company: z.string().min(2, "Company/Title is required"),
 });
 type TestimonialValues = z.infer<typeof TestimonialSchema>;
-
-
-// This hook now connects to the global store.
-export const useClientsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        clients: data.clients,
-        setClients: (updater: (clients: Client[]) => Client[]) => {
-            const currentClients = store.get().clients;
-            const newClients = updater(currentClients);
-            store.set(state => ({ ...state, clients: newClients }));
-        },
-        testimonials: data.testimonials,
-        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
-             const currentTestimonials = store.get().testimonials;
-            const newTestimonials = updater(currentTestimonials);
-            store.set(state => ({ ...state, testimonials: newTestimonials }));
-        }
-    };
-};
 
 
 // Add/Edit Dialogs
@@ -234,9 +207,9 @@ export default function ClientTable({
     setTestimonials 
 }: { 
     clients: Client[], 
-    setClients: (updater: (clients: Client[]) => Client[]) => void, 
+    setClients: (updater: (clients: Client[]) => void) => void, 
     testimonials: Testimonial[], 
-    setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => void 
+    setTestimonials: (updater: (testimonials: Testimonial[]) => void) => void 
 }) {
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
@@ -391,7 +364,3 @@ export default function ClientTable({
         </Card>
     );
 }
-
-    
-
-    
