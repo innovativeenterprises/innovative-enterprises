@@ -4,6 +4,7 @@ import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
 import SanadHubIcon from '@/components/icons/sanad-hub-icon';
+import AmeenSmartLockIcon from '@/components/icons/ameen-smart-lock-icon';
 
 export interface Service {
   icon: LucideIcon;
@@ -117,9 +118,9 @@ export const initialServices: Service[] = [
     href: "/construction-tech/workforce-scheduler",
   },
   {
-    icon: Lock,
-    title: "Ameen Digital Identity",
-    description: "Secure, password-free login using your WhatsApp account and other advanced authentication solutions.",
+    icon: AmeenSmartLockIcon,
+    title: "Ameen Digital Identity & Smart Home",
+    description: "Secure, password-free login using your WhatsApp account and manage your smart home devices.",
     enabled: true,
     href: "/ameen",
   },

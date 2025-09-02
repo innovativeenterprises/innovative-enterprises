@@ -10,8 +10,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, KeyRound, MessageSquare, ShieldCheck, CheckCircle } from 'lucide-react';
+import { Loader2, KeyRound, MessageSquare, ShieldCheck, CheckCircle, Lock, Unlock } from 'lucide-react';
 import { sendOtpViaWhatsApp, verifyOtp } from '@/ai/flows/whatsapp-agent';
+import { controlSmartLock } from '@/ai/flows/ameen-smart-lock';
+import { cn } from '@/lib/utils';
+import AmeenSmartLockIcon from '@/components/icons/ameen-smart-lock-icon';
 
 const PhoneSchema = z.object({
   phone: z.string().min(8, 'Please enter a valid phone number with country code.'),
@@ -22,6 +25,55 @@ const OtpSchema = z.object({
   otp: z.string().length(6, 'OTP must be 6 digits.'),
 });
 type OtpValues = z.infer<typeof OtpSchema>;
+
+const AmeenDashboard = ({ onLogout }: { onLogout: () => void }) => {
+    const [lockStatus, setLockStatus] = useState<'locked' | 'unlocked' | 'jammed' | 'unknown'>('locked');
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
+
+    const handleLockAction = async (action: 'lock' | 'unlock') => {
+        setIsLoading(true);
+        try {
+            const result = await controlSmartLock({ action, deviceId: 'front-door-lock-01' });
+            setLockStatus(result.status);
+            toast({ title: 'Success!', description: result.message });
+        } catch (error: any) {
+            toast({ title: 'Error', description: error.message || 'Failed to control lock.', variant: 'destructive' });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Welcome to your Ameen Dashboard</CardTitle>
+                <CardDescription>Manage your smart devices and account security.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Card className="bg-muted/50">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-lg"><AmeenSmartLockIcon className="w-5 h-5"/> Front Door Lock</CardTitle>
+                        <CardDescription>Control and monitor your primary smart lock.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center gap-4">
+                        <div className={cn("w-32 h-32 rounded-full flex items-center justify-center transition-colors", lockStatus === 'locked' ? 'bg-destructive/20' : 'bg-green-500/20')}>
+                           {lockStatus === 'locked' ? <Lock className="w-16 h-16 text-destructive"/> : <Unlock className="w-16 h-16 text-green-700"/>}
+                        </div>
+                        <p className="font-semibold text-xl capitalize">{lockStatus}</p>
+                        <div className="flex gap-4">
+                            <Button onClick={() => handleLockAction('unlock')} disabled={isLoading || lockStatus === 'unlocked'} className="w-32">Unlock</Button>
+                            <Button onClick={() => handleLockAction('lock')} disabled={isLoading || lockStatus === 'locked'} variant="destructive" className="w-32">Lock</Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </CardContent>
+            <CardFooter>
+                 <Button onClick={onLogout} variant="outline" className="w-full">Log Out</Button>
+            </CardFooter>
+        </Card>
+    )
+}
 
 export default function AmeenPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -72,127 +124,111 @@ export default function AmeenPage() {
     }
   };
   
-  if (isLoggedIn) {
-      return (
-          <div className="bg-background min-h-[calc(100vh-8rem)] flex items-center">
-            <div className="container mx-auto px-4">
-                 <div className="max-w-md mx-auto">
-                    <Card>
-                        <CardContent className="p-10 text-center">
-                            <div className="flex flex-col items-center gap-6">
-                                <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
-                                    <CheckCircle className="h-12 w-12 text-green-500" />
-                                </div>
-                                <div className="space-y-2">
-                                    <CardTitle className="text-2xl">Login Successful</CardTitle>
-                                    <CardDescription>
-                                        Welcome back! You have been securely authenticated with Ameen.
-                                    </CardDescription>
-                                </div>
-                                <Button onClick={() => { setIsLoggedIn(false); setIsOtpSent(false); phoneForm.reset(); otpForm.reset(); }}>Log Out</Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                 </div>
-            </div>
-         </div>
-      )
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setIsOtpSent(false);
+    phoneForm.reset();
+    otpForm.reset();
   }
-
+  
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-              <ShieldCheck className="w-10 h-10 text-primary" />
+              <AmeenSmartLockIcon className="w-12 h-12 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">Ameen Digital Identity</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">Ameen: Smart Identity & Home</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Secure, password-free login using your WhatsApp account.
+            Your single, secure point of control. Log in with your WhatsApp-based digital ID to manage your smart home devices.
           </p>
         </div>
         <div className="max-w-md mx-auto mt-12">
-            <Card>
-                 <CardHeader>
-                    <CardTitle>{isOtpSent ? "Verify Your Identity" : "Login with WhatsApp"}</CardTitle>
-                    <CardDescription>
-                         {isOtpSent 
-                            ? `Enter the 6-digit code sent to ${phone}.`
-                            : "Enter your phone number to receive a one-time password (OTP) on WhatsApp."
-                         }
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {!isOtpSent ? (
-                        <Form {...phoneForm}>
-                            <form onSubmit={phoneForm.handleSubmit(handleSendOtp)} className="space-y-6">
-                                <FormField
-                                    control={phoneForm.control}
-                                    name="phone"
-                                    render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Phone Number</FormLabel>
-                                        <FormControl>
-                                        <Input placeholder="e.g., 96899123456" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                    )}
-                                />
-                                <Button type="submit" disabled={isLoading} className="w-full">
-                                    {isLoading ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Sending OTP...
-                                    </>
-                                    ) : (
-                                    <>
-                                        <MessageSquare className="mr-2 h-4 w-4" />
-                                        Send OTP
-                                    </>
-                                    )}
-                                </Button>
-                            </form>
-                        </Form>
-                    ) : (
-                        <Form {...otpForm}>
-                            <form onSubmit={otpForm.handleSubmit(handleVerifyOtp)} className="space-y-6">
-                                <FormField
-                                    control={otpForm.control}
-                                    name="otp"
-                                    render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>One-Time Password (OTP)</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Enter 6-digit code" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                    )}
-                                />
-                                <Button type="submit" disabled={isVerifying} className="w-full">
-                                    {isVerifying ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Verifying...
-                                    </>
-                                    ) : (
-                                    <>
-                                        <KeyRound className="mr-2 h-4 w-4" />
-                                        Verify & Login
-                                    </>
-                                    )}
-                                </Button>
-                            </form>
-                        </Form>
+            {isLoggedIn ? (
+                 <AmeenDashboard onLogout={handleLogout} />
+            ) : (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{isOtpSent ? "Verify Your Identity" : "Login with WhatsApp"}</CardTitle>
+                        <CardDescription>
+                            {isOtpSent 
+                                ? `Enter the 6-digit code sent to ${phone}.`
+                                : "Enter your phone number to receive a one-time password (OTP) on WhatsApp."
+                            }
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {!isOtpSent ? (
+                            <Form {...phoneForm}>
+                                <form onSubmit={phoneForm.handleSubmit(handleSendOtp)} className="space-y-6">
+                                    <FormField
+                                        control={phoneForm.control}
+                                        name="phone"
+                                        render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Phone Number</FormLabel>
+                                            <FormControl>
+                                            <Input placeholder="e.g., 96899123456" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                        )}
+                                    />
+                                    <Button type="submit" disabled={isLoading} className="w-full">
+                                        {isLoading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Sending OTP...
+                                        </>
+                                        ) : (
+                                        <>
+                                            <MessageSquare className="mr-2 h-4 w-4" />
+                                            Send OTP
+                                        </>
+                                        )}
+                                    </Button>
+                                </form>
+                            </Form>
+                        ) : (
+                            <Form {...otpForm}>
+                                <form onSubmit={otpForm.handleSubmit(handleVerifyOtp)} className="space-y-6">
+                                    <FormField
+                                        control={otpForm.control}
+                                        name="otp"
+                                        render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>One-Time Password (OTP)</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Enter 6-digit code" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                        )}
+                                    />
+                                    <Button type="submit" disabled={isVerifying} className="w-full">
+                                        {isVerifying ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Verifying...
+                                        </>
+                                        ) : (
+                                        <>
+                                            <KeyRound className="mr-2 h-4 w-4" />
+                                            Verify & Login
+                                        </>
+                                        )}
+                                    </Button>
+                                </form>
+                            </Form>
+                        )}
+                    </CardContent>
+                    {isOtpSent && (
+                        <CardFooter className="flex justify-center">
+                            <Button variant="link" onClick={() => setIsOtpSent(false)}>Use a different number</Button>
+                        </CardFooter>
                     )}
-                </CardContent>
-                {isOtpSent && (
-                    <CardFooter className="flex justify-center">
-                        <Button variant="link" onClick={() => setIsOtpSent(false)}>Use a different number</Button>
-                    </CardFooter>
-                )}
-            </Card>
+                </Card>
+            )}
         </div>
       </div>
     </div>
