@@ -13,7 +13,7 @@ const StageBadge = ({ stage }: { stage: string }) => {
         switch (stage.toLowerCase()) {
             case 'ready':
                 return 'bg-green-500 hover:bg-green-600';
-            case 'live':
+            case 'live & operating':
                 return 'bg-green-600 hover:bg-green-700';
             case 'launch phase':
                 return 'bg-emerald-500 hover:bg-emerald-600';
