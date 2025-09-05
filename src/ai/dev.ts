@@ -54,8 +54,7 @@ import '@/ai/flows/scholarship-agent';
 import '@/ai/flows/scholarship-essay-assistant';
 import '@/ai/flows/quiz-generator';
 import '@/ai/flows/adaptive-learning-tutor';
-import '@/ai/flows/fire-safety-estimator';
-import '@/ai/flows/proctoring-agent';
+import '@/ai/flows/learning-path-generator';
     
 
     
