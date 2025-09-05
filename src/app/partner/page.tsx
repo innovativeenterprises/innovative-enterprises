@@ -231,6 +231,8 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
 
 export default function PartnerPage() {
   const { settings } = useSettingsData();
+  const { sanadOffice: sanadSettings } = settings;
+  
   const [pageState, setPageState] = useState<PageState>('selection');
   const [applicantType, setApplicantType] = useState<ApplicantType>('company');
   
@@ -251,6 +253,34 @@ export default function PartnerPage() {
   const inquiryForm = useForm<z.infer<typeof PartnershipInquiryInputSchema>>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
   const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
 
+  const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
+
+  const { subtotal, discount, totalPrice } = useMemo(() => {
+    let currentSubtotal = 0;
+    if (watchSubscriptionTier === 'lifetime') {
+        currentSubtotal = sanadSettings.lifetimeFee;
+    } else {
+        const subscriptionFee = watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
+        const currentDiscount = subscriptionFee * sanadSettings.firstTimeDiscountPercentage;
+        currentSubtotal = sanadSettings.registrationFee + subscriptionFee - currentDiscount;
+    }
+    
+    // Apply coupon
+    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
+    let finalDiscount = 0;
+    if (couponCode === 'AGENT50') {
+      finalDiscount = currentSubtotal * 0.5;
+    } else if (couponCode === 'FREE100') {
+      finalDiscount = currentSubtotal;
+    }
+
+    return {
+      subtotal: currentSubtotal,
+      discount: finalDiscount,
+      totalPrice: currentSubtotal - finalDiscount,
+    };
+  }, [watchSubscriptionTier, sanadSettings, paymentForm.watch('coupon')]);
+  
   const startManualEntry = () => {
     inquiryForm.reset({ companyName: '', contactName: '', email: '', partnershipDetails: '', undertaking: false });
     setAnalysisResult(null);
@@ -413,7 +443,7 @@ export default function PartnerPage() {
       });
       setAgreement(agreementData);
       
-      const newRecordNumber = `PARTNER-${Date.now()}`;
+      const newRecordNumber = `PARTNER-${new Date().getTime()}`;
       setRecordNumber(newRecordNumber);
       setPageState('submitted');
       toast({ title: 'Inquiry Submitted & Agreements Generated!', description: "Please review the generated agreements below." });
@@ -489,6 +519,7 @@ export default function PartnerPage() {
         date: new Date().toISOString(),
         registrations,
         userDocuments: [],
+        savedBoqs: [],
     };
 
     try {
@@ -969,7 +1000,7 @@ export default function PartnerPage() {
         </CardHeader>
         <CardContent>
             <Form {...paymentForm}>
-            <form onSubmit={paymentForm.handleSubmit(handleFinalSubmit)} className="space-y-4">
+            <form onSubmit={paymentForm.handleSubmit(onPaymentSubmit)} className="space-y-4">
                 <Card className="bg-muted/50">
                     <CardHeader><CardTitle className="text-lg">Order Summary</CardTitle></CardHeader>
                     <CardContent className="space-y-2 text-sm">

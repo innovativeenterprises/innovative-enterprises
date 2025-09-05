@@ -124,7 +124,7 @@ export default function CostSettingsTable({ costSettings, setCostSettings }: { c
             setCostSettings(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Cost rate updated." });
         } else {
-            const newItem: CostRate = { ...values, id: `cost_${Date.now()}` };
+            const newItem: CostRate = { ...values, id: `cost_${new Date().getTime()}` };
             setCostSettings(prev => [newItem, ...prev]);
             toast({ title: "Cost rate added." });
         }

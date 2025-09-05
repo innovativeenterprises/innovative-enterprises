@@ -22,6 +22,8 @@ import axios from 'axios';
 import * as admin from 'firebase-admin';
 import { answerQuestion } from './ai-powered-faq';
 import { store } from '@/lib/global-store';
+import crypto from 'crypto';
+
 
 // Initialize Firebase Admin SDK if not already initialized
 if (!admin.apps.length) {
@@ -147,20 +149,20 @@ export const sendOtpViaWhatsApp = ai.defineFlow({
     inputSchema: OtpPhoneSchema,
     outputSchema: z.any(),
 }, async ({ phone }) => {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Use crypto for a more secure random number than Math.random()
+    const otp = crypto.randomInt(100000, 999999).toString();
     const otpRef = db.collection("ameen_otps").doc(phone);
     const doc = await otpRef.get();
 
+    const now = admin.firestore.Timestamp.now();
+
     if (doc.exists) {
         const data = doc.data()!;
-        // Use Firebase Server Timestamp for reliable time checks
-        if (data.expiresAt && data.expiresAt.toMillis() > Date.now()) {
+        if (data.expiresAt && data.expiresAt.toMillis() > now.toMillis()) {
             throw new Error("OTP already sent. Please wait 5 minutes.");
         }
     }
     
-    // Set expiry using server-side time for consistency
-    const now = admin.firestore.Timestamp.now();
     const expiresAt = admin.firestore.Timestamp.fromMillis(now.toMillis() + 5 * 60 * 1000);
 
     await otpRef.set({
@@ -188,7 +190,7 @@ export const verifyOtp = ai.defineFlow({
     if (!doc.exists) throw new Error("OTP not found or already used.");
     
     const otpData = doc.data()!;
-    if (otpData.expiresAt.toMillis() < Date.now()) {
+    if (otpData.expiresAt.toMillis() < admin.firestore.Timestamp.now().toMillis()) {
         await otpRef.delete();
         throw new Error("OTP expired. Please request a new one.");
     }
