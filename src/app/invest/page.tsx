@@ -81,9 +81,9 @@ export default function InvestPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-primary">Invest With Us</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <div className="mt-4 text-lg text-muted-foreground">
             Explore investment opportunities and be part of our innovation journey. We are seeking strategic investors to help us scale our impact.
-          </p>
+          </div>
         </div>
 
         <div className="max-w-5xl mx-auto mt-16 space-y-20">

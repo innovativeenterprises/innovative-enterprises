@@ -174,7 +174,7 @@ export default function WorkerProfilePage() {
                                             </div>
                                             <div>
                                                 <h3 className="font-semibold text-lg border-b pb-2 mb-2">Experience</h3>
-                                                <p className="text-muted-foreground text-sm">{worker.experience}</p>
+                                                <div className="text-muted-foreground text-sm">{worker.experience}</div>
                                             </div>
                                         </div>
                                     </div>

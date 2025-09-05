@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -45,7 +46,7 @@ export default function CompanyOverview() {
                         <Star className="w-5 h-5 fill-current" />
                         <Star className="w-5 h-5 fill-current" />
                     </div>
-                    <p className="text-sm text-muted-foreground">Trusted by 100+ organizations</p>
+                    <div className="text-sm text-muted-foreground">Trusted by 100+ organizations</div>
                 </div>
             </div>
           </div>
@@ -60,7 +61,7 @@ export default function CompanyOverview() {
              <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
              <div className="absolute bottom-6 left-6 bg-background/80 backdrop-blur-md p-4 rounded-lg shadow-lg">
                 <h3 className="font-bold text-primary">Our Mission</h3>
-                <p className="text-sm text-muted-foreground max-w-xs">To drive innovation and digital excellence in Oman and beyond, fostering local talent and delivering client success.</p>
+                <div className="text-sm text-muted-foreground max-w-xs">To drive innovation and digital excellence in Oman and beyond, fostering local talent and delivering client success.</div>
              </div>
           </div>
         </div>

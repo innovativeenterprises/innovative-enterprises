@@ -305,9 +305,9 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
         <div className="w-full min-w-[150px]">
             <div className="flex justify-between items-center mb-1">
                 <Badge variant="outline">{tier}</Badge>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground">
                     {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
-                </p>
+                </div>
             </div>
             <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
         </div>
@@ -400,7 +400,7 @@ export default function ProviderTable({
                         {providers.map(p => (
                             <TableRow key={p.id} onClick={() => router.push(`/admin/people/${p.id}`)} className="cursor-pointer">
                                 <TableCell className="font-medium">
-                                    {p.name}
+                                    <p>{p.name}</p>
                                     <p className="text-sm text-muted-foreground">{p.email}</p>
                                 </TableCell>
                                 <TableCell>{p.services}</TableCell>
