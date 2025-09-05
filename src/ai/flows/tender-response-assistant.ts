@@ -58,8 +58,6 @@ Use the template below to structure the entire response. Analyze the provided te
 
 ## Tender Response: {{#if companyName}}{{{companyName}}}{{else}}[Your Company Name]{{/if}} - {{#if projectName}}{{{projectName}}}{{else}}[Project Name]{{/if}}
 
-**Date:** {{currentDate}}
-
 **To:** {{#if tenderingAuthority}}{{{tenderingAuthority}}}{{else}}[Tendering Authority Name]{{/if}}
 
 **Subject:** Tender for {{#if projectName}}{{{projectName}}}{{else}}[Project Name]{{/if}} - Proposal from {{#if companyName}}{{{companyName}}}{{else}}[Your Company Name]{{/if}}
@@ -138,11 +136,7 @@ const generateTenderResponseFlow = ai.defineFlow(
     outputSchema: GenerateTenderResponseOutputSchema,
   },
   async input => {
-    const {output} = await prompt({
-      ...input,
-      // Add the current date for the template
-      currentDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-    });
+    const {output} = await prompt(input);
     return output!;
   }
 );

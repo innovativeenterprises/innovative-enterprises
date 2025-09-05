@@ -22,7 +22,7 @@ export async function generateIctProposal(input: IctProposalInput): Promise<IctP
 
 const prompt = ai.definePrompt({
   name: 'ictProposalPrompt',
-  input: { schema: IctProposalInputSchema.extend({ availableAssetsJson: z.string() }) },
+  input: { schema: IctProposalInputSchema.extend({ availableAssetsJson: z.string(), generatedId: z.string() }) },
   output: { schema: IctProposalOutputSchema },
   prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal. You must provide options for both **renting** and **purchasing** the required IT assets if applicable.
 
@@ -71,7 +71,7 @@ You MUST only recommend assets from this list for the IT hardware portion.
         *   This system is ALWAYS a **purchase** item.
 
 2.  **Generate Proposal Content:**
-    *   **proposalId:** Create a unique ID, e.g., 'QT-SEC-12345'.
+    *   **proposalId:** Use the provided ID: \`{{{generatedId}}}\`. Do not create a new one.
     *   **proposalTitle:** Create a clear title, e.g., "Surveillance System Proposal for {{{projectName}}}".
     *   **executiveSummary:** Write a professional paragraph explaining the proposed solution, highlighting its benefits.
     *   **rentedAssets:** Create a JSON array of any IT assets selected for rental. Include quantity.
@@ -106,10 +106,15 @@ const IctProposalFlow = ai.defineFlow(
     // Filter for available assets to provide to the model
     const availableAssets = initialAssets.filter(asset => asset.status === 'Available');
     const availableAssetsJson = JSON.stringify(availableAssets, null, 2);
+    
+    // Generate a deterministic ID
+    const generatedId = `QT-SEC-${input.projectName.substring(0, 4).toUpperCase()}${String(input.projectName.length)}`;
+
 
     const { output } = await prompt({
         ...input,
-        availableAssetsJson
+        availableAssetsJson,
+        generatedId,
     });
     
     if (!output) {

@@ -79,6 +79,51 @@ const chartConfig = {
     expenses: { label: "Expenses", color: "hsl(var(--chart-2))" },
 };
 
+function DueDateDisplay({ dueDate }: { dueDate: string }) {
+    const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+
+    useEffect(() => {
+        const due = new Date(dueDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffTime = due.getTime() - today.getTime();
+        setDaysRemaining(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    }, [dueDate]);
+
+    if (daysRemaining === null) return null;
+
+    return (
+        <div className="text-sm text-muted-foreground">
+            Due: {dueDate}
+            {daysRemaining >= 0 ? (
+                <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span>
+            ) : (
+                ' (Overdue)'
+            )}
+        </div>
+    );
+}
+
+function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
+    const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+
+    useEffect(() => {
+        const due = new Date(dueDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffTime = due.getTime() - today.getTime();
+        setDaysRemaining(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    }, [dueDate]);
+
+    if (daysRemaining === null) return null;
+
+    return (
+        <div className="text-sm font-medium text-destructive mt-2">
+            ({daysRemaining >= 0 ? `${daysRemaining} days remaining` : 'Overdue'})
+        </div>
+    );
+}
+
 
 export default function CfoDashboard() {
   const [isClient, setIsClient] = useState(false);
@@ -87,17 +132,6 @@ export default function CfoDashboard() {
     setIsClient(true);
   }, []);
   
-  const getDaysRemaining = (dueDate: string) => {
-    const due = new Date(dueDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diffTime = due.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  }
-  
-  const vatDaysRemaining = isClient ? getDaysRemaining(vatPayment.dueDate) : 0;
-
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'paid':
@@ -188,14 +222,10 @@ export default function CfoDashboard() {
                 </CardHeader>
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <p className="text-muted-foreground mt-1">
+                    <div className="text-muted-foreground mt-1">
                         Due Date: {vatPayment.dueDate}
-                    </p>
-                    {isClient && (
-                         <p className="text-sm font-medium text-destructive mt-2">
-                            ({vatDaysRemaining >= 0 ? `${vatDaysRemaining} days remaining` : 'Overdue'})
-                        </p>
-                    )}
+                    </div>
+                    {isClient && <VatDueDateDisplay dueDate={vatPayment.dueDate} />}
                 </CardContent>
             </Card>
              <Card>
@@ -211,25 +241,15 @@ export default function CfoDashboard() {
                            </TableRow>
                         </TableHeader>
                         <TableBody>
-                           {upcomingPayments.slice(0, 5).map((payment, index) => {
-                               const daysRemaining = isClient ? getDaysRemaining(payment.dueDate) : 0;
-                               return (
-                                   <TableRow key={index}>
-                                       <TableCell>
-                                           <div className="font-medium">{payment.source}</div>
-                                           {isClient && (
-                                                <div className="text-sm text-muted-foreground">
-                                                    Due: {payment.dueDate} 
-                                                    {daysRemaining >= 0 ? 
-                                                    <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span> 
-                                                    : ' (Overdue)'}
-                                                </div>
-                                           )}
-                                       </TableCell>
-                                       <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
-                                   </TableRow>
-                               )
-                           })}
+                           {upcomingPayments.slice(0, 5).map((payment, index) => (
+                               <TableRow key={index}>
+                                   <TableCell>
+                                       <div className="font-medium">{payment.source}</div>
+                                       {isClient && <DueDateDisplay dueDate={payment.dueDate} />}
+                                   </TableCell>
+                                   <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
+                               </TableRow>
+                           ))}
                         </TableBody>
                     </Table>
                 </CardContent>
