@@ -80,57 +80,62 @@ const chartConfig = {
 };
 
 function DueDateDisplay({ dueDate }: { dueDate: string }) {
-    const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-
-    useEffect(() => {
-        const due = new Date(dueDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const diffTime = due.getTime() - today.getTime();
-        setDaysRemaining(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-    }, [dueDate]);
-
-    if (daysRemaining === null) return null;
-
-    return (
-        <div className="text-sm text-muted-foreground">
-            Due: {dueDate}
-            {daysRemaining >= 0 ? (
-                <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span>
-            ) : (
-                ' (Overdue)'
-            )}
-        </div>
-    );
-}
-
-function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
-    const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-
-    useEffect(() => {
-        const due = new Date(dueDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const diffTime = due.getTime() - today.getTime();
-        setDaysRemaining(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-    }, [dueDate]);
-
-    if (daysRemaining === null) return null;
-
-    return (
-        <div className="text-sm font-medium text-destructive mt-2">
-            ({daysRemaining >= 0 ? `${daysRemaining} days remaining` : 'Overdue'})
-        </div>
-    );
-}
-
-
-export default function CfoDashboard() {
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    const due = new Date(dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffTime = due.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    setDaysRemaining(diffDays);
+  }, [dueDate]);
+
+  if (!isClient) return null;
+
+  return (
+    <div className="text-sm text-muted-foreground">
+      Due: {dueDate}
+      {daysRemaining !== null && (
+        daysRemaining >= 0 ? (
+          <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span>
+        ) : (
+          ' (Overdue)'
+        )
+      )}
+    </div>
+  );
+}
+
+function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const due = new Date(dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffTime = due.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    setDaysRemaining(diffDays);
+  }, [dueDate]);
+
+  if (!isClient) return null;
+
+  return (
+    <div className="text-sm font-medium text-destructive mt-2">
+      {daysRemaining !== null && (
+        daysRemaining >= 0 ? `(${daysRemaining} days remaining)` : '(Overdue)'
+      )}
+    </div>
+  );
+}
+
+
+export default function CfoDashboard() {
   
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -225,7 +230,7 @@ export default function CfoDashboard() {
                     <div className="text-muted-foreground mt-1">
                         Due Date: {vatPayment.dueDate}
                     </div>
-                    {isClient && <VatDueDateDisplay dueDate={vatPayment.dueDate} />}
+                    <VatDueDateDisplay dueDate={vatPayment.dueDate} />
                 </CardContent>
             </Card>
              <Card>
@@ -245,7 +250,7 @@ export default function CfoDashboard() {
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
-                                       {isClient && <DueDateDisplay dueDate={payment.dueDate} />}
+                                       <DueDateDisplay dueDate={payment.dueDate} />
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>

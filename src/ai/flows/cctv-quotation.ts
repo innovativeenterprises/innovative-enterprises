@@ -108,7 +108,7 @@ const IctProposalFlow = ai.defineFlow(
     const availableAssetsJson = JSON.stringify(availableAssets, null, 2);
     
     // Generate a deterministic ID
-    const generatedId = `QT-SEC-${input.projectName.substring(0, 4).toUpperCase()}${String(input.projectName.length)}`;
+    const generatedId = `QT-SEC-${input.projectName.substring(0, 4).toUpperCase()}${String(input.projectName.length).padStart(2, '0')}`;
 
 
     const { output } = await prompt({
