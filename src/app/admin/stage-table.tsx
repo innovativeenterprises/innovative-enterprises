@@ -119,7 +119,7 @@ export default function StageTable({
             setStages(prev => prev.map(s => s.id === id ? { ...s, ...values } : s));
             toast({ title: "Stage updated successfully." });
         } else {
-            const newStage: ProjectStage = { ...values, id: `stage_${new Date().getTime()}` };
+            const newStage: ProjectStage = { ...values, id: `stage_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
             setStages(prev => [newStage, ...prev]);
             toast({ title: "Stage added successfully." });
         }
