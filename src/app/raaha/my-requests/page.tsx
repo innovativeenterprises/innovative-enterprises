@@ -107,7 +107,7 @@ export default function MyRequestsPage() {
                                                 <TableCell>
                                                     <p className="font-medium">{req.workerName}</p>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Requested: {formatDistanceToNow(new Date(req.requestDate), { addSuffix: true })}
+                                                        Requested: {isClient ? formatDistanceToNow(new Date(req.requestDate), { addSuffix: true }) : "..."}
                                                     </p>
                                                 </TableCell>
                                                 <TableCell>
@@ -115,7 +115,7 @@ export default function MyRequestsPage() {
                                                 </TableCell>
                                                 <TableCell>{getStatusBadge(req.status)}</TableCell>
                                                 <TableCell>
-                                                    {req.interviewDate ? (
+                                                    {req.interviewDate && isClient ? (
                                                         <div className="text-xs text-muted-foreground space-y-1">
                                                         <div className="flex items-center gap-1.5 font-semibold">
                                                             <CalendarIcon className="h-3 w-3 text-primary" />

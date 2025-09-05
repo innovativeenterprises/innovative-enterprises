@@ -145,7 +145,7 @@ export default function EventsFinancePage() {
             setEvents(prev => prev.map(e => e.id === id ? { ...e, ...eventData } : e));
             toast({ title: "Event updated." });
         } else {
-            const newEvent: CommunityEvent = { ...eventData, id: `event_${eventData.title.toLowerCase().replace(/\s+/g, '_')}`, rsvps: 0 };
+            const newEvent: CommunityEvent = { ...eventData, id: `event_${Date.now()}`, rsvps: 0 };
             setEvents(prev => [newEvent, ...prev]);
             toast({ title: "Event created." });
         }
@@ -161,7 +161,7 @@ export default function EventsFinancePage() {
             setFinances(prev => prev.map(f => f.id === id ? { ...f, ...values, date: new Date().toISOString() } : f));
             toast({ title: "Transaction updated." });
         } else {
-            const newTransaction: CommunityFinance = { ...values, id: `fin_${values.description.toLowerCase().replace(/\s+/g, '_').slice(0, 10)}`, date: new Date().toISOString() };
+            const newTransaction: CommunityFinance = { ...values, id: `fin_${Date.now()}`, date: new Date().toISOString() };
             setFinances(prev => [newTransaction, ...prev]);
             toast({ title: "Transaction added." });
         }
@@ -283,7 +283,7 @@ export default function EventsFinancePage() {
                                         <div className="flex-grow">
                                             <h3 className="font-semibold text-lg">{event.title}</h3>
                                             <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {isClient ? new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</span>
+                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {isClient ? format(new Date(event.date), "PPP") : ''}</span>
                                                 <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4"/> {event.location}</span>
                                                 <span className="flex items-center gap-1.5"><Users className="h-4 w-4"/> {event.rsvps} attending</span>
                                             </div>
