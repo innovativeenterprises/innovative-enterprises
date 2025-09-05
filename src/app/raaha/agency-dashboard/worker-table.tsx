@@ -233,7 +233,7 @@ export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker
             setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
             toast({ title: "Candidate updated." });
         } else {
-            const newWorker: Worker = { ...values, id: `worker_${Date.now()}`, skills: skillsArray, agencyId: agencyId as any };
+            const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agencyId as any };
             setWorkers(prev => [newWorker, ...prev]);
             toast({ title: "Candidate added." });
         }

@@ -221,7 +221,7 @@ export default function ClientTable({
             setClients(prev => prev.map(c => c.id === id ? { ...c, ...values } : c));
             toast({ title: "Client updated." });
         } else {
-            const newClient: Client = { ...values, id: `client_${new Date().getTime()}` };
+            const newClient: Client = { ...values, id: `client_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
             setClients(prev => [newClient, ...prev]);
             toast({ title: "Client added." });
         }
@@ -237,7 +237,7 @@ export default function ClientTable({
             setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...values } : t));
             toast({ title: "Testimonial updated." });
         } else {
-            const newTestimonial: Testimonial = { ...values, id: `test_${new Date().getTime()}` };
+            const newTestimonial: Testimonial = { ...values, id: `test_${values.author.toLowerCase().replace(/\s+/g, '_')}` };
             setTestimonials(prev => [newTestimonial, ...prev]);
             toast({ title: "Testimonial added." });
         }

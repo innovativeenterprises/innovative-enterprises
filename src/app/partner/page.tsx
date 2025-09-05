@@ -443,7 +443,7 @@ export default function PartnerPage() {
       });
       setAgreement(agreementData);
       
-      const newRecordNumber = `PARTNER-${new Date().getTime()}`;
+      const newRecordNumber = `PARTNER_${inquiryForm.getValues('companyName').substring(0, 5).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`;
       setRecordNumber(newRecordNumber);
       setPageState('submitted');
       toast({ title: 'Inquiry Submitted & Agreements Generated!', description: "Please review the generated agreements below." });

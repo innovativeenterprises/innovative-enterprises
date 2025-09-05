@@ -168,10 +168,11 @@ const AddEditMemberDialog = ({
         if (member) { // Editing existing member
              finalMemberData = { ...member, ...memberData };
         } else { // Adding new member
+            const baseId = `member_${memberData.name.toLowerCase().replace(/\s+/g, '_')}`;
             finalMemberData = {
                 ...memberData,
-                id: `member_${Date.now()}`,
-                familyId: familyId || (data.householdRole === 'Head' ? `fam_${Date.now()}` : undefined)
+                id: baseId,
+                familyId: familyId || (data.householdRole === 'Head' ? `fam_${baseId}` : undefined)
             }
         }
         
@@ -346,10 +347,11 @@ export default function MembershipPage() {
             setMembers(prev => prev.map(m => (m.id === id ? memberToSave : m)));
             toast({ title: "Member updated." });
         } else {
+            const baseId = `member_${values.name.toLowerCase().replace(/\s+/g, '_')}`;
             memberToSave = { 
                 ...restOfValues, 
-                id: `member_${Date.now()}`,
-                familyId: values.familyId || (values.householdRole === 'Head' ? `fam_${Date.now()}` : undefined)
+                id: baseId,
+                familyId: values.familyId || (values.householdRole === 'Head' ? `fam_${baseId}` : undefined)
             };
             setMembers(prev => [memberToSave, ...prev]);
             toast({ title: "Member added." });
