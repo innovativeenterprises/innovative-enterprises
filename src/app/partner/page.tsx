@@ -423,7 +423,7 @@ export default function PartnerPage() {
     setPageState('payment');
   };
 
-  const handleFinalSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
+  const onPaymentSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
     setPageState('submitting');
     console.log("Processing payment with details:", paymentData);
     if (finalPrice > 0) {
@@ -443,7 +443,7 @@ export default function PartnerPage() {
       });
       setAgreement(agreementData);
       
-      const newRecordNumber = `PARTNER_${inquiryForm.getValues('companyName').substring(0, 5).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`;
+      const newRecordNumber = `PARTNER_${inquiryForm.getValues('companyName').substring(0, 5).toUpperCase()}${new Date().getTime() % 10000}`;
       setRecordNumber(newRecordNumber);
       setPageState('submitted');
       toast({ title: 'Inquiry Submitted & Agreements Generated!', description: "Please review the generated agreements below." });
@@ -546,12 +546,12 @@ export default function PartnerPage() {
       return;
     }
     // Dummy coupon logic
-    if (coupon === 'FREE100') {
-      setFinalPrice(0);
-      toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
-    } else if (coupon === 'AGENT50') {
+    if (coupon === 'AGENT50') {
       setFinalPrice(subtotal / 2);
       toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
+    } else if (coupon === 'FREE100') {
+      setFinalPrice(0);
+      toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
     } else {
       toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
     }

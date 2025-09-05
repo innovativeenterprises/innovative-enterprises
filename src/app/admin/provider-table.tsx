@@ -210,7 +210,7 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
                         return null;
                     }
                     return {
-                        id: `prov_bulk_${Date.now()}_${index}`,
+                        id: `prov_bulk_${new Date().getTime()}_${index}`,
                         name: columns[0]?.trim(),
                         email: columns[1]?.trim(),
                         services: columns[2]?.trim(),
@@ -338,7 +338,7 @@ export default function ProviderTable({
         } else {
             const newProvider: Provider = {
                 ...values,
-                id: `prov_${Date.now()}`,
+                id: `prov_${values.name.replace(/\s+/g, '_').toLowerCase()}_${new Date().getTime()}`,
             };
             setProviders(prev => [newProvider, ...prev]);
             toast({ title: "Provider added successfully." });
@@ -422,10 +422,7 @@ export default function ProviderTable({
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this provider from your network.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(p.id)}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
+                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(p.id)}>Delete</AlertDialogAction></AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
                                     </div>
