@@ -26,12 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-        <React.Suspense>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <Toaster />
-        </React.Suspense>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+        <Toaster />
       </body>
     </html>
   );
