@@ -37,6 +37,7 @@ const navLinks = [
   { href: '/#products', label: 'Products' },
   { href: '/#testimonials', label: 'Clients' },
   { href: '/team', label: 'Our Team' },
+  { href: '/saas-portfolio', label: 'SaaS Portfolio'},
 ];
 
 const solutionsByCategory: { category: string; items: { title: string; href: string; description: string, icon: LucideIcon }[] }[] = [
