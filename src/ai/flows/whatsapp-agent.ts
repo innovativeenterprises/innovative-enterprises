@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -148,16 +149,24 @@ export const sendOtpViaWhatsApp = ai.defineFlow({
 }, async ({ phone }) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpRef = db.collection("ameen_otps").doc(phone);
-    const existing = await otpRef.get();
+    const doc = await otpRef.get();
 
-    if (existing.exists && Date.now() < existing.data()!.expiresAt) {
-        throw new Error("OTP already sent. Please wait 5 minutes.");
+    if (doc.exists) {
+        const data = doc.data()!;
+        // Use Firebase Server Timestamp for reliable time checks
+        if (data.expiresAt && data.expiresAt.toMillis() > Date.now()) {
+            throw new Error("OTP already sent. Please wait 5 minutes.");
+        }
     }
+    
+    // Set expiry using server-side time for consistency
+    const now = admin.firestore.Timestamp.now();
+    const expiresAt = admin.firestore.Timestamp.fromMillis(now.toMillis() + 5 * 60 * 1000);
 
     await otpRef.set({
         otp,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        expiresAt: Date.now() + 5 * 60 * 1000,
+        createdAt: now,
+        expiresAt: expiresAt,
     });
 
     return sendTemplateMessage({ to: phone, templateName: 'otp_login', variables: [otp] });
@@ -179,7 +188,7 @@ export const verifyOtp = ai.defineFlow({
     if (!doc.exists) throw new Error("OTP not found or already used.");
     
     const otpData = doc.data()!;
-    if (Date.now() > otpData.expiresAt) {
+    if (otpData.expiresAt.toMillis() < Date.now()) {
         await otpRef.delete();
         throw new Error("OTP expired. Please request a new one.");
     }
