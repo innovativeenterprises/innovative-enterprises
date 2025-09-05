@@ -279,6 +279,41 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
     );
 };
 
+const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => { setIsClient(true) }, []);
+
+    if (!isClient) {
+        return <Badge variant="secondary">Loading...</Badge>;
+    }
+
+    if (tier === 'None' || !expiry) {
+        return <Badge variant="secondary">No Subscription</Badge>;
+    }
+    if (tier === 'Lifetime') {
+        return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Lifetime</Badge>;
+    }
+
+    const expiryDate = new Date(expiry);
+    const now = new Date();
+    const daysUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
+    
+    const totalDuration = tier === 'Yearly' ? 365 : 30;
+    const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
+
+    return (
+        <div className="w-full min-w-[150px]">
+            <div className="flex justify-between items-center mb-1">
+                <Badge variant="outline">{tier}</Badge>
+                <p className="text-xs text-muted-foreground">
+                    {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
+                </p>
+            </div>
+            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
+        </div>
+    )
+}
+
 export default function ProviderTable({ 
     providers, 
     setProviders 
@@ -327,35 +362,6 @@ export default function ProviderTable({
             default: return <Badge variant="outline">{status}</Badge>;
         }
     }
-    
-    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
-        if (tier === 'None' || !expiry) {
-            return <Badge variant="secondary">No Subscription</Badge>;
-        }
-        if (tier === 'Lifetime') {
-            return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Lifetime</Badge>;
-        }
-
-        const expiryDate = new Date(expiry);
-        const now = new Date();
-        const daysUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
-        
-        const totalDuration = tier === 'Yearly' ? 365 : 30;
-        const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
-
-        return (
-            <div className="w-full min-w-[150px]">
-                <div className="flex justify-between items-center mb-1">
-                    <Badge variant="outline">{tier}</Badge>
-                    <p className="text-xs text-muted-foreground">
-                        {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
-                    </p>
-                </div>
-                <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
-            </div>
-        )
-    }
-
 
     return (
         <Card>

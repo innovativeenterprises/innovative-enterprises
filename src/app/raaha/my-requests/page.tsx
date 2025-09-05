@@ -14,8 +14,10 @@ import Link from 'next/link';
 
 export default function MyRequestsPage() {
     const [requests, setRequests] = useState<HireRequest[]>([]);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const updateRequests = () => setRequests(store.get().raahaRequests);
         updateRequests();
         const unsubscribe = store.subscribe(updateRequests);
@@ -87,7 +89,7 @@ export default function MyRequestsPage() {
                                                 <TableCell>
                                                     <p className="font-medium">{req.workerName}</p>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Requested: {formatDistanceToNow(new Date(req.requestDate), { addSuffix: true })}
+                                                        Requested: {isClient ? formatDistanceToNow(new Date(req.requestDate), { addSuffix: true }) : '...'}
                                                     </p>
                                                 </TableCell>
                                                 <TableCell>
@@ -99,7 +101,7 @@ export default function MyRequestsPage() {
                                                         <div className="text-xs text-muted-foreground space-y-1">
                                                         <div className="flex items-center gap-1.5 font-semibold">
                                                             <CalendarIcon className="h-3 w-3 text-primary" />
-                                                            <span>Interview: {format(new Date(req.interviewDate), "PPP p")}</span>
+                                                            <span>Interview: {isClient ? format(new Date(req.interviewDate), "PPP p") : '...'}</span>
                                                         </div>
                                                             {req.interviewNotes && (
                                                                 <div className="flex items-center gap-1.5">
