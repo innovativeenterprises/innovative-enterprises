@@ -338,7 +338,7 @@ export default function ProviderTable({
         } else {
             const newProvider: Provider = {
                 ...values,
-                id: `prov_${values.name.replace(/\s+/g, '_').toLowerCase()}_${new Date().getTime()}`,
+                id: `prov_${values.name.replace(/\s+/g, '_').toLowerCase()}`,
             };
             setProviders(prev => [newProvider, ...prev]);
             toast({ title: "Provider added successfully." });
