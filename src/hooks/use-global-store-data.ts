@@ -6,6 +6,7 @@ import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
 import type { Client, Testimonial } from '@/lib/clients';
+import type { Provider } from '@/lib/providers';
 
 export const useServicesData = () => {
     const [data, setData] = useState(store.get());
@@ -70,6 +71,26 @@ export const useClientsData = () => {
              const currentTestimonials = store.get().testimonials;
             const newTestimonials = updater(currentTestimonials);
             store.set(state => ({ ...state, testimonials: newTestimonials }));
+        }
+    };
+};
+
+export const useProvidersData = () => {
+    const [data, setData] = useState(store.get());
+
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        providers: data.providers,
+        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
+            const currentProviders = store.get().providers;
+            const newProviders = updater(currentProviders);
+            store.set(state => ({ ...state, providers: newProviders }));
         }
     };
 };

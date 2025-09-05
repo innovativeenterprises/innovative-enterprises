@@ -275,7 +275,7 @@ export default function Header() {
                     <Sparkles className="mr-2 h-4 w-4" /> Solutions
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid grid-cols-4 gap-x-6 gap-y-4 p-6 w-[1200px]">
+                  <div className={`grid grid-cols-${settings.servicesMenuColumns} gap-x-6 gap-y-4 p-6 w-[${settings.servicesMenuColumns * 300}px]`}>
                     {solutionsByCategory.map((category) => (
                         <div key={category.category} className="flex flex-col">
                             <h3 className="mb-3 text-sm font-semibold text-foreground px-3">{category.category}</h3>
