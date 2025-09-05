@@ -225,7 +225,7 @@ export default function PropertyTable({ properties, setProperties }: { propertie
         } else {
             const newProperty: Property = {
                 ...propertyData,
-                id: `prop_${propertyData.title.replace(/\s+/g, '_').toLowerCase()}`,
+                id: `prop_${propertyData.title.replace(/\s+/g, '_').toLowerCase()}_${new Date().getTime()}`,
             };
             setProperties(prev => [newProperty, ...prev]);
             toast({ title: "Property added." });

@@ -169,7 +169,7 @@ export default function OpportunityTable({
             // Create
             const newOpp: Opportunity = {
                 ...values,
-                id: `opp_${values.title.substring(0, 5)}_${new Date().getTime()}`,
+                id: `opp_${values.title.substring(0, 5).replace(/\s+/g, '_')}_${new Date().getTime()}`,
                 iconName: 'Trophy', // default icon for new opps
                 badgeVariant: 'outline',
             };

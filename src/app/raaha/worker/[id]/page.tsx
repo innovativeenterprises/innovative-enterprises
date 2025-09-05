@@ -42,7 +42,7 @@ const HireRequestDialog = ({ worker, agency }: { worker: Worker, agency?: Agency
             raahaRequests: [
                 ...state.raahaRequests,
                 {
-                    id: `req_${worker.id}_${data.clientName.toLowerCase()}`,
+                    id: `req_${worker.id}_${data.clientName.toLowerCase().replace(/\s+/g, '_')}`,
                     workerId: worker.id,
                     workerName: worker.name,
                     clientName: data.clientName,
