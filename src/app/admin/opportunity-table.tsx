@@ -169,7 +169,7 @@ export default function OpportunityTable({
             // Create
             const newOpp: Opportunity = {
                 ...values,
-                id: (Math.random() + 1).toString(36).substring(7), // simple unique id
+                id: `opp_${Date.now()}`,
                 iconName: 'Trophy', // default icon for new opps
                 badgeVariant: 'outline',
             };
@@ -236,10 +236,7 @@ export default function OpportunityTable({
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this opportunity.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(opp.id)}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
+                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(opp.id)}>Delete</AlertDialogAction></AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
                                     </div>
