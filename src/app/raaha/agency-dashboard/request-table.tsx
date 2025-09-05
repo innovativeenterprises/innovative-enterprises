@@ -142,6 +142,11 @@ export const useRequestsData = () => {
 
 export function RequestTable({ requests, setRequests }: { requests: HireRequest[], setRequests: (updater: (requests: HireRequest[]) => void) => void }) { 
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleStatusChange = (requestId: string, newStatus: HireRequest['status']) => {
         setRequests(prev => prev.map(req => 
@@ -201,9 +206,11 @@ export function RequestTable({ requests, setRequests }: { requests: HireRequest[
                             <TableRow key={req.id}>
                                 <TableCell>
                                     <p className="font-medium">{req.workerName}</p>
+                                    {isClient && (
                                     <p className="text-sm text-muted-foreground">
                                         Requested: {formatDistanceToNow(new Date(req.requestDate), { addSuffix: true })}
                                     </p>
+                                    )}
                                 </TableCell>
                                 <TableCell>
                                     <div>{req.clientName}</div>
@@ -226,7 +233,7 @@ export function RequestTable({ requests, setRequests }: { requests: HireRequest[
                                             <SelectItem value="Closed">Closed</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                     {req.interviewDate && (
+                                     {req.interviewDate && isClient && (
                                         <div className="text-xs text-muted-foreground mt-2 space-y-1">
                                            <div className="flex items-center gap-1.5">
                                              <Clock className="h-3 w-3" />

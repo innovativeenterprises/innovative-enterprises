@@ -973,18 +973,13 @@ export default function PartnerPage() {
                 <Card className="bg-muted/50">
                     <CardHeader><CardTitle className="text-lg">Order Summary</CardTitle></CardHeader>
                     <CardContent className="space-y-2 text-sm">
-                        <div className="flex justify-between"><span>Base Registration Fee:</span><span>OMR {REGISTRATION_FEE.toFixed(2)}</span></div>
-                        {extraServicesCount > 0 && (
-                             <div className="flex justify-between">
-                                <span>Additional Services ({extraServicesCount} x {EXTRA_SERVICE_FEE.toFixed(2)}):</span>
-                                <span>OMR {extraServiceFee.toFixed(2)}</span>
-                            </div>
-                        )}
+                        {watchSubscriptionTier !== 'lifetime' && <div className="flex justify-between"><span>One-time Registration Fee:</span><span>OMR {sanadSettings.registrationFee.toFixed(2)}</span></div>}
+                        {watchSubscriptionTier === 'monthly' && <div className="flex justify-between"><span>Monthly Subscription:</span><span>OMR {sanadSettings.monthlyFee.toFixed(2)}</span></div>}
+                        {watchSubscriptionTier === 'yearly' && <div className="flex justify-between"><span>Yearly Subscription:</span><span>OMR {sanadSettings.yearlyFee.toFixed(2)}</span></div>}
+                        {watchSubscriptionTier !== 'lifetime' && <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>First-time Discount ({sanadSettings.firstTimeDiscountPercentage * 100}%):</span><span>- OMR {( (watchSubscriptionTier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee) * sanadSettings.firstTimeDiscountPercentage).toFixed(2)}</span></div>}
+                        {discount > 0 && <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold"><span>Coupon Discount:</span><span>- OMR {discount.toFixed(2)}</span></div>}
                         <hr className="my-2 border-dashed" />
-                        <div className="flex justify-between font-bold text-lg">
-                            <span>Total Amount:</span>
-                            <span className="text-primary">OMR {calculatedTotal.toFixed(2)}</span>
-                        </div>
+                        <div className="flex justify-between font-bold text-lg"><span>Total Due Today:</span><span className="text-primary">OMR {totalPrice.toFixed(2)}</span></div>
                     </CardContent>
                      <CardFooter>
                         <FormField control={paymentForm.control} name="coupon" render={({ field }) => (
@@ -1001,30 +996,30 @@ export default function PartnerPage() {
                         )}/>
                     </CardFooter>
                 </Card>
-                <div className="mb-6 p-4 rounded-md border bg-muted/50 flex justify-between items-center">
-                    <span className="text-lg font-bold">Total Due Today</span>
-                    <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
-                </div>
-                {finalPrice > 0 && (
-                    <>
-                        <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
-                            <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
-                        )}/>
-                        <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
-                            <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
-                        )}/>
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
-                                <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+               
+                {totalPrice > 0 && (
+                    <div>
+                        <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
+                        <div className="space-y-4">
+                            <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
+                                <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
                             )}/>
-                            <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
-                                <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
+                                <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
                             )}/>
+                            <div className="grid grid-cols-2 gap-4">
+                                <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
+                                    <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                                    <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                            </div>
                         </div>
-                    </>
+                    </div>
                 )}
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                    {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Finalize` : `Complete Free Registration`}
+                    {totalPrice > 0 ? `Pay OMR ${totalPrice.toFixed(2)} & Finalize` : `Complete Free Registration`}
                 </Button>
             </form>
             </Form>
@@ -1035,16 +1030,29 @@ export default function PartnerPage() {
 
 
   const SubmittedScreen = () => {
+    const [joiningDate, setJoiningDate] = useState('');
+    const [expiryDate, setExpiryDate] = useState('');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const today = new Date();
+        const expiry = new Date(today);
+        expiry.setFullYear(today.getFullYear() + 1);
+        setJoiningDate(today.toLocaleDateString());
+        setExpiryDate(expiry.toLocaleDateString());
+    }, []);
+
+    if (!isClient) {
+        return <LoadingScreen title="Generating Card..." description="Please wait." />;
+    }
     
     const partnerName = inquiryForm.getValues('companyName') || inquiryForm.getValues('contactName');
     let crNumber;
     if (analysisResult && 'companyInfo' in analysisResult) {
         crNumber = analysisResult.companyInfo?.registrationNumber;
     }
-    const today = new Date();
-    const expiryDate = new Date(today);
-    expiryDate.setFullYear(today.getFullYear() + 1);
-
+    
     const classification = getClassification(allSelectedServices().length);
 
     return (
@@ -1068,8 +1076,8 @@ export default function PartnerPage() {
             cardRef={cardRef}
             partnerName={partnerName}
             crNumber={crNumber}
-            joiningDate={today.toLocaleDateString()}
-            expiryDate={expiryDate.toLocaleDateString()}
+            joiningDate={joiningDate}
+            expiryDate={expiryDate}
             classification={classification}
             services={allSelectedServices().join(', ')}
             partnerType={applicantType === 'company' ? "Registered Company" : "Individual Freelancer"}
