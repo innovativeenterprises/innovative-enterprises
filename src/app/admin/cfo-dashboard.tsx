@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -80,6 +81,23 @@ const chartConfig = {
 
 
 export default function CfoDashboard() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  const getDaysRemaining = (dueDate: string) => {
+    const due = new Date(dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffTime = due.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+  
+  const vatDaysRemaining = isClient ? getDaysRemaining(vatPayment.dueDate) : 0;
+
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'paid':
@@ -92,17 +110,6 @@ export default function CfoDashboard() {
         return <Badge variant="outline">{status}</Badge>;
     }
   };
-
-  const getDaysRemaining = (dueDate: string) => {
-    const due = new Date(dueDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diffTime = due.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  }
-  
-  const vatDaysRemaining = getDaysRemaining(vatPayment.dueDate);
 
   return (
     <div className="space-y-8">
@@ -184,9 +191,11 @@ export default function CfoDashboard() {
                     <p className="text-muted-foreground mt-1">
                         Due Date: {vatPayment.dueDate}
                     </p>
-                    <p className="text-sm font-medium text-destructive mt-2">
-                         ({vatDaysRemaining >= 0 ? `${vatDaysRemaining} days remaining` : 'Overdue'})
-                    </p>
+                    {isClient && (
+                         <p className="text-sm font-medium text-destructive mt-2">
+                            ({vatDaysRemaining >= 0 ? `${vatDaysRemaining} days remaining` : 'Overdue'})
+                        </p>
+                    )}
                 </CardContent>
             </Card>
              <Card>
@@ -203,17 +212,19 @@ export default function CfoDashboard() {
                         </TableHeader>
                         <TableBody>
                            {upcomingPayments.slice(0, 5).map((payment, index) => {
-                               const daysRemaining = getDaysRemaining(payment.dueDate);
+                               const daysRemaining = isClient ? getDaysRemaining(payment.dueDate) : 0;
                                return (
                                    <TableRow key={index}>
                                        <TableCell>
                                            <div className="font-medium">{payment.source}</div>
-                                           <div className="text-sm text-muted-foreground">
-                                               Due: {payment.dueDate} 
-                                               {daysRemaining >= 0 ? 
-                                                 <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span> 
-                                               : ' (Overdue)'}
-                                           </div>
+                                           {isClient && (
+                                                <div className="text-sm text-muted-foreground">
+                                                    Due: {payment.dueDate} 
+                                                    {daysRemaining >= 0 ? 
+                                                    <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span> 
+                                                    : ' (Overdue)'}
+                                                </div>
+                                           )}
                                        </TableCell>
                                        <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                    </TableRow>

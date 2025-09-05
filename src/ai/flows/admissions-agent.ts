@@ -66,9 +66,8 @@ const admissionsAgentFlow = ai.defineFlow(
     outputSchema: AdmissionsAgentOutputSchema,
   },
   async (input) => {
-    // Generate a more deterministic ID. In a real app, this might come from a database sequence.
-    const pseudoRandom = input.fullName.length + input.personalStatement.length;
-    const generatedId = `APP-${String(pseudoRandom).slice(-4)}-${input.fullName.slice(0, 2).toUpperCase()}`;
+    // Generate a more deterministic ID.
+    const generatedId = `APP-${input.fullName.slice(0, 4).toUpperCase()}${input.programOfInterest.length}`;
     
     const { output } = await prompt({ ...input, generatedId });
     return output!;
