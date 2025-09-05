@@ -13,6 +13,7 @@ export default function Footer() {
     setIsClient(true);
   }, []);
 
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-t bg-card">
@@ -25,7 +26,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4 items-center">
              {isClient && <CompanyProfileDownloader />}
              <p className="text-sm text-muted-foreground text-center">
-                © {new Date().getFullYear()} Innovative Enterprises. All rights reserved.
+                © {isClient ? currentYear : '...'} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">
