@@ -443,7 +443,7 @@ export default function PartnerPage() {
       });
       setAgreement(agreementData);
       
-      const newRecordNumber = `PARTNER_${inquiryForm.getValues('companyName').substring(0, 5).toUpperCase()}${new Date().getTime() % 10000}`;
+      const newRecordNumber = `PARTNER_${inquiryForm.getValues('companyName').substring(0, 5).toUpperCase()}${String(new Date().getTime()).slice(-4)}`;
       setRecordNumber(newRecordNumber);
       setPageState('submitted');
       toast({ title: 'Inquiry Submitted & Agreements Generated!', description: "Please review the generated agreements below." });
@@ -549,7 +549,7 @@ export default function PartnerPage() {
     if (coupon === 'AGENT50') {
       setFinalPrice(subtotal / 2);
       toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
-    } else if (coupon === 'FREE100') {
+    } else if (couponCode === 'FREE100') {
       setFinalPrice(0);
       toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
     } else {

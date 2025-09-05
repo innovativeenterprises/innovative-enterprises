@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle } from 'lucide-react';
@@ -17,10 +17,8 @@ import Link from 'next/link';
 export default function SmartLeaseManagerPage() {
     const [leases, setLeases] = useState<SignedLease[]>([]);
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const updateLeases = () => setLeases(store.get().signedLeases);
         updateLeases();
         const unsubscribe = store.subscribe(updateLeases);
