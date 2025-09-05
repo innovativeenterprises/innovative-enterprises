@@ -133,6 +133,11 @@ const AddEditEventDialog = ({ event, onSave, children }: { event?: CommunityEven
 export default function EventsFinancePage() {
     const { events, setEvents, finances, setFinances } = useCommunityHubData();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSaveEvent = (values: EventValues, id?: string) => {
         const eventData = { ...values, date: values.date.toISOString() };
@@ -192,16 +197,16 @@ export default function EventsFinancePage() {
                         </CardHeader>
                         <CardContent className="grid md:grid-cols-3 gap-4">
                              <Card className="p-4 bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800">
-                                <p className="text-sm font-medium text-green-700 dark:text-green-300 flex items-center gap-2"><ArrowUpRight/> Total Income</p>
-                                <p className="text-2xl font-bold text-green-800 dark:text-green-200">OMR {totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+                                <div className="text-sm font-medium text-green-700 dark:text-green-300 flex items-center gap-2"><ArrowUpRight/> Total Income</div>
+                                <div className="text-2xl font-bold text-green-800 dark:text-green-200">OMR {totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
                             </Card>
                              <Card className="p-4 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800">
-                                <p className="text-sm font-medium text-red-700 dark:text-red-300 flex items-center gap-2"><ArrowDownRight/> Total Expenses</p>
-                                <p className="text-2xl font-bold text-red-800 dark:text-red-200">OMR {totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+                                <div className="text-sm font-medium text-red-700 dark:text-red-300 flex items-center gap-2"><ArrowDownRight/> Total Expenses</div>
+                                <div className="text-2xl font-bold text-red-800 dark:text-red-200">OMR {totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
                             </Card>
                              <Card className="p-4 bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800">
-                                <p className="text-sm font-medium text-blue-700 dark:text-blue-300 flex items-center gap-2"><DollarSign/> Net Balance</p>
-                                <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">OMR {netBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+                                <div className="text-sm font-medium text-blue-700 dark:text-blue-300 flex items-center gap-2"><DollarSign/> Net Balance</div>
+                                <div className="text-2xl font-bold text-blue-800 dark:text-blue-200">OMR {netBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
                             </Card>
                         </CardContent>
                     </Card>
@@ -238,7 +243,7 @@ export default function EventsFinancePage() {
                                                     {item.type}
                                                 </span>
                                             </TableCell>
-                                            <TableCell>{format(new Date(item.date), "PPP")}</TableCell>
+                                            <TableCell>{isClient ? format(new Date(item.date), "PPP") : ''}</TableCell>
                                             <TableCell className="text-right font-mono">{item.amount.toFixed(2)}</TableCell>
                                              <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
@@ -278,7 +283,7 @@ export default function EventsFinancePage() {
                                         <div className="flex-grow">
                                             <h3 className="font-semibold text-lg">{event.title}</h3>
                                             <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {isClient ? new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</span>
                                                 <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4"/> {event.location}</span>
                                                 <span className="flex items-center gap-1.5"><Users className="h-4 w-4"/> {event.rsvps} attending</span>
                                             </div>

@@ -115,9 +115,9 @@ export default function CfoDashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">CFO Dashboard</h1>
-        <p className="text-muted-foreground">
+        <div className="text-muted-foreground">
           Financial overview and analysis for your business operations.
-        </p>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
@@ -188,13 +188,13 @@ export default function CfoDashboard() {
                 </CardHeader>
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <p className="text-muted-foreground mt-1">
+                    <div className="text-muted-foreground mt-1">
                         Due Date: {vatPayment.dueDate}
-                    </p>
+                    </div>
                     {isClient && (
-                         <p className="text-sm font-medium text-destructive mt-2">
+                         <div className="text-sm font-medium text-destructive mt-2">
                             ({vatDaysRemaining >= 0 ? `${vatDaysRemaining} days remaining` : 'Overdue'})
-                        </p>
+                        </div>
                     )}
                 </CardContent>
             </Card>

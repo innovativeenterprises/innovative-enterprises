@@ -17,8 +17,10 @@ import Link from 'next/link';
 export default function SmartLeaseManagerPage() {
     const [leases, setLeases] = useState<SignedLease[]>([]);
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const updateLeases = () => setLeases(store.get().signedLeases);
         updateLeases();
         const unsubscribe = store.subscribe(updateLeases);
