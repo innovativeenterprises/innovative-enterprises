@@ -318,7 +318,7 @@ const UploadDocumentDialog = ({ onUpload }: { onUpload: (file: File) => void }) 
 }
 
 const createEmptyBriefcase = (): BriefcaseData => ({
-    recordNumber: `USER-${Date.now()}`,
+    recordNumber: `USER-GUEST`,
     applicantName: "Guest User",
     agreements: {
         ndaContent: "No Non-Disclosure Agreement found. Please complete the partner application to generate one.",
@@ -410,7 +410,7 @@ export default function BriefcasePage() {
         if (!briefcaseData) return;
         const dataUri = await fileToDataURI(file);
         const newDocument: UserDocument = {
-            id: `doc_${Date.now()}`,
+            id: `doc_${file.name.replace(/\s+/g, '_')}_${new Date().getTime()}`,
             name: file.name,
             fileType: file.type,
             dataUri: dataUri,

@@ -71,7 +71,7 @@ export default function SmartLeaseManagerPage() {
                                     {leases.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
-                                                You have no agreements yet.
+                                                You have no signed agreements yet.
                                             </TableCell>
                                         </TableRow>
                                     ) : (

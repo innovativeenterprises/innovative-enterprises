@@ -260,7 +260,7 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
             toast({ title: "Investor updated successfully." });
         } else {
             const newInvestor: Investor = {
-                id: `inv_${values.name.toLowerCase().replace(/\s+/g, '_')}`,
+                id: `inv_${values.name.replace(/\s+/g, '_').toLowerCase()}`,
                 name: values.name,
                 type: values.type,
                 subType: values.subType,

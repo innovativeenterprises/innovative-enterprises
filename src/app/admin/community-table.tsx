@@ -127,7 +127,7 @@ export default function CommunityTable() {
             setCommunities(prev => prev.map(c => c.id === id ? { ...c, ...values } : c));
             toast({ title: "Community Hub updated." });
         } else {
-            const newCommunity: Community = { ...values, id: `comm_${Date.now()}` };
+            const newCommunity: Community = { ...values, id: `comm_${values.name.replace(/\s+/g, '_').toLowerCase()}` };
             setCommunities(prev => [newCommunity, ...prev]);
             toast({ title: "Community Hub created." });
         }

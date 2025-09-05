@@ -62,7 +62,7 @@ const proctoringAgentFlow = ai.defineFlow(
   },
   async (input) => {
     // Generate a unique, deterministic ID within the flow itself.
-    const reportId = `PR-EXAM-${input.examId}-${new Date().getTime()}`;
+    const reportId = `PR-EXAM-${input.examId}-S1`;
     const { output } = await prompt(input);
     
     if(!output) {

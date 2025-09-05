@@ -244,7 +244,7 @@ const ImportAssetsDialog = ({ onImport, children }: { onImport: (assets: Asset[]
                         return null;
                     }
                     return {
-                        id: `asset_bulk_${Date.now()}_${index}`,
+                        id: `asset_bulk_${columns[0]?.trim()?.replace(/\s+/g, '_')}_${index}`,
                         name: columns[0]?.trim(),
                         type: columns[1]?.trim() as any,
                         specs: columns[2]?.trim(),
@@ -329,7 +329,7 @@ export default function AssetTable({
         } else {
             const newAsset: Asset = {
                 ...values,
-                id: `asset_${Date.now()}`,
+                id: `asset_${values.name.replace(/\s+/g, '_').toLowerCase()}`,
             };
             setAssets(prev => [newAsset, ...prev]);
             toast({ title: "Asset added successfully." });
