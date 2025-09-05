@@ -63,7 +63,7 @@ export default function RentalsPage() {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        // This effect runs only on the client, after the component mounts.
+        // This effect runs only on the client, after the component has mounted.
         setIsClient(true);
     }, []);
 
