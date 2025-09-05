@@ -51,14 +51,15 @@ export const routeToSpecialistTool = ai.defineTool(
             suggestedReplies: z.array(z.string()).optional(),
         })
     },
-    async ({ department }) => {
+    async ({ department, userQuery }) => {
         const specialist = specialists[department];
         if (!specialist) {
             return { isAvailable: false, response: "I'm sorry, I can't find the right person to help with that." };
         }
 
-        // Simulate unavailability for ~50% of requests
-        const isAvailable = Math.random() > 0.5;
+        // Use a deterministic method instead of Math.random() to simulate availability.
+        // This makes the behavior predictable for testing.
+        const isAvailable = userQuery.length % 2 === 0;
 
         if (isAvailable) {
             return {
