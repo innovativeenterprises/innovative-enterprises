@@ -1,10 +1,17 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import OpportunityTable, { useOpportunitiesData } from "../opportunity-table";
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AdminOpportunitiesPage() {
   const opportunityData = useOpportunitiesData();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -15,7 +22,11 @@ export default function AdminOpportunitiesPage() {
             </p>
         </div>
 
-        <OpportunityTable {...opportunityData} />
+        {isClient ? (
+          <OpportunityTable {...opportunityData} />
+        ) : (
+          <Skeleton className="h-[400px] w-full" />
+        )}
     </div>
   );
 }

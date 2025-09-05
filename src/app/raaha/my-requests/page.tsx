@@ -38,6 +38,24 @@ export default function MyRequestsPage() {
             default: return <Badge variant="outline">{status}</Badge>;
         }
     };
+    
+    if (!isClient) {
+        return (
+             <div className="bg-background min-h-[calc(100vh-8rem)]">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-4xl mx-auto space-y-8">
+                        <div className="h-10 w-48 bg-muted rounded-md animate-pulse" />
+                        <div className="text-center">
+                            <div className="mx-auto bg-muted p-4 rounded-full w-20 h-20 mb-4 animate-pulse" />
+                            <div className="h-10 w-3/4 bg-muted rounded-md animate-pulse mx-auto" />
+                            <div className="h-6 w-full max-w-lg bg-muted rounded-md animate-pulse mx-auto mt-4" />
+                        </div>
+                        <div className="h-96 w-full bg-muted rounded-lg animate-pulse" />
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -89,7 +107,7 @@ export default function MyRequestsPage() {
                                                 <TableCell>
                                                     <p className="font-medium">{req.workerName}</p>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Requested: {isClient ? formatDistanceToNow(new Date(req.requestDate), { addSuffix: true }) : '...'}
+                                                        Requested: {formatDistanceToNow(new Date(req.requestDate), { addSuffix: true })}
                                                     </p>
                                                 </TableCell>
                                                 <TableCell>
@@ -101,7 +119,7 @@ export default function MyRequestsPage() {
                                                         <div className="text-xs text-muted-foreground space-y-1">
                                                         <div className="flex items-center gap-1.5 font-semibold">
                                                             <CalendarIcon className="h-3 w-3 text-primary" />
-                                                            <span>Interview: {isClient ? format(new Date(req.interviewDate), "PPP p") : '...'}</span>
+                                                            <span>Interview: {format(new Date(req.interviewDate), "PPP p")}</span>
                                                         </div>
                                                             {req.interviewNotes && (
                                                                 <div className="flex items-center gap-1.5">

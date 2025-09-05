@@ -85,6 +85,20 @@ export default function ServiceTable({ services, setServices }: { services: Serv
             toast({ title: "Service order updated." });
         }
     };
+    
+    if (!isMounted) {
+        return (
+             <Card>
+                <CardHeader>
+                    <CardTitle>Service Management</CardTitle>
+                    <CardDescription>Enable or disable public-facing services from the homepage.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[200px] w-full bg-muted animate-pulse rounded-md" />
+                </CardContent>
+             </Card>
+        )
+    }
 
     return (
         <Card>
@@ -103,37 +117,17 @@ export default function ServiceTable({ services, setServices }: { services: Serv
                                 <TableHead className="text-center">Status</TableHead>
                             </TableRow>
                         </TableHeader>
-                        {isMounted ? (
-                            <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
-                                <TableBody>
-                                    {services.map(service => (
-                                        <SortableServiceRow
-                                            key={service.title}
-                                            service={service}
-                                            handleToggle={handleToggle}
-                                        />
-                                    ))}
-                                </TableBody>
-                            </SortableContext>
-                        ) : (
+                        <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
                             <TableBody>
                                 {services.map(service => (
-                                    <TableRow key={service.title}>
-                                        <TableCell><GripVertical className="h-4 w-4 text-muted-foreground" /></TableCell>
-                                        <TableCell className="font-medium">{service.title}</TableCell>
-                                        <TableCell>{service.description}</TableCell>
-                                        <TableCell className="text-center">
-                                            <div className="flex flex-col items-center gap-1">
-                                                <Switch checked={service.enabled} disabled />
-                                                <Badge variant={service.enabled ? "default" : "secondary"}>
-                                                    {service.enabled ? "Enabled" : "Disabled"}
-                                                </Badge>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
+                                    <SortableServiceRow
+                                        key={service.title}
+                                        service={service}
+                                        handleToggle={handleToggle}
+                                    />
                                 ))}
                             </TableBody>
-                        )}
+                        </SortableContext>
                     </Table>
                 </DndContext>
             </CardContent>

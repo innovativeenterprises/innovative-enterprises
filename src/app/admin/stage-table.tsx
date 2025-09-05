@@ -105,9 +105,14 @@ export default function StageTable({
     setStages,
 }: {
     stages: ProjectStage[],
-    setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => void,
+    setStages: (updater: (stages: ProjectStage[]) => void) => void,
 }) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: StageValues, id?: string) => {
         if (id) {
@@ -124,7 +129,22 @@ export default function StageTable({
         setStages(prev => prev.filter(s => s.id !== id));
         toast({ title: "Stage removed.", variant: "destructive" });
     };
-
+    
+    if (!isClient) {
+        return (
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Project Stage Management</CardTitle>
+                        <CardDescription>Manage the project lifecycle stages for your products.</CardDescription>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                     <div className="h-[200px] w-full bg-muted animate-pulse rounded-md" />
+                </CardContent>
+            </Card>
+        )
+    }
 
     return (
         <Card>
@@ -162,9 +182,7 @@ export default function StageTable({
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{stage.name}" stage.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(stage.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(stage.id)}>Delete</AlertDialogAction></AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
                                     </div>
