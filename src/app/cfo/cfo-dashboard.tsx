@@ -101,6 +101,7 @@ export default function CfoDashboard() {
   };
 
   const getDaysRemaining = (dueDate: string) => {
+    if (!isClient) return 0; // Don't calculate on the server
     const due = new Date(dueDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -109,7 +110,7 @@ export default function CfoDashboard() {
     return diffDays;
   }
   
-  const vatDaysRemaining = isClient ? getDaysRemaining(vatPayment.dueDate) : 0;
+  const vatDaysRemaining = getDaysRemaining(vatPayment.dueDate);
 
   return (
     <div className="space-y-8">
@@ -212,7 +213,7 @@ export default function CfoDashboard() {
                         </TableHeader>
                         <TableBody>
                            {upcomingPayments.slice(0, 5).map((payment, index) => {
-                               const daysRemaining = isClient ? getDaysRemaining(payment.dueDate) : 0;
+                               const daysRemaining = getDaysRemaining(payment.dueDate);
                                return (
                                    <TableRow key={index}>
                                        <TableCell>
