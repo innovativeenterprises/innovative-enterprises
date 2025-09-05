@@ -16,10 +16,12 @@ import { useSettingsData } from '@/app/admin/settings-table';
 
 export default function CartPage() {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const { settings } = useSettingsData();
 
     useEffect(() => {
+        setIsClient(true);
         const updateCart = () => setCartItems(store.get().cart);
         updateCart();
         const unsubscribe = store.subscribe(updateCart);
@@ -45,6 +47,11 @@ export default function CartPage() {
     const shipping = subtotal > 0 ? 5.00 : 0; // Flat shipping rate
     const vatAmount = settings.vat.enabled ? (subtotal + shipping) * settings.vat.rate : 0;
     const total = subtotal + shipping + vatAmount;
+    
+    if (!isClient) {
+        // Render a loading state or null on the server to prevent mismatch
+        return null;
+    }
 
     return (
         <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">
