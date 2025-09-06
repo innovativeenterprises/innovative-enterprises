@@ -283,7 +283,7 @@ export default function EstimatorForm() {
     toast({ title: "Copied!", description: "The draft response has been copied to your clipboard." });
   };
 
-  const handleDownloadTender = () => {
+  const handleDownloadTenderTxt = () => {
     if (!tenderResponse) return;
     const element = document.createElement("a");
     const file = new Blob([tenderResponse], {type: 'text/plain'});
@@ -292,6 +292,28 @@ export default function EstimatorForm() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+  };
+  
+    const handleDownloadTenderPdf = () => {
+    if (!tenderResponse) return;
+        const doc = new jsPDF();
+        doc.setFont("helvetica", "normal");
+        const margin = 15;
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const splitText = doc.splitTextToSize(tenderResponse, 180);
+        
+        let yPos = margin;
+        for (let i = 0; i < splitText.length; i++) {
+            if (yPos > pageHeight - margin) {
+                doc.addPage();
+                yPos = margin;
+            }
+            doc.text(splitText[i], margin, yPos);
+            yPos += 7; // Line height
+        }
+        
+        doc.save("tender_draft_response.pdf");
+        toast({ title: "PDF Downloaded!" });
   };
 
   return (
@@ -484,7 +506,7 @@ export default function EstimatorForm() {
                     <Button variant="outline" size="sm" onClick={handleSaveToBriefcase}><Briefcase className="mr-2 h-4 w-4"/> Save</Button>
                     <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
                     <Button variant="outline" size="sm" onClick={handleDownloadPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
-                    <Button variant="outline" size="sm" onClick={handleDownloadTender}><Download className="mr-2 h-4 w-4"/> TXT</Button>
+                    <Button variant="outline" size="sm" onClick={handleDownloadTenderTxt}><Download className="mr-2 h-4 w-4"/> TXT</Button>
                 </div>
             </CardHeader>
             <CardContent className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap p-4 bg-muted rounded-md border">
