@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -24,6 +25,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
         "Fire & Safety Estimator": Siren,
+        "AI Smart Home Estimator": Cpu,
     };
     const Icon = iconMap[product.name] || HardHat;
 
