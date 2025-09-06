@@ -1,5 +1,5 @@
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -165,5 +165,26 @@ export const initialServices: Service[] = [
     description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
     enabled: true,
     href: "/cv-enhancer",
-  }
+  },
+  {
+    icon: Lightbulb,
+    title: "Lina Image Generator",
+    description: "Create stunning visuals from text descriptions in seconds.",
+    enabled: true,
+    href: "/image-generator",
+  },
+  {
+    icon: Video,
+    title: "VEO Video Factory",
+    description: "Generate short video clips from text prompts using AI.",
+    enabled: true,
+    href: "/video-generator",
+  },
+  {
+    icon: Home,
+    title: "AI Interior Designer",
+    description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
+    enabled: true,
+    href: "/interior-designer",
+  },
 ];
