@@ -147,7 +147,14 @@ export default function GuardianAiPage() {
                             <ScholarshipFinder />
                         </TabsContent>
                          <TabsContent value="interview" className="mt-6">
-                            <InterviewCoachForm />
+                             <Link href="/cv-enhancer?tab=interview">
+                                <Card className="hover:bg-muted/50 cursor-pointer">
+                                  <CardHeader>
+                                    <CardTitle>Navigate to GENIUS Platform</CardTitle>
+                                    <CardDescription>The AI Interview Coach has been integrated into our GENIUS Career Platform for a more seamless experience.</CardDescription>
+                                  </CardHeader>
+                                </Card>
+                            </Link>
                         </TabsContent>
                     </Tabs>
                 </div>

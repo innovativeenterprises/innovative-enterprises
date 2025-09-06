@@ -1,7 +1,6 @@
 
-// This page is now obsolete as the coach form is integrated into the /cv-enhancer page.
-// We will redirect users or update links to point to /cv-enhancer?tab=interview
-// For now, we'll keep a simple component here.
+
+'use client';
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
