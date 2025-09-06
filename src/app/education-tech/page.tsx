@@ -78,7 +78,7 @@ export default function EducationTechPage() {
         setIsClient(true);
     }, []);
 
-    const edtechProducts = products.filter(p => p.category === "EdTech" && p.enabled);
+    const edtechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
