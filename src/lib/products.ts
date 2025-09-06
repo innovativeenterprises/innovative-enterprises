@@ -46,6 +46,21 @@ export const initialProducts: Product[] = [
         adminStatus: 'Completed',
         adminNotes: "User acceptance testing is underway with pilot partners."
     },
+     {
+        id: 11,
+        name: "SiteGuard Compliance",
+        description: "Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/const4/400/400",
+        aiHint: "construction safety compliance",
+        rating: 0,
+        enabled: true,
+        href: "/construction-tech/site-guard",
+        adminStatus: 'Completed',
+        adminNotes: "Live and functional. PPE detection model has a 92% accuracy rate."
+    },
     {
         id: 12,
         name: "Fire & Safety Estimator",
