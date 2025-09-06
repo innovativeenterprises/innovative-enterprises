@@ -17,8 +17,10 @@ import Link from 'next/link';
 export default function SmartLeaseManagerPage() {
     const [leases, setLeases] = useState<SignedLease[]>([]);
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const updateLeases = () => setLeases(store.get().signedLeases);
         updateLeases();
         const unsubscribe = store.subscribe(updateLeases);
@@ -32,6 +34,14 @@ export default function SmartLeaseManagerPage() {
         }));
         toast({ title: "Lease Deleted", description: "The lease agreement has been removed from your dashboard.", variant: "destructive" });
     };
+    
+    if (!isClient) {
+        return (
+             <div className="bg-background min-h-[calc(100vh-8rem)] flex items-center justify-center">
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            </div>
+        )
+    }
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -120,3 +130,4 @@ export default function SmartLeaseManagerPage() {
         </div>
     );
 }
+
