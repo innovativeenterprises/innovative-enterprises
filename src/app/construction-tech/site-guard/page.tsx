@@ -112,6 +112,9 @@ export default function SiteGuardPage() {
                                     <Image src={baseImage} alt="Original Worker Photo" layout="fill" objectFit="contain" />
                                 </div>
                             </div>
+                            <div className="hidden md:block">
+                                <ArrowRight className="w-12 h-12 text-muted-foreground mx-auto" />
+                            </div>
                             <div>
                                 <h3 className="font-semibold text-center mb-2">AI Analysis</h3>
                                 <div className="relative aspect-video w-full overflow-hidden rounded-md border">

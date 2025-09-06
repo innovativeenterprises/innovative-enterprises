@@ -11,7 +11,7 @@ import type { Asset } from "@/lib/assets";
 import { useAssetsData } from "@/app/admin/asset-table";
 import { RentalRequestForm } from './rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
-import ItRentalAgentForm from './agent-form';
+import ItRentalAgentForm from '@/app/it-rental-agent/agent-form';
 
 const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => void }) => {
     const getStatusBadge = (status: string) => {
