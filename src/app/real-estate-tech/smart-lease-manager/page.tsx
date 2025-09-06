@@ -13,6 +13,7 @@ import type { SignedLease } from '@/lib/leases';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
 
 export default function SmartLeaseManagerPage() {
     const [leases, setLeases] = useState<SignedLease[]>([]);
@@ -32,7 +33,7 @@ export default function SmartLeaseManagerPage() {
             ...state,
             signedLeases: state.signedLeases.filter(lease => lease.id !== id)
         }));
-        toast({ title: "Lease Deleted", description: "The lease agreement has been removed from your dashboard.", variant: "destructive" });
+        toast({ title: "Agreement Deleted", description: "The agreement has been removed from your dashboard.", variant: "destructive" });
     };
     
     if (!isClient) {
