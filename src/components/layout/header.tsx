@@ -35,9 +35,7 @@ import { ScrollArea } from '../ui/scroll-area';
 
 const navLinks = [
   { href: '/saas-portfolio', label: 'Products' },
-  { href: '/team', label: 'Clients' },
   { href: '/team', label: 'Our Team' },
-  { href: '/saas-portfolio', label: 'SaaS Portfolio'},
 ];
 
 const solutionsByCategory: { category: string; items: { title: string; href: string; description: string, icon: LucideIcon }[] }[] = [

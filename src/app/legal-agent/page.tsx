@@ -30,10 +30,10 @@ export default function LegalAgentPage() {
                 </div>
                 <div className="max-w-3xl mx-auto mt-12">
                    <ChatComponent
-                        agentName="Lexi"
+                        agentName="Aida"
                         agentIcon={Scale}
                         agentDescription="AI Legal Assistant"
-                        welcomeMessage="Hello! I'm Lexi, your AI Legal Assistant. How can I help you today? You can ask me to draft a new NDA, analyze an existing contract, or answer a general legal question."
+                        welcomeMessage="Hello! I'm Aida, your AI Legal Assistant. How can I help you today? You can ask me to draft a new NDA, analyze an existing contract, or answer a general legal question."
                         placeholder="e.g., 'Draft an NDA for me' or 'Analyze the terms at https://example.com/terms'"
                         aiFlow={agentFlow}
                         settings={settings}
