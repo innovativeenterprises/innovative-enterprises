@@ -24,56 +24,63 @@ const AgentCard = ({ agent }: { agent: Agent }) => (
     </Card>
 );
 
-const HumanCard = ({ member }: { member: Agent }) => (
-    <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col">
-        <CardHeader className="flex flex-col items-center gap-4 pt-8">
-                <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
-                <member.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
-            </div>
-            <div>
-                <CardTitle className="text-xl">{member.name}</CardTitle>
-                <p className="text-base text-muted-foreground">{member.role}</p>
-            </div>
-        </CardHeader>
-        <CardContent className="px-6 pb-6 text-sm flex-grow">
-            {member.description}
-        </CardContent>
-        <CardFooter className="justify-center pt-0 pb-6">
-            <div className="flex gap-4">
-                {member.socials?.linkedin && (
-                    <Link href={member.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                        <Linkedin className="w-5 h-5" />
-                        <span className="sr-only">LinkedIn</span>
-                    </Link>
-                )}
-                {member.socials?.twitter && (
-                    <Link href={member.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                        <Twitter className="w-5 h-5" />
-                        <span className="sr-only">Twitter</span>
-                    </Link>
-                )}
-                {member.socials?.github && (
-                    <Link href={member.socials.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                        <Github className="w-5 h-5" />
-                        <span className="sr-only">GitHub</span>
-                    </Link>
-                )}
-                {member.socials?.website && (
-                    <Link href={member.socials.website} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                        <Globe className="w-5 h-5" />
-                        <span className="sr-only">Website</span>
-                    </Link>
-                )}
-                {member.socials?.email && (
-                    <Link href={`mailto:${member.socials.email}`} className="text-muted-foreground hover:text-primary transition-colors">
-                        <Mail className="w-5 h-5" />
-                        <span className="sr-only">Email</span>
-                    </Link>
-                )}
-            </div>
-        </CardFooter>
-    </Card>
-);
+const HumanCard = ({ member }: { member: Agent }) => {
+    const cardContent = (
+        <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col h-full">
+            <CardHeader className="flex flex-col items-center gap-4 pt-8">
+                    <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
+                    <member.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
+                </div>
+                <div>
+                    <CardTitle className="text-xl">{member.name}</CardTitle>
+                    <p className="text-base text-muted-foreground">{member.role}</p>
+                </div>
+            </CardHeader>
+            <CardContent className="px-6 pb-6 text-sm flex-grow">
+                {member.description}
+            </CardContent>
+            <CardFooter className="justify-center pt-0 pb-6">
+                <div className="flex gap-4">
+                    {member.socials?.linkedin && (
+                        <Link href={member.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                            <Linkedin className="w-5 h-5" />
+                            <span className="sr-only">LinkedIn</span>
+                        </Link>
+                    )}
+                    {member.socials?.twitter && (
+                        <Link href={member.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                            <Twitter className="w-5 h-5" />
+                            <span className="sr-only">Twitter</span>
+                        </Link>
+                    )}
+                    {member.socials?.github && (
+                        <Link href={member.socials.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                            <Github className="w-5 h-5" />
+                            <span className="sr-only">GitHub</span>
+                        </Link>
+                    )}
+                    {member.socials?.website && (
+                        <Link href={member.socials.website} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                            <Globe className="w-5 h-5" />
+                            <span className="sr-only">Website</span>
+                        </Link>
+                    )}
+                    {member.socials?.email && (
+                        <Link href={`mailto:${member.socials.email}`} className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                            <Mail className="w-5 h-5" />
+                            <span className="sr-only">Email</span>
+                        </Link>
+                    )}
+                </div>
+            </CardFooter>
+        </Card>
+    );
+
+    if (member.href) {
+        return <Link href={member.href} className="flex h-full">{cardContent}</Link>;
+    }
+    return cardContent;
+};
 
 export function LeadershipTeam({ team }: { team: Agent[] }) {
     if (team.length === 0) return null;
