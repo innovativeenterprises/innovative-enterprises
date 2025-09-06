@@ -1,5 +1,7 @@
 
 
+'use client';
+
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck } from "lucide-react";
 import InvestForm from "./invest-form";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -26,17 +28,17 @@ const investmentReasons = [
 ]
 
 const combinedProjects = [
-    { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live" },
-    { name: "ameen", description: "A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App using AI image recognition.", status: "Live" },
+    { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live", href: "/real-estate-tech/virtual-tour" },
+    { name: "ameen", description: "A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App using AI image recognition.", status: "Live", href: "/ameen" },
     { name: "APPI – عـبِّـي", description: "An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption (electricity, water, gas). It empowers users with predictive analytics, automated notifications, and convenient service booking options, ultimately leading to significant cost savings and enhanced convenience.", status: "In Development" },
     { name: "KHIDMA", description: "A revolutionary AI/Deep-tech powered mobile application that transforms the traditional service industry. It acts as a dynamic marketplace connecting service seekers with qualified providers through an innovative auction/tender system.", status: "In Development" },
-    { name: "VMALL", description: "A revolutionary Web & Mobile application that leverages Virtual Reality (VR) and Augmented Reality (AR) technology to create immersive shopping experiences. It empowers businesses across various sectors, including retail, real estate, hospitality, and event management, to showcase their offerings in a captivating and interactive manner.", status: "In Development" },
+    { name: "VMALL", description: "A revolutionary Web & Mobile application that leverages Virtual Reality (VR) and Augmented Reality (AR) technology to create immersive shopping experiences. It empowers businesses across various sectors, including retail, real estate, hospitality, and event management, to showcase their offerings in a captivating and interactive manner.", status: "In Development", href: "/real-estate-tech/virtual-tour" },
     { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
 ];
 
 const standaloneSolutions = [
-    { name: "RAAHA", description: "An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment, management, and client communication.", status: "Live" },
-    { name: "Ameen", description: "A standalone digital identity solution offering secure, password-free authentication via WhatsApp OTP and other methods, ready for integration into any application.", status: "Live" },
+    { name: "RAAHA", description: "An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment, management, and client communication.", status: "Live", href: "/raaha" },
+    { name: "Ameen", description: "A standalone digital identity solution offering secure, password-free authentication via WhatsApp OTP and other methods, ready for integration into any application.", status: "Live", href: "/ameen" },
 ];
 
 
@@ -49,7 +51,7 @@ const comingProjects = [
     { name: "Hadeeya", description: "A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.", status: "Research Phase" },
 ];
 
-const ProjectCard = ({ name, description, status }: { name: string, description: string, status: string }) => {
+const ProjectCard = ({ name, description, status, href }: { name: string, description: string, status: string, href?: string }) => {
     const getStatusColor = () => {
         switch (status) {
             case 'Live': return 'bg-green-500 hover:bg-green-600';
@@ -60,7 +62,7 @@ const ProjectCard = ({ name, description, status }: { name: string, description:
             default: return 'bg-gray-500 hover:bg-gray-600';
         }
     }
-    return (
+    const content = (
         <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <CardHeader>
                 <div className="flex justify-between items-start">
@@ -72,7 +74,9 @@ const ProjectCard = ({ name, description, status }: { name: string, description:
                 <p className="text-muted-foreground">{description}</p>
             </CardContent>
         </Card>
-    )
+    );
+
+    return href ? <Link href={href} className="flex">{content}</Link> : content;
 }
 
 export default function InvestPage() {
