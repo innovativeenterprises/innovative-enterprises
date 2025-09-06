@@ -1,7 +1,7 @@
 
 'use client';
 
-import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package } from "lucide-react";
+import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Users } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
@@ -32,7 +32,7 @@ export default function WorkforceFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/construction-tech/workforce-scheduler/timetable-generator">
+                        <Link href="/education-tech/eduflow/timetable-generator">
                             Launch Scheduler <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
