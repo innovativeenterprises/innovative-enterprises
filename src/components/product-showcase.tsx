@@ -61,7 +61,7 @@ export default function ProductShowcase({ products: managedProducts }: { product
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {enabledProducts.map((product) => (
             <Card key={product.id} className="overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-              <Link href={`/ecommerce/${product.id}`} className="flex flex-col h-full">
+              <Link href={product.href || `/ecommerce/${product.id}`} className="flex flex-col h-full">
                 <CardHeader className="p-0">
                   <div className="relative h-48 w-full">
                     <Image
