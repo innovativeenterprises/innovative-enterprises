@@ -1,4 +1,5 @@
 
+
 export interface Product {
     id: number;
     name: string;
@@ -27,7 +28,6 @@ export const initialProducts: Product[] = [
         aiHint: "construction management software",
         rating: 0,
         enabled: true,
-        href: "/admin/projects",
         adminStatus: 'Completed',
         adminNotes: "Core features are live in the admin panel's Projects page."
     },
@@ -146,7 +146,6 @@ export const initialProducts: Product[] = [
         aiHint: "construction drone survey",
         rating: 0,
         enabled: false,
-        href: undefined,
         adminStatus: 'At Risk',
         adminNotes: "This feature requires hardware (drone) integration and is on hold for the prototype."
     },
@@ -543,7 +542,6 @@ export const initialProducts: Product[] = [
         aiHint: "building information modeling",
         rating: 0,
         enabled: false,
-        href: undefined,
         adminStatus: 'On Hold',
         adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
     },
