@@ -71,7 +71,7 @@ export const initialProducts: Product[] = [
         aiHint: "construction workforce management",
         rating: 0,
         enabled: true,
-        href: "/education-tech/eduflow/timetable-generator",
+        href: "/construction-tech/workforce-scheduler",
         adminStatus: 'Completed',
         adminNotes: "The AI Workforce Scheduler is live and functional."
     },
@@ -444,7 +444,7 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: 'Completed',
         adminNotes: "Generated from Education Playbook. Addresses Pillar 4: Exams, Assessments & Certification.",
-        href: "/education-tech/certitrust/proctoring-session",
+        href: "/education-tech/certitrust",
     },
     {
         id: 39,

@@ -26,7 +26,7 @@ export default function SanadHubPage() {
                            <a href="#task-form">Submit a Task <ArrowRight className="ml-2 h-5 w-5"/></a>
                         </Button>
                         <Button size="lg" variant="outline" asChild>
-                           <Link href="/sanad-office">For Sanad Offices</Link>
+                           <Link href="/partner">For Sanad Offices</Link>
                         </Button>
                     </div>
                 </div>
