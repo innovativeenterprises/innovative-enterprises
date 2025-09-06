@@ -20,7 +20,7 @@ const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
         "EduFlow Suite": GanttChartSquare,
         "CognitaLearn": Cpu,
-        "Guardian AI": ClipboardCheck,
+        "Guardian AI": ShieldCheck,
         "CertiTrust": ShieldCheck,
         "CampusOS": Users,
         "AI Scholarship Finder": BrainCircuit,
