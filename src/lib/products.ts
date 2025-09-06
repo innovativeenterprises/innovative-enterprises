@@ -1,5 +1,4 @@
 
-
 export interface Product {
     id: number;
     name: string;
@@ -146,7 +145,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const9/400/400",
         aiHint: "construction drone survey",
         rating: 0,
-        enabled: true,
+        enabled: false,
         href: undefined,
         adminStatus: 'At Risk',
         adminNotes: "This feature requires hardware (drone) integration and is on hold for the prototype."
@@ -543,7 +542,7 @@ export const initialProducts: Product[] = [
         image: "https://picsum.photos/seed/const3/400/400",
         aiHint: "building information modeling",
         rating: 0,
-        enabled: true,
+        enabled: false,
         href: undefined,
         adminStatus: 'On Hold',
         adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
