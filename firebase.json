@@ -1,3 +1,4 @@
+
 {
   "hosting": {
     "source": ".",
@@ -8,6 +9,7 @@
     ],
     "frameworksBackend": {
       "region": "us-central1"
-    }
+    },
+    "cleanUrls": true
   }
 }
