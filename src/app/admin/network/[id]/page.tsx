@@ -1,9 +1,8 @@
 
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { useProvidersData } from '@/hooks/use-global-store-data';
-import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -107,3 +106,5 @@ export default function ProviderDetailPage() {
         </div>
     );
 }
+
+    
