@@ -547,6 +547,20 @@ export const initialProducts: Product[] = [
         adminStatus: 'On Hold',
         adminNotes: "This feature requires complex backend processing for BIM/CAD files and is on hold for the prototype."
     },
+    {
+        id: 43,
+        name: "RAAHA",
+        description: "An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment, management, and client communication.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/raaha/400/400",
+        aiHint: "workforce management platform",
+        rating: 0,
+        enabled: true,
+        href: "/raaha",
+        adminStatus: "Completed"
+    },
 ];
 
 // This is where e-commerce products should live in a real application,

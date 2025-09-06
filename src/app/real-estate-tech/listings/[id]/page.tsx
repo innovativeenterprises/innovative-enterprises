@@ -4,7 +4,7 @@
 import { useParams, notFound } from 'next/navigation';
 import { initialProperties } from '@/lib/properties';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
 import { ArrowLeft, MapPin, BedDouble, Bath, Home, Square, Building2, Banknote, Mail } from 'lucide-react';
 import Link from 'next/link';

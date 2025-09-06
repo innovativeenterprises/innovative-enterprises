@@ -34,8 +34,8 @@ import { useSettingsData } from '@/app/admin/settings-table';
 import { ScrollArea } from '../ui/scroll-area';
 
 const navLinks = [
-  { href: '/#products', label: 'Products' },
-  { href: '/#testimonials', label: 'Clients' },
+  { href: '/saas-portfolio', label: 'Products' },
+  { href: '/team', label: 'Clients' },
   { href: '/team', label: 'Our Team' },
   { href: '/saas-portfolio', label: 'SaaS Portfolio'},
 ];
