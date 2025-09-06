@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -10,12 +11,12 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recha
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
 const kpiData = [
-    { title: "Net Revenue", value: "OMR 45,231.89", change: "+20.1% from last month", icon: CircleDollarSign },
-    { title: "Subscriptions", value: "+2,350", change: "+180.1% from last month", icon: Users },
-    { title: "VAT Collected", value: "OMR 2,153.52", change: "+22% from last month", icon: Percent },
-    { title: "Operational Cost", value: "OMR 9,231.89", change: "+2% from last month", icon: TrendingUp },
-    { title: "Total Projects", value: "14", change: "+3 since last month", icon: FolderKanban },
-    { title: "Provider Network", value: "36", change: "+5 since last month", icon: Network },
+    { title: "Net Revenue", value: "OMR 45,231.89", change: "+20.1% from last month", icon: CircleDollarSign, href: "/admin/finance" },
+    { title: "Subscriptions", value: "+2,350", change: "+180.1% from last month", icon: Users, href: "/admin/finance" },
+    { title: "VAT Collected", value: "OMR 2,153.52", change: "+22% from last month", icon: Percent, href: "/admin/finance" },
+    { title: "Operational Cost", value: "OMR 9,231.89", change: "+2% from last month", icon: TrendingUp, href: "/admin/finance" },
+    { title: "Total Projects", value: "14", change: "+3 since last month", icon: FolderKanban, href: "/admin/projects" },
+    { title: "Provider Network", value: "36", change: "+5 since last month", icon: Network, href: "/admin/network" },
 ];
 
 const transactionData = [
@@ -161,16 +162,18 @@ export default function CfoDashboard() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {kpiData.map((kpi, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
-              <kpi.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{kpi.value}</div>
-              <p className="text-xs text-muted-foreground">{kpi.change}</p>
-            </CardContent>
-          </Card>
+          <Link href={kpi.href} key={index}>
+            <Card className="hover:bg-muted/50 transition-colors">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
+                <kpi.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{kpi.value}</div>
+                <p className="text-xs text-muted-foreground">{kpi.change}</p>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
 
