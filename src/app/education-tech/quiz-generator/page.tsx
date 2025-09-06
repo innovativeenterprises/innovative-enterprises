@@ -110,7 +110,7 @@ export default function QuizGeneratorPage() {
          <div className="max-w-4xl mx-auto space-y-8">
             <div>
                 <Button asChild variant="outline" className="mb-4">
-                    <Link href="/education-tech/cognita-learn"><ArrowLeft className="mr-2 h-4 w-4" />Back to CognitaLearn</Link>
+                    <Link href="/education-tech/eduflow"><ArrowLeft className="mr-2 h-4 w-4" />Back to EduFlow Suite</Link>
                 </Button>
                 <div className="text-center">
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
