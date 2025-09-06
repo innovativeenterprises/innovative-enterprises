@@ -481,7 +481,7 @@ export const initialProducts: Product[] = [
         name: "AI Scholarship Finder",
         description: "An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level.",
         stage: "Live & Operating",
-        category: "EdTech",
+        category: "Education Tech",
         price: 0,
         image: "https://picsum.photos/seed/scholarship/400/400",
         aiHint: "scholarship document graduation",
