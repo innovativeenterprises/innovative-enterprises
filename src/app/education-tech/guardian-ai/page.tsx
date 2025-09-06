@@ -22,7 +22,6 @@ import { useSettingsData } from '@/app/admin/settings-table';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ScholarshipFinder from '../scholarships/page';
-import InterviewCoachForm from '@/app/interview-coach/coach-form';
 
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
