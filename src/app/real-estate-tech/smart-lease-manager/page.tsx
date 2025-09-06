@@ -13,15 +13,12 @@ import type { SignedLease } from '@/lib/leases';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { Loader2 } from 'lucide-react';
 
 export default function SmartLeaseManagerPage() {
     const [leases, setLeases] = useState<SignedLease[]>([]);
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const updateLeases = () => setLeases(store.get().signedLeases);
         updateLeases();
         const unsubscribe = store.subscribe(updateLeases);
@@ -33,21 +30,26 @@ export default function SmartLeaseManagerPage() {
             ...state,
             signedLeases: state.signedLeases.filter(lease => lease.id !== id)
         }));
-        toast({ title: "Agreement Deleted", description: "The agreement has been removed from your dashboard.", variant: "destructive" });
+        toast({ title: "Agreement Deleted", description: "The lease agreement has been removed from your dashboard.", variant: "destructive" });
     };
     
-    if (!isClient) {
-        return (
-             <div className="bg-background min-h-[calc(100vh-8rem)] flex items-center justify-center">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            </div>
-        )
-    }
+    const totalMonthlyRent = leases.reduce((sum, lease) => {
+        if (lease.status === 'Active' && lease.contractType === 'Tenancy Agreement' && lease.pricePeriod === 'per month') {
+            return sum + lease.price;
+        }
+        return sum;
+    }, 0);
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-5xl mx-auto">
+                    <Button asChild variant="outline" className="mb-4">
+                        <Link href="/real-estate-tech">
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Back to Real Estate Tech
+                        </Link>
+                    </Button>
                     <div className="text-center mb-12">
                         <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
                             <FileText className="w-10 h-10 text-primary" />
@@ -56,6 +58,21 @@ export default function SmartLeaseManagerPage() {
                         <p className="mt-4 text-lg text-muted-foreground">
                             A centralized dashboard to view, manage, and track all your digitally signed lease and sale agreements.
                         </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6 mb-8">
+                         <Card>
+                             <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
+                             <CardContent className="text-3xl font-bold text-primary">{leases.filter(l => l.status === 'Active').length}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">OMR {totalMonthlyRent.toLocaleString()}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">{leases.filter(l => l.endDate && new Date(l.endDate) > new Date() && new Date(l.endDate).getMonth() === new Date().getMonth() + 1).length}</CardContent>
+                        </Card>
                     </div>
 
                     <Card>
@@ -80,7 +97,7 @@ export default function SmartLeaseManagerPage() {
                                     {leases.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
-                                                You have no signed agreements yet.
+                                                You have no signed agreements yet. Generate a new contract to get started.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
