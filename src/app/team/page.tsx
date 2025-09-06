@@ -29,7 +29,7 @@ export default function TeamPage() {
             Meet the leaders driving our vision and the AI-powered digital workforce that brings it to life.
           </p>
            <Button asChild className="mt-6">
-                <Link href="/service-provider">
+                <Link href="/partner">
                     Join Our Network <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
             </Button>
