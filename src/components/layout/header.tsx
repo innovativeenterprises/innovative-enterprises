@@ -60,6 +60,12 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 description: "End-to-end solutions to build, manage, and scale your online business.",
                 icon: ShoppingCart,
             },
+             {
+                title: "Ameen Digital Identity",
+                href: "/ameen",
+                description: "Secure, password-free login using your WhatsApp account and other advanced authentication solutions.",
+                icon: UserCheck,
+            },
             {
                 title: "Community Hub",
                 href: "/community-hub",
