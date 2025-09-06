@@ -34,7 +34,6 @@ import { useSettingsData } from '@/app/admin/settings-table';
 import { ScrollArea } from '../ui/scroll-area';
 
 const navLinks = [
-  { href: '/#products', label: 'Products' },
   { href: '/team', label: 'Our Team' },
 ];
 
@@ -100,6 +99,12 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 href: "/infra-rent",
                 description: "On-demand rental of IT equipment like servers, workstations, and networking gear for events and projects.",
                 icon: Server,
+            },
+             {
+                title: "RAAHA Platform",
+                href: "/raaha",
+                description: "An AI-powered white-label SaaS platform to connect domestic work agencies with clients.",
+                icon: HomeWorkforceIcon,
             },
         ]
     },

@@ -11,6 +11,12 @@ import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products";
 import { Skeleton } from '@/components/ui/skeleton';
 
+const problems = [
+    { title: "Manual Processes", description: "Administrative overhead from manual paperwork, scheduling, and approvals slows down institutions." },
+    { title: "One-Size-Fits-All Learning", description: "Lack of personalized learning paths leads to disengaged students and teacher burnout." },
+    { title: "Student Success Gaps", description: "Identifying at-risk students and providing timely career guidance is a major challenge." },
+];
+
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
         "Smart PM SaaS": GanttChartSquare,
