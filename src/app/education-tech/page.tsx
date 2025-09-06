@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap, BrainCircuit, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { useProductsData } from "@/hooks/use-global-store-data";
+import { useProductsData } from "@/app/admin/product-table";
 import type { Product } from "@/lib/products";
 import { Skeleton } from '@/components/ui/skeleton';
 
