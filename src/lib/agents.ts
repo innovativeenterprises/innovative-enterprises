@@ -33,7 +33,7 @@ export interface AgentCategory {
 
 export const initialLeadershipTeam: Agent[] = [
     { name: "JUMAA SALIM AL HADIDI", role: "CEO and Co-Founder", description: "Leads the company's vision and strategic direction.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1920&auto=format&fit=crop', aiHint: 'oman business man', href: "/invest", socials: { linkedin: "#", twitter: "#", email: "jumaa@innovative.om", website: "#" } },
-    { name: "ANWAR AHMED SHARIF", role: "CTO and Co-Founder", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=1920&auto=format&fit=crop', aiHint: 'technology expert', href: "/cto", socials: { linkedin: "#", twitter: "#", email: "anwar@innovative.om" } },
+    { name: "ANWAR AHMED SHARIF", role: "CTO and Co-Founder", description: "Drives technological innovation and engineering.", icon: User, enabled: true, type: 'Leadership', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=1920&auto=format&fit=crop', aiHint: 'technology expert', href: "/cto", socials: { linkedin: "#", twitter: "#", email: "anwar@innovative.om", github: "https://github.com" } },
 ];
 
 export const initialStaffTeam: Agent[] = [
