@@ -2,14 +2,14 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
 import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GeneratedPost } from '@/ai/flows/social-media-post-generator.schema';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -23,6 +23,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 
 const platformOptions = [
     { id: "LinkedIn", label: "LinkedIn", icon: Linkedin },
@@ -42,26 +44,104 @@ interface ScheduledPost extends GenerateSocialMediaPostOutput {
     date: Date;
 }
 
+const PostDetailDialog = ({ post }: { post: ScheduledPost }) => {
+    const { toast } = useToast();
+    const [isPublishing, setIsPublishing] = useState<string | null>(null);
+
+     const handleCopy = (content: string, hashtags: string[]) => {
+        const fullText = `${content}\n\n${hashtags.join(' ')}`;
+        navigator.clipboard.writeText(fullText);
+        toast({ title: "Copied!", description: "The post content has been copied to your clipboard." });
+    };
+    
+    const handlePublish = (platform: string) => {
+        setIsPublishing(platform);
+        toast({ title: 'Publishing...', description: `Sending post to ${platform}.`});
+        // Simulate API call
+        setTimeout(() => {
+            setIsPublishing(null);
+            toast({ title: 'Published Successfully!', description: `Your post is now live on ${platform}.`});
+        }, 2000);
+    }
+
+    return (
+        <DialogContent className="max-w-3xl">
+            <DialogHeader>
+                <DialogTitle>Campaign Details</DialogTitle>
+                <DialogDescription>
+                    Review the generated content for your campaign: "{post.topic}" scheduled for {format(post.date, "PPP")}.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="grid md:grid-cols-2 gap-6 pt-4 max-h-[70vh] overflow-y-auto pr-4">
+                <div className="space-y-4">
+                    <h3 className="font-semibold">Generated Image</h3>
+                     {post.imageUrl ? (
+                        <div className="relative aspect-square w-full overflow-hidden rounded-md border">
+                            <Image src={post.imageUrl} alt="Generated for social media post" fill className="object-cover" />
+                        </div>
+                    ) : (
+                        <div className="aspect-square w-full rounded-md border bg-muted flex items-center justify-center">
+                            <p className="text-sm text-muted-foreground">No image generated for this post.</p>
+                        </div>
+                    )}
+                </div>
+                 <Tabs defaultValue={post.posts[0]?.platform} className="w-full">
+                    <TabsList className="grid w-full grid-cols-3">
+                         {post.posts.map(p => (
+                            <TabsTrigger key={p.platform} value={p.platform}>
+                                {p.platform}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                    {post.posts.map(p => (
+                        <TabsContent key={p.platform} value={p.platform}>
+                            <Card>
+                                <CardContent className="pt-6">
+                                    <div className="prose prose-sm max-w-full text-foreground whitespace-pre-wrap h-64 overflow-y-auto">
+                                        <p>{p.postContent}</p>
+                                        <p className="font-semibold">{p.suggestedHashtags.join(' ')}</p>
+                                    </div>
+                                </CardContent>
+                                <CardFooter className="flex justify-end gap-2">
+                                     <Button variant="ghost" onClick={() => handleCopy(p.postContent, p.suggestedHashtags)}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
+                                    <Button onClick={() => handlePublish(p.platform)} disabled={!!isPublishing}>
+                                        {isPublishing === p.platform ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Send className="mr-2 h-4 w-4" />}
+                                        Publish
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        </TabsContent>
+                    ))}
+                </Tabs>
+            </div>
+        </DialogContent>
+    )
+}
+
 const PostCalendarCard = ({ post }: { post: ScheduledPost }) => {
     const platform = post.posts[0]?.platform;
     const PlatformIcon = platformOptions.find(p => p.id === platform)?.icon || FileText;
 
     return (
-        <Card className="bg-muted/50">
-            <CardContent className="p-3">
-                <div className="flex items-center gap-2">
-                    <PlatformIcon className="h-5 w-5 text-muted-foreground" />
-                    <p className="text-sm font-semibold truncate flex-1">{post.topic}</p>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{post.posts[0]?.postContent}</p>
-            </CardContent>
-        </Card>
+        <Dialog>
+            <DialogTrigger asChild>
+                <Card className="bg-muted/50 hover:bg-muted cursor-pointer transition-colors">
+                    <CardContent className="p-3">
+                        <div className="flex items-center gap-2">
+                            <PlatformIcon className="h-5 w-5 text-muted-foreground" />
+                            <p className="text-sm font-semibold truncate flex-1">{post.topic}</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{post.posts[0]?.postContent}</p>
+                    </CardContent>
+                </Card>
+            </DialogTrigger>
+            <PostDetailDialog post={post} />
+        </Dialog>
     );
 };
 
 export default function SocialMediaForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isPublishing, setIsPublishing] = useState<string | null>(null);
   const [generatedPosts, setGeneratedPosts] = useState<ScheduledPost[]>([]);
   const { toast } = useToast();
 
@@ -84,7 +164,7 @@ export default function SocialMediaForm() {
            const newPost: ScheduledPost = { ...result, topic: data.topic, date: data.postDate };
            setGeneratedPosts(prev => [...prev, newPost].sort((a, b) => a.date.getTime() - b.date.getTime()));
        }
-       toast({ title: "Campaign Generated!", description: "Your new posts are ready for review." });
+       toast({ title: "Campaign Generated!", description: "Your new posts are ready for review in the calendar." });
     } catch (error) {
       console.error(error);
       toast({
@@ -96,22 +176,6 @@ export default function SocialMediaForm() {
       setIsLoading(false);
     }
   };
-
-  const handleCopy = (content: string, hashtags: string[]) => {
-    const fullText = `${content}\n\n${hashtags.join(' ')}`;
-    navigator.clipboard.writeText(fullText);
-    toast({ title: "Copied!", description: "The post content has been copied to your clipboard." });
-  };
-  
-  const handlePublish = (platform: string) => {
-      setIsPublishing(platform);
-      toast({ title: 'Publishing...', description: `Sending post to ${platform}.`});
-      // Simulate API call
-      setTimeout(() => {
-          setIsPublishing(null);
-          toast({ title: 'Published Successfully!', description: `Your post is now live on ${platform}.`});
-      }, 2000);
-  }
 
   const postsByDate = useMemo(() => {
       return generatedPosts.reduce((acc, post) => {
@@ -175,7 +239,7 @@ export default function SocialMediaForm() {
                             return (
                                 <FormItem
                                 key={item.id}
-                                className="flex flex-row items-center space-x-3 space-y-0"
+                                className="flex flex-row items-start space-x-3 space-y-0"
                                 >
                                 <FormControl>
                                     <Checkbox
@@ -220,9 +284,8 @@ export default function SocialMediaForm() {
                             </FormControl>
                             <SelectContent>
                             <SelectItem value="Professional">Professional</SelectItem>
-                            <SelectItem value="Casual">Casual</SelectItem>
-                            <SelectItem value="Witty">Witty</SelectItem>
                             <SelectItem value="Enthusiastic">Enthusiastic</SelectItem>
+                            <SelectItem value="Casual">Casual</SelectItem>
                             </SelectContent>
                         </Select>
                         <FormMessage />
