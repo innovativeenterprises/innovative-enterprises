@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -20,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Home } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
+import { type Agency } from '@/lib/raaha-agencies';
 
 // Hook to connect to the global store for workers
 export const useWorkersData = () => {
@@ -68,7 +70,7 @@ const WorkerSchema = z.object({
 type WorkerValues = z.infer<typeof WorkerSchema> & { photo: string };
 
 
-const AddEditWorkerDialog = ({ worker, onSave, children, agencyId }: { worker?: Worker, onSave: (v: WorkerValues, id?: string) => void, children: React.ReactNode, agencyId: string }) => {
+const AddEditWorkerDialog = ({ worker, onSave, children, agencyId }: { worker?: Worker, onSave: (v: WorkerValues, id?: string) => void, children: React.ReactNode, agencyId: Agency['id'] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(worker?.photo || null);
 
@@ -225,15 +227,17 @@ const AddEditWorkerDialog = ({ worker, onSave, children, agencyId }: { worker?: 
 
 export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, agencyId: string }) { 
     const { toast } = useToast();
+    const { agencies } = useAgenciesData();
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const skillsArray = values.skills.map(s => s.value).filter(s => s.trim() !== '');
+        const agency = agencies.find(a => a.id === agencyId);
         
         if (id) {
             setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
             toast({ title: "Candidate updated." });
         } else {
-            const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agencyId as any };
+            const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agency!.name };
             setWorkers(prev => [newWorker, ...prev]);
             toast({ title: "Candidate added." });
         }

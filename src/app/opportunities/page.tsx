@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -11,6 +12,7 @@ import { opportunityIconMap } from "@/lib/opportunities";
 // Import the data hook from the admin table
 import { useOpportunitiesData } from "@/app/admin/opportunity-table";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
     const getStatusColor = () => {
@@ -61,11 +63,38 @@ const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
     )
 }
 
+const OpportunityGridSkeleton = () => (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({length: 6}).map((_, i) => (
+            <Card key={i} className="flex flex-col">
+                <CardHeader>
+                    <div className="flex justify-between items-start">
+                        <Skeleton className="h-12 w-12 rounded-full" />
+                        <Skeleton className="h-6 w-20" />
+                    </div>
+                    <div className="pt-4 space-y-2">
+                        <Skeleton className="h-6 w-3/4" />
+                    </div>
+                </CardHeader>
+                <CardContent className="flex-grow space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                </CardContent>
+                <CardFooter className="flex-col items-start gap-4">
+                     <Skeleton className="h-10 w-full" />
+                </CardFooter>
+            </Card>
+        ))}
+    </div>
+)
+
 export default function OpportunitiesPage() {
-    // This is a bit of a trick for the prototype.
-    // We "render" the admin component that holds the state, but invisibly.
-    // In a real app, this data would come from a shared store or an API.
     const { opportunities } = useOpportunitiesData();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     const publicOpportunities = opportunities
         .filter(opp => opp.status !== 'Closed')
@@ -84,10 +113,16 @@ export default function OpportunitiesPage() {
             </p>
             </div>
 
-            <div className="max-w-5xl mx-auto mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {publicOpportunities.map((opp) => (
-                    <OpportunityCard key={opp.id} opp={opp} />
-                ))}
+            <div className="max-w-5xl mx-auto mt-16">
+                {!isClient ? (
+                    <OpportunityGridSkeleton />
+                ) : (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {publicOpportunities.map((opp) => (
+                            <OpportunityCard key={opp.id} opp={opp} />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
         </div>

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -113,7 +114,7 @@ export default function AgencyDashboardPage() {
                             <RequestTable requests={filteredRequests} setRequests={setRequests} />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgencyId} />
+                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.name} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
