@@ -93,18 +93,10 @@ function DueDateDisplay({ dueDate }: { dueDate: string }) {
     setDaysRemaining(diffDays);
   }, [dueDate]);
 
-  if (!isClient) {
-      return (
-        <div className="text-sm text-muted-foreground">
-            Due: {dueDate}
-        </div>
-      )
-  }
-
   return (
     <div className="text-sm text-muted-foreground">
       Due: {dueDate} 
-      {daysRemaining !== null && (
+      {isClient && daysRemaining !== null && (
         daysRemaining >= 0 ? 
             <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span> 
             : ' (Overdue)'
