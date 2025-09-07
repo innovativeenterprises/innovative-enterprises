@@ -149,12 +149,10 @@ export default function CfoDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">CFO Dashboard</h1>
-        <div className="text-muted-foreground">
+      <h1 className="text-3xl font-bold">CFO Dashboard</h1>
+      <p className="text-muted-foreground">
           Financial overview and analysis for your business operations.
-        </div>
-      </div>
+      </p>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {kpiData.map((kpi, index) => (
