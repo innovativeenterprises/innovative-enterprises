@@ -21,6 +21,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
 import { extractPropertyDetailsFromUrl } from "@/ai/flows/property-extraction";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Hook to connect to the global store
 export const usePropertiesData = () => {
@@ -216,6 +217,12 @@ const AddEditPropertyDialog = ({
 
 export default function PropertyTable({ properties, setProperties }: { properties: Property[], setProperties: (updater: (properties: Property[]) => void) => void }) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
 
     const handleSave = (values: PropertyValues, id?: string) => {
         const { urlToScrape, ...propertyData } = values; // Exclude scraper URL from save data
@@ -225,7 +232,7 @@ export default function PropertyTable({ properties, setProperties }: { propertie
         } else {
             const newProperty: Property = {
                 ...propertyData,
-                id: `prop_${propertyData.title.replace(/\s+/g, '_').toLowerCase()}_${new Date().getTime()}`,
+                id: `prop_${Date.now()}`,
             };
             setProperties(prev => [newProperty, ...prev]);
             toast({ title: "Property added." });
@@ -270,7 +277,7 @@ export default function PropertyTable({ properties, setProperties }: { propertie
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {properties.map(prop => (
+                        {isClient ? properties.map(prop => (
                             <TableRow key={prop.id}>
                                 <TableCell>
                                      <Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" />
@@ -297,7 +304,13 @@ export default function PropertyTable({ properties, setProperties }: { propertie
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )) : (
+                            <TableRow>
+                                <TableCell colSpan={6} className="h-24 text-center">
+                                    <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
