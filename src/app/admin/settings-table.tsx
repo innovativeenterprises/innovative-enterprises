@@ -370,6 +370,11 @@ export default function SettingsTable() {
     const { costSettings, setCostSettings } = useCostSettingsData();
     const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('general');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleModeChange = (value: 'direct' | 'tender' | 'builtin') => {
         let description = '';
@@ -455,7 +460,7 @@ export default function SettingsTable() {
                 <TabsTrigger value="costing">BoQ Costing</TabsTrigger>
             </TabsList>
             <TabsContent value="general" className="mt-6 space-y-8">
-                <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} />
+                {isClient && <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} />}
                 <Card>
                     <CardHeader>
                         <CardTitle>Operational & Layout Settings</CardTitle>
@@ -603,7 +608,7 @@ export default function SettingsTable() {
                             <CardTitle>Document Branding</CardTitle>
                             <CardDescription>Manage the header and footer for generated PDFs.</CardDescription>
                         </div>
-                        <EditBrandingDialog settings={settings} onSave={handleSaveBranding} />
+                        {isClient && <EditBrandingDialog settings={settings} onSave={handleSaveBranding} />}
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-2 gap-4">
@@ -629,7 +634,7 @@ export default function SettingsTable() {
                             <CardTitle>AI Legal Assistant Fees</CardTitle>
                             <CardDescription>Manage the fees for contract analysis.</CardDescription>
                         </div>
-                        <EditLegalPricingDialog settings={settings} onSave={handleSaveLegalPricing} />
+                        {isClient && <EditLegalPricingDialog settings={settings} onSave={handleSaveLegalPricing} />}
                     </CardHeader>
                     <CardContent>
                         <Table>
@@ -663,7 +668,7 @@ export default function SettingsTable() {
                             <CardTitle>Sanad Hub Subscription Pricing</CardTitle>
                             <CardDescription>Manage the fees for Sanad Office registrations.</CardDescription>
                         </div>
-                        <EditSanadPricingDialog settings={settings} onSave={handleSaveSanadPricing} />
+                        {isClient && <EditSanadPricingDialog settings={settings} onSave={handleSaveSanadPricing} />}
                     </CardHeader>
                     <CardContent>
                         <Table>
