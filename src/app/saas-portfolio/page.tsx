@@ -1,14 +1,15 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useMemo, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { saasProducts, type SaasCategory, type SaaSProduct } from '@/lib/saas-products';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const getStatusBadge = (status: string) => {
     switch (status) {
@@ -32,6 +33,12 @@ const getStageBadge = (stage: string) => {
 export default function SaasPortfolioPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
 
     const filteredProducts = useMemo(() => {
         let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
@@ -102,16 +109,24 @@ export default function SaasPortfolioPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {filteredProducts.map(product => (
-                                    <TableRow key={product.name}>
-                                        <TableCell className="font-medium">{product.name}</TableCell>
-                                        <TableCell><Badge variant="secondary">{product.category}</Badge></TableCell>
-                                        <TableCell className="text-muted-foreground text-sm max-w-sm">{product.description}</TableCell>
-                                        <TableCell>{getStageBadge(product.stage)}</TableCell>
-                                        <TableCell>{getStatusBadge(product.status)}</TableCell>
-                                        <TableCell>{product.ready ? 'Yes' : 'No'}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {!isClient ? (
+                                    Array.from({length: 10}).map((_, index) => (
+                                         <TableRow key={index}>
+                                            <TableCell colSpan={6}><Skeleton className="h-8 w-full" /></TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    filteredProducts.map(product => (
+                                        <TableRow key={product.name}>
+                                            <TableCell className="font-medium">{product.name}</TableCell>
+                                            <TableCell><Badge variant="secondary">{product.category}</Badge></TableCell>
+                                            <TableCell className="text-muted-foreground text-sm max-w-sm">{product.description}</TableCell>
+                                            <TableCell>{getStageBadge(product.stage)}</TableCell>
+                                            <TableCell>{getStatusBadge(product.status)}</TableCell>
+                                            <TableCell>{product.ready ? 'Yes' : 'No'}</TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>

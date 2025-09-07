@@ -23,6 +23,7 @@ import Image from "next/image";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import CostSettingsTable, { useCostSettingsData } from "./cost-settings-table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 // This hook now connects to the global store.
@@ -475,128 +476,136 @@ export default function SettingsTable() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                            <TableRow>
-                                <TableCell>
-                                    <p className="font-medium">Translation Assignment Mode</p>
-                                    <p className="text-sm text-muted-foreground">Control how new translation jobs are assigned.</p>
-                                </TableCell>
-                                <TableCell>
-                                    <RadioGroup 
-                                        value={settings.translationAssignmentMode} 
-                                        onValueChange={handleModeChange}
-                                        className="gap-3"
-                                    >
-                                        <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="builtin" id="builtin" />
-                                            <Label htmlFor="builtin">Built-in AI Translator</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="direct" id="direct" />
-                                            <Label htmlFor="direct">Direct Assignment to Partner</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="tender" id="tender" />
-                                            <Label htmlFor="tender">Tender to Partner Network</Label>
-                                        </div>
-                                    </RadioGroup>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <p className="font-medium">Chatbot Voice Interaction</p>
-                                    <p className="text-sm text-muted-foreground">Globally enable or disable voice input/output on all AI chatbots.</p>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center space-x-2">
-                                        <Switch
-                                            id="voice-interaction-switch"
-                                            checked={settings.voiceInteractionEnabled}
-                                            onCheckedChange={handleVoiceChange}
-                                        />
-                                        <Label htmlFor="voice-interaction-switch">
-                                            {settings.voiceInteractionEnabled ? "Enabled" : "Disabled"}
-                                        </Label>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <p className="font-medium">Value-Added Tax (VAT)</p>
-                                    <p className="text-sm text-muted-foreground">Enable or disable VAT on all commercial services and invoices.</p>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex items-center space-x-2">
-                                            <Switch
-                                                id="vat-enabled-switch"
-                                                checked={settings.vat.enabled}
-                                                onCheckedChange={handleVatEnabledChange}
-                                            />
-                                            <Label htmlFor="vat-enabled-switch">
-                                                {settings.vat.enabled ? "Enabled" : "Disabled"}
-                                            </Label>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Label htmlFor="vat-rate-input">Rate:</Label>
-                                            <Input
-                                                id="vat-rate-input"
-                                                type="number"
-                                                defaultValue={settings.vat.rate * 100}
-                                                onBlur={handleVatRateChange}
-                                                disabled={!settings.vat.enabled}
-                                                className="w-24"
-                                                min="0"
-                                                step="0.1"
-                                            />
-                                            <span className="text-muted-foreground">%</span>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <p className="font-medium">Services Menu Layout</p>
-                                    <p className="text-sm text-muted-foreground">Number of columns in the 'Services' header dropdown.</p>
-                                </TableCell>
-                                <TableCell>
-                                    <Select
-                                        value={String(settings.servicesMenuColumns)}
-                                        onValueChange={handleServicesMenuColumnChange}
-                                    >
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="1">1 Column</SelectItem>
-                                            <SelectItem value="2">2 Columns</SelectItem>
-                                            <SelectItem value="3">3 Columns</SelectItem>
-                                            <SelectItem value="4">4 Columns</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <p className="font-medium">AI Tools Menu Layout</p>
-                                    <p className="text-sm text-muted-foreground">Number of columns in the 'AI Tools' header dropdown.</p>
-                                </TableCell>
-                                <TableCell>
-                                <Select
-                                        value={String(settings.aiToolsMenuColumns)}
-                                        onValueChange={handleAiToolsMenuColumnChange}
-                                    >
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="1">1 Column</SelectItem>
-                                            <SelectItem value="2">2 Columns</SelectItem>
-                                            <SelectItem value="3">3 Columns</SelectItem>
-                                            <SelectItem value="4">4 Columns</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </TableCell>
-                            </TableRow>
+                                {!isClient ? (
+                                    <TableRow>
+                                        <TableCell colSpan={2}><Skeleton className="h-24 w-full" /></TableCell>
+                                    </TableRow>
+                                ) : (
+                                    <>
+                                        <TableRow>
+                                            <TableCell>
+                                                <p className="font-medium">Translation Assignment Mode</p>
+                                                <p className="text-sm text-muted-foreground">Control how new translation jobs are assigned.</p>
+                                            </TableCell>
+                                            <TableCell>
+                                                <RadioGroup 
+                                                    value={settings.translationAssignmentMode} 
+                                                    onValueChange={handleModeChange}
+                                                    className="gap-3"
+                                                >
+                                                    <div className="flex items-center space-x-2">
+                                                        <RadioGroupItem value="builtin" id="builtin" />
+                                                        <Label htmlFor="builtin">Built-in AI Translator</Label>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2">
+                                                        <RadioGroupItem value="direct" id="direct" />
+                                                        <Label htmlFor="direct">Direct Assignment to Partner</Label>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2">
+                                                        <RadioGroupItem value="tender" id="tender" />
+                                                        <Label htmlFor="tender">Tender to Partner Network</Label>
+                                                    </div>
+                                                </RadioGroup>
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                <p className="font-medium">Chatbot Voice Interaction</p>
+                                                <p className="text-sm text-muted-foreground">Globally enable or disable voice input/output on all AI chatbots.</p>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center space-x-2">
+                                                    <Switch
+                                                        id="voice-interaction-switch"
+                                                        checked={settings.voiceInteractionEnabled}
+                                                        onCheckedChange={handleVoiceChange}
+                                                    />
+                                                    <Label htmlFor="voice-interaction-switch">
+                                                        {settings.voiceInteractionEnabled ? "Enabled" : "Disabled"}
+                                                    </Label>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                <p className="font-medium">Value-Added Tax (VAT)</p>
+                                                <p className="text-sm text-muted-foreground">Enable or disable VAT on all commercial services and invoices.</p>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center gap-4">
+                                                    <div className="flex items-center space-x-2">
+                                                        <Switch
+                                                            id="vat-enabled-switch"
+                                                            checked={settings.vat.enabled}
+                                                            onCheckedChange={handleVatEnabledChange}
+                                                        />
+                                                        <Label htmlFor="vat-enabled-switch">
+                                                            {settings.vat.enabled ? "Enabled" : "Disabled"}
+                                                        </Label>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Label htmlFor="vat-rate-input">Rate:</Label>
+                                                        <Input
+                                                            id="vat-rate-input"
+                                                            type="number"
+                                                            defaultValue={settings.vat.rate * 100}
+                                                            onBlur={handleVatRateChange}
+                                                            disabled={!settings.vat.enabled}
+                                                            className="w-24"
+                                                            min="0"
+                                                            step="0.1"
+                                                        />
+                                                        <span className="text-muted-foreground">%</span>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                <p className="font-medium">Services Menu Layout</p>
+                                                <p className="text-sm text-muted-foreground">Number of columns in the 'Services' header dropdown.</p>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Select
+                                                    value={String(settings.servicesMenuColumns)}
+                                                    onValueChange={handleServicesMenuColumnChange}
+                                                >
+                                                    <SelectTrigger className="w-[180px]">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="1">1 Column</SelectItem>
+                                                        <SelectItem value="2">2 Columns</SelectItem>
+                                                        <SelectItem value="3">3 Columns</SelectItem>
+                                                        <SelectItem value="4">4 Columns</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>
+                                                <p className="font-medium">AI Tools Menu Layout</p>
+                                                <p className="text-sm text-muted-foreground">Number of columns in the 'AI Tools' header dropdown.</p>
+                                            </TableCell>
+                                            <TableCell>
+                                            <Select
+                                                    value={String(settings.aiToolsMenuColumns)}
+                                                    onValueChange={handleAiToolsMenuColumnChange}
+                                                >
+                                                    <SelectTrigger className="w-[180px]">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="1">1 Column</SelectItem>
+                                                        <SelectItem value="2">2 Columns</SelectItem>
+                                                        <SelectItem value="3">3 Columns</SelectItem>
+                                                        <SelectItem value="4">4 Columns</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </TableCell>
+                                        </TableRow>
+                                    </>
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>
@@ -645,18 +654,26 @@ export default function SettingsTable() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell>B2C (Business-to-Consumer)</TableCell>
-                                    <TableCell className="text-right">{settings.legalAgentPricing.b2cFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>B2B (Business-to-Business)</TableCell>
-                                    <TableCell className="text-right">{settings.legalAgentPricing.b2bFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>B2G (Business-to-Government)</TableCell>
-                                    <TableCell className="text-right">{settings.legalAgentPricing.b2gFee.toFixed(2)}</TableCell>
-                                </TableRow>
+                                {!isClient ? (
+                                    <TableRow>
+                                        <TableCell colSpan={2}><Skeleton className="h-10 w-full" /></TableCell>
+                                    </TableRow>
+                                ) : (
+                                <>
+                                    <TableRow>
+                                        <TableCell>B2C (Business-to-Consumer)</TableCell>
+                                        <TableCell className="text-right">{settings.legalAgentPricing.b2cFee.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>B2B (Business-to-Business)</TableCell>
+                                        <TableCell className="text-right">{settings.legalAgentPricing.b2bFee.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>B2G (Business-to-Government)</TableCell>
+                                        <TableCell className="text-right">{settings.legalAgentPricing.b2gFee.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                </>
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>
@@ -679,26 +696,34 @@ export default function SettingsTable() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell>One-time Registration Fee</TableCell>
-                                    <TableCell className="text-right">{settings.sanadOffice.registrationFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Monthly Subscription Fee</TableCell>
-                                    <TableCell className="text-right">{settings.sanadOffice.monthlyFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Yearly Subscription Fee</TableCell>
-                                    <TableCell className="text-right">{settings.sanadOffice.yearlyFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Lifetime Subscription Fee</TableCell>
-                                    <TableCell className="text-right">{settings.sanadOffice.lifetimeFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>First-time Discount</TableCell>
-                                    <TableCell className="text-right">{(settings.sanadOffice.firstTimeDiscountPercentage * 100).toFixed(0)}%</TableCell>
-                                </TableRow>
+                                {!isClient ? (
+                                     <TableRow>
+                                        <TableCell colSpan={2}><Skeleton className="h-20 w-full" /></TableCell>
+                                    </TableRow>
+                                ) : (
+                                    <>
+                                        <TableRow>
+                                            <TableCell>One-time Registration Fee</TableCell>
+                                            <TableCell className="text-right">{settings.sanadOffice.registrationFee.toFixed(2)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Monthly Subscription Fee</TableCell>
+                                            <TableCell className="text-right">{settings.sanadOffice.monthlyFee.toFixed(2)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Yearly Subscription Fee</TableCell>
+                                            <TableCell className="text-right">{settings.sanadOffice.yearlyFee.toFixed(2)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Lifetime Subscription Fee</TableCell>
+                                            <TableCell className="text-right">{settings.sanadOffice.lifetimeFee.toFixed(2)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>First-time Discount</TableCell>
+                                            <TableCell className="text-right">{(settings.sanadOffice.firstTimeDiscountPercentage * 100).toFixed(0)}%</TableCell>
+                                        </TableRow>
+                                    </>
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>

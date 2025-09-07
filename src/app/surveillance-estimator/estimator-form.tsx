@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video, Building, Eye, Mic, MicOff, Users, Briefcase } from 'lucide-react';
+import { Loader2, Sparkles, ClipboardCheck, CircleDollarSign, Camera, FileText, Upload, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Wifi, WifiOff, History, ArrowLeft, Video, Building, Eye, Mic, MicOff, Users, Briefcase, Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
@@ -310,7 +310,7 @@ export default function EstimatorForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>New Surveillance Proposal Request</CardTitle>
+        <CardTitle>New Security System Proposal</CardTitle>
         <CardDescription>Answer a few questions and our AI will design a complete surveillance package for you.</CardDescription>
       </CardHeader>
       <CardContent>
