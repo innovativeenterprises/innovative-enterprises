@@ -277,7 +277,8 @@ export default function PropertyTable({ properties, setProperties }: { propertie
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {isClient ? properties.map(prop => (
+                        {isClient ? (
+                            properties.map(prop => (
                             <TableRow key={prop.id}>
                                 <TableCell>
                                      <Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" />
@@ -304,8 +305,9 @@ export default function PropertyTable({ properties, setProperties }: { propertie
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        )) : (
-                            <TableRow>
+                        ))
+                        ) : (
+                             <TableRow>
                                 <TableCell colSpan={6} className="h-24 text-center">
                                     <Skeleton className="h-10 w-full" />
                                 </TableCell>
