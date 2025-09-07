@@ -85,24 +85,6 @@ export default function MyRequestsPage() {
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
     const myRequests = requests.filter(r => r.clientName === 'Ahmed Al-Farsi');
-    
-    if (!isClient) {
-        return (
-             <div className="bg-background min-h-[calc(100vh-8rem)]">
-                <div className="container mx-auto px-4 py-16">
-                    <div className="max-w-4xl mx-auto space-y-8">
-                        <div className="h-10 w-48 bg-muted rounded-md animate-pulse" />
-                        <div className="text-center">
-                            <div className="mx-auto bg-muted p-4 rounded-full w-20 h-20 mb-4 animate-pulse" />
-                            <div className="h-10 w-3/4 bg-muted rounded-md animate-pulse mx-auto" />
-                            <div className="h-6 w-full max-w-lg bg-muted rounded-md animate-pulse mx-auto mt-4" />
-                        </div>
-                        <div className="h-96 w-full bg-muted rounded-lg animate-pulse" />
-                    </div>
-                </div>
-            </div>
-        )
-    }
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -142,16 +124,16 @@ export default function MyRequestsPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {myRequests.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
-                                                You haven't made any hire requests yet.
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : (
+                                    {isClient && myRequests.length > 0 ? (
                                         myRequests.map(req => (
                                            <RequestRow key={req.id} request={req} />
                                         ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                                                {isClient ? "You haven't made any hire requests yet." : "Loading requests..."}
+                                            </TableCell>
+                                        </TableRow>
                                     )}
                                 </TableBody>
                             </Table>
