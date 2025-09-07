@@ -336,6 +336,11 @@ const AddEditMemberDialog = ({
 export default function MembershipPage() {
     const { members, setMembers } = useMembersData();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: MemberValues, id?: string) => {
         const { identityDocument, ...restOfValues } = values; // Exclude identityDocument from saving
@@ -407,42 +412,48 @@ export default function MembershipPage() {
                 <Table>
                     <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Household Role</TableHead><TableHead>Position / Employer</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {members.map(member => (
-                            <TableRow key={member.id} className={member.householdRole === 'Member' ? 'bg-muted/50' : ''}>
-                                <TableCell>
-                                     <div className="flex items-center gap-3">
-                                        <div className="flex-shrink-0" style={{ paddingLeft: member.householdRole === 'Member' ? '20px' : '0' }}>
-                                         {member.householdRole === 'Member' && <span className="text-muted-foreground">- </span>}
-                                        <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover inline-block"/>
+                        {isClient ? (
+                            members.map(member => (
+                                <TableRow key={member.id} className={member.householdRole === 'Member' ? 'bg-muted/50' : ''}>
+                                    <TableCell>
+                                         <div className="flex items-center gap-3">
+                                            <div className="flex-shrink-0" style={{ paddingLeft: member.householdRole === 'Member' ? '20px' : '0' }}>
+                                             {member.householdRole === 'Member' && <span className="text-muted-foreground">- </span>}
+                                            <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover inline-block"/>
+                                            </div>
+                                            <div>
+                                              <p className="font-medium">{member.nickname || member.name}</p>
+                                              <p className="text-sm text-muted-foreground">{member.contact}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                          <p className="font-medium">{member.nickname || member.name}</p>
-                                          <p className="text-sm text-muted-foreground">{member.contact}</p>
+                                    </TableCell>
+                                     <TableCell><Badge variant={member.householdRole === 'Head' ? 'default' : 'outline'}>{member.householdRole === 'Head' ? 'Head of Family' : 'Member'}</Badge></TableCell>
+                                    <TableCell>
+                                      {member.position && <div>
+                                        <p className="font-medium">{member.position}</p>
+                                        {member.employer && <p className="text-sm text-muted-foreground">{member.employer}</p>}
+                                      </div>}
+                                    </TableCell>
+                                    <TableCell>{getStatusBadge(member.status)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <AddEditMemberDialog member={member} onSave={handleSave} members={members} setMembers={setMembers}><Button variant="ghost" size="icon"><Edit /></Button></AddEditMemberDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Delete Member?</AlertDialogTitle><AlertDialogDescription>This will permanently remove {member.name} from the registry.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(member.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </div>
-                                    </div>
-                                </TableCell>
-                                 <TableCell><Badge variant={member.householdRole === 'Head' ? 'default' : 'outline'}>{member.householdRole === 'Head' ? 'Head of Family' : 'Member'}</Badge></TableCell>
-                                <TableCell>
-                                  {member.position && <div>
-                                    <p className="font-medium">{member.position}</p>
-                                    {member.employer && <p className="text-sm text-muted-foreground">{member.employer}</p>}
-                                  </div>}
-                                </TableCell>
-                                <TableCell>{getStatusBadge(member.status)}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditMemberDialog member={member} onSave={handleSave} members={members} setMembers={setMembers}><Button variant="ghost" size="icon"><Edit /></Button></AddEditMemberDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Delete Member?</AlertDialogTitle><AlertDialogDescription>This will permanently remove {member.name} from the registry.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(member.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                           <TableRow>
+                             <TableCell colSpan={5} className="text-center h-24">Loading members...</TableCell>
+                           </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
