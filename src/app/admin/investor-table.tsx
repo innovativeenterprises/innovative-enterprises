@@ -382,4 +382,3 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
         </Card>
     );
 }
-
