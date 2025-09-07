@@ -235,7 +235,7 @@ export default function EventsFinancePage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {isClient && finances.map(item => (
+                                    {isClient ? finances.map(item => (
                                         <TableRow key={item.id}>
                                             <TableCell className="font-medium">{item.description}</TableCell>
                                             <TableCell><Badge variant="outline">{item.category}</Badge></TableCell>
@@ -263,7 +263,9 @@ export default function EventsFinancePage() {
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                    )) : (
+                                        <TableRow><TableCell colSpan={6}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
+                                    )}
                                 </TableBody>
                             </Table>
                         </CardContent>
@@ -279,7 +281,7 @@ export default function EventsFinancePage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {isClient && events.map(event => (
+                                {isClient ? events.map(event => (
                                     <Card key={event.id} className="p-4 flex flex-col sm:flex-row justify-between gap-4">
                                         <div className="flex-grow">
                                             <h3 className="font-semibold text-lg">{event.title}</h3>
@@ -301,7 +303,7 @@ export default function EventsFinancePage() {
                                             </AlertDialog>
                                         </div>
                                     </Card>
-                                ))}
+                                )) : <Skeleton className="h-24 w-full" />}
                             </div>
                         </CardContent>
                     </Card>
