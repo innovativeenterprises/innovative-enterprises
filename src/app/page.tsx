@@ -26,20 +26,22 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col">
-      <CompanyOverview />
-      {isClient ? (
-        <>
-          <ServiceCatalog services={services} />
-          <ProductShowcase products={products} />
-          <ClientTestimonials clients={clients} testimonials={testimonials} />
-        </>
-      ) : (
-        // You can add skeleton loaders here if you want
-        <div className="h-[200vh]"></div>
-      )}
-      <AiToolsCta />
+    <>
+      <main className="flex flex-col">
+        <CompanyOverview />
+        {isClient ? (
+          <>
+            <ServiceCatalog services={services} />
+            <ProductShowcase products={products} />
+            <ClientTestimonials clients={clients} testimonials={testimonials} />
+          </>
+        ) : (
+          // You can add skeleton loaders here if you want
+          <div className="h-[200vh]"></div>
+        )}
+        <AiToolsCta />
+      </main>
       <ChatWidget />
-    </div>
+    </>
   );
 }

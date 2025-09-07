@@ -23,7 +23,9 @@ export default function Footer() {
              <span className="font-bold text-lg">INNOVATIVE ENTERPRISES</span>
           </div>
           <div className="flex flex-col gap-4 items-center">
-             <CompanyProfileDownloader />
+             <div>
+                <CompanyProfileDownloader />
+             </div>
              <p className="text-sm text-muted-foreground text-center">
                 © {currentYear || new Date().getFullYear()} Innovative Enterprises. All rights reserved.
               </p>

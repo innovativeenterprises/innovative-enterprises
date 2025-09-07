@@ -269,8 +269,8 @@ export default function ProjectsPage() {
             </Accordion>
 
 
-            <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Project Pipeline</h2>
+            <div>
+                <h2 className="text-2xl font-bold mb-4">Project Pipeline</h2>
                  <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCorners}>
                     <div className="overflow-x-auto pb-4">
                          <div className="flex gap-6">
