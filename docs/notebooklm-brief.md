@@ -71,7 +71,7 @@ The platform is a monolithic **Next.js 14+ (App Router)** application serving bo
 -   **BoQ Generator:** AI-generated Bill of Quantities from floor plans.
 -   **StructurAI BIM:** AI-powered BIM for automated clash detection.
 
-#### Real Estate Tech (11)
+#### Real Estate Tech (12)
 -   **AI Property Valuator:** Instant property appraisals using AI.
 -   **Smart Listing & Matching:** AI matches buyers/tenants with properties.
 -   **3D Virtual Tour SaaS:** 360° tours and AR/VR staging.
@@ -83,6 +83,7 @@ The platform is a monolithic **Next.js 14+ (App Router)** application serving bo
 -   **Tenant Digital Briefcase:** App for managing personal documents and bills.
 -   **EcoBuild Certify:** Automated sustainability compliance reporting.
 -   **PANOSPACE:** Immersive platform for virtual tours.
+-   **StairSpace:** Marketplace for renting under-stair and micro-retail spaces.
 
 #### Education Tech (5)
 -   **EduFlow Suite:** All-in-one administrative automation for schools.

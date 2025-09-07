@@ -33,6 +33,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed | Yes |
 | EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed | Yes |
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed | Yes |
+| StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Idea Phase | On Track | No |
 
 ### Category: Education Tech (5)
 | Name | Description | Stage | Status | Ready / MVP Ready |
