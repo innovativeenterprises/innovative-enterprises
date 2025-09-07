@@ -20,6 +20,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { store } from "@/lib/global-store";
 import { AddEditProductDialog, type ProductValues } from "./product-form-dialog";
 import { useProductsData } from "@/hooks/use-global-store-data";
+import { Skeleton } from "../ui/skeleton";
 
 const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleToggle, handleOpenDialog }: { 
     product: Product, 
@@ -178,9 +179,9 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
-                        {isMounted ? (
-                            <SortableContext items={products.map(p => p.id)} strategy={verticalListSortingStrategy}>
-                                <TableBody>
+                        <TableBody>
+                             {isMounted ? (
+                                <SortableContext items={products.map(p => p.id)} strategy={verticalListSortingStrategy}>
                                     {products.map(p => (
                                         <SortableProductRow
                                             key={p.id}
@@ -192,37 +193,19 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                             handleOpenDialog={handleOpenDialog}
                                         />
                                     ))}
-                                </TableBody>
-                            </SortableContext>
-                        ) : (
-                            <TableBody>
-                                {products.map(p => (
-                                    <TableRow key={p.id}>
-                                        <TableCell><GripVertical className="h-4 w-4 text-muted-foreground" /></TableCell>
-                                        <TableCell><Image src={p.image} alt={p.name} width={60} height={45} className="rounded-md object-cover" /></TableCell>
-                                        <TableCell className="font-medium">{p.name}</TableCell>
-                                        <TableCell><Badge variant="outline">{p.stage}</Badge></TableCell>
-                                        <TableCell className="text-center">
-                                            <div className="flex flex-col items-center gap-1">
-                                                <Switch checked={p.enabled} disabled/>
-                                                <Badge variant={p.enabled ? "default" : "secondary"}>
-                                                    {p.enabled ? "Enabled" : "Disabled"}
-                                                </Badge>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <Button variant="ghost" size="icon" disabled><Edit /></Button>
-                                                <Button variant="ghost" size="icon" disabled><Trash2 className="text-destructive" /></Button>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        )}
+                                </SortableContext>
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={6} className="h-24 text-center">
+                                        <Skeleton className="w-full h-20" />
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
                     </Table>
                 </DndContext>
             </CardContent>
         </Card>
     );
 }
+
