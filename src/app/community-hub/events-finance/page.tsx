@@ -243,7 +243,7 @@ export default function EventsFinancePage() {
                                                     {item.type}
                                                 </span>
                                             </TableCell>
-                                            <TableCell>{format(new Date(item.date), "PPP")}</TableCell>
+                                            <TableCell>{isClient ? format(new Date(item.date), "PPP") : '...'}</TableCell>
                                             <TableCell className="text-right font-mono">{item.amount.toFixed(2)}</TableCell>
                                              <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
@@ -283,7 +283,7 @@ export default function EventsFinancePage() {
                                         <div className="flex-grow">
                                             <h3 className="font-semibold text-lg">{event.title}</h3>
                                             <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {format(new Date(event.date), "PPP")}</span>
+                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {isClient ? format(new Date(event.date), "PPP") : '...'}</span>
                                                 <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4"/> {event.location}</span>
                                                 <span className="flex items-center gap-1.5"><Users className="h-4 w-4"/> {event.rsvps} attending</span>
                                             </div>
