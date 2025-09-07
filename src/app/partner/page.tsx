@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
@@ -137,6 +138,7 @@ const PaymentSchema = z.object({
     expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
     cvc: z.string().length(3, 'CVC must be 3 digits.'),
     coupon: z.string().optional(),
+    subscriptionTier: z.enum(['monthly', 'yearly', 'lifetime']),
 });
 type PaymentValues = z.infer<typeof PaymentSchema>;
 
@@ -251,7 +253,7 @@ export default function PartnerPage() {
   const companyUploadForm = useForm<CompanyUploadValues>({ resolver: zodResolver(CompanyUploadSchema), defaultValues: { primaryBusinessCategory: "", additionalBusinessCategories: [] } });
   const individualUploadForm = useForm<IndividualUploadValues>({ resolver: zodResolver(IndividualUploadSchema), defaultValues: { primaryBusinessCategory: "", additionalBusinessCategories: [] } });
   const inquiryForm = useForm<z.infer<typeof PartnershipInquiryInputSchema>>({ resolver: zodResolver(PartnershipInquiryInputSchema) });
-  const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema) });
+  const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema), defaultValues: { subscriptionTier: 'monthly' }});
 
   const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
 
@@ -540,23 +542,22 @@ export default function PartnerPage() {
   }
 
   const handleApplyCoupon = () => {
-    const coupon = paymentForm.getValues('coupon')?.toUpperCase();
-    if (!coupon) {
+    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
+    if (!couponCode) {
       toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
       return;
     }
     // Dummy coupon logic
-    if (coupon === 'AGENT50') {
-      setFinalPrice(subtotal / 2);
-      toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
+    if (couponCode === 'AGENT50') {
+      toast({ title: 'Coupon Applied!', description: `You received a 50% discount.` });
     } else if (couponCode === 'FREE100') {
-      setFinalPrice(0);
       toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
     } else {
       toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
     }
-  }
-  
+     setFinalPrice(calculateTotalPrice());
+  };
+
   const handleDownloadPricingTemplate = () => {
     const templateData = pricingTemplates.default;
     
@@ -578,6 +579,27 @@ export default function PartnerPage() {
     const primary = formToUse.getValues('primaryBusinessCategory');
     const additional = formToUse.getValues('additionalBusinessCategories') || [];
     return [primary, ...additional].filter(Boolean);
+  }
+
+  const calculateTotalPrice = () => {
+    let currentSubtotal = 0;
+    const tier = paymentForm.getValues('subscriptionTier');
+    if (tier === 'lifetime') {
+        currentSubtotal = sanadSettings.lifetimeFee;
+    } else {
+        const subscriptionFee = tier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
+        const currentDiscount = subscriptionFee * sanadSettings.firstTimeDiscountPercentage;
+        currentSubtotal = sanadSettings.registrationFee + subscriptionFee - currentDiscount;
+    }
+
+    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
+    if (couponCode === 'AGENT50') {
+        return currentSubtotal / 2;
+    }
+    if (couponCode === 'FREE100') {
+        return 0;
+    }
+    return currentSubtotal;
   }
 
   useEffect(() => {
@@ -1063,10 +1085,8 @@ export default function PartnerPage() {
   const SubmittedScreen = () => {
     const [joiningDate, setJoiningDate] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const today = new Date();
         const expiry = new Date(today);
         expiry.setFullYear(today.getFullYear() + 1);
@@ -1074,10 +1094,6 @@ export default function PartnerPage() {
         setExpiryDate(expiry.toLocaleDateString());
     }, []);
 
-    if (!isClient) {
-        return <LoadingScreen title="Generating Card..." description="Please wait." />;
-    }
-    
     const partnerName = inquiryForm.getValues('companyName') || inquiryForm.getValues('contactName');
     let crNumber;
     if (analysisResult && 'companyInfo' in analysisResult) {

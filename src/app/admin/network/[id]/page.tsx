@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
+import { useEffect, useState } from 'react';
 
 export default function ProviderDetailPage() {
     const params = useParams();
@@ -31,7 +32,21 @@ export default function ProviderDetailPage() {
     }
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
-        if (tier === 'None' || !expiry) {
+        const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
+
+        useEffect(() => {
+            if (!expiry) {
+                setDaysUntilExpiry(null);
+                return;
+            }
+            const expiryDate = new Date(expiry);
+            const now = new Date();
+            const diffTime = expiryDate.getTime() - now.getTime();
+            setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
+        }, [expiry]);
+
+
+        if (tier === 'None') {
             return <Badge variant="secondary">No Subscription</Badge>;
         }
         if (tier === 'Lifetime') {
@@ -42,9 +57,9 @@ export default function ProviderDetailPage() {
             )
         }
 
-        const expiryDate = new Date(expiry);
-        const now = new Date();
-        const daysUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
+        if (daysUntilExpiry === null) {
+            return <Badge variant="secondary">Loading...</Badge>;
+        }
         
         const totalDuration = tier === 'Yearly' ? 365 : 30;
         const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
@@ -106,5 +121,3 @@ export default function ProviderDetailPage() {
         </div>
     );
 }
-
-    

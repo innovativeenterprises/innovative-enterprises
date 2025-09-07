@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Provider } from "@/lib/providers";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon, Upload } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon, Upload, Star } from "lucide-react";
 import Link from 'next/link';
 import { store } from "@/lib/global-store";
 import { useRouter } from "next/navigation";
@@ -281,23 +281,30 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => { setIsClient(true) }, []);
+    const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
 
-    if (!isClient) {
-        return <Badge variant="secondary">Loading...</Badge>;
-    }
+    useEffect(() => {
+        if (!expiry) {
+            setDaysUntilExpiry(null);
+            return;
+        }
+        const expiryDate = new Date(expiry);
+        const now = new Date();
+        const diffTime = expiryDate.getTime() - now.getTime();
+        setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
+    }, [expiry]);
+    
 
-    if (tier === 'None' || !expiry) {
+    if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;
     }
     if (tier === 'Lifetime') {
-        return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Lifetime</Badge>;
+        return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
     }
-
-    const expiryDate = new Date(expiry);
-    const now = new Date();
-    const daysUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
+    
+    if (daysUntilExpiry === null) {
+        return <Badge variant="secondary">Loading...</Badge>;
+    }
     
     const totalDuration = tier === 'Yearly' ? 365 : 30;
     const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
@@ -399,7 +406,7 @@ export default function ProviderTable({
                     </TableHeader>
                     <TableBody>
                         {providers.map(p => (
-                            <TableRow key={p.id} onClick={() => router.push(`/provider/${p.id}`)} className="cursor-pointer">
+                            <TableRow key={p.id} onClick={() => router.push(`/admin/network/${p.id}`)} className="cursor-pointer">
                                 <TableCell className="font-medium">
                                     <p>{p.name}</p>
                                     <p className="text-sm text-muted-foreground">{p.email}</p>
@@ -436,5 +443,3 @@ export default function ProviderTable({
         </Card>
     );
 }
-
-    
