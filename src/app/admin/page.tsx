@@ -4,7 +4,9 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, CheckCircle, FolderKanban, Network, CircleDollarSign, Percent, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { useProductsData, useProvidersData, useOpportunitiesData } from "@/hooks/use-global-store-data";
+import { useProductsData } from "@/hooks/use-global-store-data";
+import { useProvidersData } from "@/app/admin/provider-table";
+import { useOpportunitiesData } from "@/app/admin/opportunity-table";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";

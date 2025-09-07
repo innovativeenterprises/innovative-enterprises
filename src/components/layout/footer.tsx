@@ -8,8 +8,14 @@ import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear().toString());
+  const [currentYear, setCurrentYear] = useState('');
+  const [isClient, setIsClient] = useState(false);
   
+  useEffect(() => {
+    setIsClient(true);
+    setCurrentYear(new Date().getFullYear().toString());
+  }, []);
+
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto py-8 px-4">
@@ -20,10 +26,10 @@ export default function Footer() {
           </div>
           <div className="flex flex-col gap-4 items-center">
              <div>
-                <CompanyProfileDownloader />
+                {isClient && <CompanyProfileDownloader />}
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {currentYear} Innovative Enterprises. All rights reserved.
+                © {isClient ? currentYear : new Date().getFullYear().toString()} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">

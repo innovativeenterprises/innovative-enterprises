@@ -33,8 +33,10 @@ const fileToDataURI = (file: File): Promise<string> => {
 
 export const useAssetsData = () => {
     const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -47,7 +49,8 @@ export const useAssetsData = () => {
             const currentAssets = store.get().assets;
             const newAssets = updater(currentAssets);
             store.set(state => ({ ...state, assets: newAssets }));
-        }
+        },
+        isClient,
     };
 };
 
