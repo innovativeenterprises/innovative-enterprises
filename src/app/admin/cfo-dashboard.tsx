@@ -28,14 +28,10 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
     setDaysRemaining(diffDays);
   }, [date]);
 
-  if (!isClient) {
-    return <div className={cn("text-sm text-muted-foreground", className)}>Due: {date}</div>;
-  }
-
   return (
     <div className={cn("text-sm text-muted-foreground", className)}>
       Due: {date}
-      {daysRemaining !== null && (
+      {isClient && daysRemaining !== null && (
         daysRemaining >= 0 ? (
           <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
         ) : (
