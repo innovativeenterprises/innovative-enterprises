@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -212,7 +211,7 @@ const AddEditStaffDialog = ({
                                 </div>
                                 <FormField control={form.control} name="photoFile" render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Upload Photo File</FormLabel>
+                                        <FormLabel>Upload Photo</FormLabel>
                                         <FormControl>
                                             <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                         </FormControl>
@@ -485,5 +484,7 @@ export default function StaffTable({
         </Card>
     );
 }
+
+    
 
     
