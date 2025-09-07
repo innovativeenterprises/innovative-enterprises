@@ -35,7 +35,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef }:
                     )}
                     <div className="text-right text-xs text-gray-500">
                         <p className="font-semibold">Generated On</p>
-                        <p>{generatedDate || '...'}</p>
+                        <p>{generatedDate}</p>
                     </div>
                 </header>
 
@@ -198,7 +198,11 @@ export default function CompanyProfileDownloader() {
     };
     
     if (!isMounted) {
-        return null; // Don't render anything on the server or initial client render
+        return (
+             <Button variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={true}>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
+            </Button>
+        );
     }
 
 
