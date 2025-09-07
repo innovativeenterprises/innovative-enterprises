@@ -10,7 +10,7 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from '@/components/ui/skeleton';
-import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from '@/lib/cfo-data';
+import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 import { cn } from '@/lib/utils';
 
 // Reusable component for displaying due dates and remaining days
