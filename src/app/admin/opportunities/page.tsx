@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,6 +22,8 @@ import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type 
 import { SortableContext, useSortable, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
+import { Skeleton } from '@/components/ui/skeleton';
+
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
@@ -99,6 +101,11 @@ export default function ProjectsPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     const { products, setProducts } = useProductsData();
     const { stages } = useProjectStagesData();
@@ -271,22 +278,40 @@ export default function ProjectsPage() {
 
             <div>
                 <h2 className="text-2xl font-bold mb-4">Project Pipeline</h2>
-                 <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCorners}>
+                {isClient ? (
+                    <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCorners}>
+                        <div className="overflow-x-auto pb-4">
+                            <div className="flex gap-6">
+                                <SortableContext items={stages.map(s => s.name)} strategy={horizontalListSortingStrategy}>
+                                    {stages.map(stage => (
+                                        <StageColumn
+                                            key={stage.id}
+                                            stage={stage}
+                                            products={productsByStage[stage.name] || []}
+                                            onEditProduct={handleEditProduct}
+                                        />
+                                    ))}
+                                </SortableContext>
+                            </div>
+                        </div>
+                    </DndContext>
+                ) : (
                     <div className="overflow-x-auto pb-4">
-                         <div className="flex gap-6">
-                            <SortableContext items={stages.map(s => s.name)} strategy={horizontalListSortingStrategy}>
-                                {stages.map(stage => (
-                                    <StageColumn
-                                        key={stage.id}
-                                        stage={stage}
-                                        products={productsByStage[stage.name] || []}
-                                        onEditProduct={handleEditProduct}
-                                    />
-                                ))}
-                            </SortableContext>
+                        <div className="flex gap-6">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                                <div key={i} className="flex-shrink-0 w-[300px]">
+                                    <Card className="bg-muted/50 h-full flex flex-col">
+                                        <CardHeader className="p-4"><Skeleton className="h-6 w-3/4" /></CardHeader>
+                                        <CardContent className="p-4 min-h-[200px] flex-grow space-y-4">
+                                            <Skeleton className="h-16 w-full" />
+                                            <Skeleton className="h-16 w-full" />
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                </DndContext>
+                )}
             </div>
             
             <AddEditProductDialog
