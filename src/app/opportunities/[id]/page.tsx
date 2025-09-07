@@ -190,11 +190,3 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
          </div>
     );
 }
-
-// This function can be used for generating static pages at build time
-// For this prototype, we'll keep it simple and render dynamically on the client.
-// export async function generateStaticParams() {
-//   return initialOpportunities.map((opp) => ({
-//     id: opp.id,
-//   }))
-// }
