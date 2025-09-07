@@ -82,10 +82,8 @@ const chartConfig = {
 
 function DueDateDisplay({ dueDate }: { dueDate: string }) {
   const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
     const due = new Date(dueDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -94,17 +92,21 @@ function DueDateDisplay({ dueDate }: { dueDate: string }) {
     setDaysRemaining(diffDays);
   }, [dueDate]);
 
-  if (!isClient) return null;
+  if (daysRemaining === null) {
+      return (
+        <div className="text-sm text-muted-foreground">
+            Due: {dueDate}
+        </div>
+      )
+  }
 
   return (
     <div className="text-sm text-muted-foreground">
       Due: {dueDate}
-      {daysRemaining !== null && (
-        daysRemaining >= 0 ? (
+      {daysRemaining >= 0 ? (
           <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span>
-        ) : (
+      ) : (
           ' (Overdue)'
-        )
       )}
     </div>
   );
@@ -112,10 +114,8 @@ function DueDateDisplay({ dueDate }: { dueDate: string }) {
 
 function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
   const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
     const due = new Date(dueDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -124,13 +124,11 @@ function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
     setDaysRemaining(diffDays);
   }, [dueDate]);
 
-  if (!isClient) return null;
+  if (daysRemaining === null) return null;
 
   return (
     <div className="text-sm font-medium text-destructive mt-2">
-      {daysRemaining !== null && (
-        daysRemaining >= 0 ? `(${daysRemaining} days remaining)` : '(Overdue)'
-      )}
+      {daysRemaining >= 0 ? `(${daysRemaining} days remaining)` : '(Overdue)'}
     </div>
   );
 }
