@@ -17,8 +17,10 @@ import Link from 'next/link';
 export default function StudentHousingPage() {
     const [leases, setLeases] = useState<SignedLease[]>([]);
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const updateLeases = () => setLeases(store.get().signedLeases);
         updateLeases();
         const unsubscribe = store.subscribe(updateLeases);
@@ -71,7 +73,13 @@ export default function StudentHousingPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {leases.length === 0 ? (
+                                    {!isClient ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                                                Loading agreements...
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : leases.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
                                                 You have no student housing agreements yet.
