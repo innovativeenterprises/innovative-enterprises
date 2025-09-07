@@ -9,6 +9,7 @@ import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Brie
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function DueDateDisplay({ dueDate }: { dueDate: string }) {
   const [daysRemaining, setDaysRemaining] = useState<number|null>(null);
@@ -63,6 +64,11 @@ function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
 
 
 export default function CfoDashboard() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -100,7 +106,7 @@ export default function CfoDashboard() {
       </p>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        {kpiData.map((kpi, index) => (
+        {isClient ? kpiData.map((kpi, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
@@ -111,7 +117,7 @@ export default function CfoDashboard() {
               <p className="text-xs text-muted-foreground">{kpi.change}</p>
             </CardContent>
           </Card>
-        ))}
+        )) : Array.from({length: 6}).map((_, index) => <Skeleton key={index} className="h-[109px]" />)}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -131,7 +137,7 @@ export default function CfoDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactionData.slice(0, 10).map((transaction, index) => (
+                {isClient ? transactionData.slice(0, 10).map((transaction, index) => (
                   <TableRow key={index}>
                     <TableCell>
                       <div className="font-medium">{transaction.client}</div>
@@ -140,7 +146,7 @@ export default function CfoDashboard() {
                     <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                     <TableCell className="text-right">OMR {transaction.total.toFixed(2)}</TableCell>
                   </TableRow>
-                ))}
+                )) : Array.from({length: 5}).map((_, i) => <TableRow key={i}><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow>)}
               </TableBody>
             </Table>
           </CardContent>
@@ -186,7 +192,7 @@ export default function CfoDashboard() {
                            </TableRow>
                         </TableHeader>
                         <TableBody>
-                           {upcomingPayments.slice(0, 5).map((payment, index) => (
+                           {isClient ? upcomingPayments.slice(0, 5).map((payment, index) => (
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
@@ -194,7 +200,7 @@ export default function CfoDashboard() {
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>
-                           ))}
+                           )) : Array.from({length: 3}).map((_, i) => <TableRow key={i}><TableCell colSpan={2}><Skeleton className="h-10 w-full" /></TableCell></TableRow>)}
                         </TableBody>
                     </Table>
                 </CardContent>

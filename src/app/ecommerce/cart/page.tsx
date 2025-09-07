@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -13,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import { useSettingsData } from '@/app/admin/settings-table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CartPage() {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -47,11 +47,6 @@ export default function CartPage() {
     const shipping = subtotal > 0 ? 5.00 : 0; // Flat shipping rate
     const vatAmount = settings.vat.enabled ? (subtotal + shipping) * settings.vat.rate : 0;
     const total = subtotal + shipping + vatAmount;
-    
-    if (!isClient) {
-        // Render a loading state or null on the server to prevent mismatch
-        return null;
-    }
 
     return (
         <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">
@@ -66,7 +61,12 @@ export default function CartPage() {
                             <CardDescription>Review the items in your cart before proceeding to checkout.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {cartItems.length > 0 ? (
+                            {!isClient ? (
+                                <div className="space-y-4">
+                                    <Skeleton className="h-16 w-full" />
+                                    <Skeleton className="h-16 w-full" />
+                                </div>
+                            ) : cartItems.length > 0 ? (
                                 <div className="grid lg:grid-cols-3 gap-8">
                                     <div className="lg:col-span-2">
                                         <Table>
