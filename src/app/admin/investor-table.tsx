@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent, Wand2 } from "lucide-react";
 import { store } from "@/lib/global-store";
 import { analyzeCrDocument } from "@/ai/flows/cr-analysis";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Hook to connect to the global store
 export const useInvestorsData = () => {
@@ -236,6 +237,11 @@ const AddEditInvestorDialog = ({
 
 export default function InvestorTable({ investors, setInvestors }: { investors: Investor[], setInvestors: (updater: (investors: Investor[]) => void) => void }) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = async (values: InvestorValues, id?: string) => {
         const uploadedDocs: Investor['documents'] = {};
@@ -312,62 +318,68 @@ export default function InvestorTable({ investors, setInvestors }: { investors: 
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {investors.map(inv => (
-                            <TableRow key={inv.id}>
-                                <TableCell>
-                                    <div className="flex items-center gap-3">
-                                        <div className="bg-primary/10 p-2 rounded-full">
-                                            {getTypeIcon(inv.type, inv.subType)}
-                                        </div>
-                                        <div>
-                                            <p className="font-medium">{inv.name}</p>
-                                            <p className="text-sm text-muted-foreground">{inv.subType}</p>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell>{inv.country}</TableCell>
-                                <TableCell>
-                                     <Badge variant="secondary">{inv.focusArea}</Badge>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="font-medium">{inv.investmentValue?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '-'}</div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-1 font-medium">
-                                        {inv.sharePercentage ? `${inv.sharePercentage}%` : '-'}
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex gap-2 flex-wrap">
-                                        {Object.entries(inv.documents).map(([key, doc]) => (
-                                            doc && <a href={doc.dataUri} download={doc.name} key={key}><FileText className="h-5 w-5 text-muted-foreground hover:text-primary" /></a>
-                                        ))}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditInvestorDialog investor={inv} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditInvestorDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this record.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(inv.id)}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
+                        {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={7}>
+                                    <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            investors.map(inv => (
+                                <TableRow key={inv.id}>
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-primary/10 p-2 rounded-full">
+                                                {getTypeIcon(inv.type, inv.subType)}
+                                            </div>
+                                            <div>
+                                                <p className="font-medium">{inv.name}</p>
+                                                <p className="text-sm text-muted-foreground">{inv.subType}</p>
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>{inv.country}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="secondary">{inv.focusArea}</Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="font-medium">{inv.investmentValue?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '-'}</div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center gap-1 font-medium">
+                                            {inv.sharePercentage ? `${inv.sharePercentage}%` : '-'}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex gap-2 flex-wrap">
+                                            {Object.entries(inv.documents).map(([key, doc]) => (
+                                                doc && <a href={doc.dataUri} download={doc.name} key={key}><FileText className="h-5 w-5 text-muted-foreground hover:text-primary" /></a>
+                                            ))}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <AddEditInvestorDialog investor={inv} onSave={handleSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </AddEditInvestorDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this record.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(inv.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
     );
 }
+
