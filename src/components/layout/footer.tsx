@@ -31,6 +31,7 @@ export default function Footer() {
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">
+            <Link href="/platform-statistics" className="text-sm text-muted-foreground hover:text-primary transition-colors">Statistics</Link>
             <Link href="/legal/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link>
             <Link href="/legal/terms-and-conditions" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link>
           </div>
