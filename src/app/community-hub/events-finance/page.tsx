@@ -234,7 +234,7 @@ export default function EventsFinancePage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {finances.map(item => (
+                                    {isClient && finances.map(item => (
                                         <TableRow key={item.id}>
                                             <TableCell className="font-medium">{item.description}</TableCell>
                                             <TableCell><Badge variant="outline">{item.category}</Badge></TableCell>
@@ -243,7 +243,7 @@ export default function EventsFinancePage() {
                                                     {item.type}
                                                 </span>
                                             </TableCell>
-                                            <TableCell>{isClient ? format(new Date(item.date), "PPP") : ''}</TableCell>
+                                            <TableCell>{format(new Date(item.date), "PPP")}</TableCell>
                                             <TableCell className="text-right font-mono">{item.amount.toFixed(2)}</TableCell>
                                              <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
@@ -278,12 +278,12 @@ export default function EventsFinancePage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {events.map(event => (
+                                {isClient && events.map(event => (
                                     <Card key={event.id} className="p-4 flex flex-col sm:flex-row justify-between gap-4">
                                         <div className="flex-grow">
                                             <h3 className="font-semibold text-lg">{event.title}</h3>
                                             <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {isClient ? format(new Date(event.date), "PPP") : ''}</span>
+                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {format(new Date(event.date), "PPP")}</span>
                                                 <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4"/> {event.location}</span>
                                                 <span className="flex items-center gap-1.5"><Users className="h-4 w-4"/> {event.rsvps} attending</span>
                                             </div>
