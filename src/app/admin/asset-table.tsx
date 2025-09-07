@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon, Search } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -321,6 +322,11 @@ export default function AssetTable({
 }) {
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     const handleSave = (values: AssetValues, id?: string) => {
         if (id) {
@@ -398,47 +404,56 @@ export default function AssetTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {filteredAssets.map(asset => (
-                            <TableRow key={asset.id}>
-                                <TableCell>
-                                     <AddEditAssetDialog asset={asset} onSave={handleSave}>
-                                        <div className="p-1 -m-1 rounded-md hover:bg-muted w-fit cursor-pointer">
-                                            <Image src={asset.image} alt={asset.name} width={60} height={45} className="rounded-md object-cover" />
-                                        </div>
-                                    </AddEditAssetDialog>
-                                </TableCell>
-                                <TableCell>
-                                    <AddEditAssetDialog asset={asset} onSave={handleSave}>
-                                        <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">
-                                            <p className="font-medium">{asset.name}</p>
-                                            <p className="text-sm text-muted-foreground truncate max-w-xs">{asset.specs}</p>
-                                        </div>
-                                    </AddEditAssetDialog>
-                                </TableCell>
-                                <TableCell>{asset.type}</TableCell>
-                                <TableCell>OMR {asset.monthlyPrice.toFixed(2)}</TableCell>
-                                <TableCell>{getStatusBadge(asset.status)}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this asset.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(asset.id)}>Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="h-24 text-center">
+                                    <Skeleton className="w-full h-10" />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            filteredAssets.map(asset => (
+                                <TableRow key={asset.id}>
+                                    <TableCell>
+                                         <AddEditAssetDialog asset={asset} onSave={handleSave}>
+                                            <div className="p-1 -m-1 rounded-md hover:bg-muted w-fit cursor-pointer">
+                                                <Image src={asset.image} alt={asset.name} width={60} height={45} className="rounded-md object-cover" />
+                                            </div>
+                                        </AddEditAssetDialog>
+                                    </TableCell>
+                                    <TableCell>
+                                        <AddEditAssetDialog asset={asset} onSave={handleSave}>
+                                            <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">
+                                                <p className="font-medium">{asset.name}</p>
+                                                <p className="text-sm text-muted-foreground truncate max-w-xs">{asset.specs}</p>
+                                            </div>
+                                        </AddEditAssetDialog>
+                                    </TableCell>
+                                    <TableCell>{asset.type}</TableCell>
+                                    <TableCell>OMR {asset.monthlyPrice.toFixed(2)}</TableCell>
+                                    <TableCell>{getStatusBadge(asset.status)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this asset.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => handleDelete(asset.id)}>Delete</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
     );
 }
+
