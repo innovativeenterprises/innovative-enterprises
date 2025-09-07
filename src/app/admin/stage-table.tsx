@@ -120,7 +120,7 @@ export default function StageTable({
             toast({ title: "Stage updated successfully." });
         } else {
             const newStage: ProjectStage = { ...values, id: `stage_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
-            setStages(prev => [newStage, ...prev]);
+            setStages(prev => [...prev, newStage]);
             toast({ title: "Stage added successfully." });
         }
     };
