@@ -4,36 +4,44 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, CheckCircle, FolderKanban, Network, CircleDollarSign, Percent, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { useProductsData, useProvidersData } from "@/hooks/use-global-store-data";
+import { useProductsData, useProvidersData, useOpportunitiesData } from "@/hooks/use-global-store-data";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { initialStaffTeam, initialAgentCategories, initialLeadershipTeam } from "@/lib/agents";
 
 const overviewStats = [
     { title: "Net Revenue", value: "OMR 45,231", icon: CircleDollarSign, href: "/admin/finance" },
     { title: "Subscriptions", value: "+2,350", icon: Users, href: "/admin/finance" },
     { title: "Operational Cost", value: "OMR 9,231", icon: TrendingUp, href: "/admin/finance" },
     { title: "VAT Collected", value: "OMR 2,153", icon: Percent, href: "/admin/finance" },
-    { title: "Total Staff (Human + AI)", value: "26", icon: Users, href: "/admin/people" },
-    { title: "Active Projects", value: "14", icon: FolderKanban, href: "/admin/projects" },
-    { title: "Active Opportunities", value: "5", icon: Zap, href: "/admin/opportunities" },
-    { title: "Provider Network", value: "36", icon: Network, href: "/admin/network" },
 ];
 
 export default function AdminDashboardPage() {
   const { products } = useProductsData();
   const { providers } = useProvidersData();
+  const { opportunities } = useOpportunitiesData();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+  
+  const totalAgents = useMemo(() => initialAgentCategories.reduce((sum, cat) => sum + cat.agents.length, 0), []);
+  const totalStaff = useMemo(() => initialLeadershipTeam.length + initialStaffTeam.length, []);
+  
+  const dynamicStats = [
+    { title: "Total Staff (Human + AI)", value: (totalStaff + totalAgents).toString(), icon: Users, href: "/admin/people" },
+    { title: "Active Projects", value: products.filter(p => p.stage !== 'Live & Operating').length.toString(), icon: FolderKanban, href: "/admin/projects" },
+    { title: "Active Opportunities", value: opportunities.filter(o => o.status === 'Open').length.toString(), icon: Zap, href: "/admin/opportunities" },
+    { title: "Provider Network", value: providers.length.toString(), icon: Network, href: "/admin/network" },
+  ];
 
-  const projectStatusData = products.reduce((acc, product) => {
+  const projectStatusData = useMemo(() => products.reduce((acc, product) => {
     const stage = product.stage || 'Uncategorized';
     const existing = acc.find(item => item.stage === stage);
     if (existing) {
@@ -42,19 +50,19 @@ export default function AdminDashboardPage() {
       acc.push({ stage, count: 1 });
     }
     return acc;
-  }, [] as { stage: string, count: number }[]);
+  }, [] as { stage: string, count: number }[]), [products]);
 
-  const networkGrowthData = [
+  const networkGrowthData = useMemo(() => [
       { month: 'Feb', count: 12 },
       { month: 'Mar', count: 15 },
       { month: 'Apr', count: 20 },
       { month: 'May', count: 22 },
       { month: 'Jun', count: 28 },
-      { month: 'Jul', count: 36 },
-  ];
+      { month: 'Jul', count: providers.length },
+  ], [providers]);
 
   const chartConfig = {
-      count: { label: "Providers" },
+      count: { label: "Count" },
   };
   
   const getAdminStatusBadge = (status?: string) => {
@@ -77,7 +85,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {overviewStats.map((stat, index) => (
+          {[...overviewStats, ...dynamicStats].map((stat, index) => (
               <Link href={stat.href} key={index}>
                 <Card className="hover:bg-muted/50 transition-colors">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -85,7 +93,11 @@ export default function AdminDashboardPage() {
                         <stat.icon className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{stat.value}</div>
+                        {isClient ? (
+                            <div className="text-2xl font-bold">{stat.value}</div>
+                        ) : (
+                            <Skeleton className="h-8 w-20" />
+                        )}
                     </CardContent>
                 </Card>
               </Link>
@@ -99,15 +111,17 @@ export default function AdminDashboardPage() {
             <CardDescription>Number of products in each development stage.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <BarChart data={projectStatusData} accessibilityLayer>
-                    <CartesianGrid vertical={false} />
-                    <XAxis dataKey="stage" tickLine={false} tickMargin={10} axisLine={false} />
-                    <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="count" fill="var(--color-primary)" radius={4} />
-                </BarChart>
-            </ChartContainer>
+            {isClient ? (
+                <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                    <BarChart data={projectStatusData} accessibilityLayer>
+                        <CartesianGrid vertical={false} />
+                        <XAxis dataKey="stage" tickLine={false} tickMargin={10} axisLine={false} />
+                        <YAxis />
+                        <Tooltip content={<ChartTooltipContent />} />
+                        <Bar dataKey="count" fill="var(--color-primary)" radius={4} />
+                    </BarChart>
+                </ChartContainer>
+            ) : <Skeleton className="h-[300px] w-full" />}
           </CardContent>
         </Card>
         <Card>
@@ -116,15 +130,17 @@ export default function AdminDashboardPage() {
             <CardDescription>Growth of the freelancer and partner network over time.</CardDescription>
           </CardHeader>
           <CardContent>
-             <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <LineChart data={networkGrowthData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip content={<ChartTooltipContent indicator="dot" />} />
-                    <Line type="monotone" dataKey="count" stroke="var(--color-primary)" strokeWidth={2} dot={{ r: 4, fill: "var(--color-primary)" }} activeDot={{ r: 8 }} />
-                </LineChart>
-            </ChartContainer>
+             {isClient ? (
+                <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                    <LineChart data={networkGrowthData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip content={<ChartTooltipContent indicator="dot" />} />
+                        <Line type="monotone" dataKey="count" stroke="var(--color-primary)" strokeWidth={2} dot={{ r: 4, fill: "var(--color-primary)" }} activeDot={{ r: 8 }} />
+                    </LineChart>
+                </ChartContainer>
+            ) : <Skeleton className="h-[300px] w-full" />}
           </CardContent>
         </Card>
       </div>

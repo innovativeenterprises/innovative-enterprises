@@ -27,8 +27,6 @@ export default function AgencyDashboardPage() {
     }, [agencies, selectedAgencyId]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
-    const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
-    const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
     
     if (!isClient) {
         return (
@@ -36,8 +34,8 @@ export default function AgencyDashboardPage() {
                 <div className="container mx-auto px-4 py-16">
                     <div className="max-w-7xl mx-auto space-y-8">
                         <div>
-                            <h1 className="text-3xl font-bold">RAAHA Agency Dashboard</h1>
-                            <p className="text-muted-foreground">Manage your candidates and client requests.</p>
+                            <Skeleton className="h-10 w-1/3" />
+                            <Skeleton className="h-5 w-1/2 mt-2" />
                         </div>
                         <Card className="p-4 bg-muted/50">
                              <div className="flex items-center gap-4">
@@ -67,6 +65,9 @@ export default function AgencyDashboardPage() {
             </div>
          );
     }
+    
+    const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
+    const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
     
     return (
          <div className="bg-background min-h-[calc(100vh-8rem)]">
