@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { ArrowLeft, UserCheck, Search, SlidersHorizontal, ArrowUpDown } from 'lu
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Placeholder data - in a real app, this would come from a database.
 const initialApplications = [
@@ -27,6 +28,11 @@ export default function AdmissionsDashboardPage() {
     const [applications, setApplications] = useState(initialApplications);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' }>({ key: 'readinessScore', direction: 'descending' });
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const filteredAndSortedApplications = useMemo(() => {
         let sortableItems = [...applications];
@@ -130,7 +136,7 @@ export default function AdmissionsDashboardPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {filteredAndSortedApplications.map(app => (
+                                    {isClient ? filteredAndSortedApplications.map(app => (
                                         <TableRow key={app.id}>
                                             <TableCell>
                                                 <div className="font-medium">{app.name}</div>
@@ -145,7 +151,15 @@ export default function AdmissionsDashboardPage() {
                                             </TableCell>
                                             <TableCell>{getStatusBadge(app.status)}</TableCell>
                                         </TableRow>
-                                    ))}
+                                    )) : (
+                                        Array.from({ length: 5 }).map((_, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell colSpan={4}>
+                                                    <Skeleton className="h-10 w-full" />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
                                 </TableBody>
                             </Table>
                         </CardContent>

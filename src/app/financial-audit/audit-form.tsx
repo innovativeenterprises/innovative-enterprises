@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -42,7 +42,12 @@ export default function AuditForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<FinancialAnalysisOutput | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+      setIsClient(true);
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -196,7 +201,7 @@ export default function AuditForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                            {auditOffices.map(office => (
+                            {isClient && auditOffices.map(office => (
                                 <SelectItem key={office} value={office}>{office}</SelectItem>
                             ))}
                         </SelectContent>
