@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,15 +8,8 @@ import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState('');
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    // This code runs only on the client, after the component has mounted.
-    setIsClient(true);
-    setCurrentYear(new Date().getFullYear().toString());
-  }, []);
-
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear().toString());
+  
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto py-8 px-4">
@@ -29,7 +23,7 @@ export default function Footer() {
                 <CompanyProfileDownloader />
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {isClient ? currentYear : new Date().getFullYear()} Innovative Enterprises. All rights reserved.
+                © {currentYear} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">
