@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -28,6 +27,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useProvidersData } from "@/hooks/use-global-store-data";
+import { Skeleton } from "../ui/skeleton";
 
 const ProviderSchema = z.object({
   name: z.string().min(3, "Name is required"),
@@ -151,10 +151,7 @@ const AddEditProviderDialog = ({
                                     <FormControl>
                                         <Button
                                         variant={"outline"}
-                                        className={cn(
-                                            "w-[240px] pl-3 text-left font-normal",
-                                            !field.value && "text-muted-foreground"
-                                        )}
+                                        className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                         >
                                         {field.value ? (
                                             format(field.value, "PPP")
@@ -286,7 +283,10 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
 
     useEffect(() => {
         setIsClient(true);
-        if (!expiry) {
+    }, []);
+
+    useEffect(() => {
+        if (!isClient || !expiry) {
             setDaysUntilExpiry(null);
             return;
         }
@@ -294,7 +294,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
         const now = new Date();
         const diffTime = expiryDate.getTime() - now.getTime();
         setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
-    }, [expiry]);
+    }, [expiry, isClient]);
     
 
     if (tier === 'None') {
@@ -304,8 +304,12 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
         return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
     }
     
-    if (!isClient || daysUntilExpiry === null) {
+    if (!isClient) {
         return <Badge variant="secondary">Loading...</Badge>;
+    }
+
+    if (daysUntilExpiry === null) {
+         return <Badge variant="outline">{tier}</Badge>;
     }
     
     const totalDuration = tier === 'Yearly' ? 365 : 30;
@@ -412,7 +416,14 @@ export default function ProviderTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {isClient && providers.map(p => (
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={5} className="h-24">
+                                    <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            providers.map(p => (
                             <TableRow key={p.id} onClick={() => router.push(`/admin/network/${p.id}`)} className="cursor-pointer">
                                 <TableCell className="font-medium">
                                     <p>{p.name}</p>
@@ -443,10 +454,13 @@ export default function ProviderTable({
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )))}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
     );
 }
+
+
+    
