@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { store } from "@/lib/global-store";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const useCostSettingsData = () => {
     const [data, setData] = useState(store.get());
@@ -118,6 +119,11 @@ const AddEditCostDialog = ({
 
 export default function CostSettingsTable({ costSettings, setCostSettings }: { costSettings: CostRate[], setCostSettings: (updater: (items: CostRate[]) => void) => void }) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: CostSettingValues, id?: string) => {
         if (id) {
@@ -166,32 +172,40 @@ export default function CostSettingsTable({ costSettings, setCostSettings }: { c
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {Object.entries(costItemsByCategory).map(([category, items]) => (
-                            items.map(item => (
-                                 <TableRow key={item.id}>
-                                    <TableCell className="font-medium">{item.name}</TableCell>
-                                    <TableCell className="text-muted-foreground">{item.category}</TableCell>
-                                    <TableCell>{item.unit}</TableCell>
-                                    <TableCell className="text-right font-mono">{item.rate.toFixed(2)}</TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <AddEditCostDialog item={item} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditCostDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{item.name}".</AlertDialogDescription></AlertDialogHeader>
-                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(item.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={5}>
+                                    <Skeleton className="h-20 w-full" />
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            Object.entries(costItemsByCategory).map(([category, items]) => (
+                                items.map(item => (
+                                    <TableRow key={item.id}>
+                                        <TableCell className="font-medium">{item.name}</TableCell>
+                                        <TableCell className="text-muted-foreground">{item.category}</TableCell>
+                                        <TableCell>{item.unit}</TableCell>
+                                        <TableCell className="text-right font-mono">{item.rate.toFixed(2)}</TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex justify-end gap-2">
+                                                <AddEditCostDialog item={item} onSave={handleSave}>
+                                                    <Button variant="ghost" size="icon"><Edit /></Button>
+                                                </AddEditCostDialog>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{item.name}".</AlertDialogDescription></AlertDialogHeader>
+                                                        <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(item.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
                             ))
-                        ))}
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
