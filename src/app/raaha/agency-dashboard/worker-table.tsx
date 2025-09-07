@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -22,6 +21,7 @@ import { PlusCircle, Edit, Trash2, Home } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
 import { type Agency } from '@/lib/raaha-agencies';
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Hook to connect to the global store for workers
 export const useWorkersData = () => {
@@ -228,6 +228,11 @@ const AddEditWorkerDialog = ({ worker, onSave, children, agencyId }: { worker?: 
 export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, agencyId: string }) { 
     const { toast } = useToast();
     const { agencies } = useAgenciesData();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const skillsArray = values.skills.map(s => s.value).filter(s => s.trim() !== '');
@@ -271,14 +276,20 @@ export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                         {workers.length === 0 && (
+                         {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={5} className="text-center h-24">
+                                   <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                         ) : workers.length === 0 ? (
                              <TableRow>
                                 <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                                     No candidates for this agency yet.
                                 </TableCell>
                             </TableRow>
-                        )}
-                        {workers.map(worker => (
+                        ) : (
+                            workers.map(worker => (
                             <TableRow key={worker.id}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
@@ -316,7 +327,7 @@ export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )))}
                     </TableBody>
                 </Table>
             </CardContent>
