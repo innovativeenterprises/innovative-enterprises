@@ -320,6 +320,24 @@ export default function SocialMediaForm() {
                     />
                 </div>
 
+                 <FormField
+                    control={form.control}
+                    name="generateImage"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                            <FormControl>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>Generate Image</FormLabel>
+                                <FormDescription>
+                                    Let the AI generate a relevant image for your campaign.
+                                </FormDescription>
+                            </div>
+                        </FormItem>
+                    )}
+                />
+
                 <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                     {isLoading ? (
                     <>
@@ -329,7 +347,7 @@ export default function SocialMediaForm() {
                     ) : (
                     <>
                         <Sparkles className="mr-2 h-4 w-4" />
-                        Generate Campaign
+                        Generate & Schedule Campaign
                     </>
                     )}
                 </Button>
