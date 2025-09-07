@@ -105,11 +105,11 @@ export default function ValuationForm() {
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                <SelectItem value="Villa"><Building className="inline-block mr-2 h-4 w-4"/>Villa</SelectItem>
-                                <SelectItem value="Apartment"><Building className="inline-block mr-2 h-4 w-4"/>Apartment</SelectItem>
-                                <SelectItem value="Townhouse"><Building className="inline-block mr-2 h-4 w-4"/>Townhouse</SelectItem>
-                                <SelectItem value="Land"><MapPin className="inline-block mr-2 h-4 w-4"/>Land</SelectItem>
-                                <SelectItem value="Commercial Space"><Building className="inline-block mr-2 h-4 w-4"/>Commercial Space</SelectItem>
+                                <SelectItem value="Villa"><div className="flex items-center gap-2"><Building className="h-4 w-4"/>Villa</div></SelectItem>
+                                <SelectItem value="Apartment"><div className="flex items-center gap-2"><Building className="h-4 w-4"/>Apartment</div></SelectItem>
+                                <SelectItem value="Townhouse"><div className="flex items-center gap-2"><Building className="h-4 w-4"/>Townhouse</div></SelectItem>
+                                <SelectItem value="Land"><div className="flex items-center gap-2"><MapPin className="h-4 w-4"/>Land</div></SelectItem>
+                                <SelectItem value="Commercial Space"><div className="flex items-center gap-2"><Building className="h-4 w-4"/>Commercial Space</div></SelectItem>
                             </SelectContent>
                             </Select>
                             <FormMessage />
@@ -271,5 +271,3 @@ export default function ValuationForm() {
     </div>
   );
 }
-
-    
