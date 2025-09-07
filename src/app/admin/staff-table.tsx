@@ -3,7 +3,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { store } from "@/lib/global-store";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -246,7 +247,7 @@ const AddEditStaffDialog = ({
                                         <FormItem><FormLabel>Twitter URL</FormLabel><FormControl><Input placeholder="https://twitter.com/..." {...field} /></FormControl><FormMessage /></FormItem>
                                     )} />
                                      <FormField control={form.control} name="socials.github" render={({ field }) => (
-                                        <FormItem><FormLabel>GitHub URL</FormLabel><FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl><FormMessage /></FormItem>
+                                        <FormItem><FormLabel>GitHub URL</FormLabel><FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl><FormMessage /></FormMessage>
                                     )} />
                                 </AccordionContent>
                             </AccordionItem>
@@ -466,10 +467,20 @@ export default function StaffTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {isClient && leadership.map(member => renderStaffRow(member, 'leadership'))}
-                        {isClient && staff.map(member => renderStaffRow(member, 'staff'))}
-                        {isClient && agentCategories.flatMap(category => 
-                            category.agents.map(agent => renderStaffRow(agent, 'agent'))
+                        {isClient ? (
+                            <>
+                                {leadership.map(member => renderStaffRow(member, 'leadership'))}
+                                {staff.map(member => renderStaffRow(member, 'staff'))}
+                                {agentCategories.flatMap(category => 
+                                    category.agents.map(agent => renderStaffRow(agent, 'agent'))
+                                )}
+                            </>
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={5} className="h-24 text-center">
+                                    <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
                         )}
                     </TableBody>
                 </Table>
