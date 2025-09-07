@@ -30,7 +30,7 @@ export default function AgencyDashboardPage() {
     const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
     const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
     
-    if (!isClient || !selectedAgency) {
+    if (!isClient) {
         return (
             <div className="bg-background min-h-[calc(100vh-8rem)]">
                 <div className="container mx-auto px-4 py-16">
@@ -53,6 +53,19 @@ export default function AgencyDashboardPage() {
                 </div>
             </div>
         );
+    }
+    
+    if (!selectedAgency) {
+         return (
+            <div className="bg-background min-h-[calc(100vh-8rem)]">
+                <div className="container mx-auto px-4 py-16">
+                     <div className="max-w-7xl mx-auto space-y-8 text-center">
+                         <h1 className="text-2xl font-bold">No Agencies Found</h1>
+                         <p className="text-muted-foreground">Please configure at least one agency in the system.</p>
+                     </div>
+                </div>
+            </div>
+         );
     }
     
     return (
