@@ -32,7 +32,7 @@ const fileToDataURI = (file: File): Promise<string> => {
 };
 
 export const useAssetsData = () => {
-    const [data, setData = useState(store.get());
+    const [data, setData] = useState(store.get());
 
     useEffect(() => {
         const unsubscribe = store.subscribe(() => {
