@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { ProjectStage } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { store } from "@/lib/global-store";
+import { Skeleton } from "../ui/skeleton";
 
 // This hook now connects to the global store.
 export const useProjectStagesData = () => {
@@ -130,22 +131,6 @@ export default function StageTable({
         toast({ title: "Stage removed.", variant: "destructive" });
     };
     
-    if (!isClient) {
-        return (
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>Project Stage Management</CardTitle>
-                        <CardDescription>Manage the project lifecycle stages for your products.</CardDescription>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                     <div className="h-[200px] w-full bg-muted animate-pulse rounded-md" />
-                </CardContent>
-            </Card>
-        )
-    }
-
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
@@ -167,28 +152,36 @@ export default function StageTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {stages.map(stage => (
-                            <TableRow key={stage.id}>
-                                <TableCell className="font-medium">{stage.name}</TableCell>
-                                <TableCell className="text-muted-foreground">{stage.description}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditStageDialog stage={stage} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditStageDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{stage.name}" stage.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(stage.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
+                        {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={3}>
+                                    <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            stages.map(stage => (
+                                <TableRow key={stage.id}>
+                                    <TableCell className="font-medium">{stage.name}</TableCell>
+                                    <TableCell className="text-muted-foreground">{stage.description}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <AddEditStageDialog stage={stage} onSave={handleSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </AddEditStageDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{stage.name}" stage.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(stage.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
