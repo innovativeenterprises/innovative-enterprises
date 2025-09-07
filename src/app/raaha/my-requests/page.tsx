@@ -11,6 +11,7 @@ import type { HireRequest } from '@/lib/raaha-requests';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function RequestRow({ request }: { request: HireRequest }) {
     const [requestDateText, setRequestDateText] = useState("...");
@@ -46,7 +47,7 @@ function RequestRow({ request }: { request: HireRequest }) {
             <TableCell>
                 <p className="font-medium">{request.workerName}</p>
                 <p className="text-sm text-muted-foreground">
-                    Requested: {requestDateText}
+                    Requested: {isClient ? requestDateText : '...'}
                 </p>
             </TableCell>
             <TableCell>
@@ -129,16 +130,20 @@ export default function MyRequestsPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {isClient && myRequests.length > 0 ? (
+                                    {!isClient ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="h-24 text-center"><Skeleton className="h-10 w-full" /></TableCell>
+                                        </TableRow>
+                                    ) : myRequests.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                                                You haven't made any hire requests yet.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
                                         myRequests.map(req => (
                                            <RequestRow key={req.id} request={req} />
                                         ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
-                                                {isClient ? "You haven't made any hire requests yet." : "Loading requests..."}
-                                            </TableCell>
-                                        </TableRow>
                                     )}
                                 </TableBody>
                             </Table>

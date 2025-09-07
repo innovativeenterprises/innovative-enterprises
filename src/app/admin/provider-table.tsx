@@ -461,8 +461,3 @@ export default function ProviderTable({
         </Card>
     );
 }
-
-
-    
-
-    
