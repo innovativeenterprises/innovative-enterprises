@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -17,13 +18,18 @@ function DueDateDisplay({ dueDate }: { dueDate: string }) {
 
   useEffect(() => {
     setIsClient(true);
-    const due = new Date(dueDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diffTime = due.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    setDaysRemaining(diffDays);
-  }, [dueDate]);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+        const due = new Date(dueDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffTime = due.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        setDaysRemaining(diffDays);
+    }
+  }, [dueDate, isClient]);
 
   return (
     <div className="text-sm text-muted-foreground">
@@ -43,13 +49,18 @@ function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
 
   useEffect(() => {
     setIsClient(true);
-    const due = new Date(dueDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diffTime = due.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    setDaysRemaining(diffDays);
-  }, [dueDate]);
+  }, []);
+  
+  useEffect(() => {
+    if (isClient) {
+        const due = new Date(dueDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffTime = due.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        setDaysRemaining(diffDays);
+    }
+  }, [dueDate, isClient]);
 
   if (!isClient) return null;
 
@@ -210,3 +221,4 @@ export default function CfoDashboard() {
     </div>
   );
 }
+
