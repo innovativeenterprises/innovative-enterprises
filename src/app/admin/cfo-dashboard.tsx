@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight, ArrowDownRight, CircleDollarSign, Users, TrendingUp, Briefcase, Percent, ShieldAlert, FolderKanban, Network } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { Skeleton } from '@/components/ui/skeleton';
 
 const kpiData = [
     { title: "Net Revenue", value: "OMR 45,231.89", change: "+20.1% from last month", icon: CircleDollarSign, href: "/admin/finance" },
@@ -118,8 +119,10 @@ function DueDateDisplay({ dueDate }: { dueDate: string }) {
 
 function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
   const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const due = new Date(dueDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -128,17 +131,24 @@ function VatDueDateDisplay({ dueDate }: { dueDate: string }) {
     setDaysRemaining(diffDays);
   }, [dueDate]);
 
-  if (daysRemaining === null) return null;
+  if (!isClient) return null;
 
   return (
     <div className="text-sm font-medium text-destructive mt-2">
-      {daysRemaining >= 0 ? `(${daysRemaining} days remaining)` : '(Overdue)'}
+      {daysRemaining !== null && (
+        daysRemaining >= 0 ? `(${daysRemaining} days remaining)` : '(Overdue)'
+      )}
     </div>
   );
 }
 
 
 export default function CfoDashboard() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -163,7 +173,7 @@ export default function CfoDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        {kpiData.map((kpi, index) => (
+        {isClient ? kpiData.map((kpi, index) => (
           <Link href={kpi.href} key={index}>
             <Card className="hover:bg-muted/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -176,7 +186,7 @@ export default function CfoDashboard() {
               </CardContent>
             </Card>
           </Link>
-        ))}
+        )) : Array.from({length: 6}).map((_, index) => <Skeleton key={index} className="h-[109px] w-full" />)}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -196,7 +206,7 @@ export default function CfoDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactionData.slice(0, 10).map((transaction, index) => (
+                {isClient ? transactionData.slice(0, 10).map((transaction, index) => (
                   <TableRow key={index}>
                     <TableCell>
                       <div className="font-medium">{transaction.client}</div>
@@ -205,7 +215,11 @@ export default function CfoDashboard() {
                     <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                     <TableCell className="text-right">OMR {transaction.total.toFixed(2)}</TableCell>
                   </TableRow>
-                ))}
+                )) : (
+                  <TableRow>
+                    <TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -251,7 +265,7 @@ export default function CfoDashboard() {
                            </TableRow>
                         </TableHeader>
                         <TableBody>
-                           {upcomingPayments.slice(0, 5).map((payment, index) => (
+                           {isClient ? upcomingPayments.slice(0, 5).map((payment, index) => (
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
@@ -259,7 +273,11 @@ export default function CfoDashboard() {
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>
-                           ))}
+                           )) : (
+                             <TableRow>
+                               <TableCell colSpan={2}><Skeleton className="h-10 w-full" /></TableCell>
+                             </TableRow>
+                           )}
                         </TableBody>
                     </Table>
                 </CardContent>
