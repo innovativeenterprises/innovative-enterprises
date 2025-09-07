@@ -120,6 +120,79 @@ const ScheduleInterviewDialog = ({ request, onSchedule }: { request: HireRequest
     )
 }
 
+function RequestRow({ request, onStatusChange, onSchedule }: { request: HireRequest, onStatusChange: (id: string, status: HireRequest['status']) => void, onSchedule: (id: string, values: InterviewValues) => void }) {
+    const [requestDateText, setRequestDateText] = useState("...");
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
+    }, [request.requestDate]);
+
+     const getStatusBadge = (status: HireRequest['status']) => {
+        switch (status) {
+            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
+            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
+            case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
+            case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
+            case 'Closed': return <Badge variant="destructive" className="bg-red-500/20 text-red-700 hover:bg-red-500/30">Closed</Badge>;
+            default: return <Badge variant="outline">{status}</Badge>;
+        }
+    }
+
+    return (
+        <TableRow>
+            <TableCell>
+                <p className="font-medium">{request.workerName}</p>
+                {isClient && (
+                    <p className="text-sm text-muted-foreground">
+                        Requested: {requestDateText}
+                    </p>
+                )}
+            </TableCell>
+            <TableCell>
+                <div>{request.clientName}</div>
+                <div className="text-sm text-muted-foreground">{request.clientContact}</div>
+            </TableCell>
+            <TableCell>
+                    <Select onValueChange={(value: HireRequest['status']) => onStatusChange(request.id, value)} defaultValue={request.status}>
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue>
+                            <div className="flex items-center gap-2">
+                                {getStatusBadge(request.status)}
+                            </div>
+                        </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Contacted">Contacted</SelectItem>
+                        <SelectItem value="Interviewing">Interviewing</SelectItem>
+                        <SelectItem value="Hired">Hired</SelectItem>
+                        <SelectItem value="Closed">Closed</SelectItem>
+                    </SelectContent>
+                </Select>
+                    {request.interviewDate && isClient && (
+                    <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                        <div className="flex items-center gap-1.5">
+                            <Clock className="h-3 w-3" />
+                            <span>{format(new Date(request.interviewDate), "PPP 'at' p")}</span>
+                        </div>
+                        {request.interviewNotes && (
+                            <div className="flex items-center gap-1.5">
+                                <MessageSquare className="h-3 w-3" />
+                                <span className="truncate">{request.interviewNotes}</span>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </TableCell>
+            <TableCell>
+                <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />
+            </TableCell>
+        </TableRow>
+    )
+}
+
 export const useRequestsData = () => {
     const [data, setData] = useState(store.get());
 
@@ -166,17 +239,6 @@ export function RequestTable({ requests, setRequests }: { requests: HireRequest[
         ));
         toast({ title: 'Interview Scheduled!', description: 'The client will be notified.' });
     };
-
-    const getStatusBadge = (status: HireRequest['status']) => {
-        switch (status) {
-            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
-            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
-            case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
-            case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
-            case 'Closed': return <Badge variant="destructive" className="bg-red-500/20 text-red-700 hover:bg-red-500/30">Closed</Badge>;
-            default: return <Badge variant="outline">{status}</Badge>;
-        }
-    }
     
     return (
         <Card>
@@ -203,55 +265,12 @@ export function RequestTable({ requests, setRequests }: { requests: HireRequest[
                             </TableRow>
                         )}
                         {requests.map(req => (
-                            <TableRow key={req.id}>
-                                <TableCell>
-                                    <p className="font-medium">{req.workerName}</p>
-                                    {isClient && (
-                                    <p className="text-sm text-muted-foreground">
-                                        Requested: {formatDistanceToNow(new Date(req.requestDate), { addSuffix: true })}
-                                    </p>
-                                    )}
-                                </TableCell>
-                                <TableCell>
-                                    <div>{req.clientName}</div>
-                                    <div className="text-sm text-muted-foreground">{req.clientContact}</div>
-                                </TableCell>
-                                <TableCell>
-                                     <Select onValueChange={(value: HireRequest['status']) => handleStatusChange(req.id, value)} defaultValue={req.status}>
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue>
-                                                <div className="flex items-center gap-2">
-                                                    {getStatusBadge(req.status)}
-                                                </div>
-                                            </SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Pending">Pending</SelectItem>
-                                            <SelectItem value="Contacted">Contacted</SelectItem>
-                                            <SelectItem value="Interviewing">Interviewing</SelectItem>
-                                            <SelectItem value="Hired">Hired</SelectItem>
-                                            <SelectItem value="Closed">Closed</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                     {req.interviewDate && isClient && (
-                                        <div className="text-xs text-muted-foreground mt-2 space-y-1">
-                                           <div className="flex items-center gap-1.5">
-                                             <Clock className="h-3 w-3" />
-                                             <span>{format(new Date(req.interviewDate), "PPP 'at' p")}</span>
-                                           </div>
-                                            {req.interviewNotes && (
-                                                <div className="flex items-center gap-1.5">
-                                                   <MessageSquare className="h-3 w-3" />
-                                                   <span className="truncate">{req.interviewNotes}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </TableCell>
-                                <TableCell>
-                                    <ScheduleInterviewDialog request={req} onSchedule={handleScheduleInterview} />
-                                </TableCell>
-                            </TableRow>
+                           <RequestRow
+                             key={req.id}
+                             request={req}
+                             onStatusChange={handleStatusChange}
+                             onSchedule={handleScheduleInterview}
+                           />
                         ))}
                     </TableBody>
                 </Table>
