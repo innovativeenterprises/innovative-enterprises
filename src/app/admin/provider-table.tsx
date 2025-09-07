@@ -282,8 +282,10 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
     const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         if (!expiry) {
             setDaysUntilExpiry(null);
             return;
@@ -302,7 +304,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
         return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
     }
     
-    if (daysUntilExpiry === null) {
+    if (!isClient || daysUntilExpiry === null) {
         return <Badge variant="secondary">Loading...</Badge>;
     }
     
