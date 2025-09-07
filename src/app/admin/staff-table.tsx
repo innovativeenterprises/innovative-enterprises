@@ -433,10 +433,7 @@ export default function StaffTable({
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {member.name}.</AlertDialogDescription></AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(member.name, type)}>Delete</AlertDialogAction>
-                            </AlertDialogFooter>
+                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(member.name, type)}>Delete</AlertDialogAction></AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>
@@ -467,7 +464,13 @@ export default function StaffTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {isClient ? (
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={5} className="h-24 text-center">
+                                    <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                        ) : (
                             <>
                                 {leadership.map(member => renderStaffRow(member, 'leadership'))}
                                 {staff.map(member => renderStaffRow(member, 'staff'))}
@@ -475,12 +478,6 @@ export default function StaffTable({
                                     category.agents.map(agent => renderStaffRow(agent, 'agent'))
                                 )}
                             </>
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={5} className="h-24 text-center">
-                                    <Skeleton className="h-10 w-full" />
-                                </TableCell>
-                            </TableRow>
                         )}
                     </TableBody>
                 </Table>
