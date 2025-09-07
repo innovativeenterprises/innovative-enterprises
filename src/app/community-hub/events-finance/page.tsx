@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { AddEditTransactionDialog, type TransactionValues } from './transaction-form';
 import { store } from "@/lib/global-store";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const useCommunityHubData = () => {
     const [data, setData] = useState(store.get());

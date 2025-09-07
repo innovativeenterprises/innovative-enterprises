@@ -19,12 +19,16 @@ function RequestRow({ request }: { request: HireRequest }) {
 
     useEffect(() => {
         setIsClient(true);
-        // Date formatting moved inside useEffect to run only on client
-        setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
-        if (request.interviewDate) {
-            setInterviewDateText(format(new Date(request.interviewDate), "PPP 'at' p"));
+    }, []);
+    
+    useEffect(() => {
+        if (isClient) {
+             setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
+            if (request.interviewDate) {
+                setInterviewDateText(format(new Date(request.interviewDate), "PPP 'at' p"));
+            }
         }
-    }, [request]);
+    }, [request.requestDate, request.interviewDate, isClient]);
 
     const getStatusBadge = (status: HireRequest['status']) => {
         switch (status) {
@@ -42,7 +46,7 @@ function RequestRow({ request }: { request: HireRequest }) {
             <TableCell>
                 <p className="font-medium">{request.workerName}</p>
                 <p className="text-sm text-muted-foreground">
-                    Requested: {isClient ? requestDateText : '...'}
+                    Requested: {requestDateText}
                 </p>
             </TableCell>
             <TableCell>
