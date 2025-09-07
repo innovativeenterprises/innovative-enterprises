@@ -22,6 +22,7 @@ import { store } from "@/lib/global-store";
 import Link from 'next/link';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 // Hook to connect to the global store for members
@@ -356,7 +357,7 @@ export default function MembershipPage() {
             memberToSave = { 
                 ...restOfValues, 
                 id: baseId,
-                familyId: values.familyId || (values.householdRole === 'Head' ? `fam_${baseId}` : undefined)
+                familyId: values.householdRole === 'Head' ? `fam_${baseId}` : undefined
             };
             setMembers(prev => [memberToSave, ...prev]);
             toast({ title: "Member added." });
@@ -405,14 +406,18 @@ export default function MembershipPage() {
                     <CardDescription>View, add, or edit members of your community.</CardDescription>
                 </div>
                 <AddEditMemberDialog onSave={handleSave} members={members} setMembers={setMembers}>
-                    <Button><PlusCircle /> Add Member</Button>
+                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Member</Button>
                 </AddEditMemberDialog>
             </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Household Role</TableHead><TableHead>Position / Employer</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {isClient ? (
+                        {!isClient ? (
+                           <TableRow>
+                             <TableCell colSpan={5} className="text-center h-24"><Skeleton className="h-10 w-full"/></TableCell>
+                           </TableRow>
+                        ) : (
                             members.map(member => (
                                 <TableRow key={member.id} className={member.householdRole === 'Member' ? 'bg-muted/50' : ''}>
                                     <TableCell>
@@ -449,10 +454,6 @@ export default function MembershipPage() {
                                     </TableCell>
                                 </TableRow>
                             ))
-                        ) : (
-                           <TableRow>
-                             <TableCell colSpan={5} className="text-center h-24">Loading members...</TableCell>
-                           </TableRow>
                         )}
                     </TableBody>
                 </Table>

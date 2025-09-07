@@ -87,12 +87,12 @@ const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleT
 export default function ProductTable({ products, setProducts }: { products: Product[], setProducts: (updater: (products: Product[]) => void) => void }) {
     const { toast } = useToast();
     const { stages } = useProjectStagesData();
-    const [isMounted, setIsMounted] = useState(false);
+    const [isClient, setIsClient] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
 
     useEffect(() => {
-        setIsMounted(true);
+        setIsClient(true);
     }, []);
     
     const sensors = useSensors(
@@ -180,7 +180,13 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                             {isMounted ? (
+                             {!isClient ? (
+                                <TableRow>
+                                    <TableCell colSpan={6} className="h-24 text-center">
+                                        <Skeleton className="w-full h-20" />
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
                                 <SortableContext items={products.map(p => p.id)} strategy={verticalListSortingStrategy}>
                                     {products.map(p => (
                                         <SortableProductRow
@@ -194,12 +200,6 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                         />
                                     ))}
                                 </SortableContext>
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={6} className="h-24 text-center">
-                                        <Skeleton className="w-full h-20" />
-                                    </TableCell>
-                                </TableRow>
                             )}
                         </TableBody>
                     </Table>
@@ -208,3 +208,4 @@ export default function ProductTable({ products, setProducts }: { products: Prod
         </Card>
     );
 }
+
