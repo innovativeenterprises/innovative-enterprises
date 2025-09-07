@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowLeft, Users, Search, Mail, Phone, Home, User } from "lucide-react";
@@ -11,6 +11,7 @@ import type { CommunityMember } from "@/lib/community-members";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const FamilyCard = ({ familyHead, members }: { familyHead: CommunityMember, members: CommunityMember[] }) => {
     return (
@@ -42,9 +43,34 @@ const FamilyCard = ({ familyHead, members }: { familyHead: CommunityMember, memb
     )
 }
 
+const FamilyGridSkeleton = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {Array.from({ length: 4 }).map((_, index) => (
+            <Card key={index}>
+                <CardHeader className="flex flex-row items-start gap-4 bg-muted/50">
+                    <Skeleton className="h-16 w-16 rounded-full" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-6 w-48" />
+                        <Skeleton className="h-4 w-32" />
+                    </div>
+                </CardHeader>
+                <CardContent className="p-4 space-y-3">
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                </CardContent>
+            </Card>
+        ))}
+    </div>
+);
+
 export default function MemberDirectoryPage() {
     const { members } = useMembersData();
     const [searchTerm, setSearchTerm] = useState('');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     const families = useMemo(() => {
         const familyMap: Record<string, { head: CommunityMember, members: CommunityMember[] }> = {};
@@ -110,11 +136,15 @@ export default function MemberDirectoryPage() {
                 />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {families.map(({ head, members }) => (
-                    <FamilyCard key={head.familyId} familyHead={head} members={members} />
-                ))}
-            </div>
+            {isClient ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {families.map(({ head, members }) => (
+                        <FamilyCard key={head.familyId} familyHead={head} members={members} />
+                    ))}
+                </div>
+            ) : (
+                <FamilyGridSkeleton />
+            )}
 
         </div>
       </div>
