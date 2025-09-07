@@ -1,32 +1,28 @@
 
-
 'use client';
 
-import type {Metadata} from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
-import { Toaster } from "@/components/ui/toaster"
+import { cn } from '@/lib/utils';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { Inter as FontSans } from 'next/font/google';
-import { cn } from '@/lib/utils';
-import React, { useState, useEffect } from 'react';
+import { Toaster } from '@/components/ui/toaster';
+import { useState, useEffect } from 'react';
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
+const fontSans = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
 
-// Metadata is still supported in client components
-export const metadata: Metadata = {
-  title: 'INNOVATIVE ENTERPRISES',
-  description: 'Leading Omani SME in emerging technology and digital transformation.',
-};
+// Note: Metadata export is not supported in client components, but can be handled
+// in a parent server component layout or page if needed.
+// For this fix, we focus on resolving the hydration error.
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -34,20 +30,21 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+    <html lang="en">
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          fontSans.variable
+        )}
+      >
         {isClient ? (
           <>
             <Header />
-            <main>{children}</main>
+            {children}
             <Footer />
             <Toaster />
           </>
-        ) : (
-          <div className="flex items-center justify-center h-screen">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          </div>
-        )}
+        ) : null}
       </body>
     </html>
   );
