@@ -130,8 +130,8 @@ export default function WorkerProfilePage() {
     return (
         <div className="bg-muted/20 min-h-screen">
             <div className="container mx-auto px-4 py-16">
-                <div className="max-w-4xl mx-auto">
-                    <div className="mb-8">
+                <div className="max-w-4xl mx-auto space-y-8">
+                    <div>
                         <Button asChild variant="outline">
                             <Link href="/raaha/find-a-helper">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
