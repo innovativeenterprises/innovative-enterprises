@@ -33,8 +33,10 @@ export default function ProviderDetailPage() {
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
         const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
+        const [isClient, setIsClient] = useState(false);
 
         useEffect(() => {
+            setIsClient(true);
             if (!expiry) {
                 setDaysUntilExpiry(null);
                 return;
@@ -57,7 +59,7 @@ export default function ProviderDetailPage() {
             )
         }
 
-        if (daysUntilExpiry === null) {
+        if (!isClient || daysUntilExpiry === null) {
             return <Badge variant="secondary">Loading...</Badge>;
         }
         
