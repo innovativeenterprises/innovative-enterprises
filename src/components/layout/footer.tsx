@@ -8,9 +8,11 @@ import Image from 'next/image';
 
 export default function Footer() {
   const [currentYear, setCurrentYear] = useState('');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     // This code runs only on the client, after the component has mounted.
+    setIsClient(true);
     setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
@@ -27,7 +29,7 @@ export default function Footer() {
                 <CompanyProfileDownloader />
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {currentYear || new Date().getFullYear()} Innovative Enterprises. All rights reserved.
+                © {isClient ? currentYear : new Date().getFullYear()} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">
