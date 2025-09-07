@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -12,9 +13,10 @@ import { DndContext, closestCenter, type DragEndEvent, useSensors, useSensor, Po
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from "@/components/ui/button";
-import { GripVertical } from 'lucide-react';
+import { GripVertical } from "lucide-react";
 import { store } from "@/lib/global-store";
 import { useServicesData } from "@/hooks/use-global-store-data";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const SortableServiceRow = ({ service, handleToggle }: { service: Service, handleToggle: (title: string) => void }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: service.title });
@@ -51,10 +53,10 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
 
 export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (updater: (services: Service[]) => void) => void }) {
     const { toast } = useToast();
-    const [isMounted, setIsMounted] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsMounted(true);
+        setIsClient(true);
     }, []);
     
     const sensors = useSensors(
@@ -86,20 +88,6 @@ export default function ServiceTable({ services, setServices }: { services: Serv
         }
     };
     
-    if (!isMounted) {
-        return (
-             <Card>
-                <CardHeader>
-                    <CardTitle>Service Management</CardTitle>
-                    <CardDescription>Enable or disable public-facing services from the homepage.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="h-[200px] w-full bg-muted animate-pulse rounded-md" />
-                </CardContent>
-             </Card>
-        )
-    }
-
     return (
         <Card>
             <CardHeader>
@@ -117,17 +105,25 @@ export default function ServiceTable({ services, setServices }: { services: Serv
                                 <TableHead className="text-center">Status</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
-                            <TableBody>
-                                {services.map(service => (
-                                    <SortableServiceRow
-                                        key={service.title}
-                                        service={service}
-                                        handleToggle={handleToggle}
-                                    />
-                                ))}
-                            </TableBody>
-                        </SortableContext>
+                        <TableBody>
+                            {!isClient ? (
+                                <TableRow>
+                                    <TableCell colSpan={4}>
+                                        <Skeleton className="h-20 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
+                                    {services.map(service => (
+                                        <SortableServiceRow
+                                            key={service.title}
+                                            service={service}
+                                            handleToggle={handleToggle}
+                                        />
+                                    ))}
+                                </SortableContext>
+                            )}
+                        </TableBody>
                     </Table>
                 </DndContext>
             </CardContent>

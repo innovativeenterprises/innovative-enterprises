@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -241,8 +242,8 @@ export default function OpportunityTable({
                                     <TableCell>{opp.type}</TableCell>
                                     <TableCell>{opp.deadline}</TableCell>
                                     <TableCell>{getStatusBadge(opp.status)}</TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                                        <div className="flex justify-end gap-2">
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
