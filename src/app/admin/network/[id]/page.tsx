@@ -10,17 +10,47 @@ import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
 import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProviderDetailPage() {
     const params = useParams();
     const { id } = params;
     const { providers } = useProvidersData();
+    const [provider, setProvider] = useState<typeof providers[0] | null | undefined>(null);
+    const [isClient, setIsClient] = useState(false);
 
-    const provider = providers.find(p => p.id === id);
+    useEffect(() => {
+        setIsClient(true);
+        setProvider(providers.find(p => p.id === id));
+    }, [providers, id]);
 
-    if (!provider) {
+    if (!isClient) {
+        return (
+            <div className="space-y-8">
+                <div>
+                    <Skeleton className="h-10 w-40" />
+                </div>
+                <Card>
+                    <CardHeader>
+                        <Skeleton className="h-8 w-1/2" />
+                        <Skeleton className="h-5 w-1/3" />
+                    </CardHeader>
+                    <CardContent>
+                         <Skeleton className="h-12 w-full" />
+                    </CardContent>
+                </Card>
+            </div>
+        )
+    }
+
+    if (provider === undefined) {
         return notFound();
     }
+    
+    if (provider === null) {
+        return <div>Loading provider...</div>;
+    }
+
 
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -33,10 +63,10 @@ export default function ProviderDetailPage() {
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
         const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
-        const [isClient, setIsClient] = useState(false);
+        const [isSubClient, setIsSubClient] = useState(false);
 
         useEffect(() => {
-            setIsClient(true);
+            setIsSubClient(true);
             if (!expiry) {
                 setDaysUntilExpiry(null);
                 return;
@@ -59,7 +89,7 @@ export default function ProviderDetailPage() {
             )
         }
 
-        if (!isClient || daysUntilExpiry === null) {
+        if (!isSubClient || daysUntilExpiry === null) {
             return <Badge variant="secondary">Loading...</Badge>;
         }
         

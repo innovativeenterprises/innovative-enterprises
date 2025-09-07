@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,6 +22,7 @@ import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type 
 import { SortableContext, useSortable, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
@@ -103,6 +104,11 @@ export default function ProjectsPage() {
     const { products, setProducts } = useProductsData();
     const { stages } = useProjectStagesData();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
 
     const form = useForm<FormValues>({
         resolver: zodResolver(FormSchema),
@@ -117,8 +123,6 @@ export default function ProjectsPage() {
         products.forEach(product => {
             const stageName = product.stage || 'Idea Phase';
             if (!grouped[stageName]) {
-                // This handles cases where a product has a stage that's been deleted.
-                // It will create a temporary column for it.
                 grouped[stageName] = [];
             }
             grouped[stageName].push(product);
@@ -275,14 +279,28 @@ export default function ProjectsPage() {
                     <div className="overflow-x-auto pb-4">
                          <div className="flex gap-6">
                             <SortableContext items={stages.map(s => s.name)} strategy={horizontalListSortingStrategy}>
-                                {stages.map(stage => (
-                                    <StageColumn
-                                        key={stage.id}
-                                        stage={stage}
-                                        products={productsByStage[stage.name] || []}
-                                        onEditProduct={handleEditProduct}
-                                    />
-                                ))}
+                                {!isClient ? (
+                                    Array.from({ length: 5 }).map((_, i) => (
+                                        <div key={i} className="flex-shrink-0 w-[300px]">
+                                            <Card className="bg-muted/50 h-full">
+                                                <CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader>
+                                                <CardContent className="space-y-4">
+                                                    <Skeleton className="h-16 w-full" />
+                                                    <Skeleton className="h-16 w-full" />
+                                                </CardContent>
+                                            </Card>
+                                        </div>
+                                    ))
+                                ) : (
+                                    stages.map(stage => (
+                                        <StageColumn
+                                            key={stage.id}
+                                            stage={stage}
+                                            products={productsByStage[stage.name] || []}
+                                            onEditProduct={handleEditProduct}
+                                        />
+                                    ))
+                                )}
                             </SortableContext>
                         </div>
                     </div>
