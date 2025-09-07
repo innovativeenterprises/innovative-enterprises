@@ -333,6 +333,11 @@ export default function ProviderTable({
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);
@@ -405,7 +410,7 @@ export default function ProviderTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {providers.map(p => (
+                        {isClient && providers.map(p => (
                             <TableRow key={p.id} onClick={() => router.push(`/admin/network/${p.id}`)} className="cursor-pointer">
                                 <TableCell className="font-medium">
                                     <p>{p.name}</p>

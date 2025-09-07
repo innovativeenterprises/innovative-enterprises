@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -313,6 +314,11 @@ export default function StaffTable({
     setAgentCategories: (updater: (ac: AgentCategory[]) => void) => void
 }) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleToggle = (name: string, type: 'leadership' | 'staff' | 'agent') => {
         if (type === 'leadership') {
@@ -460,9 +466,9 @@ export default function StaffTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {leadership.map(member => renderStaffRow(member, 'leadership'))}
-                        {staff.map(member => renderStaffRow(member, 'staff'))}
-                        {agentCategories.flatMap(category => 
+                        {isClient && leadership.map(member => renderStaffRow(member, 'leadership'))}
+                        {isClient && staff.map(member => renderStaffRow(member, 'staff'))}
+                        {isClient && agentCategories.flatMap(category => 
                             category.agents.map(agent => renderStaffRow(agent, 'agent'))
                         )}
                     </TableBody>
