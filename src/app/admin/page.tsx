@@ -10,6 +10,8 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const overviewStats = [
     { title: "Net Revenue", value: "OMR 45,231", icon: CircleDollarSign, href: "/admin/finance" },
@@ -25,6 +27,11 @@ const overviewStats = [
 export default function AdminDashboardPage() {
   const { products } = useProductsData();
   const { providers } = useProvidersData();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const projectStatusData = products.reduce((acc, product) => {
     const stage = product.stage || 'Uncategorized';
@@ -138,22 +145,30 @@ export default function AdminDashboardPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {products.slice(0, 10).map((product) => (
-                            <TableRow key={product.id}>
-                                <TableCell className="font-medium">{product.name}</TableCell>
-                                <TableCell>
-                                    <Badge variant="outline">{product.stage}</Badge>
-                                </TableCell>
-                                <TableCell>
-                                     <Badge variant={product.enabled ? "default" : "secondary"}>
-                                        {product.enabled ? "Enabled" : "Disabled"}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>
-                                    {getAdminStatusBadge(product.adminStatus)}
+                        {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={4}>
+                                    <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            products.slice(0, 10).map((product) => (
+                                <TableRow key={product.id}>
+                                    <TableCell className="font-medium">{product.name}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline">{product.stage}</Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant={product.enabled ? "default" : "secondary"}>
+                                            {product.enabled ? "Enabled" : "Disabled"}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        {getAdminStatusBadge(product.adminStatus)}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
