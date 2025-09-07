@@ -46,7 +46,7 @@ export default function PropertyDetailPage() {
                                     <Image src={property.imageUrl} alt={property.title} fill className="object-cover rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none" />
                                 </div>
                                 <div className="p-8 flex flex-col">
-                                    <CardHeader className="p-0">
+                                    <CardHeader className="p-0 space-y-2">
                                         <CardTitle className="text-3xl font-bold">{property.title}</CardTitle>
                                         <CardDescription className="text-lg flex items-center gap-2 pt-1 text-muted-foreground">
                                             <MapPin className="h-5 w-5" /> {property.location}
