@@ -32,7 +32,7 @@ const fileToDataURI = (file: File): Promise<string> => {
 };
 
 export const useAssetsData = () => {
-    const [data, setData] = useState(store.get());
+    const [data, setData = useState(store.get());
 
     useEffect(() => {
         const unsubscribe = store.subscribe(() => {
@@ -406,8 +406,8 @@ export default function AssetTable({
                     <TableBody>
                         {!isClient ? (
                             <TableRow>
-                                <TableCell colSpan={6} className="h-24 text-center">
-                                    <Skeleton className="w-full h-10" />
+                                <TableCell colSpan={6}>
+                                    <Skeleton className="w-full h-20" />
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -457,3 +457,4 @@ export default function AssetTable({
     );
 }
 
+    
