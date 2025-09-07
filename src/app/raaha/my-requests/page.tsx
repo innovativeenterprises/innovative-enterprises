@@ -15,8 +15,10 @@ import Link from 'next/link';
 function RequestRow({ request }: { request: HireRequest }) {
     const [requestDateText, setRequestDateText] = useState("...");
     const [interviewDateText, setInterviewDateText] = useState("");
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
         if (request.interviewDate) {
             setInterviewDateText(format(new Date(request.interviewDate), "PPP 'at' p"));
@@ -39,7 +41,7 @@ function RequestRow({ request }: { request: HireRequest }) {
             <TableCell>
                 <p className="font-medium">{request.workerName}</p>
                 <p className="text-sm text-muted-foreground">
-                    Requested: {requestDateText}
+                    Requested: {isClient ? requestDateText : '...'}
                 </p>
             </TableCell>
             <TableCell>
@@ -51,7 +53,7 @@ function RequestRow({ request }: { request: HireRequest }) {
                     <div className="text-xs text-muted-foreground space-y-1">
                     <div className="flex items-center gap-1.5 font-semibold">
                         <CalendarIcon className="h-3 w-3 text-primary" />
-                        <span>Interview: {interviewDateText}</span>
+                        <span>Interview: {isClient ? interviewDateText : '...'}</span>
                     </div>
                         {request.interviewNotes && (
                             <div className="flex items-center gap-1.5">

@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useOpportunitiesData } from "@/app/admin/opportunity-table";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { initialOpportunities, opportunityIconMap, type Opportunity } from "@/lib/opportunities";
+import { opportunityIconMap, type Opportunity } from "@/lib/opportunities";
 import { notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake, MessageSquare } from "lucide-react";
@@ -81,19 +81,16 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
     const { opportunities } = useOpportunitiesData();
     const [opportunity, setOpportunity] = useState<Opportunity | undefined | null>(null);
+    const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
-      // Set a brief timeout to ensure client-side state is updated after initial render.
-      // This helps prevent hydration mismatches with data coming from localStorage.
-      const timer = setTimeout(() => {
+        setIsClient(true);
         const found = opportunities.find(opp => opp.id === params.id);
         setOpportunity(found);
-      }, 1); 
-      return () => clearTimeout(timer);
     }, [opportunities, params.id]);
 
 
-    if (opportunity === null) {
+    if (!isClient || opportunity === null) {
         // Loading state to prevent flash of incorrect content
         return (
              <div className="bg-background min-h-[calc(100vh-8rem)]">

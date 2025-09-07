@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWorkersData, WorkerTable } from './worker-table';
 import { useRequestsData, RequestTable } from './request-table';
 import { useAgenciesData, AgencySettings } from './agency-settings';
@@ -9,17 +9,51 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader } from '@/components/ui/card';
 import Image from 'next/image';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AgencyDashboardPage() {
     const { workers, setWorkers } = useWorkersData();
     const { requests, setRequests } = useRequestsData();
     const { agencies, setAgencies } = useAgenciesData();
+    const [isClient, setIsClient] = useState(false);
 
-    const [selectedAgencyId, setSelectedAgencyId] = useState(agencies[0].id);
+    const [selectedAgencyId, setSelectedAgencyId] = useState(agencies[0]?.id);
+
+    useEffect(() => {
+        setIsClient(true);
+        if (!selectedAgencyId && agencies.length > 0) {
+            setSelectedAgencyId(agencies[0].id);
+        }
+    }, [agencies, selectedAgencyId]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
     const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
+    
+    if (!isClient || !selectedAgency) {
+        return (
+            <div className="bg-background min-h-[calc(100vh-8rem)]">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-7xl mx-auto space-y-8">
+                        <div>
+                            <h1 className="text-3xl font-bold">RAAHA Agency Dashboard</h1>
+                            <p className="text-muted-foreground">Manage your candidates and client requests.</p>
+                        </div>
+                        <Card className="p-4 bg-muted/50">
+                             <div className="flex items-center gap-4">
+                                <Skeleton className="h-6 w-48" />
+                                <Skeleton className="h-10 w-[280px]" />
+                             </div>
+                        </Card>
+                         <div className="space-y-4">
+                             <Skeleton className="h-10 w-full" />
+                             <Skeleton className="h-64 w-full" />
+                         </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     
     return (
          <div className="bg-background min-h-[calc(100vh-8rem)]">
