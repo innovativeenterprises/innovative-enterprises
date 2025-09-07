@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -16,6 +17,7 @@ import { Loader2, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSettingsData } from '@/app/admin/settings-table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const CheckoutSchema = z.object({
   // Shipping Information
@@ -42,8 +44,10 @@ export default function CheckoutPage() {
     const { toast } = useToast();
     const router = useRouter();
     const [discount, setDiscount] = useState(0);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const updateCart = () => setCartItems(store.get().cart);
         updateCart();
         const unsubscribe = store.subscribe(updateCart);
@@ -208,7 +212,7 @@ export default function CheckoutPage() {
                                         </FormItem>
                                     )}/>
                                     <hr />
-                                    {cartItems.map(item => (
+                                    {isClient ? cartItems.map(item => (
                                         <div key={item.id} className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
                                                 <div className="relative">
@@ -219,7 +223,7 @@ export default function CheckoutPage() {
                                             </div>
                                             <p className="text-sm font-medium">OMR {(item.price * item.quantity).toFixed(2)}</p>
                                         </div>
-                                    ))}
+                                    )) : <Skeleton className="h-16 w-full" />}
                                     <hr className="my-4" />
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between"><span>Subtotal</span><span>OMR {subtotal.toFixed(2)}</span></div>
@@ -235,7 +239,7 @@ export default function CheckoutPage() {
                                                 <span>VAT ({settings.vat.rate * 100}%)</span>
                                                 <span>OMR {vatAmount.toFixed(2)}</span>
                                             </div>
-                                        )}
+                                         )}
                                         <hr className="my-2" />
                                         <div className="flex justify-between font-bold text-lg"><span>Total</span><span>OMR {total.toFixed(2)}</span></div>
                                     </div>

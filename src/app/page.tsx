@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,12 +9,52 @@ import ProductShowcase from '@/components/product-showcase';
 import ClientTestimonials from '@/components/client-testimonials';
 import AiToolsCta from '@/components/ai-tools-cta';
 import ChatWidget from '@/components/chat-widget';
-
-// The state for these components is now managed in the admin dashboard pages.
-// We use these hooks to get the current state. In a real app, this might
-// come from a global state manager (like Redux or Zustand) or be fetched
-// from a database via an API.
 import { useServicesData, useProductsData, useClientsData } from '@/hooks/use-global-store-data';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const ServiceCatalogSkeleton = () => (
+    <section id="services" className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4">
+             <div className="text-center mb-12">
+                <Skeleton className="h-10 w-1/2 mx-auto" />
+                <Skeleton className="h-6 w-3/4 mx-auto mt-4" />
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                 {Array.from({length: 6}).map((_, i) => <Skeleton key={i} className="h-48 w-full" />)}
+            </div>
+        </div>
+    </section>
+);
+const ProductShowcaseSkeleton = () => (
+     <section id="products" className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4">
+             <div className="text-center mb-12">
+                <Skeleton className="h-10 w-1/2 mx-auto" />
+                <Skeleton className="h-6 w-3/4 mx-auto mt-4" />
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                 {Array.from({length: 3}).map((_, i) => <Skeleton key={i} className="h-80 w-full" />)}
+            </div>
+        </div>
+    </section>
+);
+const ClientTestimonialsSkeleton = () => (
+    <section id="testimonials" className="py-16 md:py-24 bg-background">
+         <div className="container mx-auto px-4">
+             <div className="text-center mb-12">
+                <Skeleton className="h-10 w-1/2 mx-auto" />
+                <Skeleton className="h-6 w-3/4 mx-auto mt-4" />
+            </div>
+             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
+                 {Array.from({length: 6}).map((_, i) => <Skeleton key={i} className="h-12 w-32" />)}
+             </div>
+             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                 {Array.from({length: 2}).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)}
+             </div>
+         </div>
+    </section>
+);
+
 
 export default function Home() {
   const { services } = useServicesData();
@@ -36,8 +77,11 @@ export default function Home() {
             <ClientTestimonials clients={clients} testimonials={testimonials} />
           </>
         ) : (
-          // You can add skeleton loaders here if you want
-          <div className="h-[200vh]"></div>
+          <>
+            <ServiceCatalogSkeleton />
+            <ProductShowcaseSkeleton />
+            <ClientTestimonialsSkeleton />
+          </>
         )}
         <AiToolsCta />
       </main>
