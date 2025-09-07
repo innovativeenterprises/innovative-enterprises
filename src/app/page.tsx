@@ -70,19 +70,9 @@ export default function Home() {
     <>
       <main className="flex flex-col">
         <CompanyOverview />
-        {isClient ? (
-          <>
-            <ServiceCatalog services={services} />
-            <ProductShowcase products={products} />
-            <ClientTestimonials clients={clients} testimonials={testimonials} />
-          </>
-        ) : (
-          <>
-            <ServiceCatalogSkeleton />
-            <ProductShowcaseSkeleton />
-            <ClientTestimonialsSkeleton />
-          </>
-        )}
+        {isClient ? <ServiceCatalog services={services} /> : <ServiceCatalogSkeleton />}
+        {isClient ? <ProductShowcase products={products} /> : <ProductShowcaseSkeleton />}
+        {isClient ? <ClientTestimonials clients={clients} testimonials={testimonials} /> : <ClientTestimonialsSkeleton />}
         <AiToolsCta />
       </main>
       <ChatWidget />

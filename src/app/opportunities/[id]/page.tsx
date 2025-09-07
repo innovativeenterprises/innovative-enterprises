@@ -1,9 +1,10 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useOpportunitiesData } from "@/app/admin/opportunity-table";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,7 +91,7 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
     }, [opportunities, params.id]);
 
 
-    if (!isClient || opportunity === null) {
+    if (!isClient) {
         // Loading state to prevent flash of incorrect content
         return (
              <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -111,6 +112,9 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
                                      <Skeleton className="h-24 w-full" />
                                 </div>
                             </CardContent>
+                            <CardFooter>
+                                <Skeleton className="h-12 w-full" />
+                            </CardFooter>
                         </Card>
                     </div>
                 </div>
@@ -121,6 +125,8 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
     if (opportunity === undefined) {
         return notFound();
     }
+    
+    if(opportunity === null) return null; // Should be covered by the !isClient case, but good for safety.
     
     const Icon = opportunityIconMap[opportunity.iconName] || Trophy;
 
