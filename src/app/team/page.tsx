@@ -2,16 +2,22 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 // Import the data hook from the admin table
 import { useStaffData } from '@/app/admin/staff-table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TeamPage() {
     const { leadership, agentCategories, staff } = useStaffData();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const enabledLeadership = leadership.filter(member => member.enabled);
     const enabledStaff = staff.filter(member => member.enabled);
@@ -36,9 +42,18 @@ export default function TeamPage() {
             </Button>
         </div>
         <div className="space-y-20 mt-20">
-            <LeadershipTeam team={enabledLeadership} />
-            <StaffTeam team={enabledStaff} />
-            <DigitalWorkforce categories={enabledAgentCategories} />
+          {isClient ? (
+            <>
+              <LeadershipTeam team={enabledLeadership} />
+              <StaffTeam team={enabledStaff} />
+              <DigitalWorkforce categories={enabledAgentCategories} />
+            </>
+          ) : (
+             <div className="space-y-12">
+                <Skeleton className="h-48 w-full" />
+                <Skeleton className="h-96 w-full" />
+             </div>
+          )}
         </div>
       </div>
     </div>
