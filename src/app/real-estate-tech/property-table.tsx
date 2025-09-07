@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -223,7 +224,6 @@ export default function PropertyTable({ properties, setProperties }: { propertie
         setIsClient(true);
     }, []);
 
-
     const handleSave = (values: PropertyValues, id?: string) => {
         const { urlToScrape, ...propertyData } = values; // Exclude scraper URL from save data
         if (id) {
@@ -319,3 +319,4 @@ export default function PropertyTable({ properties, setProperties }: { propertie
         </Card>
     );
 }
+
