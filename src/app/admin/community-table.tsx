@@ -20,6 +20,7 @@ import { store } from "@/lib/global-store";
 import { useStaffData } from './staff-table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Hook to connect to the global store for communities
 export const useCommunitiesData = () => {
@@ -115,6 +116,12 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
 export default function CommunityTable() {
     const { communities, setCommunities } = useCommunitiesData();
     const { leadership, staff } = useStaffData();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+    
     const staffMap = [...leadership, ...staff].reduce((map, person) => {
         map[person.name] = person;
         return map;
@@ -153,40 +160,48 @@ export default function CommunityTable() {
                 <Table>
                     <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Country</TableHead><TableHead>Manager</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {communities.map(community => (
-                            <TableRow key={community.id}>
-                                <TableCell className="font-medium">{community.name}</TableCell>
-                                <TableCell>{community.country}</TableCell>
-                                <TableCell>
-                                    {staffMap[community.manager] ? (
-                                        <div className="flex items-center gap-2">
-                                            <Avatar className="h-8 w-8">
-                                                <AvatarImage src={staffMap[community.manager].photo} />
-                                                <AvatarFallback>{community.manager.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <p className="font-medium text-sm">{community.manager}</p>
-                                                <p className="text-xs text-muted-foreground">{staffMap[community.manager].role}</p>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        community.manager
-                                    )}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditCommunityDialog community={community} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditCommunityDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Delete Community Hub?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{community.name}" hub.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(community.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={4}>
+                                    <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            communities.map(community => (
+                                <TableRow key={community.id}>
+                                    <TableCell className="font-medium">{community.name}</TableCell>
+                                    <TableCell>{community.country}</TableCell>
+                                    <TableCell>
+                                        {staffMap[community.manager] ? (
+                                            <div className="flex items-center gap-2">
+                                                <Avatar className="h-8 w-8">
+                                                    <AvatarImage src={staffMap[community.manager].photo} />
+                                                    <AvatarFallback>{community.manager.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <p className="font-medium text-sm">{community.manager}</p>
+                                                    <p className="text-xs text-muted-foreground">{staffMap[community.manager].role}</p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            community.manager
+                                        )}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <AddEditCommunityDialog community={community} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditCommunityDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Delete Community Hub?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{community.name}" hub.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(community.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
