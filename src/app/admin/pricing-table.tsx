@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { store } from "@/lib/global-store";
+import { Skeleton } from "../ui/skeleton";
 
 // This hook now connects to the global store.
 export const usePricingData = () => {
@@ -99,9 +100,15 @@ export default function PricingTable({
     setPricing 
 } : { 
     pricing: Pricing[], 
-    setPricing: (updater: (pricing: Pricing[]) => Pricing[]) => void 
+    setPricing: (updater: (pricing: Pricing[]) => void) => void 
 }) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
@@ -134,20 +141,28 @@ export default function PricingTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {Object.entries(pricingByGroup).flatMap(([group, items]) => (
-                            items.map(item => (
-                                <TableRow key={item.id}>
-                                    <TableCell className="font-medium">{item.type}</TableCell>
-                                    <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
-                                    <TableCell className="text-right">
-                                        <EditPriceDialog item={item} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </EditPriceDialog>
-                                    </TableCell>
-                                </TableRow>
+                        {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={4}>
+                                    <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                             Object.entries(pricingByGroup).flatMap(([group, items]) => (
+                                items.map(item => (
+                                    <TableRow key={item.id}>
+                                        <TableCell className="font-medium">{item.type}</TableCell>
+                                        <TableCell className="text-muted-foreground">{item.group}</TableCell>
+                                        <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                        <TableCell className="text-right">
+                                            <EditPriceDialog item={item} onSave={handleSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </EditPriceDialog>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
                             ))
-                        ))}
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
