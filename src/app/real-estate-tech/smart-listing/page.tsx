@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const propertyCategories = ['All', 'Villa', 'Apartment', 'Townhouse'];
 
@@ -46,11 +47,38 @@ const PropertyCard = ({ property }: { property: Property }) => (
     </Link>
 )
 
+const PropertyGridSkeleton = () => (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 3 }).map((_, index) => (
+            <Card key={index}>
+                <Skeleton className="h-48 w-full" />
+                <CardHeader>
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                </CardHeader>
+                <CardContent>
+                    <Skeleton className="h-4 w-full" />
+                </CardContent>
+                <CardFooter>
+                    <Skeleton className="h-8 w-1/3" />
+                </CardFooter>
+            </Card>
+        ))}
+    </div>
+);
+
+
 export default function SmartListingPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [response, setResponse] = useState<PropertyMatcherOutput | null>(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
 
     const form = useForm<PropertyMatcherInput>({
         resolver: zodResolver(PropertyMatcherInputSchema),
@@ -185,11 +213,15 @@ export default function SmartListingPage() {
                             </Button>
                         ))}
                     </div>
-                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredProperties.map(property => (
-                            <PropertyCard key={property.id} property={property} />
-                        ))}
-                    </div>
+                    {isClient ? (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredProperties.map(property => (
+                                <PropertyCard key={property.id} property={property} />
+                            ))}
+                        </div>
+                    ) : (
+                        <PropertyGridSkeleton />
+                    )}
                 </div>
 
             </div>
