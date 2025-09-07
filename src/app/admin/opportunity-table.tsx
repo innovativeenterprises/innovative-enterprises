@@ -19,6 +19,7 @@ import type { Opportunity } from "@/lib/opportunities";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Trophy } from "lucide-react";
 import { store } from "@/lib/global-store";
+import { Skeleton } from "../ui/skeleton";
 
 // This hook now connects to the global store.
 export const useOpportunitiesData = () => {
@@ -154,6 +155,11 @@ export default function OpportunityTable({
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     const handleOpenDialog = (opp?: Opportunity) => {
         setSelectedOpp(opp);
@@ -222,27 +228,35 @@ export default function OpportunityTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {opportunities.map(opp => (
-                            <TableRow key={opp.id} onClick={() => handleOpenDialog(opp)} className="cursor-pointer">
-                                <TableCell className="font-medium">{opp.title}</TableCell>
-                                <TableCell>{opp.type}</TableCell>
-                                <TableCell>{opp.deadline}</TableCell>
-                                <TableCell>{getStatusBadge(opp.status)}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this opportunity.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(opp.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
+                        {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={5}>
+                                    <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            opportunities.map(opp => (
+                                <TableRow key={opp.id} onClick={() => handleOpenDialog(opp)} className="cursor-pointer">
+                                    <TableCell className="font-medium">{opp.title}</TableCell>
+                                    <TableCell>{opp.type}</TableCell>
+                                    <TableCell>{opp.deadline}</TableCell>
+                                    <TableCell>{getStatusBadge(opp.status)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this opportunity.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(opp.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
