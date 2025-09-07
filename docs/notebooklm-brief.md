@@ -91,7 +91,7 @@ The platform is a monolithic **Next.js 14+ (App Router)** application serving bo
 -   **CertiTrust:** Blockchain-based digital credentialing and AI proctoring.
 -   **CampusOS:** Smart campus management platform using IoT.
 
-#### General Platforms & SaaS (9)
+#### General Platforms & SaaS (10)
 -   **ameen:** Secure digital identity and Smart Lost & Found.
 -   **APPI – عـبِّـي:** Real-time insights into household utility consumption.
 -   **KHIDMA:** AI-powered marketplace for service seekers and providers.
@@ -101,6 +101,8 @@ The platform is a monolithic **Next.js 14+ (App Router)** application serving bo
 -   **Nova Commerce:** End-to-end e-commerce solutions.
 -   **AlumniConnect:** Digital platform for university alumni networks.
 -   **Hadeeya:** Digital gift card platform.
+-   **StockClear:** B2B marketplace for liquidating overstock goods.
+
 
 #### AI & Creative Tools (3)
 -   **AI Interior Designer:** Generates interior design ideas from photos.

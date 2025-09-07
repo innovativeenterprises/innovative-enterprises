@@ -43,7 +43,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Idea Phase | On Track | No |
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Idea Phase | On Track | No |
 
-### Category: General Platforms & SaaS (9)
+### Category: General Platforms & SaaS (10)
 | Name | Description | Stage | Status | Ready / MVP Ready |
 | :--- | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed | Yes |
@@ -55,6 +55,8 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed | Yes |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track | No |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track | No |
+| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Planning Phase | On Track | No |
+
 
 ### Category: AI & Creative Tools (3)
 | Name | Description | Stage | Status | Ready / MVP Ready |
