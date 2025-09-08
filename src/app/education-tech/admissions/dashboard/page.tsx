@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, UserCheck, Search, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -136,7 +136,16 @@ export default function AdmissionsDashboardPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {isClient ? filteredAndSortedApplications.map(app => (
+                                    {!isClient ? (
+                                        Array.from({ length: 5 }).map((_, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell colSpan={4}>
+                                                    <Skeleton className="h-10 w-full" />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                    filteredAndSortedApplications.map(app => (
                                         <TableRow key={app.id}>
                                             <TableCell>
                                                 <div className="font-medium">{app.name}</div>
@@ -151,15 +160,7 @@ export default function AdmissionsDashboardPage() {
                                             </TableCell>
                                             <TableCell>{getStatusBadge(app.status)}</TableCell>
                                         </TableRow>
-                                    )) : (
-                                        Array.from({ length: 5 }).map((_, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell colSpan={4}>
-                                                    <Skeleton className="h-10 w-full" />
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                    )}
+                                    )))}
                                 </TableBody>
                             </Table>
                         </CardContent>
