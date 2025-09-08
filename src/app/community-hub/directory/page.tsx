@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowLeft, Users, Search, Mail, Phone, Home, User } from "lucide-react";
 import Link from "next/link";
-import { useMembersData } from '@/app/community-hub/membership/page';
+import { useMembersData } from '@/hooks/use-global-store-data';
 import type { CommunityMember } from "@/lib/community-members";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
@@ -64,15 +64,11 @@ const FamilyGridSkeleton = () => (
 );
 
 export default function MemberDirectoryPage() {
-    const { members } = useMembersData();
+    const { members, isClient } = useMembersData();
     const [searchTerm, setSearchTerm] = useState('');
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
     
     const families = useMemo(() => {
+        if (!isClient) return [];
         const familyMap: Record<string, { head: CommunityMember, members: CommunityMember[] }> = {};
         
         const activeMembers = members.filter(m => m.status === 'Active');
@@ -104,7 +100,7 @@ export default function MemberDirectoryPage() {
             members.some(m => m.name.toLowerCase().includes(lowercasedFilter) || (m.nickname && m.nickname.toLowerCase().includes(lowercasedFilter)))
         );
 
-    }, [members, searchTerm]);
+    }, [members, searchTerm, isClient]);
 
     return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -136,14 +132,14 @@ export default function MemberDirectoryPage() {
                 />
             </div>
             
-            {isClient ? (
+            {!isClient ? (
+                 <FamilyGridSkeleton />
+            ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {families.map(({ head, members }) => (
                         <FamilyCard key={head.familyId} familyHead={head} members={members} />
                     ))}
                 </div>
-            ) : (
-                <FamilyGridSkeleton />
             )}
 
         </div>

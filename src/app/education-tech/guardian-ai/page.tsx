@@ -8,8 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot, PenSquare, Search } from 'lucide-react';
 import Link from 'next/link';
-import { initialStudents } from '@/lib/students';
-import type { Student } from '@/lib/students';
+import { type Student } from '@/lib/students';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
@@ -18,10 +17,12 @@ import {
 } from "@/components/ui/dialog"
 import { ChatComponent } from '@/components/chat/chat-component';
 import { wellbeingCheckin } from '@/ai/flows/wellbeing-checkin';
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ScholarshipFinder from '../scholarships/page';
+import { useStudentsData } from '@/hooks/use-global-store-data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
@@ -47,7 +48,7 @@ const WellbeingChat = ({ studentName }: { studentName: string }) => {
 }
 
 const StudentDashboard = () => {
-    const [students, setStudents] = useState<Student[]>(initialStudents);
+    const { students, isClient } = useStudentsData();
     
     const getStatusBadge = (status: Student['status']) => {
         switch (status) {
@@ -75,7 +76,16 @@ const StudentDashboard = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {students.map(student => (
+                        {!isClient ? (
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                    <TableCell colSpan={4}>
+                                        <Skeleton className="h-10 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            students.map(student => (
                             <TableRow key={student.id}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
@@ -101,7 +111,7 @@ const StudentDashboard = () => {
                                     </Dialog>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )))}
                     </TableBody>
                 </Table>
             </CardContent>

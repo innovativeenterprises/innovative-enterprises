@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useWorkersData } from '../../agency-dashboard/worker-table';
-import { useAgenciesData } from '../../agency-dashboard/agency-settings';
+import { useWorkersData } from '@/hooks/use-global-store-data';
+import { useAgenciesData } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
 import type { Agency } from '@/lib/raaha-agencies';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 const HireRequestSchema = z.object({
@@ -116,12 +117,33 @@ const AgencyInfoCard = ({ agency }: { agency: Agency }) => {
 export default function WorkerProfilePage() {
     const params = useParams();
     const { id } = params;
-    const { workers } = useWorkersData();
-    const { agencies } = useAgenciesData();
+    const { workers, isClient: isWorkersClient } = useWorkersData();
+    const { agencies, isClient: isAgenciesClient } = useAgenciesData();
 
     const worker = workers.find(p => p.id === id);
     const agency = worker ? agencies.find(a => a.id === worker.agencyId) : undefined;
 
+
+    if (!isWorkersClient || !isAgenciesClient) {
+        return (
+            <div className="bg-muted/20 min-h-screen">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-4xl mx-auto space-y-8">
+                        <div><Skeleton className="h-10 w-40" /></div>
+                        <div className="grid lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-2">
+                                <Card><CardContent className="p-8"><Skeleton className="h-96 w-full" /></CardContent></Card>
+                            </div>
+                            <div className="lg:col-span-1 space-y-6">
+                                <Card><CardContent className="p-8"><Skeleton className="h-24 w-full" /></CardContent></Card>
+                                <Card><CardContent className="p-8"><Skeleton className="h-24 w-full" /></CardContent></Card>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     if (!worker) {
         return notFound();

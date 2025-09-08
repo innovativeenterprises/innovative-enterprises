@@ -2,10 +2,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
-import { useOpportunitiesData } from "@/app/admin/opportunity-table";
+import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { opportunityIconMap, type Opportunity } from "@/lib/opportunities";
 import { notFound } from 'next/navigation';
@@ -79,15 +79,15 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
-    const { opportunities } = useOpportunitiesData();
+    const { opportunities, isClient } = useOpportunitiesData();
     const [opportunity, setOpportunity] = useState<Opportunity | undefined | null>(null);
-    const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
-        setIsClient(true);
-        const found = opportunities.find(opp => opp.id === params.id);
-        setOpportunity(found);
-    }, [opportunities, params.id]);
+        if (isClient) {
+            const found = opportunities.find(opp => opp.id === params.id);
+            setOpportunity(found);
+        }
+    }, [opportunities, params.id, isClient]);
 
 
     if (!isClient) {
