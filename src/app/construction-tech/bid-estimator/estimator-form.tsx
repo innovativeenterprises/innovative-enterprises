@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileUp, DollarSign, Percent, FileText, Copy, Download, Briefcase, Printer, PlusCircle } from 'lucide-react';
@@ -15,7 +15,7 @@ import { estimateBoq } from '@/ai/flows/boq-estimator';
 import { BoQEstimatorInputSchema, type BoQEstimatorOutput, type CostedBoQItem } from '@/ai/flows/boq-estimator.schema';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useCostSettingsData } from '@/app/admin/cost-settings-table';
+import { useCostSettingsData } from '@/hooks/use-global-store-data';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Link from 'next/link';
@@ -102,7 +102,7 @@ export default function EstimatorForm() {
       console.error("Could not load BoQ from session storage:", e);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toast]);
+  }, []);
 
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -505,7 +505,7 @@ export default function EstimatorForm() {
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={handleSaveToBriefcase}><Briefcase className="mr-2 h-4 w-4"/> Save</Button>
                     <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                    <Button variant="outline" size="sm" onClick={handleDownloadPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
+                    <Button variant="outline" size="sm" onClick={handleDownloadTenderPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
                     <Button variant="outline" size="sm" onClick={handleDownloadTenderTxt}><Download className="mr-2 h-4 w-4"/> TXT</Button>
                 </div>
             </CardHeader>
