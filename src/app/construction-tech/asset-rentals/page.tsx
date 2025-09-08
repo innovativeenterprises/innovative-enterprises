@@ -72,7 +72,7 @@ export default function AssetRentalsPage() {
         setSelectedAsset(null);
     };
 
-    const availableAssets = assets.filter(asset => asset.status === 'Available');
+    const availableAssets = isClient ? assets.filter(asset => asset.status === 'Available') : [];
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -133,3 +133,4 @@ export default function AssetRentalsPage() {
 }
 
     
+
