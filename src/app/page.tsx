@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -54,7 +55,7 @@ const ClientTestimonialsSkeleton = () => (
 );
 
 
-export default function Home() {
+const HomePageClient = () => {
   const { services } = useServicesData();
   const { products } = useProductsData();
   const { clients, testimonials } = useClientsData();
@@ -63,9 +64,9 @@ export default function Home() {
   useEffect(() => {
     setIsClient(true);
   }, []);
-
+  
   return (
-    <>
+     <>
       <CompanyOverview />
       {isClient ? <ServiceCatalog services={services} /> : <ServiceCatalogSkeleton />}
       {isClient ? <ProductShowcase products={products} /> : <ProductShowcaseSkeleton />}
@@ -73,5 +74,9 @@ export default function Home() {
       <AiToolsCta />
       {isClient && <ChatWidget />}
     </>
-  );
+  )
+}
+
+export default function Home() {
+    return <HomePageClient />;
 }
