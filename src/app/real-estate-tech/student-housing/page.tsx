@@ -21,7 +21,10 @@ export default function StudentHousingPage() {
     const { toast } = useToast();
 
     const handleDelete = (id: string) => {
-        setLeases(prev => prev.filter(lease => lease.id !== id));
+        store.set(state => ({
+            ...state,
+            signedLeases: state.signedLeases.filter(lease => lease.id !== id)
+        }));
         toast({ title: "Housing Agreement Deleted", description: "The student housing agreement has been removed from your dashboard.", variant: "destructive" });
     };
 

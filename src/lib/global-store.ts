@@ -11,7 +11,7 @@
  */
 
 import { initialServices, type Service } from './services';
-import { initialProducts, type Product } from './products';
+import { initialProducts, type Product, initialStoreProducts } from './products';
 import { initialClients, type Client, initialTestimonials, type Testimonial } from './clients';
 import { initialStaffData, type Agent, type AgentCategory } from './agents';
 import { initialOpportunities, type Opportunity } from './opportunities';
@@ -30,6 +30,9 @@ import { initialProperties, type Property } from './properties';
 import { type BoQItem } from '@/ai/flows/boq-generator.schema';
 import { initialCostSettings } from './cost-settings';
 import type { CostRate } from './cost-settings.schema';
+import { initialStudents, type Student } from './students';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from './cfo-data';
+import { kpiData, transactionData, upcomingPayments, vatPayment } from './cfo-data';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -67,6 +70,10 @@ type AppState = {
   savedBoqs: SavedBoQ[];
   cart: CartItem[];
   costSettings: CostRate[];
+  kpiData: KpiData[];
+  transactionData: TransactionData[];
+  upcomingPayments: UpcomingPayment[];
+  vatPayment: VatPayment;
 };
 
 // The single source of truth for our application's shared state.
@@ -91,11 +98,14 @@ let state: AppState = {
   raahaAgencies: initialAgencies,
   signedLeases: initialLeases,
   properties: initialProperties,
-  auditSubmissions: [],
   students: initialStudents,
   savedBoqs: [],
   cart: [],
   costSettings: initialCostSettings,
+  kpiData,
+  transactionData,
+  upcomingPayments,
+  vatPayment,
 };
 
 // A list of all component update functions to call when state changes.

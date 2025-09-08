@@ -9,8 +9,8 @@ export interface SignedLease {
     propertyType: string;
     price: number;
     pricePeriod?: string;
-    startDate?: Date;
-    endDate?: Date;
+    startDate?: string;
+    endDate?: string;
     additionalClauses?: string;
     status: 'Active' | 'Expired' | 'Terminated';
     content: string; // The full markdown content of the contract

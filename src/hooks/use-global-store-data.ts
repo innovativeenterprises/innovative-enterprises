@@ -25,6 +25,7 @@ import type { SignedLease } from '@/lib/leases';
 import type { Property } from '@/lib/properties';
 import type { Student } from '@/lib/students';
 import type { CostRate } from '@/lib/cost-settings.schema';
+import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 
 export const useServicesData = () => {
@@ -41,7 +42,7 @@ export const useServicesData = () => {
 
     return {
         services: data.services,
-        setServices: (updater: (services: Service[]) => void) => {
+        setServices: (updater: (services: Service[]) => Service[]) => {
             const currentServices = store.get().services;
             const newServices = updater(currentServices);
             store.set(state => ({ ...state, services: newServices }));
@@ -64,7 +65,7 @@ export const useProductsData = () => {
 
     return {
         products: data.products,
-        setProducts: (updater: (products: Product[]) => void) => {
+        setProducts: (updater: (products: Product[]) => Product[]) => {
             const currentProducts = store.get().products;
             const newProducts = updater(currentProducts);
             store.set(state => ({ ...state, products: newProducts }));
@@ -88,13 +89,13 @@ export const useClientsData = () => {
 
     return {
         clients: data.clients,
-        setClients: (updater: (clients: Client[]) => void) => {
+        setClients: (updater: (clients: Client[]) => Client[]) => {
             const currentClients = store.get().clients;
             const newClients = updater(currentClients);
             store.set(state => ({ ...state, clients: newClients }));
         },
         testimonials: data.testimonials,
-        setTestimonials: (updater: (testimonials: Testimonial[]) => void) => {
+        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
              const currentTestimonials = store.get().testimonials;
             const newTestimonials = updater(currentTestimonials);
             store.set(state => ({ ...state, testimonials: newTestimonials }));
@@ -117,7 +118,7 @@ export const useProvidersData = () => {
 
     return {
         providers: data.providers,
-        setProviders: (updater: (providers: Provider[]) => void) => {
+        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
             const currentProviders = store.get().providers;
             const newProviders = updater(currentProviders);
             store.set(state => ({ ...state, providers: newProviders }));
@@ -140,19 +141,19 @@ export const useStaffData = () => {
 
     return {
         leadership: data.leadership,
-        setLeadership: (updater: (agents: Agent[]) => void) => {
+        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
             const currentAgents = store.get().leadership;
             const newAgents = updater(currentAgents);
             store.set(state => ({ ...state, leadership: newAgents }));
         },
         staff: data.staff,
-        setStaff: (updater: (agents: Agent[]) => void) => {
+        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
             const currentAgents = store.get().staff;
             const newAgents = updater(currentAgents);
             store.set(state => ({ ...state, staff: newAgents }));
         },
         agentCategories: data.agentCategories,
-        setAgentCategories: (updater: (categories: AgentCategory[]) => void) => {
+        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
             const currentCategories = store.get().agentCategories;
             const newCategories = updater(currentCategories);
             store.set(state => ({ ...state, agentCategories: newCategories }));
@@ -175,7 +176,7 @@ export const useCommunitiesData = () => {
 
     return {
         communities: data.communities,
-        setCommunities: (updater: (communities: Community[]) => void) => {
+        setCommunities: (updater: (communities: Community[]) => Community[]) => {
             const currentCommunities = store.get().communities;
             const newCommunities = updater(currentCommunities);
             store.set(state => ({ ...state, communities: newCommunities }));
@@ -198,19 +199,19 @@ export const useCommunityHubData = () => {
 
     return {
         events: data.communityEvents,
-        setEvents: (updater: (events: CommunityEvent[]) => void) => {
+        setEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
             const current = store.get().communityEvents;
             const newItems = updater(current);
             store.set(state => ({ ...state, communityEvents: newItems }));
         },
         finances: data.communityFinances,
-        setFinances: (updater: (finances: CommunityFinance[]) => void) => {
+        setFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
             const current = store.get().communityFinances;
             const newItems = updater(current);
             store.set(state => ({ ...state, communityFinances: newItems }));
         },
         members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => void) => {
+        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
             const current = store.get().communityMembers;
             const newItems = updater(current);
             store.set(state => ({ ...state, communityMembers: newItems }));
@@ -233,7 +234,7 @@ export const useOpportunitiesData = () => {
 
     return {
         opportunities: data.opportunities,
-        setOpportunities: (updater: (opportunities: Opportunity[]) => void) => {
+        setOpportunities: (updater: (opportunities: Opportunity[]) => Opportunity[]) => {
             const currentOpportunities = store.get().opportunities;
             const newOpportunities = updater(currentOpportunities);
             store.set(state => ({ ...state, opportunities: newOpportunities }));
@@ -256,7 +257,7 @@ export const useProjectStagesData = () => {
 
     return {
         stages: data.stages,
-        setStages: (updater: (stages: ProjectStage[]) => void) => {
+        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
             const currentStages = store.get().stages;
             const newStages = updater(currentStages);
             store.set(state => ({ ...state, stages: newStages }));
@@ -279,7 +280,7 @@ export const useSettingsData = () => {
 
     return {
         settings: data.settings,
-        setSettings: (updater: (settings: AppSettings) => void) => {
+        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
             const currentSettings = store.get().settings;
             const newSettings = updater(currentSettings);
             store.set(state => ({ ...state, settings: newSettings }));
@@ -302,7 +303,7 @@ export const useAssetsData = () => {
 
     return {
         assets: data.assets,
-        setAssets: (updater: (assets: Asset[]) => void) => {
+        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
             const currentAssets = store.get().assets;
             const newAssets = updater(currentAssets);
             store.set(state => ({ ...state, assets: newAssets }));
@@ -325,7 +326,7 @@ export const useInvestorsData = () => {
 
     return {
         investors: data.investors,
-        setInvestors: (updater: (investors: Investor[]) => void) => {
+        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
             const currentInvestors = store.get().investors;
             const newInvestors = updater(currentInvestors);
             store.set(state => ({ ...state, investors: newInvestors }));
@@ -348,7 +349,7 @@ export const useKnowledgeData = () => {
 
     return {
         knowledgeBase: data.knowledgeBase,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => {
+        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
             const currentDocs = store.get().knowledgeBase;
             const newDocs = updater(currentDocs);
             store.set(state => ({ ...state, knowledgeBase: newDocs }));
@@ -371,7 +372,7 @@ export const useAgenciesData = () => {
 
     return {
         agencies: data.raahaAgencies,
-        setAgencies: (updater: (agencies: Agency[]) => void) => {
+        setAgencies: (updater: (agencies: Agency[]) => Agency[]) => {
             const currentAgencies = store.get().raahaAgencies;
             const newAgencies = updater(currentAgencies);
             store.set(state => ({ ...state, raahaAgencies: newAgencies }));
@@ -394,7 +395,7 @@ export const useWorkersData = () => {
 
     return {
         workers: data.raahaWorkers,
-        setWorkers: (updater: (workers: RaahaWorker[]) => void) => {
+        setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
             const currentWorkers = store.get().raahaWorkers;
             const newWorkers = updater(currentWorkers);
             store.set(state => ({ ...state, raahaWorkers: newWorkers }));
@@ -417,7 +418,7 @@ export const useRequestsData = () => {
 
     return {
         requests: data.raahaRequests,
-        setRequests: (updater: (requests: HireRequest[]) => void) => {
+        setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
             const currentRequests = store.get().raahaRequests;
             const newRequests = updater(currentRequests);
             store.set(state => ({ ...state, raahaRequests: newRequests }));
@@ -440,7 +441,7 @@ export const useLeasesData = () => {
 
     return {
         leases: data.signedLeases,
-        setLeases: (updater: (leases: SignedLease[]) => void) => {
+        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
             const currentLeases = store.get().signedLeases;
             const newLeases = updater(currentLeases);
             store.set(state => ({ ...state, signedLeases: newLeases }));
@@ -463,7 +464,7 @@ export const usePropertiesData = () => {
 
     return {
         properties: data.properties,
-        setProperties: (updater: (properties: Property[]) => void) => {
+        setProperties: (updater: (properties: Property[]) => Property[]) => {
             const currentProperties = store.get().properties;
             const newProperties = updater(currentProperties);
             store.set(state => ({ ...state, properties: newProperties }));
@@ -486,7 +487,7 @@ export const useStudentsData = () => {
 
     return {
         students: data.students,
-        setStudents: (updater: (students: Student[]) => void) => {
+        setStudents: (updater: (students: Student[]) => Student[]) => {
             const currentStudents = store.get().students;
             const newStudents = updater(currentStudents);
             store.set(state => ({ ...state, students: newStudents }));
@@ -509,7 +510,7 @@ export const useCostSettingsData = () => {
 
     return {
         costSettings: data.costSettings,
-        setCostSettings: (updater: (items: CostRate[]) => void) => {
+        setCostSettings: (updater: (items: CostRate[]) => CostRate[]) => {
             const current = store.get().costSettings;
             const newItems = updater(current);
             store.set(state => ({ ...state, costSettings: newItems }));
@@ -519,18 +520,20 @@ export const useCostSettingsData = () => {
 };
 
 export const useCfoData = () => {
-    const [data, setData] = useState({
-        kpiData,
-        transactionData,
-        upcomingPayments,
-        vatPayment
-    });
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
 
+    // Data is static, so we don't need to subscribe to the store for it.
+    const data = {
+        kpiData,
+        transactionData,
+        upcomingPayments,
+        vatPayment
+    };
+    
     return {
         ...data,
         isClient,

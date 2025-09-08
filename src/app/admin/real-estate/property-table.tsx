@@ -19,7 +19,7 @@ import type { Property } from "@/lib/properties";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
-import { extractPropertyDetailsFromUrl } from "@/ai/flows/property-extraction";
+import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePropertiesData } from "@/hooks/use-global-store-data";
 
