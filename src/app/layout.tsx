@@ -14,10 +14,6 @@ const fontSans = Inter({
   variable: '--font-sans',
 });
 
-// Note: Metadata export is not supported in client components, but can be handled
-// in a parent server component layout or page if needed.
-// For this fix, we focus on resolving the hydration error.
-
 export default function RootLayout({
   children,
 }: {
