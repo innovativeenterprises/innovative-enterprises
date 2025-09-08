@@ -146,14 +146,16 @@ export default function CfoDashboard() {
             <Card>
                 <CardHeader><CardTitle>Monthly Cash Flow</CardTitle></CardHeader>
                 <CardContent>
-                     <ChartContainer config={chartConfig} className="h-[200px] w-full">
-                        <BarChart data={cashFlowData} accessibilityLayer>
-                            <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-                            <Tooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-                            <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-                            <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
-                        </BarChart>
-                    </ChartContainer>
+                     {isClient ? (
+                        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+                            <BarChart data={cashFlowData} accessibilityLayer>
+                                <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
+                                <Tooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                                <Bar dataKey="income" fill="var(--color-income)" radius={4} />
+                                <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
+                            </BarChart>
+                        </ChartContainer>
+                     ) : <Skeleton className="h-[200px] w-full" />}
                 </CardContent>
             </Card>
 
@@ -162,8 +164,17 @@ export default function CfoDashboard() {
                     <CardTitle className="flex items-center gap-2 text-destructive"><ShieldAlert />VAT Payment Due</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
-                    <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <DueDate date={vatPayment.dueDate} className="mt-1" />
+                   {isClient ? (
+                    <>
+                        <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
+                        <DueDate date={vatPayment.dueDate} className="mt-1" />
+                    </>
+                   ) : (
+                    <div className="space-y-2">
+                        <Skeleton className="h-10 w-3/4 mx-auto" />
+                        <Skeleton className="h-4 w-1/2 mx-auto" />
+                    </div>
+                   )}
                 </CardContent>
             </Card>
 

@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Search, BedDouble, Bath, MapPin, Filter } from 'lucide-react';
 import { PropertyMatcherInputSchema, type PropertyMatcherInput, type PropertyMatcherOutput } from '@/ai/flows/property-matcher.schema';
 import { findBestPropertyMatch } from '@/ai/flows/property-matcher';
-import { usePropertiesData } from '@/app/admin/property-table';
+import { usePropertiesData } from '@/hooks/use-global-store-data';
 import type { Property } from '@/lib/properties';
 import Link from 'next/link';
 import Image from 'next/image';

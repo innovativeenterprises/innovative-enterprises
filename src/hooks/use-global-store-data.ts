@@ -20,12 +20,12 @@ import type { Investor } from '@/lib/investors';
 import type { KnowledgeDocument } from '@/lib/knowledge';
 import type { Agency } from '@/lib/raaha-agencies';
 import type { HireRequest } from '@/lib/raaha-requests';
-import type { Worker } from '@/lib/raaha-workers';
+import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { SignedLease } from '@/lib/leases';
 import type { Property } from '@/lib/properties';
-import type { Pricing } from '@/lib/pricing';
 import type { Student } from '@/lib/students';
 import type { CostRate } from '@/lib/cost-settings.schema';
+import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 
 export const useServicesData = () => {
     const [data, setData] = useState(store.get());
@@ -140,19 +140,19 @@ export const useStaffData = () => {
 
     return {
         leadership: data.leadership,
-        setLeadership: (updater: (agents: Agent[]) => void) => {
+        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
             const currentAgents = store.get().leadership;
             const newAgents = updater(currentAgents);
             store.set(state => ({ ...state, leadership: newAgents }));
         },
         staff: data.staff,
-        setStaff: (updater: (agents: Agent[]) => void) => {
+        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
             const currentAgents = store.get().staff;
             const newAgents = updater(currentAgents);
             store.set(state => ({ ...state, staff: newAgents }));
         },
         agentCategories: data.agentCategories,
-        setAgentCategories: (updater: (categories: AgentCategory[]) => void) => {
+        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
             const currentCategories = store.get().agentCategories;
             const newCategories = updater(currentCategories);
             store.set(state => ({ ...state, agentCategories: newCategories }));

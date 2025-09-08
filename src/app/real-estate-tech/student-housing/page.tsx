@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
@@ -13,26 +13,15 @@ import type { SignedLease } from '@/lib/leases';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
+import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function StudentHousingPage() {
-    const [leases, setLeases] = useState<SignedLease[]>([]);
+    const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const updateLeases = () => setLeases(store.get().signedLeases);
-        updateLeases();
-        const unsubscribe = store.subscribe(updateLeases);
-        return () => unsubscribe();
-    }, []);
 
     const handleDelete = (id: string) => {
-        store.set(state => ({
-            ...state,
-            signedLeases: state.signedLeases.filter(lease => lease.id !== id)
-        }));
+        setLeases(prev => prev.filter(lease => lease.id !== id));
         toast({ title: "Housing Agreement Deleted", description: "The student housing agreement has been removed from your dashboard.", variant: "destructive" });
     };
 

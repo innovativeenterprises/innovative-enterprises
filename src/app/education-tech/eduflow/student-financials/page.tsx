@@ -1,21 +1,22 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, DollarSign, PlusCircle, TrendingUp, TrendingDown, Percent, FileText } from 'lucide-react';
 import Link from 'next/link';
-import { initialStudents } from '@/lib/students';
-import type { Student } from '@/lib/students';
+import { Student } from '@/lib/students';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
+import { useStudentsData } from '@/hooks/use-global-store-data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function StudentFinancialsPage() {
-    const [students, setStudents] = useState<Student[]>(initialStudents);
+    const { students, isClient } = useStudentsData();
 
     const totalTuitionBilled = students.reduce((sum, s) => sum + (s.tuitionBilled || 0), 0);
     const totalScholarships = students.reduce((sum, s) => sum + (s.scholarshipAmount || 0), 0);
@@ -71,10 +72,10 @@ export default function StudentFinancialsPage() {
                     </div>
                     
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Total Tuition Billed <TrendingUp className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent><div className="text-2xl font-bold">OMR {totalTuitionBilled.toLocaleString()}</div></CardContent></Card>
-                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Scholarships Awarded <Percent className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent><div className="text-2xl font-bold">OMR {totalScholarships.toLocaleString()}</div></CardContent></Card>
-                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Total Collected <TrendingUp className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent><div className="text-2xl font-bold text-green-600">OMR {totalPaid.toLocaleString()}</div></CardContent></Card>
-                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Total Outstanding <TrendingDown className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent><div className="text-2xl font-bold text-destructive">OMR {totalOutstanding.toLocaleString()}</div></CardContent></Card>
+                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Total Tuition Billed <TrendingUp className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent>{isClient ? <div className="text-2xl font-bold">OMR {totalTuitionBilled.toLocaleString()}</div> : <Skeleton className="h-8 w-3/4"/>}</CardContent></Card>
+                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Scholarships Awarded <Percent className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent>{isClient ? <div className="text-2xl font-bold">OMR {totalScholarships.toLocaleString()}</div>: <Skeleton className="h-8 w-3/4"/>}</CardContent></Card>
+                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Total Collected <TrendingUp className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent>{isClient ? <div className="text-2xl font-bold text-green-600">OMR {totalPaid.toLocaleString()}</div>: <Skeleton className="h-8 w-3/4"/>}</CardContent></Card>
+                        <Card><CardHeader><CardTitle className="text-sm font-medium flex items-center justify-between">Total Outstanding <TrendingDown className="h-4 w-4 text-muted-foreground"/></CardTitle></CardHeader><CardContent>{isClient ? <div className="text-2xl font-bold text-destructive">OMR {totalOutstanding.toLocaleString()}</div>: <Skeleton className="h-8 w-3/4"/>}</CardContent></Card>
                     </div>
 
                     <Card>
@@ -82,14 +83,16 @@ export default function StudentFinancialsPage() {
                             <CardTitle>Financial Overview</CardTitle>
                         </CardHeader>
                         <CardContent>
-                             <ChartContainer config={chartConfig} className="h-[250px] w-full">
-                                <BarChart data={paymentStatusData} accessibilityLayer layout="vertical">
-                                    <XAxis type="number" hide />
-                                    <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} />
-                                    <Tooltip content={<ChartTooltipContent />} />
-                                    <Bar dataKey="value" layout="vertical" radius={4} />
-                                </BarChart>
-                            </ChartContainer>
+                             {isClient ? (
+                                <ChartContainer config={chartConfig} className="h-[250px] w-full">
+                                    <BarChart data={paymentStatusData} accessibilityLayer layout="vertical">
+                                        <XAxis type="number" hide />
+                                        <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} />
+                                        <Tooltip content={<ChartTooltipContent />} />
+                                        <Bar dataKey="value" layout="vertical" radius={4} />
+                                    </BarChart>
+                                </ChartContainer>
+                             ) : <Skeleton className="h-[250px] w-full" />}
                         </CardContent>
                     </Card>
 
@@ -112,7 +115,7 @@ export default function StudentFinancialsPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {students.map(student => {
+                                    {isClient ? students.map(student => {
                                         const balance = (student.tuitionBilled || 0) - (student.scholarshipAmount || 0) - (student.amountPaid || 0);
                                         return (
                                             <TableRow key={student.id}>
@@ -137,7 +140,9 @@ export default function StudentFinancialsPage() {
                                                 </TableCell>
                                             </TableRow>
                                         )
-                                    })}
+                                    }) : (
+                                        Array.from({length: 5}).map((_, i) => <TableRow key={i}><TableCell colSpan={7}><Skeleton className="h-12 w-full"/></TableCell></TableRow>)
+                                    )}
                                 </TableBody>
                             </Table>
                         </CardContent>
