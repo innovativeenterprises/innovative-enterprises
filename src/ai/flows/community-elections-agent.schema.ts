@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Schemas for the Community Elections AI Agent flow.
  */

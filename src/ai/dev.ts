@@ -40,6 +40,7 @@ import '@/ai/flows/admissions-agent';
 import '@/ai/flows/boq-generator';
 import '@/ai/flows/it-rental-agent';
 import '@/ai/flows/property-valuation';
+import '@/ai/flows/community-elections-agent';
 
 // Make sure all flows are loaded into the development server.
 import {

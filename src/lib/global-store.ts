@@ -33,6 +33,11 @@ import type { CostRate } from './cost-settings.schema';
 import { initialStudents, type Student } from './students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from './cfo-data';
 import { kpiData, transactionData, upcomingPayments, vatPayment } from './cfo-data';
+import { initialCommunities, type Community } from './communities';
+import { initialEvents, type CommunityEvent } from './community-events';
+import { initialFinances, type CommunityFinance } from './community-finances';
+import { initialMembers, type CommunityMember } from './community-members';
+
 
 export interface CartItem extends Product {
   quantity: number;
@@ -67,6 +72,10 @@ type AppState = {
   signedLeases: SignedLease[];
   properties: Property[];
   students: Student[];
+  communities: Community[];
+  communityEvents: CommunityEvent[];
+  communityFinances: CommunityFinance[];
+  communityMembers: CommunityMember[];
   savedBoqs: SavedBoQ[];
   cart: CartItem[];
   costSettings: CostRate[];
@@ -99,6 +108,10 @@ let state: AppState = {
   signedLeases: initialLeases,
   properties: initialProperties,
   students: initialStudents,
+  communities: initialCommunities,
+  communityEvents: initialEvents,
+  communityFinances: initialFinances,
+  communityMembers: initialMembers,
   savedBoqs: [],
   cart: [],
   costSettings: initialCostSettings,

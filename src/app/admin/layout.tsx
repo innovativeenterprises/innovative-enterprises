@@ -47,6 +47,7 @@ export default function AdminLayout({
     { href: '/admin/content', label: 'Site Content', icon: FileText },
     { href: '/admin/network', label: 'Network', icon: Network },
     { href: '/admin/people', label: 'People', icon: UserCog },
+    { href: '/admin/communities', label: 'Communities', icon: Users },
     { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
     { href: '/admin/operations', label: 'Operations', icon: GanttChartSquare },
   ];
