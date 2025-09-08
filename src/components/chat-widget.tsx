@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { X, MessageSquare, Bot } from "lucide-react";
@@ -12,7 +11,16 @@ import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isClient, setIsClient] = useState(false);
     const { settings } = useSettingsData();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) {
+        return null; // Don't render the chat widget on the server
+    }
 
     return (
         <div className="fixed bottom-4 right-4 z-50">

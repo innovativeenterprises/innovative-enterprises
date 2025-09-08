@@ -35,7 +35,7 @@ export default function RootLayout({
         {isClient ? (
           <>
             <Header />
-            {children}
+            <main className="flex-1">{children}</main>
             <Footer />
             <Toaster />
           </>

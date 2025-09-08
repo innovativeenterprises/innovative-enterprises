@@ -10,6 +10,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recha
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 function DueDateDisplay({ dueDate }: { dueDate: string }) {
   const [daysRemaining, setDaysRemaining] = useState<number|null>(null);
@@ -30,7 +31,7 @@ function DueDateDisplay({ dueDate }: { dueDate: string }) {
       Due: {dueDate} 
       {isClient && daysRemaining !== null && (
         daysRemaining >= 0 ? 
-            <span className={daysRemaining < 7 ? "text-destructive" : ""}> ({daysRemaining} days left)</span> 
+            <span className={cn(daysRemaining < 7 ? "text-destructive" : "", "font-medium")}> ({daysRemaining} days left)</span> 
             : ' (Overdue)'
       )}
     </div>

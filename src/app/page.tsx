@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -68,14 +66,12 @@ export default function Home() {
 
   return (
     <>
-      <main className="flex flex-col">
-        <CompanyOverview />
-        {isClient ? <ServiceCatalog services={services} /> : <ServiceCatalogSkeleton />}
-        {isClient ? <ProductShowcase products={products} /> : <ProductShowcaseSkeleton />}
-        {isClient ? <ClientTestimonials clients={clients} testimonials={testimonials} /> : <ClientTestimonialsSkeleton />}
-        <AiToolsCta />
-      </main>
-      <ChatWidget />
+      <CompanyOverview />
+      {isClient ? <ServiceCatalog services={services} /> : <ServiceCatalogSkeleton />}
+      {isClient ? <ProductShowcase products={products} /> : <ProductShowcaseSkeleton />}
+      {isClient ? <ClientTestimonials clients={clients} testimonials={testimonials} /> : <ClientTestimonialsSkeleton />}
+      <AiToolsCta />
+      {isClient && <ChatWidget />}
     </>
   );
 }
