@@ -23,7 +23,7 @@ import Link from 'next/link';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMembersData } from "@/hooks/use-global-store-data";
+import { useMembersData } from '@/hooks/use-global-store-data';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
