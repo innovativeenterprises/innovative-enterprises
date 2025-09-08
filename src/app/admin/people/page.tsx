@@ -1,12 +1,11 @@
 
 'use client';
 
-import StaffTable, { useStaffData } from "../staff-table";
-import CommunityTable, { useCommunitiesData } from "../community-table";
+import StaffTable from "../staff-table";
+import { useStaffData } from '@/hooks/use-global-store-data';
 
 export default function AdminPeoplePage() {
   const staffData = useStaffData();
-  const communityData = useCommunitiesData();
 
   return (
     <div className="space-y-8">

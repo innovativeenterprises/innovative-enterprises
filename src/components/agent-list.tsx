@@ -5,7 +5,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Linkedin, Twitter, Github, Globe, Mail, Users } from "lucide-react";
 import Link from 'next/link';
 import type { Agent, AgentCategory } from '@/lib/agents';
-import { useStaffData } from "@/app/admin/staff-table";
 
 const AgentCard = ({ agent }: { agent: Agent }) => (
     <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
@@ -138,10 +137,8 @@ export function DigitalWorkforce({ categories }: { categories: AgentCategory[] }
     )
 }
 
-export default function AgentList() {
-    const { agentCategories } = useStaffData();
-
-    const enabledAgentCategories = agentCategories.map(category => ({
+export default function AgentList({ categories }: { categories: AgentCategory[] }) {
+    const enabledAgentCategories = categories.map(category => ({
         ...category,
         agents: category.agents.filter(agent => agent.enabled)
     })).filter(category => category.agents.length > 0);

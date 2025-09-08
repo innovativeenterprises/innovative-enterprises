@@ -16,32 +16,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Community } from "@/lib/communities";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { store } from "@/lib/global-store";
-import { useStaffData } from './staff-table';
+import { useStaffData, useCommunitiesData } from '@/hooks/use-global-store-data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Hook to connect to the global store for communities
-export const useCommunitiesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        communities: data.communities,
-        setCommunities: (updater: (communities: Community[]) => Community[]) => {
-            const currentCommunities = store.get().communities;
-            const newCommunities = updater(currentCommunities);
-            store.set(state => ({ ...state, communities: newCommunities }));
-        }
-    };
-};
 
 const CommunitySchema = z.object({
   name: z.string().min(3, "Community name is required"),
@@ -114,13 +93,8 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
 };
 
 export default function CommunityTable() {
-    const { communities, setCommunities } = useCommunitiesData();
+    const { communities, setCommunities, isClient } = useCommunitiesData();
     const { leadership, staff } = useStaffData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
     
     const staffMap = [...leadership, ...staff].reduce((map, person) => {
         map[person.name] = person;

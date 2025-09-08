@@ -1,7 +1,8 @@
 
 'use client';
 
-import CommunityTable, { useCommunitiesData } from "../community-table";
+import CommunityTable from "../community-table";
+import { useCommunitiesData } from '@/hooks/use-global-store-data';
 
 export default function AdminCommunitiesPage() {
   const communityData = useCommunitiesData();

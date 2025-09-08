@@ -21,10 +21,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Agent, AgentCategory } from "@/lib/agents";
 import { Textarea } from "@/components/ui/textarea";
-import { store } from "@/lib/global-store";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStaffData } from "@/hooks/use-global-store-data";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -264,61 +264,24 @@ const AddEditStaffDialog = ({
     )
 }
 
-// This hook now connects to the global store.
-export const useStaffData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        leadership: data.leadership,
-        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
-            const currentAgents = store.get().leadership;
-            const newAgents = updater(currentAgents);
-            store.set(state => ({ ...state, leadership: newAgents }));
-        },
-        staff: data.staff,
-        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
-            const currentAgents = store.get().staff;
-            const newAgents = updater(currentAgents);
-            store.set(state => ({ ...state, staff: newAgents }));
-        },
-        agentCategories: data.agentCategories,
-        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
-            const currentCategories = store.get().agentCategories;
-            const newCategories = updater(currentCategories);
-            store.set(state => ({ ...state, agentCategories: newCategories }));
-        }
-    };
-};
-
-
 export default function StaffTable({ 
     leadership, 
     setLeadership, 
     staff,
     setStaff,
     agentCategories, 
-    setAgentCategories 
+    setAgentCategories,
+    isClient,
 } : {
     leadership: Agent[],
     setLeadership: (updater: (l: Agent[]) => void) => void,
     staff: Agent[],
     setStaff: (updater: (s: Agent[]) => void) => void,
     agentCategories: AgentCategory[],
-    setAgentCategories: (updater: (ac: AgentCategory[]) => void) => void
+    setAgentCategories: (updater: (ac: AgentCategory[]) => void) => void,
+    isClient: boolean,
 }) {
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleToggle = (name: string, type: 'leadership' | 'staff' | 'agent') => {
         if (type === 'leadership') {
@@ -484,7 +447,3 @@ export default function StaffTable({
         </Card>
     );
 }
-
-    
-
-    
