@@ -26,7 +26,7 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en">
       <head>
         <title>Innovative Enterprises - AI-Powered Business Platform</title>
         <meta
@@ -45,5 +45,3 @@ export default function RootLayout({
         ) : <main>{children}</main>}
       </body>
     </html>
-  );
-}
