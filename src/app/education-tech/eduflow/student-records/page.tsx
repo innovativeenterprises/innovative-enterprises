@@ -18,26 +18,10 @@ import type { Student } from "@/lib/students";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
-import { store } from "@/lib/global-store";
+import { useStudentsData } from '@/hooks/use-global-store-data';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const useStudentsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => setData(store.get()));
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        students: data.students,
-        setStudents: (updater: (students: Student[]) => Student[]) => {
-            const current = store.get().students;
-            const newItems = updater(current);
-            store.set(state => ({ ...state, students: newItems }));
-        }
-    };
-};
 
 const StudentSchema = z.object({
   id: z.string().min(3, "Student ID is required"),
@@ -209,9 +193,7 @@ export default function StudentRecordsPage() {
                                                         <Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button>
                                                     </AddEditStudentDialog>
                                                     <AlertDialog>
-                                                        <AlertDialogTrigger asChild>
-                                                            <Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button>
-                                                        </AlertDialogTrigger>
+                                                        <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader><AlertDialogTitle>Delete Student?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the record for {student.name}.</AlertDialogDescription></AlertDialogHeader>
                                                             <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(student.id)}>Delete</AlertDialogAction></AlertDialogFooter>
