@@ -7,7 +7,7 @@ import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState<string | null>(null);
+  const [currentYear, setCurrentYear] = useState('');
   
   useEffect(() => {
     setCurrentYear(new Date().getFullYear().toString());
@@ -23,7 +23,7 @@ export default function Footer() {
           </div>
           <div className="flex flex-col gap-4 items-center">
              <div>
-                {currentYear !== null && <CompanyProfileDownloader />}
+                {currentYear && <CompanyProfileDownloader />}
              </div>
              <p className="text-sm text-muted-foreground text-center">
                 © {currentYear || ''} Innovative Enterprises. All rights reserved.

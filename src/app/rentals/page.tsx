@@ -12,6 +12,7 @@ import type { Asset } from "@/lib/assets";
 import { useAssetsData } from "@/app/admin/asset-table";
 import { RentalRequestForm } from './rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
+import ItRentalAgentForm from '@/app/it-rental-agent/agent-form';
 
 const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => void }) => {
     const getStatusBadge = (status: string) => {
@@ -90,11 +91,18 @@ export default function RentalsPage() {
                         IT Infrastructure Rentals
                     </h1>
                     <p className="mt-4 text-lg text-muted-foreground">
-                        Browse our catalog of high-quality servers, laptops, workstations, and networking equipment available for rent.
+                        Browse our catalog of high-quality servers, laptops, workstations, and networking equipment available for rent, or let our AI build a custom package for you.
                     </p>
                 </div>
+                
+                 <div className="max-w-4xl mx-auto mt-12">
+                     <ItRentalAgentForm />
+                </div>
 
-                <div className="max-w-6xl mx-auto mt-16 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+                <div className="max-w-6xl mx-auto mt-16">
+                    <h2 className="text-3xl font-bold text-center mb-8">Available IT Assets</h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {!isClient ? (
                         // Render skeletons on the server and initial client render
                         Array.from({ length: 8 }).map((_, index) => (
@@ -119,6 +127,7 @@ export default function RentalsPage() {
                             <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
                         ))
                     )}
+                    </div>
                 </div>
 
                 {selectedAsset && (
