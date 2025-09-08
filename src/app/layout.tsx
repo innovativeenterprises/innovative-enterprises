@@ -14,17 +14,35 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+// Create a new client component to contain the main layout logic
+const LayoutClient = ({ children }: { children: React.ReactNode }) => {
   const [isClient, setIsClient] = React.useState(false);
 
   React.useEffect(() => {
     setIsClient(true);
   }, []);
 
+  if (!isClient) {
+    // Render a simplified version or a loading state on the server
+    return <main>{children}</main>;
+  }
+
+  return (
+    <>
+      <Header />
+      <main>{children}</main>
+      <Footer />
+      <Toaster />
+    </>
+  );
+};
+
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
@@ -35,13 +53,8 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        {isClient ? (
-          <>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-            <Toaster />
-          </>
-        ) : <main>{children}</main>}
+        <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
+  );
+}
