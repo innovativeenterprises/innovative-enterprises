@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,8 +11,10 @@ import type { Provider } from '@/lib/providers';
 
 export const useServicesData = () => {
     const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -24,14 +27,17 @@ export const useServicesData = () => {
             const currentServices = store.get().services;
             const newServices = updater(currentServices);
             store.set(state => ({ ...state, services: newServices }));
-        }
+        },
+        isClient,
     };
 };
 
 export const useProductsData = () => {
     const [data, setData] = useState(store.get());
+     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -44,15 +50,18 @@ export const useProductsData = () => {
             const currentProducts = store.get().products;
             const newProducts = updater(currentProducts);
             store.set(state => ({ ...state, products: newProducts }));
-        }
+        },
+        isClient,
     };
 };
 
 
 export const useClientsData = () => {
     const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -71,14 +80,17 @@ export const useClientsData = () => {
              const currentTestimonials = store.get().testimonials;
             const newTestimonials = updater(currentTestimonials);
             store.set(state => ({ ...state, testimonials: newTestimonials }));
-        }
+        },
+        isClient,
     };
 };
 
 export const useProvidersData = () => {
     const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -91,6 +103,7 @@ export const useProvidersData = () => {
             const currentProviders = store.get().providers;
             const newProviders = updater(currentProviders);
             store.set(state => ({ ...state, providers: newProviders }));
-        }
+        },
+        isClient,
     };
 };

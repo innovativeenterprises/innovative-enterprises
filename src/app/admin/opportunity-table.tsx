@@ -25,8 +25,10 @@ import { Skeleton } from "../ui/skeleton";
 // This hook now connects to the global store.
 export const useOpportunitiesData = () => {
     const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -39,7 +41,8 @@ export const useOpportunitiesData = () => {
             const currentOpportunities = store.get().opportunities;
             const newOpportunities = updater(currentOpportunities);
             store.set(state => ({ ...state, opportunities: newOpportunities }));
-        }
+        },
+        isClient,
     };
 };
 
@@ -156,11 +159,7 @@ export default function OpportunityTable({
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { isClient } = useOpportunitiesData();
     
     const handleOpenDialog = (opp?: Opportunity) => {
         setSelectedOpp(opp);

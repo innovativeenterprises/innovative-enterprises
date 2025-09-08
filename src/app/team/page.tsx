@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,12 +12,7 @@ import { useStaffData } from '@/app/admin/staff-table';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TeamPage() {
-    const { leadership, agentCategories, staff } = useStaffData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { leadership, agentCategories, staff, isClient } = useStaffData();
 
     const enabledLeadership = leadership.filter(member => member.enabled);
     const enabledStaff = staff.filter(member => member.enabled);
