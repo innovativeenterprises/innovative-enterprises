@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -40,7 +41,7 @@ export const useServicesData = () => {
 
     return {
         services: data.services,
-        setServices: (updater: (services: Service[]) => Service[]) => {
+        setServices: (updater: (services: Service[]) => void) => {
             const currentServices = store.get().services;
             const newServices = updater(currentServices);
             store.set(state => ({ ...state, services: newServices }));
@@ -63,7 +64,7 @@ export const useProductsData = () => {
 
     return {
         products: data.products,
-        setProducts: (updater: (products: Product[]) => Product[]) => {
+        setProducts: (updater: (products: Product[]) => void) => {
             const currentProducts = store.get().products;
             const newProducts = updater(currentProducts);
             store.set(state => ({ ...state, products: newProducts }));
@@ -516,3 +517,4 @@ export const useCostSettingsData = () => {
         isClient,
     };
 };
+

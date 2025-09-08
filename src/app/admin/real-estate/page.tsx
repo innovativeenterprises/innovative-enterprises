@@ -2,7 +2,7 @@
 
 'use client';
 
-import PropertyTable from "@/app/real-estate-tech/property-table";
+import PropertyTable from "@/app/admin/property-table";
 import { usePropertiesData } from "@/hooks/use-global-store-data";
 
 export default function AdminRealEstatePage() {
@@ -21,3 +21,4 @@ export default function AdminRealEstatePage() {
     </div>
   );
 }
+
