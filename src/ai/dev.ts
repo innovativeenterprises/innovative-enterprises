@@ -19,6 +19,7 @@ import '@/ai/flows/identity-analysis';
 import '@/ai/flows/meeting-analysis';
 import '@/ai/flows/generate-agreement';
 import '@/ai/flows/interview-coach';
+import '@/ai/flows/interview-feedback';
 import '@/ai/flows/whatsapp-agent';
 import '@/ai/flows/project-inception';
 import '@/ai/flows/cctv-quotation';
@@ -35,26 +36,73 @@ import '@/ai/flows/web-scraper-agent';
 import '@/ai/flows/feasibility-study';
 import '@/ai/flows/ameen-smart-lock';
 import '@/ai/flows/video-generator';
-import '@/ai* Connect to the Google Generative AI platform
- */
-import {generateAgreement} from '@/ai/flows/generate-agreement';
-import {generateEnhancedCv} from '@/ai/flows/cv-enhancement';
-import {generateLetterOfInterest} from '@/ai/flows/letter-of-interest';
-import {generateSocialMediaPost} from '@/ai/flows/social-media-post-generator';
-import {generateTenderResponse} from '@/ai/flows/tender-response-assistant';
-import {generateImage} from '@/ai/flows/image-generator';
-import {generateProjectPlan} from '@/ai/flows/project-inception';
-import {generateIctProposal} from '@/ai/flows/cctv-quotation';
-import {generateAssetRentalProposal} from '@/ai/flows/asset-rental-agent';
-import {getInterviewFeedback} from './interview-feedback';
-import {generateInterviewQuestions} from './interview-coach';
-import {generateAdaptiveLesson} from './adaptive-learning-tutor';
-import {generateLearningPath} from './learning-path-generator';
-import {generateQuiz} from './quiz-generator';
-import {generateTimetable} from './timetable-generator';
-import {generateElectionMaterials} from './community-elections-agent';
+import '@/ai/flows/admissions-agent';
+import '@/ai/flows/boq-generator';
+import '@/ai/flows/it-rental-agent';
+import '@/ai/flows/property-valuation';
+import '@/ai/flows/property-extraction';
+import '@/ai/flows/property-matcher';
+import '@/ai/flows/real-estate-contract-generator';
+import '@/ai/flows/image-transformer';
+import '@/ai/flows/boq-estimator';
+import '@/ai/flows/raaha-matcher';
+import '@/ai/flows/image-annotation';
+import '@/ai/flows/fire-safety-estimator';
+import '@/ai/flows/coupon-generator';
+import '@/ai/flows/theme-generator';
+import '@/ai/flows/timetable-generator';
+import '@/ai/flows/adaptive-learning-tutor';
+import '@/ai/flows/learning-path-generator';
+import '@/ai/flows/quiz-generator';
+import '@/ai/flows/proctoring-agent';
+import '@/ai/flows/wellbeing-checkin';
+import '@/ai/flows/scholarship-agent';
+import '@/ai/flows/scholarship-essay-assistant';
+import '@/ai/flows/community-elections-agent';
 
+// Make sure all flows are loaded into the development server.
+import {
+  answerEcommerceQuery,
+  answerHubQuery,
+  answerQuestion,
+  analyzeApplication,
+  analyzeCrDocument,
+  analyzeCv,
+  analyzeFloorPlan,
+  analyzeIdentity,
+  analyzeKnowledgeDocument,
+  analyzeMeeting,
+  analyzeProTask,
+  analyzeSanadTask,
+  analyzeWorkOrder,
+  annotateImage,
+  controlSmartLock,
+  estimateBoq,
+  evaluateProperty,
+  extractPropertyDetailsFromUrl,
+  findBestPropertyMatch,
+  findHelpers,
+  generateAgreement,
+  generateEnhancedCv,
+  generateIctProposal,
+  generateImage,
+  generateLetterOfInterest,
+  generateProjectPlan,
+  generateSocialMediaPost,
+  generateTenderResponse,
+  generateAssetRentalProposal,
+  getInterviewFeedback,
+  generateInterviewQuestions,
+  generateAdaptiveLesson,
+  generateLearningPath,
+  generateQuiz,
+  generateTimetable,
+  generateElectionMaterials,
+} from './flows';
+
+// Export all flows for discoverability.
 export {
+  answerEcommerceQuery,
   answerHubQuery,
   answerQuestion,
   analyzeApplication,
@@ -91,4 +139,3 @@ export {
   generateTimetable,
   generateElectionMaterials,
 };
-```
