@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -26,6 +25,7 @@ import type { SignedLease } from '@/lib/leases';
 import type { Property } from '@/lib/properties';
 import type { Student } from '@/lib/students';
 import type { CostRate } from '@/lib/cost-settings.schema';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 
 export const useServicesData = () => {
     const [data, setData] = useState(store.get());
@@ -518,3 +518,21 @@ export const useCostSettingsData = () => {
     };
 };
 
+export const useCfoData = () => {
+    const [data, setData] = useState({
+        kpiData,
+        transactionData,
+        upcomingPayments,
+        vatPayment
+    });
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    return {
+        ...data,
+        isClient,
+    };
+};

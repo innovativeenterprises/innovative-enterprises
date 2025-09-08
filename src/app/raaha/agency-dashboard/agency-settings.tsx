@@ -12,31 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Agency } from "@/lib/raaha-agencies";
-import { store } from "@/lib/global-store";
 import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
 import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
+import { useAgenciesData } from "@/hooks/use-global-store-data";
 
-
-export const useAgenciesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        agencies: data.raahaAgencies,
-        setAgencies: (updater: (agencies: Agency[]) => Agency[]) => {
-            const currentAgencies = store.get().raahaAgencies;
-            const newAgencies = updater(currentAgencies);
-            store.set(state => ({ ...state, raahaAgencies: newAgencies }));
-        }
-    };
-};
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {

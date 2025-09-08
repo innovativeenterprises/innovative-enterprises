@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -296,4 +295,3 @@ export default function PropertyTable({ properties, setProperties, isClient }: {
         </Card>
     );
 }
-

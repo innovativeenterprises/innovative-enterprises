@@ -12,6 +12,7 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from '@/components/ui/skeleton';
 import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 import { cn } from '@/lib/utils';
+import { useCfoData } from '@/hooks/use-global-store-data';
 
 // Reusable component for displaying due dates and remaining days
 const DueDate = ({ date, className }: { date: string, className?: string }) => {
@@ -49,11 +50,7 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
 
 // Main Dashboard Component
 export default function CfoDashboard() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { kpiData, transactionData, upcomingPayments, vatPayment, isClient } = useCfoData();
   
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
