@@ -14,6 +14,7 @@ import { Loader2, Sparkles, TrendingUp, Home, PieChart } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { Skeleton } from '@/components/ui/skeleton';
 
 const RoiSchema = z.object({
   purchasePrice: z.coerce.number().positive(),

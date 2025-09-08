@@ -99,7 +99,7 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 };
 
 export default function StudentRecordsPage() {
-    const { students, setStudents } = useStudentsData();
+    const { students, setStudents, isClient } = useStudentsData();
     const { toast } = useToast();
 
     const handleSave = (values: StudentValues, id?: string) => {
@@ -170,39 +170,43 @@ export default function StudentRecordsPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {students.map(student => (
-                                        <TableRow key={student.id}>
-                                            <TableCell>
-                                                <div className="flex items-center gap-3">
-                                                    <Avatar>
-                                                        <AvatarImage src={student.photo} alt={student.name} />
-                                                        <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
-                                                    </Avatar>
-                                                    <div>
-                                                        <p className="font-medium">{student.name}</p>
-                                                        <p className="text-sm text-muted-foreground">{student.id}</p>
+                                    {!isClient ? (
+                                        <TableRow><TableCell colSpan={5} className="text-center h-24"><Skeleton className="h-10 w-full"/></TableCell></TableRow>
+                                    ) : (
+                                        students.map(student => (
+                                            <TableRow key={student.id}>
+                                                <TableCell>
+                                                    <div className="flex items-center gap-3">
+                                                        <Avatar>
+                                                            <AvatarImage src={student.photo} alt={student.name} />
+                                                            <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <p className="font-medium">{student.name}</p>
+                                                            <p className="text-sm text-muted-foreground">{student.id}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>{student.major}</TableCell>
-                                            <TableCell>{student.year}</TableCell>
-                                            <TableCell>{getStatusBadge(student.status)}</TableCell>
-                                             <TableCell className="text-right">
-                                                <div className="flex justify-end gap-2">
-                                                    <AddEditStudentDialog student={student} onSave={handleSave}>
-                                                        <Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button>
-                                                    </AddEditStudentDialog>
-                                                    <AlertDialog>
-                                                        <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader><AlertDialogTitle>Delete Student?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the record for {student.name}.</AlertDialogDescription></AlertDialogHeader>
-                                                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(student.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                                </TableCell>
+                                                <TableCell>{student.major}</TableCell>
+                                                <TableCell>{student.year}</TableCell>
+                                                <TableCell>{getStatusBadge(student.status)}</TableCell>
+                                                <TableCell className="text-right">
+                                                    <div className="flex justify-end gap-2">
+                                                        <AddEditStudentDialog student={student} onSave={handleSave}>
+                                                            <Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button>
+                                                        </AddEditStudentDialog>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader><AlertDialogTitle>Delete Student?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the record for {student.name}.</AlertDialogDescription></AlertDialogHeader>
+                                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(student.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
                                 </TableBody>
                             </Table>
                         </CardContent>

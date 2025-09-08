@@ -34,8 +34,8 @@ const carbonData = [
   { month: 'Feb', footprint: 22000 },
   { month: 'Mar', footprint: 23500 },
   { month: 'Apr', footprint: 25000 },
-  { month: 'May', consumption: 28000 },
-  { month: 'Jun', consumption: 32000 },
+  { month: 'May', footprint: 28000 },
+  { month: 'Jun', footprint: 32000 },
 ];
 const carbonChartConfig = { footprint: { label: "kgCO2e", color: "hsl(var(--muted-foreground))" } };
 

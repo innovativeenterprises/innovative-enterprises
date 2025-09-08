@@ -121,9 +121,9 @@ export default function AdmissionsPage() {
                             <UserCheck className="w-10 h-10 text-primary" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Admissions Officer</h1>
-                        <div className="mt-4 text-lg text-muted-foreground">
+                        <p className="mt-4 text-lg text-muted-foreground">
                             Streamline your admissions process. Submit an application below to see how our AI, "Admito," provides instant preliminary analysis for your admissions team.
-                        </div>
+                        </p>
                          <div className="mt-4">
                             <Button asChild variant="outline">
                                 <Link href="/education-tech/admissions/dashboard">

@@ -4,11 +4,11 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, DollarSign, PlusCircle, TrendingUp, TrendingDown, Percent, FileText } from 'lucide-react';
 import Link from 'next/link';
-import { Student } from '@/lib/students';
+import { type Student } from '@/lib/students';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';

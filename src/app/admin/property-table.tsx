@@ -22,30 +22,7 @@ import Image from 'next/image';
 import { store } from "@/lib/global-store";
 import { extractPropertyDetailsFromUrl } from "@/ai/flows/property-extraction";
 import { Skeleton } from "@/components/ui/skeleton";
-
-// Hook to connect to the global store
-export const usePropertiesData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        properties: data.properties,
-        setProperties: (updater: (properties: Property[]) => void) => {
-            const currentProperties = store.get().properties;
-            const newProperties = updater(currentProperties);
-            store.set(state => ({ ...state, properties: newProperties }));
-        },
-        isClient,
-    };
-};
+import { usePropertiesData } from "@/hooks/use-global-store-data";
 
 const PropertySchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -218,9 +195,8 @@ const AddEditPropertyDialog = ({
     )
 }
 
-export default function PropertyTable({ properties, setProperties }: { properties: Property[], setProperties: (updater: (properties: Property[]) => void) => void }) {
+export default function PropertyTable({ properties, setProperties, isClient }: { properties: Property[], setProperties: (updater: (properties: Property[]) => void) => void, isClient: boolean }) {
     const { toast } = useToast();
-    const { isClient } = usePropertiesData();
 
     const handleSave = (values: PropertyValues, id?: string) => {
         const { urlToScrape, ...propertyData } = values; // Exclude scraper URL from save data
