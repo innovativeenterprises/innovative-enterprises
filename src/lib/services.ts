@@ -160,25 +160,4 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/cv-enhancer",
   },
-  {
-    icon: Lightbulb,
-    title: "Lina Image Generator",
-    description: "Create stunning visuals from text descriptions in seconds.",
-    enabled: true,
-    href: "/image-generator",
-  },
-  {
-    icon: Video,
-    title: "VEO Video Factory",
-    description: "Generate short video clips from text prompts using AI.",
-    enabled: true,
-    href: "/video-generator",
-  },
-  {
-    icon: Home,
-    title: "AI Interior Designer",
-    description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
-    enabled: true,
-    href: "/interior-designer",
-  },
 ];

@@ -4,7 +4,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from 'zod';
+import { z } from "zod";
 import { generateInterviewQuestions } from '@/ai/flows/interview-coach';
 import type { InterviewQuestion } from '@/ai/flows/interview-coach.schema';
 import { getInterviewFeedback } from '@/ai/flows/interview-feedback';
@@ -19,7 +19,6 @@ import { Loader2, Sparkles, Bot, User, ArrowLeft, ArrowRight, VideoOff, ThumbsUp
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from 'next/image';
-import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
 const FormSchema = z.object({
   jobTitle: z.string().min(3, 'Please enter a valid job title.'),
@@ -235,8 +234,8 @@ export default function InterviewCoachForm() {
                                     <FormItem>
                                         <FormLabel>Your Answer</FormLabel>
                                         <FormControl>
-                                             <VoiceEnabledTextarea
-                                                placeholder="Type or speak your answer here..."
+                                            <Textarea
+                                                placeholder="Type your answer here..."
                                                 rows={5}
                                                 {...field}
                                             />

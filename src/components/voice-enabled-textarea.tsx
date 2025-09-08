@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useRef, useEffect, forwardRef } from 'react';
@@ -7,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Mic, Square } from 'lucide-react';
 import { Textarea, type TextareaProps } from '@/components/ui/textarea';
-import { useFormContext } from 'react-hook-form';
 
 interface VoiceEnabledTextareaProps extends TextareaProps {
   name: string;
@@ -17,7 +15,6 @@ export const VoiceEnabledTextarea = forwardRef<HTMLTextAreaElement, VoiceEnabled
   const [isRecording, setIsRecording] = useState(false);
   const recognitionRef = useRef<any>(null);
   const { toast } = useToast();
-  const { setValue, getValues } = useFormContext();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -28,7 +25,6 @@ export const VoiceEnabledTextarea = forwardRef<HTMLTextAreaElement, VoiceEnabled
       recognitionRef.current.lang = 'en-US';
 
       recognitionRef.current.onresult = (event: any) => {
-        const existingText = getValues(name) || '';
         let finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
@@ -36,7 +32,17 @@ export const VoiceEnabledTextarea = forwardRef<HTMLTextAreaElement, VoiceEnabled
           }
         }
         if (finalTranscript) {
-          setValue(name, existingText + finalTranscript + ' ', { shouldValidate: true });
+           const currentTarget = (event.currentTarget as any);
+           const existingText = (props.value || '');
+           const updatedText = existingText + finalTranscript + ' ';
+           if (props.onChange) {
+                // Create a synthetic event to mimic a real textarea change
+                const syntheticEvent = {
+                    target: { value: updatedText, name: name },
+                    currentTarget: { value: updatedText, name: name },
+                } as React.ChangeEvent<HTMLTextAreaElement>;
+                props.onChange(syntheticEvent);
+            }
         }
       };
 
@@ -50,7 +56,7 @@ export const VoiceEnabledTextarea = forwardRef<HTMLTextAreaElement, VoiceEnabled
         setIsRecording(false);
       };
     }
-  }, [name, setValue, toast, getValues]);
+  }, [name, toast, props.value, props.onChange]);
 
   const handleToggleRecording = () => {
     if (!recognitionRef.current) {
