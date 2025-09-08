@@ -17,12 +17,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Worker } from "@/lib/raaha-workers";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Home } from "lucide-react";
+import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
-import { store } from "@/lib/global-store";
 import { type Agency } from '@/lib/raaha-agencies';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useWorkersData } from "@/hooks/use-global-store-data";
 import { useAgenciesData } from "./agency-settings";
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -206,9 +204,9 @@ const AddEditWorkerDialog = ({ worker, onSave, children, agencyId }: { worker?: 
     );
 };
 
-export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, agencyId: string }) { 
+export function WorkerTable({ workers, setWorkers, agencyId, isClient }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, agencyId: string, isClient: boolean }) { 
     const { toast } = useToast();
-    const { agencies, isClient } = useAgenciesData();
+    const { agencies } = useAgenciesData();
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const skillsArray = values.skills.map(s => s.value).filter(s => s.trim() !== '');

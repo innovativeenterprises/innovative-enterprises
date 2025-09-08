@@ -19,14 +19,19 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
     // This effect runs only on the client, after hydration
-    const dueDate = new Date(date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of day for accurate diff
-    const diffTime = dueDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    setDaysRemaining(diffDays);
+    const calculateRemainingDays = () => {
+      const dueDate = new Date(date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize to start of day for accurate diff
+      const diffTime = dueDate.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      setDaysRemaining(diffDays);
+    }
+    
+    setIsClient(true);
+    calculateRemainingDays();
+
   }, [date]);
 
   if (!isClient) {

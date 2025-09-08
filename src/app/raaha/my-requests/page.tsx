@@ -12,16 +12,12 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useRequestsData } from '@/hooks/use-global-store-data';
 
-function RequestRow({ request }: { request: HireRequest }) {
+function RequestRow({ request, isClient }: { request: HireRequest, isClient: boolean }) {
     const [requestDateText, setRequestDateText] = useState("...");
     const [interviewDateText, setInterviewDateText] = useState("");
-    const [isClient, setIsClient] = useState(false);
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-    
     useEffect(() => {
         if (isClient) {
              setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
@@ -47,7 +43,7 @@ function RequestRow({ request }: { request: HireRequest }) {
             <TableCell>
                 <p className="font-medium">{request.workerName}</p>
                 <p className="text-sm text-muted-foreground">
-                    Requested: {isClient ? requestDateText : '...'}
+                    Requested: {requestDateText}
                 </p>
             </TableCell>
             <TableCell>
@@ -77,16 +73,7 @@ function RequestRow({ request }: { request: HireRequest }) {
 }
 
 export default function MyRequestsPage() {
-    const [requests, setRequests] = useState<HireRequest[]>([]);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const updateRequests = () => setRequests(store.get().raahaRequests);
-        updateRequests();
-        const unsubscribe = store.subscribe(updateRequests);
-        return () => unsubscribe();
-    }, []);
+    const { requests, isClient } = useRequestsData();
     
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
@@ -142,7 +129,7 @@ export default function MyRequestsPage() {
                                         </TableRow>
                                     ) : (
                                         myRequests.map(req => (
-                                           <RequestRow key={req.id} request={req} />
+                                           <RequestRow key={req.id} request={req} isClient={isClient} />
                                         ))
                                     )}
                                 </TableBody>

@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { HireRequest } from "@/lib/raaha-requests";
 import { Badge } from "@/components/ui/badge";
-import { store } from "@/lib/global-store";
 import { formatDistanceToNow, format } from 'date-fns';
 import { Calendar as CalendarIcon, MessageSquare, Clock } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -21,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const InterviewSchema = z.object({
   interviewDate: z.date({ required_error: "An interview date is required."}),
@@ -198,33 +198,8 @@ function RequestRow({ request, onStatusChange, onSchedule }: { request: HireRequ
     )
 }
 
-export const useRequestsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        requests: data.raahaRequests,
-        setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
-            const currentRequests = store.get().raahaRequests;
-            const newRequests = updater(currentRequests);
-            store.set(state => ({ ...state, raahaRequests: newRequests }));
-        }
-    };
-};
-
-export function RequestTable({ requests, setRequests }: { requests: HireRequest[], setRequests: (updater: (requests: HireRequest[]) => void) => void }) { 
+export function RequestTable({ requests, setRequests, isClient }: { requests: HireRequest[], setRequests: (updater: (requests: HireRequest[]) => void) => void, isClient: boolean }) { 
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleStatusChange = (requestId: string, newStatus: HireRequest['status']) => {
         setRequests(prev => prev.map(req => 
@@ -262,21 +237,28 @@ export function RequestTable({ requests, setRequests }: { requests: HireRequest[
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {requests.length === 0 && (
+                         {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={4} className="text-center h-24">
+                                   <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                         ) : requests.length === 0 ? (
                              <TableRow>
                                 <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                                     No requests for this agency yet.
                                 </TableCell>
                             </TableRow>
+                        ) : (
+                            requests.map(req => (
+                            <RequestRow
+                                key={req.id}
+                                request={req}
+                                onStatusChange={handleStatusChange}
+                                onSchedule={handleScheduleInterview}
+                            />
+                            ))
                         )}
-                        {requests.map(req => (
-                           <RequestRow
-                             key={req.id}
-                             request={req}
-                             onStatusChange={handleStatusChange}
-                             onSchedule={handleScheduleInterview}
-                           />
-                        ))}
                     </TableBody>
                 </Table>
             </CardContent>

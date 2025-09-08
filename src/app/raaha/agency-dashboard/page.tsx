@@ -2,27 +2,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useWorkersData, WorkerTable } from './worker-table';
-import { useRequestsData, RequestTable } from './request-table';
-import { useAgenciesData, AgencySettings } from './agency-settings';
+import { WorkerTable } from './worker-table';
+import { RequestTable } from './request-table';
+import { AgencySettings } from './agency-settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardHeader } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
 
 export default function AgencyDashboardPage() {
     const { workers, setWorkers } = useWorkersData();
     const { requests, setRequests } = useRequestsData();
     const { agencies, setAgencies, isClient } = useAgenciesData();
 
-    const [selectedAgencyId, setSelectedAgencyId] = useState(agencies[0]?.id);
+    const [selectedAgencyId, setSelectedAgencyId] = useState('');
 
     useEffect(() => {
-        if (isClient && !selectedAgencyId && agencies.length > 0) {
+        if (isClient && agencies.length > 0) {
             setSelectedAgencyId(agencies[0].id);
         }
-    }, [agencies, selectedAgencyId, isClient]);
+    }, [agencies, isClient]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
@@ -109,10 +110,10 @@ export default function AgencyDashboardPage() {
                             <TabsTrigger value="settings">Agency Settings</TabsTrigger>
                         </TabsList>
                         <TabsContent value="requests" className="mt-6">
-                            <RequestTable requests={filteredRequests} setRequests={setRequests} />
+                            <RequestTable requests={filteredRequests} setRequests={setRequests} isClient={isClient} />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} />
+                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} isClient={isClient} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
