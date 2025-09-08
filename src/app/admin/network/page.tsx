@@ -1,8 +1,9 @@
 
 'use client';
 
-import ProviderTable, { useProvidersData } from "../provider-table";
-import AssetTable, { useAssetsData } from "../asset-table";
+import ProviderTable from "../provider-table";
+import AssetTable from "../asset-table";
+import { useProvidersData, useAssetsData } from "@/hooks/use-global-store-data";
 
 export default function AdminNetworkPage() {
   const providerData = useProvidersData();
@@ -22,3 +23,5 @@ export default function AdminNetworkPage() {
     </div>
   );
 }
+
+    

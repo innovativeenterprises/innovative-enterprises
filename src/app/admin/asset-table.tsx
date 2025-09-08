@@ -19,8 +19,8 @@ import type { Asset } from "@/lib/assets";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon, Search } from "lucide-react";
 import Image from 'next/image';
-import { store } from "@/lib/global-store";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAssetsData } from "@/hooks/use-global-store-data";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -30,30 +30,6 @@ const fileToDataURI = (file: File): Promise<string> => {
         reader.readAsDataURL(file);
     });
 };
-
-export const useAssetsData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        assets: data.assets,
-        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
-            const currentAssets = store.get().assets;
-            const newAssets = updater(currentAssets);
-            store.set(state => ({ ...state, assets: newAssets }));
-        },
-        isClient,
-    };
-};
-
 
 const AssetSchema = z.object({
   name: z.string().min(3, "Asset name is required"),
@@ -319,17 +295,14 @@ const ImportAssetsDialog = ({ onImport, children }: { onImport: (assets: Asset[]
 export default function AssetTable({
     assets,
     setAssets,
+    isClient,
 }: {
     assets: Asset[],
     setAssets: (updater: (assets: Asset[]) => void) => void,
+    isClient: boolean,
 }) {
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
     
     const handleSave = (values: AssetValues, id?: string) => {
         if (id) {
@@ -459,5 +432,7 @@ export default function AssetTable({
         </Card>
     );
 }
+
+    
 
     
