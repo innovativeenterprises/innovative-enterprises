@@ -126,8 +126,13 @@ function RequestRow({ request, onStatusChange, onSchedule }: { request: HireRequ
 
     useEffect(() => {
         setIsClient(true);
-        setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
-    }, [request.requestDate]);
+    }, []);
+
+    useEffect(() => {
+        if (isClient) {
+             setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
+        }
+    }, [request.requestDate, isClient]);
 
      const getStatusBadge = (status: HireRequest['status']) => {
         switch (status) {
