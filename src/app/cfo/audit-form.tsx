@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -40,17 +40,34 @@ export default function AuditForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<FinancialAnalysisOutput | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       analysisType: 'Internal Review',
       companyName: 'Innovative Enterprises',
-      fiscalYear: new Date().getFullYear().toString(),
+      fiscalYear: isClient ? new Date().getFullYear().toString() : '',
       assignedOffice: '',
     },
   });
+
+  useEffect(() => {
+    if (isClient) {
+      form.reset({
+        analysisType: 'Internal Review',
+        companyName: 'Innovative Enterprises',
+        fiscalYear: new Date().getFullYear().toString(),
+        assignedOffice: '',
+      })
+    }
+  }, [isClient, form]);
+
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
