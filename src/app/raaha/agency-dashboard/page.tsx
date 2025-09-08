@@ -14,17 +14,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function AgencyDashboardPage() {
     const { workers, setWorkers } = useWorkersData();
     const { requests, setRequests } = useRequestsData();
-    const { agencies, setAgencies } = useAgenciesData();
-    const [isClient, setIsClient] = useState(false);
+    const { agencies, setAgencies, isClient } = useAgenciesData();
 
     const [selectedAgencyId, setSelectedAgencyId] = useState(agencies[0]?.id);
 
     useEffect(() => {
-        setIsClient(true);
-        if (!selectedAgencyId && agencies.length > 0) {
+        if (isClient && !selectedAgencyId && agencies.length > 0) {
             setSelectedAgencyId(agencies[0].id);
         }
-    }, [agencies, selectedAgencyId]);
+    }, [agencies, selectedAgencyId, isClient]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     

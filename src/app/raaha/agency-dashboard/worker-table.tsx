@@ -22,27 +22,8 @@ import Image from 'next/image';
 import { store } from "@/lib/global-store";
 import { type Agency } from '@/lib/raaha-agencies';
 import { Skeleton } from "@/components/ui/skeleton";
-
-// Hook to connect to the global store for workers
-export const useWorkersData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        workers: data.raahaWorkers, // Assuming workers are stored here
-        setWorkers: (updater: (workers: Worker[]) => Worker[]) => {
-            const currentWorkers = store.get().raahaWorkers;
-            const newWorkers = updater(currentWorkers);
-            store.set(state => ({ ...state, raahaWorkers: newWorkers }));
-        }
-    };
-};
+import { useWorkersData } from "@/hooks/use-global-store-data";
+import { useAgenciesData } from "./agency-settings";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -227,12 +208,7 @@ const AddEditWorkerDialog = ({ worker, onSave, children, agencyId }: { worker?: 
 
 export function WorkerTable({ workers, setWorkers, agencyId }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, agencyId: string }) { 
     const { toast } = useToast();
-    const { agencies } = useAgenciesData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { agencies, isClient } = useAgenciesData();
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const skillsArray = values.skills.map(s => s.value).filter(s => s.trim() !== '');

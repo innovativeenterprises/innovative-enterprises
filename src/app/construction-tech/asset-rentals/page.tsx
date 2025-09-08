@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Server, ArrowRight } from "lucide-react";
 import Image from 'next/image';
 import type { Asset } from "@/lib/assets";
-import { useAssetsData } from "@/app/admin/asset-table";
+import { useAssetsData } from "@/hooks/use-global-store-data";
 import { RentalRequestForm } from './rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import AssetRentalAgentForm from './agent-form';
@@ -58,15 +58,9 @@ const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => 
 };
 
 export default function AssetRentalsPage() {
-    const { assets } = useAssetsData();
+    const { assets, isClient } = useAssetsData();
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
 
     const handleRentClick = (asset: Asset) => {
         setSelectedAsset(asset);
