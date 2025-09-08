@@ -18,6 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCostSettingsData } from "@/hooks/use-global-store-data";
 
 const CostSettingSchema = z.object({
   name: z.string().min(2, "Name is required"),

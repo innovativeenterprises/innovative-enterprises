@@ -14,6 +14,7 @@ import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { useStudentsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
+import { format } from 'date-fns';
 
 export default function StudentFinancialsPage() {
     const { students, isClient } = useStudentsData();

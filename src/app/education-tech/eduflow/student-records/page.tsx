@@ -160,15 +160,7 @@ export default function StudentRecordsPage() {
                         </CardHeader>
                         <CardContent>
                             <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Student</TableHead>
-                                        <TableHead>Major</TableHead>
-                                        <TableHead>Year</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
+                                <TableHeader><TableRow><TableHead>Student</TableHead><TableHead>Major</TableHead><TableHead>Year</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                                 <TableBody>
                                     {!isClient ? (
                                         <TableRow><TableCell colSpan={5} className="text-center h-24"><Skeleton className="h-10 w-full"/></TableCell></TableRow>
