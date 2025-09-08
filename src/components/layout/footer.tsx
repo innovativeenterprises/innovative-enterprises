@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,11 +7,9 @@ import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState('');
-  const [isClient, setIsClient] = useState(false);
+  const [currentYear, setCurrentYear] = useState<string | null>(null);
   
   useEffect(() => {
-    setIsClient(true);
     setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
@@ -26,10 +23,10 @@ export default function Footer() {
           </div>
           <div className="flex flex-col gap-4 items-center">
              <div>
-                {isClient && <CompanyProfileDownloader />}
+                {currentYear !== null && <CompanyProfileDownloader />}
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {isClient ? currentYear : new Date().getFullYear().toString()} Innovative Enterprises. All rights reserved.
+                © {currentYear || ''} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">
