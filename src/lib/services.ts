@@ -154,13 +154,6 @@ export const initialServices: Service[] = [
     href: "/infra-rent",
   },
   {
-    icon: FileText,
-    title: "Certus Audit Hub",
-    description: "Connect with certified audit offices and get AI-powered analysis of your financial documents.",
-    enabled: true,
-    href: "/financial-audit",
-  },
-  {
     icon: UserRoundCheck,
     title: "GENIUS Career Platform",
     description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",

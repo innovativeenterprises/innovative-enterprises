@@ -43,7 +43,6 @@ export default function AdminLayout({
   const menuItems = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
-    { href: '/admin/finance', label: 'Finance', icon: WalletCards },
     { href: '/admin/content', label: 'Site Content', icon: FileText },
     { href: '/admin/network', label: 'Network', icon: Network },
     { href: '/admin/people', label: 'People', icon: UserCog },

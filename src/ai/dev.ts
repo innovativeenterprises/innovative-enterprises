@@ -22,7 +22,6 @@ import '@/ai/flows/interview-coach';
 import '@/ai/flows/interview-feedback';
 import '@/ai/flows/whatsapp-agent';
 import '@/ai/flows/project-inception';
-import '@/ai/flows/financial-document-analysis';
 import '@/ai/flows/cctv-quotation';
 import '@/ai/flows/floor-plan-analysis';
 import '@/ai/flows/asset-rental-agent';
