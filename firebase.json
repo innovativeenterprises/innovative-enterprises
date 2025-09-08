@@ -8,8 +8,15 @@
       "**/node_modules/**"
     ],
     "frameworksBackend": {
-      "region": "us-central1"
+      "region": "us-central1",
+      "function": "ssrinnovativeenterprises"
     },
+    "rewrites": [
+      {
+        "source": "/**",
+        "function": "ssrinnovativeenterprises"
+      }
+    ],
     "cleanUrls": true
   }
 }
