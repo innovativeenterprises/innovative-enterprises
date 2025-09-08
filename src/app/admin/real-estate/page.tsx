@@ -1,7 +1,9 @@
 
+
 'use client';
 
-import PropertyTable, { usePropertiesData } from "../property-table";
+import PropertyTable from "@/app/real-estate-tech/property-table";
+import { usePropertiesData } from "@/hooks/use-global-store-data";
 
 export default function AdminRealEstatePage() {
   const propertyData = usePropertiesData();

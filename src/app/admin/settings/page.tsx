@@ -2,10 +2,7 @@
 
 'use client';
 
-import SettingsTable, { useSettingsData } from "../settings-table";
-import { useCostSettingsData } from "../cost-settings-table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import SettingsTable from "../settings-table";
 
 export default function AdminSettingsPage() {
   

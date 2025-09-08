@@ -1,7 +1,9 @@
 
+
 'use client';
 
-import InvestorTable, { useInvestorsData } from "../investor-table";
+import InvestorTable from "../investor-table";
+import { useInvestorsData } from "@/hooks/use-global-store-data";
 
 export default function AdminFinancePage() {
   const investorData = useInvestorsData();

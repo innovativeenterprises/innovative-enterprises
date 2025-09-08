@@ -17,30 +17,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { ProjectStage } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { store } from "@/lib/global-store";
 import { Skeleton } from "../ui/skeleton";
-
-// This hook now connects to the global store.
-export const useProjectStagesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        stages: data.stages,
-        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
-            const currentStages = store.get().stages;
-            const newStages = updater(currentStages);
-            store.set(state => ({ ...state, stages: newStages }));
-        }
-    };
-};
-
+import { useProjectStagesData } from "@/hooks/use-global-store-data";
 
 const StageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -110,11 +88,7 @@ export default function StageTable({
     setStages: (updater: (stages: ProjectStage[]) => void) => void,
 }) {
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { isClient } = useProjectStagesData();
 
     const handleSave = (values: StageValues, id?: string) => {
         if (id) {

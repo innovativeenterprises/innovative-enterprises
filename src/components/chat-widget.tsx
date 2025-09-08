@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -5,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { X, MessageSquare, Bot } from "lucide-react";
 import { ChatComponent } from '@/components/chat/chat-component';
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 
 

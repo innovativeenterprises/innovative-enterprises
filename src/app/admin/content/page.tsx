@@ -1,13 +1,12 @@
 
+
 'use client';
 
-import { useServicesData } from "../service-table";
 import ServiceTable from "../service-table";
-import { useProductsData } from "../product-table";
 import ProductTable from "../product-table";
-import { useClientsData } from "../client-table";
 import ClientTable from "../client-table";
-import PricingTable, { usePricingData } from "../pricing-table";
+import PricingTable from "../pricing-table";
+import { useServicesData, useProductsData, useClientsData, usePricingData } from "@/hooks/use-global-store-data";
 
 
 export default function AdminContentPage() {
@@ -15,6 +14,11 @@ export default function AdminContentPage() {
   const productData = useProductsData();
   const clientData = useClientsData();
   const pricingData = usePricingData();
+
+  if (!serviceData.isClient || !productData.isClient || !clientData.isClient || !pricingData.isClient) {
+    // You can return a loading skeleton here if needed
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="space-y-8">

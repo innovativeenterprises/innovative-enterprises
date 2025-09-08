@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -18,30 +19,9 @@ import { useToast } from "@/hooks/use-toast";
 import type { Investor } from "@/lib/investors";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent, Wand2 } from "lucide-react";
-import { store } from "@/lib/global-store";
 import { analyzeCrDocument } from "@/ai/flows/cr-analysis";
-import { Skeleton } from "@/components/ui/skeleton";
-
-// Hook to connect to the global store
-export const useInvestorsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        investors: data.investors,
-        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
-            const currentInvestors = store.get().investors;
-            const newInvestors = updater(currentInvestors);
-            store.set(state => ({ ...state, investors: newInvestors }));
-        }
-    };
-};
+import { Skeleton } from "../ui/skeleton";
+import { useInvestorsData } from "@/hooks/use-global-store-data";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -237,11 +217,7 @@ const AddEditInvestorDialog = ({
 
 export default function InvestorTable({ investors, setInvestors }: { investors: Investor[], setInvestors: (updater: (investors: Investor[]) => void) => void }) {
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { isClient } = useInvestorsData();
 
     const handleSave = async (values: InvestorValues, id?: string) => {
         const uploadedDocs: Investor['documents'] = {};

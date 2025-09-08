@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -14,29 +15,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
-import { store } from "@/lib/global-store";
 import { Skeleton } from "../ui/skeleton";
-
-// This hook now connects to the global store.
-export const usePricingData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        pricing: data.pricing,
-        setPricing: (updater: (pricing: Pricing[]) => Pricing[]) => {
-            const currentPricing = store.get().pricing;
-            const newPricing = updater(currentPricing);
-            store.set(state => ({ ...state, pricing: newPricing }));
-        }
-    };
-};
+import { usePricingData } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -103,11 +83,7 @@ export default function PricingTable({
     setPricing: (updater: (pricing: Pricing[]) => void) => void 
 }) {
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { isClient } = usePricingData();
 
 
     const handleSave = (values: PricingValues, id: string) => {
