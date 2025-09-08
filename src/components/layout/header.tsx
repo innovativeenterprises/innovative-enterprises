@@ -1,10 +1,11 @@
 
+
 'use client';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, BarChart } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -30,7 +31,7 @@ import Image from 'next/image';
 import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
 
 const navLinks = [
@@ -163,6 +164,12 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 href: "/cv-enhancer",
                 description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
                 icon: UserRoundCheck,
+            },
+             {
+                title: "AI Property Valuator",
+                href: "/real-estate-tech/property-valuator",
+                description: "Get an instant, data-driven market valuation for your property.",
+                icon: BarChart,
             },
         ]
     }

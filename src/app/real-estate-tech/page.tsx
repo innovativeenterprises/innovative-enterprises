@@ -120,7 +120,7 @@ export default function RealEstateTechPage() {
 
         <div className="max-w-6xl mx-auto mt-20">
             <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Upcoming SaaS Platforms</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-primary">Our AI-Powered Platforms</h2>
                 <p className="mt-4 text-lg text-muted-foreground">A preview of our dedicated solutions for the real estate industry.</p>
             </div>
             {isClient ? (
