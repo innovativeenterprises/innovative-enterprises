@@ -21,12 +21,15 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { store } from "@/lib/global-store";
 import { extractPropertyDetailsFromUrl } from "@/ai/flows/property-extraction";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Hook to connect to the global store
 export const usePropertiesData = () => {
     const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -39,7 +42,8 @@ export const usePropertiesData = () => {
             const currentProperties = store.get().properties;
             const newProperties = updater(currentProperties);
             store.set(state => ({ ...state, properties: newProperties }));
-        }
+        },
+        isClient,
     };
 };
 
@@ -216,6 +220,7 @@ const AddEditPropertyDialog = ({
 
 export default function PropertyTable({ properties, setProperties }: { properties: Property[], setProperties: (updater: (properties: Property[]) => void) => void }) {
     const { toast } = useToast();
+    const { isClient } = usePropertiesData();
 
     const handleSave = (values: PropertyValues, id?: string) => {
         const { urlToScrape, ...propertyData } = values; // Exclude scraper URL from save data
@@ -270,34 +275,44 @@ export default function PropertyTable({ properties, setProperties }: { propertie
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {properties.map(prop => (
-                            <TableRow key={prop.id}>
-                                <TableCell>
-                                     <Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" />
-                                </TableCell>
-                                <TableCell>
-                                    <p className="font-medium">{prop.title}</p>
-                                    <p className="text-sm text-muted-foreground">{prop.propertyType}</p>
-                                </TableCell>
-                                <TableCell>{prop.location}</TableCell>
-                                <TableCell className="font-mono">{prop.price.toLocaleString()}</TableCell>
-                                <TableCell>{getStatusBadge(prop.status)}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditPropertyDialog property={prop} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditPropertyDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                        {!isClient ? (
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                    <TableCell colSpan={6}>
+                                        <Skeleton className="h-12 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            properties.map(prop => (
+                                <TableRow key={prop.id}>
+                                    <TableCell>
+                                        <Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <p className="font-medium">{prop.title}</p>
+                                        <p className="text-sm text-muted-foreground">{prop.propertyType}</p>
+                                    </TableCell>
+                                    <TableCell>{prop.location}</TableCell>
+                                    <TableCell className="font-mono">{prop.price.toLocaleString()}</TableCell>
+                                    <TableCell>{getStatusBadge(prop.status)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <AddEditPropertyDialog property={prop} onSave={handleSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </AddEditPropertyDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -13,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Search, BedDouble, Bath, MapPin, Filter } from 'lucide-react';
 import { PropertyMatcherInputSchema, type PropertyMatcherInput, type PropertyMatcherOutput } from '@/ai/flows/property-matcher.schema';
 import { findBestPropertyMatch } from '@/ai/flows/property-matcher';
-import { initialProperties } from '@/lib/properties';
+import { usePropertiesData } from '@/app/admin/property-table';
 import type { Property } from '@/lib/properties';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -74,12 +73,7 @@ export default function SmartListingPage() {
     const [response, setResponse] = useState<PropertyMatcherOutput | null>(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
+    const { properties, isClient } = usePropertiesData();
 
     const form = useForm<PropertyMatcherInput>({
         resolver: zodResolver(PropertyMatcherInputSchema),
@@ -89,12 +83,12 @@ export default function SmartListingPage() {
     });
     
     const filteredProperties = useMemo(() => {
-        const availableProperties = initialProperties.filter(p => p.status === 'Available');
+        const availableProperties = properties.filter(p => p.status === 'Available');
         if (selectedCategory === 'All') {
             return availableProperties;
         }
         return availableProperties.filter(p => p.propertyType === selectedCategory);
-    }, [selectedCategory]);
+    }, [properties, selectedCategory]);
 
 
     const onSubmit: SubmitHandler<PropertyMatcherInput> = async (data) => {
@@ -121,8 +115,8 @@ export default function SmartListingPage() {
     
     const bestMatchProperty = useMemo(() => {
         if (!response) return null;
-        return initialProperties.find(p => p.id === response.bestMatch.propertyId);
-    }, [response]);
+        return properties.find(p => p.id === response.bestMatch.propertyId);
+    }, [response, properties]);
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -214,14 +208,14 @@ export default function SmartListingPage() {
                             </Button>
                         ))}
                     </div>
-                    {isClient ? (
+                    {!isClient ? (
+                        <PropertyGridSkeleton />
+                    ) : (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredProperties.map(property => (
                                 <PropertyCard key={property.id} property={property} />
                             ))}
                         </div>
-                    ) : (
-                        <PropertyGridSkeleton />
                     )}
                 </div>
 
