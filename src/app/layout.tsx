@@ -16,17 +16,6 @@ const inter = Inter({
 
 // Create a new client component to contain the main layout logic
 const LayoutClient = ({ children }: { children: React.ReactNode }) => {
-  const [isClient, setIsClient] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    // Render a simplified version or a loading state on the server
-    return <main>{children}</main>;
-  }
-
   return (
     <>
       <Header />

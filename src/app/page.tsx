@@ -55,15 +55,12 @@ const ClientTestimonialsSkeleton = () => (
 );
 
 
-const HomePageClient = () => {
-  const { services } = useServicesData();
-  const { products } = useProductsData();
-  const { clients, testimonials } = useClientsData();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+export default function Home() {
+  const { services, isClient: isServicesClient } = useServicesData();
+  const { products, isClient: isProductsClient } = useProductsData();
+  const { clients, testimonials, isClient: isClientsClient } = useClientsData();
+  
+  const isClient = isServicesClient && isProductsClient && isClientsClient;
   
   return (
      <>
@@ -75,8 +72,4 @@ const HomePageClient = () => {
       {isClient && <ChatWidget />}
     </>
   )
-}
-
-export default function Home() {
-    return <HomePageClient />;
 }
