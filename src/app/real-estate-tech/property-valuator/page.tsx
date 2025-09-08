@@ -1,4 +1,3 @@
-
 import { BarChart } from "lucide-react";
 import ValuationForm from "./valuation-form";
 

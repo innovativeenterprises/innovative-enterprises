@@ -40,25 +40,6 @@ import '@/ai/flows/admissions-agent';
 import '@/ai/flows/boq-generator';
 import '@/ai/flows/it-rental-agent';
 import '@/ai/flows/property-valuation';
-import '@/ai/flows/property-extraction';
-import '@/ai/flows/property-matcher';
-import '@/ai/flows/real-estate-contract-generator';
-import '@/ai/flows/image-transformer';
-import '@/ai/flows/boq-estimator';
-import '@/ai/flows/raaha-matcher';
-import '@/ai/flows/image-annotation';
-import '@/ai/flows/fire-safety-estimator';
-import '@/ai/flows/coupon-generator';
-import '@/ai/flows/theme-generator';
-import '@/ai/flows/timetable-generator';
-import '@/ai/flows/adaptive-learning-tutor';
-import '@/ai/flows/learning-path-generator';
-import '@/ai/flows/quiz-generator';
-import '@/ai/flows/proctoring-agent';
-import '@/ai/flows/wellbeing-checkin';
-import '@/ai/flows/scholarship-agent';
-import '@/ai/flows/scholarship-essay-assistant';
-import '@/ai/flows/community-elections-agent';
 
 // Make sure all flows are loaded into the development server.
 import {
@@ -75,29 +56,19 @@ import {
   analyzeProTask,
   analyzeSanadTask,
   analyzeWorkOrder,
-  annotateImage,
   controlSmartLock,
-  estimateBoq,
   evaluateProperty,
-  extractPropertyDetailsFromUrl,
-  findBestPropertyMatch,
-  findHelpers,
   generateAgreement,
   generateEnhancedCv,
-  generateIctProposal,
-  generateImage,
   generateLetterOfInterest,
-  generateProjectPlan,
   generateSocialMediaPost,
   generateTenderResponse,
+  generateImage,
+  generateProjectPlan,
+  generateIctProposal,
   generateAssetRentalProposal,
   getInterviewFeedback,
   generateInterviewQuestions,
-  generateAdaptiveLesson,
-  generateLearningPath,
-  generateQuiz,
-  generateTimetable,
-  generateElectionMaterials,
 } from './flows';
 
 // Export all flows for discoverability.
@@ -115,13 +86,8 @@ export {
   analyzeProTask,
   analyzeSanadTask,
   analyzeWorkOrder,
-  annotateImage,
   controlSmartLock,
-  estimateBoq,
   evaluateProperty,
-  extractPropertyDetailsFromUrl,
-  findBestPropertyMatch,
-  findHelpers,
   generateAgreement,
   generateEnhancedCv,
   generateLetterOfInterest,
@@ -133,9 +99,4 @@ export {
   generateAssetRentalProposal,
   getInterviewFeedback,
   generateInterviewQuestions,
-  generateAdaptiveLesson,
-  generateLearningPath,
-  generateQuiz,
-  generateTimetable,
-  generateElectionMaterials,
 };
