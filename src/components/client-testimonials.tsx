@@ -1,10 +1,13 @@
 
+
 'use client';
 
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
 
 export default function ClientTestimonials({ 
     clients, 
@@ -13,6 +16,12 @@ export default function ClientTestimonials({
     clients: Client[], 
     testimonials: Testimonial[] 
 }) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+      setIsClient(true);
+  }, []);
+
 
   const renderQuote = (quote: string) => {
     const parts = quote.split(/\*\*(.*?)\*\*/g);
@@ -31,40 +40,48 @@ export default function ClientTestimonials({
           </p>
         </div>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
-          {clients.map((client) => (
-            <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300" title={client.name}>
-              <Image
-                src={client.logo}
-                alt={client.name}
-                width={150}
-                height={60}
-                className="object-contain"
-                data-ai-hint={client.aiHint}
-              />
-            </div>
-          ))}
+          {!isClient ? (
+            Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-12 w-32" />)
+          ) : (
+            clients.map((client) => (
+              <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300" title={client.name}>
+                <Image
+                  src={client.logo}
+                  alt={client.name}
+                  width={150}
+                  height={60}
+                  className="object-contain"
+                  data-ai-hint={client.aiHint}
+                />
+              </div>
+            ))
+          )}
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {testimonials.map((testimonial) => (
-                <Card key={testimonial.id} className="bg-card">
-                    <CardContent className="p-6">
-                        <blockquote className="border-l-4 border-accent pl-4 italic text-foreground/80">
-                           {renderQuote(testimonial.quote)}
-                        </blockquote>
-                        <div className="flex items-center gap-4 mt-6">
-                           <Avatar>
+            {!isClient ? (
+                Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)
+            ) : (
+                testimonials.map((testimonial) => (
+                    <Card key={testimonial.id} className="bg-card">
+                        <CardContent className="p-6">
+                            <blockquote className="border-l-4 border-accent pl-4 italic text-foreground/80">
+                            {renderQuote(testimonial.quote)}
+                            </blockquote>
+                            <div className="flex items-center gap-4 mt-6">
+                            <Avatar>
                                 {testimonial.avatar && <AvatarImage src={testimonial.avatar} alt={testimonial.author} />}
                                 <AvatarFallback>{testimonial.author.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <div>
-                                <p className="font-semibold text-primary">{testimonial.author}</p>
-                                <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                                <div>
+                                    <p className="font-semibold text-primary">{testimonial.author}</p>
+                                    <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                                </div>
                             </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
+                        </CardContent>
+                    </Card>
+                ))
+            )}
         </div>
       </div>
     </section>

@@ -14,7 +14,7 @@ import { Loader2, Wand2, GripVertical } from 'lucide-react';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import { generateImage } from '@/ai/flows/image-generator';
 import type { Product } from '@/lib/products';
-import { useProductsData } from '../product-table';
+import { useProductsData } from "@/hooks/use-global-store-data";
 import { useProjectStagesData } from '../stage-table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
@@ -101,14 +101,9 @@ export default function ProjectsPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    const { products, setProducts } = useProductsData();
+    const { products, setProducts, isClient } = useProductsData();
     const { stages } = useProjectStagesData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-      setIsClient(true);
-    }, []);
 
     const form = useForm<FormValues>({
         resolver: zodResolver(FormSchema),
