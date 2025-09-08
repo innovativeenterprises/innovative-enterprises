@@ -1,12 +1,11 @@
 
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, CheckCircle, FolderKanban, Network, CircleDollarSign, Percent, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { useProductsData } from "@/hooks/use-global-store-data";
-import { useProvidersData } from "@/app/admin/provider-table";
-import { useOpportunitiesData } from "@/app/admin/opportunity-table";
+import { useProductsData, useStaffData, useOpportunitiesData, useProvidersData } from "@/hooks/use-global-store-data";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -14,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { initialStaffTeam, initialAgentCategories, initialLeadershipTeam } from "@/lib/agents";
 
 const overviewStats = [
     { title: "Net Revenue", value: "OMR 45,231", icon: CircleDollarSign, href: "/admin/finance" },
@@ -24,44 +22,48 @@ const overviewStats = [
 ];
 
 export default function AdminDashboardPage() {
-  const { products } = useProductsData();
-  const { providers } = useProvidersData();
-  const { opportunities } = useOpportunitiesData();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { products, isClient: isProductsClient } = useProductsData();
+  const { providers, isClient: isProvidersClient } = useProvidersData();
+  const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+  const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
   
-  const totalAgents = useMemo(() => initialAgentCategories.reduce((sum, cat) => sum + cat.agents.length, 0), []);
-  const totalStaff = useMemo(() => initialLeadershipTeam.length + initialStaffTeam.length, []);
+  const isClient = isProductsClient && isProvidersClient && isOpportunitiesClient && isStaffClient;
+  
+  const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
+  const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);
   
   const dynamicStats = [
-    { title: "Total Staff (Human + AI)", value: (totalStaff + totalAgents).toString(), icon: Users, href: "/admin/people" },
-    { title: "Active Projects", value: products.filter(p => p.stage !== 'Live & Operating').length.toString(), icon: FolderKanban, href: "/admin/projects" },
-    { title: "Active Opportunities", value: opportunities.filter(o => o.status === 'Open').length.toString(), icon: Zap, href: "/admin/opportunities" },
-    { title: "Provider Network", value: providers.length.toString(), icon: Network, href: "/admin/network" },
+    { title: "Total Staff (Human + AI)", value: isClient ? (totalStaff + totalAgents).toString() : '...', icon: Users, href: "/admin/people" },
+    { title: "Active Projects", value: isClient ? products.filter(p => p.stage !== 'Live & Operating').length.toString() : '...', icon: FolderKanban, href: "/admin/projects" },
+    { title: "Active Opportunities", value: isClient ? opportunities.filter(o => o.status === 'Open').length.toString() : '...', icon: Zap, href: "/admin/opportunities" },
+    { title: "Provider Network", value: isClient ? providers.length.toString() : '...', icon: Network, href: "/admin/network" },
   ];
 
-  const projectStatusData = useMemo(() => products.reduce((acc, product) => {
-    const stage = product.stage || 'Uncategorized';
-    const existing = acc.find(item => item.stage === stage);
-    if (existing) {
-      existing.count++;
-    } else {
-      acc.push({ stage, count: 1 });
-    }
-    return acc;
-  }, [] as { stage: string, count: number }[]), [products]);
+  const projectStatusData = useMemo(() => {
+    if (!isClient) return [];
+    return products.reduce((acc, product) => {
+        const stage = product.stage || 'Uncategorized';
+        const existing = acc.find(item => item.stage === stage);
+        if (existing) {
+        existing.count++;
+        } else {
+        acc.push({ stage, count: 1 });
+        }
+        return acc;
+    }, [] as { stage: string, count: number }[])
+  }, [products, isClient]);
 
-  const networkGrowthData = useMemo(() => [
-      { month: 'Feb', count: 12 },
-      { month: 'Mar', count: 15 },
-      { month: 'Apr', count: 20 },
-      { month: 'May', count: 22 },
-      { month: 'Jun', count: 28 },
-      { month: 'Jul', count: providers.length },
-  ], [providers]);
+  const networkGrowthData = useMemo(() => {
+      if (!isClient) return [];
+      return [
+          { month: 'Feb', count: 12 },
+          { month: 'Mar', count: 15 },
+          { month: 'Apr', count: 20 },
+          { month: 'May', count: 22 },
+          { month: 'Jun', count: 28 },
+          { month: 'Jul', count: providers.length },
+      ]
+  }, [providers, isClient]);
 
   const chartConfig = {
       count: { label: "Count" },
@@ -164,11 +166,9 @@ export default function AdminDashboardPage() {
                     </TableHeader>
                     <TableBody>
                         {!isClient ? (
-                             <TableRow>
-                                <TableCell colSpan={4}>
-                                    <Skeleton className="h-10 w-full" />
-                                </TableCell>
-                            </TableRow>
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <TableRow key={i}><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
+                            ))
                         ) : (
                             products.slice(0, 10).map((product) => (
                                 <TableRow key={product.id}>

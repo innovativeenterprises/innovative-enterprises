@@ -205,12 +205,14 @@ export default function ClientTable({
     clients, 
     setClients, 
     testimonials, 
-    setTestimonials 
+    setTestimonials,
+    isClient,
 }: { 
     clients: Client[], 
     setClients: (updater: (clients: Client[]) => void) => void, 
     testimonials: Testimonial[], 
-    setTestimonials: (updater: (testimonials: Testimonial[]) => void) => void 
+    setTestimonials: (updater: (testimonials: Testimonial[]) => void) => void,
+    isClient: boolean,
 }) {
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
@@ -250,18 +252,20 @@ export default function ClientTable({
     };
 
     const filteredClients = useMemo(() => {
+        if (!isClient) return [];
         return clients.filter(client =>
             client.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [clients, searchTerm]);
+    }, [clients, searchTerm, isClient]);
 
     const filteredTestimonials = useMemo(() => {
+         if (!isClient) return [];
         return testimonials.filter(t =>
             t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
             t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
             t.company.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [testimonials, searchTerm]);
+    }, [testimonials, searchTerm, isClient]);
 
 
     return (
@@ -302,7 +306,12 @@ export default function ClientTable({
                         <Table>
                              <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {filteredClients.map(client => (
+                                {!isClient ? (
+                                     Array.from({length: 3}).map((_, i) => (
+                                        <TableRow key={i}><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
+                                    ))
+                                ) : (
+                                filteredClients.map(client => (
                                     <TableRow key={client.id} className="cursor-pointer">
                                         <TableCell>
                                             <AddEditClientDialog client={client} onSave={handleSaveClient}>
@@ -324,7 +333,7 @@ export default function ClientTable({
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )))}
                             </TableBody>
                         </Table>
                     </TabsContent>
@@ -332,7 +341,12 @@ export default function ClientTable({
                          <Table>
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {filteredTestimonials.map(t => (
+                                {!isClient ? (
+                                      Array.from({length: 3}).map((_, i) => (
+                                        <TableRow key={i}><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
+                                    ))
+                                ) : (
+                                filteredTestimonials.map(t => (
                                     <TableRow key={t.id} className="cursor-pointer">
                                         <TableCell className="italic max-w-md truncate">
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
@@ -356,7 +370,7 @@ export default function ClientTable({
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )))}
                             </TableBody>
                         </Table>
                     </TabsContent>

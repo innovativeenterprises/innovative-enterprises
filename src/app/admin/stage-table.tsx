@@ -83,12 +83,13 @@ const AddEditStageDialog = ({
 export default function StageTable({
     stages,
     setStages,
+    isClient,
 }: {
     stages: ProjectStage[],
     setStages: (updater: (stages: ProjectStage[]) => void) => void,
+    isClient: boolean,
 }) {
     const { toast } = useToast();
-    const { isClient } = useProjectStagesData();
 
     const handleSave = (values: StageValues, id?: string) => {
         if (id) {
@@ -128,11 +129,11 @@ export default function StageTable({
                     </TableHeader>
                     <TableBody>
                         {!isClient ? (
-                             <TableRow>
-                                <TableCell colSpan={3}>
-                                    <Skeleton className="h-10 w-full" />
-                                </TableCell>
-                            </TableRow>
+                             Array.from({length: 5}).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell colSpan={3}><Skeleton className="h-10 w-full" /></TableCell>
+                                </TableRow>
+                            ))
                         ) : (
                             stages.map(stage => (
                                 <TableRow key={stage.id}>

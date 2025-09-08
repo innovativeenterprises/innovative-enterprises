@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -43,7 +44,7 @@ export default function AdminOperationsPage() {
                             <span className="text-lg font-semibold">{tool.title}</span>
                         </div>
                     </AccordionTrigger>
-                    <AccordionContent>
+                    <AccordionContent className="pt-4">
                         {tool.component}
                     </AccordionContent>
                 </AccordionItem>

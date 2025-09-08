@@ -15,11 +15,6 @@ export default function AdminContentPage() {
   const clientData = useClientsData();
   const pricingData = usePricingData();
 
-  if (!serviceData.isClient || !productData.isClient || !clientData.isClient || !pricingData.isClient) {
-    // You can return a loading skeleton here if needed
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="space-y-8">
         <div>
