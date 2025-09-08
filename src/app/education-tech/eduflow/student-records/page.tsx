@@ -169,10 +169,7 @@ export default function StudentRecordsPage() {
                                             <TableRow key={student.id}>
                                                 <TableCell>
                                                     <div className="flex items-center gap-3">
-                                                        <Avatar>
-                                                            <AvatarImage src={student.photo} alt={student.name} />
-                                                            <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
-                                                        </Avatar>
+                                                        <Avatar><AvatarImage src={student.photo} alt={student.name} /><AvatarFallback>{student.name.charAt(0)}</AvatarFallback></Avatar>
                                                         <div>
                                                             <p className="font-medium">{student.name}</p>
                                                             <p className="text-sm text-muted-foreground">{student.id}</p>
