@@ -1,10 +1,11 @@
 
+
 'use client';
 
 import { useRef, useState, useEffect } from "react";
-import { useStaffData } from "@/app/admin/staff-table";
-import { useServicesData } from "@/app/admin/service-table";
-import { useSettingsData } from "@/app/admin/settings-table";
+import { useStaffData } from "@/hooks/use-global-store-data";
+import { useServicesData } from "@/hooks/use-global-store-data";
+import { useSettingsData } from "@/hooks/use-global-store-data";
 import { initialProducts } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Download, Lightbulb, Loader2, Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
@@ -12,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // This is the hidden component that will be rendered to generate the PDF
 const ProfileTemplate = ({ leadership, services, products, settings, innerRef }: any) => {
@@ -138,7 +140,7 @@ export default function CompanyProfileDownloader() {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
-    const [isMounted, setIsMounted] = useState(false);
+    const [isClient, setIsMounted] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
@@ -197,7 +199,7 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    if (!isMounted) {
+    if (!isClient) {
         return (
              <Button variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={true}>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...

@@ -29,7 +29,7 @@ export default function Footer() {
                 {isClient ? <CompanyProfileDownloader /> : <Skeleton className="h-10 w-48" />}
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {isClient ? currentYear : <Skeleton className="h-4 w-10 inline-block"/>} Innovative Enterprises. All rights reserved.
+                © {currentYear || <Skeleton className="h-4 w-10 inline-block"/>} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">
