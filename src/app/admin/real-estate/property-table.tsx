@@ -21,8 +21,6 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePropertiesData } from "@/hooks/use-global-store-data";
-
 
 const PropertySchema = z.object({
   title: z.string().min(5, "Title is required."),
