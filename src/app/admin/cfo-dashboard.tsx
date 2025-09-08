@@ -20,6 +20,7 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
 
   useEffect(() => {
     setIsClient(true);
+    // This effect runs only on the client, after hydration
     const dueDate = new Date(date);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to start of day for accurate diff
