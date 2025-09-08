@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -40,33 +41,22 @@ export default function AuditForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<FinancialAnalysisOutput | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       analysisType: 'Internal Review',
       companyName: 'Innovative Enterprises',
-      fiscalYear: isClient ? new Date().getFullYear().toString() : '',
+      fiscalYear: '',
       assignedOffice: '',
     },
   });
 
   useEffect(() => {
-    if (isClient) {
-      form.reset({
-        analysisType: 'Internal Review',
-        companyName: 'Innovative Enterprises',
-        fiscalYear: new Date().getFullYear().toString(),
-        assignedOffice: '',
-      })
-    }
-  }, [isClient, form]);
+    // Set year only on client to avoid hydration mismatch
+    form.setValue('fiscalYear', new Date().getFullYear().toString());
+  }, [form]);
 
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {

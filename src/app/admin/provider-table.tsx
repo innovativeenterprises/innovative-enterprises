@@ -20,14 +20,12 @@ import type { Provider } from "@/lib/providers";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon, Upload, Star } from "lucide-react";
 import Link from 'next/link';
-import { store } from "@/lib/global-store";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { useProvidersData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "../ui/skeleton";
 
 const ProviderSchema = z.object({
@@ -284,10 +282,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
 
     useEffect(() => {
         setIsClient(true);
-    }, []);
-
-    useEffect(() => {
-        if (!isClient || !expiry) {
+        if (!expiry) {
             setDaysUntilExpiry(null);
             return;
         }
@@ -295,7 +290,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
         const now = new Date();
         const diffTime = expiryDate.getTime() - now.getTime();
         setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
-    }, [expiry, isClient]);
+    }, [expiry]);
     
 
     if (tier === 'None') {
@@ -331,20 +326,17 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
 
 export default function ProviderTable({ 
     providers, 
-    setProviders 
+    setProviders,
+    isClient,
 }: { 
     providers: Provider[], 
-    setProviders: (updater: (providers: Provider[]) => void) => void 
+    setProviders: (updater: (providers: Provider[]) => void) => void,
+    isClient: boolean,
 }) {
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);
@@ -462,4 +454,3 @@ export default function ProviderTable({
         </Card>
     );
 }
-
