@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,7 +17,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { KnowledgeDocument } from "@/lib/knowledge";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
-import { store } from "@/lib/global-store";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
 import { trainAgent } from "@/ai/flows/train-agent";
 import { scrapeAndSummarize } from "@/ai/flows/web-scraper-agent";
@@ -52,30 +52,6 @@ const fileToBase64ContentOnly = (file: File): Promise<string> => {
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
-};
-
-// Hook to connect to the global store
-export const useKnowledgeData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        knowledgeBase: data.knowledgeBase,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
-            const currentDocs = store.get().knowledgeBase;
-            const newDocs = updater(currentDocs);
-            store.set(state => ({ ...state, knowledgeBase: newDocs }));
-        },
-        isClient,
-    };
 };
 
 const UploadDocumentSchema = z.object({
@@ -360,8 +336,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable() {
-    const { knowledgeBase, setKnowledgeBase, isClient } = useKnowledgeData();
+export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase, isClient }: { knowledgeBase: KnowledgeDocument[], setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => void, isClient: boolean }) {
     const { toast } = useToast();
 
     const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {

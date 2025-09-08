@@ -8,11 +8,13 @@ import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Palette } from "lucide-react";
-import KnowledgeTable from './knowledge-table';
+import KnowledgeTable from '../knowledge-table';
 import ThemeGenerator from "./theme-generator";
+import { useKnowledgeData } from "@/hooks/use-global-store-data";
 
 
 export default function AdminOperationsPage() {
+  const knowledgeData = useKnowledgeData();
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -31,7 +33,7 @@ export default function AdminOperationsPage() {
         </div>
 
         <ThemeGenerator />
-        <KnowledgeTable />
+        <KnowledgeTable {...knowledgeData} />
         
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>

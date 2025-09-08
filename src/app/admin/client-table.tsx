@@ -20,7 +20,6 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "../ui/skeleton";
-import { useClientsData } from "@/hooks/use-global-store-data";
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {

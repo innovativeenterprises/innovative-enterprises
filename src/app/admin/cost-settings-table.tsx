@@ -17,28 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { store } from "@/lib/global-store";
 import { Skeleton } from "@/components/ui/skeleton";
-
-export const useCostSettingsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        costSettings: data.costSettings,
-        setCostSettings: (updater: (costSettings: CostRate[]) => void) => {
-            const currentCostSettings = store.get().costSettings;
-            const newCostSettings = updater(currentCostSettings);
-            store.set(state => ({ ...state, costSettings: newCostSettings }));
-        }
-    };
-};
 
 const CostSettingSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -118,13 +97,8 @@ const AddEditCostDialog = ({
     );
 };
 
-export default function CostSettingsTable({ costSettings, setCostSettings }: { costSettings: CostRate[], setCostSettings: (updater: (items: CostRate[]) => void) => void }) {
+export default function CostSettingsTable({ costSettings, setCostSettings, isClient }: { costSettings: CostRate[], setCostSettings: (updater: (items: CostRate[]) => void) => void, isClient: boolean }) {
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: CostSettingValues, id?: string) => {
         if (id) {
