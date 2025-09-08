@@ -3,8 +3,9 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/tender-response-assistant';
 import '@/ai/flows/ai-powered-faq';
+/*
+import '@/ai/flows/tender-response-assistant';
 import '@/ai/flows/social-media-post-generator';
 import '@/ai/flows/legal-agent';
 import '@/ai/flows/cv-enhancement';
@@ -41,12 +42,14 @@ import '@/ai/flows/boq-generator';
 import '@/ai/flows/it-rental-agent';
 import '@/ai/flows/property-valuation';
 import '@/ai/flows/community-elections-agent';
+*/
 
 // Make sure all flows are loaded into the development server.
 import {
+  answerQuestion,
+  /*
   answerEcommerceQuery,
   answerHubQuery,
-  answerQuestion,
   analyzeApplication,
   analyzeCrDocument,
   analyzeCv,
@@ -70,13 +73,15 @@ import {
   generateAssetRentalProposal,
   getInterviewFeedback,
   generateInterviewQuestions,
+  */
 } from './flows';
 
 // Export all flows for discoverability.
 export {
+  answerQuestion,
+  /*
   answerEcommerceQuery,
   answerHubQuery,
-  answerQuestion,
   analyzeApplication,
   analyzeCrDocument,
   analyzeCv,
@@ -100,4 +105,5 @@ export {
   generateAssetRentalProposal,
   getInterviewFeedback,
   generateInterviewQuestions,
+  */
 };
