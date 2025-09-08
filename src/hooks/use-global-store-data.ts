@@ -42,10 +42,8 @@ export const useServicesData = () => {
 
     return {
         services: data.services,
-        setServices: (updater: (services: Service[]) => Service[]) => {
-            const currentServices = store.get().services;
-            const newServices = updater(currentServices);
-            store.set(state => ({ ...state, services: newServices }));
+        setServices: (updater: (services: Service[]) => void) => {
+            store.set(state => ({ ...state, services: updater(state.services) }));
         },
         isClient,
     };
@@ -65,10 +63,8 @@ export const useProductsData = () => {
 
     return {
         products: data.products,
-        setProducts: (updater: (products: Product[]) => Product[]) => {
-            const currentProducts = store.get().products;
-            const newProducts = updater(currentProducts);
-            store.set(state => ({ ...state, products: newProducts }));
+        setProducts: (updater: (products: Product[]) => void) => {
+            store.set(state => ({ ...state, products: updater(state.products) }));
         },
         isClient,
     };
@@ -89,16 +85,12 @@ export const useClientsData = () => {
 
     return {
         clients: data.clients,
-        setClients: (updater: (clients: Client[]) => Client[]) => {
-            const currentClients = store.get().clients;
-            const newClients = updater(currentClients);
-            store.set(state => ({ ...state, clients: newClients }));
+        setClients: (updater: (clients: Client[]) => void) => {
+            store.set(state => ({ ...state, clients: updater(state.clients) }));
         },
         testimonials: data.testimonials,
-        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
-             const currentTestimonials = store.get().testimonials;
-            const newTestimonials = updater(currentTestimonials);
-            store.set(state => ({ ...state, testimonials: newTestimonials }));
+        setTestimonials: (updater: (testimonials: Testimonial[]) => void) => {
+            store.set(state => ({ ...state, testimonials: updater(state.testimonials) }));
         },
         isClient,
     };
@@ -118,10 +110,8 @@ export const useProvidersData = () => {
 
     return {
         providers: data.providers,
-        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
-            const currentProviders = store.get().providers;
-            const newProviders = updater(currentProviders);
-            store.set(state => ({ ...state, providers: newProviders }));
+        setProviders: (updater: (providers: Provider[]) => void) => {
+            store.set(state => ({ ...state, providers: updater(state.providers) }));
         },
         isClient,
     };
@@ -141,22 +131,16 @@ export const useStaffData = () => {
 
     return {
         leadership: data.leadership,
-        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
-            const currentAgents = store.get().leadership;
-            const newAgents = updater(currentAgents);
-            store.set(state => ({ ...state, leadership: newAgents }));
+        setLeadership: (updater: (agents: Agent[]) => void) => {
+            store.set(state => ({ ...state, leadership: updater(state.leadership) }));
         },
         staff: data.staff,
-        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
-            const currentAgents = store.get().staff;
-            const newAgents = updater(currentAgents);
-            store.set(state => ({ ...state, staff: newAgents }));
+        setStaff: (updater: (agents: Agent[]) => void) => {
+            store.set(state => ({ ...state, staff: updater(state.staff) }));
         },
         agentCategories: data.agentCategories,
-        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
-            const currentCategories = store.get().agentCategories;
-            const newCategories = updater(currentCategories);
-            store.set(state => ({ ...state, agentCategories: newCategories }));
+        setAgentCategories: (updater: (categories: AgentCategory[]) => void) => {
+            store.set(state => ({ ...state, agentCategories: updater(state.agentCategories) }));
         },
         isClient,
     };
@@ -176,10 +160,8 @@ export const useCommunitiesData = () => {
 
     return {
         communities: data.communities,
-        setCommunities: (updater: (communities: Community[]) => Community[]) => {
-            const currentCommunities = store.get().communities;
-            const newCommunities = updater(currentCommunities);
-            store.set(state => ({ ...state, communities: newCommunities }));
+        setCommunities: (updater: (communities: Community[]) => void) => {
+            store.set(state => ({ ...state, communities: updater(state.communities) }));
         },
         isClient,
     };
@@ -199,22 +181,16 @@ export const useCommunityHubData = () => {
 
     return {
         events: data.communityEvents,
-        setEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
-            const current = store.get().communityEvents;
-            const newItems = updater(current);
-            store.set(state => ({ ...state, communityEvents: newItems }));
+        setEvents: (updater: (events: CommunityEvent[]) => void) => {
+            store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
         },
         finances: data.communityFinances,
-        setFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
-            const current = store.get().communityFinances;
-            const newItems = updater(current);
-            store.set(state => ({ ...state, communityFinances: newItems }));
+        setFinances: (updater: (finances: CommunityFinance[]) => void) => {
+            store.set(state => ({ ...state, finances: updater(state.communityFinances) }));
         },
         members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
-            const current = store.get().communityMembers;
-            const newItems = updater(current);
-            store.set(state => ({ ...state, communityMembers: newItems }));
+        setMembers: (updater: (members: CommunityMember[]) => void) => {
+            store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
         isClient,
     };
@@ -234,10 +210,8 @@ export const useOpportunitiesData = () => {
 
     return {
         opportunities: data.opportunities,
-        setOpportunities: (updater: (opportunities: Opportunity[]) => Opportunity[]) => {
-            const currentOpportunities = store.get().opportunities;
-            const newOpportunities = updater(currentOpportunities);
-            store.set(state => ({ ...state, opportunities: newOpportunities }));
+        setOpportunities: (updater: (opportunities: Opportunity[]) => void) => {
+            store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
         },
         isClient,
     };
@@ -257,10 +231,8 @@ export const useProjectStagesData = () => {
 
     return {
         stages: data.stages,
-        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
-            const currentStages = store.get().stages;
-            const newStages = updater(currentStages);
-            store.set(state => ({ ...state, stages: newStages }));
+        setStages: (updater: (stages: ProjectStage[]) => void) => {
+            store.set(state => ({ ...state, stages: updater(state.stages) }));
         },
         isClient,
     };
@@ -280,10 +252,8 @@ export const useSettingsData = () => {
 
     return {
         settings: data.settings,
-        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
-            const currentSettings = store.get().settings;
-            const newSettings = updater(currentSettings);
-            store.set(state => ({ ...state, settings: newSettings }));
+        setSettings: (updater: (settings: AppSettings) => void) => {
+            store.set(state => ({ ...state, settings: updater(state.settings) }));
         },
         isClient,
     };
@@ -303,10 +273,8 @@ export const useAssetsData = () => {
 
     return {
         assets: data.assets,
-        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
-            const currentAssets = store.get().assets;
-            const newAssets = updater(currentAssets);
-            store.set(state => ({ ...state, assets: newAssets }));
+        setAssets: (updater: (assets: Asset[]) => void) => {
+            store.set(state => ({ ...state, assets: updater(state.assets) }));
         },
         isClient,
     };
@@ -326,10 +294,8 @@ export const useInvestorsData = () => {
 
     return {
         investors: data.investors,
-        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
-            const currentInvestors = store.get().investors;
-            const newInvestors = updater(currentInvestors);
-            store.set(state => ({ ...state, investors: newInvestors }));
+        setInvestors: (updater: (investors: Investor[]) => void) => {
+            store.set(state => ({ ...state, investors: updater(state.investors) }));
         },
         isClient,
     };
@@ -349,10 +315,8 @@ export const useKnowledgeData = () => {
 
     return {
         knowledgeBase: data.knowledgeBase,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
-            const currentDocs = store.get().knowledgeBase;
-            const newDocs = updater(currentDocs);
-            store.set(state => ({ ...state, knowledgeBase: newDocs }));
+        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => {
+            store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
         },
         isClient,
     };
@@ -372,10 +336,8 @@ export const useAgenciesData = () => {
 
     return {
         agencies: data.raahaAgencies,
-        setAgencies: (updater: (agencies: Agency[]) => Agency[]) => {
-            const currentAgencies = store.get().raahaAgencies;
-            const newAgencies = updater(currentAgencies);
-            store.set(state => ({ ...state, raahaAgencies: newAgencies }));
+        setAgencies: (updater: (agencies: Agency[]) => void) => {
+            store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
         },
         isClient,
     };
@@ -395,10 +357,8 @@ export const useWorkersData = () => {
 
     return {
         workers: data.raahaWorkers,
-        setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
-            const currentWorkers = store.get().raahaWorkers;
-            const newWorkers = updater(currentWorkers);
-            store.set(state => ({ ...state, raahaWorkers: newWorkers }));
+        setWorkers: (updater: (workers: RaahaWorker[]) => void) => {
+            store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
         },
         isClient,
     };
@@ -418,10 +378,8 @@ export const useRequestsData = () => {
 
     return {
         requests: data.raahaRequests,
-        setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
-            const currentRequests = store.get().raahaRequests;
-            const newRequests = updater(currentRequests);
-            store.set(state => ({ ...state, raahaRequests: newRequests }));
+        setRequests: (updater: (requests: HireRequest[]) => void) => {
+            store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
         },
         isClient,
     };
@@ -441,10 +399,8 @@ export const useLeasesData = () => {
 
     return {
         leases: data.signedLeases,
-        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
-            const currentLeases = store.get().signedLeases;
-            const newLeases = updater(currentLeases);
-            store.set(state => ({ ...state, signedLeases: newLeases }));
+        setLeases: (updater: (leases: SignedLease[]) => void) => {
+            store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
         },
         isClient,
     };
@@ -464,10 +420,8 @@ export const usePropertiesData = () => {
 
     return {
         properties: data.properties,
-        setProperties: (updater: (properties: Property[]) => Property[]) => {
-            const currentProperties = store.get().properties;
-            const newProperties = updater(currentProperties);
-            store.set(state => ({ ...state, properties: newProperties }));
+        setProperties: (updater: (properties: Property[]) => void) => {
+            store.set(state => ({ ...state, properties: updater(state.properties) }));
         },
         isClient,
     };
@@ -487,10 +441,8 @@ export const useStudentsData = () => {
 
     return {
         students: data.students,
-        setStudents: (updater: (students: Student[]) => Student[]) => {
-            const currentStudents = store.get().students;
-            const newStudents = updater(currentStudents);
-            store.set(state => ({ ...state, students: newStudents }));
+        setStudents: (updater: (students: Student[]) => void) => {
+            store.set(state => ({ ...state, students: updater(state.students) }));
         },
         isClient,
     };
@@ -510,10 +462,8 @@ export const useCostSettingsData = () => {
 
     return {
         costSettings: data.costSettings,
-        setCostSettings: (updater: (items: CostRate[]) => CostRate[]) => {
-            const current = store.get().costSettings;
-            const newItems = updater(current);
-            store.set(state => ({ ...state, costSettings: newItems }));
+        setCostSettings: (updater: (items: CostRate[]) => void) => {
+            store.set(state => ({ ...state, costSettings: updater(state.costSettings) }));
         },
         isClient,
     };
@@ -554,10 +504,8 @@ export const useMembersData = () => {
 
     return {
         members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
-            const currentMembers = store.get().communityMembers;
-            const newMembers = updater(currentMembers);
-            store.set(state => ({ ...state, communityMembers: newMembers }));
+        setMembers: (updater: (members: CommunityMember[]) => void) => {
+            store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
         isClient,
     };

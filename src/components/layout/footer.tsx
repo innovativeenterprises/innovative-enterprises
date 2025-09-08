@@ -5,11 +5,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
+import { Skeleton } from '../ui/skeleton';
 
 export default function Footer() {
   const [currentYear, setCurrentYear] = useState('');
+  const [isClient, setIsClient] = useState(false);
   
   useEffect(() => {
+    setIsClient(true);
     setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
@@ -23,10 +26,10 @@ export default function Footer() {
           </div>
           <div className="flex flex-col gap-4 items-center">
              <div>
-                {currentYear && <CompanyProfileDownloader />}
+                {isClient ? <CompanyProfileDownloader /> : <Skeleton className="h-10 w-48" />}
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {currentYear || ''} Innovative Enterprises. All rights reserved.
+                © {isClient ? currentYear : <Skeleton className="h-4 w-10 inline-block"/>} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">
