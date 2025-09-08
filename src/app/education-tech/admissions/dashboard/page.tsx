@@ -35,6 +35,7 @@ export default function AdmissionsDashboardPage() {
     }, []);
 
     const filteredAndSortedApplications = useMemo(() => {
+        if (!isClient) return [];
         let sortableItems = [...applications];
         if (searchTerm) {
             sortableItems = sortableItems.filter(app =>
@@ -55,7 +56,7 @@ export default function AdmissionsDashboardPage() {
             });
         }
         return sortableItems;
-    }, [applications, searchTerm, sortConfig]);
+    }, [applications, searchTerm, sortConfig, isClient]);
 
     const requestSort = (key: SortKey) => {
         let direction: 'ascending' | 'descending' = 'ascending';
