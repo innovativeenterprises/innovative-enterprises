@@ -1,11 +1,9 @@
 
-
 'use client';
 
 import SettingsTable from "../settings-table";
 
 export default function AdminSettingsPage() {
-  
   return (
     <div className="space-y-8">
         <div>

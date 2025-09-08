@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -77,14 +76,14 @@ const EditPriceDialog = ({
 
 export default function PricingTable({ 
     pricing, 
-    setPricing 
+    setPricing,
+    isClient,
 } : { 
     pricing: Pricing[], 
-    setPricing: (updater: (pricing: Pricing[]) => void) => void 
+    setPricing: (updater: (pricing: Pricing[]) => void) => void,
+    isClient: boolean,
 }) {
     const { toast } = useToast();
-    const { isClient } = usePricingData();
-
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));

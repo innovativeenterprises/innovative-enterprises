@@ -10,7 +10,6 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from '@/components/ui/skeleton';
-import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 import { cn } from '@/lib/utils';
 import { useCfoData } from '@/hooks/use-global-store-data';
 
@@ -49,8 +48,8 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
 }
 
 // Main Dashboard Component
-export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, isClient } = useCfoData();
+export default function CfoDashboard({ isClient }: { isClient: boolean }) {
+  const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
   
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {

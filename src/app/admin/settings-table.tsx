@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -12,7 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import type { AppSettings, WhatsAppSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { store } from "@/lib/global-store";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
@@ -22,30 +20,9 @@ import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import CostSettingsTable, { useCostSettingsData } from "./cost-settings-table";
+import CostSettingsTable from "./cost-settings-table";
 import { Skeleton } from "@/components/ui/skeleton";
-
-
-// This hook now connects to the global store.
-export const useSettingsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        settings: data.settings,
-        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
-            const currentSettings = store.get().settings;
-            const newSettings = updater(currentSettings);
-            store.set(state => ({ ...state, settings: newSettings }));
-        }
-    };
-};
+import { useSettingsData, useCostSettingsData } from "@/hooks/use-global-store-data";
 
 const SanadPricingSchema = z.object({
   registrationFee: z.coerce.number().min(0),
@@ -367,15 +344,10 @@ const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onS
 }
 
 export default function SettingsTable() {
-    const { settings, setSettings } = useSettingsData();
-    const { costSettings, setCostSettings } = useCostSettingsData();
+    const { settings, setSettings, isClient } = useSettingsData();
+    const costSettingsData = useCostSettingsData();
     const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('general');
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleModeChange = (value: 'direct' | 'tender' | 'builtin') => {
         let description = '';
@@ -461,7 +433,7 @@ export default function SettingsTable() {
                 <TabsTrigger value="costing">BoQ Costing</TabsTrigger>
             </TabsList>
             <TabsContent value="general" className="mt-6 space-y-8">
-                {isClient && <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} />}
+                {isClient ? <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} /> : <Skeleton className="h-96 w-full"/>}
                 <Card>
                     <CardHeader>
                         <CardTitle>Operational & Layout Settings</CardTitle>
@@ -730,7 +702,7 @@ export default function SettingsTable() {
                 </Card>
             </TabsContent>
             <TabsContent value="costing" className="mt-6">
-                <CostSettingsTable costSettings={costSettings} setCostSettings={setCostSettings} />
+                <CostSettingsTable {...costSettingsData} />
             </TabsContent>
         </Tabs>
     );

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -98,6 +97,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
   const [response, setResponse] = useState<DocumentTranslationOutput | null>(null);
   const [submittedData, setSubmittedData] = useState<FormValues | null>(null);
   const { toast } = useToast();
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const pricingMap = useMemo(() => {
       return pricing.reduce((acc, item) => {
@@ -134,36 +134,23 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
 
   const watchAllFields = form.watch();
 
-  const subtotal = useMemo(() => {
+  useEffect(() => {
       const { documentType, numberOfPages, requestSealedCopy } = watchAllFields;
       const pricePerPage = pricingMap[documentType] || 0;
-      if (!pricePerPage || !numberOfPages || numberOfPages < 1) {
-          return 0;
+      let newTotal = 0;
+      if (pricePerPage && numberOfPages && numberOfPages >= 1) {
+          newTotal = pricePerPage * numberOfPages;
+          if (requestSealedCopy) {
+              newTotal += PRICE_PER_STAMPED_PAGE * numberOfPages;
+          }
+          if (numberOfPages > 10) {
+              newTotal *= 0.9; // 10% discount
+          }
+          newTotal = Math.max(newTotal, MINIMUM_CHARGE);
       }
-      
-      let total = pricePerPage * numberOfPages;
-
-      if (requestSealedCopy) {
-          total += PRICE_PER_STAMPED_PAGE * numberOfPages;
-      }
-      
-      if (numberOfPages > 10) {
-          total *= 0.9; // 10% discount
-      }
-      
-      return Math.max(total, MINIMUM_CHARGE);
-
-  }, [watchAllFields, pricingMap]);
-
-  const vatAmount = useMemo(() => {
-    return settings.vat.enabled ? subtotal * settings.vat.rate : 0;
-  }, [subtotal, settings.vat]);
-
-  const [finalPrice, setFinalPrice] = useState(subtotal + vatAmount);
-  
-  useEffect(() => {
-      setFinalPrice(subtotal + vatAmount);
-  }, [subtotal, vatAmount]);
+      const vatAmount = settings.vat.enabled ? newTotal * settings.vat.rate : 0;
+      setTotalPrice(newTotal + vatAmount);
+  }, [watchAllFields, pricingMap, settings.vat]);
 
 
   const handleProceedToPayment: SubmitHandler<FormValues> = async (data) => {
@@ -184,7 +171,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
     
     setPageState('translating');
     console.log("Processing payment with details:", paymentData);
-    if(finalPrice > 0) {
+    if(totalPrice > 0) {
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
         toast({ title: 'Payment Successful!', description: "Your payment has been processed."});
     }
@@ -260,24 +247,20 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
     navigator.clipboard.writeText(content);
     toast({ title: 'Copied!', description: 'Translated content copied to clipboard.'});
   };
-
-  const handleApplyCoupon = () => {
-    const coupon = paymentForm.getValues('coupon')?.toUpperCase();
-    if (!coupon) {
-      toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
-      return;
+  
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    const formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+    paymentForm.setValue('cardNumber', formattedValue.slice(0, 19));
+  };
+    
+  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
     }
-    // Dummy coupon logic
-    if (coupon === 'FREE100') {
-      setFinalPrice(0);
-      toast({ title: 'Coupon Applied!', description: 'Your translation is now free.' });
-    } else if (coupon === 'AGENT50') {
-      setFinalPrice((subtotal + vatAmount) / 2);
-      toast({ title: 'Coupon Applied!', description: 'You received a 50% discount.' });
-    } else {
-      toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
-    }
-  }
+    paymentForm.setValue('expiryDate', value.slice(0, 5));
+  };
   
   const targetLanguage = form.watch("targetLanguage");
 
@@ -507,7 +490,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
 
 
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-                    <CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment ({finalPrice.toFixed(2)} OMR)
+                    <CreditCard className="mr-2 h-4 w-4" /> Proceed to Payment ({totalPrice.toFixed(2)} OMR)
                 </Button>
               </form>
             </Form>
@@ -534,7 +517,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
                                 <FormControl>
                                     <Input placeholder="Enter coupon code..." {...field} />
                                 </FormControl>
-                                <Button type="button" variant="secondary" onClick={handleApplyCoupon}>Apply</Button>
+                                <Button type="button" variant="secondary" onClick={() => toast({title: "Invalid Coupon"})}>Apply</Button>
                             </div>
                             <FormMessage />
                         </FormItem>
@@ -555,20 +538,20 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
                  <hr className="my-2 border-dashed" />
                 <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">Total Amount</span>
-                    <span className="text-xl font-bold text-primary">OMR {finalPrice.toFixed(2)}</span>
+                    <span className="text-xl font-bold text-primary">OMR {totalPrice.toFixed(2)}</span>
                 </div>
             </div>
-            {finalPrice > 0 && (
+            {totalPrice > 0 && (
                 <>
                     <FormField control={paymentForm.control} name="cardholderName" render={({ field }) => (
                         <FormItem><FormLabel>Cardholder Name</FormLabel><FormControl><Input placeholder="Name on Card" {...field} /></FormControl><FormMessage /></FormItem>
                     )}/>
                     <FormField control={paymentForm.control} name="cardNumber" render={({ field }) => (
-                        <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Card Number</FormLabel><FormControl><Input placeholder="0000 0000 0000 0000" {...field} onChange={handleCardNumberChange} /></FormControl><FormMessage /></FormItem>
                     )}/>
                      <div className="grid grid-cols-2 gap-4">
                         <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
-                            <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} onChange={handleExpiryDateChange} /></FormControl><FormMessage /></FormItem>
                         )}/>
                         <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
                             <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
@@ -577,7 +560,7 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
                 </>
             )}
             <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                {finalPrice > 0 ? `Pay OMR ${finalPrice.toFixed(2)} & Translate` : `Submit Free Translation`}
+                {totalPrice > 0 ? `Pay OMR ${totalPrice.toFixed(2)} & Translate` : `Submit Free Translation`}
             </Button>
           </form>
         </Form>
