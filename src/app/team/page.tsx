@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,8 +6,7 @@ import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-// Import the data hook from the admin table
-import { useStaffData } from '@/app/admin/staff-table';
+import { useStaffData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TeamPage() {
