@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Download, ImageIcon, Wand2, ArrowLeft, ArrowRight, Home } from 'lucide-react';
+import { Loader2, Sparkles, Download, ImageIcon, Wand2, ArrowRight, Home } from 'lucide-react';
 import Image from 'next/image';
 import { transformImage } from '@/ai/flows/image-transformer';
-import Link from 'next/link';
-import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -26,9 +27,18 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
+const roomTypes = ["Living Room", "Bedroom", "Kitchen", "Bathroom", "Office"];
+const designStyles = ["Modern", "Minimalist", "Scandinavian", "Bohemian", "Industrial", "Coastal"];
+const colorPalettes = ["Warm Neutrals", "Cool Tones", "Monochromatic", "Earthy Tones", "Pastel"];
+const keyFeatures = ["a large plant", "a statement light fixture", "a gallery wall", "a fireplace", "wooden beams"];
+
+
 const FormSchema = z.object({
   roomImageFile: z.any().refine(file => file?.length == 1, 'A room image is required.'),
-  prompt: z.string().min(10, 'Please enter a more descriptive prompt (at least 10 characters).'),
+  roomType: z.string().min(1, "Please select a room type."),
+  designStyle: z.string().min(1, "Please select a design style."),
+  colorPalette: z.string().min(1, "Please select a color palette."),
+  keyFeature: z.string().min(1, "Please select a key feature."),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
@@ -41,7 +51,10 @@ export default function InteriorDesignerPage() {
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      prompt: 'Redesign this room in a modern minimalist style, with neutral colors, wooden floors, and a large plant.',
+        roomType: "Living Room",
+        designStyle: "Modern",
+        colorPalette: "Warm Neutrals",
+        keyFeature: "a large plant",
     },
   });
 
@@ -52,7 +65,9 @@ export default function InteriorDesignerPage() {
       const baseImageUri = await fileToDataURI(data.roomImageFile[0]);
       setBaseImage(baseImageUri);
 
-      const result = await transformImage({ baseImageUri, prompt: data.prompt });
+      const prompt = `Redesign this ${data.roomType} in a ${data.designStyle} style. The color palette should be ${data.colorPalette}. Make sure to include ${data.keyFeature}.`;
+
+      const result = await transformImage({ baseImageUri, prompt });
       setTransformedImage(result.imageDataUri);
       toast({ title: "Redesign Complete!", description: "Your new interior design concept is ready." });
     } catch (error) {
@@ -94,7 +109,7 @@ export default function InteriorDesignerPage() {
             <Card>
                 <CardHeader>
                 <CardTitle>Create a New Design</CardTitle>
-                <CardDescription>Upload an image of your room and provide a prompt for the AI.</CardDescription>
+                <CardDescription>Upload an image of your room and select your desired design elements.</CardDescription>
                 </CardHeader>
                 <CardContent>
                 <Form {...form}>
@@ -104,7 +119,7 @@ export default function InteriorDesignerPage() {
                             name="roomImageFile"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Your Room Photo</FormLabel>
+                                    <FormLabel>1. Your Room Photo</FormLabel>
                                     <FormControl>
                                         <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                     </FormControl>
@@ -112,23 +127,65 @@ export default function InteriorDesignerPage() {
                                 </FormItem>
                             )}
                         />
-                        <FormField
+                        <div className="grid md:grid-cols-3 gap-4">
+                             <FormField
+                                control={form.control}
+                                name="roomType"
+                                render={({ field }) => (
+                                    <FormItem><FormLabel>2. Room Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                        {roomTypes.map(type => <SelectItem key={type} value={type}>{type}</SelectItem>)}
+                                    </SelectContent></Select><FormMessage /></FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="designStyle"
+                                render={({ field }) => (
+                                    <FormItem><FormLabel>3. Design Style</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                         {designStyles.map(style => <SelectItem key={style} value={style}>{style}</SelectItem>)}
+                                    </SelectContent></Select><FormMessage /></FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="keyFeature"
+                                render={({ field }) => (
+                                    <FormItem><FormLabel>5. Key Feature</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                        {keyFeatures.map(feature => <SelectItem key={feature} value={feature}>Include {feature}</SelectItem>)}
+                                    </SelectContent></Select><FormMessage /></FormItem>
+                                )}
+                            />
+                        </div>
+
+                         <FormField
                             control={form.control}
-                            name="prompt"
+                            name="colorPalette"
                             render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Design Instructions</FormLabel>
+                                <FormItem className="space-y-3">
+                                <FormLabel>4. Color Palette</FormLabel>
                                 <FormControl>
-                                <VoiceEnabledTextarea
-                                    placeholder="e.g., 'Make this living room look like a cozy Scandinavian space with light woods, a fireplace, and a large plush rug.'"
-                                    rows={5}
-                                    {...field}
-                                />
+                                    <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+                                    >
+                                    {colorPalettes.map(palette => (
+                                         <FormItem key={palette}>
+                                            <FormControl>
+                                                <RadioGroupItem value={palette} id={palette} className="sr-only" />
+                                            </FormControl>
+                                            <Label htmlFor={palette} className={cn('block p-4 rounded-lg border-2 text-center cursor-pointer', field.value === palette && 'border-primary ring-2 ring-primary')}>
+                                                {palette}
+                                            </Label>
+                                        </FormItem>
+                                    ))}
+                                    </RadioGroup>
                                 </FormControl>
                                 <FormMessage />
-                            </FormItem>
+                                </FormItem>
                             )}
                         />
+
                         <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
                             {isLoading ? (
                             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Design...</>
