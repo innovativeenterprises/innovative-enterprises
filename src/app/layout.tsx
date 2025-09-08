@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Inter } from 'next/font/google';
@@ -25,7 +26,7 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={cn(
           'min-h-screen bg-background font-sans antialiased',
