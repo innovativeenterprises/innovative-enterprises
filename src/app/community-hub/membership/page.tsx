@@ -23,28 +23,8 @@ import Link from 'next/link';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMembersData } from "@/hooks/use-global-store-data";
 
-
-// Hook to connect to the global store for members
-export const useMembersData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
-            const currentMembers = store.get().communityMembers;
-            const newMembers = updater(currentMembers);
-            store.set(state => ({ ...state, communityMembers: newMembers }));
-        }
-    };
-};
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -335,13 +315,8 @@ const AddEditMemberDialog = ({
 };
 
 export default function MembershipPage() {
-    const { members, setMembers } = useMembersData();
+    const { members, setMembers, isClient } = useMembersData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: MemberValues, id?: string) => {
         const { identityDocument, ...restOfValues } = values; // Exclude identityDocument from saving

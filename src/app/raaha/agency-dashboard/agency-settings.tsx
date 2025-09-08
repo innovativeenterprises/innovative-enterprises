@@ -15,7 +15,6 @@ import type { Agency } from "@/lib/raaha-agencies";
 import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
 import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
-import { useAgenciesData } from "@/hooks/use-global-store-data";
 
 
 const fileToDataURI = (file: File): Promise<string> => {

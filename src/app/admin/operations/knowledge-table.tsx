@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,7 +17,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { KnowledgeDocument } from "@/lib/knowledge";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
-import { store } from "@/lib/global-store";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
 import { trainAgent } from "@/ai/flows/train-agent";
 import { scrapeAndSummarize } from "@/ai/flows/web-scraper-agent";
@@ -25,6 +25,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from "@/components/ui/skeleton";
+import { useKnowledgeData } from "@/hooks/use-global-store-data";
 
 const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -51,27 +53,6 @@ const fileToBase64ContentOnly = (file: File): Promise<string> => {
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
-};
-
-// Hook to connect to the global store
-export const useKnowledgeData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        knowledgeBase: data.knowledgeBase,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
-            const currentDocs = store.get().knowledgeBase;
-            const newDocs = updater(currentDocs);
-            store.set(state => ({ ...state, knowledgeBase: newDocs }));
-        }
-    };
 };
 
 const UploadDocumentSchema = z.object({
@@ -341,7 +322,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                                 </Card>
                             ))}
                             </div>
-                             <Button type="button" variant="outline" size="sm" onClick={() => append({ question: '', answer: '' })} className="mt-2"><PlusCircle className="mr-2 h-4 w-4"/> Add Q&A Pair</Button>
+                             <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ question: '', answer: '' })}><PlusCircle className="mr-2 h-4 w-4"/> Add Q&A Pair</Button>
                         </div>
                          <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
@@ -356,8 +337,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable() {
-    const { knowledgeBase, setKnowledgeBase } = useKnowledgeData();
+export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase, isClient }: { knowledgeBase: KnowledgeDocument[], setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => void, isClient: boolean }) {
     const { toast } = useToast();
 
     const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {
@@ -455,46 +435,52 @@ export default function KnowledgeTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {knowledgeBase.map(doc => (
-                            <TableRow key={doc.id}>
-                                <TableCell>
-                                    <p className="font-medium">{doc.documentName}</p>
-                                </TableCell>
-                                <TableCell>
-                                     <p className="text-sm text-muted-foreground">{doc.institutionName}</p>
-                                </TableCell>
-                                <TableCell>
-                                    <p className="font-mono text-xs">{doc.documentNumber}</p>
-                                    {doc.version && <p className="text-xs text-muted-foreground">v{doc.version}</p>}
-                                </TableCell>
-                                <TableCell>{doc.issueDate}</TableCell>
-                                <TableCell>
-                                    <a 
-                                        href={doc.fileType === 'url' ? doc.fileName : doc.dataUri} 
-                                        target="_blank" rel="noopener noreferrer" 
-                                        className="text-primary underline hover:opacity-80 text-sm truncate max-w-xs block"
-                                    >
-                                        {doc.fileName}
-                                    </a>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <UploadDocumentDialog onUpload={handleUpload} documentToReplace={doc}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </UploadDocumentDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{doc.documentName}". This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(doc.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={6}><Skeleton className="h-10 w-full" /></TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            knowledgeBase.map(doc => (
+                                <TableRow key={doc.id}>
+                                    <TableCell>
+                                        <p className="font-medium">{doc.documentName}</p>
+                                    </TableCell>
+                                    <TableCell>
+                                        <p className="text-sm text-muted-foreground">{doc.institutionName}</p>
+                                    </TableCell>
+                                    <TableCell>
+                                        <p className="font-mono text-xs">{doc.documentNumber}</p>
+                                        {doc.version && <p className="text-xs text-muted-foreground">v{doc.version}</p>}
+                                    </TableCell>
+                                    <TableCell>{doc.issueDate}</TableCell>
+                                    <TableCell>
+                                        <a 
+                                            href={doc.fileType === 'url' ? doc.fileName : doc.dataUri} 
+                                            target="_blank" rel="noopener noreferrer" 
+                                            className="text-primary underline hover:opacity-80 text-sm truncate max-w-xs block"
+                                        >
+                                            {doc.fileName}
+                                        </a>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <UploadDocumentDialog onUpload={handleUpload} documentToReplace={doc}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </UploadDocumentDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{doc.documentName}". This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(doc.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>

@@ -539,3 +539,26 @@ export const useCfoData = () => {
         isClient,
     };
 };
+
+export const useMembersData = () => {
+    const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        members: data.communityMembers,
+        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
+            const currentMembers = store.get().communityMembers;
+            const newMembers = updater(currentMembers);
+            store.set(state => ({ ...state, communityMembers: newMembers }));
+        },
+        isClient,
+    };
+};
