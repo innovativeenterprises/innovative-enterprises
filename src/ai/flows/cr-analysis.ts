@@ -51,7 +51,7 @@ const prompt = ai.definePrompt({
     **Summary:**
     -   Based on the list of commercial activities, write a concise, one-paragraph summary of what the company does.
 
-3.  **Generate a Filename:** Create a descriptive filename for the document based on its content. Format: \`CR_{CompanyName}.pdf\`. Replace spaces in the company name with underscores.
+3.  **Generate a Filename:** Create a descriptive filename for the document based on its content. The format should be \`CR_{{companyName}}_{{registrationNumber}}.pdf\`.
 4.  **Return Structured Data:** Populate all extracted information into the specified output format.
 `,
 });
@@ -64,6 +64,13 @@ const crAnalysisFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await prompt(input);
+
+    if (output && !output.suggestedFilename) {
+        const companyName = output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic || 'UnknownCompany';
+        const crn = output.companyInfo?.registrationNumber || 'NoCRN';
+        output.suggestedFilename = `CR_${companyName.replace(/\s/g, '_')}_${crn}.pdf`;
+    }
+
     return output!;
   }
 );

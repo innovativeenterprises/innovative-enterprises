@@ -7,6 +7,8 @@ import { CostRateSchema as ExternalCostRateSchema } from '@/lib/cost-settings.sc
 export const CostRateSchema = ExternalCostRateSchema.pick({
   name: true,
   rate: true,
+  unit: true,
+  category: true,
 });
 export type CostRate = z.infer<typeof CostRateSchema>;
 

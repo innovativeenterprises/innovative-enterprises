@@ -4,7 +4,11 @@
  */
 
 import { z } from 'zod';
-import { AssetSchema } from '@/lib/assets.schema';
+import { AssetSchema as ExternalAssetSchema } from '@/lib/assets.schema';
+
+export const AssetSchema = ExternalAssetSchema;
+export type Asset = z.infer<typeof AssetSchema>;
+
 
 export const ItRentalInquiryInputSchema = z.object({
   projectName: z.string().min(3, "Project name is required."),
