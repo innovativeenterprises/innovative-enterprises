@@ -21,7 +21,7 @@ import Image from 'next/image';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
+import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-table';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const FormSchema = z.object({
@@ -73,7 +73,6 @@ const StageColumn = ({ stage, products, onEditProduct }: { stage: any, products:
         id: stage.name,
         data: {
             type: 'Stage',
-            stage,
         }
     });
     
@@ -145,14 +144,19 @@ export default function ProjectsPage() {
         }
     };
 
-    const getStageForOverId = (over: Over | null) => {
+    const getStageForOverId = (over: Over | null): string | null => {
         if (!over) return null;
+
+        const overId = over.id;
+        
         if (over.data.current?.type === 'Stage') {
-            return over.data.current.stage.name;
+          return overId as string;
         }
+
         if (over.data.current?.type === 'Product') {
             return over.data.current.product.stage;
         }
+
         return null;
     }
 
@@ -308,9 +312,7 @@ export default function ProjectsPage() {
                 product={selectedProduct}
                 onSave={handleSaveProduct}
                 stages={stages}
-            >
-                <div />
-            </AddEditProductDialog>
+            />
         </div>
     );
 }
