@@ -30,9 +30,6 @@ const StudentSchema = z.object({
   year: z.coerce.number().min(1, "Year must be at least 1"),
   status: z.enum(['On Track', 'Needs Attention', 'At Risk']),
   photo: z.string().url("A valid photo URL is required"),
-  tuitionBilled: z.coerce.number().optional(),
-  scholarshipAmount: z.coerce.number().optional(),
-  amountPaid: z.coerce.number().optional(),
 });
 type StudentValues = z.infer<typeof StudentSchema>;
 
@@ -40,12 +37,12 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<StudentValues>({
         resolver: zodResolver(StudentSchema),
-        defaultValues: student || { status: 'On Track' },
+        defaultValues: student || { status: 'On Track', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format&fit=crop' },
     });
 
     useEffect(() => {
         if (isOpen) {
-            form.reset(student || { id: '', name: '', major: '', year: 1, status: 'On Track', photo: '' });
+            form.reset(student || { id: '', name: '', major: '', year: 1, status: 'On Track', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format&fit=crop' });
         }
     }, [student, form, isOpen]);
 
@@ -107,7 +104,7 @@ export default function StudentRecordsPage() {
             setStudents(prev => prev.map(s => s.id === id ? { ...s, ...values } : s));
             toast({ title: "Student record updated." });
         } else {
-            const newStudent: Student = { ...values };
+            const newStudent: Student = { ...values, tuitionBilled: 0, scholarshipAmount: 0, amountPaid: 0 };
             setStudents(prev => [newStudent, ...prev]);
             toast({ title: "Student record added." });
         }

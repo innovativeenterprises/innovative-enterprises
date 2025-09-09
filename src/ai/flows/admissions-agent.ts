@@ -67,7 +67,7 @@ const admissionsAgentFlow = ai.defineFlow(
   },
   async (input) => {
     // Generate a more deterministic ID.
-    const generatedId = `APP-${input.fullName.slice(0, 4).toUpperCase()}${input.programOfInterest.length}`;
+    const generatedId = `APP-${input.fullName.slice(0, 4).toUpperCase()}${String(new Date().getTime()).slice(-6)}`;
     
     const { output } = await prompt({ ...input, generatedId });
     return output!;

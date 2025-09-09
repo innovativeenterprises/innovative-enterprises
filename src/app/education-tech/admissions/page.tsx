@@ -124,13 +124,14 @@ export default function AdmissionsPage() {
                         <p className="mt-4 text-lg text-muted-foreground">
                             Streamline your admissions process. Submit an application below to see how our AI, "Admito," provides instant preliminary analysis for your admissions team.
                         </p>
-                         <div className="mt-4">
-                            <Button asChild variant="outline">
-                                <Link href="/education-tech/admissions/dashboard">
-                                    <LayoutDashboard className="mr-2 h-4 w-4" /> View Admissions Dashboard
-                                </Link>
-                            </Button>
-                        </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                        <Button asChild variant="outline">
+                            <Link href="/education-tech/admissions/dashboard">
+                                <LayoutDashboard className="mr-2 h-4 w-4" /> View Admissions Dashboard
+                            </Link>
+                        </Button>
                     </div>
 
                     <Card>
@@ -219,11 +220,6 @@ export default function AdmissionsPage() {
                                         <CardTitle>AI Admission Analysis</CardTitle>
                                         <CardDescription>Application ID: <span className="font-mono">{response.applicationId}</span></CardDescription>
                                     </div>
-                                    <Button asChild variant="secondary">
-                                        <Link href="/education-tech/admissions/dashboard">
-                                            <LayoutDashboard className="mr-2 h-4 w-4" /> View Dashboard
-                                        </Link>
-                                    </Button>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-6">
