@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -14,7 +15,7 @@ import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type 
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
-import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
+import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import {
@@ -83,7 +84,7 @@ const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest
                             </div>
                         </DialogTrigger>
                         <div className="pl-12 pr-1 mt-2">
-                             <ScheduleInterviewDialog request={request} onSchedule={onScheduleInterview} />
+                             <ScheduleInterviewDialog request={request as GenericRequest} onSchedule={onScheduleInterview} />
                         </div>
                     </CardContent>
                  </Card>

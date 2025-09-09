@@ -9,8 +9,7 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 3
-const TOAST_REMOVE_DELAY = 500000;
+const TOAST_LIMIT = 3;
 
 type ToasterToast = ToastProps & {
   id: string
@@ -136,12 +135,6 @@ function toast({ ...props }: Toast) {
       },
     },
   })
-
-  // Remove toast after a delay
-  setTimeout(() => {
-    dispatch({ type: "REMOVE_TOAST", toastId: id });
-  }, props.duration || TOAST_REMOVE_DELAY);
-
 
   return {
     id: id,
