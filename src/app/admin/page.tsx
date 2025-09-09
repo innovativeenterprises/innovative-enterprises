@@ -5,7 +5,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, CheckCircle, FolderKanban, Network, CircleDollarSign, Percent, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { useProductsData, useStaffData, useOpportunitiesData, useProvidersData } from "@/hooks/use-global-store-data";
+import { useProductsData, useStaffData, useProvidersData } from '@/hooks/use-global-store-data';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { store } from "@/lib/global-store";
+import type { Opportunity } from "@/lib/opportunities";
 
 const overviewStats = [
     { title: "Net Revenue", value: "OMR 45,231", icon: CircleDollarSign, href: "/admin/finance" },
@@ -22,12 +24,22 @@ const overviewStats = [
 ];
 
 export default function AdminDashboardPage() {
+  const [data, setData] = useState(store.get());
+  const [isOpportunitiesClient, setIsOpportunitiesClient] = useState(false);
+
+  useEffect(() => {
+    setIsOpportunitiesClient(true);
+    const unsubscribe = store.subscribe(() => {
+        setData(store.get());
+    });
+    return () => unsubscribe();
+  }, []);
+
   const { products, isClient: isProductsClient } = useProductsData();
   const { providers, isClient: isProvidersClient } = useProvidersData();
-  const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
   const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
   
-  const isClient = isProductsClient && isProvidersClient && isOpportunitiesClient && isStaffClient;
+  const isClient = isProductsClient && isProvidersClient && isStaffClient && isOpportunitiesClient;
   
   const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
   const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);
@@ -35,7 +47,7 @@ export default function AdminDashboardPage() {
   const dynamicStats = [
     { title: "Total Staff (Human + AI)", value: isClient ? (totalStaff + totalAgents).toString() : '...', icon: Users, href: "/admin/people" },
     { title: "Active Projects", value: isClient ? products.filter(p => p.stage !== 'Live & Operating').length.toString() : '...', icon: FolderKanban, href: "/admin/projects" },
-    { title: "Active Opportunities", value: isClient ? opportunities.filter(o => o.status === 'Open').length.toString() : '...', icon: Zap, href: "/admin/opportunities" },
+    { title: "Active Opportunities", value: isClient ? data.opportunities.filter(o => o.status === 'Open').length.toString() : '...', icon: Zap, href: "/admin/opportunities" },
     { title: "Provider Network", value: isClient ? providers.length.toString() : '...', icon: Network, href: "/admin/network" },
   ];
 

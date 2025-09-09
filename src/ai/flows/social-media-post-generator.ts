@@ -77,13 +77,13 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
   },
   async (input) => {
     const textPromise = textGenerationPrompt(input);
-    let imagePromise: Promise<string | undefined> | undefined;
+    let imagePromise: Promise<{ imageUrl: string; } | undefined> | undefined;
 
     if (input.generateImage) {
         imagePromise = generateImage({ prompt: `A visually appealing image for a social media campaign about: ${input.topic}` });
     }
     
-    const [textResult, imageUrl] = await Promise.all([textPromise, imagePromise]);
+    const [textResult, imageResult] = await Promise.all([textPromise, imagePromise]);
     
     const output = textResult.output;
     if (!output || !output.posts) {
@@ -92,7 +92,7 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     
     return {
       posts: output.posts,
-      imageUrl,
+      imageUrl: imageResult?.imageUrl,
     };
   }
 );

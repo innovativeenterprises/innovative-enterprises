@@ -30,6 +30,25 @@ export default function ClientTestimonials({
     );
   };
 
+  if (!isClient) {
+    return (
+        <section id="testimonials" className="py-16 md:py-24 bg-background">
+             <div className="container mx-auto px-4">
+                 <div className="text-center mb-12">
+                    <Skeleton className="h-10 w-1/2 mx-auto" />
+                    <Skeleton className="h-6 w-3/4 mx-auto mt-4" />
+                </div>
+                 <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
+                     {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-12 w-32" />)}
+                 </div>
+                 <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                     {Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)}
+                 </div>
+             </div>
+        </section>
+    );
+  }
+
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -40,10 +59,7 @@ export default function ClientTestimonials({
           </p>
         </div>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
-          {!isClient ? (
-            Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-12 w-32" />)
-          ) : (
-            clients.map((client) => (
+          {clients.map((client) => (
               <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300" title={client.name}>
                 <Image
                   src={client.logo}
@@ -54,15 +70,11 @@ export default function ClientTestimonials({
                   data-ai-hint={client.aiHint}
                 />
               </div>
-            ))
-          )}
+            ))}
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {!isClient ? (
-                Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)
-            ) : (
-                testimonials.map((testimonial) => (
+            {testimonials.map((testimonial) => (
                     <Card key={testimonial.id} className="bg-card">
                         <CardContent className="p-6">
                             <blockquote className="border-l-4 border-accent pl-4 italic text-foreground/80">
@@ -80,8 +92,7 @@ export default function ClientTestimonials({
                             </div>
                         </CardContent>
                     </Card>
-                ))
-            )}
+                ))}
         </div>
       </div>
     </section>

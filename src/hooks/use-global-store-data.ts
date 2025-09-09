@@ -441,69 +441,6 @@ export const usePropertiesData = () => {
     };
 };
 
-export const useStudentsData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        students: data.students,
-        setStudents: (updater: (students: Student[]) => void) => {
-            store.set(state => ({ ...state, students: updater(state.students) }));
-        },
-        isClient,
-    };
-};
-
-export const useCostSettingsData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        costSettings: data.costSettings,
-        setCostSettings: (updater: (items: CostRate[]) => void) => {
-            store.set(state => ({ ...state, costSettings: updater(state.costSettings) }));
-        },
-        isClient,
-    };
-};
-
-export const useCfoData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        kpiData: data.kpiData,
-        transactionData: data.transactionData,
-        upcomingPayments: data.upcomingPayments,
-        vatPayment: data.vatPayment,
-        isClient,
-    };
-};
-
 export const useStairspaceData = () => {
     const [data, setData] = useState(store.get());
     const [isClient, setIsClient] = useState(false);
