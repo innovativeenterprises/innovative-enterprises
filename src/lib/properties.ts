@@ -3,7 +3,7 @@ export interface Property {
   id: string;
   title: string;
   listingType: 'For Sale' | 'For Rent';
-  propertyType: 'Villa' | 'Apartment' | 'Townhouse';
+  propertyType: 'Villa' | 'Apartment' | 'Townhouse' | 'Commercial' | 'Industrial';
   location: string;
   price: number;
   bedrooms: number;
@@ -117,7 +117,7 @@ export const initialProperties: Property[] = [
     id: 'prop_7',
     title: 'Commercial Office Space',
     listingType: 'For Rent',
-    propertyType: 'Apartment',
+    propertyType: 'Commercial',
     location: 'Ruwi, Muscat',
     price: 800,
     bedrooms: 0,
@@ -133,7 +133,7 @@ export const initialProperties: Property[] = [
     id: 'prop_8',
     title: 'Sohar Industrial Warehouse',
     listingType: 'For Sale',
-    propertyType: 'Villa', // Should be changed to a more appropriate type
+    propertyType: 'Industrial',
     location: 'Sohar Industrial Estate',
     price: 450000,
     bedrooms: 0,
