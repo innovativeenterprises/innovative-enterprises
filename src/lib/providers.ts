@@ -1,15 +1,8 @@
 
-export interface Provider {
-  id: string;
-  name: string;
-  email: string;
-  services: string;
-  status: 'Vetted' | 'Pending Review' | 'On Hold';
-  portfolio?: string;
-  notes?: string;
-  subscriptionTier: 'Monthly' | 'Yearly' | 'Lifetime' | 'None';
-  subscriptionExpiry: string; // ISO Date string 'YYYY-MM-DD'
-}
+import type { z } from 'zod';
+import type { ProviderSchema } from './providers.schema';
+
+export type Provider = z.infer<typeof ProviderSchema>;
 
 export const initialProviders: Provider[] = [
     {
@@ -21,7 +14,7 @@ export const initialProviders: Provider[] = [
         portfolio: "https://example.com",
         notes: "Reliable partner for several past projects. Excellent at React.",
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-06-15',
+        subscriptionExpiry: new Date('2025-06-15'),
     },
     {
         id: "prov_2",
@@ -32,7 +25,7 @@ export const initialProviders: Provider[] = [
         portfolio: "https://example.com",
         notes: "Winner of the last re-branding competition. Great creative eye.",
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-20',
+        subscriptionExpiry: new Date('2024-08-20'),
     },
     {
         id: "prov_3",
@@ -41,7 +34,7 @@ export const initialProviders: Provider[] = [
         services: "IT Support, Cloud Migration",
         status: "Pending Review",
         subscriptionTier: 'None',
-        subscriptionExpiry: '',
+        subscriptionExpiry: undefined,
     },
     {
         id: "prov_4",
@@ -50,7 +43,7 @@ export const initialProviders: Provider[] = [
         services: "Python, AI/ML, Data Scraping",
         status: "Pending Review",
         subscriptionTier: 'None',
-        subscriptionExpiry: '',
+        subscriptionExpiry: undefined,
     },
     {
         id: "prov_5",
@@ -61,7 +54,7 @@ export const initialProviders: Provider[] = [
         portfolio: "https://example.com",
         notes: "Provided voice work for the Voxi agent.",
         subscriptionTier: 'Lifetime',
-        subscriptionExpiry: '2099-12-31',
+        subscriptionExpiry: new Date('2099-12-31'),
     },
     {
         id: "prov_6",
@@ -70,7 +63,7 @@ export const initialProviders: Provider[] = [
         services: "AR/VR Development (Unity)",
         status: "On Hold",
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2024-09-01',
+        subscriptionExpiry: new Date('2024-09-01'),
     },
     {
         id: "prov_7",
@@ -81,7 +74,7 @@ export const initialProviders: Provider[] = [
         portfolio: "https://example.com",
         notes: "Handled the successful launch campaign for KHIDMA.",
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-07-30',
+        subscriptionExpiry: new Date('2024-07-30'),
     },
     {
         id: "prov_8",
@@ -90,7 +83,7 @@ export const initialProviders: Provider[] = [
         services: "Cybersecurity Auditing",
         status: "Pending Review",
         subscriptionTier: 'None',
-        subscriptionExpiry: '',
+        subscriptionExpiry: undefined,
     },
     {
         id: 'prov_9',
@@ -101,7 +94,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Specializes in court documents and contracts.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-05-20'
+        subscriptionExpiry: new Date('2025-05-20')
     },
     {
         id: 'prov_10',
@@ -112,7 +105,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Good for small to medium e-commerce projects.',
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-10'
+        subscriptionExpiry: new Date('2024-08-10')
     },
     {
         id: 'prov_11',
@@ -123,7 +116,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'New applicant with a strong portfolio in advertising.',
         subscriptionTier: 'None',
-        subscriptionExpiry: ''
+        subscriptionExpiry: undefined,
     },
     {
         id: 'prov_12',
@@ -134,7 +127,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Provides reliable local hosting infrastructure.',
         subscriptionTier: 'Lifetime',
-        subscriptionExpiry: '2099-12-31'
+        subscriptionExpiry: new Date('2099-12-31')
     },
     {
         id: 'prov_13',
@@ -145,7 +138,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Primary provider for the Dhofar region.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-04-01'
+        subscriptionExpiry: new Date('2025-04-01')
     },
     {
         id: 'prov_14',
@@ -156,7 +149,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Expert in SME financial health and fundraising.',
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-30'
+        subscriptionExpiry: new Date('2024-08-30')
     },
     {
         id: 'prov_15',
@@ -167,7 +160,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'A collective of freelance writers.',
         subscriptionTier: 'None',
-        subscriptionExpiry: ''
+        subscriptionExpiry: undefined,
     },
     {
         id: 'prov_16',
@@ -178,7 +171,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Strong results in the B2C sector.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-07-01'
+        subscriptionExpiry: new Date('2025-07-01')
     },
     {
         id: 'prov_17',
@@ -189,7 +182,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Currently on a long-term project, unavailable for new work.',
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-05'
+        subscriptionExpiry: new Date('2024-08-05')
     },
     {
         id: 'prov_18',
@@ -200,7 +193,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Key partner for projects in the Sharqiyah region.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-02-10'
+        subscriptionExpiry: new Date('2025-02-10')
     },
     {
         id: 'prov_19',
@@ -211,7 +204,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: '',
         subscriptionTier: 'Lifetime',
-        subscriptionExpiry: '2099-12-31'
+        subscriptionExpiry: new Date('2099-12-31')
     },
     {
         id: 'prov_20',
@@ -222,7 +215,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: '',
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-18'
+        subscriptionExpiry: new Date('2024-08-18')
     },
     {
         id: 'prov_21',
@@ -233,7 +226,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: '',
         subscriptionTier: 'None',
-        subscriptionExpiry: ''
+        subscriptionExpiry: undefined,
     },
     {
         id: 'prov_22',
@@ -244,7 +237,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Helped design our new office space.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-01-15'
+        subscriptionExpiry: new Date('2025-01-15')
     },
     {
         id: 'prov_23',
@@ -255,7 +248,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Our go-to partner for any logistics needs in Musandam.',
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-25'
+        subscriptionExpiry: new Date('2024-08-25')
     },
     {
         id: 'prov_24',
@@ -266,7 +259,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: '',
         subscriptionTier: 'None',
-        subscriptionExpiry: ''
+        subscriptionExpiry: undefined,
     },
     {
         id: 'prov_25',
@@ -277,7 +270,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Consulted on the development of our Lexi Legal Agent.',
         subscriptionTier: 'Lifetime',
-        subscriptionExpiry: '2099-12-31'
+        subscriptionExpiry: new Date('2099-12-31')
     },
     {
         id: 'prov_26',
@@ -288,7 +281,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Seasonal business, mostly active in winter months.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-03-01'
+        subscriptionExpiry: new Date('2025-03-01')
     },
     {
         id: 'prov_27',
@@ -299,7 +292,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Provide excellent data for our feasibility studies.',
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-28'
+        subscriptionExpiry: new Date('2024-08-28')
     },
     {
         id: 'prov_28',
@@ -310,7 +303,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: '',
         subscriptionTier: 'None',
-        subscriptionExpiry: ''
+        subscriptionExpiry: undefined,
     },
     {
         id: 'prov_29',
@@ -321,7 +314,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Certified ethical hackers.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-07-20'
+        subscriptionExpiry: new Date('2025-07-20')
     },
     {
         id: 'prov_30',
@@ -332,7 +325,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: '',
         subscriptionTier: 'Monthly',
-        subscriptionExpiry: '2024-08-12'
+        subscriptionExpiry: new Date('2024-08-12')
     },
     {
         id: 'prov_31',
@@ -343,7 +336,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Helped develop our internal HR framework.',
         subscriptionTier: 'Lifetime',
-        subscriptionExpiry: '2099-12-31'
+        subscriptionExpiry: new Date('2099-12-31')
     },
     {
         id: 'prov_32',
@@ -354,7 +347,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Fully booked for the next 3 months.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-01-01'
+        subscriptionExpiry: new Date('2025-01-01')
     },
     {
         id: 'prov_33',
@@ -365,7 +358,7 @@ export const initialProviders: Provider[] = [
         portfolio: 'https://example.com',
         notes: 'Highly efficient and knowledgeable about government processes.',
         subscriptionTier: 'Yearly',
-        subscriptionExpiry: '2025-06-30'
+        subscriptionExpiry: new Date('2025-06-30')
     }
 ];
     
