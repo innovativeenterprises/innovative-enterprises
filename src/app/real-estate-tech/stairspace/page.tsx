@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useStairspaceData } from '@/hooks/use-global-store-data';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StairspaceMatcherInputSchema, type StairspaceMatcherInput, type StairspaceMatcherOutput } from '@/ai/flows/stairspace-matcher.schema';
