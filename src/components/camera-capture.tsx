@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, forwardRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Camera, X, RefreshCw, CheckCircle } from 'lucide-react';
@@ -9,24 +9,23 @@ import { CardHeader, CardTitle, CardDescription, CardContent } from '@/component
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { cn } from '@/lib/utils';
 
+interface CameraCaptureProps {
+  title: string;
+  onCapture: (imageUri: string) => void;
+  onCancel: () => void;
+  isFlipping?: boolean;
+}
+
 export function CameraCapture({
   title,
   onCapture,
   onCancel,
-  isFlipping,
-  capturedImage,
-  setCapturedImage
-}: {
-  title: string,
-  onCapture: (imageUri: string) => void,
-  onCancel: () => void,
-  isFlipping?: boolean,
-  capturedImage: string | null,
-  setCapturedImage: (imageUri: string | null) => void,
-}) {
+  isFlipping
+}: CameraCaptureProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+    const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -130,7 +129,6 @@ export function CameraCapture({
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div className="w-[85%] h-[80%] border-4 border-dashed border-white/50 rounded-lg" style={{
                             mask: 'radial-gradient(circle at center, transparent 0%, transparent 98%, black 100%), linear-gradient(black, black)',
-                            maskComposite: 'intersect',
                             WebkitMaskComposite: 'xor',
                         }}></div>
                     </div>
