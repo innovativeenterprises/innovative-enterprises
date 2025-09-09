@@ -8,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { GenerateImageInput, GenerateImageInputSchema, GenerateImageOutput, GenerateImageOutputSchema } from './image-generator.schema';
+import { GenerateImageInput, GenerateImageInputSchema, GenerateImageOutputSchema } from './image-generator.schema';
 
 
 export async function generateImage(input: GenerateImageInput): Promise<string> {
@@ -16,7 +16,7 @@ export async function generateImage(input: GenerateImageInput): Promise<string> 
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: input.prompt,
         config: {
-            responseModalities: ['IMAGE', 'TEXT'], // MUST provide both TEXT and IMAGE
+            responseModalities: ['IMAGE'], // Only expect an image back
         },
     });
 
