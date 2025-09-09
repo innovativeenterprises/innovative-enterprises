@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { formatDistanceToNow, format } from 'date-fns';
-import { ArrowLeft, Ticket, CalendarIcon, MessageSquare, Clock, CreditCard } from 'lucide-react';
+import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
