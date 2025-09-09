@@ -110,7 +110,7 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
         ]
     },
     {
-        category: "AI Tools",
+        category: "AI & Creative Tools",
         items: [
             {
                 title: "Voxi Translator",
@@ -125,12 +125,12 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 icon: Lightbulb,
             },
              {
-                title: "Innovation Gateway",
-                href: "/submit-work",
-                description: "Submit your innovative ideas to our e-incubator for analysis and potential sponsorship.",
-                icon: Lightbulb,
+                title: "AI PDF Form Filler",
+                href: "/pdf-form-filler",
+                description: "Let our AI intelligently fill out any PDF form based on your profile data.",
+                icon: FileText,
             },
-            {
+             {
                 title: "AI Interior Designer",
                 href: "/interior-designer",
                 description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
@@ -170,6 +170,12 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 href: "/cv-enhancer",
                 description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
                 icon: UserRoundCheck,
+            },
+            {
+                title: "Innovation Gateway",
+                href: "/submit-work",
+                description: "Submit your innovative ideas to our e-incubator for analysis and potential sponsorship.",
+                icon: Lightbulb,
             },
         ]
     }

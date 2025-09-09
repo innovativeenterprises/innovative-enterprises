@@ -1,4 +1,5 @@
 
+
 'use server';
 import {answerQuestion as answerFaqQuestion} from './ai-powered-faq';
 import {analyzeApplication} from './admissions-agent';
@@ -31,6 +32,7 @@ import {generateLearningPath} from './learning-path-generator';
 import {generateQuiz} from './quiz-generator';
 import {generateTimetable} from './timetable-generator';
 import {generateElectionMaterials} from './community-elections-agent';
+import {fillPdfForm} from './pdf-form-filler';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -69,4 +71,5 @@ export {
   generateQuiz,
   generateTimetable,
   generateElectionMaterials,
+  fillPdfForm,
 };
