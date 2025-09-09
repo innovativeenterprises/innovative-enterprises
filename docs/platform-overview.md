@@ -19,7 +19,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
 | StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
 
-### Category: Real Estate Tech (11)
+### Category: Real Estate Tech (12)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | AI Property Valuator | Automates property appraisal using AI, considering location, size, amenities, and market trends for instant valuations. | Live & Operating | Completed |
@@ -33,7 +33,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed |
 | EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed |
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed |
-| StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Idea Phase | On Track |
+| StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed |
 
 ### Category: Education Tech (5)
 | Name | Description | Stage | Status |
