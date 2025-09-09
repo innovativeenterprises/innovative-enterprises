@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { formatDistanceToNow, format } from 'date-fns';
-import { ArrowLeft, Ticket, CalendarIcon, MessageSquare, Clock } from 'lucide-react';
+import { ArrowLeft, Ticket, CalendarIcon, MessageSquare, Clock, CreditCard } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
@@ -31,8 +31,9 @@ function RequestRow({ request, isClient }: { request: BookingRequest, isClient: 
         switch (status) {
             case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
             case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
-            case 'Booked': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Booked</Badge>;
+            case 'Booked': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Booked & Awaiting Payment</Badge>;
             case 'Closed': return <Badge variant="destructive">Closed</Badge>;
+            case 'Confirmed': return <Badge variant="default" className="bg-green-700 text-white">Confirmed</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
         }
     };
@@ -47,7 +48,13 @@ function RequestRow({ request, isClient }: { request: BookingRequest, isClient: 
             </TableCell>
             <TableCell>{getStatusBadge(request.status)}</TableCell>
             <TableCell>
-                 {request.interviewDate && isClient ? (
+                 {request.status === 'Booked' ? (
+                     <Button asChild size="sm">
+                        <Link href={`/real-estate-tech/stairspace/checkout/${request.id}`}>
+                            <CreditCard className="mr-2 h-4 w-4"/> Complete Booking
+                        </Link>
+                     </Button>
+                 ) : request.interviewDate && isClient ? (
                     <div className="text-xs text-muted-foreground space-y-1">
                         <div className="flex items-center gap-1.5 font-semibold">
                             <CalendarIcon className="h-3 w-3 text-primary" />

@@ -1,4 +1,5 @@
 
+
 export interface BookingRequest {
   id: string;
   listingId: number;
@@ -8,7 +9,7 @@ export interface BookingRequest {
   clientPhone: string;
   message?: string;
   requestDate: string; // ISO date string
-  status: 'Pending' | 'Contacted' | 'Booked' | 'Closed';
+  status: 'Pending' | 'Contacted' | 'Booked' | 'Closed' | 'Confirmed';
   interviewDate?: string; // ISO date string
   interviewNotes?: string;
 }
