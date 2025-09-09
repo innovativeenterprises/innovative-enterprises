@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,9 +15,11 @@ import { useToast } from '@/hooks/use-toast';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import { RequestTable } from '@/app/raaha/agency-dashboard/request-table'; // A more generic component that can be reused.
+
 
 export default function StairspaceRequestsPage() {
-    const { requests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
+    const { stairspaceRequests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
 
     const handleStatusChange = (requestId: string, newStatus: BookingRequest['status']) => {
@@ -68,14 +70,14 @@ export default function StairspaceRequestsPage() {
                         <TableBody>
                             {!isClient ? (
                                 <TableRow><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
-                            ) : requests.length === 0 ? (
+                            ) : stairspaceRequests.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
                                         No booking requests yet.
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                requests.map(request => (
+                                stairspaceRequests.map(request => (
                                     <TableRow key={request.id}>
                                         <TableCell>
                                             <p className="font-medium">{request.listingTitle}</p>
