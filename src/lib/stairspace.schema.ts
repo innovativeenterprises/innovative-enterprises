@@ -7,7 +7,7 @@ import { z } from 'zod';
  * data shape used across the application.
  */
 export const StairspaceListingSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   location: z.string(),
   price: z.string(),

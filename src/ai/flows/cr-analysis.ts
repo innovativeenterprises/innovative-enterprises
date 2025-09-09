@@ -21,10 +21,7 @@ export async function analyzeCrDocument(input: CrAnalysisInput): Promise<CrAnaly
 
 const prompt = ai.definePrompt({
   name: 'crAnalysisPrompt',
-  input: { schema: CrAnalysisInputSchema.extend({
-    companyNameForFilename: z.string().optional(),
-    crnForFilename: z.string().optional(),
-  }) },
+  input: { schema: CrAnalysisInputSchema },
   output: { schema: CrAnalysisOutputSchema },
   prompt: `You are an expert business registration analyst for the government of Oman. Your task is to analyze the provided Commercial Record (CR) document and extract key information with high accuracy.
 
@@ -55,7 +52,7 @@ const prompt = ai.definePrompt({
     **Summary:**
     -   Based on the list of commercial activities, write a concise, one-paragraph summary of what the company does.
 
-3.  **Generate a Filename:** Create a descriptive filename for the document based on the provided name and CRN. The format should be \`CR_{{companyNameForFilename}}_{{crnForFilename}}.pdf\`.
+3.  **Generate a Filename:** Based on the extracted Company Name and CR Number, create a descriptive filename for the document. The format should be \`CR_{CompanyName}_{CRN}.pdf\`. If the name or CRN is not found, use a suitable placeholder.
 4.  **Return Structured Data:** Populate all extracted information into the specified output format.
 `,
 });
@@ -67,32 +64,12 @@ const crAnalysisFlow = ai.defineFlow(
     outputSchema: CrAnalysisOutputSchema,
   },
   async (input) => {
-    // Perform a quick preliminary analysis to get the most critical info for the filename.
-    // This is more robust than a single, complex prompt.
-    const preliminaryAnalysis = await ai.generate({
-      prompt: `Extract only the company name (English or Arabic) and the commercial registration number (CRN) from this document: {{media url=documentDataUri}}. If you cannot find a value, return an empty string for that field.`,
-      output: {
-        schema: z.object({
-          companyName: z.string().optional(),
-          registrationNumber: z.string().optional(),
-        })
-      }
-    });
-
-    const companyName = preliminaryAnalysis.output?.companyName;
-    const crn = preliminaryAnalysis.output?.registrationNumber;
-
-    // Pass the extracted details to the main prompt to ensure consistent use.
-    const { output } = await prompt({
-      ...input,
-      companyNameForFilename: companyName,
-      crnForFilename: crn,
-    });
+    const { output } = await prompt(input);
 
     if (output) {
-      // Robust filename generation logic.
-      const namePart = companyName ? companyName.replace(/\s+/g, '_') : (crn ? `CRN_${crn}` : 'UnknownCompany');
-      const crnPart = crn || 'UnknownCRN';
+      // Robust filename generation logic using the final analysis result.
+      const namePart = (output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic || 'UnknownCompany').replace(/\s+/g, '_');
+      const crnPart = output.companyInfo?.registrationNumber || 'UnknownCRN';
       output.suggestedFilename = `CR_${namePart}_${crnPart}.pdf`;
     }
 
