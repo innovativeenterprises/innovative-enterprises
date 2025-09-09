@@ -1,13 +1,11 @@
 
+
 /**
  * @fileOverview Schemas and types for the IT Infrastructure Rental Agent flow.
  */
 
 import { z } from 'zod';
-import { AssetSchema as ExternalAssetSchema } from '@/lib/assets.schema';
-
-export const AssetSchema = ExternalAssetSchema;
-export type Asset = z.infer<typeof AssetSchema>;
+import { AssetSchema } from '@/lib/assets.schema';
 
 
 export const ItRentalInquiryInputSchema = z.object({

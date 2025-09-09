@@ -1,4 +1,5 @@
 
+
 import { ServerCog } from "lucide-react";
 import ItRentalAgentForm from "./agent-form";
 
@@ -15,7 +16,7 @@ export default function ItRentalAgentPage() {
             Describe your project needs, and our AI Solutions Architect will instantly design a custom hardware package and proposal for you.
           </p>
         </div>
-        <div className="max-w-3xl mx-auto mt-12">
+        <div className="max-w-4xl mx-auto mt-12">
             <ItRentalAgentForm />
         </div>
       </div>

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -173,7 +174,7 @@ export default function ItRentalAgentForm() {
             <FormField control={form.control} name="existingInfrastructure" render={({ field }) => (
                 <FormItem>
                     <FormLabel>Existing Infrastructure (Optional)</FormLabel>
-                    <FormControl><Textarea placeholder="List any equipment you already have available, e.g., 'We have our own power generator and safety gear.'" {...field} /></FormControl>
+                    <FormControl><Textarea placeholder="List any equipment you already have available, e.g., 'We have monitors and mice.'" {...field} /></FormControl>
                     <FormDescription>This helps the AI avoid recommending items you don't need.</FormDescription>
                     <FormMessage />
                 </FormItem>
@@ -182,7 +183,7 @@ export default function ItRentalAgentForm() {
              <FormField control={form.control} name="missingComponents" render={({ field }) => (
                 <FormItem>
                     <FormLabel>Specific Required Components (Optional)</FormLabel>
-                    <FormControl><Textarea placeholder="If you know exactly what you need, list it here. e.g., 'We need one 20-ton excavator and two pickup trucks.'" {...field} /></FormControl>
+                    <FormControl><Textarea placeholder="If you know exactly what you need, list it here. e.g., 'We need ten high-performance laptops and a network switch.'" {...field} /></FormControl>
                     <FormDescription>Provide this if you have specific hardware in mind.</FormDescription>
                     <FormMessage />
                 </FormItem>
