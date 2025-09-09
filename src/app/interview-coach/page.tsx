@@ -1,10 +1,18 @@
 
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function InterviewCoachRedirectPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/cv-enhancer?tab=interview');
+  }, [router]);
+
   return (
     <div className="container mx-auto text-center py-20">
       <h1 className="text-2xl font-bold">This page has moved.</h1>

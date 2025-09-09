@@ -1,7 +1,8 @@
 
-
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -9,6 +10,12 @@ import Link from "next/link";
 // We keep this page for any legacy links.
 
 export default function ServiceProviderPage() {
+    const router = useRouter();
+
+    useEffect(() => {
+        router.replace('/partner');
+    }, [router]);
+
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
