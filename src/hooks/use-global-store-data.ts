@@ -26,7 +26,7 @@ import type { Property } from '@/lib/properties';
 import type { StairspaceListing } from '@/lib/stairspace-listings';
 import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-requests';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
-import type { CostRate } from '@/lib/cost-settings.schema';
+import type { CostRate } from './cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from './cfo-data';
 import { kpiData, transactionData, upcomingPayments, vatPayment } from './cfo-data';
