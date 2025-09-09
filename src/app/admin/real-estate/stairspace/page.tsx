@@ -48,11 +48,17 @@ const sendBookingConfirmation = (request: BookingRequest) => {
 const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest, onScheduleInterview: (id: string, values: InterviewValues) => void }) => {
     const { stairspaceListings } = useStairspaceData();
     const listing = stairspaceListings.find(l => l.id === request.listingId);
+    const [dateText, setDateText] = useState('...');
     
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ 
         id: request.id,
         data: { type: 'Request', request },
     });
+
+    useEffect(() => {
+        // Calculate date on the client to avoid hydration mismatch
+        setDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
+    }, [request.requestDate]);
 
     const style = {
         transition,
@@ -72,7 +78,7 @@ const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest
                                 <div className="flex-grow">
                                     <p className="font-semibold text-sm leading-tight group-hover:text-primary">{request.listingTitle}</p>
                                     <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5"><CheckCircle className="h-3 w-3"/>{request.clientName}</p>
-                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/>{formatDistanceToNow(new Date(request.requestDate), { addSuffix: true })}</p>
+                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/>{dateText}</p>
                                 </div>
                             </div>
                         </DialogTrigger>

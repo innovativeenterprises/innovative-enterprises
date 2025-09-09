@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod';
-import { AssetSchema } from '@/lib/assets.schema';
+import { AssetSchema as ItAssetSchema } from '@/lib/assets.schema';
 
 export const IctProposalInputSchema = z.object({
   projectName: z.string().describe("The name of the client's project or event."),
@@ -45,7 +45,7 @@ const SoftwareSchema = z.object({
   estimatedCost: z.number().describe("The estimated one-time or total subscription cost for the project duration in OMR."),
 });
 
-const AssetLineItemSchema = AssetSchema.extend({
+const AssetLineItemSchema = ItAssetSchema.extend({
     quantity: z.number().describe("The number of units recommended for this asset."),
 });
 
