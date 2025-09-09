@@ -38,6 +38,7 @@ import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
 import { initialMembers, type CommunityMember } from './community-members';
 import { initialStairspaceListings, type StairspaceListing } from './stairspace-listings';
+import { initialStairspaceRequests, type BookingRequest as StairspaceRequest } from './stairspace-requests';
 
 
 export interface CartItem extends Product {
@@ -78,6 +79,7 @@ type AppState = {
   communityFinances: CommunityFinance[];
   communityMembers: CommunityMember[];
   stairspaceListings: StairspaceListing[];
+  stairspaceRequests: StairspaceRequest[];
   savedBoqs: SavedBoQ[];
   cart: CartItem[];
   costSettings: CostRate[];
@@ -115,6 +117,7 @@ let state: AppState = {
   communityFinances: initialFinances,
   communityMembers: initialMembers,
   stairspaceListings: initialStairspaceListings,
+  stairspaceRequests: initialStairspaceRequests,
   savedBoqs: [],
   cart: [],
   costSettings: initialCostSettings,

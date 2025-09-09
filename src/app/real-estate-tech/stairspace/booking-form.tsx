@@ -14,6 +14,9 @@ import { useToast } from "@/hooks/use-toast";
 import type { StairspaceListing } from "@/lib/stairspace-listings";
 import { Loader2, Send } from "lucide-react";
 import Image from 'next/image';
+import { store } from '@/lib/global-store';
+import type { BookingRequest } from '@/lib/stairspace-requests';
+
 
 const BookingSchema = z.object({
   fullName: z.string().min(3, "Full name is required"),
@@ -40,6 +43,23 @@ export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: {
     const onSubmit: SubmitHandler<BookingValues> = async (data) => {
         setIsLoading(true);
         console.log("Submitting booking request for:", listing.title, "Data:", data);
+        
+        const newRequest: BookingRequest = {
+            id: `req_${listing.id}_${Date.now()}`,
+            listingId: listing.id,
+            listingTitle: listing.title,
+            clientName: data.fullName,
+            clientEmail: data.email,
+            clientPhone: data.phone,
+            message: data.message,
+            requestDate: new Date().toISOString(),
+            status: 'Pending'
+        };
+
+        store.set(state => ({
+            ...state,
+            stairspaceRequests: [newRequest, ...state.stairspaceRequests]
+        }));
         
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
