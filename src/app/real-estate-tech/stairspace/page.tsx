@@ -4,29 +4,142 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Building2, Store, Tag, MapPin, HandCoins, Ticket, Filter } from "lucide-react";
+import { ArrowRight, Building2, Store, Tag, MapPin, HandCoins, Ticket, Filter, Loader2, Sparkles, Wand2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useStairspaceData } from '@/hooks/use-global-store-data';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { StairspaceMatcherInputSchema, type StairspaceMatcherInput, type StairspaceMatcherOutput } from '@/ai/flows/stairspace-matcher.schema';
+import { findBestStairspaceMatch } from '@/ai/flows/stairspace-matcher.ts';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Progress } from "@/components/ui/progress";
+import type { StairspaceListing } from '@/lib/stairspace-listings';
+
+const AiMatcher = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [response, setResponse] = useState<StairspaceMatcherOutput | null>(null);
+    const { toast } = useToast();
+    const { stairspaceListings } = useStairspaceData();
+
+    const form = useForm<StairspaceMatcherInput>({
+        resolver: zodResolver(StairspaceMatcherInputSchema),
+        defaultValues: { userRequirements: '' },
+    });
+
+    const onSubmit: SubmitHandler<StairspaceMatcherInput> = async (data) => {
+        setIsLoading(true);
+        setResponse(null);
+        try {
+            const result = await findBestStairspaceMatch(data);
+            setResponse(result);
+            toast({ title: 'Match Found!', description: 'Our AI has found the best space for your needs.' });
+        } catch (error) {
+            console.error(error);
+            toast({ title: 'Error', description: 'Failed to find a match. Please try again.', variant: 'destructive' });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    const bestMatchListing = useMemo(() => {
+        if (!response) return null;
+        return stairspaceListings.find(l => l.id === response.bestMatch.propertyId);
+    }, [response, stairspaceListings]);
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>AI Space Matcher</CardTitle>
+                <CardDescription>Describe what you need, and our AI will find the best space for you.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="userRequirements"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Your Requirements</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="e.g., 'I need a small space with high foot traffic for a pop-up coffee stand.'" rows={4} {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <Button type="submit" disabled={isLoading} className="w-full">
+                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Searching...</> : <><Sparkles className="mr-2 h-4 w-4" />Find My Space</>}
+                        </Button>
+                    </form>
+                </Form>
+                 {isLoading && (
+                    <div className="text-center p-6"><Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" /></div>
+                )}
+                 {response && bestMatchListing && (
+                    <div className="mt-6 space-y-4">
+                         <Alert>
+                            <AlertTitle className="font-semibold">AI Recommendation</AlertTitle>
+                            <AlertDescription>{response.bestMatch.reasoning}</AlertDescription>
+                            <div className="pt-2">
+                                <p className="text-xs text-muted-foreground">Confidence Score: {response.bestMatch.confidenceScore}%</p>
+                                <Progress value={response.bestMatch.confidenceScore} className="h-2 mt-1" />
+                            </div>
+                        </Alert>
+                        <SpaceCard space={bestMatchListing} />
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
+};
+
+const SpaceCard = ({ space }: { space: StairspaceListing }) => (
+     <Link href={`/real-estate-tech/stairspace/${space.id}`} className="flex">
+        <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
+            <CardHeader className="p-0">
+                <div className="relative h-48 w-full">
+                    <Image src={space.imageUrl} alt={space.title} fill className="object-cover transition-transform group-hover:scale-105" data-ai-hint={space.aiHint} />
+                </div>
+            </CardHeader>
+            <CardContent className="p-4 flex-grow">
+                <div className="flex flex-wrap gap-2 mb-2">
+                    {space.tags.map(tag => <div key={tag} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">{tag}</div>)}
+                </div>
+                <CardTitle className="text-lg">{space.title}</CardTitle>
+                <CardDescription className="text-sm flex items-center gap-1 mt-1"><MapPin className="h-4 w-4"/> {space.location}</CardDescription>
+            </CardContent>
+            <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                <p className="text-lg font-bold text-primary">{space.price}</p>
+                <Button variant="secondary">View Details</Button>
+            </CardFooter>
+        </Card>
+    </Link>
+);
+
 
 export default function StairspacePage() {
-    const { stairspaceListings: featuredSpaces, isClient } = useStairspaceData();
+    const { stairspaceListings } = useStairspaceData();
     const [selectedTag, setSelectedTag] = useState('All');
 
     const allTags = useMemo(() => {
         const tags = new Set<string>(['All']);
-        featuredSpaces.forEach(space => {
+        stairspaceListings.forEach(space => {
             space.tags.forEach(tag => tags.add(tag));
         });
         return Array.from(tags);
-    }, [featuredSpaces]);
+    }, [stairspaceListings]);
 
     const filteredSpaces = useMemo(() => {
         if (selectedTag === 'All') {
-            return featuredSpaces;
+            return stairspaceListings;
         }
-        return featuredSpaces.filter(space => space.tags.includes(selectedTag));
-    }, [featuredSpaces, selectedTag]);
+        return stairspaceListings.filter(space => space.tags.includes(selectedTag));
+    }, [stairspaceListings, selectedTag]);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -41,7 +154,7 @@ export default function StairspacePage() {
           </p>
            <div className="mt-8 flex justify-center gap-4">
                <Button asChild size="lg">
-                    <a href="#featured-spaces">Browse Spaces</a>
+                    <a href="#browse-spaces">Browse Spaces</a>
                 </Button>
                 <Button asChild size="lg" variant="outline">
                     <Link href="/real-estate-tech/stairspace/my-requests">
@@ -50,10 +163,14 @@ export default function StairspacePage() {
                 </Button>
            </div>
         </div>
+        
+        <div className="max-w-3xl mx-auto mt-20">
+            <AiMatcher />
+        </div>
 
-        <div id="featured-spaces" className="max-w-6xl mx-auto mt-20">
+        <div id="browse-spaces" className="max-w-6xl mx-auto mt-20">
             <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Available Spaces</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-primary">Or, Browse All Available Spaces</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Discover unique opportunities available right now.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -63,32 +180,14 @@ export default function StairspacePage() {
                         variant={selectedTag === tag ? 'default' : 'outline'}
                         onClick={() => setSelectedTag(tag)}
                     >
+                        <Filter className="mr-2 h-4 w-4" />
                         {tag}
                     </Button>
                 ))}
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredSpaces.map((space) => (
-                     <Link href={`/real-estate-tech/stairspace/${space.id}`} key={space.id} className="flex">
-                        <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
-                            <CardHeader className="p-0">
-                                <div className="relative h-48 w-full">
-                                    <Image src={space.imageUrl} alt={space.title} fill className="object-cover transition-transform group-hover:scale-105" data-ai-hint={space.aiHint} />
-                                </div>
-                            </CardHeader>
-                            <CardContent className="p-4 flex-grow">
-                                <div className="flex flex-wrap gap-2 mb-2">
-                                    {space.tags.map(tag => <div key={tag} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">{tag}</div>)}
-                                </div>
-                                <CardTitle className="text-lg">{space.title}</CardTitle>
-                                <CardDescription className="text-sm flex items-center gap-1 mt-1"><MapPin className="h-4 w-4"/> {space.location}</CardDescription>
-                            </CardContent>
-                            <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                                <p className="text-lg font-bold text-primary">{space.price}</p>
-                                <Button variant="secondary">View Details</Button>
-                            </CardFooter>
-                        </Card>
-                    </Link>
+                    <SpaceCard key={space.id} space={space} />
                 ))}
             </div>
         </div>
@@ -126,7 +225,7 @@ export default function StairspacePage() {
                 </CardContent>
                 <CardFooter className="justify-center">
                     <Button asChild size="lg" variant="secondary">
-                        <a href="#featured-spaces">Browse All Spaces</a>
+                        <a href="#browse-spaces">Browse All Spaces</a>
                     </Button>
                 </CardFooter>
             </Card>
