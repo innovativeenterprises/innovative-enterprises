@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
 import { Textarea } from '@/components/ui/textarea';
 import Image from "next/image";
-import { generateImage } from "@/ai/flows/image-generator";
+import { generateImage } from '@/ai/flows/image-generator';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -100,15 +100,16 @@ export default function ListSpaceForm() {
     };
     
      const handleGenerateImage = async () => {
-        const hint = form.getValues('aiHint');
-        if (!hint) {
+        const { title, location, tags, aiHint } = form.getValues();
+        if (!aiHint) {
             toast({ title: "AI Hint is empty", description: "Please provide a hint for the AI.", variant: "destructive" });
             return;
         }
         setIsGeneratingImg(true);
         toast({ title: "Generating Image...", description: "Lina is creating your image. This might take a moment."});
         try {
-            const newImageUrl = await generateImage({ prompt: hint });
+            const richPrompt = `A photorealistic image of a "${title}" located in ${location}. It's a ${tags}. The style should be ${aiHint}.`;
+            const newImageUrl = await generateImage({ prompt: richPrompt });
             form.setValue('imageUrl', newImageUrl, { shouldValidate: true });
             form.setValue('imageFile', undefined);
             setImagePreview(newImageUrl);
