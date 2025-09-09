@@ -39,39 +39,41 @@ function RequestRow({ request, isClient }: { request: BookingRequest, isClient: 
     };
     
     return (
-         <TableRow key={request.id}>
-            <TableCell>
-                <p className="font-medium">{request.listingTitle}</p>
-                <p className="text-sm text-muted-foreground">
-                    Requested: {requestDateText}
-                </p>
-            </TableCell>
-            <TableCell>{getStatusBadge(request.status)}</TableCell>
-            <TableCell>
+        <Card key={request.id}>
+            <CardHeader className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                <div>
+                    <CardTitle className="text-lg">{request.listingTitle}</CardTitle>
+                    <CardDescription className="flex items-center gap-1.5 text-xs pt-1">
+                        <Clock className="h-3 w-3"/> Requested {requestDateText}
+                    </CardDescription>
+                </div>
+                {getStatusBadge(request.status)}
+            </CardHeader>
+            <CardContent>
                  {request.status === 'Booked' ? (
-                     <Button asChild size="sm">
+                     <Button asChild size="sm" className="w-full sm:w-auto">
                         <Link href={`/real-estate-tech/stairspace/checkout/${request.id}`}>
-                            <CreditCard className="mr-2 h-4 w-4"/> Complete Booking
+                            <CreditCard className="mr-2 h-4 w-4"/> Complete Booking & Payment
                         </Link>
                      </Button>
                  ) : request.interviewDate && isClient ? (
-                    <div className="text-xs text-muted-foreground space-y-1">
-                        <div className="flex items-center gap-1.5 font-semibold">
-                            <CalendarIcon className="h-3 w-3 text-primary" />
-                            <span>Interview: {interviewDateText}</span>
+                    <div className="text-sm text-muted-foreground space-y-2 bg-muted/50 p-3 rounded-md">
+                        <div className="flex items-center gap-2 font-semibold">
+                            <CalendarIcon className="h-4 w-4 text-primary" />
+                            <span>Interview Scheduled: {interviewDateText}</span>
                         </div>
                         {request.interviewNotes && (
-                            <div className="flex items-center gap-1.5">
-                                <MessageSquare className="h-3 w-3" />
-                                <span className="truncate">{request.interviewNotes}</span>
+                            <div className="flex items-start gap-2">
+                                <MessageSquare className="h-4 w-4 mt-0.5" />
+                                <span className="italic">{request.interviewNotes}</span>
                             </div>
                         )}
                     </div>
                 ) : (
-                    <p className="text-xs text-muted-foreground italic">Owner will contact you soon.</p>
+                    <p className="text-sm text-muted-foreground italic">The space owner will contact you shortly regarding next steps.</p>
                 )}
-            </TableCell>
-        </TableRow>
+            </CardContent>
+        </Card>
     )
 }
 
@@ -104,40 +106,24 @@ export default function MyStairspaceRequestsPage() {
                         </div>
                     </div>
                     
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Your Submitted Requests</CardTitle>
-                            <CardDescription>The table below shows the real-time status of each request as updated by the space owner.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                             <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Listing</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead>Next Steps</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {!isClient ? (
-                                        <TableRow>
-                                            <TableCell colSpan={3} className="h-24 text-center"><Skeleton className="h-10 w-full" /></TableCell>
-                                        </TableRow>
-                                    ) : myRequests.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell colSpan={3} className="text-center text-muted-foreground h-24">
-                                                You haven't made any booking requests yet.
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : (
-                                        myRequests.map(req => (
-                                           <RequestRow key={req.id} request={req} isClient={isClient} />
-                                        ))
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
+                    <div className="space-y-4">
+                        {!isClient ? (
+                            <>
+                                <Skeleton className="h-24 w-full" />
+                                <Skeleton className="h-24 w-full" />
+                            </>
+                        ) : myRequests.length === 0 ? (
+                            <Card>
+                                <CardContent className="p-12 text-center text-muted-foreground">
+                                    You haven't made any booking requests yet.
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            myRequests.map(req => (
+                                <RequestRow key={req.id} request={req} isClient={isClient} />
+                            ))
+                        )}
+                    </div>
 
                 </div>
             </div>
