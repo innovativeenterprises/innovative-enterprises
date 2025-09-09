@@ -128,12 +128,12 @@ const ScheduleInterviewDialog = ({ request, onSchedule }: { request: GenericRequ
 }
 
 export function RequestTable({ 
-    requests,
+    data,
     columns,
     isClient,
     onSchedule,
 }: { 
-    requests: GenericRequest[], 
+    data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     onSchedule: (id: string, values: InterviewValues) => void,
@@ -145,7 +145,7 @@ export function RequestTable({
                     <TableHeader>
                         <TableRow>
                            {columns.map(col => <TableHead key={col.Header}>{col.Header}</TableHead>)}
-                            <TableHead>Actions</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -155,21 +155,21 @@ export function RequestTable({
                                    <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
-                         ) : requests.length === 0 ? (
+                         ) : data.length === 0 ? (
                              <TableRow>
                                 <TableCell colSpan={columns.length + 1} className="text-center text-muted-foreground py-8">
                                     No requests found.
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            requests.map(req => (
+                            data.map(req => (
                                <TableRow key={req.id}>
                                   {columns.map(col => (
                                     <TableCell key={col.accessor}>
                                         {col.Cell ? col.Cell({ row: { original: req } }) : req[col.accessor as keyof GenericRequest]}
                                     </TableCell>
                                   ))}
-                                  <TableCell>
+                                  <TableCell className="text-right">
                                        <ScheduleInterviewDialog request={req} onSchedule={onSchedule} />
                                   </TableCell>
                                </TableRow>
@@ -181,4 +181,3 @@ export function RequestTable({
         </Card>
     );
 }
-

@@ -2,20 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MessageSquare, Mail, Phone, CalendarIcon, Clock } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Mail, Phone, Calendar as CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
-import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { formatDistanceToNow, format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table'; // A more generic component that can be reused.
+import { RequestTable, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table';
 
 
 export default function StairspaceRequestsPage() {
