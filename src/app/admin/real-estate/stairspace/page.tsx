@@ -103,7 +103,9 @@ export default function StairspaceRequestsPage() {
         sortable: true,
         Cell: ({ row }: any) => (
           <div>
-            <p className="font-medium">{row.original.listingTitle}</p>
+            <Link href={`/real-estate-tech/stairspace/${row.original.listingId}`} className="font-medium hover:underline" target="_blank">
+                {row.original.listingTitle}
+            </Link>
             <p className="text-sm text-muted-foreground line-clamp-2">{row.original.message}</p>
           </div>
         )
