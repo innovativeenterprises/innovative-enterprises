@@ -17,8 +17,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Property } from "@/lib/properties";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
+import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePropertiesData } from "@/hooks/use-global-store-data";
 
@@ -49,7 +50,9 @@ const AddEditPropertyDialog = ({
     children: React.ReactNode
 }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
     const { toast } = useToast();
+    const [urlToScrape, setUrlToScrape] = useState('');
 
     const form = useForm<PropertyValues>({
         resolver: zodResolver(PropertySchema),
@@ -66,15 +69,44 @@ const AddEditPropertyDialog = ({
             status: "Available",
             buildingAge: "New",
             imageUrl: "https://picsum.photos/seed/newprop/600/400",
-            aiHint: "modern villa",
+            aiHint: 'modern villa'
         },
     });
 
     useEffect(() => {
         if(isOpen) {
-           form.reset(property || { title: "", listingType: "For Sale", propertyType: "Villa", location: "", price: 0, bedrooms: 3, bathrooms: 4, areaSqM: 300, description: "", status: "Available", buildingAge: "New", imageUrl: "https://picsum.photos/seed/newprop/600/400", aiHint: "modern villa" });
+           form.reset(property || { title: "", listingType: "For Sale", propertyType: "Villa", location: "", price: 0, bedrooms: 3, bathrooms: 4, areaSqM: 300, description: "", status: "Available", buildingAge: "New", imageUrl: "https://picsum.photos/seed/newprop/600/400", aiHint: 'modern villa' });
         }
     }, [property, form, isOpen]);
+
+    const handleAnalyzeUrl = async () => {
+        if (!urlToScrape) {
+            toast({ title: "Please enter a URL to analyze.", variant: 'destructive' });
+            return;
+        }
+
+        setIsAnalyzing(true);
+        toast({ title: 'Analyzing URL...', description: 'Rami is scraping the page now. This may take a moment.' });
+
+        try {
+            const result = await extractPropertyDetailsFromUrl({ url: urlToScrape });
+            form.setValue('title', result.title || '');
+            form.setValue('listingType', result.listingType as any || 'For Sale');
+            form.setValue('propertyType', result.propertyType as any || 'Villa');
+            form.setValue('location', result.location || '');
+            form.setValue('price', result.price || 0);
+            form.setValue('bedrooms', result.bedrooms || 0);
+            form.setValue('bathrooms', result.bathrooms || 0);
+            form.setValue('areaSqM', result.areaSqM || 0);
+            form.setValue('description', result.description || '');
+            toast({ title: "Analysis Complete", description: "Property details have been pre-filled from the URL." });
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Analysis Failed", description: "Could not extract details from the URL.", variant: "destructive" });
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
 
     const onSubmit: SubmitHandler<PropertyValues> = async (data) => {
         onSave(data, property?.id);
@@ -91,6 +123,22 @@ const AddEditPropertyDialog = ({
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <Card className="bg-muted/50">
+                             <CardContent className="p-4 pt-6 space-y-4">
+                                 <FormItem>
+                                     <FormLabel>Import from URL</FormLabel>
+                                     <div className="flex gap-2">
+                                         <FormControl><Input placeholder="https://www.example.com/property-listing" value={urlToScrape} onChange={(e) => setUrlToScrape(e.target.value)} /></FormControl>
+                                         <Button type="button" variant="secondary" onClick={handleAnalyzeUrl} disabled={isAnalyzing}>
+                                             {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                             Analyze & Pre-fill
+                                         </Button>
+                                     </div>
+                                     <FormDescription>Paste a URL to a property listing page and let the AI extract the details.</FormDescription>
+                                 </FormItem>
+                            </CardContent>
+                        </Card>
+
                         <FormField control={form.control} name="title" render={({ field }) => (
                             <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
@@ -131,6 +179,9 @@ const AddEditPropertyDialog = ({
                         )} />
                         <FormField control={form.control} name="imageUrl" render={({ field }) => (
                             <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="aiHint" render={({ field }) => (
+                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input placeholder="e.g., modern villa" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
 
                         <DialogFooter>

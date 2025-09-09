@@ -66,9 +66,10 @@ const crAnalysisFlow = ai.defineFlow(
     const { output } = await prompt(input);
 
     if (output && !output.suggestedFilename) {
-        const companyName = output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic || 'UnknownCompany';
-        const crn = output.companyInfo?.registrationNumber || 'NoCRN';
-        output.suggestedFilename = `CR_${companyName.replace(/\s/g, '_')}_${crn}.pdf`;
+        const companyName = output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic;
+        const crn = output.companyInfo?.registrationNumber;
+        const fallbackName = companyName ? companyName.replace(/\s/g, '_') : (crn ? `CR_${crn}` : 'UnknownCompany');
+        output.suggestedFilename = `CR_${fallbackName}.pdf`;
     }
 
     return output!;

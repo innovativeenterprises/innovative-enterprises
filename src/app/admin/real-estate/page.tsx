@@ -1,7 +1,7 @@
 
 'use client';
 
-import PropertyTable from "../property-table";
+import PropertyTable from "./property-table";
 import { usePropertiesData } from "@/hooks/use-global-store-data";
 import StairspaceListingGrid from "../stairspace-listing-grid";
 import { useStairspaceData, useStairspaceRequestsData } from "@/hooks/use-global-store-data";
