@@ -7,9 +7,9 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from "@/components/ui/input";
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
@@ -17,6 +17,7 @@ import type { StairspaceListing } from '@/lib/stairspace-listings';
 import { Loader2, Lock, ArrowLeft, CreditCard } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceData, useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import Link from 'next/link';
 
 const CheckoutSchema = z.object({
   cardholderName: z.string().min(3, 'Cardholder name is required.'),
