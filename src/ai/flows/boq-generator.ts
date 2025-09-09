@@ -13,18 +13,9 @@ import {
     BoQGeneratorOutputSchema,
     BoQCategoryGeneratorInputSchema,
     BoQCategoryGeneratorInput,
-    BoQCategoryGeneratorOutput,
     BoQCategoryGeneratorOutputSchema,
 } from './boq-generator.schema';
 
-
-export async function generateBoqCategory(input: BoQCategoryGeneratorInput): Promise<BoQCategoryGeneratorOutput> {
-    return boqCategoryGeneratorFlow(input);
-}
-
-export async function generateFullBoq(input: BoQGeneratorInput): Promise<BoQGeneratorOutput> {
-    return fullBoqGeneratorFlow(input);
-}
 
 const categoryPrompt = ai.definePrompt({
   name: 'boqCategoryGeneratorPrompt',
@@ -83,7 +74,7 @@ const fullBoqGeneratorFlow = ai.defineFlow(
 
         // Generate BoQ for all categories in parallel
         const categoryPromises = categoriesToGenerate.map(category =>
-            generateBoqCategory({ ...input, category })
+            boqCategoryGeneratorFlow({ ...input, category })
         );
 
         const results = await Promise.all(categoryPromises);
@@ -94,3 +85,11 @@ const fullBoqGeneratorFlow = ai.defineFlow(
         return { boqItems: allBoqItems };
     }
 );
+
+export async function generateFullBoq(input: BoQGeneratorInput) {
+    return fullBoqGeneratorFlow(input);
+}
+
+export async function generateBoqCategory(input: BoQCategoryGeneratorInput) {
+    return boqCategoryGeneratorFlow(input);
+}
