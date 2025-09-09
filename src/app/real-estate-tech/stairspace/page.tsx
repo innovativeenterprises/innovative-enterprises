@@ -85,7 +85,7 @@ const AiMatcher = () => {
                          <Alert>
                             <AlertTitle className="font-semibold">AI Recommendation</AlertTitle>
                             <AlertDescription>{response.bestMatch.reasoning}</AlertDescription>
-                            <div className="pt-2">
+                            <div className="pt-2 mt-2 border-t">
                                 <p className="text-xs text-muted-foreground">Confidence Score: {response.bestMatch.confidenceScore}%</p>
                                 <Progress value={response.bestMatch.confidenceScore} className="h-2 mt-1" />
                             </div>
