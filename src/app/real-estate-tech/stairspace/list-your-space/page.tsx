@@ -6,6 +6,7 @@ import { HandCoins } from "lucide-react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
 
 export default function ListSpacePage() {
