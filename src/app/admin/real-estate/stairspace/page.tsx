@@ -5,22 +5,47 @@ import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MessageSquare, Mail, Phone, Calendar as CalendarIcon, GripVertical, CheckCircle, Ticket, CreditCard, Clock } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Mail, Phone, Calendar as CalendarIcon, GripVertical, CheckCircle, Ticket, CreditCard, Clock, Link as LinkIcon, User, Search, Home } from 'lucide-react';
 import Link from 'next/link';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { formatDistanceToNow, format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { useStairspaceData, useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DndContext, useSensor, useSensors, PointerSensor, closestCenter, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
+import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { ScheduleInterviewDialog, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table';
 import { StairspaceListing } from '@/lib/stairspace.schema';
 import Image from 'next/image';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 
 const requestStatuses = ['Pending', 'Contacted', 'Booked', 'Confirmed', 'Closed'] as const;
+
+// This function simulates sending a confirmation email to the client.
+// In a real application, this would integrate with an email service (e.g., SendGrid, Mailgun).
+const sendBookingConfirmation = (request: BookingRequest) => {
+    console.log("---- SENDING BOOKING CONFIRMATION ----");
+    console.log(`To: ${request.clientEmail}`);
+    console.log(`Subject: Your Booking for "${request.listingTitle}" is Ready for Confirmation!`);
+    console.log(`Body:`);
+    console.log(`Dear ${request.clientName},`);
+    console.log(`\nWe're pleased to inform you that your booking request for "${request.listingTitle}" has been approved by the owner.`);
+    console.log(`To finalize your booking, please complete the payment at your earliest convenience.`);
+    console.log(`\nYou can complete the booking here: /real-estate-tech/stairspace/checkout/${request.id}`);
+    console.log(`\nThank you for using StairSpace.`);
+    console.log("--------------------------------------");
+};
+
 
 const RequestCard = ({ request }: { request: BookingRequest }) => {
     const { stairspaceListings } = useStairspaceData();
@@ -48,8 +73,8 @@ const RequestCard = ({ request }: { request: BookingRequest }) => {
                                 </Button>
                                 <div className="flex-grow">
                                     <p className="font-semibold text-sm leading-tight group-hover:text-primary">{request.listingTitle}</p>
-                                    <p className="text-xs text-muted-foreground mt-1">Request from: <strong>{request.clientName}</strong></p>
-                                    <p className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(request.requestDate), { addSuffix: true })}</p>
+                                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5"><User className="h-3 w-3"/>{request.clientName}</p>
+                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/>{formatDistanceToNow(new Date(request.requestDate), { addSuffix: true })}</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -65,21 +90,22 @@ const RequestCard = ({ request }: { request: BookingRequest }) => {
                     <div className="grid md:grid-cols-2 gap-6 pt-4">
                         {listing && (
                              <div className="space-y-4">
-                                <Image src={listing.imageUrl} alt={listing.title} width={300} height={200} className="rounded-lg object-cover" />
+                                <Link href={`/real-estate-tech/stairspace/${listing.id}`} target="_blank">
+                                    <Image src={listing.imageUrl} alt={listing.title} width={300} height={200} className="rounded-lg object-cover hover:opacity-80 transition-opacity" />
+                                </Link>
                                 <h3 className="font-bold">{listing.title}</h3>
                                 <p className="text-sm text-muted-foreground">{listing.location}</p>
                              </div>
                         )}
                         <div className="space-y-4">
                             <h4 className="font-semibold">Client Details</h4>
-                            <p className="text-sm"><strong>Name:</strong> {request.clientName}</p>
-                            <p className="text-sm"><strong>Email:</strong> {request.clientEmail}</p>
-                            <p className="text-sm"><strong>Phone:</strong> {request.clientPhone}</p>
+                            <p className="text-sm flex items-center gap-2"><Mail className="h-4 w-4 text-muted-foreground"/> <a href={`mailto:${request.clientEmail}`} className="text-primary hover:underline">{request.clientEmail}</a></p>
+                            <p className="text-sm flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground"/> <a href={`tel:${request.clientPhone}`} className="text-primary hover:underline">{request.clientPhone}</a></p>
                             <div>
                                 <h4 className="font-semibold">Message</h4>
-                                <p className="text-sm text-muted-foreground italic mt-1 bg-muted p-2 rounded-md">
+                                <blockquote className="text-sm text-muted-foreground italic mt-1 bg-muted p-3 rounded-md border">
                                     {request.message || "No message provided."}
-                                </p>
+                                </blockquote>
                             </div>
                              {request.interviewDate && (
                                 <div>
@@ -97,7 +123,7 @@ const RequestCard = ({ request }: { request: BookingRequest }) => {
     );
 };
 
-const StatusColumn = ({ status, requests }: { status: typeof requestStatuses[number], requests: BookingRequest[] }) => {
+const StatusColumn = ({ status, requests, onScheduleInterview }: { status: typeof requestStatuses[number], requests: BookingRequest[], onScheduleInterview: (id: string, values: InterviewValues) => void, }) => {
     const { setNodeRef } = useSortable({
         id: status,
         data: { type: 'Column', status },
@@ -125,19 +151,38 @@ const StatusColumn = ({ status, requests }: { status: typeof requestStatuses[num
 export default function StairspaceRequestsPage() {
     const { stairspaceRequests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterStatus, setFilterStatus] = useState('All');
     
+    const onScheduleInterview = (id: string, values: InterviewValues) => {
+        setStairspaceRequests(prev => prev.map(r => 
+            r.id === id ? { ...r, interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+        ));
+        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled for ${format(values.interviewDate, "PPP")}.` });
+    };
+
+    const filteredRequests = useMemo(() => {
+        return stairspaceRequests.filter(req => {
+            const matchesStatus = filterStatus === 'All' || req.status === filterStatus;
+            const matchesSearch = searchTerm === '' ||
+                req.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                req.listingTitle.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesStatus && matchesSearch;
+        });
+    }, [stairspaceRequests, searchTerm, filterStatus]);
+
     const requestsByStatus = useMemo(() => {
         const grouped: Record<string, BookingRequest[]> = {};
         requestStatuses.forEach(status => {
             grouped[status] = [];
         });
-        stairspaceRequests.forEach(request => {
+        filteredRequests.forEach(request => {
             if (grouped[request.status]) {
                 grouped[request.status].push(request);
             }
         });
         return grouped;
-    }, [stairspaceRequests]);
+    }, [filteredRequests]);
     
     const sensors = useSensors(useSensor(PointerSensor, {
         activationConstraint: { distance: 8 },
@@ -158,6 +203,14 @@ export default function StairspaceRequestsPage() {
                 title: "Status Updated",
                 description: `Request for "${activeRequest.listingTitle}" moved to ${overColumnStatus}.`
             });
+
+            if (overColumnStatus === 'Booked') {
+                sendBookingConfirmation(activeRequest);
+                toast({
+                    title: "Client Notified!",
+                    description: "A booking confirmation has been sent to the client.",
+                });
+            }
         }
     };
 
@@ -176,8 +229,34 @@ export default function StairspaceRequestsPage() {
                     <CardDescription>View and manage all incoming booking requests for micro-retail spaces.</CardDescription>
                 </CardHeader>
             </div>
+
+             <Card className="p-4 bg-muted/50">
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                     <div className="relative flex-grow w-full md:w-auto">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                            type="search"
+                            placeholder="Search by client or listing..."
+                            className="w-full pl-10"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                     <Select value={filterStatus} onValueChange={setFilterStatus}>
+                        <SelectTrigger className="w-full md:w-[200px]">
+                            <SelectValue placeholder="Filter by status..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                             <SelectItem value="All">All Statuses</SelectItem>
+                            {requestStatuses.map(status => (
+                                <SelectItem key={status} value={status}>{status}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            </Card>
             
-            <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCenter}>
+            <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCorners}>
                 <div className="overflow-x-auto pb-4">
                     <div className="flex gap-6">
                          {!isClient ? (
@@ -198,6 +277,7 @@ export default function StairspaceRequestsPage() {
                                     key={status}
                                     status={status}
                                     requests={requestsByStatus[status] || []}
+                                    onScheduleInterview={onScheduleInterview}
                                 />
                             ))
                         )}
