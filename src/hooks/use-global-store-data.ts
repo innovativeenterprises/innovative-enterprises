@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -504,17 +505,22 @@ export const useCostSettingsData = () => {
 };
 
 export const useCfoData = () => {
+    const [data, setData] = useState(store.get());
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
     }, []);
 
     return {
-        kpiData,
-        transactionData,
-        upcomingPayments,
-        vatPayment,
+        kpiData: data.kpiData,
+        transactionData: data.transactionData,
+        upcomingPayments: data.upcomingPayments,
+        vatPayment: data.vatPayment,
         isClient,
     };
 };

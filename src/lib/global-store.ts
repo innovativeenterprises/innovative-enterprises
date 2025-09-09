@@ -122,10 +122,10 @@ let state: AppState = {
   savedBoqs: [],
   cart: [],
   costSettings: initialCostSettings,
-  kpiData,
-  transactionData,
-  upcomingPayments,
-  vatPayment,
+  kpiData: kpiData,
+  transactionData: transactionData,
+  upcomingPayments: upcomingPayments,
+  vatPayment: vatPayment,
 };
 
 // A list of all component update functions to call when state changes.
@@ -160,5 +160,3 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
-
-    
