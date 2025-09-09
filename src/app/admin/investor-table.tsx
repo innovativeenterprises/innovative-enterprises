@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -147,7 +148,10 @@ const AddEditInvestorDialog = ({
                             )} />
                             <FormField control={form.control} name="subType" render={({ field }) => (
                                 <FormItem><FormLabel>Sub-Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                    <SelectItem value="Personal/Private">Personal/Private</SelectItem><SelectItem value="Angel">Angel</SelectItem><SelectItem value="Institute/Government">Institute/Government</SelectItem><SelectItem value="VC Fund">VC Fund</SelectItem>
+                                    <SelectItem value="Personal/Private">Personal/Private</SelectItem>
+                                    <SelectItem value="Angel">Angel</SelectItem>
+                                    <SelectItem value="Institute/Government">Institute/Government</SelectItem>
+                                    <SelectItem value="VC Fund">VC Fund</SelectItem>
                                 </SelectContent></Select><FormMessage /></FormItem>
                             )} />
                         </div>
