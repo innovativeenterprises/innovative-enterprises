@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,7 +9,7 @@ import { Server, ArrowRight } from "lucide-react";
 import Image from 'next/image';
 import type { Asset } from "@/lib/assets";
 import { useAssetsData } from "@/hooks/use-global-store-data";
-import { RentalRequestForm } from './rental-form';
+import { RentalRequestForm } from '@/app/construction-tech/asset-rentals/rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import ItRentalAgentForm from '@/app/it-rental-agent/agent-form';
 
@@ -135,3 +134,4 @@ export default function RentalsPage() {
         </div>
     );
 }
+

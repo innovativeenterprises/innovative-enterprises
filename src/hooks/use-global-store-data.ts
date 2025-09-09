@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -24,12 +23,13 @@ import type { HireRequest } from '@/lib/raaha-requests';
 import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { SignedLease } from '@/lib/leases';
 import type { Property } from '@/lib/properties';
-import type { StairspaceListing } from '@/lib/stairspace-listings';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-requests';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
+import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 
 export const useServicesData = () => {
     const [data, setData] = useState(store.get());
@@ -230,27 +230,6 @@ export const useMembersData = () => {
     };
 };
 
-
-export const useOpportunitiesData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        opportunities: data.opportunities,
-        setOpportunities: (updater: (opportunities: Opportunity[]) => void) => {
-            store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
-        },
-        isClient,
-    };
-};
 
 export const useProjectStagesData = () => {
     const [data, setData] = useState(store.get());
