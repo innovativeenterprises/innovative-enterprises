@@ -2,22 +2,26 @@
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
-import { useProvidersData } from '@/app/admin/provider-table';
+import { useProvidersData } from '@/hooks/use-global-store-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Phone, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
+import { useState, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProviderProfilePage() {
     const params = useParams();
     const { id } = params;
-    const { providers } = useProvidersData();
+    const { providers, isClient } = useProvidersData();
 
-    const provider = providers.find(p => p.id === id);
-
-    if (!provider) {
+    // The provider is determined synchronously. This is more stable than using useEffect.
+    const provider = isClient ? providers.find(p => p.id === id) : undefined;
+    
+    // If we're on the client and the provider is not found in the list, show 404.
+    if (isClient && !provider) {
         return notFound();
     }
 
@@ -31,7 +35,23 @@ export default function ProviderProfilePage() {
     }
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
-        if (tier === 'None' || !expiry) {
+        const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
+        const [isSubClient, setIsSubClient] = useState(false);
+
+        useEffect(() => {
+            setIsSubClient(true);
+            if (!expiry) {
+                setDaysUntilExpiry(null);
+                return;
+            }
+            const expiryDate = new Date(expiry);
+            const now = new Date();
+            const diffTime = expiryDate.getTime() - now.getTime();
+            setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
+        }, [expiry]);
+
+
+        if (tier === 'None') {
             return <Badge variant="secondary">No Subscription</Badge>;
         }
         if (tier === 'Lifetime') {
@@ -42,9 +62,9 @@ export default function ProviderProfilePage() {
             )
         }
 
-        const expiryDate = new Date(expiry);
-        const now = new Date();
-        const daysUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24);
+        if (!isSubClient || daysUntilExpiry === null) {
+            return <Badge variant="secondary">Loading...</Badge>;
+        }
         
         const totalDuration = tier === 'Yearly' ? 365 : 30;
         const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
@@ -62,6 +82,26 @@ export default function ProviderProfilePage() {
         )
     }
 
+    if (!isClient) {
+        return (
+            <div className="space-y-8 container mx-auto py-16 px-4">
+                 <div>
+                    <Skeleton className="h-10 w-40" />
+                </div>
+                <Card>
+                    <CardHeader>
+                        <Skeleton className="h-8 w-1/2" />
+                        <Skeleton className="h-5 w-1/3" />
+                    </CardHeader>
+                    <CardContent>
+                         <Skeleton className="h-12 w-full" />
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+    
+    // Now we know the provider exists
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto py-16 px-4">
