@@ -32,6 +32,8 @@ import {generateQuiz} from './quiz-generator';
 import {generateTimetable} from './timetable-generator';
 import {generateElectionMaterials} from './community-elections-agent';
 import {fillPdfForm} from './pdf-form-filler';
+import { findScholarships } from './scholarship-agent';
+import { generateScholarshipEssay } from './scholarship-essay-assistant';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -53,6 +55,7 @@ export {
   analyzeWorkOrder,
   controlSmartLock,
   evaluateProperty,
+  findScholarships,
   generateAgreement,
   generateCv,
   generateEnhancedCv,
@@ -71,4 +74,5 @@ export {
   generateTimetable,
   generateElectionMaterials,
   fillPdfForm,
+  generateScholarshipEssay,
 };
