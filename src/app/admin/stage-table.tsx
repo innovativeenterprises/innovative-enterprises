@@ -79,15 +79,8 @@ const AddEditStageDialog = ({
 };
 
 
-export default function StageTable({
-    stages,
-    setStages,
-    isClient,
-}: {
-    stages: ProjectStage[],
-    setStages: (updater: (stages: ProjectStage[]) => void) => void,
-    isClient: boolean,
-}) {
+export default function StageTable() {
+    const { stages, setStages, isClient } = useProjectStagesData();
     const { toast } = useToast();
 
     const handleSave = (values: StageValues, id?: string) => {

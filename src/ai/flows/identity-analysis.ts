@@ -57,7 +57,7 @@ const prompt = ai.definePrompt({
     **Professional Summary:**
     -   If a CV is provided, write a concise, one-paragraph summary of the individual's professional background, key skills, and experience. If no CV is provided, leave this field empty.
 
-3.  **Generate a Filename:** Based on the extracted Full Name, create a descriptive filename. Format: \`ID_{FullName}.pdf\`. Replace spaces in the name with underscores.
+3.  **Generate a Filename:** Based on the extracted Full Name, create a descriptive filename. Format: \`ID_{FullName}.pdf\`. Replace spaces in the name with underscores. If the name is not found, use the Civil ID number if available.
 4.  **Return Structured Data:** Populate all extracted information into the specified JSON output format.
 `,
 });
@@ -70,6 +70,15 @@ const identityAnalysisFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await prompt(input);
+
+    if (output) {
+        // More robust filename generation.
+        const fullName = output.personalDetails?.fullName?.replace(/\s+/g, '_');
+        const civilId = output.idCardDetails?.civilNumber;
+        const namePart = fullName || (civilId ? `ID_${civilId}` : 'UnknownPerson');
+        output.suggestedFilename = `ID_${namePart}.pdf`;
+    }
+
     return output!;
   }
 );

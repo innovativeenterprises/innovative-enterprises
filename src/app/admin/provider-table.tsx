@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { Provider } from "@/lib/providers";
+import { ProviderSchema } from "@/lib/providers.schema";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon, Upload, Star } from "lucide-react";
 import Link from 'next/link';
@@ -27,16 +28,6 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 
-const ProviderSchema = z.object({
-  name: z.string().min(3, "Name is required"),
-  email: z.string().email("A valid email is required"),
-  services: z.string().min(3, "Services are required"),
-  status: z.enum(['Vetted', 'Pending Review', 'On Hold']),
-  portfolio: z.string().url("A valid URL is required").optional().or(z.literal('')),
-  notes: z.string().optional(),
-  subscriptionTier: z.enum(['Monthly', 'Yearly', 'Lifetime', 'None']),
-  subscriptionExpiry: z.date().optional(),
-});
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
 const CsvImportSchema = z.object({
