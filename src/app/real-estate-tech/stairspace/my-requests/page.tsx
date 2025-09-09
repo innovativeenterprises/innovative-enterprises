@@ -1,20 +1,19 @@
 
-
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable } from '@/app/raaha/agency-dashboard/request-table';
+import { RequestTable } from '@/components/request-table';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { type InterviewValues } from '@/components/schedule-interview-dialog';
+import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
 
 type GenericRequest = HireRequest | BookingRequest;
@@ -58,39 +57,6 @@ const columns = [
             return getStatusBadge(request.status);
         }
     },
-    {
-        Header: 'Next Steps',
-        accessor: 'nextSteps',
-         Cell: ({ row }: { row: { original: GenericRequest }}) => {
-            const request = row.original as BookingRequest;
-            if (request.status === 'Booked') {
-                return (
-                    <Button asChild size="sm" className="w-full sm:w-auto">
-                        <Link href={`/real-estate-tech/stairspace/checkout/${request.id}`}>
-                            <CreditCard className="mr-2 h-4 w-4"/> Complete Payment
-                        </Link>
-                    </Button>
-                )
-            }
-            if (request.interviewDate) {
-                 return (
-                    <div className="text-xs text-muted-foreground space-y-1">
-                        <div className="flex items-center gap-1.5 font-semibold">
-                            <CalendarIcon className="h-3 w-3 text-primary" />
-                            <span>Interview: {format(new Date(request.interviewDate), "PPP 'at' p")}</span>
-                        </div>
-                        {request.interviewNotes && (
-                            <div className="flex items-center gap-1.5">
-                                <MessageSquare className="h-3 w-3" />
-                                <span className="truncate">{request.interviewNotes}</span>
-                            </div>
-                        )}
-                    </div>
-                 )
-            }
-            return <p className="text-xs text-muted-foreground italic">Owner will contact you.</p>
-         }
-    }
 ];
 
 export default function MyStairspaceRequestsPage() {
@@ -106,6 +72,30 @@ export default function MyStairspaceRequestsPage() {
             r.id === id ? { ...r, interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
+    };
+    
+    const renderActions = (request: GenericRequest) => {
+        const bookingRequest = request as BookingRequest;
+        if (bookingRequest.status === 'Booked') {
+            return (
+                <Button asChild size="sm" className="w-full sm:w-auto">
+                    <Link href={`/real-estate-tech/stairspace/checkout/${request.id}`}>
+                        <CreditCard className="mr-2 h-4 w-4"/> Complete Payment
+                    </Link>
+                </Button>
+            );
+        }
+        if (bookingRequest.interviewDate) {
+            return (
+                <div className="text-xs text-muted-foreground text-right">
+                    <div className="flex items-center gap-1.5 font-semibold justify-end">
+                        <CalendarIcon className="h-3 w-3 text-primary" />
+                        <span>Interview: {format(new Date(bookingRequest.interviewDate), "PPP")}</span>
+                    </div>
+                </div>
+            );
+        }
+        return <p className="text-xs text-muted-foreground italic">Owner will contact you.</p>;
     };
 
     return (
@@ -140,7 +130,7 @@ export default function MyStairspaceRequestsPage() {
                                 data={myRequests} 
                                 columns={columns}
                                 isClient={isClient}
-                                onSchedule={onSchedule}
+                                renderActions={renderActions}
                             />
                         </CardContent>
                     </Card>

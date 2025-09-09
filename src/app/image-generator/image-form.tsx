@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -38,7 +37,7 @@ export default function ImageForm() {
     setImageUrl(null);
     try {
       const result = await generateImage({ prompt: data.prompt });
-      setImageUrl(result);
+      setImageUrl(result.imageUrl);
       toast({ title: "Image Generated!", description: "Your new image is ready." });
     } catch (error) {
       console.error(error);

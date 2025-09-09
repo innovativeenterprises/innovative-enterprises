@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const BookingRequestSchema = z.object({
   id: z.string(),
-  listingId: z.number(),
+  listingId: z.string(),
   listingTitle: z.string(),
   clientName: z.string(),
   clientEmail: z.string().email(),

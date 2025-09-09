@@ -14,7 +14,7 @@ import { RequestTable } from '@/components/request-table';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
-import type { InterviewValues } from '@/components/schedule-interview-dialog';
+import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
 
@@ -178,7 +178,7 @@ export default function AgencyDashboardPage() {
                                 data={filteredRequests} 
                                 columns={columns}
                                 isClient={isClient}
-                                onSchedule={onSchedule}
+                                renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">

@@ -19,15 +19,7 @@ import { PlusCircle, Edit, Trash2, GripVertical, Sparkles, Loader2 } from "lucid
 import Image from 'next/image';
 import { generateImage } from "@/ai/flows/image-generator";
 import { Card, CardContent } from "@/components/ui/card";
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from "@/lib/utils";
 
 const ProductSchema = z.object({
   name: z.string().min(3, "Name is required"),
@@ -122,9 +114,9 @@ export const AddEditProductDialog = ({
         setIsGenerating(true);
         toast({ title: "Generating Image...", description: "Lina is creating your image. This might take a moment."});
         try {
-            const result = await generateImage({ prompt: hint });
-            form.setValue('imageUrl', result.imageUrl, { shouldValidate: true });
-            setImagePreview(result.imageUrl);
+            const { imageUrl } = await generateImage({ prompt: hint });
+            form.setValue('imageUrl', imageUrl, { shouldValidate: true });
+            setImagePreview(imageUrl);
              toast({ title: "Image Generated!", description: "The new image has been added."});
         } catch (e) {
             console.error(e);

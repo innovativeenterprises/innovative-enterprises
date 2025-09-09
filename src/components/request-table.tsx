@@ -19,14 +19,14 @@ export function RequestTable({
     data,
     columns,
     isClient,
-    onSchedule,
+    renderActions,
     sortConfig,
     requestSort,
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
-    onSchedule: (id: string, values: InterviewValues) => void,
+    renderActions: (request: GenericRequest) => React.ReactNode,
     sortConfig?: { key: string; direction: string; },
     requestSort?: (key: string) => void,
 }) { 
@@ -74,7 +74,7 @@ export function RequestTable({
                             </TableCell>
                             ))}
                             <TableCell className="text-right">
-                                    <ScheduleInterviewDialog request={req} onSchedule={onSchedule} />
+                                {renderActions(req)}
                             </TableCell>
                         </TableRow>
                     ))
