@@ -49,6 +49,7 @@ export const ChatComponent = ({
     placeholder,
     aiFlow,
     settings,
+    suggestedReplies: initialSuggestedReplies,
 }: {
     agentName: string;
     agentIcon: LucideIcon;
@@ -57,6 +58,7 @@ export const ChatComponent = ({
     placeholder: string;
     aiFlow: (input: { [key: string]: any }) => Promise<any>;
     settings: AppSettings;
+    suggestedReplies?: string[];
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -91,11 +93,11 @@ export const ChatComponent = ({
   }, [messages]);
 
   useEffect(() => {
-    setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
+    setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: initialSuggestedReplies || ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
     return () => {
       stopAudio();
     }
-  }, [welcomeMessage, stopAudio]);
+  }, [welcomeMessage, stopAudio, initialSuggestedReplies]);
 
   const handleTextToSpeech = async (text: string) => {
       stopAudio();

@@ -13,7 +13,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2, GripVertical } from 'lucide-react';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
-import { generateImage } from '@/ai/flows/image-generator';
 import type { Product } from '@/lib/products';
 import { useProductsData } from "@/hooks/use-global-store-data";
 import { useProjectStagesData } from '../stage-table';

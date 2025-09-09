@@ -51,6 +51,7 @@ export default function ChatWidget() {
                             placeholder="Ask about our services or book a meeting..."
                             aiFlow={answerQuestion}
                             settings={settings}
+                            initialSuggestedReplies={["What services do you offer?", "Tell me about your products", "How can I become a partner?"]}
                        />
                     </div>
                 </PopoverContent>
