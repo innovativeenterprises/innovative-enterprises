@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { StairspaceListing } from "@/lib/stairspace-listings";
 import { Loader2, Send } from "lucide-react";
 import Image from 'next/image';
@@ -26,19 +26,40 @@ const BookingSchema = z.object({
 });
 type BookingValues = z.infer<typeof BookingSchema>;
 
+// For demonstration purposes, we'll simulate a logged-in user's data.
+// In a real application, this would come from your authentication context.
+const loggedInUser = {
+    fullName: "Anwar Ahmed",
+    email: "anwar.ahmed@example.com",
+    phone: "+968 99887766"
+};
+
 export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: { listing: StairspaceListing, isOpen: boolean, onOpenChange: (open: boolean) => void, onClose: () => void }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
     
     const form = useForm<BookingValues>({
         resolver: zodResolver(BookingSchema),
+        // Pre-fill the form with the logged-in user's data
         defaultValues: {
-            fullName: "",
-            email: "",
-            phone: "",
+            fullName: loggedInUser.fullName,
+            email: loggedInUser.email,
+            phone: loggedInUser.phone,
             message: "",
         }
     });
+
+    // Reset form when the dialog opens/closes
+    useEffect(() => {
+        if(isOpen) {
+            form.reset({
+                fullName: loggedInUser.fullName,
+                email: loggedInUser.email,
+                phone: loggedInUser.phone,
+                message: "",
+            });
+        }
+    }, [isOpen, form]);
 
     const onSubmit: SubmitHandler<BookingValues> = async (data) => {
         setIsLoading(true);
@@ -79,7 +100,7 @@ export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: {
                 <DialogHeader>
                     <DialogTitle>Request to Book: {listing.title}</DialogTitle>
                     <DialogDescription>
-                        Please fill out your details below to submit a booking request. The space owner will contact you to confirm availability and payment.
+                        Please confirm your contact information. The space owner will contact you to confirm availability and payment.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid md:grid-cols-2 gap-6 py-4">
