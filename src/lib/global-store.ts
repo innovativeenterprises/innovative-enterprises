@@ -37,6 +37,7 @@ import { initialCommunities, type Community } from './communities';
 import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
 import { initialMembers, type CommunityMember } from './community-members';
+import { initialStairspaceListings, type StairspaceListing } from './stairspace-listings';
 
 
 export interface CartItem extends Product {
@@ -76,6 +77,7 @@ type AppState = {
   communityEvents: CommunityEvent[];
   communityFinances: CommunityFinance[];
   communityMembers: CommunityMember[];
+  stairspaceListings: StairspaceListing[];
   savedBoqs: SavedBoQ[];
   cart: CartItem[];
   costSettings: CostRate[];
@@ -112,6 +114,7 @@ let state: AppState = {
   communityEvents: initialEvents,
   communityFinances: initialFinances,
   communityMembers: initialMembers,
+  stairspaceListings: initialStairspaceListings,
   savedBoqs: [],
   cart: [],
   costSettings: initialCostSettings,

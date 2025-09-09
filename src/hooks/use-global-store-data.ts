@@ -27,6 +27,7 @@ import type { Student } from '@/lib/students';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
+import type { StairspaceListing } from '@/lib/stairspace-listings';
 
 export const useServicesData = () => {
     const [data, setData] = useState(store.get());
@@ -508,6 +509,27 @@ export const useCfoData = () => {
     
     return {
         ...data,
+        isClient,
+    };
+};
+
+export const useStairspaceData = () => {
+    const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        stairspaceListings: data.stairspaceListings,
+        setStairspaceListings: (updater: (listings: StairspaceListing[]) => void) => {
+            store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
+        },
         isClient,
     };
 };
