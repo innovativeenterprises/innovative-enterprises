@@ -27,7 +27,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert IT and Security Solutions Architect. Your task is to analyze a client's project requirements and generate a highly professional and comprehensive ICT proposal. You must provide options for both **renting** and **purchasing** the required IT assets if applicable.
 
 **Available IT Asset Inventory (for Rent or Purchase):**
-You MUST only recommend assets from this list for the IT hardware portion.
+You MUST only recommend assets from this list for the IT hardware portion. Do not make up assets.
 '''json
 {{{json availableAssetsJson}}}
 '''
@@ -82,13 +82,9 @@ You MUST only recommend assets from this list for the IT hardware portion.
         *   **CCTV Price List (OMR):** 4K Dome Camera: 45, 4K Bullet Camera: 55, 8-Channel NVR: 120, 16-Channel NVR: 200, 8-Port PoE Switch: 60, 16-Port PoE Switch: 100.
         *   Write a brief summary of the surveillance solution.
 
-3.  **Calculate Costs:**
-    *   **totalRentalCostPerMonth:** Sum up (\`asset.monthlyPrice * quantity\`) for all items in \`rentedAssets\`.
-    *   **totalRentalCostForDuration:** Calculate \`totalRentalCostPerMonth * (projectDurationMonths || 1)\`.
-    *   **totalPurchaseCost:** Sum up (\`asset.purchasePrice * quantity\`) for all items in \`purchasedAssets\`, PLUS the total cost of the surveillance system equipment.
-    *   **softwareCost:** Sum up the total cost for all items in \`recommendedSoftware\`.
-    *   **grandTotalForRentalOption:** Calculate \`totalRentalCostForDuration + (response.surveillanceSystem.equipmentList.reduce((acc, item) => acc + item.totalPrice, 0)) + softwareCost\`.
-    *   **grandTotalForPurchaseOption:** Calculate \`totalPurchaseCost + softwareCost\`. Note: The surveillance system is already included in totalPurchaseCost.
+3.  **Cost Breakdown:**
+    *   Provide estimated costs for each item.
+    *   You are **NOT** required to calculate the final totals. The application code will handle the summation of all costs. Just provide the line-item costs accurately.
 
 4.  **Next Steps:** Provide a brief, professional closing statement.
 

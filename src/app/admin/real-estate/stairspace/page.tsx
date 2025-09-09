@@ -14,7 +14,7 @@ import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type 
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
-import { ScheduleInterviewDialog, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table';
+import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import {
