@@ -19,7 +19,7 @@ export const fileToText = (file: File): Promise<string> => {
         const reader = new FileReader();
         reader.onload = (event) => resolve(event.target?.result as string);
         reader.onerror = (error) => reject(error);
-        reader.readAsText(file);
+        reader.readAsText(file, 'UTF-8'); // Specify encoding
     });
 };
 

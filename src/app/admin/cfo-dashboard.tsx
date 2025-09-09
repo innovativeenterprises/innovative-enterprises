@@ -19,7 +19,7 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This effect runs only on the client, after hydration
+    // This effect runs only on the client, after hydration, to prevent mismatch
     const calculateRemainingDays = () => {
       const dueDate = new Date(date);
       const today = new Date();
@@ -35,6 +35,7 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
   }, [date]);
 
   if (!isClient) {
+    // Render a skeleton on the server and initial client render
     return <Skeleton className="h-4 w-24 mt-1" />;
   }
 
