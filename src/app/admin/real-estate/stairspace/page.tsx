@@ -6,16 +6,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MessageSquare, Mail, Phone } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Mail, Phone, CalendarIcon, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable } from '@/app/raaha/agency-dashboard/request-table'; // A more generic component that can be reused.
+import { RequestTable, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table'; // A more generic component that can be reused.
 
 
 export default function StairspaceRequestsPage() {
@@ -31,6 +31,19 @@ export default function StairspaceRequestsPage() {
         toast({ title: "Status Updated", description: "The request status has been changed." });
     };
 
+    const handleScheduleInterview = (requestId: string, values: InterviewValues) => {
+        setStairspaceRequests(prev => prev.map(req => 
+            req.id === requestId ? { 
+                ...req, 
+                status: 'Contacted',
+                interviewDate: values.interviewDate.toISOString(),
+                interviewNotes: values.interviewNotes
+            } : req
+        ));
+        toast({ title: 'Interview Scheduled!', description: 'The client will see this update in their "My Requests" page.' });
+    };
+
+
     const getStatusBadge = (status: BookingRequest['status']) => {
         switch (status) {
             case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
@@ -40,6 +53,75 @@ export default function StairspaceRequestsPage() {
             default: return <Badge variant="outline">{status}</Badge>;
         }
     };
+
+    const columns = [
+      {
+        Header: 'Listing & Message',
+        accessor: 'listingTitle',
+        Cell: ({ row }: any) => (
+          <div>
+            <p className="font-medium">{row.original.listingTitle}</p>
+            <p className="text-sm text-muted-foreground line-clamp-2">{row.original.message}</p>
+          </div>
+        )
+      },
+      {
+        Header: 'Client Details',
+        accessor: 'clientName',
+        Cell: ({ row }: any) => (
+           <div>
+                <p className="font-medium">{row.original.clientName}</p>
+                <div className="flex flex-col gap-1 text-xs text-muted-foreground mt-1">
+                    <a href={`mailto:${row.original.clientEmail}`} className="flex items-center gap-1.5 hover:text-primary"><Mail className="h-3 w-3"/> {row.original.clientEmail}</a>
+                    <a href={`tel:${row.original.clientPhone}`} className="flex items-center gap-1.5 hover:text-primary"><Phone className="h-3 w-3"/> {row.original.clientPhone}</a>
+                </div>
+            </div>
+        )
+      },
+       {
+        Header: 'Requested On',
+        accessor: 'requestDate',
+        Cell: ({ row }: any) => isClient ? formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true }) : '...'
+       },
+       {
+        Header: 'Status',
+        accessor: 'status',
+        Cell: ({ row }: any) => (
+           <Select value={row.original.status} onValueChange={(value: BookingRequest['status']) => handleStatusChange(row.original.id, value)}>
+              <SelectTrigger className="w-[180px]">
+                  <SelectValue>{getStatusBadge(row.original.status)}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Contacted">Contacted</SelectItem>
+                  <SelectItem value="Booked">Booked</SelectItem>
+                  <SelectItem value="Closed">Closed</SelectItem>
+              </SelectContent>
+          </Select>
+        )
+      },
+      {
+        Header: 'Interview',
+        accessor: 'interviewDate',
+        Cell: ({ row }: any) => {
+          if (!row.original.interviewDate || !isClient) return 'Not Scheduled';
+          return (
+             <div className="text-xs text-muted-foreground space-y-1">
+                <div className="flex items-center gap-1.5 font-semibold">
+                    <CalendarIcon className="h-3 w-3 text-primary" />
+                    <span>{format(new Date(row.original.interviewDate), "PPP 'at' p")}</span>
+                </div>
+                {row.original.interviewNotes && (
+                    <div className="flex items-center gap-1.5">
+                        <MessageSquare className="h-3 w-3" />
+                        <span className="truncate">{row.original.interviewNotes}</span>
+                    </div>
+                )}
+            </div>
+          )
+        }
+      }
+    ];
 
     return (
         <div className="space-y-8">
@@ -56,61 +138,12 @@ export default function StairspaceRequestsPage() {
                 </CardHeader>
             </div>
 
-            <Card>
-                <CardContent className="pt-6">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Listing</TableHead>
-                                <TableHead>Client Details</TableHead>
-                                <TableHead>Requested On</TableHead>
-                                <TableHead>Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {!isClient ? (
-                                <TableRow><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
-                            ) : stairspaceRequests.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                                        No booking requests yet.
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                stairspaceRequests.map(request => (
-                                    <TableRow key={request.id}>
-                                        <TableCell>
-                                            <p className="font-medium">{request.listingTitle}</p>
-                                            <p className="text-sm text-muted-foreground line-clamp-2">{request.message}</p>
-                                        </TableCell>
-                                        <TableCell>
-                                            <p className="font-medium">{request.clientName}</p>
-                                            <div className="flex flex-col gap-1 text-xs text-muted-foreground mt-1">
-                                                <a href={`mailto:${request.clientEmail}`} className="flex items-center gap-1.5 hover:text-primary"><Mail className="h-3 w-3"/> {request.clientEmail}</a>
-                                                <a href={`tel:${request.clientPhone}`} className="flex items-center gap-1.5 hover:text-primary"><Phone className="h-3 w-3"/> {request.clientPhone}</a>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>{isClient ? formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }) : '...'}</TableCell>
-                                        <TableCell>
-                                            <Select value={request.status} onValueChange={(value: BookingRequest['status']) => handleStatusChange(request.id, value)}>
-                                                <SelectTrigger className="w-[180px]">
-                                                    <SelectValue>{getStatusBadge(request.status)}</SelectValue>
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="Pending">Pending</SelectItem>
-                                                    <SelectItem value="Contacted">Contacted</SelectItem>
-                                                    <SelectItem value="Booked">Booked</SelectItem>
-                                                    <SelectItem value="Closed">Closed</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+            <RequestTable 
+                columns={columns}
+                data={stairspaceRequests}
+                isClient={isClient}
+                onSchedule={handleScheduleInterview}
+            />
         </div>
     );
 }
