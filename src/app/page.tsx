@@ -10,6 +10,7 @@ import AiToolsCta from '@/components/ai-tools-cta';
 import ChatWidget from '@/components/chat-widget';
 import { useServicesData, useProductsData, useClientsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
+import LayoutClient from '@/components/layout-client';
 
 const ServiceCatalogSkeleton = () => (
     <section id="services" className="py-16 md:py-24 bg-white">
@@ -63,13 +64,13 @@ export default function Home() {
   const isClient = isServicesClient && isProductsClient && isClientsClient;
   
   return (
-     <>
+     <LayoutClient>
       <CompanyOverview />
       {isClient ? <ServiceCatalog services={services} /> : <ServiceCatalogSkeleton />}
       {isClient ? <ProductShowcase products={products} /> : <ProductShowcaseSkeleton />}
       {isClient ? <ClientTestimonials clients={clients} testimonials={testimonials} /> : <ClientTestimonialsSkeleton />}
       <AiToolsCta />
       {isClient && <ChatWidget />}
-    </>
+    </LayoutClient>
   )
 }

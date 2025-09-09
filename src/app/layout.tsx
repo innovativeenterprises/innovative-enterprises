@@ -1,31 +1,12 @@
-
-'use client';
-
-import * as React from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
 import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
 });
-
-// Create a new client component to contain the main layout logic
-const LayoutClient = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <>
-      <Header />
-      <main>{children}</main>
-      <Footer />
-      <Toaster />
-    </>
-  );
-};
-
 
 export default function RootLayout({
   children,
@@ -42,7 +23,8 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <LayoutClient>{children}</LayoutClient>
+        {children}
+        <Toaster />
       </body>
     </html>
   );
