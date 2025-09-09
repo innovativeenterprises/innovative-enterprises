@@ -28,7 +28,7 @@ const InterviewSchema = z.object({
 });
 export type InterviewValues = z.infer<typeof InterviewSchema>;
 
-const ScheduleInterviewDialog = ({ request, onSchedule }: { request: GenericRequest, onSchedule: (id: string, values: InterviewValues) => void }) => {
+export const ScheduleInterviewDialog = ({ request, onSchedule }: { request: GenericRequest, onSchedule: (id: string, values: InterviewValues) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { toast } = useToast();
     const form = useForm<InterviewValues>({
@@ -139,11 +139,11 @@ export function RequestTable({
     isClient: boolean,
     onSchedule: (id: string, values: InterviewValues) => void,
     sortConfig: { key: string; direction: string; },
-    requestSort: (key: string) => void,
+    requestSort?: (key: string) => void,
 }) { 
 
     const SortableHeader = ({ label, sortKey }: { label: string, sortKey: string }) => (
-         <TableHead onClick={() => requestSort(sortKey)} className="cursor-pointer">
+         <TableHead onClick={() => requestSort && requestSort(sortKey)} className="cursor-pointer">
             <div className="flex items-center gap-2">
                 {label}
                 {sortConfig.key === sortKey && <ArrowUpDown className="h-4 w-4" />}
@@ -156,8 +156,8 @@ export function RequestTable({
             <TableHeader>
                 <TableRow>
                     {columns.map(col => (
-                        col.sortable ? 
-                        <SortableHeader key={col.accessor} label={col.Header} sortKey={col.accessor} /> :
+                        col.sortable && requestSort ? 
+                        <SortableHeader key={col.accessor || col.Header} label={col.Header} sortKey={col.accessor} /> :
                         <TableHead key={col.Header}>{col.Header}</TableHead>
                     ))}
                     <TableHead className="text-right">Actions</TableHead>

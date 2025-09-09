@@ -5,172 +5,162 @@ import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MessageSquare, Mail, Phone, Calendar as CalendarIcon, Search, ArrowUpDown } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Mail, Phone, Calendar as CalendarIcon, GripVertical, CheckCircle, Ticket, CreditCard, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { formatDistanceToNow, format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table';
-import { Input } from '@/components/ui/input';
+import { useStairspaceData, useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DndContext, useSensor, useSensors, PointerSensor, closestCenter, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ScheduleInterviewDialog, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table';
+import { StairspaceListing } from '@/lib/stairspace.schema';
+import Image from 'next/image';
+
+const requestStatuses = ['Pending', 'Contacted', 'Booked', 'Confirmed', 'Closed'] as const;
+
+const RequestCard = ({ request }: { request: BookingRequest }) => {
+    const { stairspaceListings } = useStairspaceData();
+    const listing = stairspaceListings.find(l => l.id === request.listingId);
+    
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ 
+        id: request.id,
+        data: { type: 'Request', request },
+    });
+
+    const style = {
+        transition,
+        transform: CSS.Transform.toString(transform),
+    };
+    
+    return (
+        <div ref={setNodeRef} style={style}>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Card className="mb-4 group cursor-pointer bg-card hover:bg-muted/80">
+                        <CardContent className="p-3">
+                            <div className="flex items-start gap-3">
+                                <Button variant="ghost" size="icon" {...attributes} {...listeners} onClick={(e) => e.stopPropagation()} className="cursor-grab h-8 w-8 -ml-1">
+                                    <GripVertical className="h-4 w-4 text-muted-foreground" />
+                                </Button>
+                                <div className="flex-grow">
+                                    <p className="font-semibold text-sm leading-tight group-hover:text-primary">{request.listingTitle}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Request from: <strong>{request.clientName}</strong></p>
+                                    <p className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(request.requestDate), { addSuffix: true })}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                 </DialogTrigger>
+                 <DialogContent className="sm:max-w-[700px]">
+                    <DialogHeader>
+                        <DialogTitle>Request Details</DialogTitle>
+                        <DialogDescription>
+                            Reviewing request for "{request.listingTitle}" from {request.clientName}.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid md:grid-cols-2 gap-6 pt-4">
+                        {listing && (
+                             <div className="space-y-4">
+                                <Image src={listing.imageUrl} alt={listing.title} width={300} height={200} className="rounded-lg object-cover" />
+                                <h3 className="font-bold">{listing.title}</h3>
+                                <p className="text-sm text-muted-foreground">{listing.location}</p>
+                             </div>
+                        )}
+                        <div className="space-y-4">
+                            <h4 className="font-semibold">Client Details</h4>
+                            <p className="text-sm"><strong>Name:</strong> {request.clientName}</p>
+                            <p className="text-sm"><strong>Email:</strong> {request.clientEmail}</p>
+                            <p className="text-sm"><strong>Phone:</strong> {request.clientPhone}</p>
+                            <div>
+                                <h4 className="font-semibold">Message</h4>
+                                <p className="text-sm text-muted-foreground italic mt-1 bg-muted p-2 rounded-md">
+                                    {request.message || "No message provided."}
+                                </p>
+                            </div>
+                             {request.interviewDate && (
+                                <div>
+                                    <h4 className="font-semibold">Interview</h4>
+                                    <p className="text-sm text-muted-foreground">
+                                        Scheduled for: {format(new Date(request.interviewDate), "PPP 'at' p")}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </div>
+    );
+};
+
+const StatusColumn = ({ status, requests }: { status: typeof requestStatuses[number], requests: BookingRequest[] }) => {
+    const { setNodeRef } = useSortable({
+        id: status,
+        data: { type: 'Column', status },
+    });
+
+    return (
+        <div ref={setNodeRef} className="flex-shrink-0 w-[300px]">
+            <Card className="bg-muted/50 h-full flex flex-col">
+                <CardHeader className="p-3">
+                    <CardTitle className="text-base text-center">{status} ({requests.length})</CardTitle>
+                </CardHeader>
+                <CardContent className="p-2 min-h-[200px] flex-grow overflow-y-auto">
+                    <SortableContext items={requests.map(r => r.id)} strategy={verticalListSortingStrategy}>
+                        {requests.map(request => (
+                            <RequestCard key={request.id} request={request} />
+                        ))}
+                    </SortableContext>
+                </CardContent>
+            </Card>
+        </div>
+    );
+};
 
 
 export default function StairspaceRequestsPage() {
     const { stairspaceRequests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
-    const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('All');
-    const [sortConfig, setSortConfig] = useState<{ key: keyof BookingRequest | 'clientName' | 'listingTitle'; direction: 'ascending' | 'descending' }>({ key: 'requestDate', direction: 'descending' });
-
-
-    const handleStatusChange = (requestId: string, newStatus: BookingRequest['status']) => {
-        setStairspaceRequests(prev => 
-            prev.map(req =>
-                req.id === requestId ? { ...req, status: newStatus } : req
-            )
-        );
-        toast({ title: "Status Updated", description: "The request status has been changed." });
-    };
-
-    const handleScheduleInterview = (requestId: string, values: InterviewValues) => {
-        setStairspaceRequests(prev => prev.map(req => 
-            req.id === requestId ? { 
-                ...req, 
-                status: 'Contacted',
-                interviewDate: values.interviewDate.toISOString(),
-                interviewNotes: values.interviewNotes
-            } : req
-        ));
-        toast({ title: 'Interview Scheduled!', description: 'The client will see this update in their "My Requests" page.' });
-    };
-
-    const filteredAndSortedRequests = useMemo(() => {
-        let filtered = [...stairspaceRequests];
-
-        if (statusFilter !== 'All') {
-            filtered = filtered.filter(req => req.status === statusFilter);
-        }
-
-        if (searchTerm) {
-            filtered = filtered.filter(req => 
-                req.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                req.listingTitle.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        filtered.sort((a, b) => {
-            const key = sortConfig.key;
-            // Handle nested properties if necessary, but here they are top-level
-            const aValue = a[key as keyof BookingRequest];
-            const bValue = b[key as keyof BookingRequest];
-
-            if (aValue < bValue) {
-                return sortConfig.direction === 'ascending' ? -1 : 1;
-            }
-            if (aValue > bValue) {
-                return sortConfig.direction === 'ascending' ? 1 : -1;
-            }
-            return 0;
+    
+    const requestsByStatus = useMemo(() => {
+        const grouped: Record<string, BookingRequest[]> = {};
+        requestStatuses.forEach(status => {
+            grouped[status] = [];
         });
+        stairspaceRequests.forEach(request => {
+            if (grouped[request.status]) {
+                grouped[request.status].push(request);
+            }
+        });
+        return grouped;
+    }, [stairspaceRequests]);
+    
+    const sensors = useSensors(useSensor(PointerSensor, {
+        activationConstraint: { distance: 8 },
+    }));
 
-        return filtered;
-    }, [stairspaceRequests, searchTerm, statusFilter, sortConfig]);
+    const onDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (!over) return;
 
-    const requestSort = (key: keyof BookingRequest | 'clientName' | 'listingTitle') => {
-        let direction: 'ascending' | 'descending' = 'ascending';
-        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-            direction = 'descending';
+        const activeRequest = active.data.current?.request as BookingRequest;
+        const overColumnStatus = over.data.current?.status as typeof requestStatuses[number] || over.data.current?.request?.status as typeof requestStatuses[number];
+
+        if (activeRequest && overColumnStatus && activeRequest.status !== overColumnStatus) {
+            setStairspaceRequests(prev => 
+                prev.map(r => r.id === active.id ? { ...r, status: overColumnStatus } : r)
+            );
+            toast({
+                title: "Status Updated",
+                description: `Request for "${activeRequest.listingTitle}" moved to ${overColumnStatus}.`
+            });
         }
-        setSortConfig({ key, direction });
     };
 
-
-    const getStatusBadge = (status: BookingRequest['status']) => {
-        switch (status) {
-            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
-            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
-            case 'Booked': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Booked</Badge>;
-            case 'Closed': return <Badge variant="destructive">Closed</Badge>;
-            default: return <Badge variant="outline">{status}</Badge>;
-        }
-    };
-
-    const columns = [
-      {
-        Header: 'Listing & Message',
-        accessor: 'listingTitle',
-        sortable: true,
-        Cell: ({ row }: any) => (
-          <div>
-            <Link href={`/real-estate-tech/stairspace/${row.original.listingId}`} className="font-medium hover:underline" target="_blank">
-                {row.original.listingTitle}
-            </Link>
-            <p className="text-sm text-muted-foreground line-clamp-2">{row.original.message}</p>
-          </div>
-        )
-      },
-      {
-        Header: 'Client Details',
-        accessor: 'clientName',
-        sortable: true,
-        Cell: ({ row }: any) => (
-           <div>
-                <p className="font-medium">{row.original.clientName}</p>
-                <div className="flex flex-col gap-1 text-xs text-muted-foreground mt-1">
-                    <a href={`mailto:${row.original.clientEmail}`} className="flex items-center gap-1.5 hover:text-primary"><Mail className="h-3 w-3"/> {row.original.clientEmail}</a>
-                    <a href={`tel:${row.original.clientPhone}`} className="flex items-center gap-1.5 hover:text-primary"><Phone className="h-3 w-3"/> {row.original.clientPhone}</a>
-                </div>
-            </div>
-        )
-      },
-       {
-        Header: 'Requested On',
-        accessor: 'requestDate',
-        sortable: true,
-        Cell: ({ row }: any) => isClient ? formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true }) : '...'
-       },
-       {
-        Header: 'Status',
-        accessor: 'status',
-        sortable: true,
-        Cell: ({ row }: any) => (
-           <Select value={row.original.status} onValueChange={(value: BookingRequest['status']) => handleStatusChange(row.original.id, value)}>
-              <SelectTrigger className="w-[180px]">
-                  <SelectValue>{getStatusBadge(row.original.status)}</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Contacted">Contacted</SelectItem>
-                  <SelectItem value="Booked">Booked</SelectItem>
-                  <SelectItem value="Closed">Closed</SelectItem>
-              </SelectContent>
-          </Select>
-        )
-      },
-      {
-        Header: 'Interview',
-        accessor: 'interviewDate',
-        sortable: true,
-        Cell: ({ row }: any) => {
-          if (!row.original.interviewDate || !isClient) return 'Not Scheduled';
-          return (
-             <div className="text-xs text-muted-foreground space-y-1">
-                <div className="flex items-center gap-1.5 font-semibold">
-                    <CalendarIcon className="h-3 w-3 text-primary" />
-                    <span>{format(new Date(row.original.interviewDate), "PPP 'at' p")}</span>
-                </div>
-                {row.original.interviewNotes && (
-                    <div className="flex items-center gap-1.5">
-                        <MessageSquare className="h-3 w-3" />
-                        <span className="truncate">{row.original.interviewNotes}</span>
-                    </div>
-                )}
-            </div>
-          )
-        }
-      }
-    ];
 
     return (
         <div className="space-y-8">
@@ -187,47 +177,33 @@ export default function StairspaceRequestsPage() {
                 </CardHeader>
             </div>
             
-            <Card>
-                 <CardHeader>
-                    <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-                        <CardTitle className="text-xl">All Requests</CardTitle>
-                        <div className="flex w-full md:w-auto gap-2">
-                             <div className="relative flex-grow">
-                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search by name or listing..."
-                                    className="pl-8"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
+            <DndContext sensors={sensors} onDragEnd={onDragEnd} collisionDetection={closestCenter}>
+                <div className="overflow-x-auto pb-4">
+                    <div className="flex gap-6">
+                         {!isClient ? (
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <div key={i} className="flex-shrink-0 w-[300px]">
+                                    <Card className="bg-muted/50 h-full">
+                                        <CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader>
+                                        <CardContent className="space-y-4">
+                                            <Skeleton className="h-16 w-full" />
+                                            <Skeleton className="h-16 w-full" />
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            ))
+                        ) : (
+                            requestStatuses.map(status => (
+                                <StatusColumn
+                                    key={status}
+                                    status={status}
+                                    requests={requestsByStatus[status] || []}
                                 />
-                            </div>
-                            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All Statuses</SelectItem>
-                                    <SelectItem value="Pending">Pending</SelectItem>
-                                    <SelectItem value="Contacted">Contacted</SelectItem>
-                                    <SelectItem value="Booked">Booked</SelectItem>
-                                    <SelectItem value="Closed">Closed</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                            ))
+                        )}
                     </div>
-                </CardHeader>
-                <CardContent>
-                    <RequestTable 
-                        columns={columns}
-                        data={filteredAndSortedRequests}
-                        isClient={isClient}
-                        onSchedule={handleScheduleInterview}
-                        sortConfig={sortConfig}
-                        requestSort={requestSort}
-                    />
-                </CardContent>
-            </Card>
-
+                </div>
+            </DndContext>
         </div>
     );
 }
