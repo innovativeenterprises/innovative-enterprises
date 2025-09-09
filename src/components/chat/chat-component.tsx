@@ -172,6 +172,7 @@ export const ChatComponent = ({
       });
     } finally {
       setIsLoading(false);
+      setTimeout(scrollToBottom, 100);
     }
   };
 
@@ -273,7 +274,7 @@ export const ChatComponent = ({
                     {isPlaying ? (
                         <Button type="button" size="icon" variant="destructive" onClick={stopAudio}><Square className="h-5 w-5"/></Button>
                     ): (
-                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(lastMessage!.content)} disabled={isLoading || !lastMessage || lastMessage.role !== 'bot'}>
+                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(lastMessage!.content)} disabled={isLoading || !lastMessage || lastMessage.role !== 'bot' || !lastMessage.content}>
                             <Volume2 className="h-5 w-5"/>
                         </Button>
                     )}

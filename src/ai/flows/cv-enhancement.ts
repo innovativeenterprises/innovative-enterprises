@@ -105,7 +105,7 @@ Target Position: {{{targetPosition}}}
 Job Advertisement:
 {{{jobAdvertisement}}}
 {{/if}}
-Languages: {{{languages}}}
+Languages: {{{json languages}}}
 
 First, rewrite the entire CV. Use the information from the original CV but tailor the language, keywords, and structure to perfectly match the target position and the provided job advertisement. 
 - The CV output should be a complete CV in Markdown format.

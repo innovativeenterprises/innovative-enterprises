@@ -36,7 +36,6 @@ const PropertySchema = z.object({
   status: z.enum(['Available', 'Sold', 'Rented']),
   buildingAge: z.string(),
   imageUrl: z.string().url("A valid image URL is required."),
-  urlToScrape: z.string().url("A valid URL is required.").optional().or(z.literal('')),
 });
 type PropertyValues = z.infer<typeof PropertySchema>;
 
@@ -52,6 +51,7 @@ const AddEditPropertyDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const { toast } = useToast();
+    const [scrapeUrl, setScrapeUrl] = useState('');
 
     const form = useForm<PropertyValues>({
         resolver: zodResolver(PropertySchema),
@@ -78,8 +78,7 @@ const AddEditPropertyDialog = ({
     }, [property, form, isOpen]);
 
     const handleAnalyzeUrl = async () => {
-        const url = form.getValues('urlToScrape');
-        if (!url) {
+        if (!scrapeUrl) {
             toast({ title: "Please enter a URL to analyze.", variant: 'destructive' });
             return;
         }
@@ -88,7 +87,7 @@ const AddEditPropertyDialog = ({
         toast({ title: 'Analyzing URL...', description: 'Rami is scraping the page now. This may take a moment.' });
 
         try {
-            const result = await extractPropertyDetailsFromUrl({ url });
+            const result = await extractPropertyDetailsFromUrl({ url: scrapeUrl });
             form.setValue('title', result.title || '');
             form.setValue('listingType', result.listingType as any || 'For Sale');
             form.setValue('propertyType', result.propertyType as any || 'Villa');
@@ -124,20 +123,17 @@ const AddEditPropertyDialog = ({
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <Card className="bg-muted/50">
                              <CardContent className="p-4 pt-6 space-y-4">
-                                 <FormField control={form.control} name="urlToScrape" render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Import from URL</FormLabel>
-                                        <div className="flex gap-2">
-                                            <FormControl><Input placeholder="https://www.example.com/property-listing" {...field} /></FormControl>
-                                            <Button type="button" variant="secondary" onClick={handleAnalyzeUrl} disabled={isAnalyzing}>
-                                                {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                                Analyze & Pre-fill
-                                            </Button>
-                                        </div>
-                                        <FormDescription>Paste a URL to a property listing page and let the AI extract the details.</FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}/>
+                                <div>
+                                    <FormLabel>Import from URL</FormLabel>
+                                    <div className="flex gap-2">
+                                        <FormControl><Input placeholder="https://www.example.com/property-listing" value={scrapeUrl} onChange={(e) => setScrapeUrl(e.target.value)} /></FormControl>
+                                        <Button type="button" variant="secondary" onClick={handleAnalyzeUrl} disabled={isAnalyzing}>
+                                            {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                            Analyze & Pre-fill
+                                        </Button>
+                                    </div>
+                                    <FormDescription className="mt-2">Paste a URL to a property listing page and let the AI extract the details.</FormDescription>
+                                </div>
                             </CardContent>
                         </Card>
 
@@ -198,13 +194,12 @@ export default function PropertyTable({ properties, setProperties, isClient }: {
     const { toast } = useToast();
 
     const handleSave = (values: PropertyValues, id?: string) => {
-        const { urlToScrape, ...propertyData } = values; // Exclude scraper URL from save data
         if (id) {
-            setProperties(prev => prev.map(p => p.id === id ? { ...p, ...propertyData } : p));
+            setProperties(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
             toast({ title: "Property updated." });
         } else {
             const newProperty: Property = {
-                ...propertyData,
+                ...values,
                 id: `prop_${Date.now()}`,
             };
             setProperties(prev => [newProperty, ...prev]);
@@ -262,7 +257,7 @@ export default function PropertyTable({ properties, setProperties, isClient }: {
                             properties.map(prop => (
                                 <TableRow key={prop.id}>
                                     <TableCell>
-                                        <Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" />
+                                        <Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" data-ai-hint={prop.aiHint} />
                                     </TableCell>
                                     <TableCell>
                                         <p className="font-medium">{prop.title}</p>
