@@ -31,5 +31,3 @@ export const PropertyValuationOutputSchema = z.object({
   comparableProperties: z.array(ComparablePropertySchema).describe("A list of 2-3 recent, comparable property sales used for the analysis."),
 });
 export type PropertyValuationOutput = z.infer<typeof PropertyValuationOutputSchema>;
-
-    

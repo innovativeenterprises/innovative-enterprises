@@ -62,5 +62,3 @@ const propertyValuationFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    
