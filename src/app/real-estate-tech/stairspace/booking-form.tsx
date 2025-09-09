@@ -1,0 +1,106 @@
+
+'use client';
+
+import { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import type { StairspaceListing } from "@/lib/stairspace-listings";
+import { Loader2, Send } from "lucide-react";
+import Image from 'next/image';
+
+const BookingSchema = z.object({
+  fullName: z.string().min(3, "Full name is required"),
+  email: z.string().email("A valid email is required"),
+  phone: z.string().min(5, "A valid phone number is required"),
+  message: z.string().optional(),
+});
+type BookingValues = z.infer<typeof BookingSchema>;
+
+export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: { listing: StairspaceListing, isOpen: boolean, onOpenChange: (open: boolean) => void, onClose: () => void }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
+    
+    const form = useForm<BookingValues>({
+        resolver: zodResolver(BookingSchema),
+        defaultValues: {
+            fullName: "",
+            email: "",
+            phone: "",
+            message: "",
+        }
+    });
+
+    const onSubmit: SubmitHandler<BookingValues> = async (data) => {
+        setIsLoading(true);
+        console.log("Submitting booking request for:", listing.title, "Data:", data);
+        
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        toast({ title: "Booking Request Submitted!", description: `Your request for "${listing.title}" has been sent. The owner will contact you shortly.` });
+        setIsLoading(false);
+        form.reset();
+        onClose();
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={(open) => {
+            onOpenChange(open);
+            if (!open) onClose();
+        }}>
+            <DialogContent className="sm:max-w-[800px]">
+                <DialogHeader>
+                    <DialogTitle>Request to Book: {listing.title}</DialogTitle>
+                    <DialogDescription>
+                        Please fill out your details below to submit a booking request. The space owner will contact you to confirm availability and payment.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid md:grid-cols-2 gap-6 py-4">
+                    <div className="space-y-4">
+                        <div className="relative h-48 w-full overflow-hidden rounded-lg">
+                             <Image src={listing.imageUrl} alt={listing.title} fill className="object-cover" />
+                        </div>
+                        <div>
+                            <h3 className="font-bold">{listing.title}</h3>
+                            <p className="text-sm text-muted-foreground">{listing.location}</p>
+                        </div>
+                        <div>
+                            <p className="text-2xl font-bold text-primary">{listing.price}</p>
+                        </div>
+                    </div>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <FormField control={form.control} name="fullName" render={({ field }) => (
+                                <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <div className="grid grid-cols-2 gap-4">
+                                <FormField control={form.control} name="email" render={({ field }) => (
+                                    <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="phone" render={({ field }) => (
+                                    <FormItem><FormLabel>Phone</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                                )} />
+                            </div>
+                            <FormField control={form.control} name="message" render={({ field }) => (
+                                <FormItem><FormLabel>Message (Optional)</FormLabel><FormControl><Textarea rows={3} placeholder="Any specific dates or questions?" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <DialogFooter className="pt-4">
+                                <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                                <Button type="submit" disabled={isLoading}>
+                                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</> : <><Send className="mr-2 h-4 w-4" /> Submit Request</>}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};

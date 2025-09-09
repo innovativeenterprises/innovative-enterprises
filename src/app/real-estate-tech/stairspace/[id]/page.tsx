@@ -10,12 +10,16 @@ import { ArrowLeft, MapPin, Tag, Calendar, User, Mail, Phone, DollarSign } from 
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import { BookingRequestForm } from './booking-form';
+
 
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
     const { stairspaceListings, isClient } = useStairspaceData();
     const router = useRouter();
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
     const listing = stairspaceListings.find(l => l.id.toString() === id);
 
@@ -102,7 +106,7 @@ export default function StairspaceDetailPage() {
                                     <p className="text-sm text-muted-foreground">Rental Price</p>
                                     <p className="text-4xl font-extrabold text-primary">{listing.price}</p>
                                     <CardFooter className="p-0 pt-6">
-                                        <Button size="lg" className="w-full">
+                                        <Button size="lg" className="w-full" onClick={() => setIsFormOpen(true)}>
                                             <DollarSign className="mr-2 h-5 w-5" /> Request to Book
                                         </Button>
                                     </CardFooter>
@@ -111,6 +115,14 @@ export default function StairspaceDetailPage() {
                         </div>
                     </Card>
                 </div>
+                 {isFormOpen && (
+                    <BookingRequestForm 
+                        listing={listing}
+                        isOpen={isFormOpen}
+                        onOpenChange={setIsFormOpen}
+                        onClose={() => setIsFormOpen(false)}
+                    />
+                )}
             </div>
         </div>
     );
