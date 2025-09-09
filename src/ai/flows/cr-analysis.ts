@@ -7,6 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod';
 import {
     CrAnalysisInput,
     CrAnalysisInputSchema,
@@ -67,8 +68,9 @@ const crAnalysisFlow = ai.defineFlow(
   },
   async (input) => {
     // Perform a quick preliminary analysis to get the most critical info for the filename.
+    // This is more robust than a single, complex prompt.
     const preliminaryAnalysis = await ai.generate({
-      prompt: `Extract only the company name (English or Arabic) and the commercial registration number from this document: {{media url=documentDataUri}}. If you cannot find a value, return an empty string for that field.`,
+      prompt: `Extract only the company name (English or Arabic) and the commercial registration number (CRN) from this document: {{media url=documentDataUri}}. If you cannot find a value, return an empty string for that field.`,
       output: {
         schema: z.object({
           companyName: z.string().optional(),
@@ -80,20 +82,18 @@ const crAnalysisFlow = ai.defineFlow(
     const companyName = preliminaryAnalysis.output?.companyName;
     const crn = preliminaryAnalysis.output?.registrationNumber;
 
-    // Create a robust filename, preferring company name but falling back to CRN.
-    const namePart = companyName ? companyName.replace(/\s/g, '_') : (crn ? `CRN_${crn}` : 'UnknownCompany');
-    const crnPart = crn || 'UnknownCRN';
-    const finalFilename = `CR_${namePart}_${crnPart}.pdf`;
-
-    
+    // Pass the extracted details to the main prompt to ensure consistent use.
     const { output } = await prompt({
       ...input,
-      companyNameForFilename: companyName, // Pass to prompt just in case
+      companyNameForFilename: companyName,
       crnForFilename: crn,
     });
 
     if (output) {
-      output.suggestedFilename = finalFilename;
+      // Robust filename generation logic.
+      const namePart = companyName ? companyName.replace(/\s+/g, '_') : (crn ? `CRN_${crn}` : 'UnknownCompany');
+      const crnPart = crn || 'UnknownCRN';
+      output.suggestedFilename = `CR_${namePart}_${crnPart}.pdf`;
     }
 
     return output!;

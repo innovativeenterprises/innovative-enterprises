@@ -2,21 +2,18 @@
  * @fileOverview Schemas for the Bill of Quantities (BoQ) Cost Estimator AI flow.
  */
 import { z } from 'zod';
-import { CostRateSchema as ExternalCostRateSchema } from '@/lib/cost-settings.schema';
-
-export const CostRateSchema = ExternalCostRateSchema.pick({
-  name: true,
-  rate: true,
-  unit: true,
-  category: true,
-});
-export type CostRate = z.infer<typeof CostRateSchema>;
+import { CostRateSchema } from '@/lib/cost-settings.schema';
 
 export const BoQEstimatorInputSchema = z.object({
   boqCsvText: z.string().describe("The content of the Bill of Quantities file, formatted as a CSV string."),
   contingencyPercentage: z.coerce.number().min(0).max(100).describe("A percentage to add for contingencies."),
   profitMarginPercentage: z.coerce.number().min(0).max(100).describe("A percentage to add for profit margin."),
-  marketRates: z.array(CostRateSchema).describe("An array of current market rates for materials and labor."),
+  marketRates: z.array(CostRateSchema.pick({
+    name: true,
+    rate: true,
+    unit: true,
+    category: true,
+  })).describe("An array of current market rates for materials and labor."),
 });
 export type BoQEstimatorInput = z.infer<typeof BoQEstimatorInputSchema>;
 

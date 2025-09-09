@@ -9,11 +9,24 @@ import { CardHeader, CardTitle, CardDescription, CardContent } from '@/component
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { cn } from '@/lib/utils';
 
-export function CameraCapture({ title, onCapture, onCancel, isFlipping }: { title: string, onCapture: (imageUri: string) => void, onCancel: () => void, isFlipping?: boolean }) {
+export function CameraCapture({
+  title,
+  onCapture,
+  onCancel,
+  isFlipping,
+  capturedImage,
+  setCapturedImage
+}: {
+  title: string,
+  onCapture: (imageUri: string) => void,
+  onCancel: () => void,
+  isFlipping?: boolean,
+  capturedImage: string | null,
+  setCapturedImage: (imageUri: string | null) => void,
+}) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-    const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const { toast } = useToast();
 
     useEffect(() => {
