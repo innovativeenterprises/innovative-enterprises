@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -159,3 +160,5 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
+
+    

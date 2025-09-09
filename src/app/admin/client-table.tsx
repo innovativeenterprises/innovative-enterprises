@@ -20,15 +20,7 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "../ui/skeleton";
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from "@/lib/utils";
 
 // Schemas
 const ClientSchema = z.object({
@@ -378,3 +370,5 @@ export default function ClientTable({
         </Card>
     );
 }
+
+    

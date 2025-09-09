@@ -160,4 +160,13 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/cv-enhancer",
   },
+  {
+    icon: DollarSign,
+    title: "Finley CFO",
+    description: "An AI-powered CFO dashboard to monitor financial health, track transactions, and view cash flow.",
+    enabled: true,
+    href: "/cfo",
+  }
 ];
+
+    
