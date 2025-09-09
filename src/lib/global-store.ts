@@ -27,6 +27,8 @@ import { initialRequests, type HireRequest } from './raaha-requests';
 import { initialAgencies, type Agency } from './raaha-agencies';
 import { initialLeases, type SignedLease } from './leases';
 import { initialProperties, type Property } from './properties';
+import { initialStairspaceListings, type StairspaceListing } from './stairspace-listings';
+import { initialStairspaceRequests, type BookingRequest as StairspaceRequest } from './stairspace-requests';
 import { type BoQItem } from '@/ai/flows/boq-generator.schema';
 import { initialCostSettings } from './cost-settings';
 import type { CostRate } from './cost-settings.schema';
@@ -37,8 +39,6 @@ import { initialCommunities, type Community } from './communities';
 import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
 import { initialMembers, type CommunityMember } from './community-members';
-import { initialStairspaceListings, type StairspaceListing } from './stairspace-listings';
-import { initialStairspaceRequests, type BookingRequest as StairspaceRequest } from './stairspace-requests';
 
 
 export interface CartItem extends Product {
@@ -73,13 +73,13 @@ type AppState = {
   raahaAgencies: Agency[];
   signedLeases: SignedLease[];
   properties: Property[];
+  stairspaceListings: StairspaceListing[];
+  stairspaceRequests: StairspaceRequest[];
   students: Student[];
   communities: Community[];
   communityEvents: CommunityEvent[];
   communityFinances: CommunityFinance[];
   communityMembers: CommunityMember[];
-  stairspaceListings: StairspaceListing[];
-  stairspaceRequests: StairspaceRequest[];
   savedBoqs: SavedBoQ[];
   cart: CartItem[];
   costSettings: CostRate[];
@@ -111,13 +111,13 @@ let state: AppState = {
   raahaAgencies: initialAgencies,
   signedLeases: initialLeases,
   properties: initialProperties,
+  stairspaceListings: initialStairspaceListings,
+  stairspaceRequests: initialStairspaceRequests,
   students: initialStudents,
   communities: initialCommunities,
   communityEvents: initialEvents,
   communityFinances: initialFinances,
   communityMembers: initialMembers,
-  stairspaceListings: initialStairspaceListings,
-  stairspaceRequests: initialStairspaceRequests,
   savedBoqs: [],
   cart: [],
   costSettings: initialCostSettings,

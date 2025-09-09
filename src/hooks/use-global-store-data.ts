@@ -23,12 +23,12 @@ import type { HireRequest } from '@/lib/raaha-requests';
 import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { SignedLease } from '@/lib/leases';
 import type { Property } from '@/lib/properties';
+import type { StairspaceListing } from '@/lib/stairspace-listings';
+import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-requests';
 import type { Student } from '@/lib/students';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
-import type { StairspaceListing } from '@/lib/stairspace-listings';
-import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-requests';
 
 
 export const useServicesData = () => {

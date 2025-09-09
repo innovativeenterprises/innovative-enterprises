@@ -18,6 +18,7 @@ import type { StairspaceListing } from "@/lib/stairspace-listings";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStairspaceData } from "@/hooks/use-global-store-data";
 
 const StairspaceSchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -111,7 +112,7 @@ export default function StairspaceTable({ stairspaceListings, setStairspaceListi
             tags: values.tags.split(',').map(tag => tag.trim()),
         };
 
-        if (id) {
+        if (id !== undefined) {
             setStairspaceListings(prev => prev.map(l => l.id === id ? { ...l, ...listingData } : l));
             toast({ title: "Listing updated." });
         } else {
