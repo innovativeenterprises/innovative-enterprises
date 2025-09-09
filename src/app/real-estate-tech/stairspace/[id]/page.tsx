@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { BookingRequestForm } from './booking-form';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
 
 
 export default function StairspaceDetailPage() {

@@ -14,21 +14,24 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import type { StairspaceListing } from "@/lib/stairspace-listings";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStairspaceData } from "@/hooks/use-global-store-data";
+import { type StairspaceListing, StairspaceListingSchema } from "@/lib/stairspace.schema";
 
-const StairspaceSchema = z.object({
-  title: z.string().min(5, "Title is required."),
-  location: z.string().min(3, "Location is required."),
-  price: z.string().min(3, "Price is required (e.g., 'OMR 25 / day')."),
-  imageUrl: z.string().url("A valid image URL is required."),
-  aiHint: z.string().min(2, "AI hint is required."),
-  tags: z.string().describe("Comma-separated tags"),
+const FormSchema = StairspaceListingSchema.pick({
+    title: true,
+    location: true,
+    price: true,
+    imageUrl: true,
+    aiHint: true,
+    tags: true,
+}).extend({
+    tags: z.string().describe("Comma-separated tags")
 });
-type StairspaceValues = z.infer<typeof StairspaceSchema>;
+
+type StairspaceValues = z.infer<typeof FormSchema>;
 
 const AddEditStairspaceDialog = ({ 
     listing, 
@@ -42,7 +45,7 @@ const AddEditStairspaceDialog = ({
     const [isOpen, setIsOpen] = useState(false);
 
     const form = useForm<StairspaceValues>({
-        resolver: zodResolver(StairspaceSchema),
+        resolver: zodResolver(FormSchema),
         defaultValues: {
             ...listing,
             tags: listing?.tags.join(', ') || '',
@@ -89,7 +92,7 @@ const AddEditStairspaceDialog = ({
                             <FormItem><FormLabel>AI Hint</FormLabel><FormControl><Input placeholder="e.g., modern staircase retail" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                          <FormField control={form.control} name="tags" render={({ field }) => (
-                            <FormItem><FormLabel>Tags</FormLabel><FormControl><Input placeholder="e.g., Retail, Pop-up, High Traffic" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Tags (comma-separated)</FormLabel><FormControl><Input placeholder="e.g., Retail, Pop-up, High Traffic" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
 
                         <DialogFooter>

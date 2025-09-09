@@ -16,7 +16,6 @@ import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } 
 import { CSS } from '@dnd-kit/utilities';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { ScheduleInterviewDialog, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table';
-import type { StairspaceListing } from '@/lib/stairspace.schema';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import {
@@ -28,6 +27,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from '@/components/ui/textarea';
 import { generateBookingResponse } from '@/ai/flows/booking-response-generator';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
 
 
 const requestStatuses = ['Pending', 'Contacted', 'Booked', 'Confirmed', 'Closed'] as const;

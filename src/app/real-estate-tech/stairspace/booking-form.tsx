@@ -11,11 +11,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import type { StairspaceListing } from "@/lib/stairspace-listings";
 import { Loader2, Send } from "lucide-react";
 import Image from 'next/image';
 import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
 
 
 const BookingSchema = z.object({
