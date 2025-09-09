@@ -47,8 +47,8 @@ const AiMatcher = () => {
     
     const bestMatchListing = useMemo(() => {
         if (!response) return null;
-        return stairspaceListings.find(l => l.id === response.bestMatch.propertyId);
-    }, [response, stairspaceListings]);
+        return response.bestMatch.property;
+    }, [response]);
 
     return (
         <Card>

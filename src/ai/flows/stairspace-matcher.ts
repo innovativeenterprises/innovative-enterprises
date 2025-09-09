@@ -23,7 +23,7 @@ const prompt = ai.definePrompt({
   name: 'stairspaceMatcherPrompt',
   input: { schema: StairspaceMatcherInputSchema.extend({ availableSpacesJson: z.string() }) },
   output: { schema: StairspaceMatcherOutputSchema },
-  prompt: `You are an expert real estate agent AI specializing in micro-retail and pop-up spaces. Your task is to analyze a user's requirements and find the best matching "StairSpace" from the provided list of available listings.
+  prompt: `You are an expert real estate agent AI specializing in micro-retail and pop-up spaces. Your task is to analyze a user's requirements and find the best matching property from the provided list of available listings.
 
 **User's Requirements:**
 """
@@ -41,7 +41,8 @@ You MUST only recommend spaces from this list.
 2.  **Find Best Match:** From the provided JSON list, identify the single best property that most closely matches the user's requirements.
 3.  **Provide Justification:** In the 'reasoning' field, write a short, professional paragraph explaining *why* this space is an excellent fit. Highlight how its features (tags, location) meet the user's key criteria.
 4.  **Confidence Score:** Provide a confidence score (0-100) based on how well the best match aligns with the user's stated requirements. A perfect match on all key criteria should be high (90+).
-5.  **Suggest Others (Optional):** If there are 1-2 other spaces that are also good fits, list their IDs in the 'otherMatches' array.
+5.  **Return Best Match Object:** Return the full JSON object for the single best matching property in the 'bestMatch.property' field.
+6.  **Suggest Others (Optional):** If there are 1-2 other spaces that are also good fits, list their full property objects in the 'otherMatches' array.
 
 Return the complete analysis in the specified structured JSON format.
 `,

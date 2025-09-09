@@ -1,9 +1,8 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { WorkerTable } from './worker-table';
-import { RequestTable } from './request-table';
 import { AgencySettings } from './agency-settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,11 +10,69 @@ import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
+import { RequestTable } from '@/components/request-table';
+import { formatDistanceToNow, format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import type { HireRequest } from '@/lib/raaha-requests';
+import type { InterviewValues } from '@/components/schedule-interview-dialog';
+import { useToast } from '@/hooks/use-toast';
+import { CalendarIcon, MessageSquare } from 'lucide-react';
+
+const getStatusBadge = (status: HireRequest['status']) => {
+    switch (status) {
+        case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
+        case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
+        case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
+        case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
+        case 'Closed': return <Badge variant="destructive">Closed</Badge>;
+        default: return <Badge variant="outline">{status}</Badge>;
+    }
+};
+
+const columns = [
+    {
+        Header: 'Candidate',
+        accessor: 'workerName',
+    },
+    {
+        Header: 'Client',
+        accessor: 'clientName',
+    },
+     {
+        Header: 'Request Date',
+        accessor: 'requestDate',
+        Cell: ({ row }: { row: { original: HireRequest }}) => formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true })
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
+        Cell: ({ row }: { row: { original: HireRequest }}) => getStatusBadge(row.original.status)
+    },
+     {
+        Header: 'Interview',
+        accessor: 'interviewDate',
+        Cell: ({ row }: { row: { original: HireRequest }}) => row.original.interviewDate ? (
+            <div className="text-xs text-muted-foreground space-y-1">
+               <div className="flex items-center gap-1.5 font-semibold">
+                <CalendarIcon className="h-3 w-3 text-primary" />
+                <span>{format(new Date(row.original.interviewDate), "PPP 'at' p")}</span>
+               </div>
+                {row.original.interviewNotes && (
+                    <div className="flex items-center gap-1.5">
+                    <MessageSquare className="h-3 w-3" />
+                    <span className="truncate">{row.original.interviewNotes}</span>
+                    </div>
+                )}
+            </div>
+        ) : null
+    },
+];
 
 export default function AgencyDashboardPage() {
     const { workers, setWorkers } = useWorkersData();
     const { requests, setRequests } = useRequestsData();
     const { agencies, setAgencies, isClient } = useAgenciesData();
+    const { toast } = useToast();
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
 
@@ -68,6 +125,13 @@ export default function AgencyDashboardPage() {
     const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
     const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
     
+     const onSchedule = (id: string, values: InterviewValues) => {
+        setRequests(prev => prev.map(r => 
+            r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+        ));
+        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
+    };
+
     return (
          <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -110,7 +174,12 @@ export default function AgencyDashboardPage() {
                             <TabsTrigger value="settings">Agency Settings</TabsTrigger>
                         </TabsList>
                         <TabsContent value="requests" className="mt-6">
-                            <RequestTable requests={filteredRequests} setRequests={setRequests} isClient={isClient} />
+                            <RequestTable 
+                                data={filteredRequests} 
+                                columns={columns}
+                                isClient={isClient}
+                                onSchedule={onSchedule}
+                            />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
                             <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} isClient={isClient} />

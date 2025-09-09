@@ -14,18 +14,18 @@ import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRequestsData } from '@/hooks/use-global-store-data';
 
-function RequestRow({ request, isClient }: { request: HireRequest, isClient: boolean }) {
+function RequestRow({ request }: { request: HireRequest }) {
     const [requestDateText, setRequestDateText] = useState("...");
     const [interviewDateText, setInterviewDateText] = useState("");
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        if (isClient) {
-             setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
-            if (request.interviewDate) {
-                setInterviewDateText(format(new Date(request.interviewDate), "PPP 'at' p"));
-            }
+        setIsClient(true);
+        setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
+        if (request.interviewDate) {
+            setInterviewDateText(format(new Date(request.interviewDate), "PPP 'at' p"));
         }
-    }, [request.requestDate, request.interviewDate, isClient]);
+    }, [request.requestDate, request.interviewDate]);
 
     const getStatusBadge = (status: HireRequest['status']) => {
         switch (status) {
@@ -43,7 +43,7 @@ function RequestRow({ request, isClient }: { request: HireRequest, isClient: boo
             <TableCell>
                 <p className="font-medium">{request.workerName}</p>
                 <p className="text-sm text-muted-foreground">
-                    Requested: {requestDateText}
+                    Requested: {isClient ? requestDateText : '...'}
                 </p>
             </TableCell>
             <TableCell>
@@ -129,7 +129,7 @@ export default function MyRequestsPage() {
                                         </TableRow>
                                     ) : (
                                         myRequests.map(req => (
-                                           <RequestRow key={req.id} request={req} isClient={isClient} />
+                                           <RequestRow key={req.id} request={req} />
                                         ))
                                     )}
                                 </TableBody>

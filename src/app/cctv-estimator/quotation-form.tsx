@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -96,6 +97,9 @@ export default function EstimatorForm() {
       const proposalInput: IctProposalInput = {
         projectName: floorPlanFile.name,
         projectType: analysis?.projectType as any,
+        primaryGoal: 'Surveillance system installation',
+        numberOfUsers: 1, // Placeholder
+        projectDurationMonths: 1, // Placeholder
         includeSurveillance: true,
         surveillanceDetails: surveillanceDetails,
         purpose: data.purpose,
