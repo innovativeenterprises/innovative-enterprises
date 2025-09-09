@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
@@ -24,7 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CameraCapture } from '@/components/camera-capture';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import Image from 'next/image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -145,7 +144,6 @@ type PaymentValues = z.infer<typeof PaymentSchema>;
 type PageState = 'selection' | 'upload' | 'analyzing' | 'review' | 'payment' | 'submitting' | 'generating_agreements' | 'submitted' | 'capture_id_front' | 'capture_id_back' | 'capture_rep_id_front' | 'capture_rep_id_back' | 'capture_cr';
 type ApplicantType = 'individual' | 'company';
 
-const REGISTRATION_FEE = 2.5;
 const EXTRA_SERVICE_FEE = 1.5;
 
 const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDate, classification, services, partnerType, logoUrl }: {
@@ -242,7 +240,6 @@ export default function PartnerPage() {
   const [repAnalysisResult, setRepAnalysisResult] = useState<IdentityAnalysisOutput | null>(null);
   const [agreement, setAgreement] = useState<AgreementGenerationOutput | null>(null);
   const [recordNumber, setRecordNumber] = useState<string | null>(null);
-  const [finalPrice, setFinalPrice] = useState(REGISTRATION_FEE);
   const [logoDataUri, setLogoDataUri] = useState<string | undefined>();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isFlipping, setIsFlipping] = useState(false);
@@ -256,6 +253,7 @@ export default function PartnerPage() {
   const paymentForm = useForm<PaymentValues>({ resolver: zodResolver(PaymentSchema), defaultValues: { subscriptionTier: 'monthly' }});
 
   const watchSubscriptionTier = paymentForm.watch('subscriptionTier');
+  const watchCouponCode = paymentForm.watch('coupon');
 
   const { subtotal, discount, totalPrice } = useMemo(() => {
     let currentSubtotal = 0;
@@ -267,12 +265,10 @@ export default function PartnerPage() {
         currentSubtotal = sanadSettings.registrationFee + subscriptionFee - currentDiscount;
     }
     
-    // Apply coupon
-    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
     let finalDiscount = 0;
-    if (couponCode === 'AGENT50') {
+    if (watchCouponCode?.toUpperCase() === 'AGENT50') {
       finalDiscount = currentSubtotal * 0.5;
-    } else if (couponCode === 'FREE100') {
+    } else if (watchCouponCode?.toUpperCase() === 'FREE100') {
       finalDiscount = currentSubtotal;
     }
 
@@ -281,7 +277,7 @@ export default function PartnerPage() {
       discount: finalDiscount,
       totalPrice: currentSubtotal - finalDiscount,
     };
-  }, [watchSubscriptionTier, sanadSettings, paymentForm.watch('coupon')]);
+  }, [watchSubscriptionTier, sanadSettings, watchCouponCode]);
   
   const startManualEntry = () => {
     inquiryForm.reset({ companyName: '', contactName: '', email: '', partnershipDetails: '', undertaking: false });
@@ -428,7 +424,7 @@ export default function PartnerPage() {
   const onPaymentSubmit: SubmitHandler<PaymentValues> = async (paymentData) => {
     setPageState('submitting');
     console.log("Processing payment with details:", paymentData);
-    if (finalPrice > 0) {
+    if (totalPrice > 0) {
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
         toast({ title: 'Payment Successful!', description: "Your payment has been processed."});
     }
@@ -542,20 +538,8 @@ export default function PartnerPage() {
   }
 
   const handleApplyCoupon = () => {
-    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
-    if (!couponCode) {
-      toast({ title: 'Please enter a coupon code.', variant: 'destructive' });
-      return;
-    }
-    // Dummy coupon logic
-    if (couponCode === 'AGENT50') {
-      toast({ title: 'Coupon Applied!', description: `You received a 50% discount.` });
-    } else if (couponCode === 'FREE100') {
-      toast({ title: 'Coupon Applied!', description: 'Your registration is now free.' });
-    } else {
-      toast({ title: 'Invalid Coupon', description: 'The entered coupon code is not valid.', variant: 'destructive' });
-    }
-     setFinalPrice(calculateTotalPrice());
+    paymentForm.trigger('coupon');
+    // The useMemo hook will automatically recalculate the price.
   };
 
   const handleDownloadPricingTemplate = () => {
@@ -573,7 +557,7 @@ export default function PartnerPage() {
   }
   
   const additionalCategoriesCount = (applicantType === 'company' ? companyUploadForm.watch('additionalBusinessCategories') : individualUploadForm.watch('additionalBusinessCategories'))?.length || 0;
-  const subtotal = REGISTRATION_FEE + (additionalCategoriesCount * EXTRA_SERVICE_FEE);
+  
   const allSelectedServices = () => {
     const formToUse = applicantType === 'company' ? companyUploadForm : individualUploadForm;
     const primary = formToUse.getValues('primaryBusinessCategory');
@@ -581,31 +565,6 @@ export default function PartnerPage() {
     return [primary, ...additional].filter(Boolean);
   }
 
-  const calculateTotalPrice = () => {
-    let currentSubtotal = 0;
-    const tier = paymentForm.getValues('subscriptionTier');
-    if (tier === 'lifetime') {
-        currentSubtotal = sanadSettings.lifetimeFee;
-    } else {
-        const subscriptionFee = tier === 'yearly' ? sanadSettings.yearlyFee : sanadSettings.monthlyFee;
-        const currentDiscount = subscriptionFee * sanadSettings.firstTimeDiscountPercentage;
-        currentSubtotal = sanadSettings.registrationFee + subscriptionFee - currentDiscount;
-    }
-
-    const couponCode = paymentForm.getValues('coupon')?.toUpperCase();
-    if (couponCode === 'AGENT50') {
-        return currentSubtotal / 2;
-    }
-    if (couponCode === 'FREE100') {
-        return 0;
-    }
-    return currentSubtotal;
-  }
-
-  useEffect(() => {
-    setFinalPrice(subtotal);
-  }, [subtotal]);
-  
   const getClassification = (serviceCount: number): string => {
         if (serviceCount >= 6) return 'Diamond';
         if (serviceCount >= 4) return 'Gold';
@@ -613,67 +572,6 @@ export default function PartnerPage() {
         return 'Bronze';
     };
 
-
-  const renderAnalysisResult = () => {
-    if (!analysisResult) return null;
-
-    const renderObject = (obj: any, title: string) => {
-        if (!obj || Object.keys(obj).length === 0) return null;
-        return (
-            <Card className="bg-muted/50">
-                <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                    {Object.entries(obj).map(([key, value]) => (
-                         <div key={key} className="flex justify-between border-b pb-1">
-                            <span className="font-medium text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
-                            <span className="text-right">{String(value) || "-"}</span>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-        )
-    };
-    
-    if (applicantType === 'individual' && 'personalDetails' in analysisResult) {
-        const data = analysisResult as IdentityAnalysisOutput;
-        return (
-            <div className="space-y-4">
-                {renderObject(data.personalDetails, "Personal Details")}
-                {renderObject(data.passportDetails, "Passport Details")}
-                {renderObject(data.idCardDetails, "ID Card Details")}
-            </div>
-        )
-    }
-
-    if (applicantType === 'company' && 'companyInfo' in analysisResult) {
-        const companyData = analysisResult as CrAnalysisOutput;
-        const repData = repAnalysisResult;
-        return (
-            <div className="space-y-6">
-                <div className="space-y-4">
-                    <h3 className="font-semibold text-lg text-primary">Company Information</h3>
-                    {renderObject(companyData.companyInfo, "Company Details")}
-                    {companyData.authorizedSignatories && companyData.authorizedSignatories.length > 0 && (
-                        <Card className="bg-muted/50">
-                            <CardHeader><CardTitle className="text-base">Authorized Signatories</CardTitle></CardHeader>
-                            <CardContent className="space-y-2">
-                                {companyData.authorizedSignatories.map((sig, i) => <p key={i} className="text-sm">{sig.name} ({sig.designation})</p>)}
-                            </CardContent>
-                        </Card>
-                    )}
-                </div>
-                {repData && (
-                     <div className="space-y-4">
-                        <h3 className="font-semibold text-lg text-primary">Representative Information</h3>
-                        {renderObject(repData.personalDetails, "Personal Details")}
-                        {renderObject(repData.idCardDetails, "ID Card Details")}
-                    </div>
-                )}
-            </div>
-        )
-    }
-    return null;
-  }
 
   const SelectionScreen = () => (
      <>
@@ -1009,10 +907,6 @@ export default function PartnerPage() {
   );
 
   const PaymentScreen = () => {
-    const extraServicesCount = additionalCategoriesCount;
-    const extraServiceFee = extraServicesCount * EXTRA_SERVICE_FEE;
-    const calculatedTotal = subtotal;
-
     return (
         <>
         <CardHeader>
