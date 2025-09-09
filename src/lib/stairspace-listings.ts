@@ -3,7 +3,7 @@ import type { StairspaceListing } from './stairspace.schema';
 
 export const initialStairspaceListings: StairspaceListing[] = [
     {
-        id: 1,
+        id: "1",
         title: "Under-Stairs Pop-up at Muscat Grand Mall",
         location: "Muscat Grand Mall, Oman",
         price: "OMR 25 / day",
@@ -12,7 +12,7 @@ export const initialStairspaceListings: StairspaceListing[] = [
         tags: ["High Foot Traffic", "Retail", "Pop-up"],
     },
     {
-        id: 2,
+        id: "2",
         title: "Cozy Nook for Artisan Crafts",
         location: "Al-Khuwair, Muscat",
         price: "OMR 15 / day",
@@ -21,7 +21,7 @@ export const initialStairspaceListings: StairspaceListing[] = [
         tags: ["Boutique", "Crafts", "Community"],
     },
     {
-        id: 3,
+        id: "3",
         title: "Secure Micro-Storage Space",
         location: "Ruwi, Muscat",
         price: "OMR 50 / month",

@@ -22,7 +22,7 @@ export default function StairspaceDetailPage() {
     const router = useRouter();
     const [isFormOpen, setIsFormOpen] = useState(false);
 
-    const listing = stairspaceListings.find(l => l.id.toString() === id);
+    const listing = stairspaceListings.find(l => l.id === id);
 
     if (!isClient) {
         return (

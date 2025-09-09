@@ -68,7 +68,8 @@ const crAnalysisFlow = ai.defineFlow(
 
     if (output) {
       // Robust filename generation logic using the final analysis result.
-      const namePart = (output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic || 'UnknownCompany').replace(/\s+/g, '_');
+      const rawName = output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic || 'UnknownCompany';
+      const namePart = rawName.replace(/[\/\\?%*:|"<>]/g, '').replace(/\s+/g, '_');
       const crnPart = output.companyInfo?.registrationNumber || 'UnknownCRN';
       output.suggestedFilename = `CR_${namePart}_${crnPart}.pdf`;
     }
