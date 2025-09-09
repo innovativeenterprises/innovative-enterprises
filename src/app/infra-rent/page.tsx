@@ -9,7 +9,7 @@ import { Server, ArrowRight } from "lucide-react";
 import Image from 'next/image';
 import type { Asset } from "@/lib/assets";
 import { useAssetsData } from "@/hooks/use-global-store-data";
-import { RentalRequestForm } from './rental-form';
+import { RentalRequestForm } from '@/app/construction-tech/asset-rentals/rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import ItRentalAgentForm from '@/app/it-rental-agent/agent-form';
 
@@ -100,7 +100,8 @@ export default function InfraRentPage() {
                     <h2 className="text-3xl font-bold text-center mb-8">Available IT Assets</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {!isClient ? (
-                        Array.from({ length: 4 }).map((_, index) => (
+                        // Render skeletons on the server and initial client render
+                        Array.from({ length: 8 }).map((_, index) => (
                            <Card key={index}>
                                 <CardHeader className="p-0">
                                     <Skeleton className="h-48 w-full rounded-t-lg" />
@@ -117,6 +118,7 @@ export default function InfraRentPage() {
                            </Card>
                         ))
                     ) : (
+                        // Render the actual content only on the client
                         availableAssets.map((asset) => (
                             <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
                         ))
@@ -136,5 +138,3 @@ export default function InfraRentPage() {
         </div>
     );
 }
-
-    

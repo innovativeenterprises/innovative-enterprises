@@ -7,33 +7,31 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { ImageTransformerInput, ImageTransformerInputSchema, ImageTransformerOutputSchema, type ImageTransformerOutput } from './image-transformer.schema';
+import { ImageTransformerInput, ImageTransformerInputSchema, ImageTransformerOutputSchema } from './image-transformer.schema';
 
 
-export async function transformImage(input: ImageTransformerInput): Promise<ImageTransformerOutput> {
-    const { media } = await ai.generate({
-        model: 'googleai/gemini-2.0-flash-preview-image-generation',
-        prompt: [
-            { media: { url: input.baseImageUri } },
-            { text: input.prompt },
-        ],
-        config: {
-            responseModalities: ['IMAGE'], // Only expect an image back
-        },
-    });
-
-    if (!media?.url) {
-        throw new Error('Image transformation failed to return a valid image URL.');
-    }
-    
-    return { imageDataUri: media.url };
-}
-
-ai.defineFlow(
+export const transformImage = ai.defineFlow(
     {
         name: 'transformImageFlow',
         inputSchema: ImageTransformerInputSchema,
         outputSchema: ImageTransformerOutputSchema,
     },
-    async (input) => transformImage(input)
+    async (input) => {
+        const { media } = await ai.generate({
+            model: 'googleai/gemini-2.0-flash-preview-image-generation',
+            prompt: [
+                { media: { url: input.baseImageUri } },
+                { text: input.prompt },
+            ],
+            config: {
+                responseModalities: ['IMAGE'],
+            },
+        });
+
+        if (!media?.url) {
+            throw new Error('Image transformation failed to return a valid image URL.');
+        }
+        
+        return { imageDataUri: media.url };
+    }
 );

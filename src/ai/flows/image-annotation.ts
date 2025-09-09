@@ -15,14 +15,7 @@ import {
 } from './image-annotation.schema';
 
 
-const prompt = ai.definePrompt({
-  name: 'imageMeasurementPrompt',
-  input: { schema: ImageAnnotatorInputSchema },
-  output: { schema: ImageAnnotatorOutputSchema },
-  prompt: `You are a sophisticated computer vision AI specializing in photogrammetry. Your task is to analyze an image of an object and provide estimated real-world measurements.
-
-**Image to Analyze:**
-{{media url=baseImageUri}}
+const prompt = `You are a sophisticated computer vision AI specializing in photogrammetry. Your task is to analyze an image of an object and provide estimated real-world measurements.
 
 **User Instructions (Optional):**
 {{#if prompt}}
@@ -38,38 +31,35 @@ const prompt = ai.definePrompt({
 4.  **Generate Annotated Image:** Create a new version of the input image. On this new image, you MUST draw clean, professional-looking bounding boxes and add clear labels showing the estimated height, width, and depth. The annotations should look like they are from engineering software.
 
 Return the structured data and the newly generated annotated image.
-`,
-});
+`;
 
 
-export async function annotateImage(input: ImageAnnotatorInput): Promise<ImageAnnotatorOutput> {
-    const { output } = await ai.generate({
-        model: 'googleai/gemini-2.0-flash-preview-image-generation',
-        prompt: [
-            { media: { url: input.baseImageUri } },
-            { text: "Analyze the image to estimate the object's dimensions. First, identify the main object. Then, estimate its height, width, and depth in metric units based on common real-world sizes. Finally, create a new image where you overlay clean, professional-looking bounding boxes and dimension labels onto the object." },
-        ],
-        output: {
-            format: 'json',
-            schema: ImageAnnotatorOutputSchema,
-        },
-        config: {
-            responseModalities: ['IMAGE', 'TEXT'], // Correctly asking for IMAGE and TEXT
-        },
-    });
-
-    if (!output) {
-        throw new Error('Image analysis failed to return a valid response.');
-    }
-    
-    return output;
-}
-
-ai.defineFlow(
+export const annotateImage = ai.defineFlow(
     {
         name: 'annotateImageFlow',
         inputSchema: ImageAnnotatorInputSchema,
         outputSchema: ImageAnnotatorOutputSchema,
     },
-    async (input) => annotateImage(input)
+    async (input) => {
+        const { output } = await ai.generate({
+            model: 'googleai/gemini-2.0-flash-preview-image-generation',
+            prompt: [
+                { media: { url: input.baseImageUri } },
+                { text: prompt.replace("{{{prompt}}}", input.prompt || 'Analyze the main object in the image.') },
+            ],
+            output: {
+                format: 'json',
+                schema: ImageAnnotatorOutputSchema,
+            },
+            config: {
+                responseModalities: ['IMAGE', 'TEXT'],
+            },
+        });
+
+        if (!output) {
+            throw new Error('Image analysis failed to return a valid response.');
+        }
+        
+        return output;
+    }
 );

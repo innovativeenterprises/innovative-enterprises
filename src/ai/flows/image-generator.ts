@@ -10,31 +10,25 @@
 import { ai } from '@/ai/genkit';
 import { GenerateImageInput, GenerateImageInputSchema, GenerateImageOutputSchema } from './image-generator.schema';
 
-
-export async function generateImage(input: GenerateImageInput): Promise<string> {
-    const { media } = await ai.generate({
-        model: 'googleai/gemini-2.0-flash-preview-image-generation',
-        prompt: input.prompt,
-        config: {
-            responseModalities: ['IMAGE'], // Only expect an image back
-        },
-    });
-
-    if (!media?.url) {
-        throw new Error('Image generation failed to return a valid image URL.');
-    }
-    
-    return media.url;
-}
-
-ai.defineFlow(
+export const generateImage = ai.defineFlow(
     {
         name: 'generateImageFlow',
         inputSchema: GenerateImageInputSchema,
-        outputSchema: GenerateImageOutputSchema,
+        outputSchema: GenerateImageOutputSchema.pick({ imageUrl: true }), // The flow itself should conform to the output schema
     },
     async (input) => {
-        const imageUrl = await generateImage(input);
-        return { imageUrl };
+        const { media } = await ai.generate({
+            model: 'googleai/gemini-2.0-flash-preview-image-generation',
+            prompt: input.prompt,
+            config: {
+                responseModalities: ['IMAGE'],
+            },
+        });
+
+        if (!media?.url) {
+            throw new Error('Image generation failed to return a valid image URL.');
+        }
+        
+        return { imageUrl: media.url };
     }
 );
