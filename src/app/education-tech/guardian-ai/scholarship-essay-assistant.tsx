@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Download, Copy, PenSquare } from 'lucide-react';
-import { ScholarshipSchema as ExternalScholarshipSchema, ScholarshipEssayInputSchema, type ScholarshipEssayOutput } from '@/ai/flows/scholarship-essay-assistant.schema';
+import { ScholarshipSchema, ScholarshipEssayInputSchema, type ScholarshipEssayOutput } from '@/ai/flows/scholarship-essay-assistant.schema';
 import { generateScholarshipEssay } from '@/ai/flows/scholarship-essay-assistant';
 import type { Student } from '@/lib/students';
 
@@ -25,7 +25,7 @@ const fileToDataURI = (file: File): Promise<string> => {
     });
 };
 
-const FormSchema = ExternalScholarshipSchema.extend({
+const FormSchema = ScholarshipSchema.extend({
     cvDocument: z.any().refine(file => file?.length > 0, "Student's CV is required."),
 });
 type FormValues = z.infer<typeof FormSchema>;

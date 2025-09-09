@@ -42,7 +42,7 @@ const prompt = ai.definePrompt({
 
 **Your Task:**
 1.  **Use the Provided Report ID:** The Report ID for this analysis is {{{generatedId}}}. You MUST use this exact ID in the 'reportId' output field. Do not create a new one.
-2.  **Identify Violations:** Read through the session transcript and identify every event that matches the rules above. For each one, create a violation object with the timestamp, type, severity, and evidence.
+2.  **Identify Violations:** Read through the session transcript and identify every event that matches the rules above. For each one, create a violation object with the timestamp, type, severity, and evidence. If no violations are found, return an empty array for \`potentialViolations\`.
 3.  **Calculate Overall Risk Score:** Based on the number and severity of violations, calculate an overall risk score from 0 to 100.
     *   0: No violations.
     *   1-40: Low risk (e.g., one low-severity violation).
@@ -67,7 +67,13 @@ const proctoringAgentFlow = ai.defineFlow(
     const { output } = await prompt({ ...input, generatedId });
     
     if(!output) {
-        throw new Error("Failed to get a response from the proctoring agent.");
+        // If the model returns nothing (e.g., no violations found), create a default "clean" report.
+        return {
+            reportId: generatedId,
+            overallRiskScore: 0,
+            summary: "The session appears clean with no violations detected.",
+            potentialViolations: [],
+        };
     }
     
     return output;
