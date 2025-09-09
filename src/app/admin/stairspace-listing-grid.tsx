@@ -106,7 +106,7 @@ const AddEditStairspaceDialog = ({
     )
 }
 
-export default function StairspaceTable({ stairspaceListings, setStairspaceListings, isClient }: { stairspaceListings: StairspaceListing[], setStairspaceListings: (updater: (listings: StairspaceListing[]) => void) => void, isClient: boolean }) {
+export default function StairspaceListingGrid({ stairspaceListings, setStairspaceListings, isClient }: { stairspaceListings: StairspaceListing[], setStairspaceListings: (updater: (listings: StairspaceListing[]) => void) => void, isClient: boolean }) {
     const { toast } = useToast();
 
     const handleSave = (values: StairspaceValues, id?: number) => {
@@ -145,53 +145,38 @@ export default function StairspaceTable({ stairspaceListings, setStairspaceListi
                 </AddEditStairspaceDialog>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Image</TableHead>
-                            <TableHead>Title</TableHead>
-                            <TableHead>Location</TableHead>
-                            <TableHead>Price</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {!isClient ? (
-                            Array.from({ length: 3 }).map((_, index) => (
-                                <TableRow key={index}>
-                                    <TableCell colSpan={5}>
-                                        <Skeleton className="h-12 w-full" />
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            stairspaceListings.map(listing => (
-                                <TableRow key={listing.id}>
-                                    <TableCell>
-                                        <Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" />
-                                    </TableCell>
-                                    <TableCell className="font-medium">{listing.title}</TableCell>
-                                    <TableCell>{listing.location}</TableCell>
-                                    <TableCell>{listing.price}</TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <AddEditStairspaceDialog listing={listing} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditStairspaceDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader>
-                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {!isClient ? (
+                        Array.from({ length: 4 }).map((_, index) => (
+                           <Skeleton key={index} className="h-64 w-full" />
+                        ))
+                    ) : (
+                        stairspaceListings.map(listing => (
+                           <Card key={listing.id}>
+                               <div className="relative h-32 w-full">
+                                   <Image src={listing.imageUrl} alt={listing.title} fill className="object-cover rounded-t-lg" />
+                               </div>
+                               <CardHeader>
+                                   <CardTitle className="text-base truncate">{listing.title}</CardTitle>
+                                   <CardDescription className="text-xs">{listing.location}</CardDescription>
+                               </CardHeader>
+                               <CardContent className="text-sm font-semibold">{listing.price}</CardContent>
+                               <CardFooter className="flex justify-end gap-2">
+                                     <AddEditStairspaceDialog listing={listing} onSave={handleSave}>
+                                        <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
+                                    </AddEditStairspaceDialog>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="h-4 w-4 text-destructive" /></Button></AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader>
+                                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                               </CardFooter>
+                           </Card>
+                        ))
+                    )}
+                </div>
             </CardContent>
         </Card>
     );

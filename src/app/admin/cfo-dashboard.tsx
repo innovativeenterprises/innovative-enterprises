@@ -10,7 +10,6 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 import { useCfoData } from '@/hooks/use-global-store-data';
 
 // Reusable component for displaying due dates and remaining days
@@ -39,7 +38,7 @@ const DueDate = ({ date, className }: { date: string, className?: string }) => {
   }
 
   return (
-    <div className={cn("text-sm text-muted-foreground", className)}>
+    <div className={`text-sm text-muted-foreground ${className}`}>
       Due: {date}
       {daysRemaining !== null && (
         daysRemaining >= 0 ? (

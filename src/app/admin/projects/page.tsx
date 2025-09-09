@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -153,8 +154,9 @@ export default function ProjectsPage() {
           return overId as string;
         }
 
-        if (over.data.current?.type === 'Product') {
-            return over.data.current.product.stage;
+        const product = products.find(p => p.id === overId);
+        if (product) {
+            return product.stage;
         }
 
         return null;
@@ -164,8 +166,9 @@ export default function ProjectsPage() {
         const { active, over } = event;
         if (!over) return;
         
-        const activeProduct = active.data.current?.product as Product;
+        const activeProduct = products.find(p => p.id === active.id);
         const overStageName = getStageForOverId(over);
+        
 
         if (activeProduct && overStageName && activeProduct.stage !== overStageName) {
             setProducts(prev => 
@@ -312,7 +315,10 @@ export default function ProjectsPage() {
                 product={selectedProduct}
                 onSave={handleSaveProduct}
                 stages={stages}
-            />
+            >
+             {/* This empty div is a placeholder for the DialogTrigger which is handled programmatically */}
+             <div/>
+            </AddEditProductDialog>
         </div>
     );
 }

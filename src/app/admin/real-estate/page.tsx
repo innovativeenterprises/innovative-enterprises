@@ -3,7 +3,7 @@
 
 import PropertyTable from "../property-table";
 import { usePropertiesData } from "@/hooks/use-global-store-data";
-import StairspaceTable from "../stairspace-table";
+import StairspaceListingGrid from "../stairspace-listing-grid";
 import { useStairspaceData, useStairspaceRequestsData } from "@/hooks/use-global-store-data";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ export default function AdminRealEstatePage() {
         </Card>
 
         <PropertyTable {...propertyData} />
-        <StairspaceTable {...stairspaceData} />
+        <StairspaceListingGrid {...stairspaceData} />
     </div>
   );
 }

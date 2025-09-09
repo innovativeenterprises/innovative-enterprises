@@ -72,7 +72,7 @@ export default function ProductShowcase({ products: managedProducts }: { product
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                         data-ai-hint={product.aiHint}
                         />
-                        <StageBadge stage={product.stage} />
+                        {product.stage && <StageBadge stage={product.stage} />}
                     </div>
                     </CardHeader>
                     <CardContent className="p-6 flex-grow">

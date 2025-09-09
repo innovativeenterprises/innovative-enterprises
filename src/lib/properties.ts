@@ -13,6 +13,7 @@ export interface Property {
   imageUrl: string;
   status: 'Available' | 'Sold' | 'Rented';
   buildingAge: string;
+  aiHint: string;
 }
 
 export const initialProperties: Property[] = [
@@ -30,6 +31,7 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1920&auto=format&fit=crop',
     status: 'Available',
     buildingAge: '1 year',
+    aiHint: 'luxury villa pool',
   },
   {
     id: 'prop_2',
@@ -45,6 +47,7 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1594484208280-efa0ce3c894a?q=80&w=1920&auto=format&fit=crop',
     status: 'Available',
     buildingAge: '5 years',
+    aiHint: 'modern apartment interior',
   },
   {
     id: 'prop_3',
@@ -60,6 +63,7 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1920&auto=format&fit=crop',
     status: 'Available',
     buildingAge: '3 years',
+    aiHint: 'beachfront villa luxury',
   },
   {
     id: 'prop_4',
@@ -75,6 +79,7 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1920&auto=format&fit=crop',
     status: 'Rented',
     buildingAge: '8 years',
+    aiHint: 'cozy apartment living',
   },
    {
     id: 'prop_5',
@@ -90,6 +95,7 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?q=80&w=1920&auto=format&fit=crop',
     status: 'Available',
     buildingAge: '6 years',
+    aiHint: 'family townhouse exterior',
   },
   {
     id: 'prop_6',
@@ -105,6 +111,7 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1600585152220-406b9bce836d?q=80&w=1920&auto=format&fit=crop',
     status: 'Available',
     buildingAge: '2 years',
+    aiHint: 'luxury penthouse interior',
   },
    {
     id: 'prop_7',
@@ -120,6 +127,7 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1920&auto=format&fit=crop',
     status: 'Available',
     buildingAge: 'New',
+    aiHint: 'modern office space',
   },
    {
     id: 'prop_8',
@@ -135,5 +143,6 @@ export const initialProperties: Property[] = [
     imageUrl: 'https://images.unsplash.com/photo-1567984852378-c3e10740a448?q=80&w=1920&auto=format&fit=crop',
     status: 'Sold',
     buildingAge: '4 years',
+    aiHint: 'industrial warehouse exterior',
   },
 ];

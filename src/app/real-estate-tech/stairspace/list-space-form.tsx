@@ -18,15 +18,7 @@ import { generateListingDescription } from '@/ai/flows/listing-description-gener
 import { Textarea } from '@/components/ui/textarea';
 import Image from "next/image";
 import { generateImage } from '@/ai/flows/image-generator';
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from '@/lib/utils';
 
 const ListSpaceSchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -127,7 +119,7 @@ export default function ListSpaceForm() {
         setIsLoading(true);
         
         let imageUrl = data.imageUrl || '';
-        if (data.imageFile && data.imageFile.length > 0) {
+        if (!imageUrl && data.imageFile && data.imageFile.length > 0) {
             imageUrl = await fileToDataURI(data.imageFile[0]);
         }
 

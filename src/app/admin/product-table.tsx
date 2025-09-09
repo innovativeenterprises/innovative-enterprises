@@ -58,7 +58,7 @@ const ProductSchema = z.object({
 
 export type ProductValues = z.infer<typeof ProductSchema> & { image: string };
 
-const AddEditProductDialog = ({ 
+export const AddEditProductDialog = ({ 
     product, 
     onSave,
     stages,
@@ -271,13 +271,12 @@ const AddEditProductDialog = ({
     )
 }
 
-const SortableProductRow = ({ product, stages, handleSave, handleDelete, handleToggle, handleOpenDialog }: { 
+
+const SortableProductRow = ({ product, handleOpenDialog, handleToggle, handleDelete }: { 
     product: Product, 
-    stages: ProjectStage[], 
-    handleSave: (values: ProductValues, id?: number) => void, 
-    handleDelete: (id: number) => void, 
-    handleToggle: (id: number) => void,
     handleOpenDialog: (product: Product) => void,
+    handleToggle: (id: number) => void,
+    handleDelete: (id: number) => void,
 }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: product.id });
 
@@ -441,11 +440,9 @@ export default function ProductTable({ products, setProducts }: { products: Prod
                                         <SortableProductRow
                                             key={p.id}
                                             product={p}
-                                            stages={stages}
-                                            handleSave={handleSave}
-                                            handleDelete={handleDelete}
-                                            handleToggle={handleToggle}
                                             handleOpenDialog={handleOpenDialog}
+                                            handleToggle={handleToggle}
+                                            handleDelete={handleDelete}
                                         />
                                     ))}
                                 </SortableContext>
