@@ -50,7 +50,7 @@ const prompt = ai.definePrompt({
 
 
 **Instructions:**
-Use the template below to structure the entire response. Analyze the provided tender documents and the user's summary to understand the project's scope (e.g., Earthwork, Concrete Works, IT Services). Fill in the template placeholders using the **User-Provided Information** above. If a piece of user information is missing, use the corresponding placeholder text (e.g., "[Project Name]"). For the "Specific Experience" and other descriptive sections, you must use the analyzed tender documents and project requirements to generate relevant, detailed, and professional content.
+Use the template below to structure the entire response. Analyze the provided tender documents and the user's summary to understand the project's scope (e.g., Earthwork, Concrete Works, Software Development, IT Support). Fill in the template placeholders using the **User-Provided Information** above. If a piece of user information is missing, use the corresponding placeholder text (e.g., "[Project Name]"). For the "Specific Experience" and other descriptive sections, you must use the analyzed tender documents and project requirements to generate relevant, detailed, and professional content.
 
 ---
 **Template Starts Here**
