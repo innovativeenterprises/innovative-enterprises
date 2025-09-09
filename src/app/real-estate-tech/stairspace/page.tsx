@@ -207,7 +207,7 @@ export default function StairspacePage() {
                 </CardContent>
                 <CardFooter className="justify-center">
                     <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                        <Link href="/partner">List Your Space <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                        <Link href="/real-estate-tech/stairspace/list-your-space">List Your Space <ArrowRight className="ml-2 h-4 w-4"/></Link>
                     </Button>
                 </CardFooter>
             </Card>
