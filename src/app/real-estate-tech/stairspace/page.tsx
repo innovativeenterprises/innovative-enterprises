@@ -1,15 +1,32 @@
 
 'use client';
 
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Building2, Store, Tag, MapPin, HandCoins, Ticket } from "lucide-react";
+import { ArrowRight, Building2, Store, Tag, MapPin, HandCoins, Ticket, Filter } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useStairspaceData } from '@/hooks/use-global-store-data';
 
 export default function StairspacePage() {
     const { stairspaceListings: featuredSpaces, isClient } = useStairspaceData();
+    const [selectedTag, setSelectedTag] = useState('All');
+
+    const allTags = useMemo(() => {
+        const tags = new Set<string>(['All']);
+        featuredSpaces.forEach(space => {
+            space.tags.forEach(tag => tags.add(tag));
+        });
+        return Array.from(tags);
+    }, [featuredSpaces]);
+
+    const filteredSpaces = useMemo(() => {
+        if (selectedTag === 'All') {
+            return featuredSpaces;
+        }
+        return featuredSpaces.filter(space => space.tags.includes(selectedTag));
+    }, [featuredSpaces, selectedTag]);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -36,11 +53,22 @@ export default function StairspacePage() {
 
         <div id="featured-spaces" className="max-w-6xl mx-auto mt-20">
             <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Featured Spaces</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-primary">Available Spaces</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Discover unique opportunities available right now.</p>
             </div>
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+                {allTags.map(tag => (
+                    <Button 
+                        key={tag}
+                        variant={selectedTag === tag ? 'default' : 'outline'}
+                        onClick={() => setSelectedTag(tag)}
+                    >
+                        {tag}
+                    </Button>
+                ))}
+            </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featuredSpaces.map((space) => (
+                {filteredSpaces.map((space) => (
                      <Link href={`/real-estate-tech/stairspace/${space.id}`} key={space.id} className="flex">
                         <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
                             <CardHeader className="p-0">
