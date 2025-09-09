@@ -19,16 +19,8 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { analyzeIdentity } from '@/ai/flows/identity-analysis';
+import { fileToDataURI } from '@/lib/utils';
 
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
 
 const FormSchema = AdmissionsAgentInputSchema.extend({
     transcriptFile: z.any().optional(),

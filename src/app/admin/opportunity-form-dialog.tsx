@@ -4,7 +4,6 @@
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -12,16 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Opportunity } from "@/lib/opportunities";
-
-const OpportunitySchema = z.object({
-  title: z.string().min(3, "Title is required"),
-  type: z.string().min(3, "Type is required"),
-  prize: z.string().min(1, "Prize/Budget is required"),
-  deadline: z.string().min(1, "Deadline is required"),
-  description: z.string().min(10, "Description is required"),
-  status: z.enum(['Open', 'Closed', 'In Progress']),
-});
-export type OpportunityValues = z.infer<typeof OpportunitySchema>;
+import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
 
 
 export const AddEditOpportunityDialog = ({ 

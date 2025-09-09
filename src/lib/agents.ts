@@ -39,7 +39,7 @@ export const initialLeadershipTeam: Agent[] = [
 export const initialStaffTeam: Agent[] = [
     { name: "ABDULJABBAR AL FAKI", role: "Projects Manager", description: "Oversees all project execution and delivery.", icon: User, enabled: true, type: 'Staff', photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1920&auto=format&fit=crop', aiHint: 'project manager', socials: { linkedin: "#", twitter: "#", email: "abduljabbar@innovative.om" } },
     { name: "HUDA AL SALMI", role: "Public Relations Officer (PRO)", description: "Manages government relations and public engagement.", icon: User, enabled: true, type: 'Staff', photo: 'https://images.unsplash.com/photo-1542596594-649ed6e6b343?q=80&w=1920&auto=format&fit=crop', aiHint: 'business woman', socials: { linkedin: "#", email: "huda@innovative.om" } },
-    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: User, enabled: true, type: 'Staff', photo: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=1920&auto=format&fit=crop', aiHint: 'lawyer office', socials: { website: "#", email: "legal@innovative.om" } },
+    { name: "Legal Counsel Office", role: "Advocate & Legal Representative", description: "Provides expert legal guidance and representation.", icon: Scale, enabled: true, type: 'Staff', photo: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=1920&auto=format&fit=crop', aiHint: 'lawyer office', socials: { website: "#", email: "legal@innovative.om" } },
 ];
 
 export const initialAgentCategories: AgentCategory[] = [
