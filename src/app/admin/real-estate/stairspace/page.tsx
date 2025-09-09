@@ -2,14 +2,13 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MessageSquare, Mail, Phone, Calendar as CalendarIcon, GripVertical, CheckCircle, Ticket, CreditCard, Clock, Link as LinkIcon, User, Search, Home, Bot, Sparkles, Loader2 } from 'lucide-react';
+import { ArrowLeft, GripVertical, Search, CheckCircle, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { formatDistanceToNow, format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { useStairspaceData, useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
@@ -25,10 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from '@/components/ui/textarea';
-import { generateBookingResponse } from '@/ai/flows/booking-response-generator';
-import type { StairspaceListing } from '@/lib/stairspace.schema';
-
+import { useStairspaceData } from '@/hooks/use-global-store-data';
+import { formatDistanceToNow } from 'date-fns';
+import { ResponseGenerator } from './response-generator';
 
 const requestStatuses = ['Pending', 'Contacted', 'Booked', 'Confirmed', 'Closed'] as const;
 
@@ -46,53 +44,6 @@ const sendBookingConfirmation = (request: BookingRequest) => {
     console.log(`\nThank you for using StairSpace.`);
     console.log("--------------------------------------");
 };
-
-const ResponseGenerator = ({ request }: { request: BookingRequest }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [response, setResponse] = useState('');
-    const { toast } = useToast();
-
-    const handleGenerate = async () => {
-        setIsLoading(true);
-        setResponse('');
-        try {
-            const result = await generateBookingResponse({
-                listingTitle: request.listingTitle,
-                clientName: request.clientName,
-                clientMessage: request.message,
-            });
-            setResponse(result.response);
-        } catch (e) {
-            toast({ title: "Failed to generate response.", variant: "destructive" });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    
-    return (
-        <div className="mt-4 pt-4 border-t">
-            <h4 className="font-semibold text-sm flex items-center gap-2 mb-2"><Bot className="h-4 w-4"/> AI Response Assistant</h4>
-            <Textarea
-                value={response}
-                readOnly={!response}
-                onChange={(e) => setResponse(e.target.value)}
-                rows={8}
-                placeholder="Click 'Generate Response' to have the AI draft a reply to the client..."
-            />
-             <div className="flex justify-end gap-2 mt-2">
-                <Button variant="ghost" onClick={() => {
-                    navigator.clipboard.writeText(response);
-                    toast({title: "Copied to clipboard!"});
-                }} disabled={!response}>Copy</Button>
-                <Button onClick={handleGenerate} disabled={isLoading}>
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Sparkles className="mr-2 h-4 w-4"/>}
-                    Generate Response
-                </Button>
-            </div>
-        </div>
-    )
-}
-
 
 const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest, onScheduleInterview: (id: string, values: InterviewValues) => void }) => {
     const { stairspaceListings } = useStairspaceData();
@@ -120,7 +71,7 @@ const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest
                                 </Button>
                                 <div className="flex-grow">
                                     <p className="font-semibold text-sm leading-tight group-hover:text-primary">{request.listingTitle}</p>
-                                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5"><User className="h-3 w-3"/>{request.clientName}</p>
+                                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5"><CheckCircle className="h-3 w-3"/>{request.clientName}</p>
                                     <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/>{formatDistanceToNow(new Date(request.requestDate), { addSuffix: true })}</p>
                                 </div>
                             </div>
@@ -147,26 +98,7 @@ const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest
                                 <p className="text-sm text-muted-foreground">{listing.location}</p>
                              </div>
                         )}
-                        <div className="space-y-4">
-                            <h4 className="font-semibold">Client Details</h4>
-                            <p className="text-sm flex items-center gap-2"><Mail className="h-4 w-4 text-muted-foreground"/> <a href={`mailto:${request.clientEmail}`} className="text-primary hover:underline">{request.clientEmail}</a></p>
-                            <p className="text-sm flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground"/> <a href={`tel:${request.clientPhone}`} className="text-primary hover:underline">{request.clientPhone}</a></p>
-                            <div>
-                                <h4 className="font-semibold">Message</h4>
-                                <blockquote className="text-sm text-muted-foreground italic mt-1 bg-muted p-3 rounded-md border">
-                                    {request.message || "No message provided."}
-                                </blockquote>
-                            </div>
-                             {request.interviewDate && (
-                                <div>
-                                    <h4 className="font-semibold">Interview</h4>
-                                    <p className="text-sm text-muted-foreground">
-                                        Scheduled for: {format(new Date(request.interviewDate), "PPP 'at' p")}
-                                    </p>
-                                </div>
-                            )}
-                            <ResponseGenerator request={request} />
-                        </div>
+                        <ResponseGenerator request={request} />
                     </div>
                 </DialogContent>
             </Dialog>
@@ -209,7 +141,7 @@ export default function StairspaceRequestsPage() {
         setStairspaceRequests(prev => prev.map(r => 
             r.id === id ? { ...r, interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
-        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled for ${format(values.interviewDate, "PPP")}.` });
+        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
     };
 
     const filteredRequests = useMemo(() => {
