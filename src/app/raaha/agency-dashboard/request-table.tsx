@@ -2,17 +2,16 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import type { HireRequest } from "@/lib/raaha-requests";
 import type { BookingRequest } from "@/lib/stairspace-requests";
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, ArrowUpDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
@@ -132,52 +131,66 @@ export function RequestTable({
     columns,
     isClient,
     onSchedule,
+    sortConfig,
+    requestSort,
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     onSchedule: (id: string, values: InterviewValues) => void,
+    sortConfig: { key: string; direction: string; },
+    requestSort: (key: string) => void,
 }) { 
+
+    const SortableHeader = ({ label, sortKey }: { label: string, sortKey: string }) => (
+         <TableHead onClick={() => requestSort(sortKey)} className="cursor-pointer">
+            <div className="flex items-center gap-2">
+                {label}
+                {sortConfig.key === sortKey && <ArrowUpDown className="h-4 w-4" />}
+            </div>
+        </TableHead>
+    );
+
     return (
-        <Card>
-            <CardContent className="pt-6">
-                <Table>
-                    <TableHeader>
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    {columns.map(col => (
+                        col.sortable ? 
+                        <SortableHeader key={col.accessor} label={col.Header} sortKey={col.accessor} /> :
+                        <TableHead key={col.Header}>{col.Header}</TableHead>
+                    ))}
+                    <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                    {!isClient ? (
                         <TableRow>
-                           {columns.map(col => <TableHead key={col.Header}>{col.Header}</TableHead>)}
-                            <TableHead className="text-right">Actions</TableHead>
+                        <TableCell colSpan={columns.length + 1} className="text-center h-24">
+                            <Skeleton className="h-10 w-full" />
+                        </TableCell>
+                    </TableRow>
+                    ) : data.length === 0 ? (
+                        <TableRow>
+                        <TableCell colSpan={columns.length + 1} className="text-center text-muted-foreground py-8">
+                            No requests found.
+                        </TableCell>
+                    </TableRow>
+                ) : (
+                    data.map(req => (
+                        <TableRow key={req.id}>
+                            {columns.map(col => (
+                            <TableCell key={col.accessor}>
+                                {col.Cell ? col.Cell({ row: { original: req } }) : req[col.accessor as keyof GenericRequest]}
+                            </TableCell>
+                            ))}
+                            <TableCell className="text-right">
+                                    <ScheduleInterviewDialog request={req} onSchedule={onSchedule} />
+                            </TableCell>
                         </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                         {!isClient ? (
-                             <TableRow>
-                                <TableCell colSpan={columns.length + 1} className="text-center h-24">
-                                   <Skeleton className="h-10 w-full" />
-                                </TableCell>
-                            </TableRow>
-                         ) : data.length === 0 ? (
-                             <TableRow>
-                                <TableCell colSpan={columns.length + 1} className="text-center text-muted-foreground py-8">
-                                    No requests found.
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            data.map(req => (
-                               <TableRow key={req.id}>
-                                  {columns.map(col => (
-                                    <TableCell key={col.accessor}>
-                                        {col.Cell ? col.Cell({ row: { original: req } }) : req[col.accessor as keyof GenericRequest]}
-                                    </TableCell>
-                                  ))}
-                                  <TableCell className="text-right">
-                                       <ScheduleInterviewDialog request={req} onSchedule={onSchedule} />
-                                  </TableCell>
-                               </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
+                    ))
+                )}
+            </TableBody>
+        </Table>
     );
 }
