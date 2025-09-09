@@ -9,6 +9,8 @@ export interface BookingRequest {
   message?: string;
   requestDate: string; // ISO date string
   status: 'Pending' | 'Contacted' | 'Booked' | 'Closed';
+  interviewDate?: string; // ISO date string
+  interviewNotes?: string;
 }
 
 export const initialStairspaceRequests: BookingRequest[] = [];

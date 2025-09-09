@@ -8,20 +8,24 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { formatDistanceToNow } from 'date-fns';
-import { ArrowLeft, Ticket } from 'lucide-react';
+import { formatDistanceToNow, format } from 'date-fns';
+import { ArrowLeft, Ticket, CalendarIcon, MessageSquare, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 function RequestRow({ request, isClient }: { request: BookingRequest, isClient: boolean }) {
     const [requestDateText, setRequestDateText] = useState("...");
+    const [interviewDateText, setInterviewDateText] = useState("");
 
     useEffect(() => {
         if (isClient) {
              setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
+             if (request.interviewDate) {
+                setInterviewDateText(format(new Date(request.interviewDate), "PPP 'at' p"));
+            }
         }
-    }, [request.requestDate, isClient]);
+    }, [request.requestDate, request.interviewDate, isClient]);
 
     const getStatusBadge = (status: BookingRequest['status']) => {
         switch (status) {
@@ -41,11 +45,25 @@ function RequestRow({ request, isClient }: { request: BookingRequest, isClient: 
                     Requested: {requestDateText}
                 </p>
             </TableCell>
-            <TableCell>
-                <p>{request.clientName}</p>
-                <p className="text-sm text-muted-foreground">{request.clientEmail}</p>
-            </TableCell>
             <TableCell>{getStatusBadge(request.status)}</TableCell>
+            <TableCell>
+                 {request.interviewDate && isClient ? (
+                    <div className="text-xs text-muted-foreground space-y-1">
+                        <div className="flex items-center gap-1.5 font-semibold">
+                            <CalendarIcon className="h-3 w-3 text-primary" />
+                            <span>Interview: {interviewDateText}</span>
+                        </div>
+                        {request.interviewNotes && (
+                            <div className="flex items-center gap-1.5">
+                                <MessageSquare className="h-3 w-3" />
+                                <span className="truncate">{request.interviewNotes}</span>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <p className="text-xs text-muted-foreground italic">Owner will contact you soon.</p>
+                )}
+            </TableCell>
         </TableRow>
     )
 }
@@ -89,8 +107,8 @@ export default function MyStairspaceRequestsPage() {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Listing</TableHead>
-                                        <TableHead>Requester</TableHead>
                                         <TableHead>Status</TableHead>
+                                        <TableHead>Next Steps</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
