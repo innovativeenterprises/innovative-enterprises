@@ -20,16 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Pricing } from '@/lib/pricing';
 import type { AppSettings } from '@/lib/settings';
 import { translationOffices } from '@/lib/offices';
-
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from '@/lib/utils';
 
 const documentTypeEnum = z.enum([
     // Legal
@@ -498,10 +489,33 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
         </Card>
   );
 
+  const subtotal = useMemo(() => {
+    if (!submittedData) return 0;
+    const { documentType, numberOfPages, requestSealedCopy } = submittedData;
+    const pricePerPage = pricingMap[documentType] || 0;
+    let newTotal = 0;
+    if (pricePerPage && numberOfPages && numberOfPages >= 1) {
+        newTotal = pricePerPage * numberOfPages;
+        if (requestSealedCopy) {
+            newTotal += PRICE_PER_STAMPED_PAGE * numberOfPages;
+        }
+        if (numberOfPages > 10) {
+            newTotal *= 0.9; // 10% discount
+        }
+        newTotal = Math.max(newTotal, MINIMUM_CHARGE);
+    }
+    return newTotal;
+  }, [submittedData, pricingMap]);
+
+  const vatAmount = useMemo(() => {
+      return settings.vat.enabled ? subtotal * settings.vat.rate : 0;
+  }, [subtotal, settings.vat]);
+
+
   const PaymentScreen = () => (
      <Card>
       <CardHeader>
-        <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('form')}>&larr; Back to Form</Button>
+        <Button variant="ghost" size="sm" className="absolute top-4 left-4" onClick={() => setPageState('form')}>&larr; Back</Button>
         <CardTitle className="text-center pt-8">Final Step: Complete Payment</CardTitle>
         <CardDescription className="text-center">Please confirm the payment to begin your translation.</CardDescription>
       </CardHeader>
