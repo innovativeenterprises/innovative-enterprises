@@ -11,6 +11,7 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCfoData } from '@/hooks/use-global-store-data';
+import type { KpiData } from '@/lib/cfo-data';
 
 // Reusable component for displaying due dates and remaining days
 const DueDate = ({ date, className }: { date: string, className?: string }) => {

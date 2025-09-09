@@ -1,11 +1,11 @@
-
 import { DollarSign, Users, CreditCard, Activity } from "lucide-react";
+import type { LucideIcon } from 'lucide-react';
 
 export interface KpiData {
     title: string;
     value: string;
     change: string;
-    icon: React.ElementType;
+    icon: LucideIcon;
     href: string;
 }
 
@@ -61,5 +61,3 @@ export const vatPayment: VatPayment = {
     amount: 2153.45,
     dueDate: "2024-08-15",
 };
-
-    

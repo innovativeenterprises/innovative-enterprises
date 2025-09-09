@@ -17,4 +17,6 @@ export const ProductSchema = z.object({
   aiHint: z.string(),
   rating: z.number(),
   enabled: z.boolean(),
+  adminStatus: z.enum(['On Track', 'At Risk', 'On Hold', 'Completed']).optional(),
+  adminNotes: z.string().optional(),
 });

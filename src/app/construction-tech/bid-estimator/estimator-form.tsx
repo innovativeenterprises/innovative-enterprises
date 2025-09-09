@@ -22,8 +22,7 @@ import 'jspdf-autotable';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
-import { fileToText } from '@/lib/utils';
-import { fileToDataURI } from '@/lib/utils';
+import { fileToDataURI, fileToText } from '@/lib/utils';
 
 
 const FormSchema = z.object({
