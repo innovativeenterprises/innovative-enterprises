@@ -31,24 +31,26 @@ export default function StairspacePage() {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {featuredSpaces.map((space) => (
-                     <Card key={space.id} className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
-                        <CardHeader className="p-0">
-                            <div className="relative h-48 w-full">
-                                <Image src={space.imageUrl} alt={space.title} fill className="object-cover transition-transform group-hover:scale-105" data-ai-hint={space.aiHint} />
-                            </div>
-                        </CardHeader>
-                        <CardContent className="p-4 flex-grow">
-                            <div className="flex flex-wrap gap-2 mb-2">
-                                {space.tags.map(tag => <div key={tag} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">{tag}</div>)}
-                            </div>
-                            <CardTitle className="text-lg">{space.title}</CardTitle>
-                            <CardDescription className="text-sm flex items-center gap-1 mt-1"><MapPin className="h-4 w-4"/> {space.location}</CardDescription>
-                        </CardContent>
-                        <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                            <p className="text-lg font-bold text-primary">{space.price}</p>
-                            <Button>Book Now</Button>
-                        </CardFooter>
-                    </Card>
+                     <Link href={`/real-estate-tech/stairspace/${space.id}`} key={space.id} className="flex">
+                        <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
+                            <CardHeader className="p-0">
+                                <div className="relative h-48 w-full">
+                                    <Image src={space.imageUrl} alt={space.title} fill className="object-cover transition-transform group-hover:scale-105" data-ai-hint={space.aiHint} />
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-4 flex-grow">
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    {space.tags.map(tag => <div key={tag} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">{tag}</div>)}
+                                </div>
+                                <CardTitle className="text-lg">{space.title}</CardTitle>
+                                <CardDescription className="text-sm flex items-center gap-1 mt-1"><MapPin className="h-4 w-4"/> {space.location}</CardDescription>
+                            </CardContent>
+                            <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                                <p className="text-lg font-bold text-primary">{space.price}</p>
+                                <Button variant="secondary">View Details</Button>
+                            </CardFooter>
+                        </Card>
+                    </Link>
                 ))}
             </div>
         </div>
