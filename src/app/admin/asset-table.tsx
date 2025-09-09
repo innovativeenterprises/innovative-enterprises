@@ -21,15 +21,7 @@ import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon, Search } from "lu
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAssetsData } from "@/hooks/use-global-store-data";
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from "@/lib/utils";
 
 const AssetSchema = z.object({
   name: z.string().min(3, "Asset name is required"),
@@ -436,4 +428,5 @@ export default function AssetTable({
     
 
     
+
 

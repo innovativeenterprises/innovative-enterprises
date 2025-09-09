@@ -2,7 +2,7 @@
 'use client';
 
 import { ShieldCheck } from "lucide-react";
-import EstimatorForm from "./estimator-form";
+import EstimatorForm from "../cctv-estimator/estimator-form";
 
 export default function SurveillanceEstimatorPage() {
   return (
