@@ -25,10 +25,11 @@ import type { SignedLease } from '@/lib/leases';
 import type { Property } from '@/lib/properties';
 import type { StairspaceListing } from '@/lib/stairspace-listings';
 import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-requests';
-import type { Student } from '@/lib/students';
+import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
-import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
+import type { Student } from '@/lib/students';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from './cfo-data';
+import { kpiData, transactionData, upcomingPayments, vatPayment } from './cfo-data';
 
 
 export const useServicesData = () => {

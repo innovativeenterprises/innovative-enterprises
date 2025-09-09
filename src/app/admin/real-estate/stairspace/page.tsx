@@ -17,7 +17,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } 
 import { CSS } from '@dnd-kit/utilities';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { ScheduleInterviewDialog, type InterviewValues } from '@/app/raaha/agency-dashboard/request-table';
-import { StairspaceListing } from '@/lib/stairspace.schema';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import {

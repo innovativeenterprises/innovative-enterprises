@@ -1,17 +1,21 @@
 
+import { z } from 'zod';
 
-export interface BookingRequest {
-  id: string;
-  listingId: number;
-  listingTitle: string;
-  clientName: string;
-  clientEmail: string;
-  clientPhone: string;
-  message?: string;
-  requestDate: string; // ISO date string
-  status: 'Pending' | 'Contacted' | 'Booked' | 'Closed' | 'Confirmed';
-  interviewDate?: string; // ISO date string
-  interviewNotes?: string;
-}
+export const BookingRequestSchema = z.object({
+  id: z.string(),
+  listingId: z.number(),
+  listingTitle: z.string(),
+  clientName: z.string(),
+  clientEmail: z.string().email(),
+  clientPhone: z.string(),
+  message: z.string().optional(),
+  requestDate: z.string().datetime(), // ISO date string
+  status: z.enum(['Pending', 'Contacted', 'Booked', 'Closed', 'Confirmed']),
+  interviewDate: z.string().datetime().optional(), // ISO date string
+  interviewNotes: z.string().optional(),
+});
+
+export type BookingRequest = z.infer<typeof BookingRequestSchema>;
+
 
 export const initialStairspaceRequests: BookingRequest[] = [];
