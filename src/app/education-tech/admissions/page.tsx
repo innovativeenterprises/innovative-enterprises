@@ -214,13 +214,9 @@ export default function AdmissionsPage() {
 
                     {response && (
                         <Card>
-                            <CardHeader>
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <CardTitle>AI Admission Analysis</CardTitle>
-                                        <CardDescription>Application ID: <span className="font-mono">{response.applicationId}</span></CardDescription>
-                                    </div>
-                                </div>
+                             <CardHeader>
+                                <CardTitle>AI Admission Analysis</CardTitle>
+                                <CardDescription>Application ID: <span className="font-mono">{response.applicationId}</span></CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div>
