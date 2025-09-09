@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview Schemas and types for the Work Order Analysis flow.
  *
@@ -24,9 +25,12 @@ export type WorkOrderInput = z.infer<typeof WorkOrderInputSchema>;
 
 
 export const WorkOrderAnalysisOutputSchema = z.object({
-  category: z.enum(['Project', 'Task', 'Competition', 'RFP', 'Subcontract'])
+  category: z.enum(['Project', 'Task', 'Competition', 'RFP', 'Subcontract', 'Startup Idea', 'Social Initiative'])
     .describe('The category the work order falls into.'),
   summary: z.string().describe('A concise summary of the opportunity, suitable for posting on an opportunities board.'),
+  noveltyScore: z.number().min(0).max(100).describe("A score from 0-100 indicating how novel or unique the idea is."),
+  marketPotentialScore: z.number().min(0).max(100).describe("A score from 0-100 indicating the potential market size and viability."),
+  impactScore: z.number().min(0).max(100).describe("A score from 0-100 indicating the potential social or economic impact."),
   recommendedNextSteps: z.string().describe('A brief recommendation for the business owner on what to expect next.'),
   generatedQuestions: z.array(z.string()).describe("A list of 3-5 key questions for potential service providers to answer in their proposal."),
 });

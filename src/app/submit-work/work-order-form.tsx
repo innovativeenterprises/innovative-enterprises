@@ -10,10 +10,10 @@ import { type WorkOrderInput, WorkOrderInputSchema, type WorkOrderAnalysisOutput
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from "@/components/ui/input';
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, FileText, ClipboardList, Milestone, CircleDollarSign, Calendar, Mic } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, FileText, ClipboardList, Milestone, CircleDollarSign, Calendar, Mic, Lightbulb, TrendingUp, Target, Handshake } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 
@@ -63,13 +63,13 @@ export default function WorkOrderForm() {
         setResponse(result);
         toast({
           title: 'Analysis Complete!',
-          description: 'Your work order has been successfully analyzed.',
+          description: 'Your idea has been successfully analyzed.',
         })
     } catch (error) {
       console.error(error);
       toast({
         title: 'Error',
-        description: 'Failed to analyze the work order. Please try again.',
+        description: 'Failed to analyze the submission. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -81,8 +81,8 @@ export default function WorkOrderForm() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Submit Your Idea or Challenge</CardTitle>
-          <CardDescription>Fill in the details below. Our AI will analyze your submission and suggest the best way to move forward.</CardDescription>
+          <CardTitle>Submit Your Idea</CardTitle>
+          <CardDescription>Fill in the details below. Our AI will perform an initial analysis to gauge its potential.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -92,9 +92,9 @@ export default function WorkOrderForm() {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Idea Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 'New Mobile App for E-Commerce Store' or 'A Campaign to Reduce Plastic Waste'" {...field} />
+                      <Input placeholder="e.g., 'A mobile app for E-Commerce Store' or 'A campaign to reduce plastic waste'" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -125,9 +125,9 @@ export default function WorkOrderForm() {
                   name="budget"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Reward / Budget (Optional)</FormLabel>
+                      <FormLabel>Estimated Budget (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., '$10,000' or 'Non-monetary recognition'" {...field} />
+                        <Input placeholder="e.g., 'OMR 10,000' or 'Seeking seed funding'" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -140,7 +140,7 @@ export default function WorkOrderForm() {
                     <FormItem>
                       <FormLabel>Expected Timeline (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., '3 months' or 'Q4 2024'" {...field} />
+                        <Input placeholder="e.g., '3-6 months for MVP'" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -157,7 +157,7 @@ export default function WorkOrderForm() {
                     <FormControl>
                         <Input type="file" accept=".pdf,.doc,.docx,.txt,.md" onChange={(e) => field.onChange(e.target.files)} />
                     </FormControl>
-                    <FormDescription>Upload a project brief, specifications, or any other relevant file.</FormDescription>
+                    <FormDescription>Upload a business plan, pitch deck, or any other relevant file.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -172,7 +172,7 @@ export default function WorkOrderForm() {
                 ) : (
                    <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Analyze Submission
+                    Analyze My Idea
                    </>
                 )}
               </Button>
@@ -195,8 +195,8 @@ export default function WorkOrderForm() {
           <CardHeader>
             <div className="flex justify-between items-start">
                 <div>
-                    <CardTitle>Analysis Complete</CardTitle>
-                    <CardDescription>Our AI has categorized your request and prepared it for the next steps.</CardDescription>
+                    <CardTitle>AI Innovation Analysis</CardTitle>
+                    <CardDescription>Our AI has categorized your idea and provided a preliminary analysis.</CardDescription>
                 </div>
                 <div className="text-right">
                     <p className="text-sm font-medium text-muted-foreground">Recommended Category</p>
@@ -205,10 +205,24 @@ export default function WorkOrderForm() {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
+             <div className="grid md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-muted rounded-lg">
+                      <h4 className="font-semibold flex items-center gap-2 text-sm text-primary"><Lightbulb className="h-4 w-4" /> Novelty Score</h4>
+                      <p className="text-2xl font-bold">{response.noveltyScore}/100</p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg">
+                      <h4 className="font-semibold flex items-center gap-2 text-sm text-primary"><TrendingUp className="h-4 w-4" /> Market Potential</h4>
+                      <p className="text-2xl font-bold">{response.marketPotentialScore}/100</p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg">
+                      <h4 className="font-semibold flex items-center gap-2 text-sm text-primary"><Target className="h-4 w-4" /> Impact Score</h4>
+                      <p className="text-2xl font-bold">{response.impactScore}/100</p>
+                  </div>
+              </div>
             <div>
               <h3 className="font-semibold flex items-center gap-2"><ClipboardList className="h-5 w-5" /> Public Summary</h3>
               <p className="text-sm text-muted-foreground mt-2 p-4 bg-muted rounded-md border">
-                This is the summary that will be reviewed for our public opportunities board to attract talent.
+                This is the summary that will be reviewed by our team for potential sponsorship or awards.
               </p>
               <div className="mt-2 prose prose-sm max-w-full rounded-md border bg-background p-4 whitespace-pre-wrap">
                   {response.summary}
@@ -224,7 +238,7 @@ export default function WorkOrderForm() {
           </CardContent>
           <CardFooter>
             <p className="text-xs text-muted-foreground">
-                Talia, our Talent & Competition Agent, will handle the posting of this opportunity once approved by our team.
+                Talia, our Talent & Competition Agent, may contact you if your idea is shortlisted for an award or our e-incubation program.
             </p>
           </CardFooter>
         </Card>

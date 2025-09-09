@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -24,10 +25,10 @@ const prompt = ai.definePrompt({
   name: 'workOrderAnalysisPrompt',
   input: { schema: WorkOrderInputSchema },
   output: { schema: WorkOrderAnalysisOutputSchema },
-  prompt: `You are an expert project manager and intake specialist for "Innovative Enterprises".
-Your task is to analyze a new work order submitted by a potential client and prepare it for our internal teams and network of freelancers.
+  prompt: `You are an expert project manager and innovation analyst for "Innovative Enterprises".
+Your task is to analyze a new submission, which could be a work order, a business idea, or a social initiative.
 
-**Work Order Details:**
+**Submission Details:**
 -   **Title:** {{{title}}}
 -   **Description:** {{{description}}}
 {{#if budget}}
@@ -41,18 +42,25 @@ Your task is to analyze a new work order submitted by a potential client and pre
 {{/if}}
 
 **Instructions:**
-1.  **Categorize the Work:** Based on the description, categorize the work order into ONE of the following:
+1.  **Categorize the Submission:** Based on the description, categorize the work into ONE of the following:
     *   'Project': A complex, multi-stage piece of work requiring a team (e.g., "Build a new e-commerce website").
     *   'Task': A smaller, well-defined piece of work for a single freelancer (e.g., "Design a logo").
-    *   'Competition': Work that can be structured as a contest to get multiple submissions (e.g., "Company Rebranding Design").
-    *   'RFP' (Request for Proposal): A large, formal request that needs a detailed proposal from multiple companies or teams.
-    *   'Subcontract': A specific part of a larger project that we need to outsource.
+    *   'Competition': Work that can be structured as a contest (e.g., "Company Rebranding Design").
+    *   'RFP' (Request for Proposal): A large, formal request that needs a detailed proposal.
+    *   'Subcontract': A specific part of a larger project to be outsourced.
+    *   'Startup Idea': A concept for a new business or digital product.
+    *   'Social Initiative': An idea for a community project or social good campaign.
 
-2.  **Write a Public Summary:** Create a clear, concise, and anonymous summary of the opportunity. This summary will be posted on our public "Opportunities" page for freelancers. Remove any client-specific identifying information. It should be written to attract the right talent.
+2.  **Write a Public Summary:** Create a clear, concise, and anonymous summary of the opportunity. This summary will be reviewed internally. Remove any identifying information from the user.
 
-3.  **Generate Clarifying Questions:** Based on the provided title and description, generate a list of 3-5 important and clarifying questions that a potential service provider should answer in their proposal. These questions should help solicit the necessary information to properly scope and quote the project (e.g., "What is your experience with [specific technology]?", "Can you provide examples of similar projects you have completed?", "What is your proposed timeline for the key milestones?").
+3.  **Score the Idea:** Based on the description, provide three scores from 0-100:
+    *   **noveltyScore:** How original and innovative is the idea? (0 = very common, 100 = groundbreaking).
+    *   **marketPotentialScore:** What is the potential market size and viability? (0 = niche/none, 100 = huge market).
+    *   **impactScore:** What is the potential social or economic impact? (0 = low impact, 100 = highly impactful).
 
-4.  **Recommend Next Steps:** Provide a short (1-2 sentences) message for the client who submitted the form, explaining what they should expect next. For example, "Our team will review the analysis and prepare it for our opportunities board." or "Thank you. Our partnerships team will contact you to discuss the RFP requirements."
+4.  **Generate Clarifying Questions:** Based on the provided title and description, generate a list of 3-5 important questions that would help clarify the idea's scope and viability. These questions are for an internal review team.
+
+5.  **Recommend Next Steps:** Provide a short (1-2 sentences) message for the user who submitted the idea, explaining what they should expect next. For example, "Thank you for your submission. Our team will review your idea and contact you if it aligns with our current incubation programs."
 
 Generate the response in the required structured format.
 `,

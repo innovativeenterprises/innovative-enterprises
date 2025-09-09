@@ -124,11 +124,11 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 description: "Create stunning visuals from text descriptions in seconds.",
                 icon: Lightbulb,
             },
-            {
-                title: "VEO Video Factory",
-                href: "/video-generator",
-                description: "Generate short video clips from text prompts using AI.",
-                icon: Video,
+             {
+                title: "Innovation Gateway",
+                href: "/submit-work",
+                description: "Submit your innovative ideas to our e-incubator for analysis and potential sponsorship.",
+                icon: Lightbulb,
             },
             {
                 title: "AI Interior Designer",
