@@ -1,14 +1,15 @@
 
+
 'use client';
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle, FileText, ListChecks } from 'lucide-react';
@@ -21,7 +22,7 @@ const FormSchema = z.object({
   serviceName: z.string().min(1, "Please select a service."),
   notes: z.string().optional(),
   contactPhone: z.string().min(8, "A valid phone number is required."),
-  document: z.any().optional(),
+  document: z.any().optional(), // This field is now optional
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -187,4 +188,3 @@ export default function TaskForm() {
     </Card>
   );
 }
-

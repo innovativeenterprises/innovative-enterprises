@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -299,45 +300,47 @@ export default function StaffTable({
     };
 
     const handleSave = (values: StaffValues, originalName?: string) => {
-        const newStaffMember: Agent = { ...values, icon: values.type === 'AI Agent' ? Bot : User, enabled: true };
-
-        const updateStaffList = (list: Agent[]) => {
-            if (originalName) {
-                return list.map(staff => staff.name === originalName ? { ...staff, ...values } : staff);
-            }
-            return [...list, newStaffMember];
+        const newStaffMember: Agent = { 
+            ...values,
+            socials: values.socials,
+            icon: values.type === 'AI Agent' ? Bot : User, 
+            enabled: true, 
+            photo: values.photo,
         };
 
-        if (values.type === 'Leadership') {
-            setLeadership(updateStaffList);
-        } else if (values.type === 'Staff') {
-            setStaff(updateStaffList);
-        } else { // AI Agent
-             if (originalName) {
-                let found = false;
-                setAgentCategories(prev => prev.map(cat => {
-                    if (found) return cat;
-                    const agentIndex = cat.agents.findIndex(a => a.name === originalName);
-                    if (agentIndex > -1) {
-                        found = true;
-                        const updatedAgents = [...cat.agents];
-                        updatedAgents[agentIndex] = { ...updatedAgents[agentIndex], ...values };
-                        return { ...cat, agents: updatedAgents };
-                    }
-                    return cat;
+        const updateList = (list: Agent[], name?: string) => 
+            name 
+                ? list.map(member => member.name === name ? { ...member, ...newStaffMember } : member)
+                : [...list, newStaffMember];
+
+        const updateAgentCategories = (categories: AgentCategory[], name?: string) => {
+            if (name) { // Editing existing agent
+                return categories.map(cat => ({
+                    ...cat,
+                    agents: cat.agents.map(agent => agent.name === name ? { ...agent, ...newStaffMember } : agent)
                 }));
-            } else {
-                 setAgentCategories(prev => {
-                    const newCats = [...prev];
-                    const targetCat = newCats.find(c => c.category === "Core Business Operations Agents");
-                    if (targetCat) {
-                        targetCat.agents.push(newStaffMember);
-                    } else {
-                        newCats.push({ category: 'General Agents', agents: [newStaffMember] });
-                    }
-                    return newCats;
-                });
+            } else { // Adding new agent
+                const newCats = [...categories];
+                const targetCat = newCats.find(c => c.category === "Core Business Operations Agents");
+                if (targetCat) {
+                    targetCat.agents.push(newStaffMember);
+                } else {
+                    newCats.push({ category: 'General Agents', agents: [newStaffMember] });
+                }
+                return newCats;
             }
+        };
+
+        switch (values.type) {
+            case 'Leadership':
+                setLeadership(prev => updateList(prev, originalName));
+                break;
+            case 'Staff':
+                setStaff(prev => updateList(prev, originalName));
+                break;
+            case 'AI Agent':
+                setAgentCategories(prev => updateAgentCategories(prev, originalName));
+                break;
         }
 
         toast({ title: originalName ? "Staff member updated." : "Staff member added." });
