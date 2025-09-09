@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Schemas and types for the Asset Rental Agent flow.
  */
@@ -13,6 +14,7 @@ export const AssetRentalInquiryInputSchema = z.object({
     'Training Program or Workshop',
     'Special Event',
     'Short-term Project',
+    'Hardware Evaluation or Testing',
     'Other'
   ]),
   numberOfWorkers: z.coerce.number().min(1, "Please specify the number of workers/users."),
