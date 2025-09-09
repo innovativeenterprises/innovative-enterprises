@@ -20,7 +20,10 @@ export async function analyzeCrDocument(input: CrAnalysisInput): Promise<CrAnaly
 
 const prompt = ai.definePrompt({
   name: 'crAnalysisPrompt',
-  input: { schema: CrAnalysisInputSchema },
+  input: { schema: CrAnalysisInputSchema.extend({
+    companyNameForFilename: z.string().optional(),
+    crnForFilename: z.string().optional(),
+  }) },
   output: { schema: CrAnalysisOutputSchema },
   prompt: `You are an expert business registration analyst for the government of Oman. Your task is to analyze the provided Commercial Record (CR) document and extract key information with high accuracy.
 
@@ -51,7 +54,7 @@ const prompt = ai.definePrompt({
     **Summary:**
     -   Based on the list of commercial activities, write a concise, one-paragraph summary of what the company does.
 
-3.  **Generate a Filename:** Create a descriptive filename for the document based on its content. The format should be \`CR_{{companyName}}_{{registrationNumber}}.pdf\`.
+3.  **Generate a Filename:** Create a descriptive filename for the document based on the provided name and CRN. The format should be \`CR_{{companyNameForFilename}}_{{crnForFilename}}.pdf\`.
 4.  **Return Structured Data:** Populate all extracted information into the specified output format.
 `,
 });
@@ -63,13 +66,27 @@ const crAnalysisFlow = ai.defineFlow(
     outputSchema: CrAnalysisOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const preliminaryAnalysis = await ai.generate({
+      prompt: `Extract only the company name and commercial registration number from this document: {{media url=documentDataUri}}. If you cannot find them, return empty strings.`,
+      output: {
+        schema: z.object({
+          companyName: z.string().optional(),
+          registrationNumber: z.string().optional(),
+        })
+      }
+    });
+
+    const companyNameForFilename = preliminaryAnalysis.output?.companyName?.replace(/\s/g, '_') || 'UnknownCompany';
+    const crnForFilename = preliminaryAnalysis.output?.registrationNumber || 'UnknownCRN';
+    
+    const { output } = await prompt({
+      ...input,
+      companyNameForFilename,
+      crnForFilename,
+    });
 
     if (output && !output.suggestedFilename) {
-        const companyName = output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic;
-        const crn = output.companyInfo?.registrationNumber;
-        const fallbackName = companyName ? companyName.replace(/\s/g, '_') : (crn ? `CR_${crn}` : 'UnknownCompany');
-        output.suggestedFilename = `CR_${fallbackName}.pdf`;
+        output.suggestedFilename = `CR_${companyNameForFilename}_${crnForFilename}.pdf`;
     }
 
     return output!;
