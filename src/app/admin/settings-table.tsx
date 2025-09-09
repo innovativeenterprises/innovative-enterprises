@@ -23,6 +23,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import CostSettingsTable from "./cost-settings-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettingsData, useCostSettingsData } from "@/hooks/use-global-store-data";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const SanadPricingSchema = z.object({
   registrationFee: z.coerce.number().min(0),

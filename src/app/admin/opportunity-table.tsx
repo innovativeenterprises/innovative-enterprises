@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -19,33 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 import type { Opportunity } from "@/lib/opportunities";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Trophy } from "lucide-react";
-import { store } from "@/lib/global-store";
+import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "../ui/skeleton";
-
-// This hook now connects to the global store.
-export const useOpportunitiesData = () => {
-    const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return {
-        opportunities: data.opportunities,
-        setOpportunities: (updater: (opportunities: Opportunity[]) => Opportunity[]) => {
-            const currentOpportunities = store.get().opportunities;
-            const newOpportunities = updater(currentOpportunities);
-            store.set(state => ({ ...state, opportunities: newOpportunities }));
-        },
-        isClient,
-    };
-};
-
 
 const OpportunitySchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -263,3 +237,4 @@ export default function OpportunityTable({
         </Card>
     );
 }
+
