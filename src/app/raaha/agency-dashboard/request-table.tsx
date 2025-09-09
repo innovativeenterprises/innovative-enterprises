@@ -62,9 +62,9 @@ export const ScheduleInterviewDialog = ({ request, onSchedule }: { request: Gene
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                 <Button variant="outline" size="sm">
+                 <Button variant="outline" size="sm" className="w-full">
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {request.interviewDate ? 'Reschedule' : 'Schedule'}
+                    {request.interviewDate ? 'Reschedule' : 'Schedule'} Interview
                 </Button>
             </DialogTrigger>
             <DialogContent>

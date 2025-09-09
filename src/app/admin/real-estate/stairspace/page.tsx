@@ -47,7 +47,7 @@ const sendBookingConfirmation = (request: BookingRequest) => {
 };
 
 
-const RequestCard = ({ request }: { request: BookingRequest }) => {
+const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest, onScheduleInterview: (id: string, values: InterviewValues) => void }) => {
     const { stairspaceListings } = useStairspaceData();
     const listing = stairspaceListings.find(l => l.id === request.listingId);
     
@@ -64,10 +64,10 @@ const RequestCard = ({ request }: { request: BookingRequest }) => {
     return (
         <div ref={setNodeRef} style={style}>
             <Dialog>
-                <DialogTrigger asChild>
-                    <Card className="mb-4 group cursor-pointer bg-card hover:bg-muted/80">
-                        <CardContent className="p-3">
-                            <div className="flex items-start gap-3">
+                <Card className="mb-4 group bg-card hover:bg-muted/80">
+                    <CardContent className="p-3">
+                         <DialogTrigger asChild>
+                             <div className="flex items-start gap-3 cursor-pointer">
                                 <Button variant="ghost" size="icon" {...attributes} {...listeners} onClick={(e) => e.stopPropagation()} className="cursor-grab h-8 w-8 -ml-1">
                                     <GripVertical className="h-4 w-4 text-muted-foreground" />
                                 </Button>
@@ -77,9 +77,12 @@ const RequestCard = ({ request }: { request: BookingRequest }) => {
                                     <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/>{formatDistanceToNow(new Date(request.requestDate), { addSuffix: true })}</p>
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
-                 </DialogTrigger>
+                        </DialogTrigger>
+                        <div className="pl-12 pr-1 mt-2">
+                             <ScheduleInterviewDialog request={request} onSchedule={onScheduleInterview} />
+                        </div>
+                    </CardContent>
+                 </Card>
                  <DialogContent className="sm:max-w-[700px]">
                     <DialogHeader>
                         <DialogTitle>Request Details</DialogTitle>
@@ -138,7 +141,7 @@ const StatusColumn = ({ status, requests, onScheduleInterview }: { status: typeo
                 <CardContent className="p-2 min-h-[200px] flex-grow overflow-y-auto">
                     <SortableContext items={requests.map(r => r.id)} strategy={verticalListSortingStrategy}>
                         {requests.map(request => (
-                            <RequestCard key={request.id} request={request} />
+                            <RequestCard key={request.id} request={request} onScheduleInterview={onScheduleInterview} />
                         ))}
                     </SortableContext>
                 </CardContent>
