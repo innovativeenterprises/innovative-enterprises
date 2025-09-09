@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -21,24 +22,9 @@ import 'jspdf-autotable';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
+import { fileToText } from '@/lib/utils';
+import { fileToDataURI } from '@/lib/utils';
 
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
-
-const fileToText = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsText(file);
-    });
-};
 
 const FormSchema = z.object({
   boqFile: z.any().refine(file => file?.length == 1, 'A Bill of Quantities file is required.'),
@@ -505,7 +491,7 @@ export default function EstimatorForm() {
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={handleSaveToBriefcase}><Briefcase className="mr-2 h-4 w-4"/> Save</Button>
                     <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                    <Button variant="outline" size="sm" onClick={handleDownloadTenderPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
+                    <Button variant="outline" size="sm" onClick={handleDownloadPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
                     <Button variant="outline" size="sm" onClick={handleDownloadTenderTxt}><Download className="mr-2 h-4 w-4"/> TXT</Button>
                 </div>
             </CardHeader>

@@ -22,7 +22,7 @@ const FormSchema = z.object({
   serviceName: z.string().min(1, "Please select a service."),
   notes: z.string().optional(),
   contactPhone: z.string().min(8, "A valid phone number is required."),
-  document: z.any().optional(), // This field is now optional
+  document: z.any().optional(),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -172,7 +172,11 @@ export default function TaskForm() {
                     )} />
                     
                     <FormField control={form.control} name="document" render={({ field }) => (
-                        <FormItem><FormLabel>Attach Supporting Document (Optional)</FormLabel><FormControl><Input type="file" /></FormControl><FormMessage /></FormItem>
+                        <FormItem>
+                            <FormLabel>Attach Supporting Document (Optional)</FormLabel>
+                            <FormControl><Input type="file" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
                     )} />
 
                     <Button type="submit" disabled={isLoading || isAnalyzing} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">

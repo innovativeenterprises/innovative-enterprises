@@ -22,7 +22,7 @@ import Image from 'next/image';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-table';
+import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const FormSchema = z.object({

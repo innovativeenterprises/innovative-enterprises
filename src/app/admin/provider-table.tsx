@@ -79,7 +79,7 @@ const AddEditProviderDialog = ({
     const onSubmit: SubmitHandler<ProviderValues> = (data) => {
         onSave({
             ...data,
-            subscriptionExpiry: data.subscriptionExpiry ? format(data.subscriptionExpiry, 'yyyy-MM-dd') : '',
+            subscriptionExpiry: data.subscriptionExpiry ? data.subscriptionExpiry.toISOString() : '',
         }, provider?.id);
         form.reset();
         onOpenChange(false);

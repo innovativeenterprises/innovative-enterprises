@@ -26,7 +26,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert HR and compliance officer specializing in document verification. Your task is to analyze the provided identity documents and optional CV to extract key information with high accuracy.
 
 **Instructions:**
-1.  **Analyze the Documents:** You will be provided with one or more of the following documents.
+1.  **Orient and Analyze:** The documents may be rotated. First, orient them correctly. Then, analyze the content.
     -   Identity Document (Front): {{media url=idDocumentFrontUri}}
     {{#if idDocumentBackUri}}
     -   Identity Document (Back): {{media url=idDocumentBackUri}}
