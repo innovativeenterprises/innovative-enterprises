@@ -1,13 +1,5 @@
 
-export interface StairspaceListing {
-    id: number;
-    title: string;
-    location: string;
-    price: string;
-    imageUrl: string;
-    aiHint: string;
-    tags: string[];
-}
+import type { StairspaceListing } from './stairspace.schema';
 
 export const initialStairspaceListings: StairspaceListing[] = [
     {
