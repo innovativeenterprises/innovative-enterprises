@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Building2, Store, Tag, MapPin, HandCoins } from "lucide-react";
+import { ArrowRight, Building2, Store, Tag, MapPin, HandCoins, Ticket } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useStairspaceData } from '@/hooks/use-global-store-data';
@@ -22,9 +22,19 @@ export default function StairspacePage() {
           <p className="mt-4 text-lg text-muted-foreground">
             Unlock the hidden potential of underutilized spaces. StairSpace is a marketplace that connects property owners with entrepreneurs looking for affordable, flexible, and high-visibility micro-retail and storage spots.
           </p>
+           <div className="mt-8 flex justify-center gap-4">
+               <Button asChild size="lg">
+                    <a href="#featured-spaces">Browse Spaces</a>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                    <Link href="/real-estate-tech/stairspace/my-requests">
+                        <Ticket className="mr-2 h-4 w-4" /> My Booking Requests
+                    </Link>
+                </Button>
+           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto mt-20">
+        <div id="featured-spaces" className="max-w-6xl mx-auto mt-20">
             <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold text-primary">Featured Spaces</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Discover unique opportunities available right now.</p>
@@ -88,7 +98,7 @@ export default function StairspacePage() {
                 </CardContent>
                 <CardFooter className="justify-center">
                     <Button asChild size="lg" variant="secondary">
-                        <Link href="#">Browse All Spaces <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                        <a href="#featured-spaces">Browse All Spaces</a>
                     </Button>
                 </CardFooter>
             </Card>
