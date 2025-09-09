@@ -1,15 +1,18 @@
+import { z } from 'zod';
 
-export interface Student {
-    id: string;
-    name: string;
-    major: string;
-    year: number;
-    status: 'On Track' | 'Needs Attention' | 'At Risk';
-    photo: string;
-    tuitionBilled?: number;
-    scholarshipAmount?: number;
-    amountPaid?: number;
-}
+export const StudentSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    major: z.string(),
+    year: z.number(),
+    status: z.enum(['On Track', 'Needs Attention', 'At Risk']),
+    photo: z.string().url(),
+    tuitionBilled: z.number().optional(),
+    scholarshipAmount: z.number().optional(),
+    amountPaid: z.number().optional(),
+});
+
+export type Student = z.infer<typeof StudentSchema>;
 
 export const initialStudents: Student[] = [
     {
