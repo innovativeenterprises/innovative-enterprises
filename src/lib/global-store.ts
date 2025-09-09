@@ -97,7 +97,7 @@ let state: AppState = {
   testimonials: initialTestimonials,
   leadership: initialStaffData.leadership,
   staff: initialStaffData.staff,
-  agentCategories: initialAgentCategories,
+  agentCategories: initialStaffData.agentCategories,
   opportunities: initialOpportunities,
   pricing: initialPricing,
   stages: initialStages,

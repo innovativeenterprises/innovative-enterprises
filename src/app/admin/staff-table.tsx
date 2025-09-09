@@ -321,25 +321,37 @@ export default function StaffTable({
                 }));
             } else { // Adding new agent
                 const newCats = [...categories];
-                const targetCat = newCats.find(c => c.category === "Core Business Operations Agents");
+                let targetCat = newCats.find(c => c.category === "Core Business Operations Agents"); // Default category
                 if (targetCat) {
                     targetCat.agents.push(newStaffMember);
-                } else {
+                } else { // Fallback if default category doesn't exist
                     newCats.push({ category: 'General Agents', agents: [newStaffMember] });
                 }
                 return newCats;
             }
         };
 
+        if(originalName) {
+            // Find which list the original member was in
+            const wasLeadership = leadership.some(m => m.name === originalName);
+            const wasStaff = staff.some(m => m.name === originalName);
+            const wasAgent = agentCategories.some(c => c.agents.some(a => a.name === originalName));
+
+            // Remove from old list
+            if (wasLeadership) setLeadership(prev => prev.filter(m => m.name !== originalName));
+            if (wasStaff) setStaff(prev => prev.filter(m => m.name !== originalName));
+            if (wasAgent) setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
+        }
+
         switch (values.type) {
             case 'Leadership':
-                setLeadership(prev => updateList(prev, originalName));
+                setLeadership(prev => updateList(prev, undefined)); // always add to new list
                 break;
             case 'Staff':
-                setStaff(prev => updateList(prev, originalName));
+                setStaff(prev => updateList(prev, undefined));
                 break;
             case 'AI Agent':
-                setAgentCategories(prev => updateAgentCategories(prev, originalName));
+                setAgentCategories(prev => updateAgentCategories(prev, undefined));
                 break;
         }
 

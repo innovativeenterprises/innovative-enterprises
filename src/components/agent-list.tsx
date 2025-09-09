@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -65,10 +66,10 @@ const HumanCard = ({ member }: { member: Agent }) => {
                         </Link>
                     )}
                     {member.socials?.email && (
-                        <Link href={`mailto:${member.socials.email}`} className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <a href={`mailto:${member.socials.email}`} className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
                             <Mail className="w-5 h-5" />
                             <span className="sr-only">Email</span>
-                        </Link>
+                        </a>
                     )}
                 </div>
             </CardFooter>

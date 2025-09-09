@@ -7,7 +7,7 @@ import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
 import type { Client, Testimonial } from '@/lib/clients';
 import type { Provider } from '@/lib/providers';
-import type { Agent, AgentCategory } from '@/lib/agents';
+import { initialStaffData, type Agent, type AgentCategory } from '@/lib/agents';
 import type { Community } from '@/lib/communities';
 import type { CommunityEvent } from '@/lib/community-events';
 import type { CommunityFinance } from '@/lib/community-finances';
@@ -127,6 +127,16 @@ export const useStaffData = () => {
 
     useEffect(() => {
         setIsClient(true);
+        // Initialize the store with data from agents.ts if it's not already there
+        if(store.get().leadership.length === 0) {
+            store.set(state => ({
+                ...state,
+                leadership: initialStaffData.leadership,
+                staff: initialStaffData.staff,
+                agentCategories: initialStaffData.agentCategories
+            }));
+        }
+
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
