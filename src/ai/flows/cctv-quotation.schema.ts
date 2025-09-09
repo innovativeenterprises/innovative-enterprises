@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { AssetSchema as ItAssetSchema } from '@/lib/assets.schema';
 
 export const IctProposalInputSchema = z.object({
-  projectName: z.string().describe("The name of the client's project or event."),
+  projectName: z.string().min(1, "Project name is required.").describe("The name of the client's project or event."),
   projectType: z.enum([
     'Temporary Office Setup',
     'Training Program or Workshop',
@@ -23,7 +23,7 @@ export const IctProposalInputSchema = z.object({
   purpose: z.enum(['General Security', 'Employee Monitoring', 'Asset Protection', 'Customer Traffic Analysis']).describe("The primary purpose of the surveillance system."),
   numberOfUsers: z.coerce.number().min(1, "Please specify at least one user."),
   projectDurationMonths: z.coerce.number().min(1, "Please specify a duration of at least one month."),
-  primaryGoal: z.string().optional().describe("A description of what the users will be doing, which informs the type of hardware needed."),
+  primaryGoal: z.string().min(10, "Please describe the primary goal in more detail.").describe("A description of what the users will be doing, which informs the type of hardware needed."),
   includeSurveillance: z.boolean().describe("Whether the client also needs a quote for a surveillance system."),
   surveillanceDetails: z.string().optional().describe("Specific requirements for the surveillance system, if requested."),
   coverageType: z.enum(['Interior', 'Exterior']).optional().describe("The specific area to be covered if coverage is partial."),

@@ -28,6 +28,7 @@ export const initialProducts: Product[] = [
         aiHint: "construction management software",
         rating: 0,
         enabled: true,
+        href: "/admin/projects",
         adminStatus: 'Completed',
         adminNotes: "Core features are live in the admin panel's Projects page."
     },
