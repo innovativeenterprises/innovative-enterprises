@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -128,8 +129,9 @@ const IctProposalFlow = ai.defineFlow(
     output.costBreakdown.totalRentalCostForDuration = rentalCostForDuration;
     output.costBreakdown.totalPurchaseCost = itPurchaseCost + surveillancePurchaseCost;
     output.costBreakdown.softwareCost = softwareCost;
-    output.costBreakdown.grandTotalForRentalOption = rentalCostForDuration + surveillancePurchaseCost + softwareCost;
-    output.costBreakdown.grandTotalForPurchaseOption = itPurchaseCost + surveillancePurchaseCost + softwareCost;
+    // Corrected Logic: Rental option should not include the purchase price of IT assets.
+    output.costBreakdown.grandTotalForRentalOption = rentalCostForDuration + (input.includeSurveillance ? surveillancePurchaseCost : 0) + softwareCost;
+    output.costBreakdown.grandTotalForPurchaseOption = itPurchaseCost + (input.includeSurveillance ? surveillancePurchaseCost : 0) + softwareCost;
 
 
     return output;

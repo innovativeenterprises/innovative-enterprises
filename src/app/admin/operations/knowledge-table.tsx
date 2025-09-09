@@ -14,7 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { KnowledgeDocument } from "@/lib/knowledge";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
@@ -27,33 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useKnowledgeData } from "@/hooks/use-global-store-data";
-
-const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const result = reader.result as string;
-            // The result includes the full data URI prefix, which we want here
-            resolve(result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
-
-
-const fileToBase64ContentOnly = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const result = reader.result as string;
-            const base64Content = result.split(',')[1];
-            resolve(base64Content);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -370,7 +344,7 @@ export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase, isClie
             } else if (source.file) {
                 const fileName = source.file.name;
                 const fileType = source.file.type;
-                const dataUri = await fileToBase64(source.file);
+                const dataUri = await fileToDataURI(source.file);
                 const analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
 
                 const newDoc: KnowledgeDocument = {
