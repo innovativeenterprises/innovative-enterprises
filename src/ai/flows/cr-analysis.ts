@@ -66,8 +66,9 @@ const crAnalysisFlow = ai.defineFlow(
     outputSchema: CrAnalysisOutputSchema,
   },
   async (input) => {
+    // Perform a quick preliminary analysis to get the most critical info for the filename.
     const preliminaryAnalysis = await ai.generate({
-      prompt: `Extract only the company name and commercial registration number from this document: {{media url=documentDataUri}}. If you cannot find them, return empty strings.`,
+      prompt: `Extract only the company name (English or Arabic) and the commercial registration number from this document: {{media url=documentDataUri}}. If you cannot find a value, return an empty string for that field.`,
       output: {
         schema: z.object({
           companyName: z.string().optional(),
@@ -76,17 +77,23 @@ const crAnalysisFlow = ai.defineFlow(
       }
     });
 
-    const companyNameForFilename = preliminaryAnalysis.output?.companyName?.replace(/\s/g, '_') || 'UnknownCompany';
-    const crnForFilename = preliminaryAnalysis.output?.registrationNumber || 'UnknownCRN';
+    const companyName = preliminaryAnalysis.output?.companyName;
+    const crn = preliminaryAnalysis.output?.registrationNumber;
+
+    // Create a robust filename, preferring company name but falling back to CRN.
+    const namePart = companyName ? companyName.replace(/\s/g, '_') : (crn ? `CRN_${crn}` : 'UnknownCompany');
+    const crnPart = crn || 'UnknownCRN';
+    const finalFilename = `CR_${namePart}_${crnPart}.pdf`;
+
     
     const { output } = await prompt({
       ...input,
-      companyNameForFilename,
-      crnForFilename,
+      companyNameForFilename: companyName, // Pass to prompt just in case
+      crnForFilename: crn,
     });
 
-    if (output && !output.suggestedFilename) {
-        output.suggestedFilename = `CR_${companyNameForFilename}_${crnForFilename}.pdf`;
+    if (output) {
+      output.suggestedFilename = finalFilename;
     }
 
     return output!;
