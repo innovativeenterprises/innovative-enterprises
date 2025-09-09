@@ -24,6 +24,25 @@ const initialApplications = [
 type Application = typeof initialApplications[0];
 type SortKey = keyof Application | '';
 
+const SortableHeader = ({
+  label,
+  sortKey,
+  sortConfig,
+  requestSort,
+}: {
+  label: string;
+  sortKey: SortKey;
+  sortConfig: { key: SortKey; direction: 'ascending' | 'descending' };
+  requestSort: (key: SortKey) => void;
+}) => (
+  <TableHead onClick={() => requestSort(sortKey)} className="cursor-pointer">
+    <div className="flex items-center gap-2">
+      {label}
+      {sortConfig.key === sortKey && <ArrowUpDown className="h-4 w-4" />}
+    </div>
+  </TableHead>
+);
+
 export default function AdmissionsDashboardPage() {
     const [applications, setApplications] = useState(initialApplications);
     const [searchTerm, setSearchTerm] = useState('');
@@ -76,15 +95,6 @@ export default function AdmissionsDashboardPage() {
         }
     };
 
-    const SortableHeader = ({ label, sortKey }: { label: string, sortKey: SortKey }) => (
-         <TableHead onClick={() => requestSort(sortKey)} className="cursor-pointer">
-            <div className="flex items-center gap-2">
-                {label}
-                {sortConfig.key === sortKey && <ArrowUpDown className="h-4 w-4" />}
-            </div>
-        </TableHead>
-    );
-
     return (
         <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
@@ -130,10 +140,10 @@ export default function AdmissionsDashboardPage() {
                              <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <SortableHeader label="Applicant" sortKey="name" />
-                                        <SortableHeader label="Program" sortKey="program" />
-                                        <SortableHeader label="Readiness Score" sortKey="readinessScore" />
-                                        <SortableHeader label="AI Recommended Step" sortKey="status" />
+                                        <SortableHeader label="Applicant" sortKey="name" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Program" sortKey="program" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Readiness Score" sortKey="readinessScore" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="AI Recommended Step" sortKey="status" sortConfig={sortConfig} requestSort={requestSort} />
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>

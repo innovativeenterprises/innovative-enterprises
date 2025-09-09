@@ -1,11 +1,10 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap, BrainCircuit, ShieldCheck } from "lucide-react";
+import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap, BrainCircuit, ShieldCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products";
@@ -42,7 +41,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         <CardFooter>
             {product.href ? (
                  <Button asChild className="w-full">
-                    <Link href={product.href}>Use Tool</Link>
+                    <Link href={product.href}>Use Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
                 </Button>
             ) : (
                 <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
