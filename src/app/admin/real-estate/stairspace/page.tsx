@@ -14,27 +14,18 @@ import { formatDistanceToNow } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 export default function StairspaceRequestsPage() {
-    const [requests, setRequests] = useState<BookingRequest[]>(store.get().stairspaceRequests);
-    const [isClient, setIsClient] = useState(false);
+    const { requests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
 
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setRequests(store.get().stairspaceRequests);
-        });
-        return () => unsubscribe();
-    }, []);
-
     const handleStatusChange = (requestId: string, newStatus: BookingRequest['status']) => {
-        store.set(state => ({
-            ...state,
-            stairspaceRequests: state.stairspaceRequests.map(req =>
+        setStairspaceRequests(prev => 
+            prev.map(req =>
                 req.id === requestId ? { ...req, status: newStatus } : req
             )
-        }));
+        );
         toast({ title: "Status Updated", description: "The request status has been changed." });
     };
 
