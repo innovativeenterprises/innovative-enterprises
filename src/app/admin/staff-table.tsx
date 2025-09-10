@@ -20,20 +20,12 @@ import type { LucideIcon } from "lucide-react";
 import { User, Bot, PlusCircle, Trash2, Edit, Mail, Phone, Globe, Linkedin, Twitter, Github } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { Agent, AgentCategory } from "@/lib/agents";
+import type { Agent, AgentCategory } from '@/lib/agents';
 import { Textarea } from "@/components/ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from '@/lib/utils';
 
 const SocialsSchema = z.object({
     email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
