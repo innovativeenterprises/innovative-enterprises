@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,7 +10,7 @@ import type { Asset } from "@/lib/assets";
 import { useAssetsData } from "@/hooks/use-global-store-data";
 import { RentalRequestForm } from '@/app/construction-tech/asset-rentals/rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
-import ItRentalAgentForm from '@/app/it-rental-agent/agent-form';
+import AssetRentalAgentForm from '@/app/construction-tech/asset-rentals/agent-form';
 
 const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => void }) => {
     const getStatusBadge = (status: string) => {
@@ -61,7 +60,7 @@ export default function RentalsPage() {
     const { assets, isClient } = useAssetsData();
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
-
+    
     const handleRentClick = (asset: Asset) => {
         setSelectedAsset(asset);
         setIsFormOpen(true);
@@ -71,8 +70,12 @@ export default function RentalsPage() {
         setIsFormOpen(false);
         setSelectedAsset(null);
     };
+    
+    const itAssets = assets.filter(asset => 
+        ['Server', 'Laptop', 'Workstation', 'Networking', 'Storage', 'Peripheral'].includes(asset.type)
+    );
 
-    const availableAssets = assets.filter(asset => asset.status === 'Available');
+    const availableAssets = itAssets.filter(asset => asset.status === 'Available');
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -88,7 +91,7 @@ export default function RentalsPage() {
                 </div>
                 
                  <div className="max-w-4xl mx-auto mt-12">
-                     <ItRentalAgentForm />
+                     <AssetRentalAgentForm />
                 </div>
 
 
@@ -134,4 +137,3 @@ export default function RentalsPage() {
         </div>
     );
 }
-
