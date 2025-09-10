@@ -54,12 +54,36 @@ export default function EstimatorForm() {
   const contingencyPercentage = form.watch('contingencyPercentage');
   const profitMarginPercentage = form.watch('profitMarginPercentage');
 
+  const updateSummary = () => {
+    if (!response) return;
+    const { contingencyPercentage, profitMarginPercentage } = form.getValues();
+    const totalDirectCosts = response.costedItems.reduce((sum, item) => sum + item.totalItemCost, 0);
+    const contingencyAmount = totalDirectCosts * (contingencyPercentage / 100);
+    const subtotal = totalDirectCosts + contingencyAmount;
+    const profitAmount = subtotal * (profitMarginPercentage / 100);
+    const grandTotal = subtotal + profitAmount;
+    
+    setResponse(prev => {
+        if (!prev) return null;
+        return {
+            ...prev,
+            summary: {
+                totalDirectCosts,
+                contingencyAmount,
+                subtotal,
+                profitAmount,
+                grandTotal,
+            }
+        };
+    });
+  }
+
   useEffect(() => {
     if (response) {
       updateSummary();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contingencyPercentage, profitMarginPercentage, response?.costedItems]);
+  }, [contingencyPercentage, profitMarginPercentage]);
 
 
   useEffect(() => {
@@ -112,30 +136,6 @@ export default function EstimatorForm() {
     }
   };
 
-  const updateSummary = () => {
-    if (!response) return;
-    const { contingencyPercentage, profitMarginPercentage } = form.getValues();
-    const totalDirectCosts = response.costedItems.reduce((sum, item) => sum + item.totalItemCost, 0);
-    const contingencyAmount = totalDirectCosts * (contingencyPercentage / 100);
-    const subtotal = totalDirectCosts + contingencyAmount;
-    const profitAmount = subtotal * (profitMarginPercentage / 100);
-    const grandTotal = subtotal + profitAmount;
-    
-    setResponse(prev => {
-        if (!prev) return null;
-        return {
-            ...prev,
-            summary: {
-                totalDirectCosts,
-                contingencyAmount,
-                subtotal,
-                profitAmount,
-                grandTotal,
-            }
-        };
-    });
-  }
-
   const handleCostChange = (index: number, field: keyof CostedBoQItem, value: string | number) => {
     setResponse(prev => {
         if (!prev) return null;
@@ -156,6 +156,7 @@ export default function EstimatorForm() {
 
         return { ...prev, costedItems: newItems };
     });
+    updateSummary();
   }
   
   const handleAddItem = () => {

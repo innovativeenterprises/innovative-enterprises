@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -65,7 +66,7 @@ export default function MyStairspaceRequestsPage() {
     
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
-    const myRequests = stairspaceRequests.filter(r => r.clientName === 'Anwar Ahmed');
+    const myRequests = isClient ? stairspaceRequests.filter(r => r.clientName === 'Anwar Ahmed') : [];
     
     const onSchedule = (id: string, values: InterviewValues) => {
         setStairspaceRequests(prev => prev.map(r => 
