@@ -168,7 +168,6 @@ export const initialServices: Service[] = [
     title: "ProcureChain SaaS",
     description: "E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
     enabled: true,
-    href: "/construction-tech/asset-rentals",
     category: "Essential Business Services"
   },
   {
@@ -176,7 +175,7 @@ export const initialServices: Service[] = [
     title: "InfraRent",
     description: "On-demand rental of IT equipment like servers, workstations, and networking gear for events and projects.",
     enabled: true,
-    href: "/infra-rent",
+    href: "/rentals",
     category: "Essential Business Services"
   },
   {
