@@ -28,7 +28,7 @@ export default function AiToolsCta() {
                         </CardContent>
                         <CardFooter className="justify-center">
                             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                <Link href="/team">Explore Agents</Link>
+                                <Link href="/automation">Explore Agents</Link>
                             </Button>
                         </CardFooter>
                     </Card>
