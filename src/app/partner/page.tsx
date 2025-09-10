@@ -27,16 +27,8 @@ import { useSettingsData } from '@/hooks/use-global-store-data';
 import Image from 'next/image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { fileToDataURI } from '@/lib/utils';
 
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
 
 const businessCategories = [
     "Tech & IT Services",
@@ -1079,6 +1071,37 @@ export default function PartnerPage() {
         default: return <SelectionScreen />;
     }
   };
+
+   const renderAnalysisResult = () => {
+        if (!analysisResult) return null;
+        
+        if ('companyInfo' in analysisResult) { // It's a CrAnalysisOutput
+            const info = analysisResult.companyInfo;
+            return (
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                    <div className="font-semibold">Company Name:</div><div>{info?.companyNameEnglish || info?.companyNameArabic}</div>
+                    <div className="font-semibold">CR Number:</div><div>{info?.registrationNumber}</div>
+                    <div className="font-semibold">Status:</div><div>{info?.status}</div>
+                    <div className="font-semibold">Legal Type:</div><div>{info?.legalType}</div>
+                    <div className="font-semibold">Expiry Date:</div><div>{info?.expiryDate}</div>
+                </div>
+            )
+        }
+
+        if ('personalDetails' in analysisResult) { // It's an IdentityAnalysisOutput
+             const { personalDetails: pd, idCardDetails: id } = analysisResult;
+             return (
+                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                    <div className="font-semibold">Full Name:</div><div>{pd?.fullName}</div>
+                    <div className="font-semibold">Civil ID:</div><div>{id?.civilNumber}</div>
+                    <div className="font-semibold">Nationality:</div><div>{pd?.nationality}</div>
+                    <div className="font-semibold">Date of Birth:</div><div>{pd?.dateOfBirth}</div>
+                </div>
+             )
+        }
+        return null;
+    }
+
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

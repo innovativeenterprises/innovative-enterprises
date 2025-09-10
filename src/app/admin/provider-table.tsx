@@ -27,6 +27,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
+import { useProvidersData } from "@/hooks/use-global-store-data";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -34,6 +35,15 @@ const CsvImportSchema = z.object({
   csvFile: z.any().refine(file => file?.length == 1, 'A CSV file is required.'),
 });
 type CsvImportValues = z.infer<typeof CsvImportSchema>;
+
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
 
 const AddEditProviderDialog = ({ 
     provider, 
