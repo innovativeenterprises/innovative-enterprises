@@ -482,3 +482,45 @@ export const useStairspaceRequestsData = () => {
         isClient,
     };
 };
+
+export const useOpportunitiesData = () => {
+    const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        opportunities: data.opportunities,
+        setOpportunities: (updater: (opps: Opportunity[]) => void) => {
+            store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
+        },
+        isClient,
+    };
+};
+
+export const useCfoData = () => {
+    const [data, setData] = useState(store.get());
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const unsubscribe = store.subscribe(() => {
+            setData(store.get());
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return {
+        kpiData: data.kpiData,
+        transactionData: data.transactionData,
+        upcomingPayments: data.upcomingPayments,
+        vatPayment: data.vatPayment,
+        isClient,
+    };
+};
