@@ -4,15 +4,16 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { store } from '@/lib/global-store';
-import type { HireRequest } from '@/lib/raaha-requests';
-import { formatDistanceToNow, format } from 'date-fns';
-import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock } from 'lucide-react';
+import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRequestsData } from '@/hooks/use-global-store-data';
+import { formatDistanceToNow, format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import type { HireRequest } from '@/lib/raaha-requests';
+import { RequestTable } from '@/components/request-table';
+import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 function RequestRow({ request }: { request: HireRequest }) {
     const [requestDateText, setRequestDateText] = useState("...");
@@ -33,7 +34,7 @@ function RequestRow({ request }: { request: HireRequest }) {
             case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Agency Contacted</Badge>;
             case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
             case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
-            case 'Closed': return <Badge variant="destructive" className="bg-red-500/20 text-red-700 hover:bg-red-500/30">Closed</Badge>;
+            case 'Closed': return <Badge variant="destructive">Closed</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
         }
     };
@@ -73,11 +74,54 @@ function RequestRow({ request }: { request: HireRequest }) {
 }
 
 export default function MyRequestsPage() {
-    const { requests, isClient } = useRequestsData();
+    const { requests, setRequests, isClient } = useRequestsData();
+    const { toast } = useToast();
     
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
-    const myRequests = requests.filter(r => r.clientName === 'Ahmed Al-Farsi');
+    const myRequests = isClient ? requests.filter(r => r.clientName === 'Ahmed Al-Farsi') : [];
+    
+    const onSchedule = (id: string, values: InterviewValues) => {
+        setRequests(prev => prev.map(r => 
+            r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+        ));
+        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
+    };
+
+    const getStatusBadge = (status: HireRequest['status']) => {
+        switch (status) {
+            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
+            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
+            case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
+            case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
+            case 'Closed': return <Badge variant="destructive">Closed</Badge>;
+            default: return <Badge variant="outline">{status}</Badge>;
+        }
+    };
+    
+    const columns = [
+        {
+            Header: 'Candidate',
+            accessor: 'workerName',
+            Cell: ({ row }: { row: { original: HireRequest }}) => (
+                <div>
+                    <p className="font-medium">{row.original.workerName}</p>
+                    <p className="text-sm text-muted-foreground">
+                        Requested: {formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true })}
+                    </p>
+                </div>
+            )
+        },
+        {
+            Header: 'Agency',
+            accessor: 'agencyId',
+        },
+        {
+            Header: 'Status',
+            accessor: 'status',
+            Cell: ({ row }: { row: { original: HireRequest }}) => getStatusBadge(row.original.status)
+        },
+    ];
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -107,33 +151,12 @@ export default function MyRequestsPage() {
                             <CardDescription>The table below shows the real-time status of each request as updated by the agency.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                             <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Candidate</TableHead>
-                                        <TableHead>Agency</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead>Next Steps</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {!isClient ? (
-                                        <TableRow>
-                                            <TableCell colSpan={4} className="h-24 text-center"><Skeleton className="h-10 w-full" /></TableCell>
-                                        </TableRow>
-                                    ) : myRequests.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
-                                                You haven't made any hire requests yet.
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : (
-                                        myRequests.map(req => (
-                                           <RequestRow key={req.id} request={req} />
-                                        ))
-                                    )}
-                                </TableBody>
-                            </Table>
+                           <RequestTable 
+                                data={myRequests}
+                                columns={columns}
+                                isClient={isClient}
+                                renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}
+                            />
                         </CardContent>
                     </Card>
 

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,12 +11,7 @@ import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 import { RequestTable } from '@/components/request-table';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
-import type { HireRequest } from '@/lib/raaha-requests';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
-import { useToast } from '@/hooks/use-toast';
-
-type GenericRequest = HireRequest | BookingRequest;
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -34,17 +28,14 @@ const columns = [
     {
         Header: 'Listing',
         accessor: 'listingTitle',
-        Cell: ({ row }: { row: { original: GenericRequest }}) => {
-            const request = row.original as BookingRequest;
-            return (
-                <div>
-                    <p className="font-medium">{request.listingTitle}</p>
-                    <p className="text-sm text-muted-foreground">
-                        Requested: {formatDistanceToNow(new Date(request.requestDate), { addSuffix: true })}
-                    </p>
-                </div>
-            );
-        }
+        Cell: ({ row }: { row: { original: BookingRequest }}) => (
+            <div>
+                <p className="font-medium">{row.original.listingTitle}</p>
+                <p className="text-sm text-muted-foreground">
+                    Requested: {formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true })}
+                </p>
+            </div>
+        )
     },
     {
         Header: 'Client',
@@ -53,31 +44,18 @@ const columns = [
     {
         Header: 'Status',
         accessor: 'status',
-        Cell: ({ row }: { row: { original: GenericRequest }}) => {
-            const request = row.original as BookingRequest;
-            return getStatusBadge(request.status);
-        }
+        Cell: ({ row }: { row: { original: BookingRequest }}) => getStatusBadge(row.original.status)
     },
 ];
 
 export default function MyStairspaceRequestsPage() {
-    const { stairspaceRequests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
-    const { toast } = useToast();
+    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
     
     // In a real app, you would filter requests by the logged-in user.
-    // For this prototype, we'll assume we're viewing requests for one client.
     const myRequests = isClient ? stairspaceRequests.filter(r => r.clientName === 'Anwar Ahmed') : [];
     
-    const onSchedule = (id: string, values: InterviewValues) => {
-        setStairspaceRequests(prev => prev.map(r => 
-            r.id === id ? { ...r, interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
-        ));
-        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
-    };
-    
-    const renderActions = (request: GenericRequest) => {
-        const bookingRequest = request as BookingRequest;
-        if (bookingRequest.status === 'Booked') {
+    const renderActions = (request: BookingRequest) => {
+        if (request.status === 'Booked') {
             return (
                 <Button asChild size="sm" className="w-full sm:w-auto">
                     <Link href={`/real-estate-tech/stairspace/checkout/${request.id}`}>
@@ -86,17 +64,7 @@ export default function MyStairspaceRequestsPage() {
                 </Button>
             );
         }
-        if (bookingRequest.interviewDate) {
-            return (
-                <div className="text-xs text-muted-foreground text-right">
-                    <div className="flex items-center gap-1.5 font-semibold justify-end">
-                        <CalendarIcon className="h-3 w-3 text-primary" />
-                        <span>Interview: {format(new Date(bookingRequest.interviewDate), "PPP")}</span>
-                    </div>
-                </div>
-            );
-        }
-        return <p className="text-xs text-muted-foreground italic">Owner will contact you.</p>;
+        return <p className="text-xs text-muted-foreground italic text-right">Owner will contact you.</p>;
     };
 
     return (
@@ -131,7 +99,7 @@ export default function MyStairspaceRequestsPage() {
                                 data={myRequests} 
                                 columns={columns}
                                 isClient={isClient}
-                                renderActions={renderActions}
+                                renderActions={(request) => renderActions(request as BookingRequest)}
                             />
                         </CardContent>
                     </Card>

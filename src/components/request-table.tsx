@@ -6,13 +6,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import type { HireRequest } from "@/lib/raaha-requests";
 import type { BookingRequest } from "@/lib/stairspace-requests";
-import { format } from 'date-fns';
-import { CalendarIcon, ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
-import { ScheduleInterviewDialog, type InterviewValues } from "@/components/schedule-interview-dialog";
 
-// Define a generic request type that can be either a HireRequest or a BookingRequest.
-// This allows the table to be reusable for different types of requests.
 type GenericRequest = HireRequest | BookingRequest;
 
 export function RequestTable({ 
