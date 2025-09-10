@@ -5,6 +5,10 @@ import AgentList from "@/components/agent-list";
 import { useStaffData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+
 
 export default function AutomationPage() {
   const { agentCategories, isClient } = useStaffData();
@@ -17,6 +21,11 @@ export default function AutomationPage() {
           <p className="mt-4 text-lg text-muted-foreground">
             Explore our suite of specialized AI agents, designed to handle key business functions, so you can focus on growth and innovation.
           </p>
+           <Button asChild className="mt-6">
+                <Link href="/team">
+                    Meet The Full Team (Human & AI) <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+            </Button>
         </div>
         <div className="max-w-7xl mx-auto mt-12">
             {isClient ? (
