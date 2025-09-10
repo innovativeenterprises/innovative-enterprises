@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3 } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -40,9 +40,9 @@ const navLinks = [
 
 const solutionsByCategory: { category: string; items: { title: string; href: string; description: string, icon: LucideIcon }[] }[] = [
     {
-        category: "Business Platforms",
+        category: "Digital Transformations",
         items: [
-            {
+             {
                 title: "Sanad Hub Platform",
                 href: "/sanad-hub",
                 description: "A digital gateway connecting users with Sanad Service Centres across Oman for task delegation and service bidding.",
@@ -54,7 +54,41 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 description: "A B2B marketplace connecting businesses with each other and with new clients for opportunities.",
                 icon: Handshake,
             },
+             {
+                title: "Community Hub",
+                href: "/community-hub",
+                description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
+                icon: Users,
+            },
+        ]
+    },
+     {
+        category: "AI Powered & Automation",
+        items: [
             {
+                title: "Synergy AI",
+                href: "/automation",
+                description: "Leverage AI to automate processes, gain insights, and create intelligent products and agents.",
+                icon: Bot,
+            },
+            {
+                title: "Voxi Translator",
+                href: "/document-translator",
+                description: "Translate legal, financial, and official documents with high accuracy.",
+                icon: Languages,
+            },
+            {
+                title: "Lexi Legal Assistant",
+                href: "/legal-agent",
+                description: "Ask legal questions or analyze documents for potential risks and get preliminary advice.",
+                icon: Scale,
+            },
+        ]
+    },
+    {
+        category: "Business Tech Solutions",
+        items: [
+           {
                 title: "Nova Commerce",
                 href: "/ecommerce",
                 description: "End-to-end solutions to build, manage, and scale your online business.",
@@ -67,12 +101,6 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 icon: UserCheck,
             },
             {
-                title: "Community Hub",
-                href: "/community-hub",
-                description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
-                icon: Users,
-            },
-             {
                 title: "SaaS Portfolio",
                 href: "/saas-portfolio",
                 description: "A complete overview of all our digital products and platforms.",
@@ -80,8 +108,11 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
             },
         ]
     },
-    {
-        category: "Industry Solutions",
+];
+
+const industriesByCategory: { category: string; items: { title: string; href: string; description: string, icon: LucideIcon }[] }[] = [
+     {
+        category: "Industry Verticals",
         items: [
              {
                 title: "Construction Tech",
@@ -101,6 +132,11 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
                 icon: GraduationCap,
             },
+        ]
+    },
+    {
+        category: "Specialized Platforms",
+        items: [
              {
                 title: "InfraRent",
                 href: "/infra-rent",
@@ -113,79 +149,16 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 description: "An AI-powered white-label SaaS platform to connect domestic work agencies with clients.",
                 icon: HomeWorkforceIcon,
             },
-        ]
-    },
-    {
-        category: "AI & Creative Tools",
-        items: [
-            {
-                title: "Voxi Translator",
-                href: "/document-translator",
-                description: "Translate legal, financial, and official documents with high accuracy.",
-                icon: Languages,
-            },
-            {
-                title: "Lina Image Generator",
-                href: "/image-generator",
-                description: "Create stunning visuals from text descriptions in seconds.",
-                icon: Lightbulb,
-            },
              {
-                title: "AI PDF Form Filler",
-                href: "/pdf-form-filler",
-                description: "Let our AI intelligently fill out any PDF form based on your profile data.",
-                icon: FileText,
-            },
-             {
-                title: "AI Interior Designer",
-                href: "/interior-designer",
-                description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
-                icon: Home,
-            },
-             {
-                title: "StairSpace",
-                href: "/real-estate-tech/stairspace",
-                description: "A marketplace for renting under-stair and micro-retail spaces.",
-                icon: Store,
-            },
-        ]
-    },
-    {
-        category: "Professional Services",
-        items: [
-            {
-                title: "Lexi Legal Assistant",
-                href: "/legal-agent",
-                description: "Ask legal questions or analyze documents for potential risks and get preliminary advice.",
-                icon: Scale,
-            },
-            {
-                title: "Certus Audit Hub",
-                href: "/financial-audit",
-                description: "Connect with certified audit offices and get AI-powered analysis of your financial documents.",
-                icon: FileText,
-            },
-            {
-                title: "Tender Response Assistant",
-                href: "/tender-assistant",
-                description: "Upload tender documents and let our AI generate a comprehensive draft response.",
-                icon: FileText,
-            },
-             {
-                title: "GENIUS Career Platform",
-                href: "/cv-enhancer",
-                description: "Optimize CVs for ATS and get support for skilled labor provision and recruitment.",
-                icon: UserRoundCheck,
-            },
-            {
-                title: "Innovation Gateway",
-                href: "/submit-work",
-                description: "Submit your innovative ideas to our e-incubator for analysis and potential sponsorship.",
-                icon: Lightbulb,
+                title: "The Majlis (VIP Hub)",
+                href: "/vip-hub",
+                description: "An exclusive, AI-managed ecosystem for VIPs, executives, and their trusted networks.",
+                icon: Gem,
             },
         ]
     }
-];
+]
+
 
 const opportunitiesLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
    {
@@ -306,7 +279,32 @@ export default function Header() {
                   <div className={cn("grid gap-x-6 gap-y-4 p-6", `grid-cols-${settings.servicesMenuColumns} w-[${settings.servicesMenuColumns * 300}px]`)}>
                     {solutionsByCategory.map((category) => (
                         <div key={category.category} className="flex flex-col">
-                            <h3 className="mb-3 text-sm font-semibold text-foreground px-3">{category.category}</h3>
+                            <h3 className="mb-3 text-sm font-semibold text-foreground px-3 flex items-center gap-2"><GitBranch className="h-4 w-4" /> {category.category}</h3>
+                            <ul className="flex flex-col gap-1">
+                                {category.items.map((component) => (
+                                <ListItem
+                                    key={component.title}
+                                    title={component.title}
+                                    href={component.href}
+                                    onClick={handleLinkClick}
+                                    icon={component.icon}
+                                >
+                                    {component.description}
+                                </ListItem>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                   </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+                <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">Industries</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className={cn("grid gap-x-6 gap-y-4 p-6", `grid-cols-2 w-[600px]`)}>
+                    {industriesByCategory.map((category) => (
+                        <div key={category.category} className="flex flex-col">
+                            <h3 className="mb-3 text-sm font-semibold text-foreground px-3 flex items-center gap-2"><GitBranch className="h-4 w-4" /> {category.category}</h3>
                             <ul className="flex flex-col gap-1">
                                 {category.items.map((component) => (
                                 <ListItem
