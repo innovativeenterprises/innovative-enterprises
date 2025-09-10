@@ -1,246 +1,220 @@
+
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Building2, Store, Tag, MapPin, HandCoins, Ticket, Filter, Loader2, Sparkles, Wand2 } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { useStairspaceData } from '@/hooks/use-global-store-data';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StairspaceMatcherInputSchema, type StairspaceMatcherInput, type StairspaceMatcherOutput } from '@/ai/flows/stairspace-matcher.schema';
-import { findBestStairspaceMatch } from '@/ai/flows/stairspace-matcher.ts';
+import { z } from 'zod';
+import { analyzeWorkOrder } from '@/ai/flows/work-order-analysis';
+import { type WorkOrderAnalysisOutput, WorkOrderInputSchema } from '@/ai/flows/work-order-analysis.schema';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Sparkles, Bot, FileText, BadgePercent, TrendingUp, Impact, Lightbulb } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Progress } from "@/components/ui/progress";
-import type { StairspaceListing } from '@/lib/stairspace-listings';
-import { store } from '@/lib/global-store';
+import { Progress } from '@/components/ui/progress';
 
-const AiMatcher = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [response, setResponse] = useState<StairspaceMatcherOutput | null>(null);
-    const { toast } = useToast();
-    const { stairspaceListings } = useStairspaceData();
-
-    const form = useForm<StairspaceMatcherInput>({
-        resolver: zodResolver(StairspaceMatcherInputSchema),
-        defaultValues: { userRequirements: '' },
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
     });
-
-    const onSubmit: SubmitHandler<StairspaceMatcherInput> = async (data) => {
-        setIsLoading(true);
-        setResponse(null);
-        try {
-            const result = await findBestStairspaceMatch(data);
-            setResponse(result);
-            toast({ title: 'Match Found!', description: 'Our AI has found the best space for your needs.' });
-        } catch (error) {
-            console.error(error);
-            toast({ title: 'Error', description: 'Failed to find a match. Please try again.', variant: 'destructive' });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    
-    const bestMatchListing = useMemo(() => {
-        if (!response) return null;
-        return response.bestMatch.property;
-    }, [response]);
-
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>AI Space Matcher</CardTitle>
-                <CardDescription>Describe what you need, and our AI will find the best space for you.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="userRequirements"
-                            render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Your Requirements</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="e.g., 'I need a small space with high foot traffic for a pop-up coffee stand.'" rows={4} {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-                        <Button type="submit" disabled={isLoading} className="w-full">
-                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Searching...</> : <><Sparkles className="mr-2 h-4 w-4" />Find My Space</>}
-                        </Button>
-                    </form>
-                </Form>
-                 {isLoading && (
-                    <div className="text-center p-6"><Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" /></div>
-                )}
-                 {response && bestMatchListing && (
-                    <div className="mt-6 space-y-4">
-                         <Alert>
-                            <AlertTitle className="font-semibold">AI Recommendation</AlertTitle>
-                            <AlertDescription>{response.bestMatch.reasoning}</AlertDescription>
-                            <div className="pt-2 mt-2 border-t">
-                                <p className="text-xs text-muted-foreground">Confidence Score: {response.bestMatch.confidenceScore}%</p>
-                                <Progress value={response.bestMatch.confidenceScore} className="h-2 mt-1" />
-                            </div>
-                        </Alert>
-                        <SpaceCard space={bestMatchListing} />
-                    </div>
-                )}
-            </CardContent>
-        </Card>
-    );
 };
 
-const SpaceCard = ({ space }: { space: StairspaceListing }) => (
-     <Link href={`/real-estate-tech/stairspace/${space.id}`} className="flex">
-        <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
-            <CardHeader className="p-0">
-                <div className="relative h-48 w-full">
-                    <Image src={space.imageUrl} alt={space.title} fill className="object-cover transition-transform group-hover:scale-105" data-ai-hint={space.aiHint} />
-                </div>
-            </CardHeader>
-            <CardContent className="p-4 flex-grow">
-                <div className="flex flex-wrap gap-2 mb-2">
-                    {space.tags.map(tag => <div key={tag} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">{tag}</div>)}
-                </div>
-                <CardTitle className="text-lg">{space.title}</CardTitle>
-                <CardDescription className="text-sm flex items-center gap-1 mt-1"><MapPin className="h-4 w-4"/> {space.location}</CardDescription>
-            </CardContent>
-            <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                <p className="text-lg font-bold text-primary">{space.price}</p>
-                <Button variant="secondary">View Details</Button>
-            </CardFooter>
-        </Card>
-    </Link>
-);
+const FormSchema = WorkOrderInputSchema.extend({
+  documentFile: z.any().optional(),
+});
+type FormValues = z.infer<typeof FormSchema>;
 
+export default function WorkOrderForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState<WorkOrderAnalysisOutput | null>(null);
+  const { toast } = useToast();
 
-export default function StairspacePage() {
-    const [stairspaceListings, setStairspaceListings] = useState(store.get().stairspaceListings);
-    const [selectedTag, setSelectedTag] = useState('All');
-     const [isClient, setIsClient] = useState(false);
+  const form = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+        title: '',
+        description: '',
+        budget: '',
+        timeline: '',
+    },
+  });
 
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setStairspaceListings(store.get().stairspaceListings);
-        });
-        return () => unsubscribe();
-    }, []);
-
-    const allTags = useMemo(() => {
-        const tags = new Set<string>(['All']);
-        stairspaceListings.forEach(space => {
-            space.tags.forEach(tag => tags.add(tag));
-        });
-        return Array.from(tags);
-    }, [stairspaceListings]);
-
-    const filteredSpaces = useMemo(() => {
-        if (selectedTag === 'All') {
-            return stairspaceListings;
-        }
-        return stairspaceListings.filter(space => space.tags.includes(selectedTag));
-    }, [stairspaceListings, selectedTag]);
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    setIsLoading(true);
+    setResponse(null);
+    try {
+      let documentDataUri: string | undefined;
+      if (data.documentFile && data.documentFile.length > 0) {
+        documentDataUri = await fileToDataURI(data.documentFile[0]);
+      }
+      
+      const result = await analyzeWorkOrder({ 
+          ...data,
+          documentDataUri,
+      });
+      setResponse(result);
+      toast({ title: 'Analysis Complete!', description: 'Your idea has been analyzed by our AI.' });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'Failed to analyze the submission. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="bg-background min-h-[calc(100vh-8rem)]">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center">
-            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                <Store className="w-12 h-12 text-primary" />
-            </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">StairSpace: Your Micro-Retail Revolution</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Unlock the hidden potential of underutilized spaces. StairSpace is a marketplace that connects property owners with entrepreneurs looking for affordable, flexible, and high-visibility micro-retail and storage spots.
-          </p>
-           <div className="mt-8 flex justify-center gap-4">
-               <Button asChild size="lg">
-                    <a href="#browse-spaces">Browse Spaces</a>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                    <Link href="/real-estate-tech/stairspace/my-requests">
-                        <Ticket className="mr-2 h-4 w-4" /> My Booking Requests
-                    </Link>
-                </Button>
-           </div>
-        </div>
-        
-        <div className="max-w-3xl mx-auto mt-20">
-            <AiMatcher />
-        </div>
+    <div className="space-y-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Submit Your Idea</CardTitle>
+          <CardDescription>Provide details about your project, task, or startup idea. Our AI will analyze it for categorization and potential.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title / Project Name</FormLabel>
+                    <FormControl><Input placeholder="e.g., AI-powered personal finance app" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Detailed Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Describe the problem, your proposed solution, and the target audience." rows={8} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormField
+                    control={form.control}
+                    name="budget"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Estimated Budget (Optional)</FormLabel>
+                        <FormControl><Input placeholder="e.g., 10,000 OMR" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="timeline"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Expected Timeline (Optional)</FormLabel>
+                        <FormControl><Input placeholder="e.g., 3-6 months" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+              </div>
+                <FormField
+                control={form.control}
+                name="documentFile"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Attach Supporting Document (Optional)</FormLabel>
+                    <FormControl>
+                      <Input type="file" onChange={(e) => field.onChange(e.target.files)} />
+                    </FormControl>
+                     <FormDescription>e.g., a brief, business plan, or technical specs.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                {isLoading ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing Submission...</>
+                ) : (
+                   <><Sparkles className="mr-2 h-4 w-4" />Analyze Idea with AI</>
+                )}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
 
-        <div id="browse-spaces" className="max-w-6xl mx-auto mt-20">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary">Or, Browse All Available Spaces</h2>
-                <p className="mt-4 text-lg text-muted-foreground">Discover unique opportunities available right now.</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-                {allTags.map(tag => (
-                    <Button 
-                        key={tag}
-                        variant={selectedTag === tag ? 'default' : 'outline'}
-                        onClick={() => setSelectedTag(tag)}
-                    >
-                        <Filter className="mr-2 h-4 w-4" />
-                        {tag}
-                    </Button>
-                ))}
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredSpaces.map((space) => (
-                    <SpaceCard key={space.id} space={space} />
-                ))}
-            </div>
-        </div>
+      {isLoading && (
+         <Card>
+            <CardContent className="p-6 text-center">
+                <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+                <p className="mt-4 text-muted-foreground">Our AI agents are analyzing your submission...</p>
+            </CardContent>
+         </Card>
+      )}
 
-        <div className="max-w-4xl mx-auto mt-20 grid md:grid-cols-2 gap-8">
-             <Card className="bg-accent/10 border-accent text-center">
-                <CardHeader className="items-center">
-                    <div className="bg-accent p-3 rounded-full">
-                        <HandCoins className="w-8 h-8 text-accent-foreground" />
-                    </div>
-                    <CardTitle className="text-2xl text-accent pt-2">For Property Owners</CardTitle>
-                </CardHeader>
-                <CardContent>
-                     <p className="text-accent-foreground/80">
-                       Have an empty space under a staircase, in a lobby, or a wide corridor? Turn your unused liability into a revenue-generating asset.
-                    </p>
-                </CardContent>
-                <CardFooter className="justify-center">
-                    <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                        <Link href="/real-estate-tech/stairspace/list-your-space">List Your Space <ArrowRight className="ml-2 h-4 w-4"/></Link>
-                    </Button>
-                </CardFooter>
-            </Card>
-             <Card className="bg-muted/50 text-center">
-                <CardHeader className="items-center">
-                    <div className="bg-primary/20 p-3 rounded-full">
-                        <Building2 className="w-8 h-8 text-primary" />
-                    </div>
-                    <CardTitle className="text-2xl pt-2">For Entrepreneurs</CardTitle>
-                </CardHeader>
-                <CardContent>
-                     <p className="text-muted-foreground">
-                       Launch your pop-up shop, test a new product, or secure convenient micro-storage without the cost of a full retail lease.
-                    </p>
-                </CardContent>
-                <CardFooter className="justify-center">
-                    <Button asChild size="lg" variant="secondary">
-                        <a href="#browse-spaces">Browse All Spaces</a>
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
-
-      </div>
+      {response && (
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Bot className="h-6 w-6"/> AI Analysis Report</CardTitle>
+             <CardDescription>
+                Your submission has been categorized as a <span className="font-semibold text-primary">{response.category}</span>.
+             </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+                <h3 className="font-semibold text-lg mb-2">Opportunity Summary</h3>
+                <p className="text-sm text-muted-foreground p-4 bg-muted rounded-md border">{response.summary}</p>
+            </div>
+            
+            <div>
+                <h3 className="font-semibold text-lg mb-2">Potential Scores</h3>
+                <div className="grid grid-cols-3 gap-4">
+                    <Card className="text-center p-3">
+                        <BadgePercent className="mx-auto h-6 w-6 text-primary mb-1"/>
+                        <p className="text-2xl font-bold">{response.noveltyScore}</p>
+                        <p className="text-xs text-muted-foreground">Novelty</p>
+                    </Card>
+                    <Card className="text-center p-3">
+                        <TrendingUp className="mx-auto h-6 w-6 text-primary mb-1"/>
+                        <p className="text-2xl font-bold">{response.marketPotentialScore}</p>
+                        <p className="text-xs text-muted-foreground">Market Potential</p>
+                    </Card>
+                    <Card className="text-center p-3">
+                        <Lightbulb className="mx-auto h-6 w-6 text-primary mb-1"/>
+                        <p className="text-2xl font-bold">{response.impactScore}</p>
+                        <p className="text-xs text-muted-foreground">Impact</p>
+                    </Card>
+                </div>
+            </div>
+             
+             <div>
+                <h3 className="font-semibold text-lg mb-2">Clarifying Questions for Providers</h3>
+                <ul className="list-decimal pl-5 space-y-2 text-sm text-muted-foreground">
+                    {response.generatedQuestions.map((q, i) => <li key={i}>{q}</li>)}
+                </ul>
+            </div>
+            
+            <Alert>
+                <AlertTitle>Next Steps</AlertTitle>
+                <AlertDescription>{response.recommendedNextSteps}</AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

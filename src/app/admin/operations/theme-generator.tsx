@@ -12,6 +12,7 @@ import { Loader2, Sparkles, Palette, Wand2 } from 'lucide-react';
 import { ThemeGeneratorInputSchema, type ThemeGeneratorInput, type ThemeGeneratorOutput } from '@/ai/flows/theme-generator.schema';
 import { generateTheme } from '@/ai/flows/theme-generator';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
+import { cn } from '@/lib/utils';
 
 const ColorPreview = ({ title, color, className }: { title: string, color: any, className?: string }) => (
     <div className={cn("p-4 rounded-lg border text-sm", className)}>

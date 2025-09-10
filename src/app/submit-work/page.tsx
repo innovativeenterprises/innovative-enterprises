@@ -2,7 +2,7 @@
 
 'use client';
 
-import TenderForm from "@/app/tender-assistant/tender-form";
+import WorkOrderForm from "@/app/tender-assistant/work-order-form";
 import { Lightbulb } from "lucide-react";
 
 export default function SubmitWorkPage() {
@@ -19,7 +19,7 @@ export default function SubmitWorkPage() {
           </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">
-            <TenderForm />
+            <WorkOrderForm />
         </div>
       </div>
     </div>
