@@ -36,15 +36,6 @@ const CsvImportSchema = z.object({
 });
 type CsvImportValues = z.infer<typeof CsvImportSchema>;
 
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
-
 const AddEditProviderDialog = ({ 
     provider, 
     onSave,
