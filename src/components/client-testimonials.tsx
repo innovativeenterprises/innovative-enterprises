@@ -2,12 +2,12 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
 
 export default function ClientTestimonials({ 
     clients, 
@@ -17,9 +17,11 @@ export default function ClientTestimonials({
     testimonials: Testimonial[] 
 }) {
   const [isClient, setIsClient] = useState(false);
+  const [currentYear, setCurrentYear] = useState('');
 
   useEffect(() => {
       setIsClient(true);
+      setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
 

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -101,10 +101,10 @@ export default function ListSpaceForm() {
         toast({ title: "Generating Image...", description: "Lina is creating your image. This might take a moment."});
         try {
             const richPrompt = `A photorealistic image of a "${title}" located in ${location}. It's a ${tags}. The style should be ${aiHint}.`;
-            const newImageUrl = await generateImage({ prompt: richPrompt });
-            form.setValue('imageUrl', newImageUrl, { shouldValidate: true });
+            const { imageUrl } = await generateImage({ prompt: richPrompt });
+            form.setValue('imageUrl', imageUrl, { shouldValidate: true });
             form.setValue('imageFile', undefined);
-            setImagePreview(newImageUrl);
+            setImagePreview(imageUrl);
             toast({ title: "Image Generated!", description: "The new image has been added."});
         } catch (e) {
             console.error(e);
@@ -126,7 +126,7 @@ export default function ListSpaceForm() {
         const newListing: StairspaceListing = {
             ...data,
             imageUrl,
-            id: (stairspaceListings.length > 0 ? Math.max(...stairspaceListings.map(l => l.id)) : 0) + 1,
+            id: String((stairspaceListings.length > 0 ? Math.max(...stairspaceListings.map(l => Number(l.id))) : 0) + 1),
             tags: data.tags.split(',').map(tag => tag.trim()),
         };
 
