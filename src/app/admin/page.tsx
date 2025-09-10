@@ -15,6 +15,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { store } from "@/lib/global-store";
 import type { Opportunity } from "@/lib/opportunities";
+import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 
 const overviewStats = [
     { title: "Net Revenue", value: "OMR 45,231", icon: CircleDollarSign, href: "/admin/finance" },
@@ -24,20 +25,10 @@ const overviewStats = [
 ];
 
 export default function AdminDashboardPage() {
-  const [data, setData] = useState(store.get());
-  const [isOpportunitiesClient, setIsOpportunitiesClient] = useState(false);
-
-  useEffect(() => {
-    setIsOpportunitiesClient(true);
-    const unsubscribe = store.subscribe(() => {
-        setData(store.get());
-    });
-    return () => unsubscribe();
-  }, []);
-
   const { products, isClient: isProductsClient } = useProductsData();
   const { providers, isClient: isProvidersClient } = useProvidersData();
   const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
+  const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
   
   const isClient = isProductsClient && isProvidersClient && isStaffClient && isOpportunitiesClient;
   
@@ -47,7 +38,7 @@ export default function AdminDashboardPage() {
   const dynamicStats = [
     { title: "Total Staff (Human + AI)", value: isClient ? (totalStaff + totalAgents).toString() : '...', icon: Users, href: "/admin/people" },
     { title: "Active Projects", value: isClient ? products.filter(p => p.stage !== 'Live & Operating').length.toString() : '...', icon: FolderKanban, href: "/admin/projects" },
-    { title: "Active Opportunities", value: isClient ? data.opportunities.filter(o => o.status === 'Open').length.toString() : '...', icon: Zap, href: "/admin/opportunities" },
+    { title: "Active Opportunities", value: isClient ? opportunities.filter(o => o.status === 'Open').length.toString() : '...', icon: Zap, href: "/admin/projects" },
     { title: "Provider Network", value: isClient ? providers.length.toString() : '...', icon: Network, href: "/admin/network" },
   ];
 
