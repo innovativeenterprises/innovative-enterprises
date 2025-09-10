@@ -26,33 +26,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-
-const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const result = reader.result as string;
-            // The result includes the full data URI prefix, which we want here
-            resolve(result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
-
-
-const fileToBase64ContentOnly = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const result = reader.result as string;
-            const base64Content = result.split(',')[1];
-            resolve(base64Content);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from "@/lib/utils";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -369,7 +343,7 @@ export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase, isClie
             } else if (source.file) {
                 const fileName = source.file.name;
                 const fileType = source.file.type;
-                const dataUri = await fileToBase64(source.file);
+                const dataUri = await fileToDataURI(source.file);
                 const analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
 
                 const newDoc: KnowledgeDocument = {

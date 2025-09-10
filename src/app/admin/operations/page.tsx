@@ -11,7 +11,7 @@ import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Pa
 import KnowledgeTable from '../knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import { useKnowledgeData } from "@/hooks/use-global-store-data";
-
+import AssetRentalAgentForm from '@/app/construction-tech/asset-rentals/agent-form';
 
 export default function AdminOperationsPage() {
   const knowledgeData = useKnowledgeData();
@@ -21,6 +21,7 @@ export default function AdminOperationsPage() {
     { id: 'tender', title: 'Tender Response Assistant', icon: FileText, component: <TenderForm /> },
     { id: 'meeting', title: 'Online Meeting Agent', icon: NotebookText, component: <MeetingForm /> },
     { id: 'coupon', title: 'Coupon Generator', icon: Ticket, component: <CouponGenerator /> },
+    { id: 'rental', title: 'Asset Rental Proposal Generator', icon: Scale, component: <AssetRentalAgentForm /> },
   ]
 
   return (

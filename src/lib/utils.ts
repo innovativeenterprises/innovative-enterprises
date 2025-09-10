@@ -27,14 +27,24 @@ export const fileToText = (file: File): Promise<string> => {
 };
 
 export const fileToBase64ContentOnly = (file: File): Promise<string> => {
+    if (!file) {
+        return Promise.reject(new Error("No file provided."));
+    }
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
+            if (typeof reader.result !== 'string') {
+                return reject(new Error('File could not be read as a string.'));
+            }
             const result = reader.result as string;
             // The result includes the full data URI prefix, e.g., "data:image/jpeg;base64,".
             // We only want the content after the comma.
             const base64Content = result.split(',')[1];
-            resolve(base64Content);
+            if(base64Content) {
+                resolve(base64Content);
+            } else {
+                reject(new Error('Could not extract base64 content from data URI.'));
+            }
         };
         reader.onerror = reject;
         reader.readAsDataURL(file);

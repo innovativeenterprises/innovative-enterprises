@@ -13,15 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileText, Download } from 'lucide-react';
 import { fillPdfForm } from '@/ai/flows/pdf-form-filler';
 import { type FilledFormData } from '@/ai/flows/pdf-form-filler.schema';
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from '@/lib/utils';
 
 const FormSchema = z.object({
   pdfDocument: z.any().refine(file => file?.length == 1, 'PDF document is required.'),

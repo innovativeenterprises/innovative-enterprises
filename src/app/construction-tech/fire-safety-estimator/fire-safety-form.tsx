@@ -19,15 +19,7 @@ import Image from 'next/image';
 import { estimateFireSafety } from '@/ai/flows/fire-safety-estimator';
 import type { FireSafetyEstimatorOutput } from '@/ai/flows/fire-safety-estimator.schema';
 import { annotateImage } from '@/ai/flows/image-annotation';
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from '@/lib/utils';
 
 const FormSchema = z.object({
   floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
