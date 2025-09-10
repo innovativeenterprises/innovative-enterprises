@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { generateBookingResponse } from '@/ai/flows/booking-response-generator';
 
-export const ResponseGenerator = ({ request }: { request: BookingRequest }) => {
+export function ResponseGenerator({ request }: { request: BookingRequest }) {
     const [isLoading, setIsLoading] = useState(false);
     const [response, setResponse] = useState('');
     const { toast } = useToast();
