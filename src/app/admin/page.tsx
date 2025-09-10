@@ -1,9 +1,8 @@
 
-
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Users, Bot, Zap, CheckCircle, FolderKanban, Network, CircleDollarSign, Percent, TrendingUp } from "lucide-react";
+import { Users, Bot, Zap, FolderKanban, Network } from "lucide-react";
 import Link from "next/link";
 import { useProductsData, useStaffData, useProvidersData } from '@/hooks/use-global-store-data';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
@@ -13,15 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { store } from "@/lib/global-store";
-import type { Opportunity } from "@/lib/opportunities";
-
-const overviewStats = [
-    { title: "Net Revenue", value: "OMR 45,231", icon: CircleDollarSign, href: "/admin/finance" },
-    { title: "Subscriptions", value: "+2350", icon: Users, href: "/admin/finance" },
-    { title: "Operational Cost", value: "OMR 9,231", icon: TrendingUp, href: "/admin/finance" },
-    { title: "VAT Collected", value: "OMR 2,153", icon: Percent, href: "/admin/finance" },
-];
 
 export default function AdminDashboardPage() {
   const { products, isClient: isProductsClient } = useProductsData();
@@ -90,7 +80,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[...overviewStats, ...dynamicStats].map((stat, index) => (
+          {dynamicStats.map((stat, index) => (
               <Link href={stat.href} key={index}>
                 <Card className="hover:bg-muted/50 transition-colors">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
