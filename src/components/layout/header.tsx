@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -34,8 +33,9 @@ import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
 
-const navLinks = [
-  { href: '/team', label: 'Our Team' },
+const navLinks: { href: string; label: string }[] = [
+  // The "Our Team" link has been removed to streamline navigation.
+  // This page is accessible from the "Explore Agents" CTA on the homepage and other sections.
 ];
 
 const solutionsByCategory: { category: string; items: { title: string; href: string; description: string, icon: LucideIcon }[] }[] = [
