@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -18,15 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { fileToDataURI } from '@/lib/utils';
 
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
 
 const FormSchema = PropertyValuationInputSchema.extend({
     propertyImageFile: z.any().optional(),
@@ -56,7 +50,11 @@ export default function ValuationForm() {
     try {
         let propertyImageUri: string | undefined;
         if (data.propertyImageFile && data.propertyImageFile.length > 0) {
-            propertyImageUri = await fileToDataURI(data.propertyImageFile[0]);
+            propertyImageUri = await fileToDataURI(data.propertyImageFile[0]).catch(err => {
+                console.error(err);
+                toast({ title: 'Error reading file', description: 'Could not process the uploaded image.', variant: 'destructive'});
+                return undefined;
+            });
         }
       
         const result = await evaluateProperty({

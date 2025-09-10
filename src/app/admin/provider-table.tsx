@@ -50,13 +50,12 @@ const AddEditProviderDialog = ({
     isOpen: boolean,
     onOpenChange: (open: boolean) => void,
 }) => {
-    const defaultExpiry = provider?.subscriptionExpiry ? new Date(provider.subscriptionExpiry) : undefined;
     
     const form = useForm<ProviderValues>({
         resolver: zodResolver(ProviderSchema),
         defaultValues: {
             ...provider,
-            subscriptionExpiry: defaultExpiry,
+            subscriptionExpiry: provider?.subscriptionExpiry ? new Date(provider.subscriptionExpiry) : undefined,
         }
     });
 

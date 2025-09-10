@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -77,10 +78,10 @@ export default function AgencyDashboardPage() {
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
 
     useEffect(() => {
-        if (isClient && agencies.length > 0) {
+        if (isClient && agencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(agencies[0].id);
         }
-    }, [agencies, isClient]);
+    }, [agencies, isClient, selectedAgencyId]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
