@@ -21,16 +21,8 @@ import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { type Agency } from '@/lib/raaha-agencies';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAgenciesData } from "./agency-settings";
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { useAgenciesData } from "@/hooks/use-global-store-data";
+import { fileToDataURI } from '@/lib/utils';
 
 const WorkerSchema = z.object({
   name: z.string().min(2, "Name is required"),
