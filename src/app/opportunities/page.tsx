@@ -9,8 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight } from "lucide-react";
 import type { Opportunity } from "@/lib/opportunities";
 import { opportunityIconMap } from "@/lib/opportunities";
-// Import the data hook from the admin table
-import { useOpportunitiesData } from "@/app/admin/opportunity-table";
+import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -89,16 +88,13 @@ const OpportunityGridSkeleton = () => (
 )
 
 export default function OpportunitiesPage() {
-    const { opportunities } = useOpportunitiesData();
-    const [isClient, setIsClient] = useState(false);
+    const { opportunities, isClient } = useOpportunitiesData();
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-    
-    const publicOpportunities = opportunities
-        .filter(opp => opp.status !== 'Closed')
-        .sort((a,b) => (a.status === 'In Progress' ? -1 : 1));
+    const publicOpportunities = isClient 
+        ? opportunities
+            .filter(opp => opp.status !== 'Closed')
+            .sort((a,b) => (a.status === 'In Progress' ? -1 : 1))
+        : [];
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
