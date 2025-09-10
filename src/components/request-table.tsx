@@ -1,34 +1,53 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import type { HireRequest } from "@/lib/raaha-requests";
-import type { BookingRequest } from "@/lib/stairspace-requests";
 import { ArrowUpDown } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 
-type GenericRequest = HireRequest | BookingRequest;
+type GenericRequest = Record<string, any>;
 
 export function RequestTable({ 
     data,
     columns,
     isClient,
     renderActions,
-    sortConfig,
-    requestSort,
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     renderActions: (request: GenericRequest) => React.ReactNode,
-    sortConfig?: { key: string; direction: string; },
-    requestSort?: (key: string) => void,
 }) { 
+    const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
+
+    const sortedData = useMemo(() => {
+        let sortableItems = [...data];
+        if (sortConfig !== null) {
+            sortableItems.sort((a, b) => {
+                if (a[sortConfig.key] < b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                }
+                if (a[sortConfig.key] > b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return sortableItems;
+    }, [data, sortConfig]);
+
+    const requestSort = (key: string) => {
+        let direction: 'ascending' | 'descending' = 'ascending';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        }
+        setSortConfig({ key, direction });
+    };
 
     const SortableHeader = ({ label, sortKey }: { label: string, sortKey: string }) => (
-         <TableHead onClick={() => requestSort && requestSort(sortKey)} className="cursor-pointer">
+         <TableHead onClick={() => requestSort(sortKey)} className="cursor-pointer">
             <div className="flex items-center gap-2">
                 {label}
                 {sortConfig && sortConfig.key === sortKey && <ArrowUpDown className="h-4 w-4" />}
@@ -41,7 +60,7 @@ export function RequestTable({
             <TableHeader>
                 <TableRow>
                     {columns.map(col => (
-                        col.sortable && requestSort ? 
+                        col.sortable ? 
                         <SortableHeader key={col.accessor || col.Header} label={col.Header} sortKey={col.accessor} /> :
                         <TableHead key={col.Header}>{col.Header}</TableHead>
                     ))}
@@ -58,11 +77,11 @@ export function RequestTable({
                     ) : data.length === 0 ? (
                         <TableRow>
                         <TableCell colSpan={columns.length + 1} className="text-center text-muted-foreground py-8">
-                            No requests found.
+                            No items found.
                         </TableCell>
                     </TableRow>
                 ) : (
-                    data.map(req => (
+                    sortedData.map(req => (
                         <TableRow key={req.id}>
                             {columns.map(col => (
                             <TableCell key={col.accessor}>
@@ -77,5 +96,71 @@ export function RequestTable({
                 )}
             </TableBody>
         </Table>
+    );
+}
+
+// Re-usable WorkerTable component using the generic RequestTable
+import { useAgenciesData, useWorkersData } from "@/hooks/use-global-store-data";
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { AddEditWorkerDialog } from '@/app/raaha/agency-dashboard/worker-table';
+import type { Worker } from '@/lib/raaha-workers';
+
+export function WorkerTable({ workers, setWorkers, agencyId, isClient }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, agencyId: string, isClient: boolean }) { 
+    const { toast } = useToast();
+    const { agencies } = useAgenciesData();
+
+    const handleSave = (values: any, id?: string) => {
+        const skillsArray = values.skills.map((s: { value: any; }) => s.value).filter((s: string) => s.trim() !== '');
+        const agency = agencies.find(a => a.id === agencyId);
+        
+        if (id) {
+            setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
+            toast({ title: "Candidate updated." });
+        } else {
+            const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agency!.name };
+            setWorkers(prev => [newWorker, ...prev]);
+            toast({ title: "Candidate added." });
+        }
+    };
+    
+    const handleDelete = (id: string) => {
+        setWorkers(prev => prev.filter(w => w.id !== id));
+        toast({ title: "Candidate removed.", variant: "destructive" });
+    };
+
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Agency Candidate Management</CardTitle>
+                    <CardDescription>Manage the domestic worker candidates in your agency's database.</CardDescription>
+                </div>
+                <AddEditWorkerDialog onSave={handleSave} agencyId={agencyId}>
+                    <Button><PlusCircle /> Add Candidate</Button>
+                </AddEditWorkerDialog>
+            </CardHeader>
+            <CardContent>
+                <RequestTable 
+                    data={workers}
+                    columns={workersColumns}
+                    isClient={isClient}
+                    renderActions={(worker) => (
+                         <div className="flex justify-end gap-2">
+                            <AddEditWorkerDialog worker={worker as Worker} onSave={handleSave} agencyId={agencyId}>
+                                <Button variant="ghost" size="icon"><Edit /></Button>
+                            </AddEditWorkerDialog>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader><AlertDialogTitle>Delete Candidate?</AlertDialogTitle><AlertDialogDescription>This will permanently remove {worker.name} from your database.</AlertDialogDescription></AlertDialogHeader>
+                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(worker.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
+                    )}
+                />
+            </CardContent>
+        </Card>
     );
 }

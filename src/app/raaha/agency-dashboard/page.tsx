@@ -3,11 +3,11 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { WorkerTable } from './worker-table';
+import { WorkerTable } from '@/components/request-table'; // Use the generic table
 import { AgencySettings } from './agency-settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
@@ -15,9 +15,13 @@ import { RequestTable } from '@/components/request-table';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
+import type { Worker } from '@/lib/raaha-workers';
 import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, MessageSquare } from 'lucide-react';
+import { CalendarIcon, MessageSquare, PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AddEditWorkerDialog } from './worker-table';
+
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -30,7 +34,7 @@ const getStatusBadge = (status: HireRequest['status']) => {
     }
 };
 
-const columns = [
+const requestsColumns = [
     {
         Header: 'Candidate',
         accessor: 'workerName',
@@ -68,6 +72,49 @@ const columns = [
         ) : null
     },
 ];
+
+const getAvailabilityBadge = (availability: Worker['availability']) => {
+    return (
+        <Badge variant={availability === 'Available' ? 'default' : 'outline'} className={availability === 'Available' ? 'bg-green-500/20 text-green-700' : ''}>
+            {availability}
+        </Badge>
+    );
+};
+
+const workersColumns = [
+    {
+        Header: 'Candidate',
+        accessor: 'name',
+        Cell: ({ row }: { row: { original: Worker }}) => (
+            <div className="flex items-center gap-3">
+                <Image src={row.original.photo} alt={row.original.name} width={40} height={40} className="rounded-full object-cover"/>
+                <div>
+                    <p className="font-medium">{row.original.name}</p>
+                    <p className="text-sm text-muted-foreground">{row.original.age} years old</p>
+                </div>
+            </div>
+        )
+    },
+    {
+        Header: 'Nationality',
+        accessor: 'nationality',
+    },
+    {
+        Header: 'Skills',
+        accessor: 'skills',
+        Cell: ({ row }: { row: { original: Worker }}) => (
+             <div className="flex flex-wrap gap-1 max-w-xs">
+                {row.original.skills.slice(0, 3).map(skill => <Badge key={skill} variant="secondary">{skill}</Badge>)}
+                {row.original.skills.length > 3 && <Badge variant="outline">+{row.original.skills.length - 3}</Badge>}
+            </div>
+        )
+    },
+    {
+        Header: 'Availability',
+        accessor: 'availability',
+        Cell: ({ row }: { row: { original: Worker }}) => getAvailabilityBadge(row.original.availability)
+    },
+]
 
 export default function AgencyDashboardPage() {
     const { workers, setWorkers } = useWorkersData();
@@ -177,7 +224,7 @@ export default function AgencyDashboardPage() {
                         <TabsContent value="requests" className="mt-6">
                             <RequestTable 
                                 data={filteredRequests} 
-                                columns={columns}
+                                columns={requestsColumns}
                                 isClient={isClient}
                                 renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}
                             />
