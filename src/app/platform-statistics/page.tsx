@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network, Briefcase, Building2, GraduationCap, Handshake } from "lucide-react";
-import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from "@/hooks/use-global-store-data";
+import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PlatformStatisticsPage() {
