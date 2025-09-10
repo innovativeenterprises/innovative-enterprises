@@ -17,15 +17,7 @@ import { Loader2, Sparkles, FileText, Download, Copy, Mic, Briefcase } from 'luc
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 import jsPDF from 'jspdf';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from '@/lib/utils';
 
 const FormSchema = GenerateTenderResponseInputSchema.extend({
   // Adding a separate field for file input that won't be sent to the AI flow directly

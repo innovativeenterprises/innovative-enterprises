@@ -6,6 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const fileToDataURI = (file: File): Promise<string> => {
+    if (!file) {
+        return Promise.reject(new Error("No file provided."));
+    }
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);
