@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -139,7 +139,7 @@ const industriesByCategory: { category: string; items: { title: string; href: st
         items: [
              {
                 title: "InfraRent",
-                href: "/infra-rent",
+                href: "/rentals",
                 description: "On-demand rental of IT equipment like servers, workstations, and networking gear for events and projects.",
                 icon: Server,
             },
@@ -169,11 +169,11 @@ const opportunitiesLinks: { title: string; href: string; description: string, ic
     icon: Trophy,
   },
   {
-    title: "Submit a Work Order",
+    title: "Submit an Idea",
     href: "/submit-work",
     description:
-      "Have a project or task? Submit it here for analysis and routing to our talent network.",
-    icon: Briefcase,
+      "Have a project or startup idea? Submit it to our e-incubator for analysis and potential sponsorship.",
+    icon: Lightbulb,
   },
 ];
 

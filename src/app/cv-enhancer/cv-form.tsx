@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -718,7 +719,7 @@ export default function CvForm() {
                     </div>
                      <CardDescription>Your CV and Cover Letter are now highly optimized. The next step is to prepare for the interview.</CardDescription>
                        <Button asChild variant="secondary" className="mt-2">
-                        <Link href="/cv-enhancer?tab=interview" scroll={false}>Practice for Interview <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                        <Link href="/interview-coach" scroll={false}>Practice for Interview <ArrowRight className="ml-2 h-4 w-4"/></Link>
                       </Button>
                 </div>
             </CardHeader>
