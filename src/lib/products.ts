@@ -356,9 +356,9 @@ export const initialProducts: Product[] = [
         aiHint: "pdf document form",
         rating: 0,
         enabled: true,
+        href: "/pdf-form-filler",
         adminStatus: 'Completed',
         adminNotes: "New idea submitted. Requires initial research and validation.",
-        href: "/pdf-form-filler",
     },
     {
         id: 32,
