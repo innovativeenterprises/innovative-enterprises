@@ -220,8 +220,12 @@ export default function InvestorTable({ investors, setInvestors, isClient }: { i
         const processDoc = async (key: keyof Investor['documents'], fileList: any) => {
             if (fileList && fileList.length > 0) {
                 const file = fileList[0];
-                const dataUri = await fileToDataURI(file);
-                uploadedDocs[key] = { name: file.name, dataUri };
+                await fileToDataURI(file).then(dataUri => {
+                    uploadedDocs[key] = { name: file.name, dataUri };
+                }).catch(error => {
+                    toast({title: `Error reading ${file.name}`, description: 'Could not upload file.', variant: 'destructive'});
+                    console.error(error);
+                });
             }
         };
 
