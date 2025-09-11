@@ -574,6 +574,20 @@ export const initialProducts: Product[] = [
         href: "/real-estate-tech/stairspace",
         adminStatus: "Completed"
     },
+     {
+        id: 45,
+        name: "Tender Response Assistant",
+        description: "Upload tender documents and let our AI generate a comprehensive, professional draft response tailored to your company's strengths.",
+        stage: "Live & Operating",
+        category: "AI Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/tender-response/400/400",
+        aiHint: "legal document tender",
+        rating: 0,
+        enabled: true,
+        href: "/tender-assistant",
+        adminStatus: "Completed"
+    }
 ];
 
 // This is where e-commerce products should live in a real application,
