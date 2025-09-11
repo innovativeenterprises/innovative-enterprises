@@ -50,7 +50,7 @@ function SuccessContent() {
                                 </Link>
                             </Button>
                              <Button asChild size="lg" variant="outline" className="w-full">
-                                <Link href="/real-estate-tech/stairspace/my-requests">
+                                <Link href="/admin/real-estate/stairspace">
                                     <Ticket className="mr-2 h-5 w-5" /> View My Bookings
                                 </Link>
                             </Button>
