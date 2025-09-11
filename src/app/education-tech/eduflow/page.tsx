@@ -32,7 +32,7 @@ export default function EduFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/education-tech/eduflow/timetable-generator">
+                        <Link href="/construction-tech/workforce-scheduler">
                             Launch Timetable Generator <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
