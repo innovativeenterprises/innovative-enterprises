@@ -391,14 +391,15 @@ export const initialProducts: Product[] = [
         id: 34,
         name: "AI-POS for Education",
         description: "A smart, AI-driven Point-of-Sale system for university canteens or school stores, featuring inventory management and student spending analytics.",
-        stage: "Research Phase",
+        stage: "Live & Operating",
         category: "SaaS",
         price: 0,
         image: "https://picsum.photos/seed/pos/400/400",
         aiHint: "point of sale system",
         rating: 0,
-        enabled: false,
-        adminStatus: 'On Track',
+        enabled: true,
+        href: "/cfo",
+        adminStatus: 'Completed',
         adminNotes: "Evaluating hardware requirements and potential suppliers."
     },
     {
