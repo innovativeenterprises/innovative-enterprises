@@ -487,7 +487,7 @@ export const initialProducts: Product[] = [
         aiHint: "scholarship document graduation",
         rating: 0,
         enabled: true,
-        href: "/education-tech/scholarships",
+        href: "/education-tech/guardian-ai",
         adminStatus: "Completed",
     },
     {
