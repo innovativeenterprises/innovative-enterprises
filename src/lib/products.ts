@@ -561,6 +561,20 @@ export const initialProducts: Product[] = [
         href: "/raaha",
         adminStatus: "Completed"
     },
+    {
+        id: 44,
+        name: "StairSpace",
+        description: "A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/stairspace/400/400",
+        aiHint: "staircase retail pop-up",
+        rating: 0,
+        enabled: true,
+        href: "/real-estate-tech/stairspace",
+        adminStatus: "Completed"
+    },
 ];
 
 // This is where e-commerce products should live in a real application,
