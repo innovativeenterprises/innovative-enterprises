@@ -190,7 +190,7 @@ export const initialProducts: Product[] = [
         aiHint: "house search map",
         rating: 0,
         enabled: true,
-        href: "/real-estate-tech/smart-listing",
+        href: "/real-estate-tech/listings",
         adminStatus: 'Completed',
         adminNotes: "Core matching algorithm is complete. Now working on the agent dashboard."
     },
