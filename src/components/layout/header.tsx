@@ -198,6 +198,13 @@ const networkLinks: { title: string; href: string; description: string, icon: Lu
       "Explore investment opportunities and be part of our innovation journey.",
     icon: FileText,
   },
+   {
+    title: "Facebook Cover",
+    href: "/facebook-cover",
+    description:
+      "View our AI Technology themed Facebook cover page.",
+    icon: MessageSquare,
+  },
 ];
 
 
