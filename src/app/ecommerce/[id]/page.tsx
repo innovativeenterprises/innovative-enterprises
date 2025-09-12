@@ -40,14 +40,42 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 
 
 export default function ProductDetailPage({ params }: { params: { id: string }}) {
+    const { id } = params;
     const products = initialStoreProducts;
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
     const router = useRouter();
-    const product = products.find(p => p.id === parseInt(params.id, 10));
+    const [product, setProduct] = useState<Product | null | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
-    if (!product) {
-        return notFound();
+    useEffect(() => {
+        setIsLoading(true);
+        if (id) {
+            const foundProduct = products.find(p => p.id === parseInt(id as string, 10));
+            setProduct(foundProduct || null);
+        }
+        setIsLoading(false);
+    }, [id, products]);
+
+    if (isLoading) {
+        return (
+             <div className="container mx-auto px-4 py-16">
+                <Skeleton className="h-10 w-40 mb-8" />
+                 <div className="grid lg:grid-cols-2 gap-12">
+                    <Skeleton className="aspect-square w-full" />
+                    <div className="space-y-6">
+                        <Skeleton className="h-6 w-24" />
+                        <Skeleton className="h-12 w-3/4" />
+                        <Skeleton className="h-20 w-full" />
+                        <Skeleton className="h-10 w-1/2" />
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    if (product === null) {
+        notFound();
     }
     
     const handleAddToCart = () => {

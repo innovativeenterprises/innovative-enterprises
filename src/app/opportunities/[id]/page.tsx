@@ -79,10 +79,31 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
+    const { id } = params;
     const { opportunities } = useOpportunitiesData();
-    const opportunity = opportunities.find(opp => opp.id === params.id);
+    const [opportunity, setOpportunity] = useState<Opportunity | null | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        setIsLoading(true);
+        if (id) {
+            const foundOpp = opportunities.find(opp => opp.id === id);
+            setOpportunity(foundOpp || null);
+        }
+        setIsLoading(false);
+    }, [id, opportunities]);
+
+    if (isLoading) {
+        return (
+            <div className="container mx-auto px-4 py-16">
+                <div className="max-w-3xl mx-auto">
+                    <Skeleton className="h-96 w-full" />
+                </div>
+            </div>
+        );
+    }
     
-    if (!opportunity) {
+    if (opportunity === null) {
         return notFound();
     }
     

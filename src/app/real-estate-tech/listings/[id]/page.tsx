@@ -3,19 +3,44 @@
 
 import { useParams, notFound } from 'next/navigation';
 import { initialProperties } from '@/lib/properties';
+import type { Property } from '@/lib/properties';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
 import { ArrowLeft, MapPin, BedDouble, Bath, Home, Square, Building2, Banknote, Mail } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PropertyDetailPage() {
     const params = useParams();
     const { id } = params;
-    const property = initialProperties.find(p => p.id === id);
+    const properties = initialProperties;
+    const [property, setProperty] = useState<Property | null | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
-    if (!property) {
-        return notFound();
+    useEffect(() => {
+        setIsLoading(true);
+        if (id) {
+            const foundProperty = properties.find(p => p.id === id);
+            setProperty(foundProperty || null);
+        }
+        setIsLoading(false);
+    }, [id, properties]);
+
+     if (isLoading) {
+        return (
+             <div className="container mx-auto px-4 py-16">
+                <div className="max-w-5xl mx-auto">
+                    <Skeleton className="h-10 w-40 mb-8" />
+                    <Skeleton className="h-[600px] w-full" />
+                </div>
+            </div>
+        )
+    }
+
+    if (property === null) {
+        notFound();
     }
 
     const details = [
