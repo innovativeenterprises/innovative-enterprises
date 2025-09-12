@@ -106,8 +106,13 @@ const AddEditOpportunityDialog = ({
 }
 
 export default function OpportunityTable() {
-    const { opportunities, setOpportunities, isClient } = useOpportunitiesData();
+    const { opportunities, setOpportunities } = useOpportunitiesData();
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
         if (id) {

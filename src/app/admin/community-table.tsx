@@ -92,9 +92,14 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
     );
 };
 
-export default function CommunityTable({ communities, setCommunities, isClient }: { communities: Community[], setCommunities: (updater: (communities: Community[]) => void) => void, isClient: boolean }) {
+export default function CommunityTable({ communities, setCommunities }: { communities: Community[], setCommunities: (updater: (communities: Community[]) => void) => void }) {
     const { leadership, staff } = useStaffData();
+    const [isClient, setIsClient] = useState(false);
     
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
+
     const staffMap = [...leadership, ...staff].reduce((map, person) => {
         map[person.name] = person;
         return map;

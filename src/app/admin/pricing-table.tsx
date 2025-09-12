@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { usePricingData } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
@@ -77,13 +77,16 @@ const EditPriceDialog = ({
 export default function PricingTable({ 
     pricing, 
     setPricing,
-    isClient,
 } : { 
     pricing: Pricing[], 
     setPricing: (updater: (pricing: Pricing[]) => void) => void,
-    isClient: boolean,
 }) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));

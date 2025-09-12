@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { ProjectStage } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useProjectStagesData } from "@/hooks/use-global-store-data";
 
 const StageSchema = z.object({
@@ -80,8 +80,13 @@ const AddEditStageDialog = ({
 
 
 export default function StageTable() {
-    const { stages, setStages, isClient } = useProjectStagesData();
+    const { stages, setStages } = useProjectStagesData();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: StageValues, id?: string) => {
         if (id) {
