@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -9,14 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import { Skeleton } from '@/components/ui/skeleton';
 import { useCfoData } from '@/hooks/use-global-store-data';
 import type { KpiData } from '@/lib/cfo-data';
 import DueDate from './due-date';
 
 
 // Main Dashboard Component
-export default function CfoDashboard({ isClient }: { isClient: boolean }) {
+export default function CfoDashboard() {
   const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
   
   const getStatusBadge = (status: string) => {
@@ -153,4 +151,3 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
     </div>
   );
 }
-

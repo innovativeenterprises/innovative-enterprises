@@ -1,3 +1,4 @@
+
 'use client';
 
 import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Users, Home } from "lucide-react";
@@ -31,7 +32,7 @@ export default function EduFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/construction-tech/workforce-scheduler">
+                        <Link href="/education-tech/eduflow/timetable-generator">
                             Launch Timetable Generator <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
