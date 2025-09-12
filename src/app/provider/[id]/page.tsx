@@ -16,19 +16,21 @@ import type { Provider } from '@/lib/providers';
 export default function ProviderProfilePage() {
     const params = useParams();
     const { id } = params;
-    const { providers } = useProvidersData();
+    const { providers, isClient } = useProvidersData();
     const [provider, setProvider] = useState<Provider | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (id) {
+        if (isClient && id) {
             const foundProvider = providers.find(p => p.id === id);
-            setProvider(foundProvider);
+            if (foundProvider) {
+                setProvider(foundProvider);
+            } else {
+                notFound();
+            }
         }
-        setIsLoading(false);
-    }, [id, providers]);
+    }, [id, providers, isClient]);
 
-    if (isLoading) {
+    if (!isClient || !provider) {
         return (
              <div className="bg-background min-h-[calc(100vh-8rem)]">
                 <div className="container mx-auto py-16 px-4">
@@ -38,10 +40,6 @@ export default function ProviderProfilePage() {
                 </div>
             </div>
         )
-    }
-
-    if (!provider) {
-        return notFound();
     }
     
     const getStatusBadge = (status: string) => {
@@ -53,19 +51,16 @@ export default function ProviderProfilePage() {
         }
     }
     
-    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
+    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
         const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
-        const [isSubClient, setIsSubClient] = useState(false);
-
+        
         useEffect(() => {
-            setIsSubClient(true);
             if (!expiry) {
                 setDaysUntilExpiry(null);
                 return;
             }
-            const expiryDate = new Date(expiry);
             const now = new Date();
-            const diffTime = expiryDate.getTime() - now.getTime();
+            const diffTime = new Date(expiry).getTime() - now.getTime();
             setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
         }, [expiry]);
 
@@ -80,9 +75,9 @@ export default function ProviderProfilePage() {
                  </div>
             )
         }
-
-        if (!isSubClient || daysUntilExpiry === null) {
-            return <Badge variant="secondary">Loading...</Badge>;
+        
+        if (daysUntilExpiry === null) {
+             return <Badge variant="outline">{tier}</Badge>;
         }
         
         const totalDuration = tier === 'Yearly' ? 365 : 30;
@@ -135,7 +130,7 @@ export default function ProviderProfilePage() {
                                 </div>
                                 <div className="w-full md:w-auto">
                                     <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
-                                    <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry as string} />
+                                    <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry} />
                                 </div>
                             </CardHeader>
                             <CardContent>
@@ -151,3 +146,5 @@ export default function ProviderProfilePage() {
         </div>
     );
 }
+
+    

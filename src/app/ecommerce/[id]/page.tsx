@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, notFound } from 'next/navigation';
+import { useParams, notFound, useRouter } from 'next/navigation';
 import type { Product } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,22 +40,25 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 
 export default function ProductDetailPage() {
     const params = useParams();
+    const router = useRouter();
     const { id } = params;
-    const { products } = useProductsData();
+    const { products, isClient } = useProductsData();
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
     const [product, setProduct] = useState<Product | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
-
+    
     useEffect(() => {
-        if (id) {
+        if (isClient && id) {
             const foundProduct = products.find(p => p.id === parseInt(id as string, 10));
-            setProduct(foundProduct);
+            if (foundProduct) {
+                setProduct(foundProduct);
+            } else {
+                notFound();
+            }
         }
-        setIsLoading(false);
-    }, [id, products]);
+    }, [id, products, isClient]);
 
-    if (isLoading) {
+    if (!isClient || !product) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <Skeleton className="h-10 w-40 mb-8" />
@@ -70,10 +73,6 @@ export default function ProductDetailPage() {
                 </div>
             </div>
         )
-    }
-
-    if (!product) {
-        return notFound();
     }
     
     const handleAddToCart = () => {
@@ -164,3 +163,5 @@ export default function ProductDetailPage() {
         </div>
     );
 }
+
+    

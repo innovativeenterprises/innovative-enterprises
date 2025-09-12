@@ -79,19 +79,21 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 export default function OpportunityDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { opportunities } = useOpportunitiesData();
+    const { opportunities, isClient } = useOpportunitiesData();
     const [opportunity, setOpportunity] = useState<Opportunity | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (id) {
+        if (isClient && id) {
             const foundOpp = opportunities.find(opp => opp.id === id);
-            setOpportunity(foundOpp);
+            if(foundOpp) {
+                setOpportunity(foundOpp);
+            } else {
+                notFound();
+            }
         }
-        setIsLoading(false);
-    }, [id, opportunities]);
+    }, [id, opportunities, isClient]);
 
-    if (isLoading) {
+    if (!isClient || !opportunity) {
         return (
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-3xl mx-auto">
@@ -99,10 +101,6 @@ export default function OpportunityDetailPage() {
                 </div>
             </div>
         );
-    }
-    
-    if (!opportunity) {
-        return notFound();
     }
     
     const Icon = opportunityIconMap[opportunity.iconName] || Trophy;
@@ -173,3 +171,5 @@ export default function OpportunityDetailPage() {
          </div>
     );
 }
+
+    

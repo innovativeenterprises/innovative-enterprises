@@ -115,25 +115,27 @@ const AgencyInfoCard = ({ agency }: { agency: Agency }) => {
 export default function WorkerProfilePage() {
     const params = useParams();
     const { id } = params;
-    const { workers } = useWorkersData();
-    const { agencies } = useAgenciesData();
+    const { workers, isClient: isWorkersClient } = useWorkersData();
+    const { agencies, isClient: isAgenciesClient } = useAgenciesData();
     const [worker, setWorker] = useState<Worker | undefined>(undefined);
     const [agency, setAgency] = useState<Agency | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
+    
+    const isClient = isWorkersClient && isAgenciesClient;
 
     useEffect(() => {
-        if(id) {
+        if(isClient && id) {
             const foundWorker = workers.find(p => p.id === id);
-            setWorker(foundWorker);
-            if (foundWorker) {
+            if(foundWorker) {
+                setWorker(foundWorker);
                 const foundAgency = agencies.find(a => a.name === foundWorker.agencyId);
                 setAgency(foundAgency);
+            } else {
+                notFound();
             }
         }
-        setIsLoading(false);
-    }, [id, workers, agencies]);
+    }, [id, workers, agencies, isClient]);
 
-    if (isLoading) {
+    if (!isClient || !worker) {
         return (
             <div className="bg-muted/20 min-h-screen">
                 <div className="container mx-auto px-4 py-16">
@@ -152,10 +154,6 @@ export default function WorkerProfilePage() {
                 </div>
             </div>
         )
-    }
-
-    if (!worker) {
-        return notFound();
     }
     
     return (
@@ -230,3 +228,5 @@ export default function WorkerProfilePage() {
         </div>
     );
 }
+
+    

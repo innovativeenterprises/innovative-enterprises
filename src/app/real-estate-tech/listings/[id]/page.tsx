@@ -15,19 +15,21 @@ import { usePropertiesData } from '@/hooks/use-global-store-data';
 export default function PropertyDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { properties } = usePropertiesData();
+    const { properties, isClient } = usePropertiesData();
     const [property, setProperty] = useState<Property | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (id) {
+        if (isClient && id) {
             const foundProperty = properties.find(p => p.id === id);
-            setProperty(foundProperty);
+            if (foundProperty) {
+                setProperty(foundProperty);
+            } else {
+                notFound();
+            }
         }
-        setIsLoading(false);
-    }, [id, properties]);
+    }, [id, properties, isClient]);
 
-     if (isLoading) {
+     if (!isClient || !property) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-5xl mx-auto">
@@ -36,10 +38,6 @@ export default function PropertyDetailPage() {
                 </div>
             </div>
         )
-    }
-
-    if (!property) {
-        return notFound();
     }
 
     const details = [
@@ -108,3 +106,5 @@ export default function PropertyDetailPage() {
         </div>
     );
 }
+
+    

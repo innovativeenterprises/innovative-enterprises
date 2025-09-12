@@ -8,13 +8,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { CheckCircle, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import type { BookingRequest } from '@/lib/stairspace-requests';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function SuccessContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const requestId = searchParams.get('requestId');
     const { stairspaceRequests, isClient } = useStairspaceRequestsData();
-    const [request, setRequest] = useState<any>(undefined);
+    const [request, setRequest] = useState<BookingRequest | undefined>(undefined);
 
     useEffect(() => {
         if (isClient) {
@@ -31,12 +33,12 @@ function SuccessContent() {
         }
     }, [isClient, requestId, stairspaceRequests, router]);
 
-    if (!isClient || request === undefined) {
+    if (!isClient || !request) {
          return (
              <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
                 <div className="container mx-auto px-4 py-16">
                     <div className="max-w-lg mx-auto">
-                        <Card><CardContent className="p-10"><p>Loading...</p></CardContent></Card>
+                        <Card><CardContent className="p-10"><Skeleton className="h-48 w-full" /></CardContent></Card>
                     </div>
                 </div>
             </div>
@@ -89,3 +91,5 @@ export default function AdminStairspaceCheckoutSuccessPage() {
         </Suspense>
     );
 }
+
+    

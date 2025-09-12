@@ -17,20 +17,22 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { stairspaceListings } = useStairspaceData();
+    const { stairspaceListings, isClient } = useStairspaceData();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [listing, setListing] = useState<StairspaceListing | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if(id) {
+        if(isClient && id) {
             const foundListing = stairspaceListings.find(l => l.id === id);
-            setListing(foundListing);
+            if (foundListing) {
+                setListing(foundListing);
+            } else {
+                notFound();
+            }
         }
-        setIsLoading(false);
-    }, [id, stairspaceListings]);
+    }, [id, stairspaceListings, isClient]);
 
-    if (isLoading) {
+    if (!isClient || !listing) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto space-y-6">
@@ -39,10 +41,6 @@ export default function StairspaceDetailPage() {
                 </div>
             </div>
         );
-    }
-    
-    if (!listing) {
-        return notFound();
     }
 
     return (
@@ -118,3 +116,5 @@ export default function StairspaceDetailPage() {
         </div>
     );
 }
+
+    
