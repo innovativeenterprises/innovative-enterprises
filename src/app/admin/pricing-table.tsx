@@ -38,12 +38,13 @@ const EditPriceDialog = ({
     });
 
     useEffect(() => {
-        form.reset({ price: item.price });
+        if(isOpen) {
+            form.reset({ price: item.price });
+        }
     }, [item, form, isOpen]);
 
     const onSubmit: SubmitHandler<PricingValues> = (data) => {
         onSave(data, item.id);
-        form.reset();
         setIsOpen(false);
     };
 

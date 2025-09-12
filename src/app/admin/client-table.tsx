@@ -48,6 +48,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     const [imagePreview, setImagePreview] = useState<string | null>(client?.logo || null);
 
     const form = useForm<z.infer<typeof ClientSchema>>({
+        resolver: zodResolver(ClientSchema),
         defaultValues: {
             name: client?.name || "",
             aiHint: client?.aiHint || "",

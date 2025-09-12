@@ -15,13 +15,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ProviderProfilePage() {
     const params = useParams();
     const { id } = params;
-    const { providers, isClient } = useProvidersData();
+    const { providers } = useProvidersData();
 
     // The provider is determined synchronously. This is more stable than using useEffect.
-    const provider = isClient ? providers.find(p => p.id === id) : undefined;
+    const provider = providers.find(p => p.id === id);
     
-    // If we're on the client and the provider is not found in the list, show 404.
-    if (isClient && !provider) {
+    if (!provider) {
         return notFound();
     }
 
@@ -81,27 +80,7 @@ export default function ProviderProfilePage() {
             </div>
         )
     }
-
-    if (!isClient) {
-        return (
-            <div className="space-y-8 container mx-auto py-16 px-4">
-                 <div>
-                    <Skeleton className="h-10 w-40" />
-                </div>
-                <Card>
-                    <CardHeader>
-                        <Skeleton className="h-8 w-1/2" />
-                        <Skeleton className="h-5 w-1/3" />
-                    </CardHeader>
-                    <CardContent>
-                         <Skeleton className="h-12 w-full" />
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
     
-    // Now we know the provider exists
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto py-16 px-4">

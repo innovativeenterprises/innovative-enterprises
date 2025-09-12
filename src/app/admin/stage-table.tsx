@@ -80,13 +80,8 @@ const AddEditStageDialog = ({
 
 
 export default function StageTable() {
-    const { stages, setStages } = useProjectStagesData();
+    const { stages, setStages, isClient } = useProjectStagesData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: StageValues, id?: string) => {
         if (id) {

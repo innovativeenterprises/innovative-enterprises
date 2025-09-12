@@ -86,13 +86,6 @@ const EditBrandingDialog = ({
         }
     }, [settings, isOpen, form]);
 
-    const handleFileChange = async (file: File | undefined, setter: (uri: string) => void) => {
-        if (file) {
-            const uri = await fileToDataURI(file);
-            setter(uri);
-        }
-    };
-
     const onSubmit: SubmitHandler<BrandingValues> = async (data) => {
         let headerUri = settings.headerImageUrl;
         if (data.headerImageFile && data.headerImageFile[0]) {

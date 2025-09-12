@@ -28,6 +28,7 @@ const AssetSchema = z.object({
   type: z.enum(['Heavy Machinery', 'Power Tools', 'Vehicles', 'Scaffolding', 'Server', 'Laptop', 'Workstation', 'Networking', 'Storage', 'Peripheral']),
   specs: z.string().min(5, "Specifications are required"),
   monthlyPrice: z.coerce.number().min(1, "Monthly price is required"),
+  purchasePrice: z.coerce.number().optional(),
   status: z.enum(['Available', 'Rented', 'Maintenance']),
   imageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   imageFile: z.any().optional(),
@@ -59,6 +60,7 @@ const AddEditAssetDialog = ({
             type: asset?.type || 'Laptop',
             specs: asset?.specs || "",
             monthlyPrice: asset?.monthlyPrice || 0,
+            purchasePrice: asset?.purchasePrice || 0,
             status: asset?.status || 'Available',
             aiHint: asset?.aiHint || "",
             imageUrl: asset?.image || "",
@@ -85,6 +87,7 @@ const AddEditAssetDialog = ({
                 type: asset?.type || 'Laptop',
                 specs: asset?.specs || "",
                 monthlyPrice: asset?.monthlyPrice || 0,
+                purchasePrice: asset?.purchasePrice || 0,
                 status: asset?.status || 'Available',
                 aiHint: asset?.aiHint || "",
                 imageUrl: asset?.image || "",
@@ -193,97 +196,6 @@ const AddEditAssetDialog = ({
     )
 }
 
-const CsvImportSchema = z.object({
-  csvFile: z.any().refine(file => file?.length == 1, 'A CSV file is required.'),
-});
-type CsvImportValues = z.infer<typeof CsvImportSchema>;
-
-const ImportAssetsDialog = ({ onImport, children }: { onImport: (assets: Asset[]) => void, children: React.ReactNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<CsvImportValues>({ resolver: zodResolver(CsvImportSchema) });
-    const { toast } = useToast();
-
-    const handleFileParse = (file: File): Promise<Asset[]> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const text = event.target?.result as string;
-                const rows = text.split('\n').slice(1); // remove header
-                const newAssets: Asset[] = rows.map((row, index) => {
-                    const columns = row.split(',');
-                    if (columns.length !== 7) {
-                        console.warn(`Skipping malformed row ${index + 2}: ${row}`);
-                        return null;
-                    }
-                    return {
-                        id: `asset_bulk_${columns[0]?.trim()?.replace(/\s+/g, '_')}_${index}`,
-                        name: columns[0]?.trim(),
-                        type: columns[1]?.trim() as any,
-                        specs: columns[2]?.trim(),
-                        monthlyPrice: parseFloat(columns[3]?.trim()) || 0,
-                        status: columns[4]?.trim() as any,
-                        image: columns[5]?.trim(),
-                        aiHint: columns[6]?.trim(),
-                    };
-                }).filter((p): p is Asset => p !== null && p.name !== '');
-                resolve(newAssets);
-            };
-            reader.onerror = (error) => reject(error);
-            reader.readAsText(file);
-        });
-    }
-
-    const onSubmit: SubmitHandler<CsvImportValues> = async (data) => {
-        try {
-            const newAssets = await handleFileParse(data.csvFile[0]);
-            onImport(newAssets);
-            toast({ title: "Import Successful", description: `${newAssets.length} assets have been added.` });
-            setIsOpen(false);
-            form.reset();
-        } catch (error) {
-            toast({ title: "Import Failed", description: "Could not parse the CSV file. Please check the format.", variant: 'destructive' });
-        }
-    };
-    
-    const handleDownloadTemplate = () => {
-        const headers = ["name", "type", "specs", "monthlyPrice", "status", "image", "aiHint"];
-        const csvContent = headers.join(",") + "\n";
-        const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "asset_template.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Import Assets from CSV</DialogTitle>
-                    <DialogDescription>
-                        Upload a CSV file to add multiple assets at once. Ensure the file has the correct columns.
-                    </DialogDescription>
-                </DialogHeader>
-                <Button variant="outline" onClick={handleDownloadTemplate}>Download Template</Button>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField control={form.control} name="csvFile" render={({ field }) => (
-                            <FormItem><FormLabel>CSV File</FormLabel><FormControl><Input type="file" accept=".csv" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Import Assets</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
-    );
-};
-
 export default function AssetTable({
     assets,
     setAssets,
@@ -310,10 +222,6 @@ export default function AssetTable({
         }
     };
     
-    const handleBulkImport = (newAssets: Asset[]) => {
-        setAssets(prev => [...newAssets, ...prev]);
-    };
-
     const handleDelete = (id: string) => {
         setAssets(prev => prev.filter(asset => asset.id !== id));
         toast({ title: "Asset removed.", variant: "destructive" });
@@ -424,7 +332,3 @@ export default function AssetTable({
         </Card>
     );
 }
-
-    
-
-    

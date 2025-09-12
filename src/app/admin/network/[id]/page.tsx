@@ -15,40 +15,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ProviderDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { providers, isClient } = useProvidersData();
-    const [provider, setProvider] = useState<typeof providers[0] | null | undefined>(undefined);
+    const { providers } = useProvidersData();
     
-    useEffect(() => {
-        if (isClient) {
-            setProvider(providers.find(p => p.id === id));
-        }
-    }, [providers, id, isClient]);
+    const provider = providers.find(p => p.id === id);
 
-    if (!isClient) {
-        return (
-            <div className="space-y-8">
-                <div>
-                    <Skeleton className="h-10 w-40" />
-                </div>
-                <Card>
-                    <CardHeader>
-                        <Skeleton className="h-8 w-1/2" />
-                        <Skeleton className="h-5 w-1/3" />
-                    </CardHeader>
-                    <CardContent>
-                         <Skeleton className="h-12 w-full" />
-                    </CardContent>
-                </Card>
-            </div>
-        )
-    }
-
-    if (provider === undefined) {
+    if (!provider) {
         return notFound();
-    }
-    
-    if (provider === null) {
-        return <div>Loading provider...</div>;
     }
 
 

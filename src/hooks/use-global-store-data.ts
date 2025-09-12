@@ -317,3 +317,14 @@ export const useCfoData = () => {
         isClient: true,
     };
 };
+
+export const useStudentsData = () => {
+    const data = useStoreData();
+    return {
+        students: data.students,
+        setStudents: (updater: (students: Student[]) => void) => {
+            store.set(state => ({...state, students: updater(state.students)}));
+        },
+        isClient: true,
+    };
+};

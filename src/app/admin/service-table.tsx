@@ -13,7 +13,6 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from "@/components/ui/button";
 import { GripVertical } from "lucide-react";
-import { store } from "@/lib/global-store";
 import { useServicesData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 

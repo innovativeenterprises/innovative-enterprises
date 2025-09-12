@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { opportunityIconMap, type Opportunity } from "@/lib/opportunities";
-import { notFound } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -79,53 +79,12 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
-    const { opportunities, isClient } = useOpportunitiesData();
-    const [opportunity, setOpportunity] = useState<Opportunity | undefined | null>(null);
+    const { opportunities } = useOpportunitiesData();
+    const opportunity = opportunities.find(opp => opp.id === params.id);
     
-    useEffect(() => {
-        if (isClient) {
-            const found = opportunities.find(opp => opp.id === params.id);
-            setOpportunity(found);
-        }
-    }, [opportunities, params.id, isClient]);
-
-
-    if (!isClient) {
-        // Loading state to prevent flash of incorrect content
-        return (
-             <div className="bg-background min-h-[calc(100vh-8rem)]">
-                <div className="container mx-auto px-4 py-16">
-                    <div className="max-w-3xl mx-auto">
-                        <Card>
-                            <CardHeader>
-                                <Skeleton className="h-10 w-3/4" />
-                                <Skeleton className="h-6 w-1/2" />
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <Skeleton className="h-20 w-full" />
-                                    <Skeleton className="h-20 w-full" />
-                                </div>
-                                <div className="space-y-2">
-                                     <Skeleton className="h-6 w-1/4" />
-                                     <Skeleton className="h-24 w-full" />
-                                </div>
-                            </CardContent>
-                            <CardFooter>
-                                <Skeleton className="h-12 w-full" />
-                            </CardFooter>
-                        </Card>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-    
-    if (opportunity === undefined) {
+    if (!opportunity) {
         return notFound();
     }
-    
-    if(opportunity === null) return null; // Should be covered by the !isClient case, but good for safety.
     
     const Icon = opportunityIconMap[opportunity.iconName] || Trophy;
 
