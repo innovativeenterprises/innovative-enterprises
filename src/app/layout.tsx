@@ -26,6 +26,7 @@ export default function RootLayout({
           name="description"
           content="An AI-powered business services platform for the Omani market that automates key operations and enhances business productivity."
         />
+        <meta name="facebook-domain-verification" content="7hbqn30n21c3su6iuyi0ndrbodkhgv" />
       </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <div className="flex min-h-screen flex-col">
