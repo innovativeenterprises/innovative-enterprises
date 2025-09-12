@@ -586,7 +586,7 @@ export const initialProducts: Product[] = [
         aiHint: "legal document tender",
         rating: 0,
         enabled: true,
-        href: "/tender-assistant",
+        href: "/submit-work",
         adminStatus: "Completed"
     }
 ];
@@ -699,6 +699,8 @@ export const initialStoreProducts: Product[] = [
         adminStatus: 'Completed',
     },
 ];
+
+    
 
     
 
