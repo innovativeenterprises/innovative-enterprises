@@ -7,10 +7,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useStaffData } from '@/hooks/use-global-store-data';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TeamPage() {
-    const { leadership, agentCategories, staff, isClient } = useStaffData();
+    const { leadership, agentCategories, staff } = useStaffData();
 
     const enabledLeadership = leadership.filter(member => member.enabled);
     const enabledStaff = staff.filter(member => member.enabled);
@@ -35,18 +34,9 @@ export default function TeamPage() {
             </Button>
         </div>
         <div className="space-y-20 mt-20">
-          {isClient ? (
-            <>
-              <LeadershipTeam team={enabledLeadership} />
-              <StaffTeam team={enabledStaff} />
-              <DigitalWorkforce categories={enabledAgentCategories} />
-            </>
-          ) : (
-             <div className="space-y-12">
-                <Skeleton className="h-48 w-full" />
-                <Skeleton className="h-96 w-full" />
-             </div>
-          )}
+            <LeadershipTeam team={enabledLeadership} />
+            <StaffTeam team={enabledStaff} />
+            <DigitalWorkforce categories={enabledAgentCategories} />
         </div>
       </div>
     </div>

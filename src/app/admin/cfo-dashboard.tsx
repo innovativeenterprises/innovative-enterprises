@@ -15,7 +15,7 @@ import DueDate from './due-date';
 
 
 // Main Dashboard Component
-export default function CfoDashboard({ isClient }: { isClient: boolean }) {
+export default function CfoDashboard() {
   const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
   
   const getStatusBadge = (status: string) => {
@@ -55,7 +55,7 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        {isClient ? kpiData.map((kpi, index) => (
+        {kpiData.map((kpi, index) => (
           <Link href={kpi.href} key={index}>
             <Card className="hover:bg-muted/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -68,7 +68,7 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
               </CardContent>
             </Card>
           </Link>
-        )) : Array.from({length: 6}).map((_, index) => <Skeleton key={index} className="h-[109px] w-full" />)}
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -88,18 +88,14 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isClient ? transactionData.slice(0, 10).map((transaction, index) => (
+                {transactionData.slice(0, 10).map((transaction, index) => (
                   <TableRow key={index}>
                     <TableCell><div className="font-medium">{transaction.client}</div></TableCell>
                     <TableCell className="hidden sm:table-cell">{transaction.type}</TableCell>
                     <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                     <TableCell className="text-right">OMR {transaction.total.toFixed(2)}</TableCell>
                   </TableRow>
-                )) : (
-                  Array.from({length: 5}).map((_, i) => (
-                    <TableRow key={i}><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
-                  ))
-                )}
+                ))}
               </TableBody>
             </Table>
           </CardContent>
@@ -109,16 +105,14 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
             <Card>
                 <CardHeader><CardTitle>Monthly Cash Flow</CardTitle></CardHeader>
                 <CardContent>
-                     {isClient ? (
-                        <ChartContainer config={chartConfig} className="h-[200px] w-full">
-                            <BarChart data={cashFlowData} accessibilityLayer>
-                                <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-                                <Tooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-                                <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-                                <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
-                            </BarChart>
-                        </ChartContainer>
-                     ) : <Skeleton className="h-[200px] w-full" />}
+                    <ChartContainer config={chartConfig} className="h-[200px] w-full">
+                        <BarChart data={cashFlowData} accessibilityLayer>
+                            <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
+                            <Tooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                            <Bar dataKey="income" fill="var(--color-income)" radius={4} />
+                            <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
+                        </BarChart>
+                    </ChartContainer>
                 </CardContent>
             </Card>
 
@@ -127,17 +121,8 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
                     <CardTitle className="flex items-center gap-2 text-destructive"><ShieldAlert />VAT Payment Due</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
-                   {isClient ? (
-                    <>
-                        <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                        <DueDate date={vatPayment.dueDate} />
-                    </>
-                   ) : (
-                    <div className="space-y-2">
-                        <Skeleton className="h-10 w-3/4 mx-auto" />
-                        <Skeleton className="h-4 w-1/2 mx-auto" />
-                    </div>
-                   )}
+                    <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
+                    <DueDate date={vatPayment.dueDate} />
                 </CardContent>
             </Card>
 
@@ -149,7 +134,7 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
                            <TableRow><TableHead>Source</TableHead><TableHead className="text-right">Amount</TableHead></TableRow>
                         </TableHeader>
                         <TableBody>
-                           {isClient ? upcomingPayments.slice(0, 5).map((payment, index) => (
+                           {upcomingPayments.slice(0, 5).map((payment, index) => (
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
@@ -157,11 +142,7 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>
-                           )) : (
-                             Array.from({length: 3}).map((_, i) => (
-                               <TableRow key={i}><TableCell colSpan={2}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
-                             ))
-                           )}
+                           ))}
                         </TableBody>
                     </Table>
                 </CardContent>

@@ -32,7 +32,7 @@ import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 
-export const useServicesData = () => {
+const useStoreData = () => {
     const [data, setData] = useState(store.get());
 
     useEffect(() => {
@@ -41,7 +41,12 @@ export const useServicesData = () => {
         });
         return () => unsubscribe();
     }, []);
+    
+    return data;
+}
 
+export const useServicesData = () => {
+    const data = useStoreData();
     return {
         services: data.services,
         setServices: (updater: (services: Service[]) => Service[]) => {
@@ -51,15 +56,7 @@ export const useServicesData = () => {
 };
 
 export const useProductsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         products: data.products,
         setProducts: (updater: (products: Product[]) => Product[]) => {
@@ -70,15 +67,7 @@ export const useProductsData = () => {
 
 
 export const useClientsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         clients: data.clients,
         setClients: (updater: (clients: Client[]) => Client[]) => {
@@ -92,15 +81,7 @@ export const useClientsData = () => {
 };
 
 export const useProvidersData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         providers: data.providers,
         setProviders: (updater: (providers: Provider[]) => Provider[]) => {
@@ -110,9 +91,8 @@ export const useProvidersData = () => {
 };
 
 export const useStaffData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
+    const data = useStoreData();
+     useEffect(() => {
         // Initialize the store with data from agents.ts if it's not already there
         if(store.get().leadership.length === 0) {
             store.set(state => ({
@@ -122,11 +102,6 @@ export const useStaffData = () => {
                 agentCategories: initialStaffData.agentCategories
             }));
         }
-
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
     }, []);
 
     return {
@@ -146,15 +121,7 @@ export const useStaffData = () => {
 };
 
 export const useCommunitiesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         communities: data.communities,
         setCommunities: (updater: (communities: Community[]) => Community[]) => {
@@ -164,15 +131,7 @@ export const useCommunitiesData = () => {
 };
 
 export const useCommunityHubData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         events: data.communityEvents,
         setEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
@@ -190,15 +149,7 @@ export const useCommunityHubData = () => {
 };
 
 export const useMembersData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         members: data.communityMembers,
         setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
@@ -209,15 +160,7 @@ export const useMembersData = () => {
 
 
 export const useProjectStagesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         stages: data.stages,
         setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
@@ -227,15 +170,7 @@ export const useProjectStagesData = () => {
 };
 
 export const useSettingsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         settings: data.settings,
         setSettings: (updater: (settings: AppSettings) => AppSettings) => {
@@ -245,15 +180,7 @@ export const useSettingsData = () => {
 };
 
 export const useAssetsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         assets: data.assets,
         setAssets: (updater: (assets: Asset[]) => Asset[]) => {
@@ -263,15 +190,7 @@ export const useAssetsData = () => {
 };
 
 export const useInvestorsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         investors: data.investors,
         setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
@@ -281,15 +200,7 @@ export const useInvestorsData = () => {
 };
 
 export const useKnowledgeData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         knowledgeBase: data.knowledgeBase,
         setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
@@ -299,15 +210,7 @@ export const useKnowledgeData = () => {
 };
 
 export const useAgenciesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         agencies: data.raahaAgencies,
         setAgencies: (updater: (agencies: Agency[]) => Agency[]) => {
@@ -317,15 +220,7 @@ export const useAgenciesData = () => {
 };
 
 export const useWorkersData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         workers: data.raahaWorkers,
         setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
@@ -335,15 +230,7 @@ export const useWorkersData = () => {
 };
 
 export const useRequestsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         requests: data.raahaRequests,
         setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
@@ -353,15 +240,7 @@ export const useRequestsData = () => {
 };
 
 export const useLeasesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         leases: data.signedLeases,
         setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
@@ -371,15 +250,7 @@ export const useLeasesData = () => {
 };
 
 export const usePropertiesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         properties: data.properties,
         setProperties: (updater: (properties: Property[]) => Property[]) => {
@@ -389,15 +260,7 @@ export const usePropertiesData = () => {
 };
 
 export const useStairspaceData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         stairspaceListings: data.stairspaceListings,
         setStairspaceListings: (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => {
@@ -407,15 +270,7 @@ export const useStairspaceData = () => {
 };
 
 export const useStairspaceRequestsData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         stairspaceRequests: data.stairspaceRequests,
         setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => StairspaceRequest[]) => {
@@ -425,15 +280,7 @@ export const useStairspaceRequestsData = () => {
 };
 
 export const useOpportunitiesData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         opportunities: data.opportunities,
         setOpportunities: (updater: (opps: Opportunity[]) => Opportunity[]) => {
@@ -443,15 +290,7 @@ export const useOpportunitiesData = () => {
 };
 
 export const useCfoData = () => {
-    const [data, setData] = useState(store.get());
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-
+    const data = useStoreData();
     return {
         kpiData: data.kpiData,
         transactionData: data.transactionData,

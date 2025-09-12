@@ -2,7 +2,6 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, GraduationCap, BrainCircuit, ShieldCheck, ArrowRight } from "lucide-react";

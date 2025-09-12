@@ -1,13 +1,12 @@
 
+
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Leaf, Droplets, Wind, Upload, Download, CheckCircle, Cpu } from "lucide-react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import { Skeleton } from '@/components/ui/skeleton';
 
 const energyData = [
   { month: 'Jan', consumption: 45000 },
@@ -34,23 +33,14 @@ const carbonData = [
   { month: 'Feb', footprint: 22000 },
   { month: 'Mar', footprint: 23500 },
   { month: 'Apr', footprint: 25000 },
-  { month: 'May', footprint: 28000 },
-  { month: 'Jun', footprint: 32000 },
+  { month: 'May', consumption: 28000 },
+  { month: 'Jun', consumption: 32000 },
 ];
 const carbonChartConfig = { footprint: { label: "kgCO2e", color: "hsl(var(--muted-foreground))" } };
 
 export default function CampusOsPage() {
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const renderChart = (chartType: 'energy' | 'water' | 'carbon') => {
-        if (!isClient) {
-            return <Skeleton className="h-48 w-full" />;
-        }
-        
         if (chartType === 'energy') {
              return (
                 <ChartContainer config={energyChartConfig} className="h-48 w-full">

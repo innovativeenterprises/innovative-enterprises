@@ -19,7 +19,6 @@ import type { Client, Testimonial } from "@/lib/clients";
 import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "../ui/skeleton";
 import { fileToDataURI } from "@/lib/utils";
 import { useClientsData } from "@/hooks/use-global-store-data";
 
