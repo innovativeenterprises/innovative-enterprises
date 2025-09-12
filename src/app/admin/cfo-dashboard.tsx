@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -12,46 +11,8 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCfoData } from '@/hooks/use-global-store-data';
 import type { KpiData } from '@/lib/cfo-data';
+import DueDate from './due-date';
 
-// Reusable component for displaying due dates and remaining days
-const DueDate = ({ date, className }: { date: string, className?: string }) => {
-  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    // This effect runs only on the client, after hydration, to prevent mismatch
-    const calculateRemainingDays = () => {
-      const dueDate = new Date(date);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Normalize to start of day for accurate diff
-      const diffTime = dueDate.getTime() - today.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      setDaysRemaining(diffDays);
-    }
-    
-    setIsClient(true);
-    calculateRemainingDays();
-
-  }, [date]);
-
-  if (!isClient) {
-    // Render a skeleton on the server and initial client render
-    return <Skeleton className="h-4 w-24 mt-1" />;
-  }
-
-  return (
-    <div className={`text-sm text-muted-foreground ${className}`}>
-      Due: {date}
-      {daysRemaining !== null && (
-        daysRemaining >= 0 ? (
-          <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
-        ) : (
-          <span className="text-destructive font-medium"> (Overdue)</span>
-        )
-      )}
-    </div>
-  );
-}
 
 // Main Dashboard Component
 export default function CfoDashboard({ isClient }: { isClient: boolean }) {
@@ -169,7 +130,7 @@ export default function CfoDashboard({ isClient }: { isClient: boolean }) {
                    {isClient ? (
                     <>
                         <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                        <DueDate date={vatPayment.dueDate} className="mt-1" />
+                        <DueDate date={vatPayment.dueDate} />
                     </>
                    ) : (
                     <div className="space-y-2">

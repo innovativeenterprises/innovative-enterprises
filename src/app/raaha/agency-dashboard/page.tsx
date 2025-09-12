@@ -31,29 +31,44 @@ const getStatusBadge = (status: HireRequest['status']) => {
     }
 };
 
-const requestsColumns = [
-    {
-        Header: 'Candidate',
-        accessor: 'workerName',
-    },
-    {
-        Header: 'Client',
-        accessor: 'clientName',
-    },
-     {
-        Header: 'Request Date',
-        accessor: 'requestDate',
-        Cell: ({ row }: { row: { original: HireRequest }}) => formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true })
-    },
-    {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: ({ row }: { row: { original: HireRequest }}) => getStatusBadge(row.original.status)
-    },
-     {
-        Header: 'Interview',
-        accessor: 'interviewDate',
-        Cell: ({ row }: { row: { original: HireRequest }}) => row.original.interviewDate ? (
+const getAvailabilityBadge = (availability: Worker['availability']) => {
+    return (
+        <Badge variant={availability === 'Available' ? 'default' : 'outline'} className={availability === 'Available' ? 'bg-green-500/20 text-green-700' : ''}>
+            {availability}
+        </Badge>
+    );
+};
+
+export default function AgencyDashboardPage() {
+    const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
+    const { requests, setRequests, isClient: isRequestsClient } = useRequestsData();
+    const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
+    const { toast } = useToast();
+
+    const [selectedAgencyId, setSelectedAgencyId] = useState('');
+    const isClient = isWorkersClient && isRequestsClient && isAgenciesClient;
+
+    useEffect(() => {
+        if (agencies.length > 0 && !selectedAgencyId) {
+            setSelectedAgencyId(agencies[0].id);
+        }
+    }, [agencies, selectedAgencyId]);
+
+    const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
+    
+    const onSchedule = (id: string, values: InterviewValues) => {
+        setRequests(prev => prev.map(r => 
+            r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+        ));
+        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
+    };
+
+    const requestsColumns = useMemo(() => [
+        { Header: 'Candidate', accessor: 'workerName' },
+        { Header: 'Client', accessor: 'clientName' },
+        { Header: 'Request Date', accessor: 'requestDate', Cell: ({ row }: { row: { original: HireRequest }}) => formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true }) },
+        { Header: 'Status', accessor: 'status', Cell: ({ row }: { row: { original: HireRequest }}) => getStatusBadge(row.original.status) },
+        { Header: 'Interview', accessor: 'interviewDate', Cell: ({ row }: { row: { original: HireRequest }}) => row.original.interviewDate ? (
             <div className="text-xs text-muted-foreground space-y-1">
                <div className="flex items-center gap-1.5 font-semibold">
                 <CalendarIcon className="h-3 w-3 text-primary" />
@@ -66,23 +81,11 @@ const requestsColumns = [
                     </div>
                 )}
             </div>
-        ) : null
-    },
-];
+        ) : null },
+    ], []);
 
-const getAvailabilityBadge = (availability: Worker['availability']) => {
-    return (
-        <Badge variant={availability === 'Available' ? 'default' : 'outline'} className={availability === 'Available' ? 'bg-green-500/20 text-green-700' : ''}>
-            {availability}
-        </Badge>
-    );
-};
-
-const workersColumns = [
-    {
-        Header: 'Candidate',
-        accessor: 'name',
-        Cell: ({ row }: { row: { original: Worker }}) => (
+    const workersColumns = useMemo(() => [
+        { Header: 'Candidate', accessor: 'name', Cell: ({ row }: { row: { original: Worker }}) => (
             <div className="flex items-center gap-3">
                 <Image src={row.original.photo} alt={row.original.name} width={40} height={40} className="rounded-full object-cover"/>
                 <div>
@@ -90,45 +93,17 @@ const workersColumns = [
                     <p className="text-sm text-muted-foreground">{row.original.age} years old</p>
                 </div>
             </div>
-        )
-    },
-    {
-        Header: 'Nationality',
-        accessor: 'nationality',
-    },
-    {
-        Header: 'Skills',
-        accessor: 'skills',
-        Cell: ({ row }: { row: { original: Worker }}) => (
+        )},
+        { Header: 'Nationality', accessor: 'nationality' },
+        { Header: 'Skills', accessor: 'skills', Cell: ({ row }: { row: { original: Worker }}) => (
              <div className="flex flex-wrap gap-1 max-w-xs">
                 {row.original.skills.slice(0, 3).map(skill => <Badge key={skill} variant="secondary">{skill}</Badge>)}
                 {row.original.skills.length > 3 && <Badge variant="outline">+{row.original.skills.length - 3}</Badge>}
             </div>
-        )
-    },
-    {
-        Header: 'Availability',
-        accessor: 'availability',
-        Cell: ({ row }: { row: { original: Worker }}) => getAvailabilityBadge(row.original.availability)
-    },
-]
+        )},
+        { Header: 'Availability', accessor: 'availability', Cell: ({ row }: { row: { original: Worker }}) => getAvailabilityBadge(row.original.availability) },
+    ], []);
 
-export default function AgencyDashboardPage() {
-    const { workers, setWorkers } = useWorkersData();
-    const { requests, setRequests } = useRequestsData();
-    const { agencies, setAgencies } = useAgenciesData();
-    const { toast } = useToast();
-
-    const [selectedAgencyId, setSelectedAgencyId] = useState('');
-
-    useEffect(() => {
-        if (agencies.length > 0 && !selectedAgencyId) {
-            setSelectedAgencyId(agencies[0].id);
-        }
-    }, [agencies, selectedAgencyId]);
-
-    const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
-    
     if (!selectedAgency) {
          return (
             <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -144,13 +119,6 @@ export default function AgencyDashboardPage() {
     
     const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
     const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
-    
-     const onSchedule = (id: string, values: InterviewValues) => {
-        setRequests(prev => prev.map(r => 
-            r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
-        ));
-        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
-    };
 
     return (
          <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -197,12 +165,12 @@ export default function AgencyDashboardPage() {
                             <RequestTable 
                                 data={filteredRequests} 
                                 columns={requestsColumns}
-                                isClient={true}
+                                isClient={isClient}
                                 renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} isClient={true} />
+                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} isClient={isClient} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import InvestorTable from "../investor-table";
 import { useInvestorsData } from "@/hooks/use-global-store-data";
 import CfoDashboard from "../cfo-dashboard";
+import DueDate from '../due-date';
 
 export default function AdminFinancePage() {
   const investorData = useInvestorsData();

@@ -18,7 +18,10 @@ export default function AdminDashboardPage() {
   const { providers, isClient: isProvidersClient } = useProvidersData();
   const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
   
-  const isClient = isProductsClient && isProvidersClient && isStaffClient;
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(isProductsClient && isProvidersClient && isStaffClient);
+  }, [isProductsClient, isProvidersClient, isStaffClient]);
   
   const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
   const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);
