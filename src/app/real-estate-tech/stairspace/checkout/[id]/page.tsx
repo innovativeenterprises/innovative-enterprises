@@ -5,7 +5,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
+import { CheckCircle, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 import type { BookingRequest } from '@/lib/stairspace-requests';
