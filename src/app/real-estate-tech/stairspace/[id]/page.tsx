@@ -1,26 +1,18 @@
 
 'use client';
 
-import { useParams, useRouter, notFound } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { useStairspaceData } from '@/hooks/use-global-store-data';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
-import { ArrowLeft, MapPin, Tag, Calendar, User, Mail, Phone, DollarSign } from 'lucide-react';
+import { ArrowLeft, MapPin, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
 import { BookingRequestForm } from '../booking-form';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Skeleton } from '@/components/ui/skeleton';
-import { initialStairspaceListings } from '@/lib/stairspace-listings';
-
-export function generateStaticParams() {
-    return initialStairspaceListings.map((listing) => ({
-        id: listing.id,
-    }));
-}
-
 
 export default function StairspaceDetailPage() {
     const params = useParams();
@@ -31,7 +23,6 @@ export default function StairspaceDetailPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
         if(id) {
             const foundListing = stairspaceListings.find(l => l.id === id);
             setListing(foundListing);
@@ -39,7 +30,7 @@ export default function StairspaceDetailPage() {
         setIsLoading(false);
     }, [id, stairspaceListings]);
 
-    if (isLoading || listing === undefined) {
+    if (isLoading) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto space-y-6">

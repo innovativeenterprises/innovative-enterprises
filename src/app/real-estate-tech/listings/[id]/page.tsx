@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, useRouter, notFound } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import type { Property } from '@/lib/properties';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,14 +11,6 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePropertiesData } from '@/hooks/use-global-store-data';
-import { initialProperties } from '@/lib/properties';
-
-export function generateStaticParams() {
-    return initialProperties.map((property) => ({
-        id: property.id,
-    }));
-}
-
 
 export default function PropertyDetailPage() {
     const params = useParams();
@@ -28,7 +20,6 @@ export default function PropertyDetailPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
         if (id) {
             const foundProperty = properties.find(p => p.id === id);
             setProperty(foundProperty);
@@ -36,7 +27,7 @@ export default function PropertyDetailPage() {
         setIsLoading(false);
     }, [id, properties]);
 
-     if (isLoading || property === undefined) {
+     if (isLoading) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-5xl mx-auto">

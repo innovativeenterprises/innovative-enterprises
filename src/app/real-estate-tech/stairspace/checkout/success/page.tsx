@@ -1,14 +1,13 @@
 
 'use client';
 
-import { Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
+import { CheckCircle, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { useEffect, useState } from 'react';
 
 function SuccessContent() {
     const router = useRouter();
@@ -24,9 +23,10 @@ function SuccessContent() {
                 return;
             }
             const foundRequest = stairspaceRequests.find(r => r.id === requestId);
-            setRequest(foundRequest || null);
             if (!foundRequest) {
-                router.replace('/404');
+                notFound();
+            } else {
+                setRequest(foundRequest);
             }
         }
     }, [isClient, requestId, stairspaceRequests, router]);
@@ -43,10 +43,6 @@ function SuccessContent() {
         );
     }
 
-    if (request === null) {
-        return null; // Will be redirected by useEffect
-    }
-    
     return (
          <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
             <div className="container mx-auto px-4 py-16">

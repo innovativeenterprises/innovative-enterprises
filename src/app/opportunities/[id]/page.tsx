@@ -7,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { opportunityIconMap, type Opportunity, initialOpportunities } from "@/lib/opportunities";
-import { useParams, useRouter, notFound } from 'next/navigation';
+import { opportunityIconMap, type Opportunity } from "@/lib/opportunities";
+import { useParams, notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake, MessageSquare } from "lucide-react";
+import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
-
 
 const NegotiationSchema = z.object({
   proposedPrice: z.coerce.number().positive("Proposed price must be a positive number."),
@@ -77,21 +76,14 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
     )
 }
 
-export function generateStaticParams() {
-    return initialOpportunities.map((opp) => ({
-        id: opp.id,
-    }));
-}
-
-
-export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
+export default function OpportunityDetailPage() {
+    const params = useParams();
     const { id } = params;
     const { opportunities } = useOpportunitiesData();
     const [opportunity, setOpportunity] = useState<Opportunity | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
         if (id) {
             const foundOpp = opportunities.find(opp => opp.id === id);
             setOpportunity(foundOpp);
@@ -99,7 +91,7 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
         setIsLoading(false);
     }, [id, opportunities]);
 
-    if (isLoading || opportunity === undefined) {
+    if (isLoading) {
         return (
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-3xl mx-auto">

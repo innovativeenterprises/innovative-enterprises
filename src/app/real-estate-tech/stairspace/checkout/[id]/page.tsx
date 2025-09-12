@@ -1,14 +1,13 @@
 
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { useEffect, useState } from 'react';
 
 function SuccessContent() {
     const router = useRouter();
@@ -20,9 +19,10 @@ function SuccessContent() {
     useEffect(() => {
         if (isClient && requestId) {
             const foundRequest = stairspaceRequests.find(r => r.id === requestId);
-            setRequest(foundRequest || null);
-             if (!foundRequest) {
+            if (!foundRequest) {
                 notFound();
+            } else {
+                setRequest(foundRequest);
             }
         }
     }, [isClient, requestId, stairspaceRequests]);
@@ -37,10 +37,6 @@ function SuccessContent() {
                 </div>
             </div>
         );
-    }
-    
-    if (request === null) {
-        return notFound();
     }
     
     return (

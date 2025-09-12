@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter, notFound } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { useWorkersData } from '@/hooks/use-global-store-data';
 import { useAgenciesData } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
@@ -21,7 +21,6 @@ import { store } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { initialWorkers } from '@/lib/raaha-workers';
 
 const HireRequestSchema = z.object({
     clientName: z.string().min(3, "Name is required."),
@@ -113,13 +112,6 @@ const AgencyInfoCard = ({ agency }: { agency: Agency }) => {
     )
 }
 
-export function generateStaticParams() {
-    return initialWorkers.map((worker) => ({
-        id: worker.id,
-    }));
-}
-
-
 export default function WorkerProfilePage() {
     const params = useParams();
     const { id } = params;
@@ -130,7 +122,6 @@ export default function WorkerProfilePage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
         if(id) {
             const foundWorker = workers.find(p => p.id === id);
             setWorker(foundWorker);
@@ -142,7 +133,7 @@ export default function WorkerProfilePage() {
         setIsLoading(false);
     }, [id, workers, agencies]);
 
-    if (isLoading || worker === undefined) {
+    if (isLoading) {
         return (
             <div className="bg-muted/20 min-h-screen">
                 <div className="container mx-auto px-4 py-16">

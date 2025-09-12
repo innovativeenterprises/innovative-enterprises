@@ -1,8 +1,7 @@
 
 'use client';
 
-import { useParams, useRouter, notFound } from 'next/navigation';
-import { initialStoreProducts } from '@/lib/products';
+import { useParams, notFound } from 'next/navigation';
 import type { Product } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,15 +38,8 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
     </Card>
 );
 
-
-export function generateStaticParams() {
-    return initialStoreProducts.map((product) => ({
-        id: String(product.id),
-    }));
-}
-
-
-export default function ProductDetailPage({ params }: { params: { id: string }}) {
+export default function ProductDetailPage() {
+    const params = useParams();
     const { id } = params;
     const { products } = useProductsData();
     const [quantity, setQuantity] = useState(1);
@@ -56,7 +48,6 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
         if (id) {
             const foundProduct = products.find(p => p.id === parseInt(id as string, 10));
             setProduct(foundProduct);
@@ -64,7 +55,7 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
         setIsLoading(false);
     }, [id, products]);
 
-    if (isLoading || product === undefined) {
+    if (isLoading) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <Skeleton className="h-10 w-40 mb-8" />

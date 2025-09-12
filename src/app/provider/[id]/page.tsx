@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, useRouter, notFound } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { useProvidersData } from '@/hooks/use-global-store-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,22 +12,15 @@ import { Progress } from '@/components/ui/progress';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
-import { initialProviders } from '@/lib/providers';
 
-export function generateStaticParams() {
-    return initialProviders.map((provider) => ({
-        id: provider.id,
-    }));
-}
-
-
-const ProviderProfilePageContent = ({ id }: { id: string }) => {
+export default function ProviderProfilePage() {
+    const params = useParams();
+    const { id } = params;
     const { providers } = useProvidersData();
     const [provider, setProvider] = useState<Provider | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
         if (id) {
             const foundProvider = providers.find(p => p.id === id);
             setProvider(foundProvider);
@@ -35,21 +28,14 @@ const ProviderProfilePageContent = ({ id }: { id: string }) => {
         setIsLoading(false);
     }, [id, providers]);
 
-    if (isLoading || provider === undefined) {
+    if (isLoading) {
         return (
-             <div className="space-y-8">
-                <div>
-                    <Skeleton className="h-10 w-40" />
+             <div className="bg-background min-h-[calc(100vh-8rem)]">
+                <div className="container mx-auto py-16 px-4">
+                    <div className="max-w-4xl mx-auto">
+                        <Skeleton className="h-96 w-full" />
+                    </div>
                 </div>
-                <Card>
-                    <CardHeader>
-                        <Skeleton className="h-8 w-1/2" />
-                        <Skeleton className="h-4 w-3/4" />
-                    </CardHeader>
-                    <CardContent>
-                        <Skeleton className="h-24 w-full" />
-                    </CardContent>
-                </Card>
             </div>
         )
     }
@@ -116,59 +102,50 @@ const ProviderProfilePageContent = ({ id }: { id: string }) => {
     }
     
     return (
-        <div className="space-y-8">
-            <div>
-                <Button asChild variant="outline">
-                    <Link href="/business-hub">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Business Hub
-                    </Link>
-                </Button>
-            </div>
-            <Card>
-                <CardHeader className="flex flex-col md:flex-row justify-between items-start gap-4">
-                    <div>
-                        <div className="flex items-center gap-4 mb-2">
-                        <CardTitle className="text-3xl">{provider.name}</CardTitle>
-                        {getStatusBadge(provider.status)}
-                        </div>
-                        <CardDescription className="text-base">{provider.services}</CardDescription>
-                        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-                            <a href={`mailto:${provider.email}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
-                                <Mail className="h-4 w-4" /> {provider.email}
-                            </a>
-                            {provider.portfolio && 
-                                <a href={provider.portfolio} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
-                                    <Globe className="h-4 w-4" /> Portfolio
-                                </a>
-                            }
-                        </div>
-                    </div>
-                    <div className="w-full md:w-auto">
-                        <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
-                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry as string} />
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <h3 className="text-lg font-semibold mb-2">Internal Notes</h3>
-                    <p className="text-sm text-muted-foreground bg-muted p-4 rounded-md border italic">
-                        {provider.notes || "No notes for this provider yet."}
-                    </p>
-                </CardContent>
-            </Card>
-        </div>
-    );
-}
-
-export default function ProviderProfilePage() {
-    const params = useParams();
-    const id = params.id as string;
-    
-    return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto py-16 px-4">
                 <div className="max-w-4xl mx-auto">
-                   <ProviderProfilePageContent id={id} />
+                     <div className="space-y-8">
+                        <div>
+                            <Button asChild variant="outline">
+                                <Link href="/business-hub">
+                                    <ArrowLeft className="mr-2 h-4 w-4" />
+                                    Back to Business Hub
+                                </Link>
+                            </Button>
+                        </div>
+                        <Card>
+                            <CardHeader className="flex flex-col md:flex-row justify-between items-start gap-4">
+                                <div>
+                                    <div className="flex items-center gap-4 mb-2">
+                                    <CardTitle className="text-3xl">{provider.name}</CardTitle>
+                                    {getStatusBadge(provider.status)}
+                                    </div>
+                                    <CardDescription className="text-base">{provider.services}</CardDescription>
+                                    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                                        <a href={`mailto:${provider.email}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                                            <Mail className="h-4 w-4" /> {provider.email}
+                                        </a>
+                                        {provider.portfolio && 
+                                            <a href={provider.portfolio} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                                                <Globe className="h-4 w-4" /> Portfolio
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                                <div className="w-full md:w-auto">
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
+                                    <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry as string} />
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <h3 className="text-lg font-semibold mb-2">Internal Notes</h3>
+                                <p className="text-sm text-muted-foreground bg-muted p-4 rounded-md border italic">
+                                    {provider.notes || "No notes for this provider yet."}
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
             </div>
         </div>
