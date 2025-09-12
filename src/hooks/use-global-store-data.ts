@@ -29,19 +29,11 @@ import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
+import { kpiData, transactionData, upcomingPayments, vatPayment } from './cfo-data';
 
 const useStoreData = () => {
     return useSyncExternalStore(store.subscribe, store.get, store.get);
 }
-
-const useIsClient = () => {
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-    return isClient;
-}
-
 
 export const useServicesData = () => {
     const data = useStoreData();
@@ -55,10 +47,8 @@ export const useServicesData = () => {
 
 export const useProductsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setProducts: (updater: (products: Product[]) => void) => {
             store.set(state => ({ ...state, products: updater(state.products) }));
         },
@@ -81,10 +71,8 @@ export const useClientsData = () => {
 
 export const useProvidersData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setProviders: (updater: (providers: Provider[]) => void) => {
             store.set(state => ({ ...state, providers: updater(state.providers) }));
         },
@@ -93,10 +81,8 @@ export const useProvidersData = () => {
 
 export const useStaffData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setLeadership: (updater: (agents: Agent[]) => void) => {
             store.set(state => ({ ...state, leadership: updater(state.leadership) }));
         },
@@ -111,10 +97,8 @@ export const useStaffData = () => {
 
 export const useCommunitiesData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setCommunities: (updater: (communities: Community[]) => void) => {
             store.set(state => ({ ...state, communities: updater(state.communities) }));
         },
@@ -123,10 +107,8 @@ export const useCommunitiesData = () => {
 
 export const useCommunityHubData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setEvents: (updater: (events: CommunityEvent[]) => void) => {
             store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
         },
@@ -138,10 +120,8 @@ export const useCommunityHubData = () => {
 
 export const useMembersData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setMembers: (updater: (members: CommunityMember[]) => void) => {
             store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
@@ -151,10 +131,8 @@ export const useMembersData = () => {
 
 export const useProjectStagesData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setStages: (updater: (stages: ProjectStage[]) => void) => {
             store.set(state => ({ ...state, stages: updater(state.stages) }));
         },
@@ -163,10 +141,8 @@ export const useProjectStagesData = () => {
 
 export const useSettingsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setSettings: (updater: (settings: AppSettings) => void) => {
             store.set(state => ({ ...state, settings: updater(state.settings) }));
         },
@@ -175,10 +151,8 @@ export const useSettingsData = () => {
 
 export const useAssetsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setAssets: (updater: (assets: Asset[]) => void) => {
             store.set(state => ({ ...state, assets: updater(state.assets) }));
         },
@@ -187,10 +161,8 @@ export const useAssetsData = () => {
 
 export const useInvestorsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setInvestors: (updater: (investors: Investor[]) => void) => {
             store.set(state => ({ ...state, investors: updater(state.investors) }));
         },
@@ -199,10 +171,8 @@ export const useInvestorsData = () => {
 
 export const useKnowledgeData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => {
             store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
         },
@@ -211,10 +181,8 @@ export const useKnowledgeData = () => {
 
 export const useAgenciesData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setAgencies: (updater: (agencies: Agency[]) => void) => {
             store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
         },
@@ -223,10 +191,8 @@ export const useAgenciesData = () => {
 
 export const useWorkersData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setWorkers: (updater: (workers: RaahaWorker[]) => void) => {
             store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
         },
@@ -235,10 +201,8 @@ export const useWorkersData = () => {
 
 export const useRequestsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setRequests: (updater: (requests: HireRequest[]) => void) => {
             store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
         },
@@ -247,10 +211,8 @@ export const useRequestsData = () => {
 
 export const useLeasesData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setLeases: (updater: (leases: SignedLease[]) => void) => {
             store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
         },
@@ -259,10 +221,8 @@ export const useLeasesData = () => {
 
 export const usePropertiesData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setProperties: (updater: (properties: Property[]) => void) => {
             store.set(state => ({ ...state, properties: updater(state.properties) }));
         },
@@ -271,10 +231,8 @@ export const usePropertiesData = () => {
 
 export const useStairspaceData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setStairspaceListings: (updater: (listings: StairspaceListing[]) => void) => {
             store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
         },
@@ -283,10 +241,8 @@ export const useStairspaceData = () => {
 
 export const useStairspaceRequestsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => void) => {
             store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
         },
@@ -295,10 +251,8 @@ export const useStairspaceRequestsData = () => {
 
 export const useOpportunitiesData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setOpportunities: (updater: (opps: Opportunity[]) => void) => {
             store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
         },
@@ -307,19 +261,15 @@ export const useOpportunitiesData = () => {
 
 export const useCfoData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
     };
 };
 
 export const useCostSettingsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setCostSettings: (updater: (items: CostRate[]) => void) => {
             store.set(state => ({...state, costSettings: updater(state.costSettings)}));
         }
