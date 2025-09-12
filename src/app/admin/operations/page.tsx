@@ -11,7 +11,7 @@ import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Pa
 import KnowledgeTable from '../knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import { useKnowledgeData } from "@/hooks/use-global-store-data";
-import AssetRentalAgentForm from '@/app/construction-tech/asset-rentals/agent-form';
+import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 
 export default function AdminOperationsPage() {
   const knowledgeData = useKnowledgeData();
