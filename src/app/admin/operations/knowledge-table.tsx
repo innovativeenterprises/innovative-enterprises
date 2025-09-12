@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -310,13 +311,8 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase }: { knowledgeBase: KnowledgeDocument[], setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => void }) {
+export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase, isClient }: { knowledgeBase: KnowledgeDocument[], setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => void, isClient: boolean }) {
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-      setIsClient(true);
-    }, []);
 
     const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {
         toast({ title: 'Analyzing Source(s)...', description: 'Please wait while the AI extracts key information.' });
