@@ -9,8 +9,46 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
-import DueDate from './due-date';
 import { useCfoData } from '@/hooks/use-global-store-data';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+// A new sub-component to safely render dates on the client.
+const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
+    const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const calculateRemainingDays = () => {
+            const dueDate = new Date(date);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const diffTime = dueDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+            setDaysRemaining(diffDays);
+        }
+        calculateRemainingDays();
+    }, [date]);
+
+    if (!isClient) {
+        return <Skeleton className="h-4 w-24 mt-1" />;
+    }
+
+    return (
+        <div className={`text-sm text-muted-foreground ${className}`}>
+            Due: {date}
+            {daysRemaining !== null && (
+                daysRemaining >= 0 ? (
+                    <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
+                ) : (
+                    <span className="text-destructive font-medium"> (Overdue)</span>
+                )
+            )}
+        </div>
+    );
+}
+
 
 // Main Dashboard Component
 export default function CfoDashboard() {
@@ -111,7 +149,7 @@ export default function CfoDashboard() {
                 </CardHeader>
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <DueDate date={vatPayment.dueDate} />
+                    <DueDateDisplay date={vatPayment.dueDate} />
                 </CardContent>
             </Card>
 
@@ -127,7 +165,7 @@ export default function CfoDashboard() {
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
-                                       <DueDate date={payment.dueDate} />
+                                       <DueDateDisplay date={payment.dueDate} />
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>
