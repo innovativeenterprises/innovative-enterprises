@@ -22,9 +22,14 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { analyzeFloorPlan, type FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis';
 import { fileToDataURI } from '@/lib/utils';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const FormSchema = z.object({
   floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
+  projectType: z.enum(['Temporary Office Setup', 'Training Program or Workshop', 'Special Event (e.g., conference, hackathon)', 'Short-term Project (e.g., data analysis, software dev)', 'Hardware Evaluation or Testing', 'Residential Villa', 'Commercial Building', 'Industrial Warehouse', 'Other']),
+  numberOfUsers: z.coerce.number().min(1),
   coverage: z.enum(['Full', 'Partial']).default('Full'),
   coverageType: z.enum(['Interior', 'Exterior']).optional(),
   connectivity: z.enum(['WiFi', 'Wired']).default('Wired'),
@@ -52,6 +57,8 @@ export default function EstimatorForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      projectType: 'Commercial Building',
+      numberOfUsers: 1,
       coverage: 'Full',
       connectivity: 'Wired',
       purpose: 'General Security',
@@ -88,10 +95,10 @@ export default function EstimatorForm() {
 
       const proposalInput: IctProposalInput = {
         projectName: floorPlanFile.name,
-        projectType: analysis?.projectType as any,
+        projectType: data.projectType,
         primaryGoal: 'Surveillance system installation',
-        numberOfUsers: 1, // Placeholder
-        projectDurationMonths: 1, // Placeholder
+        numberOfUsers: data.numberOfUsers,
+        projectDurationMonths: 1, // Placeholder for surveillance-only quote
         includeSurveillance: true,
         surveillanceDetails: surveillanceDetails,
         purpose: data.purpose,
@@ -153,16 +160,11 @@ export default function EstimatorForm() {
         }
         
         if (result.projectType) {
-            const currentValues = form.getValues();
-            form.reset({
-                ...currentValues,
-                areasToMonitor: specs.trim(),
-            });
-        } else {
-             form.setValue('areasToMonitor', specs.trim());
+            form.setValue('projectType', result.projectType as any);
         }
+        form.setValue('areasToMonitor', specs.trim());
 
-        toast({ title: 'Floor Plan Analyzed', description: 'AI has provided insights. Review the pre-filled "Specific Areas to Monitor" section.' });
+        toast({ title: 'Floor Plan Analyzed', description: 'AI has provided insights. Review the pre-filled form sections.' });
 
     } catch (e) {
         console.error("Floor plan analysis failed:", e);
@@ -307,54 +309,95 @@ export default function EstimatorForm() {
                     <FileCheck2 className="h-4 w-4" />
                     <AlertTitle>AI Analysis Complete</AlertTitle>
                     <AlertDescription>
-                        {analysis.projectType && <p><strong>Inferred Project Type:</strong> {analysis.projectType}</p>}
-                        {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
-                        {analysis.suggestedDvrLocation && <p><strong>Suggested Equipment Room:</strong> {analysis.suggestedDvrLocation}</p>}
-                        <p className="text-xs mt-1">This information has been added to the "Specific Areas to Monitor" section below. You can edit it if needed.</p>
+                        <p>The AI has pre-filled some details below based on its analysis. Please review them.</p>
                     </AlertDescription>
                 </Alert>
             )}
-            <div className="space-y-3">
-                <FormLabel>2. Select Coverage Level</FormLabel>
-            </div>
 
-             {watchCoverage === 'Partial' && (
-              <div className="space-y-3">
-                  <FormLabel>2a. Specify Partial Coverage Area</FormLabel>
-              </div>
-            )}
-             <div className="space-y-3">
-                <FormLabel>3. Select Purpose of Surveillance</FormLabel>
-            </div>
-            
-            <div className="space-y-3">
-                <FormLabel>4. Select Connectivity Type</FormLabel>
-            </div>
-            
-            <div className="space-y-3">
-                <FormLabel>5. Select Viewing & Audio Options</FormLabel>
-                 <div className="pt-4">
-                 </div>
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="projectType" render={({ field }) => (
+                    <FormItem><FormLabel>2. Project Type</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select project type..."/></SelectTrigger></FormControl><SelectContent>
+                        <SelectItem value="Residential Villa">Residential Villa</SelectItem>
+                        <SelectItem value="Commercial Building">Commercial Building</SelectItem>
+                        <SelectItem value="Industrial Warehouse">Industrial Warehouse</SelectItem>
+                        <SelectItem value="Temporary Office Setup">Temporary Office Setup</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent></Select><FormMessage /></FormItem>
+                )}/>
+                <FormField control={form.control} name="numberOfUsers" render={({ field }) => (
+                    <FormItem><FormLabel>Number of Users/Staff</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormDescription>How many people will be using the system?</FormDescription><FormMessage /></FormItem>
+                )}/>
             </div>
 
             <FormField
               control={form.control}
-              name="recordingDays"
+              name="coverage"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2"><History className="h-5 w-5"/> 6. Recording Storage Duration</FormLabel>
-                  <FormControl><Input type="number" {...field} /></FormControl>
-                  <FormDescription>How many days of continuous recording do you need to store?</FormDescription>
-                  <FormMessage />
+                <FormItem className="space-y-3">
+                  <FormLabel>3. Select Coverage Level</FormLabel>
+                  <FormControl>
+                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
+                        <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Full" /></FormControl><Label>Full Coverage</Label></FormItem>
+                        <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Partial" /></FormControl><Label>Partial Coverage</Label></FormItem>
+                    </RadioGroup>
+                  </FormControl>
                 </FormItem>
               )}
             />
+
+             {watchCoverage === 'Partial' && (
+              <FormField
+                control={form.control}
+                name="coverageType"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>3a. Specify Partial Coverage Area</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select area..." /></SelectTrigger></FormControl><SelectContent>
+                        <SelectItem value="Interior">Interior Only</SelectItem>
+                        <SelectItem value="Exterior">Exterior Only</SelectItem>
+                    </SelectContent></Select>
+                    </FormItem>
+                )}
+              />
+            )}
+             <FormField control={form.control} name="purpose" render={({ field }) => (
+                 <FormItem>
+                    <FormLabel>4. Select Purpose of Surveillance</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select purpose..."/></SelectTrigger></FormControl><SelectContent>
+                        <SelectItem value="General Security">General Security</SelectItem>
+                        <SelectItem value="Employee Monitoring">Employee Monitoring</SelectItem>
+                        <SelectItem value="Asset Protection">Asset Protection</SelectItem>
+                        <SelectItem value="Customer Traffic Analysis">Customer Traffic Analysis</SelectItem>
+                    </SelectContent></Select>
+                 </FormItem>
+             )}/>
             
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="connectivity" render={({ field }) => (
+                    <FormItem><FormLabel>5. Connectivity</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl><SelectContent>
+                        <SelectItem value="WiFi">WiFi Cameras (Easier Install)</SelectItem>
+                        <SelectItem value="Wired">Wired Cameras (More Reliable)</SelectItem>
+                    </SelectContent></Select></FormItem>
+                )} />
+                <FormField control={form.control} name="recordingDays" render={({ field }) => (
+                    <FormItem><FormLabel>6. Recording Storage</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormDescription>Days of continuous recording</FormDescription><FormMessage /></FormItem>
+                )} />
+            </div>
+            
+            <div className="space-y-3">
+                <FormLabel>7. Select Viewing & Audio Options</FormLabel>
+                <div className="flex flex-col sm:flex-row gap-x-6 gap-y-2">
+                    <FormField control={form.control} name="remoteViewing" render={({ field }) => (
+                        <FormItem className="flex items-center gap-2 space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange}/></FormControl><Label>Remote Viewing via Mobile App</Label></FormItem>
+                    )} />
+                    <FormField control={form.control} name="audioRecording" render={({ field }) => (
+                        <FormItem className="flex items-center gap-2 space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange}/></FormControl><Label>Include Audio Recording</Label></FormItem>
+                    )} />
+                </div>
+            </div>
+
             <FormField control={form.control} name="areasToMonitor" render={({ field }) => (
-                <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Video className="h-5 w-5"/> 7. Specific Areas to Monitor (Optional)</FormLabel>
-                    <FormControl><Textarea placeholder="e.g., 'Main entrance, back door, parking lot, and server room.'" {...field} rows={3} /></FormControl>
-                </FormItem>
+                <FormItem><FormLabel className="flex items-center gap-2">8. Specific Areas to Monitor (Optional)</FormLabel><FormControl><Textarea placeholder="e.g., 'Main entrance, back door, parking lot, and server room.'" {...field} rows={3} /></FormControl></FormItem>
             )} />
 
             <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg" disabled={pageState === 'loading' || isAnalyzing}>
