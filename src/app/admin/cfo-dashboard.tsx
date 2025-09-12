@@ -8,14 +8,21 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import { useCfoData } from '@/hooks/use-global-store-data';
-import type { KpiData } from '@/lib/cfo-data';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import DueDate from './due-date';
 
-
 // Main Dashboard Component
-export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
+export default function CfoDashboard({
+    kpiData,
+    transactionData,
+    upcomingPayments,
+    vatPayment,
+}: {
+    kpiData: KpiData[],
+    transactionData: TransactionData[],
+    upcomingPayments: UpcomingPayment[],
+    vatPayment: VatPayment,
+}) {
   
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
