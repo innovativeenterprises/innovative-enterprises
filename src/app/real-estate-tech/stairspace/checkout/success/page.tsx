@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Suspense } from 'react';
@@ -76,7 +75,7 @@ function SuccessContent() {
 }
 
 
-export default function StairspaceCheckoutSuccessPage() {
+export default function AdminStairspaceCheckoutSuccessPage() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <SuccessContent />

@@ -12,13 +12,22 @@ function SuccessContent() {
     const router = useRouter();
     const params = useParams();
     const requestId = params.id as string;
-    const { stairspaceRequests } = useStairspaceRequestsData();
+    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    
+    if (!isClient) {
+        return <div>Loading...</div>; // Or a skeleton loader
+    }
+
+    if (!requestId) {
+        if (typeof window !== 'undefined') {
+            router.replace('/admin/real-estate/stairspace');
+        }
+        return null;
+    }
     
     const request = stairspaceRequests.find(r => r.id === requestId);
 
     if (!request) {
-        // Use router to navigate to a 404 page if not found client-side
-        // This avoids throwing an error during render
         if (typeof window !== 'undefined') {
             router.replace('/404');
         }
