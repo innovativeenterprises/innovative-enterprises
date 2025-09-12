@@ -8,27 +8,39 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import { useEffect, useState } from 'react';
 
 function SuccessContent() {
     const router = useRouter();
     const params = useParams();
     const requestId = params.id as string;
-    const { stairspaceRequests } = useStairspaceRequestsData();
-    
-    if (!requestId) {
-        if (typeof window !== 'undefined') {
-            router.replace('/real-estate-tech/stairspace');
+    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const [request, setRequest] = useState<any>(undefined);
+
+    useEffect(() => {
+        if (isClient && requestId) {
+            const foundRequest = stairspaceRequests.find(r => r.id === requestId);
+            setRequest(foundRequest || null);
+             if (!foundRequest) {
+                notFound();
+            }
         }
-        return null;
+    }, [isClient, requestId, stairspaceRequests]);
+    
+    if (!isClient || request === undefined) {
+        return (
+             <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-lg mx-auto">
+                        <Card><CardContent className="p-10"><p>Loading...</p></CardContent></Card>
+                    </div>
+                </div>
+            </div>
+        );
     }
     
-    const request = stairspaceRequests.find(r => r.id === requestId);
-
-    if (!request) {
-        if (typeof window !== 'undefined') {
-            router.replace('/404');
-        }
-        return null;
+    if (request === null) {
+        return notFound();
     }
     
     return (

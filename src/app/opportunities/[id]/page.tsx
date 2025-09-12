@@ -80,20 +80,21 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
     const { id } = params;
-    const { opportunities } = useOpportunitiesData();
+    const { opportunities, isClient } = useOpportunitiesData();
     const [opportunity, setOpportunity] = useState<Opportunity | null | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
-        if (id) {
-            const foundOpp = opportunities.find(opp => opp.id === id);
-            setOpportunity(foundOpp || null);
-        }
-        setIsLoading(false);
-    }, [id, opportunities]);
+        if (!isClient) return;
 
-    if (isLoading) {
+        const foundOpp = opportunities.find(opp => opp.id === id);
+        setOpportunity(foundOpp || null);
+        
+        if (id && !foundOpp) {
+            notFound();
+        }
+    }, [id, opportunities, isClient]);
+
+    if (!isClient || opportunity === undefined) {
         return (
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-3xl mx-auto">
@@ -104,6 +105,7 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
     }
     
     if (opportunity === null) {
+        // This will be triggered by the useEffect if the ID is not found after client-side hydration
         return notFound();
     }
     

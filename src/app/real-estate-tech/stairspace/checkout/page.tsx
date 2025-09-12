@@ -1,50 +1,30 @@
 
 'use client';
 
+// THIS FILE IS DEPRECATED AND REPLACED BY [id]/page.tsx to handle dynamic routes correctly.
+// It is kept for historical purposes but should not be used.
+
 import { Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { useEffect, useState } from 'react';
 
 function SuccessContent() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const requestId = searchParams.get('requestId');
-    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
-    const [request, setRequest] = useState<any>(undefined);
+    const params = useParams();
+    const requestId = params.id as string; // This will likely fail as this page is not dynamic
+    const { stairspaceRequests } = useStairspaceRequestsData();
+    
+    const request = stairspaceRequests.find(r => r.id === requestId);
 
-    useEffect(() => {
-        if (isClient) {
-            if (!requestId) {
-                router.replace('/real-estate-tech/stairspace');
-                return;
-            }
-            const foundRequest = stairspaceRequests.find(r => r.id === requestId);
-            setRequest(foundRequest || null);
-            if (!foundRequest) {
-                router.replace('/404');
-            }
+    if (!request) {
+        if (typeof window !== 'undefined') {
+            router.replace('/404');
         }
-    }, [isClient, requestId, stairspaceRequests, router]);
-
-    if (!isClient || request === undefined) {
-         return (
-             <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
-                <div className="container mx-auto px-4 py-16">
-                    <div className="max-w-lg mx-auto">
-                        <Card><CardContent className="p-10"><p>Loading...</p></CardContent></Card>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (request === null) {
-        return null; // Will be redirected by useEffect
+        return null;
     }
     
     return (
@@ -58,12 +38,12 @@ function SuccessContent() {
                             </div>
                             <CardTitle className="text-3xl">Booking Confirmed!</CardTitle>
                             <CardDescription className="text-base pt-2">
-                                Thank you for your payment. Your booking for <strong>{request.listingTitle}</strong> is confirmed.
+                                Thank you for your payment. The booking for <strong>{request.listingTitle}</strong> is confirmed.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <p className="text-muted-foreground">
-                                The space owner has been notified and will provide you with access details shortly. You can view all your bookings from your "My Requests" page.
+                                The space owner has been notified and will provide the client with access details shortly. You can view all bookings from your dashboard.
                             </p>
                         </CardContent>
                         <CardFooter className="flex-col gap-4">
@@ -73,8 +53,8 @@ function SuccessContent() {
                                 </Link>
                             </Button>
                              <Button asChild size="lg" variant="outline" className="w-full">
-                                <Link href="/real-estate-tech/stairspace/my-requests">
-                                    <Ticket className="mr-2 h-5 w-5" /> View My Bookings
+                                <Link href="/admin/real-estate/stairspace">
+                                    <Ticket className="mr-2 h-5 w-5" /> View All Bookings
                                 </Link>
                             </Button>
                         </CardFooter>
@@ -86,7 +66,7 @@ function SuccessContent() {
 }
 
 
-export default function AdminStairspaceCheckoutSuccessPage() {
+export default function StairspaceCheckoutSuccessPage() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <SuccessContent />
