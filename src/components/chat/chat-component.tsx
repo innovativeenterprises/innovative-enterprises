@@ -94,9 +94,10 @@ export const ChatComponent = ({
 
   useEffect(() => {
     setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: initialSuggestedReplies || ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
+    // Cleanup function to stop audio when the component unmounts
     return () => {
       stopAudio();
-    }
+    };
   }, [welcomeMessage, stopAudio, initialSuggestedReplies]);
 
   const handleTextToSpeech = async (text: string) => {
