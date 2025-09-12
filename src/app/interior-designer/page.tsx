@@ -18,6 +18,13 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { fileToDataURI } from '@/lib/utils';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Interior Designer | Innovative Enterprises",
+  description: "Get instant interior design ideas. Upload a photo of your room, describe the style you want, and let our AI generate a stunning new design concept for you.",
+};
+
 
 const roomTypes = ["Living Room", "Bedroom", "Kitchen", "Bathroom", "Office"];
 const designStyles = ["Modern", "Minimalist", "Scandinavian", "Bohemian", "Industrial", "Coastal"];

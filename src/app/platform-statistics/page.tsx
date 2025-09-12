@@ -6,6 +6,12 @@ import { Users, Bot, Zap, FolderKanban, Network, Briefcase, Building2, Graduatio
 import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMemo } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Platform Statistics | Innovative Enterprises",
+  description: "A real-time overview of our ecosystem, showcasing the scale of our AI and human workforce, project pipeline, partner network, and product portfolio.",
+};
 
 export default function PlatformStatisticsPage() {
     const { products } = useProductsData();

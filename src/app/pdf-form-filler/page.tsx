@@ -1,6 +1,12 @@
 
 import FormFiller from "./form-filler";
 import { FileText } from "lucide-react";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI PDF Form Filler | Innovative Enterprises",
+  description: "Tired of manually filling out forms? Upload a PDF, and our AI will intelligently fill it out using your profile data, saving you time and effort.",
+};
 
 export default function PdfFormFillerPage() {
   return (

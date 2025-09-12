@@ -10,6 +10,13 @@ import { saasProducts, type SaasCategory, type SaaSProduct } from '@/lib/saas-pr
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "SaaS Portfolio | Innovative Enterprises",
+  description: "Browse the complete portfolio of over 30+ digital products and SaaS platforms developed by Innovative Enterprises, spanning construction, real estate, education, and AI tools.",
+};
+
 
 const getStatusBadge = (status: string) => {
     switch (status) {

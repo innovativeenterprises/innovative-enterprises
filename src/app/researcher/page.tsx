@@ -1,11 +1,16 @@
 
 'use client';
 
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
 import { Search } from 'lucide-react';
+import type { Metadata } from 'next';
 
+export const metadata: Metadata = {
+  title: "Rami - AI Research Agent | Innovative Enterprises",
+  description: "Chat with Rami, your AI-powered research assistant. Scrape data from any URL or perform a web search to gather and summarize information quickly.",
+};
 
 export default function ResearcherPage() {
     const { settings } = useSettingsData();
