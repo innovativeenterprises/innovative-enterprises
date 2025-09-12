@@ -29,6 +29,8 @@ import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
+import type { Pricing } from '@/lib/pricing';
+
 
 const useStoreData = () => {
     return useSyncExternalStore(store.subscribe, store.get, store.get);
@@ -37,8 +39,8 @@ const useStoreData = () => {
 export const useServicesData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setServices: (updater: (services: Service[]) => Service[]) => {
+        services: data.services,
+        setServices: (updater: (services: Service[]) => void) => {
             store.set(state => ({ ...state, services: updater(state.services) }));
         },
     };
@@ -47,8 +49,8 @@ export const useServicesData = () => {
 export const useProductsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setProducts: (updater: (products: Product[]) => Product[]) => {
+        products: data.products,
+        setProducts: (updater: (products: Product[]) => void) => {
             store.set(state => ({ ...state, products: updater(state.products) }));
         },
     };
@@ -58,11 +60,12 @@ export const useProductsData = () => {
 export const useClientsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setClients: (updater: (clients: Client[]) => Client[]) => {
+        clients: data.clients,
+        testimonials: data.testimonials,
+        setClients: (updater: (clients: Client[]) => void) => {
             store.set(state => ({ ...state, clients: updater(state.clients) }));
         },
-        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
+        setTestimonials: (updater: (testimonials: Testimonial[]) => void) => {
             store.set(state => ({ ...state, testimonials: updater(state.testimonials) }));
         },
     };
@@ -71,8 +74,8 @@ export const useClientsData = () => {
 export const useProvidersData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
+        providers: data.providers,
+        setProviders: (updater: (providers: Provider[]) => void) => {
             store.set(state => ({ ...state, providers: updater(state.providers) }));
         },
     };
@@ -81,14 +84,16 @@ export const useProvidersData = () => {
 export const useStaffData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
+        leadership: data.leadership,
+        staff: data.staff,
+        agentCategories: data.agentCategories,
+        setLeadership: (updater: (agents: Agent[]) => void) => {
             store.set(state => ({ ...state, leadership: updater(state.leadership) }));
         },
-        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
+        setStaff: (updater: (agents: Agent[]) => void) => {
             store.set(state => ({ ...state, staff: updater(state.staff) }));
         },
-        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
+        setAgentCategories: (updater: (categories: AgentCategory[]) => void) => {
             store.set(state => ({ ...state, agentCategories: updater(state.agentCategories) }));
         },
     };
@@ -97,8 +102,8 @@ export const useStaffData = () => {
 export const useCommunitiesData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setCommunities: (updater: (communities: Community[]) => Community[]) => {
+        communities: data.communities,
+        setCommunities: (updater: (communities: Community[]) => void) => {
             store.set(state => ({ ...state, communities: updater(state.communities) }));
         },
     };
@@ -107,11 +112,12 @@ export const useCommunitiesData = () => {
 export const useCommunityHubData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
+        communityEvents: data.communityEvents,
+        communityFinances: data.communityFinances,
+        setEvents: (updater: (events: CommunityEvent[]) => void) => {
             store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
         },
-        setFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
+        setFinances: (updater: (finances: CommunityFinance[]) => void) => {
             store.set(state => ({ ...state, communityFinances: updater(state.communityFinances) }));
         },
     };
@@ -120,8 +126,8 @@ export const useCommunityHubData = () => {
 export const useMembersData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
+        communityMembers: data.communityMembers,
+        setMembers: (updater: (members: CommunityMember[]) => void) => {
             store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
     };
@@ -131,8 +137,8 @@ export const useMembersData = () => {
 export const useProjectStagesData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
+        stages: data.stages,
+        setStages: (updater: (stages: ProjectStage[]) => void) => {
             store.set(state => ({ ...state, stages: updater(state.stages) }));
         },
     };
@@ -141,8 +147,8 @@ export const useProjectStagesData = () => {
 export const useSettingsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
+        settings: data.settings,
+        setSettings: (updater: (settings: AppSettings) => void) => {
             store.set(state => ({ ...state, settings: updater(state.settings) }));
         },
     };
@@ -151,8 +157,8 @@ export const useSettingsData = () => {
 export const useAssetsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
+        assets: data.assets,
+        setAssets: (updater: (assets: Asset[]) => void) => {
             store.set(state => ({ ...state, assets: updater(state.assets) }));
         },
     };
@@ -161,8 +167,8 @@ export const useAssetsData = () => {
 export const useInvestorsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
+        investors: data.investors,
+        setInvestors: (updater: (investors: Investor[]) => void) => {
             store.set(state => ({ ...state, investors: updater(state.investors) }));
         },
     };
@@ -171,8 +177,8 @@ export const useInvestorsData = () => {
 export const useKnowledgeData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
+        knowledgeBase: data.knowledgeBase,
+        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => {
             store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
         },
     };
@@ -181,8 +187,8 @@ export const useKnowledgeData = () => {
 export const useAgenciesData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setAgencies: (updater: (agencies: Agency[]) => Agency[]) => {
+        raahaAgencies: data.raahaAgencies,
+        setAgencies: (updater: (agencies: Agency[]) => void) => {
             store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
         },
     };
@@ -191,8 +197,8 @@ export const useAgenciesData = () => {
 export const useWorkersData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
+        raahaWorkers: data.raahaWorkers,
+        setWorkers: (updater: (workers: RaahaWorker[]) => void) => {
             store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
         },
     };
@@ -201,8 +207,8 @@ export const useWorkersData = () => {
 export const useRequestsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
+        raahaRequests: data.raahaRequests,
+        setRequests: (updater: (requests: HireRequest[]) => void) => {
             store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
         },
     };
@@ -211,8 +217,8 @@ export const useRequestsData = () => {
 export const useLeasesData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
+        signedLeases: data.signedLeases,
+        setLeases: (updater: (leases: SignedLease[]) => void) => {
             store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
         },
     };
@@ -221,8 +227,8 @@ export const useLeasesData = () => {
 export const usePropertiesData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setProperties: (updater: (properties: Property[]) => Property[]) => {
+        properties: data.properties,
+        setProperties: (updater: (properties: Property[]) => void) => {
             store.set(state => ({ ...state, properties: updater(state.properties) }));
         },
     };
@@ -231,8 +237,8 @@ export const usePropertiesData = () => {
 export const useStairspaceData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setStairspaceListings: (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => {
+        stairspaceListings: data.stairspaceListings,
+        setStairspaceListings: (updater: (listings: StairspaceListing[]) => void) => {
             store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
         },
     };
@@ -241,8 +247,8 @@ export const useStairspaceData = () => {
 export const useStairspaceRequestsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => StairspaceRequest[]) => {
+        stairspaceRequests: data.stairspaceRequests,
+        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => void) => {
             store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
         },
     };
@@ -251,8 +257,8 @@ export const useStairspaceRequestsData = () => {
 export const useOpportunitiesData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setOpportunities: (updater: (opps: Opportunity[]) => Opportunity[]) => {
+        opportunities: data.opportunities,
+        setOpportunities: (updater: (opps: Opportunity[]) => void) => {
             store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
         },
     };
@@ -261,16 +267,29 @@ export const useOpportunitiesData = () => {
 export const useCfoData = () => {
     const data = useStoreData();
     return {
-        ...data,
+        kpiData: data.kpiData,
+        transactionData: data.transactionData,
+        upcomingPayments: data.upcomingPayments,
+        vatPayment: data.vatPayment,
     };
 };
 
 export const useCostSettingsData = () => {
     const data = useStoreData();
     return {
-        ...data,
-        setCostSettings: (updater: (items: CostRate[]) => CostRate[]) => {
+        costSettings: data.costSettings,
+        setCostSettings: (updater: (items: CostRate[]) => void) => {
             store.set(state => ({...state, costSettings: updater(state.costSettings)}));
+        }
+    };
+}
+
+export const usePricingData = () => {
+    const data = useStoreData();
+    return {
+        pricing: data.pricing,
+        setPricing: (updater: (items: Pricing[]) => void) => {
+            store.set(state => ({...state, pricing: updater(state.pricing)}));
         }
     };
 }
