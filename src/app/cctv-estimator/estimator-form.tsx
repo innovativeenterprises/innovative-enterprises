@@ -129,40 +129,6 @@ export default function EstimatorForm() {
       });
     }
   };
-  
-  // This component will be removed, as the functionality is being moved to
-  // the surveillance estimator page.
-  const CardSelector = ({ name, options }: { name: "coverage" | "connectivity" | "remoteViewing" | "audioRecording" | "coverageType" | "purpose", options: {value: any, label: string, icon: React.ElementType, description: string}[]}) => (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="space-y-3">
-          <div className="grid grid-cols-2 gap-4">
-            {options.map((option) => (
-              <FormItem key={String(option.value)}>
-                <FormControl>
-                  <Card
-                    onClick={() => field.onChange(option.value)}
-                    className={cn(
-                      "cursor-pointer transition-all hover:shadow-md",
-                      field.value === option.value && "ring-2 ring-primary shadow-lg"
-                    )}
-                  >
-                    <CardContent className="p-4 flex flex-col items-center justify-center text-center gap-2">
-                      <option.icon className="w-8 h-8 text-primary" />
-                      <FormLabel className="font-semibold cursor-pointer">{option.label}</FormLabel>
-                      <p className="text-xs text-muted-foreground">{option.description}</p>
-                    </CardContent>
-                  </Card>
-                </FormControl>
-              </FormItem>
-            ))}
-          </div>
-        </FormItem>
-      )}
-    />
-  );
 
   const handleFloorPlanAnalysis = async () => {
     const floorPlanFile = form.getValues('floorPlanFile');
