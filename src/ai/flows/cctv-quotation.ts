@@ -35,30 +35,21 @@ You MUST only recommend assets from this list for the IT hardware portion. Do no
 
 **Client Project Requirements:**
 - **Project Name:** {{{projectName}}}
-{{#if purpose}}
-- **Purpose of Surveillance:** {{{purpose}}}
-{{/if}}
-{{#if projectType}}
 - **Project Type:** {{{projectType}}}
-{{/if}}
-{{#if numberOfUsers}}
 - **Number of Users:** {{{numberOfUsers}}}
-{{/if}}
-{{#if projectDurationMonths}}
-- **Project Duration:** {{{projectDurationMonths}}} months
-{{/if}}
-{{#if primaryGoal}}
 - **Primary Goal/Task:** {{{primaryGoal}}}
-{{/if}}
+- **Project Duration:** {{{projectDurationMonths}}} months
 - **Include Surveillance System:** {{#if includeSurveillance}}Yes{{else}}No{{/if}}
 {{#if surveillanceDetails}}
 - **Surveillance Details:** {{{surveillanceDetails}}}
 {{/if}}
+- **Purpose of Surveillance:** {{{purpose}}}
 {{#if coverageType}}
 - **Coverage Type:** {{{coverageType}}}
 {{/if}}
 - **Remote Viewing:** {{#if remoteViewing}}Yes{{else}}No{{/if}}
 - **Audio Recording:** {{#if audioRecording}}Yes{{else}}No{{/if}}
+
 
 **Your Task:**
 1.  **Analyze and Design:**
@@ -69,6 +60,7 @@ You MUST only recommend assets from this list for the IT hardware portion. Do no
         *   If 'coverageType' is 'Exterior', recommend 'Bullet Cameras'. If 'Interior', recommend 'Dome Cameras'. If not specified, use a mix.
         *   If 'audioRecording' is true, specify that the cameras should have built-in microphones.
         *   If 'remoteViewing' is true, ensure the NVR selected is a "Network Video Recorder" capable of IP access.
+        *   **Crucially, scale the NVR and PoE switch based on the project size.** For a small 'Residential Villa' with 1-4 cameras, an 8-channel NVR and 8-port switch is sufficient. For a larger 'Commercial Building' or a high number of cameras, recommend a 16-channel NVR and 16-port PoE switch.
         *   This system is ALWAYS a **purchase** item.
 
 2.  **Generate Proposal Content:**
