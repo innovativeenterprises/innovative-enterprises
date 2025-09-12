@@ -237,12 +237,13 @@ export default function AssetTable({
     }
 
     const filteredAssets = useMemo(() => {
+        if (!isClient) return [];
         return assets.filter(asset =>
             asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             asset.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
             asset.specs.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [assets, searchTerm]);
+    }, [assets, searchTerm, isClient]);
 
 
     return (
@@ -281,11 +282,11 @@ export default function AssetTable({
                     </TableHeader>
                     <TableBody>
                         {!isClient ? (
-                            <TableRow>
-                                <TableCell colSpan={6}>
-                                    <Skeleton className="w-full h-20" />
-                                </TableCell>
-                            </TableRow>
+                            Array.from({length: 5}).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell colSpan={6}><Skeleton className="w-full h-12" /></TableCell>
+                                </TableRow>
+                            ))
                         ) : (
                             filteredAssets.map(asset => (
                                 <TableRow key={asset.id}>
@@ -332,3 +333,5 @@ export default function AssetTable({
         </Card>
     );
 }
+
+    
