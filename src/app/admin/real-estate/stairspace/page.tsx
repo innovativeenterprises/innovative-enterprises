@@ -10,10 +10,10 @@ import type { BookingRequest } from '@/lib/stairspace-requests';
 import { useToast } from '@/hooks/use-toast';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
-import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
@@ -151,6 +151,7 @@ export default function StairspaceRequestsPage() {
     };
 
     const filteredRequests = useMemo(() => {
+        if (!isClient) return [];
         return stairspaceRequests.filter(req => {
             const matchesStatus = filterStatus === 'All' || req.status === filterStatus;
             const matchesSearch = searchTerm === '' ||
@@ -158,7 +159,7 @@ export default function StairspaceRequestsPage() {
                 req.listingTitle.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesStatus && matchesSearch;
         });
-    }, [stairspaceRequests, searchTerm, filterStatus]);
+    }, [stairspaceRequests, searchTerm, filterStatus, isClient]);
 
     const requestsByStatus = useMemo(() => {
         const grouped: Record<string, BookingRequest[]> = {};
