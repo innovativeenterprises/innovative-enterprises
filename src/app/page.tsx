@@ -65,11 +65,11 @@ export default function Home() {
   return (
     <>
       <CompanyOverview />
-      {isClient ? <ServiceCatalog services={services} /> : <ServiceCatalogSkeleton />}
-      {isClient ? <ProductShowcase products={products} /> : <ProductShowcaseSkeleton />}
-      {isClient ? <ClientTestimonials clients={clients} testimonials={testimonials} /> : <ClientTestimonialsSkeleton />}
+      <ServiceCatalog services={services} />
+      <ProductShowcase products={products} />
+      <ClientTestimonials clients={clients} testimonials={testimonials} />
       <AiToolsCta />
-      {isClient && <ChatWidget />}
+      <ChatWidget />
     </>
   )
 }
