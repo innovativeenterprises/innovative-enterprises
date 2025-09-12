@@ -1,6 +1,13 @@
 
+
 import { DollarSign } from "lucide-react";
 import EstimatorForm from "./estimator-form";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "BidWise Estimator | Innovative Enterprises",
+  description: "Automate construction cost estimation and tender management. Upload a Bill of Quantities (BoQ) and let our AI provide a detailed cost breakdown.",
+};
 
 export default function BidEstimatorPage() {
   return (

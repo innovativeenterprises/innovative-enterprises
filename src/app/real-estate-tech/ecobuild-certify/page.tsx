@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -7,38 +8,84 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Leaf, Droplets, Wind, Upload, Download, CheckCircle } from "lucide-react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "EcoBuild Certify | Innovative Enterprises",
+  description: "Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance and green building certification.",
+};
+
 
 const energyData = [
-  { month: 'Jan', consumption: 450 },
-  { month: 'Feb', consumption: 480 },
-  { month: 'Mar', consumption: 510 },
-  { month: 'Apr', consumption: 550 },
-  { month: 'May', consumption: 620 },
-  { month: 'Jun', consumption: 710 },
+  { month: 'Jan', consumption: 45000 },
+  { month: 'Feb', consumption: 48000 },
+  { month: 'Mar', consumption: 51000 },
+  { month: 'Apr', consumption: 55000 },
+  { month: 'May', consumption: 62000 },
+  { month: 'Jun', consumption: 71000 },
 ];
-const energyChartConfig = { consumption: { label: "KWh", color: "hsl(var(--chart-1))" } };
+const energyChartConfig = { consumption: { label: "KWh", color: "hsl(var(--chart-3))" } };
 
 const waterData = [
-  { month: 'Jan', consumption: 15 },
-  { month: 'Feb', consumption: 16 },
-  { month: 'Mar', consumption: 15.5 },
-  { month: 'Apr', consumption: 17 },
-  { month: 'May', consumption: 18 },
-  { month: 'Jun', consumption: 19 },
+  { month: 'Jan', consumption: 1500 },
+  { month: 'Feb', consumption: 1600 },
+  { month: 'Mar', consumption: 1550 },
+  { month: 'Apr', consumption: 1700 },
+  { month: 'May', consumption: 1800 },
+  { month: 'Jun', consumption: 1900 },
 ];
 const waterChartConfig = { consumption: { label: "Cubic Meters", color: "hsl(var(--chart-2))" } };
 
 const carbonData = [
-  { month: 'Jan', footprint: 210 },
-  { month: 'Feb', footprint: 220 },
-  { month: 'Mar', footprint: 235 },
-  { month: 'Apr', footprint: 250 },
-  { month: 'May', consumption: 280 },
-  { month: 'Jun', consumption: 320 },
+  { month: 'Jan', footprint: 21000 },
+  { month: 'Feb', footprint: 22000 },
+  { month: 'Mar', footprint: 23500 },
+  { month: 'Apr', footprint: 25000 },
+  { month: 'May', consumption: 28000 },
+  { month: 'Jun', consumption: 32000 },
 ];
 const carbonChartConfig = { footprint: { label: "kgCO2e", color: "hsl(var(--muted-foreground))" } };
 
 export default function EcoBuildCertifyPage() {
+
+    const renderChart = (chartType: 'energy' | 'water' | 'carbon') => {
+        if (chartType === 'energy') {
+             return (
+                <ChartContainer config={energyChartConfig} className="h-48 w-full">
+                    <LineChart data={energyData} margin={{ left: -20, right: 20 }}>
+                        <YAxis tickFormatter={(value) => `${'${value/1000}'}k`} />
+                        <Tooltip content={<ChartTooltipContent />} />
+                        <Line type="monotone" dataKey="consumption" stroke="var(--color-consumption)" strokeWidth={2} dot={false} />
+                    </LineChart>
+                </ChartContainer>
+            );
+        }
+
+        if (chartType === 'water') {
+            return (
+                <ChartContainer config={waterChartConfig} className="h-48 w-full">
+                    <BarChart data={waterData} accessibilityLayer>
+                        <YAxis tickFormatter={(value) => `${'${value/1000}'}k`} />
+                        <Tooltip content={<ChartTooltipContent />} />
+                        <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
+                    </BarChart>
+                </ChartContainer>
+            );
+        }
+
+        if (chartType === 'carbon') {
+            return (
+                 <ChartContainer config={carbonChartConfig} className="h-48 w-full">
+                     <BarChart data={carbonData} accessibilityLayer>
+                        <YAxis tickFormatter={(value) => `${'${value/1000}'}k`} />
+                        <Tooltip content={<ChartTooltipContent />} />
+                        <Bar dataKey="footprint" fill="var(--color-footprint)" radius={4} />
+                    </BarChart>
+                </ChartContainer>
+            );
+        }
+    };
+
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -63,13 +110,7 @@ export default function EcoBuildCertifyPage() {
                                     <CardTitle className="text-lg flex items-center gap-2"><Droplets className="h-5 w-5 text-blue-500" /> Water Consumption</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <ChartContainer config={waterChartConfig} className="h-48 w-full">
-                                        <BarChart data={waterData} accessibilityLayer>
-                                            <YAxis />
-                                            <Tooltip content={<ChartTooltipContent />} />
-                                            <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
-                                        </BarChart>
-                                    </ChartContainer>
+                                    {renderChart('water')}
                                 </CardContent>
                             </Card>
                             <Card>
@@ -77,13 +118,7 @@ export default function EcoBuildCertifyPage() {
                                     <CardTitle className="text-lg flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Energy Usage</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                     <ChartContainer config={energyChartConfig} className="h-48 w-full">
-                                        <LineChart data={energyData} margin={{ left: -20, right: 20 }}>
-                                            <YAxis />
-                                            <Tooltip content={<ChartTooltipContent />} />
-                                            <Line type="monotone" dataKey="consumption" stroke="var(--color-consumption)" strokeWidth={2} dot={false} />
-                                        </LineChart>
-                                    </ChartContainer>
+                                    {renderChart('energy')}
                                 </CardContent>
                             </Card>
                             <Card>
@@ -91,13 +126,7 @@ export default function EcoBuildCertifyPage() {
                                     <CardTitle className="text-lg flex items-center gap-2"><Wind className="h-5 w-5 text-slate-500" /> Carbon Footprint</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <ChartContainer config={carbonChartConfig} className="h-48 w-full">
-                                         <BarChart data={carbonData} accessibilityLayer>
-                                            <YAxis />
-                                            <Tooltip content={<ChartTooltipContent />} />
-                                            <Bar dataKey="footprint" fill="var(--color-footprint)" radius={4} />
-                                        </BarChart>
-                                    </ChartContainer>
+                                    {renderChart('carbon')}
                                 </CardContent>
                             </Card>
                         </CardContent>

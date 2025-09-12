@@ -7,6 +7,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/comp
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import WorkforceTimetableForm from "./workforce-timetable-form";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "WorkforceFlow | Innovative Enterprises",
+  description: "AI-driven workforce scheduling, digital timecards, and IoT equipment tracking to optimize your construction site operations.",
+};
 
 export default function WorkforceFlowPage() {
   return (

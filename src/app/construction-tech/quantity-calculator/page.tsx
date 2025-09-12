@@ -1,10 +1,17 @@
 
+
 'use client'
 
 import { Calculator } from "lucide-react";
 import CalculatorForm from "./calculator-form";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Bill of Quantities (BoQ) Generator | Innovative Enterprises",
+  description: "Upload your building floor plan and let our AI Quantity Surveyor analyze the plan and generate a preliminary Bill of Quantities for your construction project.",
+};
 
 export default function QuantityCalculatorPage() {
   return (

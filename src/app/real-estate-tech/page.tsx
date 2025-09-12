@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,13 @@ import { Check, Building2, AlertTriangle, GanttChartSquare, ClipboardCheck, User
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Real Estate Technology Solutions | Innovative Enterprises",
+  description: "Discover a portfolio of AI-driven SaaS platforms to modernize property valuation, management, and investment for the Gulf region.",
+};
+
 
 const problems = [
     { title: "Manual Valuation", description: "Property valuation is slow, subjective, and lacks data-driven accuracy." },

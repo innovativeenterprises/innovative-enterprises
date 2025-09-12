@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -23,6 +24,12 @@ import { useRouter } from 'next/navigation';
 import { store } from '@/lib/global-store';
 import type { SignedLease } from '@/lib/leases';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "DocuChain Compliance | Innovative Enterprises",
+  description: "Automate your real estate paperwork. Generate professional Tenancy or Sale Agreements tailored to your needs in seconds with our AI-powered tool.",
+};
 
 const FormSchema = RealEstateContractInputSchema.omit({ 
     startDate: true, 
