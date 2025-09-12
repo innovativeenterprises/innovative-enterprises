@@ -26,7 +26,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-import { fileToDataURI } from "@/lib/utils";
+import { useKnowledgeData } from "@/hooks/use-global-store-data";
+import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),

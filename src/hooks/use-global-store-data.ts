@@ -31,8 +31,7 @@ import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 
 const useStoreData = () => {
-    const data = useSyncExternalStore(store.subscribe, store.get, store.get);
-    return data;
+    return useSyncExternalStore(store.subscribe, store.get, store.get);
 }
 
 const useIsClient = () => {
@@ -46,10 +45,8 @@ const useIsClient = () => {
 
 export const useServicesData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setServices: (updater: (services: Service[]) => void) => {
             store.set(state => ({ ...state, services: updater(state.services) }));
         },
@@ -71,10 +68,8 @@ export const useProductsData = () => {
 
 export const useClientsData = () => {
     const data = useStoreData();
-    const isClient = useIsClient();
     return {
         ...data,
-        isClient,
         setClients: (updater: (clients: Client[]) => void) => {
             store.set(state => ({ ...state, clients: updater(state.clients) }));
         },
@@ -318,3 +313,15 @@ export const useCfoData = () => {
         isClient,
     };
 };
+
+export const useCostSettingsData = () => {
+    const data = useStoreData();
+    const isClient = useIsClient();
+    return {
+        ...data,
+        isClient,
+        setCostSettings: (updater: (items: CostRate[]) => void) => {
+            store.set(state => ({...state, costSettings: updater(state.costSettings)}));
+        }
+    };
+}
