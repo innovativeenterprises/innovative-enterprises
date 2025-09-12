@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useStaffData } from "@/hooks/use-global-store-data";
 import { useServicesData } from "@/hooks/use-global-store-data";
 import { useSettingsData } from "@/hooks/use-global-store-data";
@@ -13,7 +13,6 @@ import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
 
 // This is the hidden component that will be rendered to generate the PDF
 const ProfileTemplate = ({ leadership, services, products, settings, innerRef, generatedDate }: any) => {
@@ -134,11 +133,6 @@ export default function CompanyProfileDownloader() {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const enabledServices = services.filter(s => s.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
@@ -191,14 +185,6 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    if (!isClient) {
-        return (
-             <Button variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={true}>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
-            </Button>
-        );
-    }
-
 
     return (
         <>

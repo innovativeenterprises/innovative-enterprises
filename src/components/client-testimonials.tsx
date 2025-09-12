@@ -16,12 +16,6 @@ export default function ClientTestimonials({
     clients: Client[], 
     testimonials: Testimonial[] 
 }) {
-  const [currentYear, setCurrentYear] = useState('');
-
-  useEffect(() => {
-      setCurrentYear(new Date().getFullYear().toString());
-  }, []);
-
 
   const renderQuote = (quote: string) => {
     const parts = quote.split(/\*\*(.*?)\*\*/g);

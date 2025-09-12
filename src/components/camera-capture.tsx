@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import { useState, useRef, useEffect, forwardRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Camera, X, RefreshCw, CheckCircle, VideoOff } from 'lucide-react';
@@ -30,7 +31,7 @@ export function CameraCapture({
 
     useEffect(() => {
         const getCameraPermission = async () => {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            if (typeof window === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 console.error('Camera API not available.');
                 setHasCameraPermission(false);
                 toast({

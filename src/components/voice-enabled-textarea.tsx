@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Textarea, type TextareaProps } from "@/components/ui/textarea";
@@ -25,57 +26,59 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
   const { toast } = useToast();
 
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      setIsAvailable(true);
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
+    if (typeof window !== 'undefined') {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            setIsAvailable(true);
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
 
-      recognition.onresult = (event) => {
-        let interimTranscript = '';
-        let finalTranscript = '';
+            recognition.onresult = (event: any) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
 
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
-          } else {
-            interimTranscript += event.results[i][0].transcript;
-          }
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                }
+                }
+                
+                const existingValue = typeof value === 'string' ? value : '';
+                const newValue = existingValue + finalTranscript;
+
+                // Create a synthetic event to pass to the parent's onChange handler
+                const syntheticEvent = {
+                target: { value: newValue }
+                } as React.ChangeEvent<HTMLTextAreaElement>;
+
+                onChange?.(syntheticEvent);
+            };
+            
+            recognition.onerror = (event: any) => {
+                console.error('Speech recognition error:', event.error);
+                setIsListening(false);
+                toast({
+                title: "Voice Error",
+                description: `An error occurred: ${event.error}. Please try again.`,
+                variant: "destructive",
+                })
+            };
+
+            recognition.onend = () => {
+                if (recognitionRef.current) { // Check if it hasn't been cleaned up
+                setIsListening(false);
+                }
+            };
+            
+            recognitionRef.current = recognition;
+        } else {
+            console.log("Speech Recognition not available in this browser.");
+            setIsAvailable(false);
         }
-        
-        const existingValue = typeof value === 'string' ? value : '';
-        const newValue = existingValue + finalTranscript;
-
-        // Create a synthetic event to pass to the parent's onChange handler
-        const syntheticEvent = {
-          target: { value: newValue }
-        } as React.ChangeEvent<HTMLTextAreaElement>;
-
-        onChange?.(syntheticEvent);
-      };
-      
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-        toast({
-          title: "Voice Error",
-          description: `An error occurred: ${event.error}. Please try again.`,
-          variant: "destructive",
-        })
-      };
-
-      recognition.onend = () => {
-        if (recognitionRef.current) { // Check if it hasn't been cleaned up
-          setIsListening(false);
-        }
-      };
-      
-      recognitionRef.current = recognition;
-    } else {
-        console.log("Speech Recognition not available in this browser.");
-        setIsAvailable(false);
     }
 
      return () => {

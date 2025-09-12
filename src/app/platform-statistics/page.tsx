@@ -1,20 +1,18 @@
 
+
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network, Briefcase, Building2, GraduationCap, Handshake } from "lucide-react";
 import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PlatformStatisticsPage() {
-    const { products, isClient: isProductsClient } = useProductsData();
-    const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
-    const { providers, isClient: isProvidersClient } = useProvidersData();
-    const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
-    const { services, isClient: isServicesClient } = useServicesData();
-    
-    const isClient = isProductsClient && isStaffClient && isProvidersClient && isOpportunitiesClient && isServicesClient;
+    const { products } = useProductsData();
+    const { leadership, staff, agentCategories } = useStaffData();
+    const { providers } = useProvidersData();
+    const { opportunities } = useOpportunitiesData();
+    const { services } = useServicesData();
 
     const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
     const totalStaff = leadership.length + staff.length;
@@ -54,8 +52,7 @@ export default function PlatformStatisticsPage() {
 
                 <div className="max-w-4xl mx-auto mt-16">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {isClient ? (
-                            stats.map((stat) => (
+                        {stats.map((stat) => (
                                 <Card key={stat.title}>
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                         <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
@@ -65,19 +62,7 @@ export default function PlatformStatisticsPage() {
                                         <div className="text-4xl font-bold text-primary">{stat.value}</div>
                                     </CardContent>
                                 </Card>
-                            ))
-                        ) : (
-                             Array.from({ length: 9 }).map((_, index) => (
-                                <Card key={index}>
-                                    <CardHeader>
-                                        <Skeleton className="h-5 w-3/4" />
-                                    </CardHeader>
-                                    <CardContent>
-                                        <Skeleton className="h-10 w-1/2" />
-                                    </CardContent>
-                                </Card>
-                            ))
-                        )}
+                            ))}
                     </div>
                 </div>
             </div>

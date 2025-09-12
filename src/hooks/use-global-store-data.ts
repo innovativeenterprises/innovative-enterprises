@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -33,10 +34,8 @@ import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cf
 
 export const useServicesData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -45,19 +44,16 @@ export const useServicesData = () => {
 
     return {
         services: data.services,
-        setServices: (updater: (services: Service[]) => void) => {
+        setServices: (updater: (services: Service[]) => Service[]) => {
             store.set(state => ({ ...state, services: updater(state.services) }));
         },
-        isClient,
     };
 };
 
 export const useProductsData = () => {
     const [data, setData] = useState(store.get());
-     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -66,20 +62,17 @@ export const useProductsData = () => {
 
     return {
         products: data.products,
-        setProducts: (updater: (products: Product[]) => void) => {
+        setProducts: (updater: (products: Product[]) => Product[]) => {
             store.set(state => ({ ...state, products: updater(state.products) }));
         },
-        isClient,
     };
 };
 
 
 export const useClientsData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -88,23 +81,20 @@ export const useClientsData = () => {
 
     return {
         clients: data.clients,
-        setClients: (updater: (clients: Client[]) => void) => {
+        setClients: (updater: (clients: Client[]) => Client[]) => {
             store.set(state => ({ ...state, clients: updater(state.clients) }));
         },
         testimonials: data.testimonials,
-        setTestimonials: (updater: (testimonials: Testimonial[]) => void) => {
+        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
             store.set(state => ({ ...state, testimonials: updater(state.testimonials) }));
         },
-        isClient,
     };
 };
 
 export const useProvidersData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -113,19 +103,16 @@ export const useProvidersData = () => {
 
     return {
         providers: data.providers,
-        setProviders: (updater: (providers: Provider[]) => void) => {
+        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
             store.set(state => ({ ...state, providers: updater(state.providers) }));
         },
-        isClient,
     };
 };
 
 export const useStaffData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         // Initialize the store with data from agents.ts if it's not already there
         if(store.get().leadership.length === 0) {
             store.set(state => ({
@@ -144,27 +131,24 @@ export const useStaffData = () => {
 
     return {
         leadership: data.leadership,
-        setLeadership: (updater: (agents: Agent[]) => void) => {
+        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
             store.set(state => ({ ...state, leadership: updater(state.leadership) }));
         },
         staff: data.staff,
-        setStaff: (updater: (agents: Agent[]) => void) => {
+        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
             store.set(state => ({ ...state, staff: updater(state.staff) }));
         },
         agentCategories: data.agentCategories,
-        setAgentCategories: (updater: (categories: AgentCategory[]) => void) => {
+        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
             store.set(state => ({ ...state, agentCategories: updater(state.agentCategories) }));
         },
-        isClient,
     };
 };
 
 export const useCommunitiesData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -173,19 +157,16 @@ export const useCommunitiesData = () => {
 
     return {
         communities: data.communities,
-        setCommunities: (updater: (communities: Community[]) => void) => {
+        setCommunities: (updater: (communities: Community[]) => Community[]) => {
             store.set(state => ({ ...state, communities: updater(state.communities) }));
         },
-        isClient,
     };
 };
 
 export const useCommunityHubData = () => {
     const [data, setData] = useState(store.get());
-     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -194,27 +175,24 @@ export const useCommunityHubData = () => {
 
     return {
         events: data.communityEvents,
-        setEvents: (updater: (events: CommunityEvent[]) => void) => {
+        setEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
             store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
         },
         finances: data.communityFinances,
-        setFinances: (updater: (finances: CommunityFinance[]) => void) => {
+        setFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
             store.set(state => ({ ...state, finances: updater(state.communityFinances) }));
         },
         members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => void) => {
+        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
             store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
-        isClient,
     };
 };
 
 export const useMembersData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -223,20 +201,17 @@ export const useMembersData = () => {
 
     return {
         members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => void) => {
+        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
             store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
-        isClient,
     };
 };
 
 
 export const useProjectStagesData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -245,19 +220,16 @@ export const useProjectStagesData = () => {
 
     return {
         stages: data.stages,
-        setStages: (updater: (stages: ProjectStage[]) => void) => {
+        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
             store.set(state => ({ ...state, stages: updater(state.stages) }));
         },
-        isClient,
     };
 };
 
 export const useSettingsData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -266,19 +238,16 @@ export const useSettingsData = () => {
 
     return {
         settings: data.settings,
-        setSettings: (updater: (settings: AppSettings) => void) => {
+        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
             store.set(state => ({ ...state, settings: updater(state.settings) }));
         },
-        isClient,
     };
 };
 
 export const useAssetsData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -287,19 +256,16 @@ export const useAssetsData = () => {
 
     return {
         assets: data.assets,
-        setAssets: (updater: (assets: Asset[]) => void) => {
+        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
             store.set(state => ({ ...state, assets: updater(state.assets) }));
         },
-        isClient,
     };
 };
 
 export const useInvestorsData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -308,19 +274,16 @@ export const useInvestorsData = () => {
 
     return {
         investors: data.investors,
-        setInvestors: (updater: (investors: Investor[]) => void) => {
+        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
             store.set(state => ({ ...state, investors: updater(state.investors) }));
         },
-        isClient,
     };
 };
 
 export const useKnowledgeData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -329,19 +292,16 @@ export const useKnowledgeData = () => {
 
     return {
         knowledgeBase: data.knowledgeBase,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => {
+        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
             store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
         },
-        isClient,
     };
 };
 
 export const useAgenciesData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -350,19 +310,16 @@ export const useAgenciesData = () => {
 
     return {
         agencies: data.raahaAgencies,
-        setAgencies: (updater: (agencies: Agency[]) => void) => {
+        setAgencies: (updater: (agencies: Agency[]) => Agency[]) => {
             store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
         },
-        isClient,
     };
 };
 
 export const useWorkersData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -371,19 +328,16 @@ export const useWorkersData = () => {
 
     return {
         workers: data.raahaWorkers,
-        setWorkers: (updater: (workers: RaahaWorker[]) => void) => {
+        setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
             store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
         },
-        isClient,
     };
 };
 
 export const useRequestsData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -392,19 +346,16 @@ export const useRequestsData = () => {
 
     return {
         requests: data.raahaRequests,
-        setRequests: (updater: (requests: HireRequest[]) => void) => {
+        setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
             store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
         },
-        isClient,
     };
 };
 
 export const useLeasesData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -413,19 +364,16 @@ export const useLeasesData = () => {
 
     return {
         leases: data.signedLeases,
-        setLeases: (updater: (leases: SignedLease[]) => void) => {
+        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
             store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
         },
-        isClient,
     };
 };
 
 export const usePropertiesData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -434,19 +382,16 @@ export const usePropertiesData = () => {
 
     return {
         properties: data.properties,
-        setProperties: (updater: (properties: Property[]) => void) => {
+        setProperties: (updater: (properties: Property[]) => Property[]) => {
             store.set(state => ({ ...state, properties: updater(state.properties) }));
         },
-        isClient,
     };
 };
 
 export const useStairspaceData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -455,19 +400,16 @@ export const useStairspaceData = () => {
 
     return {
         stairspaceListings: data.stairspaceListings,
-        setStairspaceListings: (updater: (listings: StairspaceListing[]) => void) => {
+        setStairspaceListings: (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => {
             store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
         },
-        isClient,
     };
 };
 
 export const useStairspaceRequestsData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -476,19 +418,16 @@ export const useStairspaceRequestsData = () => {
 
     return {
         stairspaceRequests: data.stairspaceRequests,
-        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => void) => {
+        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => StairspaceRequest[]) => {
             store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
         },
-        isClient,
     };
 };
 
 export const useOpportunitiesData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -497,19 +436,16 @@ export const useOpportunitiesData = () => {
 
     return {
         opportunities: data.opportunities,
-        setOpportunities: (updater: (opps: Opportunity[]) => void) => {
+        setOpportunities: (updater: (opps: Opportunity[]) => Opportunity[]) => {
             store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
         },
-        isClient,
     };
 };
 
 export const useCfoData = () => {
     const [data, setData] = useState(store.get());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
         const unsubscribe = store.subscribe(() => {
             setData(store.get());
         });
@@ -521,6 +457,5 @@ export const useCfoData = () => {
         transactionData: data.transactionData,
         upcomingPayments: data.upcomingPayments,
         vatPayment: data.vatPayment,
-        isClient,
     };
 };
