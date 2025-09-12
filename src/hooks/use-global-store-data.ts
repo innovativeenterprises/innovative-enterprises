@@ -378,5 +378,3 @@ export const useStudentsData = () => {
         isClient,
     };
 };
-
-    
