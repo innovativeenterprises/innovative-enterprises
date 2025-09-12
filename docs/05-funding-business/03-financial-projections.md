@@ -20,3 +20,4 @@
 | Operational & Admin         | 14,400      | 20,000      | 35,000      |                                          |
 | **Total Expenses**          | **117,720** | **210,000** | **405,000** |                                          |
 | **Profit / Loss (OMR)**     | **(90,120)**| **(60,000)**| **265,000** | **Breakeven expected during Year 3.**      |
+

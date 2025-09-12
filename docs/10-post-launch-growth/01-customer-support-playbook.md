@@ -15,7 +15,7 @@
 
 #### **Issue: User's CR/ID analysis failed.**
 **Response:**
-"Hi [User Name], I'm sorry you're having trouble with the document analysis. This can sometimes happen if the uploaded scan is blurry or has a lot of glare. Could you please try uploading a clear, high-resolution picture of the document? If the problem continues, please send the file to `support@innovative.om` and I will ask our technical team to investigate."
+"Hi [User Name], I'm sorry you're having trouble with the document analysis. This can sometimes happen if the uploaded scan is blurry or has a lot of glare. Could you please try uploading a clear, high-resolution picture of the document? If the problem continues, please send the file to `support@innovativeenterprises.tech` and I will ask our technical team to investigate."
 
 #### **Issue: A Sanad Partner is complaining about not getting leads.**
 **Response:**

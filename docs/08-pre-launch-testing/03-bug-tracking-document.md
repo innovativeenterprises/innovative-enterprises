@@ -11,3 +11,4 @@
 | B-004 | Mobile view: E-Briefcase tabs are misaligned on Safari on iOS | Beta Tester C | 2024-08-19 | 1. Log in as a partner on an iPhone. 2. Go to E-Briefcase. | Tabs should be in a single row. | Tabs wrap incorrectly and overlap. | Medium   | `To Do`     | Frontend Team       |
 | B-005 | Bid amount on Sanad Hub accepts negative numbers. | Internal QA   | 2024-08-20 | 1. As a Sanad office, open a task. 2. Enter "-10" in the bid amount field. | Form should show a validation error. | Form accepts the negative value. | High     | `Done`      | Frontend Team (Fixed in #efgh) |
 
+

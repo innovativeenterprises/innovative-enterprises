@@ -169,6 +169,6 @@ This section covers our standalone Software-as-a-Service products.
     7.  The client can review these profiles and submit a hire request, which appears in the agency's private dashboard for follow-up.
 
 ---
-*This document will continue to be updated as the INNOVATIVE ENTERPRISES ecosystem evolves. It stands as a testament to our commitment to structured, AI-driven innovation.*
+*This document will continue to be updated as the Innovative Enterprises ecosystem evolves. It stands as a testament to our commitment to structured, AI-driven innovation.*
 
     

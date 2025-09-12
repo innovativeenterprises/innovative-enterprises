@@ -39,3 +39,4 @@
 ### 3. Assessment & Recommendation
 
 **Recommendation:** Proceed with trademark application in Oman and key GCC markets under Class 35 (Business Services) and Class 42 (Software as a Service). The name "Sanad Hub" and its associated shield logo appear to be available and defensible. The term "Sanad" is common in Arabic, but its combination with "Hub" for this specific digital service creates a distinctive mark.
+

@@ -15,15 +15,15 @@ export default function Footer() {
       <div className="container mx-auto py-8 px-4">
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="flex items-center gap-2 justify-center md:justify-start">
-             <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png" alt="innovative-enterprises Logo" width={40} height={40} className="w-10 h-10" />
-             <span className="font-bold text-lg">innovative-enterprises</span>
+             <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png" alt="Innovative Enterprises Logo" width={40} height={40} className="w-10 h-10" />
+             <span className="font-bold text-lg">Innovative Enterprises</span>
           </div>
           <div className="flex flex-col gap-4 items-center">
              <div>
                 <CompanyProfileDownloader />
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {currentYear} innovative-enterprises. All rights reserved.
+                © {currentYear} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 items-center justify-center md:justify-end">
@@ -40,3 +40,4 @@ export default function Footer() {
     </footer>
   );
 }
+

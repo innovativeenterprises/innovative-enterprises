@@ -43,3 +43,4 @@ This work consists of a collection of original computer programs, graphical user
 - [x] Prepare source code deposit (first and last 25 pages of key modules, e.g., `partner-page.tsx`, `sanad-task-analysis.ts`).
 - [ ] Prepare screenshots of key UI screens (e.g., Admin Dashboard, Sanad Hub form).
 - [x] Create a digital archive (.zip) of the material.
+

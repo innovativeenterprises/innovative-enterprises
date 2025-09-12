@@ -25,7 +25,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
                         <Image src={settings.headerImageUrl} alt="Company Header" width={240} height={80} className="h-20 w-auto object-contain" />
                     ) : (
                          <div className="flex items-center gap-4">
-                            <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="innovative-enterprises Logo" width={240} height={60} className="h-16 w-auto object-contain" />
+                            <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={240} height={60} className="h-16 w-auto object-contain" />
                         </div>
                     )}
                     <div className="text-right text-xs text-gray-500">
@@ -39,7 +39,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
                         <section className="[break-inside:avoid]">
                             <h2 className="text-xl font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">1. About Us</h2>
                             <p className="text-sm leading-relaxed text-gray-700">
-                                innovative-enterprises is a leading Omani SME dedicated to delivering cutting-edge solutions in emerging technology and digital transformation. We empower businesses and government entities to thrive in the digital age by providing a suite of innovative products and services designed to enhance efficiency, drive growth, and foster collaboration. Our mission is to pioneer tomorrow's technology today, with a strong focus on local talent and client success.
+                                Innovative Enterprises is a leading Omani SME dedicated to delivering cutting-edge solutions in emerging technology and digital transformation. We empower businesses and government entities to thrive in the digital age by providing a suite of innovative products and services designed to enhance efficiency, drive growth, and foster collaboration. Our mission is to pioneer tomorrow's technology today, with a strong focus on local talent and client success.
                             </p>
                         </section>
 
@@ -117,7 +117,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
                 </footer>
             ) : (
                 <footer className="mt-8 p-4 bg-gray-100 text-center text-xs text-gray-600">
-                    <p className="font-semibold">innovative-enterprises</p>
+                    <p className="font-semibold">Innovative Enterprises</p>
                     <p>Your Partner in Digital Transformation</p>
                 </footer>
             )}
@@ -173,7 +173,7 @@ export default function CompanyProfileDownloader() {
                 pdf.addImage(imgData, 'PNG', 0, yPos, pdfWidth, canvasHeight * ratio);
             }
 
-            pdf.save("innovative-enterprises-Company-Profile.pdf");
+            pdf.save("Innovative-Enterprises-Company-Profile.pdf");
 
             toast({ title: 'Profile Downloaded!', description: `Your PDF company profile is ready.` });
 

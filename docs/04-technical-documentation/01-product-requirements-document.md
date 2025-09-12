@@ -46,7 +46,7 @@ This document outlines the product requirements for the Minimum Viable Product (
 ### 6. User Stories
 - **As a** SME Owner, **I want to** submit a request for "CR Renewal" **so that I can** get competitive quotes from multiple Sanad offices without having to call them individually.
 - **As a** Sanad Office Owner, **I want to** receive notifications for new tasks in my area **so that I can** expand my client base.
-- **As a** Freelancer, **I want to** have a secure digital briefcase **so that I can** easily access my signed NDA and service agreements.
+- **As a** Freelancer, **I want to** have a secure digital briefcase **so that I can** easily access my signed NDA and Service agreements.
 
 ### 7. Design & UX Requirements
 - **Figma Link:** [Link to Figma file to be added]
@@ -63,3 +63,4 @@ This document outlines the product requirements for the Minimum Viable Product (
 - **Activation Rate:** >30% of new users submit at least one task or inquiry within their first week.
 - **Provider Network Growth:** Onboard 50 vetted service providers (Sanad offices and freelancers) within 3 months of launch.
 - **User Satisfaction:** Achieve a CSAT score of 4.5/5 or higher from post-task completion surveys.
+

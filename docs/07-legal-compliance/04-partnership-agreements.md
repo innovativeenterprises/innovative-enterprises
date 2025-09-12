@@ -1,3 +1,4 @@
+
 # Partnership / Agency Agreement - DRAFT
 
 **This Agreement** is made on `[Date]` ("Effective Date").

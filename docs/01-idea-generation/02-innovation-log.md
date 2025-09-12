@@ -9,3 +9,4 @@
 | 2024-07-18 | GENIUS Career Platform | The process of creating a CV and preparing for interviews is stressful and inefficient for job seekers. | Create an end-to-end AI-powered career platform with a CV enhancer and an interview coach. |
 | 2024-07-22 | Voxi Document Translator | High demand for legally accurate document translation, but turnaround times from human translators can be slow. | Develop an AI agent specialized in high-fidelity translation of official Omani documents. |
 | 2024-07-28 | Ameen Digital Identity | Password management is a security risk and a pain point for users across multiple services. | Build a password-free login system using WhatsApp OTP and a centralized digital identity. |
+
