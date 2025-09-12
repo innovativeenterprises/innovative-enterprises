@@ -6,10 +6,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 // Reusable component for displaying due dates and remaining days
 export default function DueDate({ date, className }: { date: string, className?: string }) {
     const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-    const [isClient, setIsClient] = useState(false);
   
     useEffect(() => {
-      // This effect runs only on the client, after hydration, to prevent mismatch
       const calculateRemainingDays = () => {
         const dueDate = new Date(date);
         const today = new Date();
@@ -19,12 +17,11 @@ export default function DueDate({ date, className }: { date: string, className?:
         setDaysRemaining(diffDays);
       }
       
-      setIsClient(true);
       calculateRemainingDays();
   
     }, [date]);
   
-    if (!isClient) {
+    if (daysRemaining === null) {
       // Render a skeleton on the server and initial client render
       return <Skeleton className="h-4 w-24 mt-1" />;
     }
@@ -32,13 +29,12 @@ export default function DueDate({ date, className }: { date: string, className?:
     return (
       <div className={`text-sm text-muted-foreground ${className}`}>
         Due: {date}
-        {daysRemaining !== null && (
-          daysRemaining >= 0 ? (
+        {daysRemaining >= 0 ? (
             <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
           ) : (
             <span className="text-destructive font-medium"> (Overdue)</span>
           )
-        )}
+        }
       </div>
     );
 }
