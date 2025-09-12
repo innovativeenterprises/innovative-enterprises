@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,11 +7,13 @@ import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, 
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PlatformStatisticsPage() {
-    const { products } = useProductsData();
-    const { leadership, staff, agentCategories } = useStaffData();
-    const { providers } = useProvidersData();
-    const { opportunities } = useOpportunitiesData();
-    const { services } = useServicesData();
+    const { products, isClient: isProductsClient } = useProductsData();
+    const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
+    const { providers, isClient: isProvidersClient } = useProvidersData();
+    const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+    const { services, isClient: isServicesClient } = useServicesData();
+
+    const isClient = isProductsClient && isStaffClient && isProvidersClient && isOpportunitiesClient && isServicesClient;
 
     const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
     const totalStaff = leadership.length + staff.length;
@@ -59,7 +60,7 @@ export default function PlatformStatisticsPage() {
                                         <stat.icon className="h-5 w-5 text-muted-foreground" />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-4xl font-bold text-primary">{stat.value}</div>
+                                        {!isClient ? <Skeleton className="h-10 w-16" /> : <div className="text-4xl font-bold text-primary">{stat.value}</div>}
                                     </CardContent>
                                 </Card>
                             ))}
