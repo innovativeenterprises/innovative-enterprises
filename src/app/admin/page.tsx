@@ -14,14 +14,14 @@ import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboardPage() {
-  const { products, isClient: isProductsClient } = useProductsData();
-  const { providers, isClient: isProvidersClient } = useProvidersData();
-  const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
-  
+  const { products } = useProductsData();
+  const { providers } = useProvidersData();
+  const { leadership, staff, agentCategories } = useStaffData();
   const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
-    setIsClient(isProductsClient && isProvidersClient && isStaffClient);
-  }, [isProductsClient, isProvidersClient, isStaffClient]);
+    setIsClient(true);
+  }, []);
   
   const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
   const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);

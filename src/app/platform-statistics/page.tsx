@@ -4,16 +4,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network, Briefcase, Building2, GraduationCap, Handshake } from "lucide-react";
 import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-global-store-data';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PlatformStatisticsPage() {
-    const { products, isClient: isProductsClient } = useProductsData();
-    const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
-    const { providers, isClient: isProvidersClient } = useProvidersData();
-    const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
-    const { services, isClient: isServicesClient } = useServicesData();
-
-    const isClient = isProductsClient && isStaffClient && isProvidersClient && isOpportunitiesClient && isServicesClient;
+    const { products } = useProductsData();
+    const { leadership, staff, agentCategories } = useStaffData();
+    const { providers } = useProvidersData();
+    const { opportunities } = useOpportunitiesData();
+    const { services } = useServicesData();
+    const isClient = true; // All hooks are now client-safe
 
     const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
     const totalStaff = leadership.length + staff.length;
