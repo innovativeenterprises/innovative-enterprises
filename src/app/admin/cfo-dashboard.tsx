@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -15,7 +16,7 @@ import DueDate from './due-date';
 
 
 // Main Dashboard Component
-export default function CfoDashboard() {
+export default function CfoDashboard({ isClient }: { isClient: boolean }) {
   const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
   
   const getStatusBadge = (status: string) => {
@@ -152,3 +153,4 @@ export default function CfoDashboard() {
     </div>
   );
 }
+

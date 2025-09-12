@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -33,18 +33,8 @@ import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/li
 import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 
 const useStoreData = () => {
-    const [data, setData] = useState(() => store.get());
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setData(store.get());
-        });
-        return () => unsubscribe();
-    }, []);
-    
-    return { ...data, isClient };
+    const data = useSyncExternalStore(store.subscribe, store.get);
+    return data;
 }
 
 export const useServicesData = () => {
