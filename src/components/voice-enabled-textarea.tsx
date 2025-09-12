@@ -88,7 +88,7 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
   };
 
   if (!isAvailable) {
-    return <Textarea ref={ref} className={className} {...props} />;
+    return <Textarea ref={ref} className={className} value={value} onChange={onChange} {...props} />;
   }
 
   return (
