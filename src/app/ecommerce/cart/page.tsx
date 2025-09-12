@@ -12,16 +12,13 @@ import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import { useSettingsData } from '@/hooks/use-global-store-data';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CartPage() {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
-    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const { settings } = useSettingsData();
 
     useEffect(() => {
-        setIsClient(true);
         const updateCart = () => setCartItems(store.get().cart);
         updateCart();
         const unsubscribe = store.subscribe(updateCart);
@@ -61,12 +58,7 @@ export default function CartPage() {
                             <CardDescription>Review the items in your cart before proceeding to checkout.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {!isClient ? (
-                                <div className="space-y-4">
-                                    <Skeleton className="h-16 w-full" />
-                                    <Skeleton className="h-16 w-full" />
-                                </div>
-                            ) : cartItems.length > 0 ? (
+                            {cartItems.length > 0 ? (
                                 <div className="grid lg:grid-cols-3 gap-8">
                                     <div className="lg:col-span-2">
                                         <Table>

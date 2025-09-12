@@ -58,7 +58,7 @@ const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => 
 };
 
 export default function AssetRentalsPage() {
-    const { assets, isClient } = useAssetsData();
+    const { assets } = useAssetsData();
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -72,7 +72,7 @@ export default function AssetRentalsPage() {
         setSelectedAsset(null);
     };
 
-    const availableAssets = isClient ? assets.filter(asset => asset.status === 'Available') : [];
+    const availableAssets = assets.filter(asset => asset.status === 'Available');
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -94,28 +94,9 @@ export default function AssetRentalsPage() {
                 <div className="max-w-6xl mx-auto mt-16">
                     <h2 className="text-3xl font-bold text-center mb-8">Available Assets</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {!isClient ? (
-                        Array.from({ length: 8 }).map((_, index) => (
-                           <Card key={index}>
-                                <CardHeader className="p-0">
-                                    <Skeleton className="h-48 w-full rounded-t-lg" />
-                                </CardHeader>
-                                <CardContent className="p-4 space-y-2">
-                                    <Skeleton className="h-4 w-20" />
-                                    <Skeleton className="h-6 w-3/4" />
-                                    <Skeleton className="h-4 w-full" />
-                                </CardContent>
-                                <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                                    <Skeleton className="h-8 w-1/3" />
-                                    <Skeleton className="h-10 w-1/2" />
-                                </CardFooter>
-                           </Card>
-                        ))
-                    ) : (
-                        availableAssets.map((asset) => (
-                            <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
-                        ))
-                    )}
+                    {availableAssets.map((asset) => (
+                        <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
+                    ))}
                     </div>
                 </div>
 
@@ -133,5 +114,6 @@ export default function AssetRentalsPage() {
 }
 
     
+
 
 

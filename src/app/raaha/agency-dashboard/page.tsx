@@ -9,7 +9,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable, WorkerTable } from '@/components/request-table';
+import { RequestTable } from '@/components/request-table';
+import { WorkerTable } from '@/app/raaha/agency-dashboard/worker-table';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
@@ -113,46 +114,20 @@ const workersColumns = [
 ]
 
 export default function AgencyDashboardPage() {
-    const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
-    const { requests, setRequests, isClient: isRequestsClient } = useRequestsData();
-    const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
+    const { workers, setWorkers } = useWorkersData();
+    const { requests, setRequests } = useRequestsData();
+    const { agencies, setAgencies } = useAgenciesData();
     const { toast } = useToast();
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const isClient = isWorkersClient && isRequestsClient && isAgenciesClient;
 
     useEffect(() => {
-        if (isClient && agencies.length > 0 && !selectedAgencyId) {
+        if (agencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(agencies[0].id);
         }
-    }, [agencies, isClient, selectedAgencyId]);
+    }, [agencies, selectedAgencyId]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
-    
-    if (!isClient) {
-        return (
-            <div className="bg-background min-h-[calc(100vh-8rem)]">
-                <div className="container mx-auto px-4 py-16">
-                    <div className="max-w-7xl mx-auto space-y-8">
-                        <div>
-                            <Skeleton className="h-10 w-1/3" />
-                            <Skeleton className="h-5 w-1/2 mt-2" />
-                        </div>
-                        <Card className="p-4 bg-muted/50">
-                             <div className="flex items-center gap-4">
-                                <Skeleton className="h-6 w-48" />
-                                <Skeleton className="h-10 w-[280px]" />
-                             </div>
-                        </Card>
-                         <div className="space-y-4">
-                             <Skeleton className="h-10 w-full" />
-                             <Skeleton className="h-64 w-full" />
-                         </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
     
     if (!selectedAgency) {
          return (
@@ -222,12 +197,12 @@ export default function AgencyDashboardPage() {
                             <RequestTable 
                                 data={filteredRequests} 
                                 columns={requestsColumns}
-                                isClient={isClient}
+                                isClient={true}
                                 renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} isClient={isClient} />
+                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} isClient={true} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}

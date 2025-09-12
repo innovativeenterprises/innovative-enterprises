@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, Star, Filter, Bot, ShoppingCart } from "lucide-react";
@@ -12,8 +11,6 @@ import { initialStoreProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
-import type { CartItem } from '@/lib/global-store';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const categories = [
     "All",
@@ -83,37 +80,9 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-const ProductGridSkeleton = () => (
-     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i}>
-                 <Skeleton className="h-64 w-full" />
-                 <CardHeader>
-                     <Skeleton className="h-4 w-20 mb-2" />
-                     <Skeleton className="h-6 w-4/5" />
-                 </CardHeader>
-                 <CardContent>
-                    <div className="flex justify-between">
-                         <Skeleton className="h-8 w-24" />
-                         <Skeleton className="h-6 w-12" />
-                    </div>
-                 </CardContent>
-                 <CardFooter>
-                    <Skeleton className="h-10 w-full" />
-                 </CardFooter>
-            </Card>
-        ))}
-    </div>
-);
-
 export default function EcommercePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const products = initialStoreProducts;
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const filteredProducts = selectedCategory === 'All'
     ? products.filter(p => p.enabled)
@@ -180,11 +149,9 @@ export default function EcommercePage() {
                 </Card>
             </aside>
             <main className="lg:col-span-3">
-                 {!isClient ? <ProductGridSkeleton /> : (
-                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {filteredProducts.map(product => <ProductCard key={product.id} product={product} />)}
-                    </div>
-                 )}
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {filteredProducts.map(product => <ProductCard key={product.id} product={product} />)}
+                </div>
                  <div className="mt-12 text-center">
                     <Button variant="outline">Load More Products</Button>
                 </div>
@@ -194,4 +161,3 @@ export default function EcommercePage() {
     </div>
   );
 }
-

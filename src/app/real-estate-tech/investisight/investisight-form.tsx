@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,11 +10,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, TrendingUp, Home, PieChart } from 'lucide-react';
+import { Sparkles, Home, PieChart } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import { Skeleton } from '@/components/ui/skeleton';
 
 const RoiSchema = z.object({
   purchasePrice: z.coerce.number().positive(),
@@ -34,12 +33,6 @@ export default function InvestisightForm() {
   const [roiResult, setRoiResult] = useState<{ annualReturn: number; netYield: number } | null>(null);
   const [mortgageResult, setMortgageResult] = useState<{ monthlyPayment: number; totalPayment: number; totalInterest: number } | null>(null);
   const [chartData, setChartData] = useState<{name: string, principal: number, interest: number}[]>([]);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
 
   const roiForm = useForm<RoiValues>({
     resolver: zodResolver(RoiSchema),
@@ -123,7 +116,7 @@ export default function InvestisightForm() {
                 <Button type="submit" className="w-full"><Sparkles className="mr-2 h-4 w-4" />Calculate ROI</Button>
               </form>
             </Form>
-            {isClient && roiResult && (
+            {roiResult && (
                 <div className="mt-8 grid md:grid-cols-2 gap-6">
                     <Card className="bg-muted/50">
                         <CardHeader><CardTitle>Annual Net Return</CardTitle></CardHeader>
@@ -161,7 +154,7 @@ export default function InvestisightForm() {
                         <Button type="submit" className="w-full"><Sparkles className="mr-2 h-4 w-4" />Calculate Mortgage</Button>
                     </form>
                 </Form>
-                {isClient && mortgageResult && (
+                {mortgageResult && (
                     <div className="mt-8 space-y-6">
                          <div className="grid md:grid-cols-3 gap-6 text-center">
                             <Card className="bg-muted/50"><CardHeader><CardTitle>Monthly Payment</CardTitle></CardHeader><CardContent className="text-2xl font-bold text-primary">OMR {mortgageResult.monthlyPayment.toFixed(2)}</CardContent></Card>

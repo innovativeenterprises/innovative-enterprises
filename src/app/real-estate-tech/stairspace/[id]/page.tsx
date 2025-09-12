@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Image from 'next/image';
 import { ArrowLeft, MapPin, Tag, Calendar, User, Mail, Phone, DollarSign } from 'lucide-react';
 import Link from 'next/link';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { BookingRequestForm } from './booking-form';
@@ -18,38 +17,11 @@ import type { StairspaceListing } from '@/lib/stairspace.schema';
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { stairspaceListings, isClient } = useStairspaceData();
+    const { stairspaceListings } = useStairspaceData();
     const router = useRouter();
     const [isFormOpen, setIsFormOpen] = useState(false);
 
-    const listing = isClient ? stairspaceListings.find(l => l.id === id) : undefined;
-
-    if (!isClient) {
-        return (
-            <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">
-                <div className="container mx-auto px-4 py-16">
-                    <div className="max-w-4xl mx-auto space-y-6">
-                        <Skeleton className="h-10 w-48" />
-                        <Card>
-                            <CardContent className="p-0">
-                                <div className="grid lg:grid-cols-5">
-                                    <div className="lg:col-span-3">
-                                        <Skeleton className="h-[400px] w-full" />
-                                    </div>
-                                    <div className="lg:col-span-2 p-8 space-y-4">
-                                        <Skeleton className="h-8 w-3/4" />
-                                        <Skeleton className="h-5 w-1/2" />
-                                        <Skeleton className="h-20 w-full" />
-                                        <Skeleton className="h-12 w-full" />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    const listing = stairspaceListings.find(l => l.id === id);
 
     if (!listing) {
         return notFound();

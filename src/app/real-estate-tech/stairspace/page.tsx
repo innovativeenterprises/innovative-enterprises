@@ -122,7 +122,7 @@ const SpaceCard = ({ space }: { space: StairspaceListing }) => (
 
 
 export default function StairspacePage() {
-    const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData();
+    const { stairspaceListings } = useStairspaceData();
     const [selectedTag, setSelectedTag] = useState('All');
     
     const allTags = useMemo(() => {

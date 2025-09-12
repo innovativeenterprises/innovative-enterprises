@@ -44,41 +44,9 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
     const router = useRouter();
-    const [product, setProduct] = useState<Product | null | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
+    const product = products.find(p => p.id === parseInt(params.id, 10));
 
-    useEffect(() => {
-        setIsClient(true);
-        const foundProduct = products.find(p => p.id === parseInt(params.id, 10));
-        setProduct(foundProduct);
-    }, [products, params.id]);
-
-    if (!isClient || product === undefined) {
-         return (
-             <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">
-                <div className="container mx-auto px-4 py-16">
-                     <Skeleton className="h-10 w-40 mb-8" />
-                    <div className="grid lg:grid-cols-2 gap-12">
-                        <div><Skeleton className="aspect-square w-full" /></div>
-                        <div className="space-y-6">
-                            <Skeleton className="h-6 w-24" />
-                            <Skeleton className="h-12 w-3/4" />
-                            <Skeleton className="h-6 w-1/2" />
-                            <Skeleton className="h-20 w-full" />
-                            <Skeleton className="h-12 w-1/3" />
-                            <Separator />
-                            <div className="flex items-center gap-4">
-                                <Skeleton className="h-12 w-32" />
-                                <Skeleton className="h-12 w-48" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-    
-    if (product === null) {
+    if (!product) {
         return notFound();
     }
     
