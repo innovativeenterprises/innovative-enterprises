@@ -2,10 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, notFound } from 'next/navigation';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { useParams, useRouter } from 'next/navigation';
 import { useWorkersData } from '@/hooks/use-global-store-data';
 import { useAgenciesData } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
@@ -22,7 +19,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
-
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 const HireRequestSchema = z.object({
     clientName: z.string().min(3, "Name is required."),
@@ -116,15 +114,31 @@ const AgencyInfoCard = ({ agency }: { agency: Agency }) => {
 
 export default function WorkerProfilePage() {
     const params = useParams();
+    const router = useRouter();
     const { id } = params;
-    const { workers, isClient: isWorkersClient } = useWorkersData();
-    const { agencies, isClient: isAgenciesClient } = useAgenciesData();
+    const { workers } = useWorkersData();
+    const { agencies } = useAgenciesData();
+    const [worker, setWorker] = useState<Worker | null | undefined>(undefined);
+    const [agency, setAgency] = useState<Agency | null | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const worker = workers.find(p => p.id === id);
-    const agency = worker ? agencies.find(a => a.id === worker.agencyId) : undefined;
+    useEffect(() => {
+        setIsLoading(true);
+        if(id) {
+            const foundWorker = workers.find(p => p.id === id);
+            if (foundWorker) {
+                setWorker(foundWorker);
+                const foundAgency = agencies.find(a => a.name === foundWorker.agencyId);
+                setAgency(foundAgency);
+            } else {
+                setWorker(null);
+                router.push('/404');
+            }
+        }
+        setIsLoading(false);
+    }, [id, workers, agencies, router]);
 
-
-    if (!isWorkersClient || !isAgenciesClient) {
+    if (isLoading || worker === undefined) {
         return (
             <div className="bg-muted/20 min-h-screen">
                 <div className="container mx-auto px-4 py-16">
@@ -145,8 +159,8 @@ export default function WorkerProfilePage() {
         )
     }
 
-    if (!worker) {
-        return notFound();
+    if (worker === null) {
+        return null;
     }
     
     return (

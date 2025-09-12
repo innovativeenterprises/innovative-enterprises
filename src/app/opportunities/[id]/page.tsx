@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { opportunityIconMap, type Opportunity } from "@/lib/opportunities";
-import { useParams, notFound } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,21 +80,26 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
     const { id } = params;
-    const { opportunities, isClient } = useOpportunitiesData();
+    const { opportunities } = useOpportunitiesData();
+    const router = useRouter();
     const [opportunity, setOpportunity] = useState<Opportunity | null | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (!isClient) return;
-
-        const foundOpp = opportunities.find(opp => opp.id === id);
-        setOpportunity(foundOpp || null);
-        
-        if (id && !foundOpp) {
-            notFound();
+        setIsLoading(true);
+        if (id) {
+            const foundOpp = opportunities.find(opp => opp.id === id);
+            if (foundOpp) {
+                setOpportunity(foundOpp);
+            } else {
+                setOpportunity(null);
+                router.push('/404'); // Redirect if not found after checking
+            }
         }
-    }, [id, opportunities, isClient]);
+        setIsLoading(false);
+    }, [id, opportunities, router]);
 
-    if (!isClient || opportunity === undefined) {
+    if (isLoading || opportunity === undefined) {
         return (
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-3xl mx-auto">
@@ -105,8 +110,7 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
     }
     
     if (opportunity === null) {
-        // This will be triggered by the useEffect if the ID is not found after client-side hydration
-        return notFound();
+        return null;
     }
     
     const Icon = opportunityIconMap[opportunity.iconName] || Trophy;

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, notFound } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { initialProperties } from '@/lib/properties';
 import type { Property } from '@/lib/properties';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,13 @@ import { ArrowLeft, MapPin, BedDouble, Bath, Home, Square, Building2, Banknote, 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { usePropertiesData } from '@/hooks/use-global-store-data';
 
 export default function PropertyDetailPage() {
     const params = useParams();
     const { id } = params;
-    const properties = initialProperties;
+    const { properties } = usePropertiesData();
+    const router = useRouter();
     const [property, setProperty] = useState<Property | null | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -23,12 +25,17 @@ export default function PropertyDetailPage() {
         setIsLoading(true);
         if (id) {
             const foundProperty = properties.find(p => p.id === id);
-            setProperty(foundProperty || null);
+            if (foundProperty) {
+                setProperty(foundProperty);
+            } else {
+                setProperty(null);
+                router.push('/404');
+            }
         }
         setIsLoading(false);
-    }, [id, properties]);
+    }, [id, properties, router]);
 
-     if (isLoading) {
+     if (isLoading || property === undefined) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-5xl mx-auto">
@@ -40,7 +47,7 @@ export default function PropertyDetailPage() {
     }
 
     if (property === null) {
-        notFound();
+        return null;
     }
 
     const details = [

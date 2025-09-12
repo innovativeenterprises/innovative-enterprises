@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, notFound, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useProvidersData } from '@/hooks/use-global-store-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,14 +15,25 @@ import type { Provider } from '@/lib/providers';
 
 const ProviderProfilePageContent = ({ id }: { id: string }) => {
     const { providers } = useProvidersData();
+    const router = useRouter();
     const [provider, setProvider] = useState<Provider | null | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const foundProvider = providers.find(p => p.id === id);
-        setProvider(foundProvider);
-    }, [id, providers]);
+        setIsLoading(true);
+        if (id) {
+            const foundProvider = providers.find(p => p.id === id);
+            if(foundProvider) {
+                setProvider(foundProvider);
+            } else {
+                setProvider(null);
+                router.push('/404');
+            }
+        }
+        setIsLoading(false);
+    }, [id, providers, router]);
 
-    if (provider === undefined) {
+    if (isLoading || provider === undefined) {
         return (
              <div className="space-y-8">
                 <div>
@@ -42,7 +53,7 @@ const ProviderProfilePageContent = ({ id }: { id: string }) => {
     }
 
     if (provider === null) {
-        notFound();
+        return null;
     }
     
     const getStatusBadge = (status: string) => {

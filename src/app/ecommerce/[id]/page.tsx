@@ -1,7 +1,7 @@
 
 'use client';
 
-import { notFound, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { initialStoreProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useProductsData } from '@/hooks/use-global-store-data';
 
 
 const RelatedProductCard = ({ product }: { product: Product }) => (
@@ -41,7 +42,7 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 
 export default function ProductDetailPage({ params }: { params: { id: string }}) {
     const { id } = params;
-    const products = initialStoreProducts;
+    const { products } = useProductsData();
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
     const router = useRouter();
@@ -52,12 +53,17 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
         setIsLoading(true);
         if (id) {
             const foundProduct = products.find(p => p.id === parseInt(id as string, 10));
-            setProduct(foundProduct || null);
+            if (foundProduct) {
+                setProduct(foundProduct);
+            } else {
+                setProduct(null); // Explicitly set to null if not found
+                router.push('/404'); // Redirect to a 404 page
+            }
         }
         setIsLoading(false);
-    }, [id, products]);
+    }, [id, products, router]);
 
-    if (isLoading) {
+    if (isLoading || product === undefined) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <Skeleton className="h-10 w-40 mb-8" />
@@ -75,7 +81,8 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
     }
 
     if (product === null) {
-        notFound();
+        // This state will be briefly active before the redirect.
+        return null;
     }
     
     const handleAddToCart = () => {
