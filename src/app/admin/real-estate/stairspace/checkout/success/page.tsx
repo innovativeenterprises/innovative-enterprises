@@ -2,7 +2,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
@@ -10,26 +10,25 @@ import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 function SuccessContent() {
-    const searchParams = useSearchParams();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const requestId = searchParams.get('requestId');
     const { stairspaceRequests } = useStairspaceRequestsData();
 
-    
     if (!requestId) {
+        // Redirect if the request ID is missing.
+        // This check should only run on the client.
         if (typeof window !== 'undefined') {
-            router.push('/admin/real-estate/stairspace');
+            router.replace('/admin/real-estate/stairspace');
         }
         return null;
     }
-    
+
     const request = stairspaceRequests.find(r => r.id === requestId);
 
     if (!request) {
-         if (typeof window !== 'undefined') {
-            router.push('/404');
-        }
-        return null;
+        // Use notFound from Next.js to render a 404 page if the request is invalid.
+        return notFound();
     }
     
     return (
