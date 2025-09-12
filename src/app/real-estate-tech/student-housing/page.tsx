@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,12 +8,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import type { SignedLease } from '@/lib/leases';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
 import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { SignedLease } from '@/lib/leases';
 
 export default function StudentHousingPage() {
     const { leases, setLeases } = useLeasesData();
