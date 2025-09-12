@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Suspense } from 'react';
@@ -13,11 +12,7 @@ function SuccessContent() {
     const router = useRouter();
     const params = useParams();
     const requestId = params.id as string;
-    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
-
-    if (!isClient) {
-        return <div>Loading...</div>; // Or a skeleton loader
-    }
+    const { stairspaceRequests } = useStairspaceRequestsData();
     
     const request = stairspaceRequests.find(r => r.id === requestId);
 
@@ -41,12 +36,12 @@ function SuccessContent() {
                             </div>
                             <CardTitle className="text-3xl">Booking Confirmed!</CardTitle>
                             <CardDescription className="text-base pt-2">
-                                Thank you for your payment. Your booking for <strong>{request.listingTitle}</strong> is confirmed.
+                                Thank you for your payment. The booking for <strong>{request.listingTitle}</strong> is confirmed.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <p className="text-muted-foreground">
-                                The space owner has been notified and will provide you with access details shortly. You can view all your bookings from your "My Requests" page.
+                                The space owner has been notified and will provide the client with access details shortly. You can view all bookings from your dashboard.
                             </p>
                         </CardContent>
                         <CardFooter className="flex-col gap-4">
@@ -57,7 +52,7 @@ function SuccessContent() {
                             </Button>
                              <Button asChild size="lg" variant="outline" className="w-full">
                                 <Link href="/admin/real-estate/stairspace">
-                                    <Ticket className="mr-2 h-5 w-5" /> View My Bookings
+                                    <Ticket className="mr-2 h-5 w-5" /> View All Bookings
                                 </Link>
                             </Button>
                         </CardFooter>
@@ -69,7 +64,7 @@ function SuccessContent() {
 }
 
 
-export default function StairspaceCheckoutSuccessPage() {
+export default function AdminStairspaceCheckoutSuccessPage() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <SuccessContent />

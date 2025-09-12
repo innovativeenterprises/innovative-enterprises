@@ -1,4 +1,3 @@
-
 'use client';
 
 import CfoDashboard from "../admin/cfo-dashboard";
@@ -16,4 +15,3 @@ export default function CfoPage() {
     </div>
   );
 }
-
