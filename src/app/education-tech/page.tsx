@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -71,7 +72,7 @@ const ProductGridSkeleton = () => (
 );
 
 export default function EducationTechPage() {
-    const { products, isClient } = useProductsData();
+    const { products } = useProductsData();
     
     const edtechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
     
@@ -113,13 +114,11 @@ export default function EducationTechPage() {
                 <h2 className="text-3xl md:text-4xl font-bold text-primary">Our AI-Powered Education Platforms</h2>
                 <p className="mt-4 text-lg text-muted-foreground">A preview of our dedicated solutions for the education sector.</p>
             </div>
-            {isClient ? (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {edtechProducts.map(product => (
-                        <ProductCard key={product.id} product={product} />
-                    ))}
-                </div>
-            ) : <ProductGridSkeleton />}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {edtechProducts.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                ))}
+            </div>
         </div>
 
         <div className="max-w-3xl mx-auto mt-20 text-center">

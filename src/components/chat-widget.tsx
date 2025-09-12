@@ -13,14 +13,10 @@ import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
-    const [isClient, setIsClient] = useState(false);
     const { settings } = useSettingsData();
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
-    if (!isClient) {
+    if (typeof window === 'undefined') {
         return null; // Don't render the chat widget on the server
     }
 

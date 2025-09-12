@@ -16,11 +16,9 @@ export default function ClientTestimonials({
     clients: Client[], 
     testimonials: Testimonial[] 
 }) {
-  const [isClient, setIsClient] = useState(false);
   const [currentYear, setCurrentYear] = useState('');
 
   useEffect(() => {
-      setIsClient(true);
       setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
@@ -31,25 +29,6 @@ export default function ClientTestimonials({
       index % 2 === 1 ? <strong key={index} className="font-semibold text-foreground">{part}</strong> : part
     );
   };
-
-  if (!isClient) {
-    return (
-        <section id="testimonials" className="py-16 md:py-24 bg-background">
-             <div className="container mx-auto px-4">
-                 <div className="text-center mb-12">
-                    <Skeleton className="h-10 w-1/2 mx-auto" />
-                    <Skeleton className="h-6 w-3/4 mx-auto mt-4" />
-                </div>
-                 <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
-                     {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-12 w-32" />)}
-                 </div>
-                 <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                     {Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)}
-                 </div>
-             </div>
-        </section>
-    );
-  }
 
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-background">

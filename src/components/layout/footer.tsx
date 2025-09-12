@@ -10,14 +10,8 @@ import { Skeleton } from '../ui/skeleton';
 import { Github } from 'lucide-react';
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState('');
-  const [isClient, setIsClient] = useState(false);
+  const currentYear = new Date().getFullYear().toString();
   
-  useEffect(() => {
-    setIsClient(true);
-    setCurrentYear(new Date().getFullYear().toString());
-  }, []);
-
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto py-8 px-4">
@@ -28,10 +22,10 @@ export default function Footer() {
           </div>
           <div className="flex flex-col gap-4 items-center">
              <div>
-                {isClient ? <CompanyProfileDownloader /> : <Skeleton className="h-10 w-48" />}
+                <CompanyProfileDownloader />
              </div>
              <p className="text-sm text-muted-foreground text-center">
-                © {currentYear || <Skeleton className="h-4 w-10 inline-block"/>} Innovative Enterprises. All rights reserved.
+                © {currentYear} Innovative Enterprises. All rights reserved.
               </p>
           </div>
           <div className="flex gap-4 items-center justify-center md:justify-end">

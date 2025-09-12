@@ -16,13 +16,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // This is the hidden component that will be rendered to generate the PDF
-const ProfileTemplate = ({ leadership, services, products, settings, innerRef }: any) => {
-    const [generatedDate, setGeneratedDate] = useState('');
-
-    useEffect(() => {
-        // This effect runs only on the client, after hydration, preventing mismatch.
-        setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-    }, []);
+const ProfileTemplate = ({ leadership, services, products, settings, innerRef, generatedDate }: any) => {
 
     return (
         <div ref={innerRef} className="bg-white text-gray-900" style={{ width: '210mm', minHeight: '297mm', fontFamily: 'Inter, sans-serif' }}>
@@ -140,16 +134,14 @@ export default function CompanyProfileDownloader() {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
-    const [isClient, setIsMounted] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsMounted(true);
+        setIsClient(true);
     }, []);
 
     const enabledServices = services.filter(s => s.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
-    // Use the initialProducts directly to avoid hydration issues.
-    // This data is static and consistent on both server and client.
     const products = initialProducts.filter(p => p.enabled);
 
     const handleDownload = async () => {
@@ -217,6 +209,7 @@ export default function CompanyProfileDownloader() {
                     services={enabledServices}
                     products={products}
                     settings={settings}
+                    generatedDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                 />
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
