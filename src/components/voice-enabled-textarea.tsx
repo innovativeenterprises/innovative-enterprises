@@ -8,6 +8,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 interface VoiceEnabledTextareaProps extends TextareaProps {}
 
 export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceEnabledTextareaProps>(
@@ -67,6 +74,7 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
       
       recognitionRef.current = recognition;
     } else {
+        console.log("Speech Recognition not available in this browser.");
         setIsAvailable(false);
     }
 

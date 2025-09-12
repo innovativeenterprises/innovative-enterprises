@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -8,10 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from "@/components/ui/textarea";
+import { Form } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Send, Mic, Square, CornerDownLeft, Bot, User, Volume2, Link as LinkIcon, CheckCircle, ShoppingCart } from 'lucide-react';
+import { Loader2, Send, Square, Bot, User, Volume2, Link as LinkIcon, CheckCircle, ShoppingCart } from 'lucide-react';
 import type { LucideIcon } from "lucide-react";
 import type { AppSettings } from '@/lib/settings';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
@@ -79,6 +77,7 @@ export const ChatComponent = ({
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
         setIsPlaying(false);
+        audioRef.current = null;
     }
   }, []);
   
@@ -109,7 +108,10 @@ export const ChatComponent = ({
             const audio = new Audio(response.audioUrl);
             audioRef.current = audio;
             audio.play();
-            audio.onended = () => setIsPlaying(false);
+            audio.onended = () => {
+                setIsPlaying(false);
+                audioRef.current = null;
+            };
           }
       } catch (error) {
           console.error("TTS Error:", error);

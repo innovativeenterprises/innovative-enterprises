@@ -33,6 +33,11 @@ export function CameraCapture({
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 console.error('Camera API not available.');
                 setHasCameraPermission(false);
+                toast({
+                    variant: 'destructive',
+                    title: 'Unsupported Browser',
+                    description: 'Your browser does not support the camera API.',
+                });
                 return;
             }
             try {

@@ -2,24 +2,21 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { WorkerTable } from '@/components/request-table'; // Use the generic table
 import { AgencySettings } from './agency-settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable } from '@/components/request-table';
+import { RequestTable, WorkerTable } from '@/components/request-table';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
 import type { Worker } from '@/lib/raaha-workers';
 import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, MessageSquare, PlusCircle, Edit, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { AddEditWorkerDialog } from './worker-table';
+import { CalendarIcon, MessageSquare } from 'lucide-react';
 
 
 const getStatusBadge = (status: HireRequest['status']) => {
