@@ -13,7 +13,11 @@ function SuccessContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const requestId = searchParams.get('requestId');
-    const { stairspaceRequests } = useStairspaceRequestsData();
+    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+
+    if (!isClient) {
+        return <div>Loading...</div>; // Or a skeleton loader
+    }
 
     if (!requestId) {
         // Handle case where requestId is missing
@@ -79,4 +83,3 @@ export default function StairspaceCheckoutSuccessPage() {
         </Suspense>
     );
 }
-

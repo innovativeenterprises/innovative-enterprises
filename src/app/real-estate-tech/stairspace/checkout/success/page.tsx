@@ -13,8 +13,12 @@ function SuccessContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const requestId = searchParams.get('requestId');
-    const { stairspaceRequests } = useStairspaceRequestsData();
+    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
 
+    if (!isClient) {
+        return <div>Loading...</div>; // Or a skeleton loader
+    }
+    
     if (!requestId) {
         // Handle case where requestId is missing
         if (typeof window !== 'undefined') {
@@ -59,7 +63,7 @@ function SuccessContent() {
                                 </Link>
                             </Button>
                              <Button asChild size="lg" variant="outline" className="w-full">
-                                <Link href="/admin/real-estate/stairspace">
+                                <Link href="/real-estate-tech/stairspace/my-requests">
                                     <Ticket className="mr-2 h-5 w-5" /> View My Bookings
                                 </Link>
                             </Button>
@@ -79,4 +83,3 @@ export default function StairspaceCheckoutSuccessPage() {
         </Suspense>
     );
 }
-
