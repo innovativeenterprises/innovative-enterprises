@@ -1,34 +1,43 @@
 
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
+import { CheckCircle, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import type { BookingRequest } from '@/lib/stairspace-requests';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function SuccessContent() {
-    const router = useRouter();
     const params = useParams();
     const requestId = params.id as string;
-    const { stairspaceRequests } = useStairspaceRequestsData();
-    
-    if (!requestId) {
-        if (typeof window !== 'undefined') {
-            router.replace('/admin/real-estate/stairspace');
-        }
-        return null;
-    }
-    
-    const request = stairspaceRequests.find(r => r.id === requestId);
+    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const [request, setRequest] = useState<BookingRequest | undefined>(undefined);
 
-    if (!request) {
-        if (typeof window !== 'undefined') {
-            router.replace('/404');
+    useEffect(() => {
+        if (isClient && requestId) {
+            const foundRequest = stairspaceRequests.find(r => r.id === requestId);
+            if (!foundRequest) {
+                notFound();
+            } else {
+                setRequest(foundRequest);
+            }
         }
-        return null;
+    }, [isClient, requestId, stairspaceRequests]);
+    
+    if (!isClient || !request) {
+        return (
+             <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-lg mx-auto">
+                        <Card><CardContent className="p-10"><Skeleton className="h-48 w-full" /></CardContent></Card>
+                    </div>
+                </div>
+            </div>
+        );
     }
     
     return (
