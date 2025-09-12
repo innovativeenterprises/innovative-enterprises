@@ -28,9 +28,6 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-  experimental: {
-    allowedDevOrigins: ["https://localhost:3000", "https://localhost:9002"],
-  },
 };
 
 export default nextConfig;

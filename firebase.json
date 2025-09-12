@@ -8,14 +8,6 @@
     ],
     "frameworksBackend": {
       "region": "us-central1"
-    },
-    "redirects": [
-      {
-        "source": "/:path*",
-        "destination": "https://innovativeenterprises.tech/:path*",
-        "type": 301,
-        "protocol": "http"
-      }
-    ]
+    }
   }
 }
