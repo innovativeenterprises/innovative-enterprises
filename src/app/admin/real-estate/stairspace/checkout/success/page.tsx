@@ -18,7 +18,7 @@ function SuccessContent() {
     if (!isClient) {
         return <div>Loading...</div>; // Or a skeleton loader
     }
-
+    
     if (!requestId) {
         // Handle case where requestId is missing
         if (typeof window !== 'undefined') {
