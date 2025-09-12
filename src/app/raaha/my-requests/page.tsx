@@ -1,10 +1,9 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare } from 'lucide-react';
+import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRequestsData } from '@/hooks/use-global-store-data';
@@ -152,7 +151,7 @@ export default function MyRequestsPage() {
                         </CardHeader>
                         <CardContent>
                            <RequestTable 
-                                data={myRequests}
+                                data={myRequests} 
                                 columns={columns}
                                 isClient={isClient}
                                 renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}

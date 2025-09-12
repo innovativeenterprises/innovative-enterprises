@@ -1,4 +1,3 @@
-
 'use client';
 
 import CfoDashboard from "../admin/cfo-dashboard";

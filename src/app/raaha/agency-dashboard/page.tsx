@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -104,13 +103,13 @@ export default function AgencyDashboardPage() {
         { Header: 'Availability', accessor: 'availability', Cell: ({ row }: { row: { original: Worker }}) => getAvailabilityBadge(row.original.availability) },
     ], []);
 
-    if (!selectedAgency) {
+    if (!isClient || !selectedAgency) {
          return (
             <div className="bg-background min-h-[calc(100vh-8rem)]">
                 <div className="container mx-auto px-4 py-16">
                      <div className="max-w-7xl mx-auto space-y-8 text-center">
-                         <h1 className="text-2xl font-bold">No Agencies Found</h1>
-                         <p className="text-muted-foreground">Please configure at least one agency in the system.</p>
+                         <h1 className="text-2xl font-bold">Loading Agency Data...</h1>
+                         <Skeleton className="h-96 w-full" />
                      </div>
                 </div>
             </div>
