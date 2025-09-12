@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Suspense } from 'react';
@@ -16,7 +17,6 @@ function SuccessContent() {
 
     
     if (!requestId) {
-        // Handle case where requestId is missing
         if (typeof window !== 'undefined') {
             router.push('/admin/real-estate/stairspace');
         }
@@ -26,7 +26,6 @@ function SuccessContent() {
     const request = stairspaceRequests.find(r => r.id === requestId);
 
     if (!request) {
-        // Handle case where request is not found
          if (typeof window !== 'undefined') {
             router.push('/404');
         }

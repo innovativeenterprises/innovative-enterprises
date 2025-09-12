@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Suspense } from 'react';
@@ -12,12 +13,8 @@ function SuccessContent() {
     const router = useRouter();
     const params = useParams();
     const requestId = params.id as string;
-    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const { stairspaceRequests } = useStairspaceRequestsData();
     
-    if (!isClient) {
-        return <div>Loading...</div>; // Or a skeleton loader
-    }
-
     if (!requestId) {
         if (typeof window !== 'undefined') {
             router.replace('/real-estate-tech/stairspace');

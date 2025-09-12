@@ -2,8 +2,6 @@
 'use client';
 
 import CfoDashboard from "../admin/cfo-dashboard";
-import { useSyncExternalStore } from 'react';
-import { store } from '@/lib/global-store';
 import { useCfoData } from '@/hooks/use-global-store-data';
 
 

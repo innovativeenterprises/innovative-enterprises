@@ -18,8 +18,6 @@ function SuccessContent() {
     const request = stairspaceRequests.find(r => r.id === requestId);
 
     if (!request) {
-        // Use router to navigate to a 404 page if not found client-side
-        // This avoids throwing an error during render
         if (typeof window !== 'undefined') {
             router.replace('/404');
         }
