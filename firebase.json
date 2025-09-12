@@ -1,7 +1,7 @@
 
 {
   "hosting": {
-    "source": ".",
+    "public": "out",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -10,7 +10,7 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "ssrInnovateEnterprises"
+        "destination": "/index.html"
       }
     ]
   }
