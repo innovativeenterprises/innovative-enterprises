@@ -129,7 +129,9 @@ export default function EstimatorForm() {
       });
     }
   };
-
+  
+  // This component will be removed, as the functionality is being moved to
+  // the surveillance estimator page.
   const CardSelector = ({ name, options }: { name: "coverage" | "connectivity" | "remoteViewing" | "audioRecording" | "coverageType" | "purpose", options: {value: any, label: string, icon: React.ElementType, description: string}[]}) => (
     <FormField
       control={form.control}
@@ -348,68 +350,24 @@ export default function EstimatorForm() {
             )}
             <div className="space-y-3">
                 <FormLabel>2. Select Coverage Level</FormLabel>
-                <CardSelector
-                    name="coverage"
-                    options={[
-                        { value: 'Full', label: 'Full Coverage', icon: ShieldCheck, description: "Monitor all critical areas and perimeters." },
-                        { value: 'Partial', label: 'Partial Coverage', icon: Shield, description: "Focus only on specific, high-priority zones." },
-                    ]}
-                />
             </div>
 
              {watchCoverage === 'Partial' && (
               <div className="space-y-3">
                   <FormLabel>2a. Specify Partial Coverage Area</FormLabel>
-                   <CardSelector
-                      name="coverageType"
-                      options={[
-                          { value: 'Interior', label: 'Interior', icon: Building, description: 'Monitor inside rooms and hallways.' },
-                          { value: 'Exterior', label: 'Exterior', icon: Camera, description: 'Monitor outdoor areas and building perimeter.' },
-                      ]}
-                  />
               </div>
             )}
              <div className="space-y-3">
                 <FormLabel>3. Select Purpose of Surveillance</FormLabel>
-                <CardSelector
-                    name="purpose"
-                    options={[
-                        { value: 'General Security', label: 'General Security', icon: ShieldCheck, description: "Deterrence and incident review." },
-                        { value: 'Employee Monitoring', label: 'Employee Monitoring', icon: Users, description: "Monitor staff activity and productivity." },
-                        { value: 'Asset Protection', label: 'Asset Protection', icon: Briefcase, description: "Protect valuable equipment or stock." },
-                        { value: 'Customer Traffic Analysis', label: 'Traffic Analysis', icon: Eye, description: "Analyze customer flow and behavior." },
-                    ]}
-                />
             </div>
             
             <div className="space-y-3">
                 <FormLabel>4. Select Connectivity Type</FormLabel>
-                <CardSelector
-                    name="connectivity"
-                    options={[
-                        { value: 'Wired', label: 'Wired (PoE)', icon: WifiOff, description: "Reliable, powered over ethernet. Recommended." },
-                        { value: 'WiFi', label: 'Wireless (Wi-Fi)', icon: Wifi, description: "Flexible placement, requires power outlets." },
-                    ]}
-                />
             </div>
             
             <div className="space-y-3">
                 <FormLabel>5. Select Viewing & Audio Options</FormLabel>
-                 <CardSelector
-                    name="remoteViewing"
-                    options={[
-                        { value: true, label: 'Remote Viewing', icon: Eye, description: "Access live feed from your mobile." },
-                        { value: false, label: 'Local Only', icon: Shield, description: "Viewing only available on-site." },
-                    ]}
-                />
                  <div className="pt-4">
-                  <CardSelector
-                      name="audioRecording"
-                      options={[
-                          { value: true, label: 'With Audio', icon: Mic, description: "Cameras will record audio." },
-                          { value: false, label: 'No Audio', icon: MicOff, description: "Video only, no audio recording." },
-                      ]}
-                  />
                  </div>
             </div>
 

@@ -2,7 +2,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { useSearchParams, useRouter, notFound } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
@@ -13,24 +13,22 @@ function SuccessContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const requestId = searchParams.get('requestId');
-    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const { stairspaceRequests } = useStairspaceRequestsData();
 
-    if (!isClient) {
-        return <div>Loading...</div>; // Or a skeleton loader
-    }
-    
     if (!requestId) {
-        router.replace('/real-estate-tech/stairspace');
+        // Handle case where requestId is missing
+        if (typeof window !== 'undefined') {
+            router.push('/real-estate-tech/stairspace');
+        }
         return null;
     }
-
+    
     const request = stairspaceRequests.find(r => r.id === requestId);
 
     if (!request) {
-        // Use router to navigate to a 404 page if not found client-side
-        // This avoids throwing an error during render
-        if (typeof window !== 'undefined') {
-            router.replace('/404');
+        // Handle case where request is not found
+         if (typeof window !== 'undefined') {
+            router.push('/404');
         }
         return null;
     }
@@ -82,4 +80,3 @@ export default function StairspaceCheckoutSuccessPage() {
     );
 }
 
-    
