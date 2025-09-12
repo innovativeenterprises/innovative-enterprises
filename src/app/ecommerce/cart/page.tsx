@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CartPage() {

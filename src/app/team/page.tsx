@@ -2,7 +2,6 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";

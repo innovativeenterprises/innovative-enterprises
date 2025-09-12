@@ -66,6 +66,8 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
       };
       
       recognitionRef.current = recognition;
+    } else {
+        setIsAvailable(false);
     }
 
      return () => {

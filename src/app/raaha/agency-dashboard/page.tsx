@@ -116,12 +116,13 @@ const workersColumns = [
 ]
 
 export default function AgencyDashboardPage() {
-    const { workers, setWorkers } = useWorkersData();
-    const { requests, setRequests } = useRequestsData();
-    const { agencies, setAgencies, isClient } = useAgenciesData();
+    const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
+    const { requests, setRequests, isClient: isRequestsClient } = useRequestsData();
+    const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
     const { toast } = useToast();
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
+    const isClient = isWorkersClient && isRequestsClient && isAgenciesClient;
 
     useEffect(() => {
         if (isClient && agencies.length > 0 && !selectedAgencyId) {

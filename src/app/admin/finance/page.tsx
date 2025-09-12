@@ -18,7 +18,7 @@ export default function AdminFinancePage() {
   return (
     <div className="space-y-8">
         <CfoDashboard isClient={isClient} />
-        <InvestorTable {...investorData} />
+        <InvestorTable {...investorData} isClient={isClient} />
     </div>
   );
 }

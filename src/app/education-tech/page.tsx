@@ -71,13 +71,8 @@ const ProductGridSkeleton = () => (
 );
 
 export default function EducationTechPage() {
-    const { products } = useProductsData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
+    const { products, isClient } = useProductsData();
+    
     const edtechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
     
   return (

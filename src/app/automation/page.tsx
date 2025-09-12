@@ -4,7 +4,6 @@
 import AgentList from "@/components/agent-list";
 import { useStaffData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";

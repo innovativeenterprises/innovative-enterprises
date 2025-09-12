@@ -4,7 +4,7 @@
 import { useState, useRef, useEffect, forwardRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Camera, X, RefreshCw, CheckCircle } from 'lucide-react';
+import { Loader2, Camera, X, RefreshCw, CheckCircle, VideoOff } from 'lucide-react';
 import { CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { cn } from '@/lib/utils';
@@ -97,6 +97,7 @@ export function CameraCapture({
              return (
                 <div className="p-8">
                     <Alert variant="destructive">
+                         <VideoOff className="h-4 w-4" />
                         <AlertTitle>Camera Access Required</AlertTitle>
                         <AlertDescription>
                             We couldn't access your camera. Please ensure you have a camera connected and have granted permission in your browser's site settings.

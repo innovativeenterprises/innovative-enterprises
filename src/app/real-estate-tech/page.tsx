@@ -76,12 +76,7 @@ const ProductGridSkeleton = () => (
 );
 
 export default function RealEstateTechPage() {
-    const { products } = useProductsData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { products, isClient } = useProductsData();
     
     const realEstateProducts = products.filter(p => p.category === "Real Estate Tech" && p.enabled);
     

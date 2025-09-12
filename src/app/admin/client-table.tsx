@@ -21,6 +21,7 @@ import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "../ui/skeleton";
 import { fileToDataURI } from "@/lib/utils";
+import { useClientsData } from "@/hooks/use-global-store-data";
 
 // Schemas
 const ClientSchema = z.object({
@@ -192,19 +193,8 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 
 // Main Component
-export default function ClientTable({ 
-    clients, 
-    setClients, 
-    testimonials, 
-    setTestimonials,
-    isClient,
-}: { 
-    clients: Client[], 
-    setClients: (updater: (clients: Client[]) => void) => void, 
-    testimonials: Testimonial[], 
-    setTestimonials: (updater: (testimonials: Testimonial[]) => void) => void,
-    isClient: boolean,
-}) {
+export default function ClientTable() { 
+    const { clients, setClients, testimonials, setTestimonials, isClient } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');

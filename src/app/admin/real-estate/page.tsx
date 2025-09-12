@@ -13,7 +13,7 @@ import Link from 'next/link';
 export default function AdminRealEstatePage() {
   const propertyData = usePropertiesData();
   const stairspaceData = useStairspaceData();
-  const { stairspaceRequests } = useStairspaceRequestsData();
+  const { stairspaceRequests, isClient } = useStairspaceRequestsData();
 
   return (
     <div className="space-y-8">
@@ -28,7 +28,7 @@ export default function AdminRealEstatePage() {
             <CardHeader>
                 <CardTitle>StairSpace Management</CardTitle>
                 <CardDescription>
-                    You have {stairspaceRequests.filter(r => r.status === 'Pending').length} new booking requests for your StairSpace listings.
+                    You have {isClient ? stairspaceRequests.filter(r => r.status === 'Pending').length : '...'} new booking requests for your StairSpace listings.
                 </CardDescription>
             </CardHeader>
             <CardFooter>
