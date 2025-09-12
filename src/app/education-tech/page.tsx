@@ -41,7 +41,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         <CardFooter>
             {product.href ? (
                  <Button asChild className="w-full">
-                    <Link href={product.href}>Use Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                    <Link href={product.href}>Use Tool</Link>
                 </Button>
             ) : (
                 <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
