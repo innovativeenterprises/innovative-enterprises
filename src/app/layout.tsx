@@ -7,11 +7,41 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import type { Metadata } from 'next';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
 });
+
+export const metadata: Metadata = {
+  title: "Innovative Enterprises - AI-Powered Business Platform",
+  description: "An AI-powered business services platform for the Omani market that automates key operations, connects a network of service providers, and provides a suite of intelligent tools to enhance business productivity and digital transformation.",
+  keywords: ["Oman", "SME", "AI", "business services", "Sanad Hub", "digital transformation", "automation", "e-commerce", "real estate tech"],
+  openGraph: {
+    title: "Innovative Enterprises - AI-Powered Business Platform",
+    description: "The digital operating system for SMEs in Oman. Automate, delegate, and grow with our integrated suite of AI tools and service marketplaces.",
+    url: "https://innovativeenterprises.tech",
+    siteName: "Innovative Enterprises",
+    images: [
+      {
+        url: "https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Innovative Enterprises Logo"
+      }
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+   twitter: {
+    card: "summary_large_image",
+    title: "Innovative Enterprises - AI-Powered Business Platform",
+    description: "The digital operating system for SMEs in Oman. Automate, delegate, and grow with our integrated suite of AI tools and service marketplaces.",
+    images: ["https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png"],
+  },
+}
+
 
 export default function RootLayout({
   children,
@@ -21,11 +51,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
-        <title>Innovative Enterprises - AI-Powered Business Platform</title>
-        <meta
-          name="description"
-          content="An AI-powered business services platform for the Omani market that automates key operations and enhances business productivity."
-        />
         <meta name="facebook-domain-verification" content="7hbqn30n21c3su6iuyi0ndrbodkhgv" />
       </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
