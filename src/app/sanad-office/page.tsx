@@ -1,9 +1,12 @@
+
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { FileText, MessageSquareQuote, Bot, Scale, BrainCircuit } from "lucide-react";
 import Link from "next/link";
 
-export default function AiToolsCta() {
+export default function SanadOfficePage() {
     return (
         <section className="py-16 md:py-24 bg-white">
             <div className="container mx-auto px-4">
