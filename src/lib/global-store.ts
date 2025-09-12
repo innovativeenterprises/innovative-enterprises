@@ -1,5 +1,4 @@
 
-
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -35,7 +34,7 @@ import { initialCostSettings } from './cost-settings';
 import type { CostRate } from './cost-settings.schema';
 import { initialStudents, type Student } from './students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from './cfo-data';
-import { kpiData, transactionData, upcomingPayments, vatPayment } from './cfo-data';
+import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from './cfo-data';
 import { initialCommunities, type Community } from './communities';
 import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
@@ -88,6 +87,7 @@ type AppState = {
   transactionData: TransactionData[];
   upcomingPayments: UpcomingPayment[];
   vatPayment: VatPayment;
+  cashFlowData: { month: string; income: number; expenses: number }[];
 };
 
 // The single source of truth for our application's shared state.
@@ -126,6 +126,7 @@ let state: AppState = {
   transactionData: transactionData,
   upcomingPayments: upcomingPayments,
   vatPayment: vatPayment,
+  cashFlowData: cashFlowData,
 };
 
 // A list of all component update functions to call when state changes.

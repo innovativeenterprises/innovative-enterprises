@@ -359,6 +359,7 @@ export const useCfoData = () => {
         transactionData: state.transactionData,
         upcomingPayments: state.upcomingPayments,
         vatPayment: state.vatPayment,
+        cashFlowData: state.cashFlowData,
     }));
     const isClient = useClientCheck();
     return {

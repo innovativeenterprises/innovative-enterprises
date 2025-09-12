@@ -1,3 +1,4 @@
+
 import { DollarSign, Users, CreditCard, Activity } from "lucide-react";
 import type { LucideIcon } from 'lucide-react';
 
@@ -61,3 +62,12 @@ export const vatPayment: VatPayment = {
     amount: 2153.45,
     dueDate: "2024-08-15",
 };
+
+export const cashFlowData = [
+    { month: 'Mar', income: 4000, expenses: 2400 },
+    { month: 'Apr', income: 3000, expenses: 1398 },
+    { month: 'May', income: 2000, expenses: 9800 },
+    { month: 'Jun', income: 2780, expenses: 3908 },
+    { month: 'Jul', income: 1890, expenses: 4800 },
+    { month: 'Aug', income: 2390, expenses: 3800 },
+];
