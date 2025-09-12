@@ -112,8 +112,8 @@ export const useCommunitiesData = () => {
 export const useCommunityHubData = () => {
     const data = useStoreData();
     return {
-        communityEvents: data.communityEvents,
-        communityFinances: data.communityFinances,
+        events: data.communityEvents,
+        finances: data.communityFinances,
         setEvents: (updater: (events: CommunityEvent[]) => void) => {
             store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
         },
@@ -126,7 +126,7 @@ export const useCommunityHubData = () => {
 export const useMembersData = () => {
     const data = useStoreData();
     return {
-        communityMembers: data.communityMembers,
+        members: data.communityMembers,
         setMembers: (updater: (members: CommunityMember[]) => void) => {
             store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
@@ -187,7 +187,7 @@ export const useKnowledgeData = () => {
 export const useAgenciesData = () => {
     const data = useStoreData();
     return {
-        raahaAgencies: data.raahaAgencies,
+        agencies: data.raahaAgencies,
         setAgencies: (updater: (agencies: Agency[]) => void) => {
             store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
         },
@@ -197,7 +197,7 @@ export const useAgenciesData = () => {
 export const useWorkersData = () => {
     const data = useStoreData();
     return {
-        raahaWorkers: data.raahaWorkers,
+        workers: data.raahaWorkers,
         setWorkers: (updater: (workers: RaahaWorker[]) => void) => {
             store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
         },
@@ -207,7 +207,7 @@ export const useWorkersData = () => {
 export const useRequestsData = () => {
     const data = useStoreData();
     return {
-        raahaRequests: data.raahaRequests,
+        requests: data.raahaRequests,
         setRequests: (updater: (requests: HireRequest[]) => void) => {
             store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
         },
@@ -217,7 +217,7 @@ export const useRequestsData = () => {
 export const useLeasesData = () => {
     const data = useStoreData();
     return {
-        signedLeases: data.signedLeases,
+        leases: data.signedLeases,
         setLeases: (updater: (leases: SignedLease[]) => void) => {
             store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
         },

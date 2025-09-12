@@ -18,11 +18,12 @@ export default function AdminNetworkPage() {
             </p>
         </div>
 
-        <ProviderTable {...providerData} />
-        <AssetTable {...assetData} />
+        <ProviderTable {...providerData} isClient={true} />
+        <AssetTable {...assetData} isClient={true} />
     </div>
   );
 }
 
     
+
 

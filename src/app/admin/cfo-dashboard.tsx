@@ -10,11 +10,19 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import DueDate from './due-date';
-import { useCfoData } from '@/hooks/use-global-store-data';
 
 // Main Dashboard Component
-export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
+export default function CfoDashboard({
+    kpiData,
+    transactionData,
+    upcomingPayments,
+    vatPayment,
+} : {
+    kpiData: KpiData[],
+    transactionData: TransactionData[],
+    upcomingPayments: UpcomingPayment[],
+    vatPayment: VatPayment,
+}) {
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -150,3 +158,4 @@ export default function CfoDashboard() {
     </div>
   );
 }
+
