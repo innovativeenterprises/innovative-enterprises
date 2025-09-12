@@ -96,8 +96,13 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 };
 
 export default function StudentRecordsPage() {
-    const { students, setStudents, isClient } = useStudentsData();
+    const { students, setStudents } = useStudentsData();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: StudentValues, id?: string) => {
         if (id) {
@@ -146,7 +151,7 @@ export default function StudentRecordsPage() {
                         </div>
                     </div>
                     <Card>
-                        <CardHeader className="flex-row items-center justify-between">
+                        <CardHeader className="flex flex-row items-center justify-between">
                              <div>
                                 <CardTitle>Student Registry</CardTitle>
                                 <CardDescription>A list of all enrolled students.</CardDescription>
@@ -178,9 +183,7 @@ export default function StudentRecordsPage() {
                                                 <TableCell>{getStatusBadge(student.status)}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
-                                                        <AddEditStudentDialog student={student} onSave={handleSave}>
-                                                            <Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button>
-                                                        </AddEditStudentDialog>
+                                                        <AddEditStudentDialog student={student} onSave={handleSave}><Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button></AddEditStudentDialog>
                                                         <AlertDialog>
                                                             <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
                                                             <AlertDialogContent>
