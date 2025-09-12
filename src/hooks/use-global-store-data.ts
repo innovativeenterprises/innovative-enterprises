@@ -2,13 +2,13 @@
 
 'use client';
 
-import { useState, useEffect, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
 import type { Client, Testimonial } from '@/lib/clients';
 import type { Provider } from '@/lib/providers';
-import { initialStaffData, type Agent, type AgentCategory } from '@/lib/agents';
+import { type Agent, type AgentCategory } from '@/lib/agents';
 import type { Community } from '@/lib/communities';
 import type { CommunityEvent } from '@/lib/community-events';
 import type { CommunityFinance } from '@/lib/community-finances';
@@ -30,7 +30,6 @@ import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
-import { kpiData, transactionData, upcomingPayments, vatPayment } from '@/lib/cfo-data';
 
 const useStoreData = () => {
     const data = useSyncExternalStore(store.subscribe, store.get);

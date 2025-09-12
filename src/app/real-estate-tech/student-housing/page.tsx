@@ -17,8 +17,14 @@ import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function StudentHousingPage() {
-    const { leases, setLeases, isClient } = useLeasesData();
+    const { leases, setLeases } = useLeasesData();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
 
     const handleDelete = (id: string) => {
         store.set(state => ({
@@ -123,3 +129,4 @@ export default function StudentHousingPage() {
         </div>
     );
 }
+

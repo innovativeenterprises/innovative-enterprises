@@ -2,7 +2,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { useSearchParams, useRouter, notFound } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft, Home, Ticket } from 'lucide-react';
@@ -11,17 +11,26 @@ import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 function SuccessContent() {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const requestId = searchParams.get('requestId');
-    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const { stairspaceRequests } = useStairspaceRequestsData();
 
-    if (!isClient) {
-        return <div>Loading...</div>; // Or a skeleton loader
+    if (!requestId) {
+        // Handle case where requestId is missing
+        if (typeof window !== 'undefined') {
+            router.push('/real-estate-tech/stairspace');
+        }
+        return null;
     }
-
+    
     const request = stairspaceRequests.find(r => r.id === requestId);
 
     if (!request) {
-        return notFound();
+        // Handle case where request is not found
+         if (typeof window !== 'undefined') {
+            router.push('/404');
+        }
+        return null;
     }
     
     return (
@@ -70,3 +79,4 @@ export default function StairspaceCheckoutSuccessPage() {
         </Suspense>
     );
 }
+
