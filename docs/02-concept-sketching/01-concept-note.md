@@ -1,7 +1,7 @@
 
 # Concept Note (1-Pager)
 
-## Project Title: innovative-enterprises - AI-Powered Business Platform
+## Project Title: Innovative Enterprises - AI-Powered Business Platform
 
 ### 1. Introduction & Problem
 Omani SMEs are the backbone of the economy but are significantly hampered by operational inefficiencies. They struggle with time-consuming administrative tasks, a fragmented market for finding reliable service providers, and a lack of access to the affordable digital tools needed to compete and scale. This operational friction directly impacts their productivity, profitability, and growth potential.
@@ -30,3 +30,5 @@ We offer a one-stop-shop for digital transformation that is tailored to the Oman
 - **Team:** Core team of 2 developers, 1 project manager, 1 business development lead.
 - **Technology:** Next.js, Firebase (Auth, Firestore), Genkit (Google AI - Gemini), Tailwind CSS.
 - **Budget (Year 1):** ~OMR 100,000 for salaries, marketing, and operational costs.
+
+    

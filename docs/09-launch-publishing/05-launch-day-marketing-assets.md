@@ -52,3 +52,5 @@
 | Short Video Demo                 | `Done`      | Mira  | [Link to Frame.io Project]                      |
 | Website & Email Banners          | `Done`      | Anwar | Deployed in latest commit.                    |
 | Media Kit                        | `Done`      | Huda  | [Link to Google Drive Folder]                   |
+
+    

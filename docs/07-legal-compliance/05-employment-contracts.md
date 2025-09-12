@@ -40,3 +40,5 @@ Jumaa Salim Al Hadidi, CEO
 
 ---
 ***Disclaimer:** This is a basic template. It is essential to consult with a qualified legal professional to ensure full compliance with Omani Labour Law.*
+
+    

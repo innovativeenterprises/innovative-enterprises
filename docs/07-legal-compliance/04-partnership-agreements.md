@@ -37,3 +37,5 @@ The Partner is an independent contractor. Nothing in this Agreement shall be con
 
 ---
 ***Disclaimer:** This is a basic draft. It is essential to have it reviewed by a qualified legal professional.*
+
+    

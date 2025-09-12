@@ -1,4 +1,3 @@
-
 # Grant / Funding Proposal Outline
 
 ---
@@ -56,3 +55,5 @@
 - Resumes/CVs of Jumaa Salim Al Hadidi and Anwar Ahmed Sharif.
 - Copy of Innovative Enterprises' Commercial Registration.
 - Detailed Financial Projections.
+
+    

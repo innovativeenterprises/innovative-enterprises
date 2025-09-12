@@ -30,3 +30,5 @@ The Company and the Investor represent that they have the authority to enter int
 
 ---
 ***Disclaimer:** This is a basic SAFE template. It is NOT a substitute for professional legal and financial advice. Consult with legal counsel before using.*
+
+    

@@ -37,3 +37,5 @@
 - **Possible Cause 2:** Their notification settings are turned off.
   - **Solution:** Advise them to check their account settings to ensure email or WhatsApp notifications are enabled.
 - **Escalation:** If the profile is complete and settings are correct, check the admin dashboard to ensure the partner is marked as 'Vetted' and 'Active'. If so, escalate to the development team to check the task routing logic.
+
+    

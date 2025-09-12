@@ -1,4 +1,3 @@
-
 # Investor Pitch Deck Outline
 
 ---
@@ -56,3 +55,6 @@
 - **Content:** Jumaa Salim Al Hadidi, CEO | invest@innovativeenterprises.tech | +968 78492280 | innovativeenterprises.tech
 
 
+
+
+    
