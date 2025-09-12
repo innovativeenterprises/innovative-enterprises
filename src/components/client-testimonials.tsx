@@ -2,12 +2,10 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ClientTestimonials({ 
     clients, 

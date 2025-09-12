@@ -49,7 +49,7 @@ export const useServicesData = () => {
     const data = useStoreData();
     return {
         services: data.services,
-        setServices: (updater: (services: Service[]) => Service[]) => {
+        setServices: (updater: (services: Service[]) => void) => {
             store.set(state => ({ ...state, services: updater(state.services) }));
         },
     };
@@ -59,7 +59,7 @@ export const useProductsData = () => {
     const data = useStoreData();
     return {
         products: data.products,
-        setProducts: (updater: (products: Product[]) => Product[]) => {
+        setProducts: (updater: (products: Product[]) => void) => {
             store.set(state => ({ ...state, products: updater(state.products) }));
         },
     };
@@ -70,11 +70,11 @@ export const useClientsData = () => {
     const data = useStoreData();
     return {
         clients: data.clients,
-        setClients: (updater: (clients: Client[]) => Client[]) => {
+        setClients: (updater: (clients: Client[]) => void) => {
             store.set(state => ({ ...state, clients: updater(state.clients) }));
         },
         testimonials: data.testimonials,
-        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
+        setTestimonials: (updater: (testimonials: Testimonial[]) => void) => {
             store.set(state => ({ ...state, testimonials: updater(state.testimonials) }));
         },
     };
@@ -84,7 +84,7 @@ export const useProvidersData = () => {
     const data = useStoreData();
     return {
         providers: data.providers,
-        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
+        setProviders: (updater: (providers: Provider[]) => void) => {
             store.set(state => ({ ...state, providers: updater(state.providers) }));
         },
     };
@@ -106,15 +106,15 @@ export const useStaffData = () => {
 
     return {
         leadership: data.leadership,
-        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
+        setLeadership: (updater: (agents: Agent[]) => void) => {
             store.set(state => ({ ...state, leadership: updater(state.leadership) }));
         },
         staff: data.staff,
-        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
+        setStaff: (updater: (agents: Agent[]) => void) => {
             store.set(state => ({ ...state, staff: updater(state.staff) }));
         },
         agentCategories: data.agentCategories,
-        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
+        setAgentCategories: (updater: (categories: AgentCategory[]) => void) => {
             store.set(state => ({ ...state, agentCategories: updater(state.agentCategories) }));
         },
     };
@@ -124,7 +124,7 @@ export const useCommunitiesData = () => {
     const data = useStoreData();
     return {
         communities: data.communities,
-        setCommunities: (updater: (communities: Community[]) => Community[]) => {
+        setCommunities: (updater: (communities: Community[]) => void) => {
             store.set(state => ({ ...state, communities: updater(state.communities) }));
         },
     };
@@ -134,16 +134,12 @@ export const useCommunityHubData = () => {
     const data = useStoreData();
     return {
         events: data.communityEvents,
-        setEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
+        setEvents: (updater: (events: CommunityEvent[]) => void) => {
             store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
         },
         finances: data.communityFinances,
-        setFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
+        setFinances: (updater: (finances: CommunityFinance[]) => void) => {
             store.set(state => ({ ...state, finances: updater(state.communityFinances) }));
-        },
-        members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
-            store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
     };
 };
@@ -152,7 +148,7 @@ export const useMembersData = () => {
     const data = useStoreData();
     return {
         members: data.communityMembers,
-        setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
+        setMembers: (updater: (members: CommunityMember[]) => void) => {
             store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
     };
@@ -163,7 +159,7 @@ export const useProjectStagesData = () => {
     const data = useStoreData();
     return {
         stages: data.stages,
-        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
+        setStages: (updater: (stages: ProjectStage[]) => void) => {
             store.set(state => ({ ...state, stages: updater(state.stages) }));
         },
     };
@@ -173,7 +169,7 @@ export const useSettingsData = () => {
     const data = useStoreData();
     return {
         settings: data.settings,
-        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
+        setSettings: (updater: (settings: AppSettings) => void) => {
             store.set(state => ({ ...state, settings: updater(state.settings) }));
         },
     };
@@ -183,7 +179,7 @@ export const useAssetsData = () => {
     const data = useStoreData();
     return {
         assets: data.assets,
-        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
+        setAssets: (updater: (assets: Asset[]) => void) => {
             store.set(state => ({ ...state, assets: updater(state.assets) }));
         },
     };
@@ -193,7 +189,7 @@ export const useInvestorsData = () => {
     const data = useStoreData();
     return {
         investors: data.investors,
-        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
+        setInvestors: (updater: (investors: Investor[]) => void) => {
             store.set(state => ({ ...state, investors: updater(state.investors) }));
         },
     };
@@ -203,7 +199,7 @@ export const useKnowledgeData = () => {
     const data = useStoreData();
     return {
         knowledgeBase: data.knowledgeBase,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
+        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => {
             store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
         },
     };
@@ -213,7 +209,7 @@ export const useAgenciesData = () => {
     const data = useStoreData();
     return {
         agencies: data.raahaAgencies,
-        setAgencies: (updater: (agencies: Agency[]) => Agency[]) => {
+        setAgencies: (updater: (agencies: Agency[]) => void) => {
             store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
         },
     };
@@ -223,7 +219,7 @@ export const useWorkersData = () => {
     const data = useStoreData();
     return {
         workers: data.raahaWorkers,
-        setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
+        setWorkers: (updater: (workers: RaahaWorker[]) => void) => {
             store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
         },
     };
@@ -233,7 +229,7 @@ export const useRequestsData = () => {
     const data = useStoreData();
     return {
         requests: data.raahaRequests,
-        setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
+        setRequests: (updater: (requests: HireRequest[]) => void) => {
             store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
         },
     };
@@ -243,7 +239,7 @@ export const useLeasesData = () => {
     const data = useStoreData();
     return {
         leases: data.signedLeases,
-        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
+        setLeases: (updater: (leases: SignedLease[]) => void) => {
             store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
         },
     };
@@ -253,7 +249,7 @@ export const usePropertiesData = () => {
     const data = useStoreData();
     return {
         properties: data.properties,
-        setProperties: (updater: (properties: Property[]) => Property[]) => {
+        setProperties: (updater: (properties: Property[]) => void) => {
             store.set(state => ({ ...state, properties: updater(state.properties) }));
         },
     };
@@ -263,7 +259,7 @@ export const useStairspaceData = () => {
     const data = useStoreData();
     return {
         stairspaceListings: data.stairspaceListings,
-        setStairspaceListings: (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => {
+        setStairspaceListings: (updater: (listings: StairspaceListing[]) => void) => {
             store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
         },
     };
@@ -273,7 +269,7 @@ export const useStairspaceRequestsData = () => {
     const data = useStoreData();
     return {
         stairspaceRequests: data.stairspaceRequests,
-        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => StairspaceRequest[]) => {
+        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => void) => {
             store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
         },
     };
@@ -283,7 +279,7 @@ export const useOpportunitiesData = () => {
     const data = useStoreData();
     return {
         opportunities: data.opportunities,
-        setOpportunities: (updater: (opps: Opportunity[]) => Opportunity[]) => {
+        setOpportunities: (updater: (opps: Opportunity[]) => void) => {
             store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
         },
     };

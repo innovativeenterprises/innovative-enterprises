@@ -2,11 +2,9 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
-import { Skeleton } from '../ui/skeleton';
 import { Github } from 'lucide-react';
 
 export default function Footer() {
