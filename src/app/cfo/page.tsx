@@ -3,10 +3,14 @@
 
 import { useState, useEffect } from 'react';
 import CfoDashboard from "../admin/cfo-dashboard";
-import { useCfoData } from "@/hooks/use-global-store-data";
 
 export default function CfoPage() {
-  const { isClient } = useCfoData();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
 
   return (
     <div className="bg-muted/30 min-h-screen">

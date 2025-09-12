@@ -14,18 +14,16 @@ import { useToast } from '@/hooks/use-toast';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StairspaceMatcherInputSchema, type StairspaceMatcherInput, type StairspaceMatcherOutput } from '@/ai/flows/stairspace-matcher.schema';
-import { findBestStairspaceMatch } from '@/ai/flows/stairspace-matcher.ts';
+import { findBestStairspaceMatch } from '@/ai/flows/stairspace-matcher';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from "@/components/ui/progress";
-import type { StairspaceListing } from '@/lib/stairspace-listings';
-import { store } from '@/lib/global-store';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
 
 const AiMatcher = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [response, setResponse] = useState<StairspaceMatcherOutput | null>(null);
     const { toast } = useToast();
-    const { stairspaceListings } = useStairspaceData();
-
+    
     const form = useForm<StairspaceMatcherInput>({
         resolver: zodResolver(StairspaceMatcherInputSchema),
         defaultValues: { userRequirements: '' },
@@ -124,18 +122,9 @@ const SpaceCard = ({ space }: { space: StairspaceListing }) => (
 
 
 export default function StairspacePage() {
-    const [stairspaceListings, setStairspaceListings] = useState(store.get().stairspaceListings);
+    const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData();
     const [selectedTag, setSelectedTag] = useState('All');
-     const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setStairspaceListings(store.get().stairspaceListings);
-        });
-        return () => unsubscribe();
-    }, []);
-
+    
     const allTags = useMemo(() => {
         const tags = new Set<string>(['All']);
         stairspaceListings.forEach(space => {

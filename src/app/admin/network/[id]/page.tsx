@@ -15,14 +15,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ProviderDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { providers } = useProvidersData();
-    const [provider, setProvider] = useState<typeof providers[0] | null | undefined>(null);
-    const [isClient, setIsClient] = useState(false);
-
+    const { providers, isClient } = useProvidersData();
+    const [provider, setProvider] = useState<typeof providers[0] | null | undefined>(undefined);
+    
     useEffect(() => {
-        setIsClient(true);
-        setProvider(providers.find(p => p.id === id));
-    }, [providers, id]);
+        if (isClient) {
+            setProvider(providers.find(p => p.id === id));
+        }
+    }, [providers, id, isClient]);
 
     if (!isClient) {
         return (

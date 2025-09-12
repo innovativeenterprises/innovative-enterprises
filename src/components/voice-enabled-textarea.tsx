@@ -60,7 +60,9 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
       };
 
       recognition.onend = () => {
-        setIsListening(false);
+        if (recognitionRef.current) { // Check if it hasn't been cleaned up
+          setIsListening(false);
+        }
       };
       
       recognitionRef.current = recognition;
@@ -82,8 +84,13 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
       recognitionRef.current.stop();
       setIsListening(false);
     } else {
-      recognitionRef.current.start();
-      setIsListening(true);
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch(e) {
+        console.error("Could not start recognition:", e);
+        setIsListening(false);
+      }
     }
   };
 

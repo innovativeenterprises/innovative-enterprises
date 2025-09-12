@@ -130,6 +130,7 @@ export function CameraCapture({
                         <div className="w-[85%] h-[80%] border-4 border-dashed border-white/50 rounded-lg" style={{
                             mask: 'radial-gradient(circle at center, transparent 0%, transparent 98%, black 100%), linear-gradient(black, black)',
                             WebkitMaskComposite: 'xor',
+                            maskComposite: 'exclude',
                         }}></div>
                     </div>
                 </div>
