@@ -2,27 +2,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  reactStrictMode: false,
+  // Disable Image Optimization API for static export
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-      },
-       {
-        protocol: 'https',
-        hostname: 'storage.googleapis.com',
-      },
-    ],
+    unoptimized: true,
   },
+  reactStrictMode: false,
    typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if
