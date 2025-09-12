@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -28,7 +27,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
-import { useProvidersData } from "@/hooks/use-global-store-data";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -318,16 +316,19 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
 export default function ProviderTable({ 
     providers, 
     setProviders,
-    isClient,
 }: { 
     providers: Provider[], 
     setProviders: (updater: (providers: Provider[]) => void) => void,
-    isClient: boolean,
 }) {
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);

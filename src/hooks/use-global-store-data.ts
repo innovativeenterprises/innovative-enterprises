@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useSyncExternalStore } from 'react';
@@ -260,16 +261,6 @@ export const useOpportunitiesData = () => {
         setOpportunities: (updater: (opps: Opportunity[]) => void) => {
             store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
         },
-    };
-};
-
-export const useCfoData = () => {
-    const data = useStoreData();
-    return {
-        kpiData: data.kpiData,
-        transactionData: data.transactionData,
-        upcomingPayments: data.upcomingPayments,
-        vatPayment: data.vatPayment,
     };
 };
 
