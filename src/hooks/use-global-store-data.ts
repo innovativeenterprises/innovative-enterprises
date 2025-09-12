@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -30,22 +30,12 @@ import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
+import { useState, useEffect } from 'react';
 
-// This is the new, robust pattern for all client-side data hooks.
-// It ensures that components re-render correctly once the global store is hydrated.
+
 function useStoreData<T>(selector: (state: any) => T): T {
-    const [data, setData] = useState(() => selector(store.get()));
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setData(selector(store.get()));
-        });
-        // Ensure data is up-to-date on mount in case it changed between initial state and effect
-        setData(selector(store.get())); 
-        return unsubscribe;
-    }, [selector]);
-
-    return data;
+    const state = useSyncExternalStore(store.subscribe, () => selector(store.get()), () => selector(store.get()));
+    return state;
 }
 
 const useClientCheck = () => {
