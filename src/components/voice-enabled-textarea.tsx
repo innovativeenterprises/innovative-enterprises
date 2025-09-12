@@ -106,8 +106,11 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
         variant={isListening ? 'destructive' : 'outline'}
         className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
         onClick={toggleListening}
+        disabled={!isAvailable}
       >
-        {isListening ? (
+        {!isAvailable ? (
+          <MicOff className="h-4 w-4" />
+        ) : isListening ? (
           <Square className="h-4 w-4" />
         ) : (
           <Mic className="h-4 w-4" />
