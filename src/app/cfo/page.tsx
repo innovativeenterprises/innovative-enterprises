@@ -4,20 +4,11 @@
 import CfoDashboard from "../admin/cfo-dashboard";
 import { useSyncExternalStore } from 'react';
 import { store } from '@/lib/global-store';
+import { useCfoData } from '@/hooks/use-global-store-data';
 
 
 export default function CfoPage() {
-    const cfoData = useSyncExternalStore(store.subscribe, () => ({
-        kpiData: store.get().kpiData,
-        transactionData: store.get().transactionData,
-        upcomingPayments: store.get().upcomingPayments,
-        vatPayment: store.get().vatPayment,
-    }), () => ({
-        kpiData: [],
-        transactionData: [],
-        upcomingPayments: [],
-        vatPayment: { amount: 0, dueDate: '' },
-    }));
+    const cfoData = useCfoData();
 
   return (
     <div className="bg-muted/30 min-h-screen">

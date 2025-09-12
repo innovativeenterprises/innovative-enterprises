@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network, Briefcase, Building2, GraduationCap, Handshake } from "lucide-react";
 import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMemo } from 'react';
 
 export default function PlatformStatisticsPage() {
     const { products } = useProductsData();
@@ -12,19 +13,20 @@ export default function PlatformStatisticsPage() {
     const { providers } = useProvidersData();
     const { opportunities } = useOpportunitiesData();
     const { services } = useServicesData();
-    const isClient = true; // All hooks are now client-safe
+    
+    const isClient = true; // All hooks are client-safe now.
 
-    const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
-    const totalStaff = leadership.length + staff.length;
+    const totalAgents = useMemo(() => agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0), [agentCategories]);
+    const totalStaff = useMemo(() => leadership.length + staff.length, [leadership, staff]);
     const totalWorkforce = totalAgents + totalStaff;
-    const activeProjects = products.filter(p => p.stage !== 'Live & Operating' && p.stage !== 'Idea Phase').length;
-    const liveProducts = products.filter(p => p.stage === 'Live & Operating').length;
-    const totalOpportunities = opportunities.filter(o => o.status === 'Open').length;
+    const activeProjects = useMemo(() => products.filter(p => p.stage !== 'Live & Operating' && p.stage !== 'Idea Phase').length, [products]);
+    const liveProducts = useMemo(() => products.filter(p => p.stage === 'Live & Operating').length, [products]);
+    const totalOpportunities = useMemo(() => opportunities.filter(o => o.status === 'Open').length, [opportunities]);
     const totalProviders = providers.length;
     const totalServices = services.length;
-    const contechProducts = products.filter(p => p.category === "Construction Tech").length;
-    const edutechProducts = products.filter(p => p.category === "Education Tech").length;
-    const retechProducts = products.filter(p => p.category === "Real Estate Tech").length;
+    const contechProducts = useMemo(() => products.filter(p => p.category === "Construction Tech").length, [products]);
+    const edutechProducts = useMemo(() => products.filter(p => p.category === "Education Tech").length, [products]);
+    const retechProducts = useMemo(() => products.filter(p => p.category === "Real Estate Tech").length, [products]);
 
     const stats = [
         { title: "Total Digital Workforce", value: totalAgents, icon: Bot },
