@@ -1,8 +1,7 @@
 
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
-import { initialProperties } from '@/lib/properties';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import type { Property } from '@/lib/properties';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,28 +11,30 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePropertiesData } from '@/hooks/use-global-store-data';
+import { initialProperties } from '@/lib/properties';
+
+export function generateStaticParams() {
+    return initialProperties.map((property) => ({
+        id: property.id,
+    }));
+}
+
 
 export default function PropertyDetailPage() {
     const params = useParams();
     const { id } = params;
     const { properties } = usePropertiesData();
-    const router = useRouter();
-    const [property, setProperty] = useState<Property | null | undefined>(undefined);
+    const [property, setProperty] = useState<Property | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         if (id) {
             const foundProperty = properties.find(p => p.id === id);
-            if (foundProperty) {
-                setProperty(foundProperty);
-            } else {
-                setProperty(null);
-                router.push('/404');
-            }
+            setProperty(foundProperty);
         }
         setIsLoading(false);
-    }, [id, properties, router]);
+    }, [id, properties]);
 
      if (isLoading || property === undefined) {
         return (
@@ -46,8 +47,8 @@ export default function PropertyDetailPage() {
         )
     }
 
-    if (property === null) {
-        return null;
+    if (!property) {
+        return notFound();
     }
 
     const details = [

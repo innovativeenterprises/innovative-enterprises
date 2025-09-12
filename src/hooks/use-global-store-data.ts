@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useSyncExternalStore, useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';

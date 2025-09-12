@@ -7,8 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { opportunityIconMap, type Opportunity } from "@/lib/opportunities";
-import { useParams, useRouter } from 'next/navigation';
+import { opportunityIconMap, type Opportunity, initialOpportunities } from "@/lib/opportunities";
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,27 +77,27 @@ const PriceNegotiationDialog = ({ opportunity }: { opportunity: any }) => {
     )
 }
 
+export function generateStaticParams() {
+    return initialOpportunities.map((opp) => ({
+        id: opp.id,
+    }));
+}
+
 
 export default function OpportunityDetailPage({ params }: { params: { id: string }}) {
     const { id } = params;
     const { opportunities } = useOpportunitiesData();
-    const router = useRouter();
-    const [opportunity, setOpportunity] = useState<Opportunity | null | undefined>(undefined);
+    const [opportunity, setOpportunity] = useState<Opportunity | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         if (id) {
             const foundOpp = opportunities.find(opp => opp.id === id);
-            if (foundOpp) {
-                setOpportunity(foundOpp);
-            } else {
-                setOpportunity(null);
-                router.push('/404'); // Redirect if not found after checking
-            }
+            setOpportunity(foundOpp);
         }
         setIsLoading(false);
-    }, [id, opportunities, router]);
+    }, [id, opportunities]);
 
     if (isLoading || opportunity === undefined) {
         return (
@@ -109,8 +109,8 @@ export default function OpportunityDetailPage({ params }: { params: { id: string
         );
     }
     
-    if (opportunity === null) {
-        return null;
+    if (!opportunity) {
+        return notFound();
     }
     
     const Icon = opportunityIconMap[opportunity.iconName] || Trophy;

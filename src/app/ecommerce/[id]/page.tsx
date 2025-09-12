@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { initialStoreProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import { Button } from '@/components/ui/button';
@@ -40,28 +40,29 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 );
 
 
+export function generateStaticParams() {
+    return initialStoreProducts.map((product) => ({
+        id: String(product.id),
+    }));
+}
+
+
 export default function ProductDetailPage({ params }: { params: { id: string }}) {
     const { id } = params;
     const { products } = useProductsData();
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
-    const router = useRouter();
-    const [product, setProduct] = useState<Product | null | undefined>(undefined);
+    const [product, setProduct] = useState<Product | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         if (id) {
             const foundProduct = products.find(p => p.id === parseInt(id as string, 10));
-            if (foundProduct) {
-                setProduct(foundProduct);
-            } else {
-                setProduct(null); // Explicitly set to null if not found
-                router.push('/404'); // Redirect to a 404 page
-            }
+            setProduct(foundProduct);
         }
         setIsLoading(false);
-    }, [id, products, router]);
+    }, [id, products]);
 
     if (isLoading || product === undefined) {
         return (
@@ -80,9 +81,8 @@ export default function ProductDetailPage({ params }: { params: { id: string }})
         )
     }
 
-    if (product === null) {
-        // This state will be briefly active before the redirect.
-        return null;
+    if (!product) {
+        return notFound();
     }
     
     const handleAddToCart = () => {

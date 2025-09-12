@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { useProvidersData } from '@/hooks/use-global-store-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,26 +12,28 @@ import { Progress } from '@/components/ui/progress';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
+import { initialProviders } from '@/lib/providers';
+
+export function generateStaticParams() {
+    return initialProviders.map((provider) => ({
+        id: provider.id,
+    }));
+}
+
 
 const ProviderProfilePageContent = ({ id }: { id: string }) => {
     const { providers } = useProvidersData();
-    const router = useRouter();
-    const [provider, setProvider] = useState<Provider | null | undefined>(undefined);
+    const [provider, setProvider] = useState<Provider | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         if (id) {
             const foundProvider = providers.find(p => p.id === id);
-            if(foundProvider) {
-                setProvider(foundProvider);
-            } else {
-                setProvider(null);
-                router.push('/404');
-            }
+            setProvider(foundProvider);
         }
         setIsLoading(false);
-    }, [id, providers, router]);
+    }, [id, providers]);
 
     if (isLoading || provider === undefined) {
         return (
@@ -52,8 +54,8 @@ const ProviderProfilePageContent = ({ id }: { id: string }) => {
         )
     }
 
-    if (provider === null) {
-        return null;
+    if (!provider) {
+        return notFound();
     }
     
     const getStatusBadge = (status: string) => {
@@ -144,7 +146,7 @@ const ProviderProfilePageContent = ({ id }: { id: string }) => {
                     </div>
                     <div className="w-full md:w-auto">
                         <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
-                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry} />
+                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry as string} />
                     </div>
                 </CardHeader>
                 <CardContent>

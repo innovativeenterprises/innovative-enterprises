@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { useWorkersData } from '@/hooks/use-global-store-data';
 import { useAgenciesData } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
@@ -14,13 +14,14 @@ import { ArrowLeft, Mail, Phone, Globe, Check, Star, Briefcase, Building2 } from
 import Link from 'next/link';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { initialWorkers } from '@/lib/raaha-workers';
 
 const HireRequestSchema = z.object({
     clientName: z.string().min(3, "Name is required."),
@@ -112,31 +113,34 @@ const AgencyInfoCard = ({ agency }: { agency: Agency }) => {
     )
 }
 
+export function generateStaticParams() {
+    return initialWorkers.map((worker) => ({
+        id: worker.id,
+    }));
+}
+
+
 export default function WorkerProfilePage() {
     const params = useParams();
-    const router = useRouter();
     const { id } = params;
     const { workers } = useWorkersData();
     const { agencies } = useAgenciesData();
-    const [worker, setWorker] = useState<Worker | null | undefined>(undefined);
-    const [agency, setAgency] = useState<Agency | null | undefined>(undefined);
+    const [worker, setWorker] = useState<Worker | undefined>(undefined);
+    const [agency, setAgency] = useState<Agency | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         if(id) {
             const foundWorker = workers.find(p => p.id === id);
+            setWorker(foundWorker);
             if (foundWorker) {
-                setWorker(foundWorker);
                 const foundAgency = agencies.find(a => a.name === foundWorker.agencyId);
                 setAgency(foundAgency);
-            } else {
-                setWorker(null);
-                router.push('/404');
             }
         }
         setIsLoading(false);
-    }, [id, workers, agencies, router]);
+    }, [id, workers, agencies]);
 
     if (isLoading || worker === undefined) {
         return (
@@ -159,8 +163,8 @@ export default function WorkerProfilePage() {
         )
     }
 
-    if (worker === null) {
-        return null;
+    if (!worker) {
+        return notFound();
     }
     
     return (

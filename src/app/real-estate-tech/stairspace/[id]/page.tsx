@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { useStairspaceData } from '@/hooks/use-global-store-data';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,33 +10,34 @@ import { ArrowLeft, MapPin, Tag, Calendar, User, Mail, Phone, DollarSign } from 
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
-import { BookingRequestForm } from './booking-form';
+import { BookingRequestForm } from '../booking-form';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Skeleton } from '@/components/ui/skeleton';
+import { initialStairspaceListings } from '@/lib/stairspace-listings';
+
+export function generateStaticParams() {
+    return initialStairspaceListings.map((listing) => ({
+        id: listing.id,
+    }));
+}
 
 
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
     const { stairspaceListings } = useStairspaceData();
-    const router = useRouter();
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [listing, setListing] = useState<StairspaceListing | null | undefined>(undefined);
+    const [listing, setListing] = useState<StairspaceListing | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         if(id) {
             const foundListing = stairspaceListings.find(l => l.id === id);
-            if (foundListing) {
-                setListing(foundListing);
-            } else {
-                setListing(null);
-                router.push('/404');
-            }
+            setListing(foundListing);
         }
         setIsLoading(false);
-    }, [id, stairspaceListings, router]);
+    }, [id, stairspaceListings]);
 
     if (isLoading || listing === undefined) {
         return (
@@ -49,8 +50,8 @@ export default function StairspaceDetailPage() {
         );
     }
     
-    if (listing === null) {
-        return null;
+    if (!listing) {
+        return notFound();
     }
 
     return (
@@ -58,7 +59,7 @@ export default function StairspaceDetailPage() {
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto space-y-6">
                     <div>
-                        <Button asChild variant="outline" onClick={() => router.back()}>
+                        <Button asChild variant="outline">
                             <Link href="/real-estate-tech/stairspace">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Listings
