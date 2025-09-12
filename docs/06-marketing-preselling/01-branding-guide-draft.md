@@ -1,6 +1,7 @@
+
 # Branding Guide - DRAFT
 
-## Project: Innovative Enterprises
+## Project: innovative-enterprises
 
 ---
 
@@ -8,7 +9,7 @@
 *Insert the final logo versions here (Primary, Secondary, Icon/Favicon).*
 
 **Primary Logo:**
-![Placeholder for Primary Logo](https://placehold.co/400x100/293462/F0F4F8?text=INNOVATIVE%0AENTERPRISES&font=inter)
+![Placeholder for Primary Logo](https://placehold.co/400x100/293462/F0F4F8?text=innovative-enterprises&font=inter)
 
 **Icon:**
 ![Placeholder for Icon](https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png)
