@@ -43,7 +43,7 @@ const AddEditProviderDialog = ({
     onOpenChange,
 }: { 
     provider?: Provider, 
-    onSave: (values: ProviderValues & { subscriptionExpiry: string }, id?: string) => void,
+    onSave: (values: ProviderValues, id?: string) => void,
     children: React.ReactNode,
     isOpen: boolean,
     onOpenChange: (open: boolean) => void,
@@ -67,10 +67,7 @@ const AddEditProviderDialog = ({
     }, [provider, form, isOpen]);
 
     const onSubmit: SubmitHandler<ProviderValues> = (data) => {
-        onSave({
-            ...data,
-            subscriptionExpiry: data.subscriptionExpiry ? data.subscriptionExpiry.toISOString() : '',
-        }, provider?.id);
+        onSave(data, provider?.id);
         form.reset();
         onOpenChange(false);
     };
@@ -265,12 +262,12 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
     );
 };
 
-const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
+const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string }) => {
     const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
-    const [isClient, setIsClient] = useState(false);
+    const [isSubClient, setIsSubClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
+        setIsSubClient(true);
         if (!expiry) {
             setDaysUntilExpiry(null);
             return;
@@ -289,7 +286,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) 
         return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
     }
     
-    if (!isClient) {
+    if (!isSubClient) {
         return <Badge variant="secondary">Loading...</Badge>;
     }
 
@@ -335,13 +332,18 @@ export default function ProviderTable({
         setIsDialogOpen(true);
     }
 
-    const handleSave = (values: ProviderValues & { subscriptionExpiry: string }, id?: string) => {
+    const handleSave = (values: ProviderValues, id?: string) => {
+        const providerData = {
+            ...values,
+            subscriptionExpiry: values.subscriptionExpiry ? values.subscriptionExpiry.toISOString() : undefined,
+        };
+
         if (id) {
-            setProviders(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
+            setProviders(prev => prev.map(p => p.id === id ? { ...p, ...providerData } : p));
             toast({ title: "Provider updated successfully." });
         } else {
             const newProvider: Provider = {
-                ...values,
+                ...providerData,
                 id: `prov_${values.name.replace(/\s+/g, '_').toLowerCase()}`,
             };
             setProviders(prev => [newProvider, ...prev]);
