@@ -390,7 +390,7 @@ export const initialProducts: Product[] = [
     {
         id: 34,
         name: "AI-POS for Education",
-        description: "A smart, AI-driven Point-of-Sale system for university canteens or school stores, featuring inventory management and student spending analytics.",
+        description: "A smart, AI-driven Point-of-Sale system for university canteens or school stores, featuring inventory management, sales analytics, and student spending insights.",
         stage: "Live & Operating",
         category: "SaaS",
         price: 0,
@@ -586,7 +586,7 @@ export const initialProducts: Product[] = [
         aiHint: "legal document tender",
         rating: 0,
         enabled: true,
-        href: "/submit-work",
+        href: "/tender-assistant",
         adminStatus: "Completed"
     }
 ];
