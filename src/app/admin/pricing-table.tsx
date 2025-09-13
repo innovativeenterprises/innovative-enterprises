@@ -75,7 +75,7 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() {
+export default function PricingTable() { 
     const { pricing, isClient } = usePricingData();
     const { toast } = useToast();
 
