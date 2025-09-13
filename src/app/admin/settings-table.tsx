@@ -22,7 +22,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import CostSettingsTable from "./cost-settings-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSettingsData, useCostSettingsData } from "@/hooks/use-global-store-data";
+import { useSettingsData, useCostSettingsData, setSettings } from "@/hooks/use-global-store-data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const SanadPricingSchema = z.object({
@@ -338,7 +338,7 @@ const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onS
 }
 
 export default function SettingsTable() {
-    const { settings, setSettings, isClient } = useSettingsData();
+    const { settings, isClient } = useSettingsData();
     const costSettingsData = useCostSettingsData();
     const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('general');

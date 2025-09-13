@@ -6,8 +6,8 @@ import TranslationForm from "./translation-form";
 import { Languages, FileText, Banknote, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pricing, PricingGroup } from '@/lib/pricing';
-import { usePricingData } from '@/app/admin/pricing-table';
-import { useSettingsData } from '@/app/admin/settings-table';
+import { usePricingData } from '@/hooks/use-global-store-data';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 
 const iconMap: { [key: string]: React.ElementType } = {
     "Legal & Official Documents": ShieldCheck,
