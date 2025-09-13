@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   title: "INNOVATIVE ENTERPRISES - AI-Powered Business Platform",
   description: "An AI-powered business services platform for the Omani market that automates key operations, connects a network of service providers, and provides a suite of intelligent tools to enhance business productivity and digital transformation.",
   keywords: ["Oman", "SME", "AI", "business services", "Sanad Hub", "digital transformation", "automation", "e-commerce", "real estate tech"],
+  verification: {
+    other: {
+      'facebook-domain-verification': '7hbqn30n21c3su6iuyi0ndrbodkhgv',
+    }
+  },
   openGraph: {
     title: "INNOVATIVE ENTERPRISES - AI-Powered Business Platform",
     description: "The digital operating system for SMEs in Oman. Automate, delegate, and grow with our integrated suite of AI tools and service marketplaces.",
@@ -45,9 +50,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <head>
-        <meta name="facebook-domain-verification" content="7hbqn30n21c3su6iuyi0ndrbodkhgv" />
-      </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <ClientLayout>{children}</ClientLayout>
       </body>
