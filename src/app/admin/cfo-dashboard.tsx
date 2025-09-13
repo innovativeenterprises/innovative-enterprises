@@ -15,18 +15,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [displayState, setDisplayState] = useState({ isClient: false, daysRemaining: null as number | null });
+    const [displayState, setDisplayState] = useState<{isClient: boolean, daysRemaining: number | null}>({ isClient: false, daysRemaining: null });
 
     useEffect(() => {
-        const calculateRemainingDays = () => {
-            const dueDate = new Date(date);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const diffTime = dueDate.getTime() - today.getTime();
-            const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
-            setDisplayState({ isClient: true, daysRemaining: diffDays });
-        }
-        calculateRemainingDays();
+        const dueDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffTime = dueDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+        setDisplayState({ isClient: true, daysRemaining: diffDays });
     }, [date]);
 
     if (!displayState.isClient) {
