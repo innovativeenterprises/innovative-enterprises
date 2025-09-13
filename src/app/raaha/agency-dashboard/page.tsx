@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -7,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
+import { useAgenciesData, useWorkersData, useRequestsData, setRequests, setWorkers } from '@/hooks/use-global-store-data';
 import { RequestTable } from '@/components/request-table';
 import { WorkerTable } from '@/app/raaha/agency-dashboard/worker-table';
 import { formatDistanceToNow, format } from 'date-fns';
@@ -38,6 +39,17 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
     );
 };
 
+// Client-side component to prevent hydration errors with time formatting
+const TimeAgoCell = ({ date }: { date: string }) => {
+    const [timeAgo, setTimeAgo] = useState('');
+
+    useEffect(() => {
+        setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
+    }, [date]);
+
+    return <span>{timeAgo || '...'}</span>;
+};
+
 export default function AgencyDashboardPage() {
     const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
     const { requests, setRequests, isClient: isRequestsClient } = useRequestsData();
@@ -65,7 +77,7 @@ export default function AgencyDashboardPage() {
     const requestsColumns = useMemo(() => [
         { Header: 'Candidate', accessor: 'workerName' },
         { Header: 'Client', accessor: 'clientName' },
-        { Header: 'Request Date', accessor: 'requestDate', Cell: ({ row }: { row: { original: HireRequest }}) => formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true }) },
+        { Header: 'Request Date', accessor: 'requestDate', Cell: ({ row }: { row: { original: HireRequest }}) => <TimeAgoCell date={row.original.requestDate} /> },
         { Header: 'Status', accessor: 'status', Cell: ({ row }: { row: { original: HireRequest }}) => getStatusBadge(row.original.status) },
         { Header: 'Interview', accessor: 'interviewDate', Cell: ({ row }: { row: { original: HireRequest }}) => row.original.interviewDate ? (
             <div className="text-xs text-muted-foreground space-y-1">
@@ -165,7 +177,7 @@ export default function AgencyDashboardPage() {
                                 data={filteredRequests} 
                                 columns={requestsColumns}
                                 isClient={isClient}
-                                renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}
+                                renderActions={(request) => <ScheduleInterviewDialog request={request as HireRequest} onSchedule={onSchedule} />}
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
