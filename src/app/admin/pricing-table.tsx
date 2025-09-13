@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -125,7 +126,7 @@ export default function PricingTable() {
                                         <TableCell>OMR {item.price.toFixed(2)}</TableCell>
                                         <TableCell className="text-right">
                                             <EditPriceDialog item={item} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                                <Button variant="ghost" size="icon" aria-label={`Edit price for ${item.type}`}><Edit /></Button>
                                             </EditPriceDialog>
                                         </TableCell>
                                     </TableRow>
@@ -138,3 +139,4 @@ export default function PricingTable() {
         </Card>
     );
 }
+

@@ -310,7 +310,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
                     {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
                 </div>
             </div>
-            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
+            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progressValue}%`} />
         </div>
     )
 }
@@ -418,15 +418,15 @@ export default function ProviderTable() {
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
-                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)}><Edit className="h-4 w-4" /></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)} aria-label={`Edit ${p.name}`}><Edit className="h-4 w-4" /></Button>
                                         {p.portfolio && (
-                                            <Button asChild variant="ghost" size="icon">
+                                            <Button asChild variant="ghost" size="icon" aria-label={`View ${p.name}'s portfolio`}>
                                                 <a href={p.portfolio} target="_blank" rel="noopener noreferrer"><LinkIcon /></a>
                                             </Button>
                                         )}
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                <Button variant="ghost" size="icon" aria-label={`Delete ${p.name}`}><Trash2 className="text-destructive" /></Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this provider from your network.</AlertDialogDescription></AlertDialogHeader>
@@ -443,6 +443,3 @@ export default function ProviderTable() {
         </Card>
     );
 }
-
-
-    
