@@ -271,17 +271,18 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string }) => {
     const [isClient, setIsClient] = useState(false);
+    const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
 
     useEffect(() => {
         setIsClient(true);
-    }, []);
-
-    const daysUntilExpiry = useMemo(() => {
-        if (!expiry) return null;
+        if (!expiry) {
+            setDaysUntilExpiry(null);
+            return;
+        }
         const expiryDate = new Date(expiry);
         const now = new Date();
         const diffTime = expiryDate.getTime() - now.getTime();
-        return Math.ceil(diffTime / (1000 * 3600 * 24));
+        setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
     }, [expiry]);
 
     if (!isClient) {
