@@ -52,10 +52,6 @@ const AddEditProviderDialog = ({
     
     const form = useForm<ProviderValues>({
         resolver: zodResolver(ProviderSchema),
-        defaultValues: {
-            ...provider,
-            subscriptionExpiry: provider?.subscriptionExpiry ? new Date(provider.subscriptionExpiry) : undefined,
-        }
     });
 
     useEffect(() => {
@@ -190,7 +186,7 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
                 const newProviders: Provider[] = rows.map((row, index) => {
                     const columns = row.split(',');
                     if (columns.length !== 8) {
-                        console.warn(`Skipping malformed row ${index + 2}: ${row}`);
+                        console.warn(`Skipping malformed row ${"'" + (index + 2) + "'"}: ${row}`);
                         return null;
                     }
                     return {

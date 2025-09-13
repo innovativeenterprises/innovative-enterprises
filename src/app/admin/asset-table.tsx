@@ -55,7 +55,15 @@ const AddEditAssetDialog = ({
 
     const form = useForm<z.infer<typeof AssetSchema>>({
         resolver: zodResolver(AssetSchema),
-        defaultValues: {
+    });
+    
+     const watchImageUrl = form.watch('imageUrl');
+     const watchImageFile = form.watch('imageFile');
+
+    useEffect(() => {
+        if (!isOpen) return;
+        
+        form.reset({
             name: asset?.name || "",
             type: asset?.type || 'Laptop',
             specs: asset?.specs || "",
@@ -64,38 +72,18 @@ const AddEditAssetDialog = ({
             status: asset?.status || 'Available',
             aiHint: asset?.aiHint || "",
             imageUrl: asset?.image || "",
-        },
-    });
+            imageFile: undefined,
+        });
+        setImagePreview(asset?.image || null);
+    }, [isOpen, asset, form]);
     
-     const watchImageUrl = form.watch('imageUrl');
-     const watchImageFile = form.watch('imageFile');
-
-    useEffect(() => {
+     useEffect(() => {
         if (watchImageFile && watchImageFile.length > 0) {
             fileToDataURI(watchImageFile[0]).then(setImagePreview);
         } else if (watchImageUrl) {
             setImagePreview(watchImageUrl);
-        } else {
-             setImagePreview(asset?.image || null);
         }
-    }, [watchImageUrl, watchImageFile, asset?.image]);
-
-     useEffect(() => {
-        if(isOpen) {
-           form.reset({ 
-                name: asset?.name || "",
-                type: asset?.type || 'Laptop',
-                specs: asset?.specs || "",
-                monthlyPrice: asset?.monthlyPrice || 0,
-                purchasePrice: asset?.purchasePrice || 0,
-                status: asset?.status || 'Available',
-                aiHint: asset?.aiHint || "",
-                imageUrl: asset?.image || "",
-                imageFile: undefined,
-            });
-            setImagePreview(asset?.image || null);
-        }
-    }, [asset, form, isOpen]);
+    }, [watchImageUrl, watchImageFile]);
     
     const onSubmit: SubmitHandler<z.infer<typeof AssetSchema>> = async (data) => {
         let imageValue = "";
@@ -110,8 +98,6 @@ const AddEditAssetDialog = ({
             ...data,
             image: imageValue,
         }, asset?.id);
-        form.reset();
-        setImagePreview(null);
         setIsOpen(false);
     };
 
