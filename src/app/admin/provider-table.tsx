@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -35,6 +36,15 @@ const CsvImportSchema = z.object({
   csvFile: z.any().refine(file => file?.length == 1, 'A CSV file is required.'),
 });
 type CsvImportValues = z.infer<typeof CsvImportSchema>;
+
+const fileToDataURI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
 
 const AddEditProviderDialog = ({ 
     provider, 
@@ -260,21 +270,23 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string }) => {
-    const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
-    const [isSubClient, setIsSubClient] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsSubClient(true);
-        if (!expiry) {
-            setDaysUntilExpiry(null);
-            return;
-        }
+        setIsClient(true);
+    }, []);
+
+    const daysUntilExpiry = useMemo(() => {
+        if (!expiry) return null;
         const expiryDate = new Date(expiry);
         const now = new Date();
         const diffTime = expiryDate.getTime() - now.getTime();
-        setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
+        return Math.ceil(diffTime / (1000 * 3600 * 24));
     }, [expiry]);
-    
+
+    if (!isClient) {
+        return <Badge variant="secondary">Loading...</Badge>;
+    }
 
     if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;
@@ -283,10 +295,6 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
         return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
     }
     
-    if (!isSubClient) {
-        return <Badge variant="secondary">Loading...</Badge>;
-    }
-
     if (daysUntilExpiry === null) {
          return <Badge variant="outline">{tier}</Badge>;
     }
@@ -435,3 +443,4 @@ export default function ProviderTable() {
         </Card>
     );
 }
+
