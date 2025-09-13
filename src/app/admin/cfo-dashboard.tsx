@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import { useCfoData } from '@/hooks/use-global-store-data';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';

@@ -28,6 +28,12 @@ export interface VatPayment {
     dueDate: string;
 }
 
+export interface CashFlowData {
+    month: string;
+    income: number;
+    expenses: number;
+}
+
 export const kpiData: KpiData[] = [
     { title: "Total Revenue", value: "OMR 45,231.89", change: "+20.1% from last month", icon: DollarSign, href: "#" },
     { title: "Active Subscriptions", value: "+2350", change: "+180.1% from last month", icon: Users, href: "#" },
@@ -63,7 +69,7 @@ export const vatPayment: VatPayment = {
     dueDate: "2024-08-15",
 };
 
-export const cashFlowData = [
+export const cashFlowData: CashFlowData[] = [
     { month: 'Mar', income: 4000, expenses: 2400 },
     { month: 'Apr', income: 3000, expenses: 1398 },
     { month: 'May', income: 2000, expenses: 9800 },
