@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useSyncExternalStore } from 'react';
@@ -92,5 +93,5 @@ export const useStairspaceRequestsData = () => ({ stairspaceRequests: useStoreDa
 export const useOpportunitiesData = () => ({ opportunities: useStoreData(state => state.opportunities), isClient: true });
 export const useCostSettingsData = () => ({ costSettings: useStoreData(state => state.costSettings), isClient: true });
 export const usePricingData = () => ({ pricing: useStoreData(state => state.pricing), isClient: true });
-export const useCfoData = () => ({ kpiData: useStoreData(s => s.kpiData), transactionData: useStoreData(s => s.transactionData), upcomingPayments: useStoreData(s => s.upcomingPayments), vatPayment: useStoreData(s => s.vatPayment), isClient: true });
+export const useCfoData = () => ({ kpiData: useStoreData(s => s.kpiData), transactionData: useStoreData(s => s.transactionData), upcomingPayments: useStoreData(s => s.upcomingPayments), vatPayment: useStoreData(s => s.vatPayment), cashFlowData: useStoreData(s => s.cashFlowData), isClient: true });
 export const useStudentsData = () => ({ students: useStoreData(state => state.students), isClient: true });

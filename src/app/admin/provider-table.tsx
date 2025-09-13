@@ -208,7 +208,7 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
                         portfolio: columns[4]?.trim(),
                         notes: columns[5]?.trim(),
                         subscriptionTier: columns[6]?.trim() as any,
-                        subscriptionExpiry: columns[7]?.trim(),
+                        subscriptionExpiry: new Date(columns[7]?.trim()),
                     };
                 }).filter((p): p is Provider => p !== null && p.name !== '');
                 resolve(newProviders);
@@ -269,12 +269,10 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
     );
 };
 
-const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string }) => {
-    const [isClient, setIsClient] = useState(false);
+const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
     const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
 
     useEffect(() => {
-        setIsClient(true);
         if (!expiry) {
             setDaysUntilExpiry(null);
             return;
@@ -284,10 +282,6 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
         const diffTime = expiryDate.getTime() - now.getTime();
         setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
     }, [expiry]);
-
-    if (!isClient) {
-        return <Badge variant="secondary">Loading...</Badge>;
-    }
 
     if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;
@@ -331,7 +325,7 @@ export default function ProviderTable() {
     const handleSave = (values: ProviderValues, id?: string) => {
         const providerData = {
             ...values,
-            subscriptionExpiry: values.subscriptionExpiry ? values.subscriptionExpiry.toISOString() : undefined,
+            subscriptionExpiry: values.subscriptionExpiry,
         };
 
         if (id) {
@@ -415,7 +409,7 @@ export default function ProviderTable() {
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell>
-                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry as string | undefined} />
+                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} />
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">

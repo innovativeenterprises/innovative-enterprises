@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -8,8 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
-import { store } from '@/lib/global-store';
+import { useAgenciesData, useWorkersData, useRequestsData, setRequests as setRaahaRequests } from '@/hooks/use-global-store-data';
 import { RequestTable } from '@/components/request-table';
 import { WorkerTable } from '@/app/raaha/agency-dashboard/worker-table';
 import { formatDistanceToNow, format } from 'date-fns';
@@ -52,7 +52,7 @@ const TimeAgoCell = ({ date }: { date: string }) => {
 
 export default function AgencyDashboardPage() {
     const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
-    const { requests, setRequests, isClient: isRequestsClient } = useRequestsData();
+    const { requests, isClient: isRequestsClient } = useRequestsData();
     const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
     const { toast } = useToast();
 
@@ -68,12 +68,9 @@ export default function AgencyDashboardPage() {
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
     const onSchedule = (id: string, values: InterviewValues) => {
-        store.set(state => ({
-            ...state,
-            raahaRequests: state.raahaRequests.map(r => 
-                r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
-            )
-        }));
+        setRaahaRequests(prev => prev.map(r => 
+            r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+        ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
     };
 
