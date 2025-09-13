@@ -62,7 +62,7 @@ export default function CooDashboardPage() {
     useEffect(() => {
         runAnalysis();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products, providers, kpiData]);
+    }, []);
 
     return (
         <div className="space-y-8">
