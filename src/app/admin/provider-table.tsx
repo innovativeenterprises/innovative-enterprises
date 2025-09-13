@@ -27,6 +27,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
+import { useProvidersData, setProviders } from "@/hooks/use-global-store-data";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -310,22 +311,12 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
     )
 }
 
-export default function ProviderTable({ 
-    providers, 
-    setProviders,
-}: { 
-    providers: Provider[], 
-    setProviders: (updater: (providers: Provider[]) => void) => void,
-}) {
+export default function ProviderTable() {
+    const { providers, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);
@@ -419,7 +410,7 @@ export default function ProviderTable({
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell>
-                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} />
+                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry as string | undefined} />
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
@@ -448,5 +439,3 @@ export default function ProviderTable({
         </Card>
     );
 }
-
-  

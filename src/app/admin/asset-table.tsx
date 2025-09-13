@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon, Search } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAssetsData } from "@/hooks/use-global-store-data";
+import { useAssetsData, setAssets } from "@/hooks/use-global-store-data";
 import { fileToDataURI } from "@/lib/utils";
 
 const AssetSchema = z.object({
@@ -196,15 +196,8 @@ const AddEditAssetDialog = ({
     )
 }
 
-export default function AssetTable({
-    assets,
-    setAssets,
-    isClient,
-}: {
-    assets: Asset[],
-    setAssets: (updater: (assets: Asset[]) => void) => void,
-    isClient: boolean,
-}) {
+export default function AssetTable() {
+    const { assets, isClient } = useAssetsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     
@@ -333,5 +326,3 @@ export default function AssetTable({
         </Card>
     );
 }
-
-    
