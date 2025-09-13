@@ -1,11 +1,10 @@
-
 # SAFE (Simple Agreement for Future Equity) - DRAFT
 
 **THIS AGREEMENT** is made on `[Date]`
 
 **BETWEEN:**
 
-1.  **innovative-enterprises**, an Omani SME (CRN: 1435192) ("Company").
+1.  **INNOVATIVE ENTERPRISES**, an Omani SME (CRN: 1435192) ("Company").
 2.  **[Investor Name]** ("Investor").
 
 This is an agreement for the Investor to make a cash investment in the Company in exchange for the right to receive equity in the future.
@@ -31,5 +30,3 @@ The Company and the Investor represent that they have the authority to enter int
 
 ---
 ***Disclaimer:** This is a basic SAFE template. It is NOT a substitute for professional legal and financial advice. Consult with legal counsel before using.*
-
-    

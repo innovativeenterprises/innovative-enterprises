@@ -1,9 +1,8 @@
-
 # Privacy Policy - DRAFT
 
 **Last Updated:** 2024-08-01
 
-innovative-enterprises ("us", "we", or "our") operates the `innovativeenterprises.tech` website and its associated services (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
+INNOVATIVE ENTERPRISES ("us", "we", or "our") operates the `INNOVATIVE ENTERPRISES.tech` website and its associated services (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
 
 ### 1. Information Collection and Use
 We collect several different types of information for various purposes to provide and improve our Service to you.
@@ -13,7 +12,7 @@ We collect several different types of information for various purposes to provid
 - **Uploaded Documents:** When you use our AI tools (e.g., Voxi Translator, CR Analysis), you may upload documents. These documents are processed to provide the requested service.
 
 ### 2. Use of Data
-innovative-enterprises uses the collected data for various purposes:
+INNOVATIVE ENTERPRISES uses the collected data for various purposes:
 - To provide and maintain the Service (e.g., to connect you with service providers).
 - To process your documents with our AI agents to generate the outputs you request.
 - To notify you about changes to our Service.
@@ -37,5 +36,3 @@ We may update our Privacy Policy from time to time. We will notify you of any ch
 
 ---
 ***Disclaimer:** This is a basic template. It is crucial to have it reviewed by a qualified legal professional to ensure compliance with all applicable laws.*
-
-    

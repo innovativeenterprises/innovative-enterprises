@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck } from "lucide-react";
@@ -67,7 +65,7 @@ const ProjectCard = ({ name, description, status, href }: { name: string, descri
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <CardTitle className="text-xl">{name}</CardTitle>
-                     <Badge variant="default" className={`${getStatusColor()} text-white`}>{status}</Badge>
+                     <Badge variant="default" className={`${"'" + getStatusColor() + "'"} text-white`}>{status}</Badge>
                 </div>
             </CardHeader>
             <CardContent className="flex-grow">
@@ -92,7 +90,7 @@ export default function InvestPage() {
 
         <div className="max-w-5xl mx-auto mt-16 space-y-20">
             <div>
-                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Why Invest in Innovative Enterprises?</h2>
+                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Why Invest in INNOVATIVE ENTERPRISES?</h2>
                  <div className="grid md:grid-cols-3 gap-8">
                      {investmentReasons.map((reason) => (
                         <Card key={reason.title} className="text-center group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">

@@ -43,7 +43,7 @@
 ---
 
 ### **Testimonial Section**
-- **Quote:** "Innovative Enterprises and the Sanad Hub have transformed how we operate. What used to take days of phone calls now takes minutes on their platform. It's an essential tool for any SME in Oman."
+- **Quote:** "INNOVATIVE ENTERPRISES and the Sanad Hub have transformed how we operate. What used to take days of phone calls now takes minutes on their platform. It's an essential tool for any SME in Oman."
 - **Attribution:** "Ali Al-Saidi, CEO, Modern Construction Co."
 
 ---
@@ -52,4 +52,3 @@
 - **Headline:** Ready to Revolutionize Your Business?
 - **Sub-headline:** Join hundreds of Omani businesses that are saving time, reducing costs, and accelerating growth.
 - **Primary CTA Button:** Sign Up and Automate Your First Task
-

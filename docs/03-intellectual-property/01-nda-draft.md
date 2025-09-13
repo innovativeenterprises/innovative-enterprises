@@ -1,9 +1,8 @@
-
 # Non-Disclosure Agreement (NDA) - DRAFT
 
 **This Agreement** is entered into as of `[Date]` ("Effective Date"), by and between:
 
-**Party A:** **innovative-enterprises**, an Omani SME with Commercial Registration No. 1435192, with its principal place of business at Al Amerat, Muscat, Oman ("Disclosing Party").
+**Party A:** **INNOVATIVE ENTERPRISES**, an Omani SME with Commercial Registration No. 1435192, with its principal place of business at Al Amerat, Muscat, Oman ("Disclosing Party").
 
 **Party B:** `[Full Name/Company Name]`, with its principal place of business at `[Address]` ("Receiving Party").
 
@@ -26,7 +25,7 @@ This Agreement shall be governed by and construed in accordance with the laws of
 
 **IN WITNESS WHEREOF,** the parties have executed this Agreement as of the Effective Date.
 
-**PARTY A: innovative-enterprises**
+**PARTY A: INNOVATIVE ENTERPRISES**
 
 _________________________
 Jumaa Salim Al Hadidi, CEO
@@ -35,5 +34,4 @@ Jumaa Salim Al Hadidi, CEO
 
 _________________________
 [Name], [Title]
-
 

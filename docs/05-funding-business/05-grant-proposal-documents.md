@@ -1,18 +1,17 @@
-
 # Grant / Funding Proposal Outline
 
 ---
 ### 1. Cover Letter
 - **To:** [Name of Foundation/Granting Body, e.g., Oman Technology Fund]
-- **From:** Jumaa Salim Al Hadidi, CEO, innovative-enterprises
+- **From:** Jumaa Salim Al Hadidi, CEO, INNOVATIVE ENTERPRISES
 - **Subject:** Grant Proposal for "Sanad Hub": Digitizing SME Access to Government Services
-- **Content:** A brief introduction to innovative-enterprises as an Omani SME focused on digital transformation. We are requesting [Amount] to accelerate the development and onboarding for our "Sanad Hub" platform, which aligns with Oman Vision 2040's goals of SME empowerment and digitalization.
+- **Content:** A brief introduction to INNOVATIVE ENTERPRISES as an Omani SME focused on digital transformation. We are requesting [Amount] to accelerate the development and onboarding for our "Sanad Hub" platform, which aligns with Oman Vision 2040's goals of SME empowerment and digitalization.
 
 ---
 ### 2. Executive Summary (1 page)
 - **Problem:** Omani SMEs face significant friction when accessing essential government services through traditional Sanad offices, leading to wasted time and lost productivity.
 - **Solution:** Sanad Hub is a digital platform that connects SMEs with a network of vetted Sanad offices. It uses AI to clarify document requirements upfront and allows for competitive bidding on tasks, making the process transparent and efficient.
-- **Organization:** innovative-enterprises is an emerging leader in Oman's tech sector, specializing in AI-driven solutions.
+- **Organization:** INNOVATIVE ENTERPRISES is an emerging leader in Oman's tech sector, specializing in AI-driven solutions.
 - **Funding Request:** We are seeking OMR [Amount] to onboard 200+ Sanad offices, launch a targeted marketing campaign to SMEs, and enhance the platform's AI capabilities.
 - **Impact:** This project will directly support thousands of SMEs, increase the digital literacy of service providers, and create a more efficient digital economy in Oman.
 
@@ -34,7 +33,7 @@
 
 ---
 ### 5. Organization Information (1 page)
-- Mission and vision of innovative-enterprises.
+- Mission and vision of INNOVATIVE ENTERPRISES.
 - Brief history, including the development of our AI platform and other products.
 - Evidence of capacity: Highlight the team's combined experience in technology and the Omani market.
 
@@ -54,7 +53,5 @@
 ### 8. Appendices
 - Letters of Support from a few pilot Sanad offices or SME owners.
 - Resumes/CVs of Jumaa Salim Al Hadidi and Anwar Ahmed Sharif.
-- Copy of innovative-enterprises' Commercial Registration.
+- Copy of INNOVATIVE ENTERPRISES' Commercial Registration.
 - Detailed Financial Projections.
-
-    

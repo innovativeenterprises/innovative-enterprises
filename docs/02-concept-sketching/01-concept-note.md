@@ -1,7 +1,6 @@
-
 # Concept Note (1-Pager)
 
-## Project Title: innovative-enterprises - AI-Powered Business Platform
+## Project Title: INNOVATIVE ENTERPRISES - AI-Powered Business Platform
 
 ### 1. Introduction & Problem
 Omani SMEs are the backbone of the economy but are significantly hampered by operational inefficiencies. They struggle with time-consuming administrative tasks, a fragmented market for finding reliable service providers, and a lack of access to the affordable digital tools needed to compete and scale. This operational friction directly impacts their productivity, profitability, and growth potential.

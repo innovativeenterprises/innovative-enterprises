@@ -1,7 +1,6 @@
-
 # Branding Guide - DRAFT
 
-## Project: innovative-enterprises
+## Project: INNOVATIVE ENTERPRISES
 
 ---
 
@@ -9,7 +8,7 @@
 *Insert the final logo versions here (Primary, Secondary, Icon/Favicon).*
 
 **Primary Logo:**
-![Placeholder for Primary Logo](https://placehold.co/400x100/293462/F0F4F8?text=innovative-enterprises&font=inter)
+![Placeholder for Primary Logo](https://placehold.co/400x100/293462/F0F4F8?text=INNOVATIVE ENTERPRISES&font=inter)
 
 **Icon:**
 ![Placeholder for Icon](https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png)
@@ -18,7 +17,7 @@
 - Use the primary, full-text logo whenever possible, especially in headers.
 - The Icon can be used for favicons, social media profile pictures, and in-app elements where space is limited.
 - Do not stretch, distort, or change the colors of the logo.
-- Maintain a minimum clear space around the logo equal to the height of the "i" in "innovative-enterprises".
+- Maintain a minimum clear space around the logo equal to the height of the "i" in "INNOVATIVE ENTERPRISES".
 
 ---
 
@@ -62,5 +61,3 @@
 *Describe the style of photos and icons to be used.*
 - **Photography:** Use professional, high-quality photos that are authentic and feature a diverse group of people in modern Omani business settings. Blend images of technology with Omani culture. Avoid generic, "corporate-speak" stock photos.
 - **Iconography:** Use the `lucide-react` icon library. Icons should be clean, line-based, and consistently implemented across the platform. For custom icons (e.g., Sanad Hub), maintain a similar line weight and style.
-
-    

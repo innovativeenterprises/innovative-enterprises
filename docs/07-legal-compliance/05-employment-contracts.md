@@ -1,11 +1,10 @@
-
 # Employment Contract - DRAFT
 
 **This Employment Agreement** is made on `[Date]`
 
 **BETWEEN:**
 
-**innovative-enterprises** (CRN: 1435192), a company registered in the Sultanate of Oman ("Company")
+**INNOVATIVE ENTERPRISES** (CRN: 1435192), a company registered in the Sultanate of Oman ("Company")
 
 **AND**
 
@@ -35,11 +34,9 @@ This Agreement shall be governed by and construed in accordance with the laws of
 _________________________
 [Employee Name]
 
-**For innovative-enterprises:**
+**For INNOVATIVE ENTERPRISES:**
 _________________________
 Jumaa Salim Al Hadidi, CEO
 
 ---
 ***Disclaimer:** This is a basic template. It is essential to consult with a qualified legal professional to ensure full compliance with Omani Labour Law.*
-
-    

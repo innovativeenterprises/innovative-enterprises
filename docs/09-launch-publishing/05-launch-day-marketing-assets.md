@@ -1,7 +1,6 @@
-
 # Launch Day Marketing Assets Checklist
 
-## Project: innovative-enterprises Platform
+## Project: INNOVATIVE ENTERPRISES Platform
 **Launch Date:** 2024-09-15
 
 ---
@@ -14,7 +13,7 @@
 - [x] **Launch Announcement Graphic:**
   - [x] Square format (1080x1080) for Instagram/LinkedIn.
   - [x] Landscape format (1200x675) for Twitter/Facebook.
-  - *Content: "innovative-enterprises is Now Live!", App Logo, Screenshot of the main dashboard, URL: innovative.om*
+  - *Content: "INNOVATIVE ENTERPRISES is Now Live!", App Logo, Screenshot of the main dashboard, URL: innovative.om*
 - [x] **Short Video Demo (60 seconds):**
   - [x] Screen recording showing the Sanad Hub task submission flow from start to finish.
   - [x] Formatted for all platforms (16:9, 1:1, 9:16).
@@ -28,7 +27,7 @@
 - [x] **Website Homepage Banner:**
   - A prominent banner on the hero section announcing "We're Live! The Future of Business in Oman is Here."
 - [x] **Blog Post Graphics:**
-  - [x] A feature image for the "Welcome to innovative-enterprises" launch day blog post.
+  - [x] A feature image for the "Welcome to INNOVATIVE ENTERPRISES" launch day blog post.
 - [x] **Email Header Graphic:**
   - [x] A special branded graphic for the launch announcement email campaign sent via Mailchimp/Brevo.
 
@@ -53,5 +52,3 @@
 | Short Video Demo                 | `Done`      | Mira  | [Link to Frame.io Project]                      |
 | Website & Email Banners          | `Done`      | Anwar | Deployed in latest commit.                    |
 | Media Kit                        | `Done`      | Huda  | [Link to Google Drive Folder]                   |
-
-    

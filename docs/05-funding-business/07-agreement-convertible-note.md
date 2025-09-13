@@ -1,11 +1,10 @@
-
 # Convertible Note Agreement - DRAFT
 
 **Principal Amount:** OMR [Principal Amount]
 **Date of Issuance:** [Date]
 **Maturity Date:** [Maturity Date, e.g., 24 months from issuance]
 
-**FOR VALUE RECEIVED,** innovative-enterprises ("Company") promises to pay to **[Investor Name]** ("Investor") the principal sum of **OMR [Principal Amount]**.
+**FOR VALUE RECEIVED,** INNOVATIVE ENTERPRISES ("Company") promises to pay to **[Investor Name]** ("Investor") the principal sum of **OMR [Principal Amount]**.
 
 ### 1. Interest
 Interest will accrue on the unpaid principal balance at a rate of **[Interest Rate, e.g., 6]%** per annum, compounded annually. Interest will be payable at maturity or upon conversion.
@@ -26,4 +25,3 @@ This Note shall be governed by and construed under the laws of the Sultanate of 
 
 ---
 ***Disclaimer:** This is a basic Convertible Note template. It is NOT a substitute for professional legal and financial advice. Consult with legal counsel before using.*
-

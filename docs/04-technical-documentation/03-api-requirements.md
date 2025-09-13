@@ -1,7 +1,6 @@
-
 # API Requirements & Integration Notes
 
-## Project: innovative-enterprises - AI Business Platform
+## Project: INNOVATIVE ENTERPRISES - AI Business Platform
 
 ---
 
@@ -71,4 +70,3 @@ To achieve this, the platform will expose a secure, versioned, RESTful Partner A
 *   **`POST /api/v1/orders`**:
     *   **Purpose:** When a product sold on our store belongs to a partner, our system will call this endpoint on the *partner's* API to notify them of the new sale for fulfillment.
     *   **Request Body:** A JSON object containing order details like `orderId`, `customerDetails`, and an array of `lineItems` (`sku`, `quantity`).
-

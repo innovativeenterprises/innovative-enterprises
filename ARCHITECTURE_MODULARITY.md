@@ -1,4 +1,3 @@
-
 # Transforming Services into Standalone Apps
 
 Yes, it is absolutely possible to transform any of the built-in services (like "Sanad Hub" or "Nova Commerce") into a separate, standalone application while maintaining data and logical integrity with the other services.
@@ -10,7 +9,7 @@ The current architecture is designed to be modular, which makes this process fea
 You would create a new, separate Next.js project for the service you want to spin off (e.g., "Sanad Hub").
 
 -   **Copy UI Components**: Move all the relevant frontend files for that service—such as the pages in `/app/sanad-hub/`, its specific forms, and any related UI components—into the new project.
--   **Independent Deployment**: This new application would be deployed independently and could have its own domain name (e.g., `sanad-hub.innovative.om`).
+-   **Independent Deployment**: This new application would be deployed independently and could have its own domain name (e.g., `sanad-hub.INNOVATIVE ENTERPRISES.om`).
 
 ### 2. Maintain Integrity with a Shared Backend
 

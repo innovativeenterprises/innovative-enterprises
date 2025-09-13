@@ -1,4 +1,3 @@
-
 # Email Campaign Drafts
 
 ---
@@ -14,23 +13,23 @@ How many hours did you spend this month on paperwork, chasing documents, or find
 
 For the average SME in Oman, that number is far too high. It's time that changes.
 
-innovative-enterprises is putting the final touches on a new platform designed to automate your operations and give you back your most valuable asset: your time.
+INNOVATIVE ENTERPRISES is putting the final touches on a new platform designed to automate your operations and give you back your most valuable asset: your time.
 
 Stay tuned for the official announcement.
 
 Best,
-The innovative-enterprises Team
+The INNOVATIVE ENTERPRISES Team
 
 ---
 
 ### Campaign 2: Launch Announcement
 
-**Subject:** It's Here! Welcome to innovative-enterprises - Your AI-Powered Business Partner
+**Subject:** It's Here! Welcome to INNOVATIVE ENTERPRISES - Your AI-Powered Business Partner
 
 **Body:**
 Hi [First Name],
 
-The wait is over! We're thrilled to officially launch the **innovative-enterprises platform**, designed to help your business operate smarter, not harder.
+The wait is over! We're thrilled to officially launch the **INNOVATIVE ENTERPRISES platform**, designed to help your business operate smarter, not harder.
 
 Starting today, you can:
 - **Delegate Tasks to Sanad Hub:** Submit any government service task and receive competitive quotes from our verified network.
@@ -45,7 +44,7 @@ We're excited to help you accelerate your growth.
 
 Cheers,
 Jumaa Salim Al Hadidi, CEO
-innovative-enterprises
+INNOVATIVE ENTERPRISES
 
 ---
 
@@ -56,7 +55,7 @@ innovative-enterprises
 **Body:**
 Hi [First Name],
 
-Welcome to innovative-enterprises! We're glad to have you on board.
+Welcome to INNOVATIVE ENTERPRISES! We're glad to have you on board.
 
 Ready to see the platform in action? The fastest way to experience the magic is to delegate your first task.
 
@@ -69,6 +68,4 @@ Do you have a document that needs translating for an international partner? Or p
 Our team (both human and AI) is here to help if you have any questions.
 
 Best,
-The Team at innovative-enterprises
-
-    
+The Team at INNOVATIVE ENTERPRISES

@@ -1,7 +1,6 @@
-
 # User Stories
 
-## Project: innovative-enterprises - AI Business Platform
+## Project: INNOVATIVE ENTERPRISES - AI Business Platform
 
 | ID  | As a... (User Role) | I want to... (Action)                               | So that I can... (Benefit)                          | Priority | Acceptance Criteria                                                                   |
 | :-- | :------------------ | :-------------------------------------------------- | :-------------------------------------------------- | :------: | :------------------------------------------------------------------------------------ |

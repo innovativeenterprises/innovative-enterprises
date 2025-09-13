@@ -1,7 +1,6 @@
-
 # Preliminary Budget Draft
 
-## Project: innovative-enterprises - AI Business Platform
+## Project: INNOVATIVE ENTERPRISES - AI Business Platform
 **Period:** First Year of Operation
 
 ---
@@ -50,5 +49,3 @@
 - **Net Burn:** (90,120 OMR)
 - **Contingency (15%):** 13,518 OMR
 - **TOTAL FUNDING SOUGHT:** **~OMR 105,000**
-
-

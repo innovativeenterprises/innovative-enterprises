@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState } from 'react';
@@ -107,7 +105,7 @@ export default function InvestForm() {
     const element = document.createElement("a");
     const file = new Blob([response.letterContent], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = "Letter-of-Interest-Innovative-Enterprises.txt";
+    element.download = "Letter-of-Interest-INNOVATIVE-ENTERPRISES.txt";
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -116,8 +114,8 @@ export default function InvestForm() {
 
   const handleEmail = () => {
     if (!response) return;
-    const subject = "Following up on my interest in Innovative Enterprises";
-    const body = encodeURIComponent("Dear Innovative Enterprises Team,\n\nPlease find the automatically generated Letter of Interest based on my recent inquiry. I look forward to discussing potential investment opportunities.\n\n---\n\n" + response.letterContent);
+    const subject = "Following up on my interest in INNOVATIVE ENTERPRISES";
+    const body = encodeURIComponent("Dear INNOVATIVE ENTERPRISES Team,\n\nPlease find the automatically generated Letter of Interest based on my recent inquiry. I look forward to discussing potential investment opportunities.\n\n---\n\n" + response.letterContent);
     window.location.href = `mailto:invest@innovative.om?subject=${subject}&body=${body}`;
     toast({
         title: 'Forwarded to Sales Agent',
@@ -441,4 +439,3 @@ export default function InvestForm() {
     </div>
   );
 }
-

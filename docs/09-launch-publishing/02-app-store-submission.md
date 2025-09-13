@@ -1,7 +1,6 @@
-
 # App Store / Marketplace Submission Checklist
 
-## App Name: innovative-enterprises
+## App Name: INNOVATIVE ENTERPRISES
 
 *Note: As this is a web application, this document serves as a template for a potential future Progressive Web App (PWA) submission or a native app wrapper.*
 
@@ -9,10 +8,10 @@
 
 ### 1. App Store Connect (for iOS)
 
-- [ ] **App Name:** innovative-enterprises
+- [ ] **App Name:** INNOVATIVE ENTERPRISES
 - [ ] **Subtitle:** AI-Powered Business Services
-- [ ] **Bundle ID:** `tech.innovativeenterprises.platform`
-- [ ] **SKU:** `innovative-enterprises_PLATFORM_V1`
+- [ ] **Bundle ID:** `tech.INNOVATIVE ENTERPRISES.platform`
+- [ ] **SKU:** `INNOVATIVE ENTERPRISES_PLATFORM_V1`
 - [ ] **Primary Language:** English
 - [ ] **Category:** Business, Productivity
 
@@ -28,21 +27,21 @@
 - [ ] **Promotional Text:** (170 characters) - "Your AI-powered partner for digital transformation. Delegate tasks, automate workflows, and grow your business."
 - [ ] **Description:** (4000 characters) - A detailed description covering Sanad Hub, Business Hub, the AI Agents (Aida, Voxi), and the E-Briefcase for partners. Emphasize benefits for Omani SMEs.
 - [ ] **Keywords:** (100 characters total, comma-separated) - `Oman, SME, Sanad, Business, AI, Automation, Freelance, Tender, Digital Transformation, Vision 2040`
-- [ ] **Support URL:** `https://innovativeenterprises.tech/faq`
-- [ ] **Marketing URL:** `https://innovativeenterprises.tech`
+- [ ] **Support URL:** `https://INNOVATIVE ENTERPRISES.tech/faq`
+- [ ] **Marketing URL:** `https://INNOVATIVE ENTERPRISES.tech`
 
 - [ ] **Version Number:** `1.0.0`
-- [ ] **What's New in This Version:** "Initial release of the innovative-enterprises platform! Connect with Sanad offices, delegate tasks, and use our powerful AI tools."
-- [ ] **Copyright:** `2024 innovative-enterprises`
+- [ ] **What's New in This Version:** "Initial release of the INNOVATIVE ENTERPRISES platform! Connect with Sanad offices, delegate tasks, and use our powerful AI tools."
+- [ ] **Copyright:** `2024 INNOVATIVE ENTERPRISES`
 - [ ] **Contact Information:** (Provide primary contact details for App Review team)
 - [ ] **Demo Account:** (Provide a test user account with credentials for both a 'Client' and a 'Provider' role).
-- [ ] **Privacy Policy URL:** `https://innovativeenterprises.tech/privacy`
+- [ ] **Privacy Policy URL:** `https://INNOVATIVE ENTERPRISES.tech/privacy`
 
 ---
 
 ### 2. Google Play Console (for Android)
 
-- [ ] **App Name:** innovative-enterprises (50 characters)
+- [ ] **App Name:** INNOVATIVE ENTERPRISES (50 characters)
 - [ ] **Short Description:** (80 characters) - "The AI-powered platform for Omani SMEs. Delegate tasks, automate, and grow."
 - [ ] **Full Description:** (4000 characters) - Same as the iOS description.
 
@@ -54,12 +53,10 @@
 - [ ] **Category:** Business
 - [ ] **Content Rating:** Complete the content rating questionnaire.
 
-- [ ] **Website:** `https://innovativeenterprises.tech`
-- [ ] **Email:** `support@innovativeenterprises.tech`
-- [ ] **Privacy Policy:** `https://innovativeenterprises.tech/privacy`
+- [ ] **Website:** `https://INNOVATIVE ENTERPRISES.tech`
+- [ ] **Email:** `support@INNOVATIVE ENTERPRISES.tech`
+- [ ] **Privacy Policy:** `https://INNOVATIVE ENTERPRISES.tech/privacy`
 
 - [ ] **Target Audience and Content:** Set target age group (18+).
 - [ ] **Data Safety:** Complete the data safety form accurately, disclosing the use of user data for core functionality.
 - [ ] **App Release:** Upload the signed AAB (Android App Bundle).
-
-    

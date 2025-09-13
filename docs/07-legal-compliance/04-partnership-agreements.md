@@ -1,11 +1,10 @@
-
 # Partnership / Agency Agreement - DRAFT
 
 **This Agreement** is made on `[Date]` ("Effective Date").
 
 **BETWEEN:**
 
-1.  **innovative-enterprises**, an Omani SME (CRN: 1435192) ("Company")
+1.  **INNOVATIVE ENTERPRISES**, an Omani SME (CRN: 1435192) ("Company")
 2.  **[Partner/Agent Name]** ("Partner")
 
 ### 1. Purpose
@@ -38,5 +37,3 @@ The Partner is an independent contractor. Nothing in this Agreement shall be con
 
 ---
 ***Disclaimer:** This is a basic draft. It is essential to have it reviewed by a qualified legal professional.*
-
-    
