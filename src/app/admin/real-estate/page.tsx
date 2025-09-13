@@ -2,17 +2,15 @@
 'use client';
 
 import PropertyTable from "../property-table";
-import { usePropertiesData, setProperties } from "@/hooks/use-global-store-data";
+import { useStairspaceData } from "@/hooks/use-global-store-data";
 import StairspaceListingGrid from "../stairspace-listing-grid";
-import { useStairspaceData, setStairspaceListings, useStairspaceRequestsData } from "@/hooks/use-global-store-data";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from 'next/link';
 
 export default function AdminRealEstatePage() {
-  const { properties } = usePropertiesData();
-  const { stairspaceListings } = useStairspaceData();
+  const { stairspaceListings, setStairspaceListings } = useStairspaceData();
   const { stairspaceRequests } = useStairspaceRequestsData();
 
   return (
@@ -38,7 +36,7 @@ export default function AdminRealEstatePage() {
             </CardFooter>
         </Card>
 
-        <PropertyTable properties={properties} setProperties={setProperties} isClient={true} />
+        <PropertyTable />
         <StairspaceListingGrid stairspaceListings={stairspaceListings} setStairspaceListings={setStairspaceListings} isClient={true} />
     </div>
   );
