@@ -1,16 +1,13 @@
-
 {
   "hosting": {
-    "public": "out",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "source": ".",
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "apphosting": {
+          "backendId": "innovative-enterprises-app",
+          "region": "us-central1"
+        }
       }
     ]
   }
