@@ -139,6 +139,16 @@ export default function CompanyProfileDownloader() {
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
     }, []);
 
+    // This is the correct position for the early return.
+    // It is after all hooks have been called.
+    if (!settings) {
+        return (
+            <Button variant="outline" size="lg" disabled>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
+            </Button>
+        );
+    }
+    
     const enabledServices = services.filter(s => s.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
     const products = initialProducts.filter(p => p.enabled);
