@@ -1,11 +1,6 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  // Disable Image Optimization API for static export
-  images: {
-    unoptimized: true,
-  },
   reactStrictMode: false,
    typescript: {
     // !! WARN !!
