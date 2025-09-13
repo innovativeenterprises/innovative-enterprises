@@ -7,7 +7,7 @@ import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Palette } from "lucide-react";
-import KnowledgeTable from '../knowledge-table';
+import KnowledgeTable from './knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 
@@ -54,5 +54,4 @@ export default function AdminOperationsPage() {
     </div>
   );
 }
-
     
