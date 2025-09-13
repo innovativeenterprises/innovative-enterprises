@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -6,74 +7,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRequestsData } from '@/hooks/use-global-store-data';
-import { formatDistanceToNow, format } from 'date-fns';
+import { useRequestsData, setRaahaRequests } from '@/hooks/use-global-store-data';
+import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
-import { RequestTable } from '@/components/request-table';
-import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
+import { RequestTable, TimeAgoCell } from '@/components/request-table';
+import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
 
-function RequestRow({ request }: { request: HireRequest }) {
-    const [requestDateText, setRequestDateText] = useState("...");
-    const [interviewDateText, setInterviewDateText] = useState("");
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        setRequestDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
-        if (request.interviewDate) {
-            setInterviewDateText(format(new Date(request.interviewDate), "PPP 'at' p"));
-        }
-    }, [request.requestDate, request.interviewDate]);
-
-    const getStatusBadge = (status: HireRequest['status']) => {
-        switch (status) {
-            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending Agency Review</Badge>;
-            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Agency Contacted</Badge>;
-            case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
-            case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
-            case 'Closed': return <Badge variant="destructive">Closed</Badge>;
-            default: return <Badge variant="outline">{status}</Badge>;
-        }
-    };
-    
-    return (
-         <TableRow key={request.id}>
-            <TableCell>
-                <p className="font-medium">{request.workerName}</p>
-                <p className="text-sm text-muted-foreground">
-                    Requested: {isClient ? requestDateText : '...'}
-                </p>
-            </TableCell>
-            <TableCell>
-                <p>{request.agencyId}</p>
-            </TableCell>
-            <TableCell>{getStatusBadge(request.status)}</TableCell>
-            <TableCell>
-                {request.interviewDate && isClient ? (
-                    <div className="text-xs text-muted-foreground space-y-1">
-                    <div className="flex items-center gap-1.5 font-semibold">
-                        <CalendarIcon className="h-3 w-3 text-primary" />
-                        <span>Interview: {interviewDateText}</span>
-                    </div>
-                        {request.interviewNotes && (
-                            <div className="flex items-center gap-1.5">
-                            <MessageSquare className="h-3 w-3" />
-                            <span className="truncate">{request.interviewNotes}</span>
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <p className="text-xs text-muted-foreground italic">Agency will contact you soon.</p>
-                )}
-            </TableCell>
-        </TableRow>
-    )
-}
-
 export default function MyRequestsPage() {
-    const { requests, setRequests, isClient } = useRequestsData();
+    const { requests, isClient } = useRequestsData();
     const { toast } = useToast();
     
     // In a real app, you would filter requests by the logged-in user.
@@ -81,7 +24,7 @@ export default function MyRequestsPage() {
     const myRequests = isClient ? requests.filter(r => r.clientName === 'Ahmed Al-Farsi') : [];
     
     const onSchedule = (id: string, values: InterviewValues) => {
-        setRequests(prev => prev.map(r => 
+        setRaahaRequests(prev => prev.map(r => 
             r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
@@ -105,9 +48,9 @@ export default function MyRequestsPage() {
             Cell: ({ row }: { row: { original: HireRequest }}) => (
                 <div>
                     <p className="font-medium">{row.original.workerName}</p>
-                    <p className="text-sm text-muted-foreground">
-                        Requested: {formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true })}
-                    </p>
+                    <div className="text-sm text-muted-foreground">
+                        <TimeAgoCell date={row.original.requestDate} />
+                    </div>
                 </div>
             )
         },
@@ -154,7 +97,7 @@ export default function MyRequestsPage() {
                                 data={myRequests} 
                                 columns={columns}
                                 isClient={isClient}
-                                renderActions={(request) => <ScheduleInterviewDialog request={request} onSchedule={onSchedule} />}
+                                renderActions={(request) => <ScheduleInterviewDialog request={request as GenericRequest} onSchedule={onSchedule} />}
                             />
                         </CardContent>
                     </Card>
