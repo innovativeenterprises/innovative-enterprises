@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useSyncExternalStore, useMemo } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -284,5 +284,3 @@ export const useStudentsData = () => {
     const students = useStoreData(state => state.students);
     return { students, setStudents, isClient: true };
 };
-
-    
