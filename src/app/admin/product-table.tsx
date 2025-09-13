@@ -15,11 +15,12 @@ import { AddEditProductDialog, type ProductValues } from './product-form-dialog'
 import { useProductsData, useProjectStagesData, setProducts } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ProductTable({ products }: { products: Product[] }) {
+export default function ProductTable() {
+    const { products, isClient } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
-    const { stages, isClient } = useProjectStagesData();
+    const { stages } = useProjectStagesData();
 
     const handleToggle = (id: number) => {
         setProducts(prev =>
@@ -112,4 +113,3 @@ export default function ProductTable({ products }: { products: Product[] }) {
         </Card>
     );
 }
-

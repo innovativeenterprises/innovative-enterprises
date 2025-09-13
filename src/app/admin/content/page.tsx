@@ -5,11 +5,8 @@ import ServiceTable from "../service-table";
 import ProductTable from "../product-table";
 import ClientTable from "../client-table";
 import PricingTable from "../pricing-table";
-import { useServicesData, useProductsData } from "@/hooks/use-global-store-data";
 
 export default function AdminContentPage() {
-  const { services } = useServicesData();
-  const { products } = useProductsData();
 
   return (
     <div className="space-y-8">
@@ -19,8 +16,8 @@ export default function AdminContentPage() {
                 Manage your public-facing services, products, and client testimonials.
             </p>
         </div>
-        <ServiceTable services={services} />
-        <ProductTable products={products} />
+        <ServiceTable />
+        <ProductTable />
         <ClientTable />
         <PricingTable />
     </div>

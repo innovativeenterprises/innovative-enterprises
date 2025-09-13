@@ -50,9 +50,9 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     );
 };
 
-export default function ServiceTable({ services }: { services: Service[] }) {
+export default function ServiceTable() {
+    const { services, isClient } = useServicesData();
     const { toast } = useToast();
-    const { isClient } = useServicesData();
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -125,4 +125,3 @@ export default function ServiceTable({ services }: { services: Service[] }) {
         </Card>
     );
 }
-
