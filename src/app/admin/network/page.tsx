@@ -3,11 +3,8 @@
 
 import ProviderTable from "../provider-table";
 import AssetTable from "../asset-table";
-import { useProvidersData, useAssetsData } from "@/hooks/use-global-store-data";
 
 export default function AdminNetworkPage() {
-  const providerData = useProvidersData();
-  const assetData = useAssetsData();
 
   return (
     <div className="space-y-8">
@@ -23,10 +20,3 @@ export default function AdminNetworkPage() {
     </div>
   );
 }
-
-    
-
-
-
-
-
