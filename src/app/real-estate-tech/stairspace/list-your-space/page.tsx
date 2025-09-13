@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import ListSpaceForm from "./list-space-form";
+import ListSpaceForm from "../list-space-form";
 import { HandCoins } from "lucide-react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";

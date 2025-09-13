@@ -1,24 +1,42 @@
 
+
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDistanceToNow } from 'date-fns';
 
 type GenericRequest = Record<string, any>;
+
+// Client-side component to prevent hydration errors with time formatting
+export const TimeAgoCell = ({ date }: { date: string }) => {
+    const [timeAgo, setTimeAgo] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (date) {
+           setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
+        }
+    }, [date]);
+
+    return <span>{timeAgo ?? '...'}</span>;
+};
+
 
 export function RequestTable({ 
     data,
     columns,
     isClient,
     renderActions,
+    onSchedule,
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
-    renderActions: (request: GenericRequest) => React.ReactNode,
+    renderActions?: (request: GenericRequest) => React.ReactNode,
+    onSchedule?: (id: string, values: any) => void
 }) { 
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
 
@@ -64,19 +82,19 @@ export function RequestTable({
                         <SortableHeader key={col.accessor || col.Header} label={col.Header} sortKey={col.accessor} /> :
                         <TableHead key={col.Header}>{col.Header}</TableHead>
                     ))}
-                    <TableHead className="text-right">Actions</TableHead>
+                    {renderActions && <TableHead className="text-right">Actions</TableHead>}
                 </TableRow>
             </TableHeader>
             <TableBody>
                     {!isClient ? (
                         <TableRow>
-                        <TableCell colSpan={columns.length + 1} className="text-center h-24">
+                        <TableCell colSpan={columns.length + (renderActions ? 1: 0)} className="text-center h-24">
                             <Skeleton className="h-10 w-full" />
                         </TableCell>
                     </TableRow>
                     ) : data.length === 0 ? (
                         <TableRow>
-                        <TableCell colSpan={columns.length + 1} className="text-center text-muted-foreground py-8">
+                        <TableCell colSpan={columns.length + (renderActions ? 1 : 0)} className="text-center text-muted-foreground py-8">
                             No items found.
                         </TableCell>
                     </TableRow>
@@ -88,9 +106,11 @@ export function RequestTable({
                                 {col.Cell ? col.Cell({ row: { original: req } }) : req[col.accessor as keyof GenericRequest]}
                             </TableCell>
                             ))}
-                            <TableCell className="text-right">
-                                {renderActions(req)}
-                            </TableCell>
+                            {renderActions && (
+                                <TableCell className="text-right">
+                                    {renderActions(req)}
+                                </TableCell>
+                            )}
                         </TableRow>
                     ))
                 )}
@@ -108,24 +128,24 @@ import { setRaahaWorkers } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-export function WorkerTable({ workers, columns, agencyId, isClient }: { workers: Worker[], columns: any[], agencyId: string, isClient: boolean }) { 
+export function WorkerTable({ workers, setWorkers, columns, agencyId, isClient }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, columns: any[], agencyId: string, isClient: boolean }) { 
     const { toast } = useToast();
 
     const handleSave = (values: any, id?: string) => {
         const skillsArray = values.skills.map((s: { value: any; }) => s.value).filter((s: string) => s.trim() !== '');
         
         if (id) {
-            setRaahaWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
+            setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
             toast({ title: "Candidate updated." });
         } else {
             const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agencyId };
-            setRaahaWorkers(prev => [newWorker, ...prev]);
+            setWorkers(prev => [newWorker, ...prev]);
             toast({ title: "Candidate added." });
         }
     };
     
     const handleDelete = (id: string) => {
-        setRaahaWorkers(prev => prev.filter(w => w.id !== id));
+        setWorkers(prev => prev.filter(w => w.id !== id));
         toast({ title: "Candidate removed.", variant: "destructive" });
     };
 

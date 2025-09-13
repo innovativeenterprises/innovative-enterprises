@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -9,14 +10,14 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAgenciesData, useWorkersData, useRequestsData, setRaahaRequests, setRaahaWorkers, setAgencies } from '@/hooks/use-global-store-data';
-import { RequestTable, WorkerTable } from '@/components/request-table';
-import { formatDistanceToNow, format } from 'date-fns';
+import { RequestTable, WorkerTable, TimeAgoCell } from '@/components/request-table';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
 import type { Worker } from '@/lib/raaha-workers';
-import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
+import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
+import { format } from 'date-fns';
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -37,21 +38,10 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
     );
 };
 
-// Client-side component to prevent hydration errors with time formatting
-const TimeAgoCell = ({ date }: { date: string }) => {
-    const [timeAgo, setTimeAgo] = useState<string | null>(null);
-
-    useEffect(() => {
-        setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
-    }, [date]);
-
-    return <span>{timeAgo ?? '...'}</span>;
-};
-
 export default function AgencyDashboardPage() {
-    const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
+    const { workers, isClient: isWorkersClient } = useWorkersData();
     const { requests, isClient: isRequestsClient } = useRequestsData();
-    const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
+    const { agencies, isClient: isAgenciesClient } = useAgenciesData();
     const { toast } = useToast();
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
@@ -175,7 +165,8 @@ export default function AgencyDashboardPage() {
                                 data={filteredRequests} 
                                 columns={requestsColumns}
                                 isClient={isClient}
-                                renderActions={(request) => <ScheduleInterviewDialog request={request as HireRequest} onSchedule={onSchedule} />}
+                                onSchedule={onSchedule}
+                                renderActions={(request) => <ScheduleInterviewDialog request={request as GenericRequest} onSchedule={onSchedule} />}
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">

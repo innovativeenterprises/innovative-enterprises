@@ -1,9 +1,10 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
@@ -16,6 +17,7 @@ import Image from 'next/image';
 import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
+import { setStairspaceRequests } from '@/hooks/use-global-store-data';
 
 
 const BookingSchema = z.object({
@@ -77,10 +79,7 @@ export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: {
             status: 'Pending'
         };
 
-        store.set(state => ({
-            ...state,
-            stairspaceRequests: [newRequest, ...state.stairspaceRequests]
-        }));
+        setStairspaceRequests(prev => [newRequest, ...prev]);
         
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));

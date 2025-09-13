@@ -270,24 +270,26 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => setIsClient(true), []);
 
-    useEffect(() => {
-        if (!expiry) {
-            setDaysUntilExpiry(null);
-            return;
-        }
-        const expiryDate = new Date(expiry);
-        const now = new Date();
-        const diffTime = expiryDate.getTime() - now.getTime();
-        setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
-    }, [expiry]);
-
+    if (!isClient) {
+        return <Skeleton className="h-6 w-24" />;
+    }
+    
     if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;
     }
     if (tier === 'Lifetime') {
         return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
+    }
+    
+    let daysUntilExpiry: number | null = null;
+    if (expiry) {
+        const expiryDate = new Date(expiry);
+        const now = new Date();
+        const diffTime = expiryDate.getTime() - now.getTime();
+        daysUntilExpiry = Math.ceil(diffTime / (1000 * 3600 * 24));
     }
     
     if (daysUntilExpiry === null) {
@@ -438,3 +440,4 @@ export default function ProviderTable() {
         </Card>
     );
 }
+
