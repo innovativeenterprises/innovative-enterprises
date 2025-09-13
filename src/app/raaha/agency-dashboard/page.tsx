@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -9,9 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAgenciesData, useWorkersData, useRequestsData, setRequests as setRaahaRequests } from '@/hooks/use-global-store-data';
-import { RequestTable } from '@/components/request-table';
-import { WorkerTable } from '@/app/raaha/agency-dashboard/worker-table';
+import { useAgenciesData, useWorkersData, useRequestsData, setRaahaRequests, setRaahaWorkers, setAgencies } from '@/hooks/use-global-store-data';
+import { RequestTable, WorkerTable } from '@/components/request-table';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
@@ -181,7 +179,7 @@ export default function AgencyDashboardPage() {
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} agencyId={selectedAgency.id} isClient={isClient} />
+                            <WorkerTable workers={filteredWorkers} setWorkers={setRaahaWorkers} columns={workersColumns} agencyId={selectedAgency.name} isClient={isClient} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,6 +20,7 @@ import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fileToDataURI } from "@/lib/utils";
 import { useClientsData, setClients, setTestimonials } from "@/hooks/use-global-store-data";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Schemas
 const ClientSchema = z.object({
@@ -54,7 +55,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     const watchLogoFile = form.watch('logoFile');
     const watchLogoUrl = form.watch('logoUrl');
 
-    useEffect(() => {
+    useState(() => {
         if (isOpen) {
             form.reset({
                 name: client?.name || "",
@@ -64,9 +65,9 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
             });
             setImagePreview(client?.logo || null);
         }
-    }, [isOpen, client, form]);
+    });
 
-    useEffect(() => {
+    useState(() => {
         if (!isOpen) return;
         if (watchLogoFile && watchLogoFile.length > 0) {
             fileToDataURI(watchLogoFile[0]).then(setImagePreview);
@@ -75,7 +76,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
         } else {
             setImagePreview(client?.logo || null);
         }
-    }, [watchLogoUrl, watchLogoFile, isOpen, client?.logo]);
+    });
     
     const onSubmit: SubmitHandler<z.infer<typeof ClientSchema>> = async (data) => {
         let logoValue = "";
@@ -152,11 +153,11 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
         defaultValues: testimonial || { quote: "", author: "", company: "" },
     });
     
-    useEffect(() => { 
+    useState(() => { 
         if(isOpen) {
             form.reset(testimonial || { quote: "", author: "", company: "" });
         }
-    }, [testimonial, form, isOpen]);
+    });
 
     const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
         onSave(data, testimonial?.id);
@@ -193,7 +194,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 // Main Component
 export default function ClientTable() { 
-    const { clients, testimonials } = useClientsData();
+    const { clients, testimonials, isClient } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
@@ -232,18 +233,20 @@ export default function ClientTable() {
     };
 
     const filteredClients = useMemo(() => {
+        if (!isClient) return [];
         return clients.filter(client =>
             client.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [clients, searchTerm]);
+    }, [clients, searchTerm, isClient]);
 
     const filteredTestimonials = useMemo(() => {
+        if (!isClient) return [];
         return testimonials.filter(t =>
             t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
             t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
             t.company.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [testimonials, searchTerm]);
+    }, [testimonials, searchTerm, isClient]);
 
 
     return (
@@ -284,7 +287,10 @@ export default function ClientTable() {
                         <Table>
                              <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {filteredClients.map(client => (
+                                {!isClient ? (
+                                    <TableRow><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
+                                ) : (
+                                    filteredClients.map(client => (
                                     <TableRow key={client.id} className="cursor-pointer">
                                         <TableCell>
                                             <AddEditClientDialog client={client} onSave={handleSaveClient}>
@@ -306,7 +312,7 @@ export default function ClientTable() {
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )))}
                             </TableBody>
                         </Table>
                     </TabsContent>
@@ -314,7 +320,10 @@ export default function ClientTable() {
                          <Table>
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {filteredTestimonials.map(t => (
+                                {!isClient ? (
+                                     <TableRow><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
+                                ) : (
+                                filteredTestimonials.map(t => (
                                     <TableRow key={t.id} className="cursor-pointer">
                                         <TableCell className="italic max-w-md truncate">
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
@@ -338,7 +347,7 @@ export default function ClientTable() {
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )))}
                             </TableBody>
                         </Table>
                     </TabsContent>

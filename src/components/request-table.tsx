@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from 'lucide-react';
@@ -100,32 +100,32 @@ export function RequestTable({
 }
 
 // Re-usable WorkerTable component using the generic RequestTable
-import { useAgenciesData, useWorkersData } from "@/hooks/use-global-store-data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { AddEditWorkerDialog } from '@/app/raaha/agency-dashboard/worker-table';
+import { useToast } from "@/hooks/use-toast";
+import { setRaahaWorkers } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-export function WorkerTable({ workers, setWorkers, agencyId, isClient }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, agencyId: string, isClient: boolean }) { 
+export function WorkerTable({ workers, columns, agencyId, isClient }: { workers: Worker[], columns: any[], agencyId: string, isClient: boolean }) { 
     const { toast } = useToast();
-    const { agencies } = useAgenciesData();
 
     const handleSave = (values: any, id?: string) => {
         const skillsArray = values.skills.map((s: { value: any; }) => s.value).filter((s: string) => s.trim() !== '');
-        const agency = agencies.find(a => a.id === agencyId);
         
         if (id) {
-            setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
+            setRaahaWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
             toast({ title: "Candidate updated." });
         } else {
-            const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agency!.name };
-            setWorkers(prev => [newWorker, ...prev]);
+            const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agencyId };
+            setRaahaWorkers(prev => [newWorker, ...prev]);
             toast({ title: "Candidate added." });
         }
     };
     
     const handleDelete = (id: string) => {
-        setWorkers(prev => prev.filter(w => w.id !== id));
+        setRaahaWorkers(prev => prev.filter(w => w.id !== id));
         toast({ title: "Candidate removed.", variant: "destructive" });
     };
 
@@ -143,7 +143,7 @@ export function WorkerTable({ workers, setWorkers, agencyId, isClient }: { worke
             <CardContent>
                 <RequestTable 
                     data={workers}
-                    columns={workersColumns}
+                    columns={columns}
                     isClient={isClient}
                     renderActions={(worker) => (
                          <div className="flex justify-end gap-2">
