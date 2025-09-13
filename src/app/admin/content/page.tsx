@@ -5,12 +5,11 @@ import ServiceTable from "../service-table";
 import ProductTable from "../product-table";
 import ClientTable from "../client-table";
 import PricingTable from "../pricing-table";
-import { useServicesData, useProductsData, usePricingData } from "@/hooks/use-global-store-data";
+import { useServicesData, useProductsData } from "@/hooks/use-global-store-data";
 
 export default function AdminContentPage() {
   const serviceData = useServicesData();
   const productData = useProductsData();
-  const pricingData = usePricingData();
 
   return (
     <div className="space-y-8">
@@ -23,7 +22,7 @@ export default function AdminContentPage() {
         <ServiceTable {...serviceData} />
         <ProductTable {...productData} />
         <ClientTable />
-        <PricingTable {...pricingData} />
+        <PricingTable />
     </div>
   );
 }

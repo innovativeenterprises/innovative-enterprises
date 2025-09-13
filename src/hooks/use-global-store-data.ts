@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useMemo } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -43,7 +43,7 @@ const setServices = (updater: (prev: Service[]) => Service[]) => {
 
 export const useServicesData = () => {
     const services = useStoreData(state => state.services);
-    return { services, setServices, isClient: true };
+    return useMemo(() => ({ services, setServices, isClient: true }), [services]);
 };
 
 const setProducts = (updater: (prev: Product[]) => Product[]) => {
@@ -52,7 +52,7 @@ const setProducts = (updater: (prev: Product[]) => Product[]) => {
 
 export const useProductsData = () => {
     const products = useStoreData(state => state.products);
-    return { products, setProducts, isClient: true };
+    return useMemo(() => ({ products, setProducts, isClient: true }), [products]);
 };
 
 const setClients = (updater: (prev: Client[]) => Client[]) => {
@@ -64,7 +64,7 @@ const setTestimonials = (updater: (prev: Testimonial[]) => Testimonial[]) => {
 
 export const useClientsData = () => {
     const data = useStoreData(state => ({ clients: state.clients, testimonials: state.testimonials }));
-    return { ...data, setClients, setTestimonials, isClient: true };
+    return useMemo(() => ({ ...data, setClients, setTestimonials, isClient: true }), [data]);
 };
 
 const setProviders = (updater: (prev: Provider[]) => Provider[]) => {
@@ -73,7 +73,7 @@ const setProviders = (updater: (prev: Provider[]) => Provider[]) => {
 
 export const useProvidersData = () => {
     const providers = useStoreData(state => state.providers);
-    return { providers, setProviders, isClient: true };
+    return useMemo(() => ({ providers, setProviders, isClient: true }), [providers]);
 };
 
 const setLeadership = (updater: (prev: Agent[]) => Agent[]) => {
@@ -92,7 +92,7 @@ export const useStaffData = () => {
         staff: state.staff,
         agentCategories: state.agentCategories,
     }));
-    return { ...data, setLeadership, setStaff, setAgentCategories, isClient: true };
+    return useMemo(() => ({ ...data, setLeadership, setStaff, setAgentCategories, isClient: true }), [data]);
 };
 
 const setCommunities = (updater: (prev: Community[]) => Community[]) => {
@@ -101,7 +101,7 @@ const setCommunities = (updater: (prev: Community[]) => Community[]) => {
 
 export const useCommunitiesData = () => {
     const communities = useStoreData(state => state.communities);
-    return { communities, setCommunities, isClient: true };
+    return useMemo(() => ({ communities, setCommunities, isClient: true }), [communities]);
 };
 
 const setCommunityEvents = (updater: (prev: CommunityEvent[]) => CommunityEvent[]) => {
@@ -116,13 +116,13 @@ export const useCommunityHubData = () => {
         events: state.communityEvents,
         finances: state.communityFinances,
     }));
-    return { 
+    return useMemo(() => ({ 
         events: data.events,
         finances: data.finances,
         setEvents: setCommunityEvents, 
         setFinances: setCommunityFinances, 
         isClient: true 
-    };
+    }), [data.events, data.finances]);
 };
 
 const setCommunityMembers = (updater: (prev: CommunityMember[]) => CommunityMember[]) => {
@@ -131,7 +131,7 @@ const setCommunityMembers = (updater: (prev: CommunityMember[]) => CommunityMemb
 
 export const useMembersData = () => {
     const members = useStoreData(state => state.communityMembers);
-    return { members, setMembers: setCommunityMembers, isClient: true };
+    return useMemo(() => ({ members, setMembers: setCommunityMembers, isClient: true }), [members]);
 };
 
 const setStages = (updater: (prev: ProjectStage[]) => ProjectStage[]) => {
@@ -140,7 +140,7 @@ const setStages = (updater: (prev: ProjectStage[]) => ProjectStage[]) => {
 
 export const useProjectStagesData = () => {
     const stages = useStoreData(state => state.stages);
-    return { stages, setStages, isClient: true };
+    return useMemo(() => ({ stages, setStages, isClient: true }), [stages]);
 };
 
 const setSettings = (updater: (prev: AppSettings) => AppSettings) => {
@@ -149,7 +149,7 @@ const setSettings = (updater: (prev: AppSettings) => AppSettings) => {
 
 export const useSettingsData = () => {
     const settings = useStoreData(state => state.settings);
-    return { settings, setSettings, isClient: true };
+    return useMemo(() => ({ settings, setSettings, isClient: true }), [settings]);
 };
 
 const setAssets = (updater: (prev: Asset[]) => Asset[]) => {
@@ -158,7 +158,7 @@ const setAssets = (updater: (prev: Asset[]) => Asset[]) => {
 
 export const useAssetsData = () => {
     const assets = useStoreData(state => state.assets);
-    return { assets, setAssets, isClient: true };
+    return useMemo(() => ({ assets, setAssets, isClient: true }), [assets]);
 };
 
 const setInvestors = (updater: (prev: Investor[]) => Investor[]) => {
@@ -167,7 +167,7 @@ const setInvestors = (updater: (prev: Investor[]) => Investor[]) => {
 
 export const useInvestorsData = () => {
     const investors = useStoreData(state => state.investors);
-    return { investors, setInvestors, isClient: true };
+    return useMemo(() => ({ investors, setInvestors, isClient: true }), [investors]);
 };
 
 const setKnowledgeBase = (updater: (prev: KnowledgeDocument[]) => KnowledgeDocument[]) => {
@@ -176,7 +176,7 @@ const setKnowledgeBase = (updater: (prev: KnowledgeDocument[]) => KnowledgeDocum
 
 export const useKnowledgeData = () => {
     const knowledgeBase = useStoreData(state => state.knowledgeBase);
-    return { knowledgeBase, setKnowledgeBase, isClient: true };
+    return useMemo(() => ({ knowledgeBase, setKnowledgeBase, isClient: true }), [knowledgeBase]);
 };
 
 const setRaahaAgencies = (updater: (prev: Agency[]) => Agency[]) => {
@@ -185,7 +185,7 @@ const setRaahaAgencies = (updater: (prev: Agency[]) => Agency[]) => {
 
 export const useAgenciesData = () => {
     const agencies = useStoreData(state => state.raahaAgencies);
-    return { agencies, setAgencies: setRaahaAgencies, isClient: true };
+    return useMemo(() => ({ agencies, setAgencies: setRaahaAgencies, isClient: true }), [agencies]);
 };
 
 const setRaahaWorkers = (updater: (prev: RaahaWorker[]) => RaahaWorker[]) => {
@@ -194,7 +194,7 @@ const setRaahaWorkers = (updater: (prev: RaahaWorker[]) => RaahaWorker[]) => {
 
 export const useWorkersData = () => {
     const workers = useStoreData(state => state.raahaWorkers);
-    return { workers, setWorkers: setRaahaWorkers, isClient: true };
+    return useMemo(() => ({ workers, setWorkers: setRaahaWorkers, isClient: true }), [workers]);
 };
 
 const setRaahaRequests = (updater: (prev: HireRequest[]) => HireRequest[]) => {
@@ -203,7 +203,7 @@ const setRaahaRequests = (updater: (prev: HireRequest[]) => HireRequest[]) => {
 
 export const useRequestsData = () => {
     const requests = useStoreData(state => state.raahaRequests);
-    return { requests, setRequests: setRaahaRequests, isClient: true };
+    return useMemo(() => ({ requests, setRequests: setRaahaRequests, isClient: true }), [requests]);
 };
 
 const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => {
@@ -212,7 +212,7 @@ const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => {
 
 export const useLeasesData = () => {
     const leases = useStoreData(state => state.signedLeases);
-    return { leases, setLeases: setSignedLeases, isClient: true };
+    return useMemo(() => ({ leases, setLeases: setSignedLeases, isClient: true }), [leases]);
 };
 
 const setProperties = (updater: (prev: Property[]) => Property[]) => {
@@ -221,7 +221,7 @@ const setProperties = (updater: (prev: Property[]) => Property[]) => {
 
 export const usePropertiesData = () => {
     const properties = useStoreData(state => state.properties);
-    return { properties, setProperties, isClient: true };
+    return useMemo(() => ({ properties, setProperties, isClient: true }), [properties]);
 };
 
 const setStairspaceListings = (updater: (prev: StairspaceListing[]) => StairspaceListing[]) => {
@@ -230,7 +230,7 @@ const setStairspaceListings = (updater: (prev: StairspaceListing[]) => Stairspac
 
 export const useStairspaceData = () => {
     const stairspaceListings = useStoreData(state => state.stairspaceListings);
-    return { stairspaceListings, setStairspaceListings, isClient: true };
+    return useMemo(() => ({ stairspaceListings, setStairspaceListings, isClient: true }), [stairspaceListings]);
 };
 
 const setStairspaceRequests = (updater: (prev: StairspaceRequest[]) => StairspaceRequest[]) => {
@@ -239,7 +239,7 @@ const setStairspaceRequests = (updater: (prev: StairspaceRequest[]) => Stairspac
 
 export const useStairspaceRequestsData = () => {
     const stairspaceRequests = useStoreData(state => state.stairspaceRequests);
-    return { stairspaceRequests, setStairspaceRequests, isClient: true };
+    return useMemo(() => ({ stairspaceRequests, setStairspaceRequests, isClient: true }), [stairspaceRequests]);
 };
 
 const setOpportunities = (updater: (prev: Opportunity[]) => Opportunity[]) => {
@@ -248,7 +248,7 @@ const setOpportunities = (updater: (prev: Opportunity[]) => Opportunity[]) => {
 
 export const useOpportunitiesData = () => {
     const opportunities = useStoreData(state => state.opportunities);
-    return { opportunities, setOpportunities, isClient: true };
+    return useMemo(() => ({ opportunities, setOpportunities, isClient: true }), [opportunities]);
 };
 
 const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => {
@@ -257,7 +257,7 @@ const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => {
 
 export const useCostSettingsData = () => {
     const costSettings = useStoreData(state => state.costSettings);
-    return { costSettings, setCostSettings, isClient: true };
+    return useMemo(() => ({ costSettings, setCostSettings, isClient: true }), [costSettings]);
 };
 
 const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => {
@@ -266,7 +266,7 @@ const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => {
 
 export const usePricingData = () => {
     const pricing = useStoreData(state => state.pricing);
-    return { pricing, setPricing, isClient: true };
+    return useMemo(() => ({ pricing, setPricing, isClient: true }), [pricing]);
 };
 
 const setKpiData = (updater: (prev: KpiData[]) => KpiData[]) => store.set(s => ({...s, kpiData: updater(s.kpiData)}));
@@ -283,7 +283,7 @@ export const useCfoData = () => {
         vatPayment: state.vatPayment,
         cashFlowData: state.cashFlowData,
     }));
-    return {
+    return useMemo(() => ({
         ...data,
         setKpiData,
         setTransactionData,
@@ -291,7 +291,7 @@ export const useCfoData = () => {
         setVatPayment,
         setCashFlowData,
         isClient: true,
-    };
+    }), [data.kpiData, data.transactionData, data.upcomingPayments, data.vatPayment, data.cashFlowData]);
 };
 
 const setStudents = (updater: (prev: Student[]) => Student[]) => {
@@ -300,5 +300,5 @@ const setStudents = (updater: (prev: Student[]) => Student[]) => {
 
 export const useStudentsData = () => {
     const students = useStoreData(state => state.students);
-    return { students, setStudents, isClient: true };
+    return useMemo(() => ({ students, setStudents, isClient: true }), [students]);
 };

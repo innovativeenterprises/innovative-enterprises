@@ -75,13 +75,8 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable({ 
-    pricing, 
-    setPricing,
-} : { 
-    pricing: Pricing[], 
-    setPricing: (updater: (pricing: Pricing[]) => void) => void,
-}) {
+export default function PricingTable() {
+    const { pricing, setPricing } = usePricingData();
     const { toast } = useToast();
     const [isClient, setIsClient] = useState(false);
 
