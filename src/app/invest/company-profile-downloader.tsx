@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Lightbulb, Loader2, Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import 'jspdf-autotable';
 import Image from "next/image";
 
 // This is the hidden component that will be rendered to generate the PDF
@@ -126,7 +126,6 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    // All hooks are called unconditionally at the top of the component.
     const { leadership } = useStaffData();
     const { services } = useServicesData();
     const { settings } = useSettingsData();
@@ -136,8 +135,8 @@ export default function CompanyProfileDownloader() {
     const profileRef = useRef<HTMLDivElement>(null);
     const [isReady, setIsReady] = useState(false);
 
-    // This effect now correctly depends on the data from the hooks.
-    // It will run once on the client after the data is loaded.
+    // This effect runs on the client and sets the isReady flag
+    // once all the necessary data from our custom hooks is available.
     useEffect(() => {
         if (settings && leadership && services) {
             setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
@@ -192,7 +191,6 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    // During server render or before client-side data is ready, show a disabled button.
     if (!isReady) {
         return (
             <Button variant="outline" size="lg" disabled>
@@ -201,7 +199,6 @@ export default function CompanyProfileDownloader() {
         );
     }
     
-    // Data is ready, render the full component with the downloader logic.
     const enabledServices = services.filter(s => s.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
     const products = initialProducts.filter(p => p.enabled);
@@ -232,3 +229,4 @@ export default function CompanyProfileDownloader() {
         </>
     );
 }
+
