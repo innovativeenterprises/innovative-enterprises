@@ -90,6 +90,30 @@ const AddEditStaffDialog = ({
     const watchPhotoFile = form.watch('photoFile');
 
     useEffect(() => {
+        if (!isOpen) return;
+
+        form.reset({
+            name: staffMember?.name || "",
+            role: staffMember?.role || "",
+            type: staffMember?.type || "Staff",
+            description: staffMember?.description || "",
+            aiHint: staffMember?.aiHint || "",
+            photoUrl: staffMember?.photo || "",
+            photoFile: undefined,
+            socials: {
+                email: staffMember?.socials?.email || '',
+                phone: staffMember?.socials?.phone || '',
+                website: staffMember?.socials?.website || '',
+                linkedin: staffMember?.socials?.linkedin || '',
+                twitter: staffMember?.socials?.twitter || '',
+                github: staffMember?.socials?.github || '',
+            }
+        });
+        setImagePreview(staffMember?.photo || null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen]);
+
+    useEffect(() => {
         if (watchPhotoFile && watchPhotoFile.length > 0) {
             fileToDataURI(watchPhotoFile[0]).then(setImagePreview);
         } else if (watchPhotoUrl) {
@@ -98,30 +122,6 @@ const AddEditStaffDialog = ({
             setImagePreview(staffMember?.photo || null);
         }
     }, [watchPhotoUrl, watchPhotoFile, staffMember?.photo]);
-
-
-    useEffect(() => {
-        if(isOpen) {
-            form.reset({ 
-                name: staffMember?.name || "",
-                role: staffMember?.role || "",
-                type: staffMember?.type || "Staff",
-                description: staffMember?.description || "",
-                aiHint: staffMember?.aiHint || "",
-                photoUrl: staffMember?.photo || "",
-                photoFile: undefined,
-                socials: {
-                    email: staffMember?.socials?.email || '',
-                    phone: staffMember?.socials?.phone || '',
-                    website: staffMember?.socials?.website || '',
-                    linkedin: staffMember?.socials?.linkedin || '',
-                    twitter: staffMember?.socials?.twitter || '',
-                    github: staffMember?.socials?.github || '',
-                }
-            });
-             setImagePreview(staffMember?.photo || null);
-        }
-    }, [staffMember, form, isOpen]);
 
     const onSubmit: SubmitHandler<z.infer<typeof StaffSchema>> = async (data) => {
         let photoValue = "";
