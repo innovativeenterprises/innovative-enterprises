@@ -13,10 +13,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import type { Pricing } from "@/lib/pricing";
+import type { Pricing, PricingGroup } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData, setPricing } from "@/hooks/use-global-store-data";
+import { usePricingData } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -76,9 +76,19 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() {
-    const { pricing, isClient } = usePricingData();
+export default function PricingTable({ 
+    pricing, 
+    setPricing,
+} : { 
+    pricing: Pricing[], 
+    setPricing: (updater: (pricing: Pricing[]) => void) => void,
+}) {
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
