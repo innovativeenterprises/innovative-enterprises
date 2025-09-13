@@ -5,7 +5,7 @@ import ServiceTable from "../service-table";
 import ProductTable from "../product-table";
 import ClientTable from "../client-table";
 import PricingTable from "../pricing-table";
-import { useServicesData, setServices, useProductsData, setProducts } from "@/hooks/use-global-store-data";
+import { useServicesData, useProductsData } from "@/hooks/use-global-store-data";
 
 export default function AdminContentPage() {
   const { services } = useServicesData();
