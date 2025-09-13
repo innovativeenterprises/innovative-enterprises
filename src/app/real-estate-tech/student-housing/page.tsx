@@ -11,12 +11,12 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData, setSignedLeases as setLeases } from '@/hooks/use-global-store-data';
+import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
 export default function StudentHousingPage() {
-    const { leases, isClient } = useLeasesData();
+    const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
     const [expiringLeasesCount, setExpiringLeasesCount] = useState<number | null>(null);
 

@@ -18,12 +18,11 @@ import type { CommunityMember } from "@/lib/community-members";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, ArrowLeft, Users, Wand2, Loader2, FileCheck2, Link as LinkIcon, Link2Off, UserPlus, Home } from "lucide-react";
 import Image from 'next/image';
-import { store } from '@/lib/global-store';
 import Link from 'next/link';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMembersData, setCommunityMembers as setMembers } from '@/hooks/use-global-store-data';
+import { useMembersData } from '@/hooks/use-global-store-data';
 
 
 const fileToDataURI = (file: File): Promise<string> => {
@@ -60,13 +59,15 @@ const AddEditMemberDialog = ({
     familyId,
     onSave, 
     children, 
-    members
+    members,
+    setMembers,
 }: { 
     member?: CommunityMember, 
     familyId?: string,
     onSave: (v: MemberValues, id?: string) => void, 
     children: React.ReactNode,
-    members: CommunityMember[]
+    members: CommunityMember[],
+    setMembers: (updater: (prev: CommunityMember[]) => CommunityMember[]) => void,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(member?.photo || null);
@@ -277,7 +278,7 @@ const AddEditMemberDialog = ({
                                 <CardHeader>
                                     <CardTitle className="text-base flex items-center justify-between">
                                         Family Members
-                                        <AddEditMemberDialog onSave={onSave} familyId={member.familyId} members={members}>
+                                        <AddEditMemberDialog onSave={onSave} familyId={member.familyId} members={members} setMembers={setMembers}>
                                             <Button size="sm" variant="outline"><UserPlus className="mr-2 h-4 w-4"/>Add Family Member</Button>
                                         </AddEditMemberDialog>
                                     </CardTitle>
@@ -313,7 +314,7 @@ const AddEditMemberDialog = ({
 };
 
 export default function MembershipPage() {
-    const { members, isClient } = useMembersData();
+    const { members, isClient, setMembers } = useMembersData();
     const { toast } = useToast();
 
     const handleSave = (values: MemberValues, id?: string) => {
@@ -378,7 +379,7 @@ export default function MembershipPage() {
                     <CardTitle>Member Registry</CardTitle>
                     <CardDescription>View, add, or edit members of your community.</CardDescription>
                 </div>
-                <AddEditMemberDialog onSave={handleSave} members={members}>
+                <AddEditMemberDialog onSave={handleSave} members={members} setMembers={setMembers}>
                     <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Member</Button>
                 </AddEditMemberDialog>
             </CardHeader>
@@ -415,7 +416,7 @@ export default function MembershipPage() {
                                     <TableCell>{getStatusBadge(member.status)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <AddEditMemberDialog member={member} onSave={handleSave} members={members}><Button variant="ghost" size="icon"><Edit /></Button></AddEditMemberDialog>
+                                            <AddEditMemberDialog member={member} onSave={handleSave} members={members} setMembers={setMembers}><Button variant="ghost" size="icon"><Edit /></Button></AddEditMemberDialog>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                 <AlertDialogContent>
