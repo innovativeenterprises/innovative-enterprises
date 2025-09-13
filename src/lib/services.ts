@@ -53,7 +53,7 @@ export const initialServices: Service[] = [
   // Data Analytics
   {
     icon: Search,
-    title: "Data Scraping & Automation",
+    title: "Data Miner",
     description: "Automated data extraction from web sources to provide you with the insights you need.",
     enabled: true,
     href: "/researcher",
@@ -65,6 +65,14 @@ export const initialServices: Service[] = [
     description: "An AI-powered CFO dashboard to monitor financial health, track transactions, and view cash flow.",
     enabled: true,
     href: "/cfo",
+    category: "Data Analytics"
+  },
+  {
+    icon: BarChart,
+    title: "SEO Analyzer",
+    description: "Analyze any webpage for on-page SEO best practices against a target keyword.",
+    enabled: true,
+    href: "/seo-analyzer",
     category: "Data Analytics"
   },
   // AI Powered & Automation
