@@ -90,28 +90,28 @@ const AddEditStaffDialog = ({
     const watchPhotoFile = form.watch('photoFile');
 
     useEffect(() => {
-        if (!isOpen) return;
-
-        form.reset({
-            name: staffMember?.name || "",
-            role: staffMember?.role || "",
-            type: staffMember?.type || "Staff",
-            description: staffMember?.description || "",
-            aiHint: staffMember?.aiHint || "",
-            photoUrl: staffMember?.photo || "",
-            photoFile: undefined,
-            socials: {
-                email: staffMember?.socials?.email || '',
-                phone: staffMember?.socials?.phone || '',
-                website: staffMember?.socials?.website || '',
-                linkedin: staffMember?.socials?.linkedin || '',
-                twitter: staffMember?.socials?.twitter || '',
-                github: staffMember?.socials?.github || '',
-            }
-        });
-        setImagePreview(staffMember?.photo || null);
+        if (isOpen) {
+            form.reset({
+                name: staffMember?.name || "",
+                role: staffMember?.role || "",
+                type: staffMember?.type || "Staff",
+                description: staffMember?.description || "",
+                aiHint: staffMember?.aiHint || "",
+                photoUrl: staffMember?.photo || "",
+                photoFile: undefined,
+                socials: {
+                    email: staffMember?.socials?.email || '',
+                    phone: staffMember?.socials?.phone || '',
+                    website: staffMember?.socials?.website || '',
+                    linkedin: staffMember?.socials?.linkedin || '',
+                    twitter: staffMember?.socials?.twitter || '',
+                    github: staffMember?.socials?.github || '',
+                }
+            });
+            setImagePreview(staffMember?.photo || null);
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen]);
+    }, [isOpen, staffMember]);
 
     useEffect(() => {
         if (watchPhotoFile && watchPhotoFile.length > 0) {
@@ -202,13 +202,7 @@ const AddEditStaffDialog = ({
                                     <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
                                 </div>
                                 <FormField control={form.control} name="photoFile" render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Upload Photo</FormLabel>
-                                        <FormControl>
-                                            <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
+                                    <FormItem><FormLabel>Upload Photo</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
                                 )} />
                             </CardContent>
                         </Card>
