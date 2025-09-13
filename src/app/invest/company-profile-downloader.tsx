@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRef, useState, useEffect } from "react";
@@ -20,7 +21,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
             <div className="p-12">
                 <header className="flex items-start justify-between pb-6 border-b-4 border-primary">
                     {settings.headerImageUrl ? (
-                        <Image src={settings.headerImageUrl} alt="Company Header" width={240} height={80} className="h-20 w-auto object-contain" />
+                        <Image src={settings.headerImageUrl} alt="Company Header" width={240} height={80} style={{width: 'auto'}} className="h-20 w-auto object-contain" />
                     ) : (
                          <div className="flex items-center gap-4">
                             <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={240} height={60} className="h-16 w-auto object-contain" />
