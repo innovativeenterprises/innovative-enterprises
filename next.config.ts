@@ -9,6 +9,23 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  serverActions: true, // Enable server actions
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+       {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
