@@ -12,11 +12,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { AddEditProductDialog, type ProductValues } from './product-form-dialog';
-import { useProductsData, useProjectStagesData, setProducts } from "@/hooks/use-global-store-data";
+import { useProductsData, useProjectStagesData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProductTable() {
-    const { products, isClient } = useProductsData();
+    const { products, setProducts, isClient } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
@@ -79,11 +79,13 @@ export default function ProductTable() {
                     </TableHeader>
                     <TableBody>
                         {!isClient ? (
-                             <TableRow>
-                                <TableCell colSpan={5}>
-                                    <Skeleton className="h-10 w-full" />
-                                </TableCell>
-                            </TableRow>
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell colSpan={5}>
+                                        <Skeleton className="h-10 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
                         ) : (
                             products.map((product) => (
                                 <TableRow key={product.id}>

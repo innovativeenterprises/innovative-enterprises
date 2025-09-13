@@ -18,7 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { ProjectStage } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProjectStagesData, setStages } from "@/hooks/use-global-store-data";
+import { useProjectStagesData } from "@/hooks/use-global-store-data";
 
 const StageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -80,7 +80,7 @@ const AddEditStageDialog = ({
 
 
 export default function StageTable() {
-    const { stages, isClient } = useProjectStagesData();
+    const { stages, setStages, isClient } = useProjectStagesData();
     const { toast } = useToast();
 
     const handleSave = (values: StageValues, id?: string) => {

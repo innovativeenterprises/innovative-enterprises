@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Community } from "@/lib/communities";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { useStaffData, useCommunitiesData, setCommunities } from "@/hooks/use-global-store-data";
+import { useStaffData, useCommunitiesData } from "@/hooks/use-global-store-data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -92,7 +93,7 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
 };
 
 export default function CommunityTable() {
-    const { communities, isClient } = useCommunitiesData();
+    const { communities, setCommunities, isClient } = useCommunitiesData();
     const { leadership, staff } = useStaffData();
     const { toast } = useToast();
 
@@ -133,11 +134,13 @@ export default function CommunityTable() {
                     <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Country</TableHead><TableHead>Manager</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {!isClient ? (
-                            <TableRow>
-                                <TableCell colSpan={4}>
-                                    <Skeleton className="h-10 w-full" />
-                                </TableCell>
-                            </TableRow>
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell colSpan={4}>
+                                        <Skeleton className="h-10 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
                         ) : (
                             communities.map(community => (
                                 <TableRow key={community.id}>

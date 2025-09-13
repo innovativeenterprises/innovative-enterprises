@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,7 +20,7 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fileToDataURI } from "@/lib/utils";
-import { useClientsData, setClients, setTestimonials } from "@/hooks/use-global-store-data";
+import { useClientsData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Schemas
@@ -55,7 +56,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     const watchLogoFile = form.watch('logoFile');
     const watchLogoUrl = form.watch('logoUrl');
 
-    useState(() => {
+    useEffect(() => {
         if (isOpen) {
             form.reset({
                 name: client?.name || "",
@@ -65,9 +66,9 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
             });
             setImagePreview(client?.logo || null);
         }
-    });
+    }, [isOpen, client, form]);
 
-    useState(() => {
+    useEffect(() => {
         if (!isOpen) return;
         if (watchLogoFile && watchLogoFile.length > 0) {
             fileToDataURI(watchLogoFile[0]).then(setImagePreview);
@@ -76,7 +77,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
         } else {
             setImagePreview(client?.logo || null);
         }
-    });
+    }, [isOpen, watchLogoFile, watchLogoUrl, client]);
     
     const onSubmit: SubmitHandler<z.infer<typeof ClientSchema>> = async (data) => {
         let logoValue = "";
@@ -153,11 +154,11 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
         defaultValues: testimonial || { quote: "", author: "", company: "" },
     });
     
-    useState(() => { 
+    useEffect(() => { 
         if(isOpen) {
             form.reset(testimonial || { quote: "", author: "", company: "" });
         }
-    });
+    }, [isOpen, testimonial, form]);
 
     const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
         onSave(data, testimonial?.id);
@@ -194,7 +195,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 // Main Component
 export default function ClientTable() { 
-    const { clients, testimonials, isClient } = useClientsData();
+    const { clients, setClients, testimonials, setTestimonials, isClient } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
