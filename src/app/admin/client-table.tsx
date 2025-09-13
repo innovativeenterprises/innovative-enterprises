@@ -75,7 +75,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
         } else {
             setImagePreview(client?.logo || null);
         }
-    }, [watchLogoUrl, watchLogoFile, isOpen]);
+    }, [watchLogoUrl, watchLogoFile, isOpen, client?.logo]);
     
     const onSubmit: SubmitHandler<z.infer<typeof ClientSchema>> = async (data) => {
         let logoValue = "";

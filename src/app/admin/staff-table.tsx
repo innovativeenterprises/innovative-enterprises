@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -26,6 +25,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
+import { setLeadership, setStaff, setAgentCategories } from "@/hooks/use-global-store-data";
 
 const SocialsSchema = z.object({
     email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
@@ -67,23 +67,6 @@ const AddEditStaffDialog = ({
     
     const form = useForm<z.infer<typeof StaffSchema>>({
         resolver: zodResolver(StaffSchema),
-        defaultValues: {
-            name: staffMember?.name || "",
-            role: staffMember?.role || "",
-            type: staffMember?.type || "Staff",
-            description: staffMember?.description || "",
-            aiHint: staffMember?.aiHint || "",
-            photoUrl: staffMember?.photo || "",
-            photoFile: undefined,
-            socials: {
-                email: staffMember?.socials?.email || '',
-                phone: staffMember?.socials?.phone || '',
-                website: staffMember?.socials?.website || '',
-                linkedin: staffMember?.socials?.linkedin || '',
-                twitter: staffMember?.socials?.twitter || '',
-                github: staffMember?.socials?.github || '',
-            }
-        },
     });
 
     const watchPhotoUrl = form.watch('photoUrl');
@@ -110,7 +93,7 @@ const AddEditStaffDialog = ({
             });
             setImagePreview(staffMember?.photo || null);
         }
-    }, [isOpen, staffMember]);
+    }, [isOpen, staffMember, form]);
 
     useEffect(() => {
         if (watchPhotoFile && watchPhotoFile.length > 0) {
@@ -251,19 +234,13 @@ const AddEditStaffDialog = ({
 
 export default function StaffTable({ 
     leadership, 
-    setLeadership, 
     staff,
-    setStaff,
     agentCategories, 
-    setAgentCategories,
     isClient,
 } : {
     leadership: Agent[],
-    setLeadership: (updater: (l: Agent[]) => void) => void,
     staff: Agent[],
-    setStaff: (updater: (s: Agent[]) => void) => void,
     agentCategories: AgentCategory[],
-    setAgentCategories: (updater: (ac: AgentCategory[]) => void) => void,
     isClient: boolean,
 }) {
     const { toast } = useToast();

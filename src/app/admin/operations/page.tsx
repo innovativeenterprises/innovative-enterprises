@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -14,7 +13,7 @@ import { useKnowledgeData } from "@/hooks/use-global-store-data";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 
 export default function AdminOperationsPage() {
-  const knowledgeData = useKnowledgeData();
+  const { knowledgeBase, isClient } = useKnowledgeData();
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -34,7 +33,7 @@ export default function AdminOperationsPage() {
         </div>
 
         <ThemeGenerator />
-        <KnowledgeTable {...knowledgeData} />
+        <KnowledgeTable />
         
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>

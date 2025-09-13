@@ -19,8 +19,8 @@ export default function AdminContentPage() {
                 Manage your public-facing services, products, and client testimonials.
             </p>
         </div>
-        <ServiceTable services={services} setServices={setServices} />
-        <ProductTable products={products} setProducts={setProducts} />
+        <ServiceTable services={services} />
+        <ProductTable products={products} />
         <ClientTable />
         <PricingTable />
     </div>

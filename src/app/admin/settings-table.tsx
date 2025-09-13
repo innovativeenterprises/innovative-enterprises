@@ -339,7 +339,7 @@ const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onS
 
 export default function SettingsTable() {
     const { settings, isClient } = useSettingsData();
-    const costSettingsData = useCostSettingsData();
+    const { costSettings, setCostSettings } = useCostSettingsData();
     const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('general');
 
@@ -696,7 +696,7 @@ export default function SettingsTable() {
                 </Card>
             </TabsContent>
             <TabsContent value="costing" className="mt-6">
-                <CostSettingsTable {...costSettingsData} />
+                <CostSettingsTable costSettings={costSettings} setCostSettings={setCostSettings} />
             </TabsContent>
         </Tabs>
     );

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -21,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent, Wand2 } from "lucide-react";
 import { analyzeCrDocument } from "@/ai/flows/cr-analysis";
 import { Skeleton } from "../ui/skeleton";
-import { useInvestorsData } from "@/hooks/use-global-store-data";
+import { useInvestorsData, setInvestors } from "@/hooks/use-global-store-data";
 import { fileToDataURI } from "@/lib/utils";
 
 const InvestorSchema = z.object({
@@ -57,16 +56,6 @@ const AddEditInvestorDialog = ({
 
     const form = useForm<InvestorValues>({
         resolver: zodResolver(InvestorSchema),
-        defaultValues: investor || {
-            name: "",
-            type: "Investor",
-            subType: "Personal/Private",
-            profile: "",
-            focusArea: "",
-            country: "",
-            investmentValue: 0,
-            sharePercentage: 0,
-        },
     });
 
     const { toast } = useToast();
@@ -210,7 +199,8 @@ const AddEditInvestorDialog = ({
     )
 }
 
-export default function InvestorTable({ investors, setInvestors, isClient }: { investors: Investor[], setInvestors: (updater: (investors: Investor[]) => void) => void, isClient: boolean }) {
+export default function InvestorTable() {
+    const { investors, isClient } = useInvestorsData();
     const { toast } = useToast();
 
     const handleSave = async (values: InvestorValues, id?: string) => {
