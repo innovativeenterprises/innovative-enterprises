@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,13 +15,13 @@ export const metadata: Metadata = {
 };
 
 export default function PlatformStatisticsPage() {
-    const { products } = useProductsData();
-    const { leadership, staff, agentCategories } = useStaffData();
-    const { providers } = useProvidersData();
-    const { opportunities } = useOpportunitiesData();
-    const { services } = useServicesData();
+    const { products, isClient: isProductsClient } = useProductsData();
+    const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
+    const { providers, isClient: isProvidersClient } = useProvidersData();
+    const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+    const { services, isClient: isServicesClient } = useServicesData();
     
-    const isClient = true; // All hooks are client-safe now.
+    const isClient = isProductsClient && isStaffClient && isProvidersClient && isOpportunitiesClient && isServicesClient;
 
     const totalAgents = useMemo(() => agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0), [agentCategories]);
     const totalStaff = useMemo(() => leadership.length + staff.length, [leadership, staff]);

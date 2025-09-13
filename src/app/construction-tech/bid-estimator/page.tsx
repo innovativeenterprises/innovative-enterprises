@@ -1,5 +1,7 @@
 
 
+'use client';
+
 import { DollarSign } from "lucide-react";
 import EstimatorForm from "./estimator-form";
 import type { Metadata } from 'next';

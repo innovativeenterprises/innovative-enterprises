@@ -86,12 +86,7 @@ const ProductGridSkeleton = () => (
 );
 
 export default function ConstructionTechPage() {
-    const { products } = useProductsData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { products, isClient } = useProductsData();
 
     const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     

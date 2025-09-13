@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
@@ -7,6 +8,12 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useStaffData } from '@/hooks/use-global-store-data';
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Our Team | Innovative Enterprises",
+  description: "Meet the human experts and AI-powered digital workforce behind our innovative solutions.",
+};
 
 export default function TeamPage() {
     const { leadership, agentCategories, staff, isClient } = useStaffData();

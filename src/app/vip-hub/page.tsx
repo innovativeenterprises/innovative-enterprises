@@ -1,10 +1,17 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Gem, ShieldCheck, Zap, Handshake, ArrowRight } from "lucide-react";
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "The Majlis - VIP Hub | Innovative Enterprises",
+  description: "An exclusive, invitation-only ecosystem for VIPs, executives, and their trusted networks to solve complex challenges with absolute confidentiality.",
+};
 
 const vipPillars = [
     {

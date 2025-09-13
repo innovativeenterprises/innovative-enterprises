@@ -1,8 +1,15 @@
 
+
 'use client';
 
 import { DollarSign, BarChart } from "lucide-react";
 import InvestisightForm from "./investisight-form";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "InvestiSight AI | Innovative Enterprises",
+  description: "Make informed real estate investment decisions. Use our calculators to forecast ROI, simulate mortgage payments, and analyze rental yields.",
+};
 
 export default function InvestisightPage() {
   return (
@@ -24,4 +31,3 @@ export default function InvestisightPage() {
     </div>
   );
 }
-

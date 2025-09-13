@@ -1,8 +1,15 @@
 
+
 'use client';
 
 import { Siren } from "lucide-react";
 import EstimatorForm from "@/app/cctv-estimator/estimator-form";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Security System Estimator | Innovative Enterprises",
+  description: "Get an instant, AI-powered proposal for your project's surveillance and security needs. Upload a floor plan and our AI will design a system and estimate costs.",
+};
 
 export default function SurveillanceEstimatorPage() {
   return (

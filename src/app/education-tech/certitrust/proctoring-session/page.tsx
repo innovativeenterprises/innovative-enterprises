@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -16,6 +17,13 @@ import { ProctoringInputSchema, type ProctoringOutput } from '@/ai/flows/proctor
 import { analyzeExamSession } from '@/ai/flows/proctoring-agent';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Proctoring Assistant | Innovative Enterprises",
+  description: "Submit an exam session log for analysis. The AI will review the transcript for potential academic integrity violations.",
+};
+
 
 const FormSchema = ProctoringInputSchema;
 type FormValues = z.infer<typeof FormSchema>;

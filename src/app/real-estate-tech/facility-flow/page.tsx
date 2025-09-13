@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -13,7 +14,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Send, CheckCircle, Wrench } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useProvidersData } from '@/app/admin/provider-table';
+import { useProvidersData } from '@/hooks/use-global-store-data';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "FacilityFlow SaaS | Innovative Enterprises",
+  description: "A streamlined platform for tenants to raise service tickets. Our system uses AI to automatically assign the issue to the best-qualified vendor.",
+};
+
 
 const TicketSchema = z.object({
   propertyAddress: z.string().min(5, "Property address is required."),
