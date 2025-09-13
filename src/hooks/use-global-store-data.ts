@@ -61,7 +61,11 @@ export const setTestimonials = (updater: (prev: Testimonial[]) => Testimonial[])
 };
 export const useClientsData = () => {
     const data = useStoreData(state => ({ clients: state.clients, testimonials: state.testimonials }));
-    return useMemo(() => ({ ...data, isClient: true }), [data]);
+    return {
+        clients: data.clients,
+        testimonials: data.testimonials,
+        isClient: true,
+    };
 };
 
 export const setProviders = (updater: (prev: Provider[]) => Provider[]) => {
@@ -69,7 +73,11 @@ export const setProviders = (updater: (prev: Provider[]) => Provider[]) => {
 };
 export const useProvidersData = () => {
     const providers = useStoreData(state => state.providers);
-    return useMemo(() => ({ providers, isClient: true }), [providers]);
+     return {
+        providers,
+        setProviders,
+        isClient: true,
+    };
 };
 
 export const setLeadership = (updater: (prev: Agent[]) => Agent[]) => {
@@ -87,7 +95,13 @@ export const useStaffData = () => {
         staff: state.staff,
         agentCategories: state.agentCategories,
     }));
-    return useMemo(() => ({ ...data, isClient: true }), [data]);
+    return {
+        ...data,
+        setLeadership,
+        setStaff,
+        setAgentCategories,
+        isClient: true,
+    };
 };
 
 export const setCommunities = (updater: (prev: Community[]) => Community[]) => {
@@ -95,7 +109,11 @@ export const setCommunities = (updater: (prev: Community[]) => Community[]) => {
 };
 export const useCommunitiesData = () => {
     const communities = useStoreData(state => state.communities);
-    return useMemo(() => ({ communities, isClient: true }), [communities]);
+    return {
+        communities,
+        setCommunities,
+        isClient: true,
+    };
 };
 
 export const setCommunityEvents = (updater: (prev: CommunityEvent[]) => CommunityEvent[]) => {
@@ -109,11 +127,13 @@ export const useCommunityHubData = () => {
         events: state.communityEvents,
         finances: state.communityFinances,
     }));
-    return useMemo(() => ({ 
+    return { 
         events: data.events,
         finances: data.finances,
+        setEvents: setCommunityEvents,
+        setFinances: setCommunityFinances,
         isClient: true 
-    }), [data.events, data.finances]);
+    };
 };
 
 export const setCommunityMembers = (updater: (prev: CommunityMember[]) => CommunityMember[]) => {
@@ -121,7 +141,7 @@ export const setCommunityMembers = (updater: (prev: CommunityMember[]) => Commun
 };
 export const useMembersData = () => {
     const members = useStoreData(state => state.communityMembers);
-    return useMemo(() => ({ members, setMembers: setCommunityMembers, isClient: true }), [members]);
+    return { members, setMembers: setCommunityMembers, isClient: true };
 };
 
 export const setStages = (updater: (prev: ProjectStage[]) => ProjectStage[]) => {
@@ -129,7 +149,7 @@ export const setStages = (updater: (prev: ProjectStage[]) => ProjectStage[]) => 
 };
 export const useProjectStagesData = () => {
     const stages = useStoreData(state => state.stages);
-    return useMemo(() => ({ stages, setStages, isClient: true }), [stages]);
+    return { stages, setStages, isClient: true };
 };
 
 export const setSettings = (updater: (prev: AppSettings) => AppSettings) => {
@@ -137,7 +157,7 @@ export const setSettings = (updater: (prev: AppSettings) => AppSettings) => {
 };
 export const useSettingsData = () => {
     const settings = useStoreData(state => state.settings);
-    return useMemo(() => ({ settings, isClient: true }), [settings]);
+    return { settings, setSettings, isClient: true };
 };
 
 export const setAssets = (updater: (prev: Asset[]) => Asset[]) => {
@@ -145,7 +165,7 @@ export const setAssets = (updater: (prev: Asset[]) => Asset[]) => {
 };
 export const useAssetsData = () => {
     const assets = useStoreData(state => state.assets);
-    return useMemo(() => ({ assets, isClient: true }), [assets]);
+    return { assets, setAssets, isClient: true };
 };
 
 export const setInvestors = (updater: (prev: Investor[]) => Investor[]) => {
@@ -153,7 +173,7 @@ export const setInvestors = (updater: (prev: Investor[]) => Investor[]) => {
 };
 export const useInvestorsData = () => {
     const investors = useStoreData(state => state.investors);
-    return useMemo(() => ({ investors, isClient: true }), [investors]);
+    return { investors, setInvestors, isClient: true };
 };
 
 export const setKnowledgeBase = (updater: (prev: KnowledgeDocument[]) => KnowledgeDocument[]) => {
@@ -161,7 +181,7 @@ export const setKnowledgeBase = (updater: (prev: KnowledgeDocument[]) => Knowled
 };
 export const useKnowledgeData = () => {
     const knowledgeBase = useStoreData(state => state.knowledgeBase);
-    return useMemo(() => ({ knowledgeBase, isClient: true }), [knowledgeBase]);
+    return { knowledgeBase, setKnowledgeBase, isClient: true };
 };
 
 export const setRaahaAgencies = (updater: (prev: Agency[]) => Agency[]) => {
@@ -169,7 +189,7 @@ export const setRaahaAgencies = (updater: (prev: Agency[]) => Agency[]) => {
 };
 export const useAgenciesData = () => {
     const agencies = useStoreData(state => state.raahaAgencies);
-    return useMemo(() => ({ agencies, isClient: true }), [agencies]);
+    return { agencies, setAgencies, isClient: true };
 };
 
 export const setRaahaWorkers = (updater: (prev: RaahaWorker[]) => RaahaWorker[]) => {
@@ -177,7 +197,7 @@ export const setRaahaWorkers = (updater: (prev: RaahaWorker[]) => RaahaWorker[])
 };
 export const useWorkersData = () => {
     const workers = useStoreData(state => state.raahaWorkers);
-    return useMemo(() => ({ workers, setWorkers: setRaahaWorkers, isClient: true }), [workers]);
+    return { workers, setWorkers: setRaahaWorkers, isClient: true };
 };
 
 export const setRaahaRequests = (updater: (prev: HireRequest[]) => HireRequest[]) => {
@@ -185,7 +205,7 @@ export const setRaahaRequests = (updater: (prev: HireRequest[]) => HireRequest[]
 };
 export const useRequestsData = () => {
     const requests = useStoreData(state => state.raahaRequests);
-    return useMemo(() => ({ requests, setRequests: setRaahaRequests, isClient: true }), [requests]);
+    return { requests, setRequests: setRaahaRequests, isClient: true };
 };
 
 export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => {
@@ -193,7 +213,7 @@ export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[])
 };
 export const useLeasesData = () => {
     const leases = useStoreData(state => state.signedLeases);
-    return useMemo(() => ({ leases, setLeases: setSignedLeases, isClient: true }), [leases]);
+    return { leases, setLeases: setSignedLeases, isClient: true };
 };
 
 export const setProperties = (updater: (prev: Property[]) => Property[]) => {
@@ -201,7 +221,7 @@ export const setProperties = (updater: (prev: Property[]) => Property[]) => {
 };
 export const usePropertiesData = () => {
     const properties = useStoreData(state => state.properties);
-    return useMemo(() => ({ properties, isClient: true }), [properties]);
+    return { properties, setProperties, isClient: true };
 };
 
 export const setStairspaceListings = (updater: (prev: StairspaceListing[]) => StairspaceListing[]) => {
@@ -209,7 +229,7 @@ export const setStairspaceListings = (updater: (prev: StairspaceListing[]) => St
 };
 export const useStairspaceData = () => {
     const stairspaceListings = useStoreData(state => state.stairspaceListings);
-    return useMemo(() => ({ stairspaceListings, setStairspaceListings, isClient: true }), [stairspaceListings]);
+    return { stairspaceListings, setStairspaceListings, isClient: true };
 };
 
 export const setStairspaceRequests = (updater: (prev: StairspaceRequest[]) => StairspaceRequest[]) => {
@@ -217,7 +237,7 @@ export const setStairspaceRequests = (updater: (prev: StairspaceRequest[]) => St
 };
 export const useStairspaceRequestsData = () => {
     const stairspaceRequests = useStoreData(state => state.stairspaceRequests);
-    return useMemo(() => ({ stairspaceRequests, setStairspaceRequests, isClient: true }), [stairspaceRequests]);
+    return { stairspaceRequests, setStairspaceRequests, isClient: true };
 };
 
 export const setOpportunities = (updater: (prev: Opportunity[]) => Opportunity[]) => {
@@ -225,7 +245,7 @@ export const setOpportunities = (updater: (prev: Opportunity[]) => Opportunity[]
 };
 export const useOpportunitiesData = () => {
     const opportunities = useStoreData(state => state.opportunities);
-    return useMemo(() => ({ opportunities, isClient: true }), [opportunities]);
+    return { opportunities, setOpportunities, isClient: true };
 };
 
 export const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => {
@@ -233,7 +253,7 @@ export const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => {
 };
 export const useCostSettingsData = () => {
     const costSettings = useStoreData(state => state.costSettings);
-    return useMemo(() => ({ costSettings, setCostSettings, isClient: true }), [costSettings]);
+    return { costSettings, setCostSettings, isClient: true };
 };
 
 export const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => {
@@ -241,7 +261,7 @@ export const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => {
 };
 export const usePricingData = () => {
     const pricing = useStoreData(state => state.pricing);
-    return useMemo(() => ({ pricing, isClient: true }), [pricing]);
+    return { pricing, isClient: true };
 };
 
 export const useCfoData = () => {
@@ -250,12 +270,11 @@ export const useCfoData = () => {
         transactionData: state.transactionData,
         upcomingPayments: state.upcomingPayments,
         vatPayment: state.vatPayment,
-        cashFlowData: state.cashFlowData,
     }));
-    return useMemo(() => ({
+    return {
         ...data,
         isClient: true,
-    }), [data]);
+    };
 };
 
 export const setStudents = (updater: (prev: Student[]) => Student[]) => {
@@ -263,5 +282,5 @@ export const setStudents = (updater: (prev: Student[]) => Student[]) => {
 };
 export const useStudentsData = () => {
     const students = useStoreData(state => state.students);
-    return useMemo(() => ({ students, setStudents, isClient: true }), [students]);
+    return { students, setStudents, isClient: true };
 };
