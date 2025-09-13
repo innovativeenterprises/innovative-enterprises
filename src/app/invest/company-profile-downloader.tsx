@@ -12,10 +12,11 @@ import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
+import html2canvas from 'html2canvas';
 
 // This is the hidden component that will be rendered to generate the PDF
 const ProfileTemplate = ({ leadership, services, products, settings, innerRef, generatedDate }: any) => {
-
     return (
         <div ref={innerRef} className="bg-white text-gray-900" style={{ width: '210mm', minHeight: '297mm', fontFamily: 'Inter, sans-serif' }}>
             <div className="p-12">
@@ -134,7 +135,7 @@ export default function CompanyProfileDownloader() {
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
     const [isReady, setIsReady] = useState(false);
-
+    
     // This effect runs on the client and sets the isReady flag
     // once all the necessary data from our custom hooks is available.
     useEffect(() => {
@@ -229,4 +230,3 @@ export default function CompanyProfileDownloader() {
         </>
     );
 }
-
