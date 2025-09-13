@@ -127,6 +127,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
+    // Call all hooks unconditionally at the top level
     const { leadership } = useStaffData();
     const { services } = useServicesData();
     const { settings } = useSettingsData();
