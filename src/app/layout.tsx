@@ -11,7 +11,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://innovativeenterprises.tech'),
-  title: "INNOVATIVE ENTERPRISES - AI-Powered Business Platform",
+  title: {
+    default: "INNOVATIVE ENTERPRISES - AI-Powered Business Platform",
+    template: "%s | INNOVATIVE ENTERPRISES",
+  },
   description: "An AI-powered business services platform for the Omani market that automates key operations, connects a network of service providers, and provides a suite of intelligent tools to enhance business productivity and digital transformation.",
   keywords: ["Oman", "SME", "AI", "business services", "Sanad Hub", "digital transformation", "automation", "e-commerce", "real estate tech"],
   openGraph: {
