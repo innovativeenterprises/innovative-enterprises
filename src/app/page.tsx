@@ -1,3 +1,4 @@
+
 'use client';
 
 import CompanyOverview from '@/components/company-overview';
