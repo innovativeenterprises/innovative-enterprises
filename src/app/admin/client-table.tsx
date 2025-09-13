@@ -55,16 +55,15 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     const watchLogoUrl = form.watch('logoUrl');
 
     useEffect(() => {
-        if (!isOpen) return;
-
-        form.reset({
-            name: client?.name || "",
-            aiHint: client?.aiHint || "",
-            logoUrl: client?.logo || "",
-            logoFile: undefined,
-        });
-
-        setImagePreview(client?.logo || null);
+        if (isOpen) {
+            form.reset({
+                name: client?.name || "",
+                aiHint: client?.aiHint || "",
+                logoUrl: client?.logo || "",
+                logoFile: undefined,
+            });
+            setImagePreview(client?.logo || null);
+        }
     }, [isOpen, client, form]);
 
     useEffect(() => {
@@ -76,7 +75,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
         } else {
             setImagePreview(client?.logo || null);
         }
-    }, [watchLogoUrl, watchLogoFile, client?.logo, isOpen]);
+    }, [watchLogoUrl, watchLogoFile, isOpen]);
     
     const onSubmit: SubmitHandler<z.infer<typeof ClientSchema>> = async (data) => {
         let logoValue = "";

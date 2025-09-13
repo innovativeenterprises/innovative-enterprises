@@ -43,7 +43,7 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
         if (isOpen) {
             form.reset(community || { name: "", country: "", description: "", manager: "" });
         }
-    }, [community, form, isOpen]);
+    }, [isOpen, community, form]);
 
     const onSubmit: SubmitHandler<CommunityValues> = (data) => {
         onSave(data, community?.id);
