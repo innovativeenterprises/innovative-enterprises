@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from "lucide-react";
+import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { format } from "date-fns";
+import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
 import { useLeasesData, setSignedLeases as setLeases } from '@/hooks/use-global-store-data';
@@ -19,6 +18,16 @@ import type { SignedLease } from '@/lib/leases';
 export default function StudentHousingPage() {
     const { leases, isClient } = useLeasesData();
     const { toast } = useToast();
+    const [expiringLeasesCount, setExpiringLeasesCount] = useState<number | null>(null);
+
+
+    useEffect(() => {
+        if(isClient) {
+            const expiringCount = leases.filter(l => l.endDate && new Date(l.endDate) > new Date() && new Date(l.endDate).getMonth() === new Date().getMonth() + 1).length;
+            setExpiringLeasesCount(expiringCount);
+        }
+    }, [isClient, leases]);
+
 
     const handleDelete = (id: string) => {
         setLeases(prev => prev.filter(lease => lease.id !== id));
@@ -63,7 +72,7 @@ export default function StudentHousingPage() {
                         </Card>
                          <Card>
                             <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{isClient ? leases.filter(l => l.endDate && new Date(l.endDate) > new Date() && new Date(l.endDate).getMonth() === new Date().getMonth() + 1).length : <Skeleton className="h-8 w-1/2" />}</CardContent>
+                            <CardContent className="text-3xl font-bold text-primary">{expiringLeasesCount === null ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
                         </Card>
                     </div>
 
