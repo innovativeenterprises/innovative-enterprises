@@ -1,0 +1,115 @@
+
+
+'use client';
+
+import { useState, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import type { Product } from "@/lib/products";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import { AddEditProductDialog, type ProductValues } from './product-form-dialog';
+import { useProductsData, useProjectStagesData, setProducts } from "@/hooks/use-global-store-data";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function ProductTable({ products }: { products: Product[] }) {
+    const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
+    const { stages, isClient } = useProjectStagesData();
+
+    const handleToggle = (id: number) => {
+        setProducts(prev =>
+            prev.map(product =>
+                product.id === id ? { ...product, enabled: !product.enabled } : product
+            )
+        );
+        toast({ title: "Product status updated." });
+    };
+
+    const handleEdit = (product: Product) => {
+        setSelectedProduct(product);
+        setIsDialogOpen(true);
+    };
+
+    const handleSave = (values: ProductValues, id?: number) => {
+        if (id !== undefined) {
+            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values, id } : p));
+            toast({ title: "Product updated successfully." });
+        } else {
+            const newProduct: Product = {
+                ...values,
+                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
+            };
+            setProducts(prev => [newProduct, ...prev]);
+            toast({ title: "Product added successfully." });
+        }
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Product Management</CardTitle>
+                <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <AddEditProductDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    product={selectedProduct}
+                    onSave={handleSave}
+                    stages={stages}
+                >
+                    {/* This is a controlled dialog, so the trigger is handled programmatically */}
+                    <div />
+                </AddEditProductDialog>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Product Name</TableHead>
+                            <TableHead>Category</TableHead>
+                            <TableHead>Price (OMR)</TableHead>
+                            <TableHead className="text-center">Status</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={5}>
+                                    <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            products.map((product) => (
+                                <TableRow key={product.id}>
+                                    <TableCell className="font-medium">{product.name}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline">{product.category}</Badge>
+                                    </TableCell>
+                                    <TableCell>{product.price > 0 ? `OMR ${product.price.toFixed(2)}` : 'N/A'}</TableCell>
+                                    <TableCell className="text-center">
+                                        <Switch
+                                            checked={product.enabled}
+                                            onCheckedChange={() => handleToggle(product.id)}
+                                            aria-label={`Enable/disable ${product.name}`}
+                                        />
+                                    </TableCell>
+                                     <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => handleEdit(product)}>
+                                            <Edit />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+

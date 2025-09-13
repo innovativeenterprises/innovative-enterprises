@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -339,7 +340,6 @@ const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onS
 
 export default function SettingsTable() {
     const { settings, isClient } = useSettingsData();
-    const { costSettings, setCostSettings } = useCostSettingsData();
     const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('general');
 
@@ -696,8 +696,9 @@ export default function SettingsTable() {
                 </Card>
             </TabsContent>
             <TabsContent value="costing" className="mt-6">
-                <CostSettingsTable costSettings={costSettings} setCostSettings={setCostSettings} />
+                <CostSettingsTable />
             </TabsContent>
         </Tabs>
     );
 }
+
