@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -41,7 +42,7 @@ const MemberSchema = z.object({
   householdRole: z.enum(['Head', 'Member']),
   status: z.enum(['Active', 'Inactive', 'Pending Review']),
   joinDate: z.string(), // Will be handled as ISO string
-  photoUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
+  photoUrl: z.string().url("A valid photo URL is required.").optional().or(z.literal('')),
   photoFile: z.any().optional(),
   position: z.string().optional(),
   employer: z.string().optional(),
@@ -135,7 +136,7 @@ const AddEditMemberDialog = ({
 
     const onSubmit: SubmitHandler<z.infer<typeof MemberSchema>> = async (data) => {
         let photoValue = "";
-        if (data.photoFile && data.photoFile[0]) {
+        if (data.photoFile && data.photoFile.length > 0) {
             photoValue = await fileToDataURI(data.photoFile[0]);
         } else if (data.photoUrl) {
             photoValue = data.photoUrl;
@@ -398,7 +399,7 @@ export default function MembershipPage() {
                                          <div className="flex items-center gap-3">
                                             <div className="flex-shrink-0" style={{ paddingLeft: member.householdRole === 'Member' ? '20px' : '0' }}>
                                              {member.householdRole === 'Member' && <span className="text-muted-foreground">- </span>}
-                                            <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover inline-block"/>
+                                            <Image src={member.photo} alt={member.name} width={40} height={40} className="rounded-full object-cover"/>
                                             </div>
                                             <div>
                                               <p className="font-medium">{member.nickname || member.name}</p>

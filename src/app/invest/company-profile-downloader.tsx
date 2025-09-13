@@ -194,14 +194,16 @@ export default function CompanyProfileDownloader() {
     return (
         <>
             <div style={{ position: 'fixed', left: '-200vw', top: 0, zIndex: -100 }}>
-                <ProfileTemplate 
-                    innerRef={profileRef}
-                    leadership={enabledLeadership}
-                    services={enabledServices}
-                    products={products}
-                    settings={settings}
-                    generatedDate={generatedDate || ''}
-                />
+                {settings && (
+                    <ProfileTemplate 
+                        innerRef={profileRef}
+                        leadership={enabledLeadership}
+                        services={enabledServices}
+                        products={products}
+                        settings={settings}
+                        generatedDate={generatedDate || ''}
+                    />
+                )}
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating || !generatedDate}>
                  {isGenerating ? (

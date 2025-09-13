@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -116,7 +117,7 @@ export default function PricingTable() {
                         {!isClient ? (
                              <TableRow>
                                 <TableCell colSpan={4}>
-                                    <Skeleton className="h-10 w-full" />
+                                    <Skeleton className="h-24 w-full" />
                                 </TableCell>
                             </TableRow>
                         ) : (
