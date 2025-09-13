@@ -1,7 +1,7 @@
 
 'use client';
 
-import CfoDashboard from "../admin/cfo-dashboard";
+import CfoDashboard from "./cfo-dashboard";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
