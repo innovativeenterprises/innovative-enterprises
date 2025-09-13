@@ -126,7 +126,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    // Call all hooks unconditionally at the top level
+    // All hooks are called unconditionally at the top level.
     const { leadership } = useStaffData();
     const { services } = useServicesData();
     const { settings } = useSettingsData();
@@ -134,33 +134,25 @@ export default function CompanyProfileDownloader() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-    
-    // Set the date only on the client-side to prevent hydration mismatch
-    useEffect(() => {
-        setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-    }, []);
+    const [isReady, setIsReady] = useState(false);
 
-    // Conditional logic and rendering should come *after* all hooks.
-    if (!settings || !leadership || !services) {
-        return (
-            <Button variant="outline" size="lg" disabled>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
-            </Button>
-        );
-    }
-    
-    const enabledServices = services.filter(s => s.enabled);
-    const enabledLeadership = leadership.filter(l => l.enabled);
-    const products = initialProducts.filter(p => p.enabled);
+    useEffect(() => {
+        // This effect runs on the client after hydration.
+        // We set the date and readiness state once all data is available.
+        if (settings && leadership && services) {
+            setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+            setIsReady(true);
+        }
+    }, [settings, leadership, services]);
 
     const handleDownload = async () => {
-        if (!profileRef.current) return;
+        if (!profileRef.current || !isReady) return;
         setIsGenerating(true);
         toast({ title: 'Generating PDF...', description: 'Please wait while we create your company profile.' });
         
         try {
             const canvas = await html2canvas(profileRef.current, {
-                scale: 2, // Higher scale for better quality
+                scale: 2,
                 useCORS: true,
                 logging: false,
                 backgroundColor: null,
@@ -200,6 +192,19 @@ export default function CompanyProfileDownloader() {
         }
     };
     
+    // During server render or before client-side data is ready, show a disabled button.
+    if (!isReady) {
+        return (
+            <Button variant="outline" size="lg" disabled>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
+            </Button>
+        );
+    }
+    
+    // Data is ready, render the full component with the downloader logic.
+    const enabledServices = services.filter(s => s.enabled);
+    const enabledLeadership = leadership.filter(l => l.enabled);
+    const products = initialProducts.filter(p => p.enabled);
 
     return (
         <>
@@ -213,7 +218,7 @@ export default function CompanyProfileDownloader() {
                     generatedDate={generatedDate || ''}
                 />
             </div>
-            <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating || !generatedDate}>
+            <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
                  {isGenerating ? (
                     <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generating...
