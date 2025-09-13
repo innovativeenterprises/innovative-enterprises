@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useStaffData } from "@/hooks/use-global-store-data";
 import { useServicesData } from "@/hooks/use-global-store-data";
 import { useSettingsData } from "@/hooks/use-global-store-data";
@@ -130,7 +130,13 @@ export default function CompanyProfileDownloader() {
     const { settings } = useSettingsData();
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
+    const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        // Set the date only on the client-side to prevent hydration mismatch
+        setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+    }, []);
 
     const enabledServices = services.filter(s => s.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
@@ -193,10 +199,10 @@ export default function CompanyProfileDownloader() {
                     services={enabledServices}
                     products={products}
                     settings={settings}
-                    generatedDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    generatedDate={generatedDate || ''}
                 />
             </div>
-            <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
+            <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating || !generatedDate}>
                  {isGenerating ? (
                     <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generating...
