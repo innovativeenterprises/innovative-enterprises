@@ -1,3 +1,4 @@
+
 # Transforming Services into Standalone Apps
 
 Yes, it is absolutely possible to transform any of the built-in services (like "Sanad Hub" or "Nova Commerce") into a separate, standalone application while maintaining data and logical integrity with the other services.

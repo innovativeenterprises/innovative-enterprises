@@ -1,6 +1,7 @@
-# Project Brief: Innovative Enterprises AI-Powered Business Platform
 
-**Document Purpose:** This document serves as a comprehensive, centralized source of truth for the Innovative Enterprises project, intended for use with AI analysis tools like Google NotebookLM.
+# Project Brief: innovative-enterprises AI-Powered Business Platform
+
+**Document Purpose:** This document serves as a comprehensive, centralized source of truth for the innovative-enterprises project, intended for use with AI analysis tools like Google NotebookLM.
 
 ---
 

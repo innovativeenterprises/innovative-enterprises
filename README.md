@@ -1,4 +1,5 @@
-# INNOVATIVE ENTERPRISES - AI-Powered Business Platform
+
+# innovative-enterprises - AI-Powered Business Platform
 
 This is a comprehensive business services platform built with Next.js, Genkit, and ShadCN UI. It features a suite of AI-powered tools and agent-driven services designed to automate processes, enhance productivity, and foster business growth in the Omani market.
 
@@ -79,3 +80,4 @@ This application is configured for easy deployment to Firebase App Hosting.
 ```bash
 firebase deploy --only hosting
 ```
+

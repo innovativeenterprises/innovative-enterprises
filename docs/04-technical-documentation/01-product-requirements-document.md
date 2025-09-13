@@ -1,7 +1,7 @@
 
 # Product Requirements Document (PRD)
 
-## Project: Innovative Enterprises - AI Business Platform
+## Project: innovative-enterprises - AI Business Platform
 **Version:** 1.0
 **Date:** 2024-08-01
 **Author:** Jumaa Salim Al Hadidi
@@ -10,7 +10,7 @@
 ---
 
 ### 1. Introduction & Purpose
-This document outlines the product requirements for the Minimum Viable Product (MVP) of the Innovative Enterprises AI-Powered Business Platform. The purpose is to create a single source of truth for the project's goals, features, and technical specifications to guide the development team.
+This document outlines the product requirements for the Minimum Viable Product (MVP) of the innovative-enterprises AI-Powered Business Platform. The purpose is to create a single source of truth for the project's goals, features, and technical specifications to guide the development team.
 
 ### 2. Goals & Objectives
 - **Business Goal:** Become the leading digital transformation partner for SMEs in Oman within 24 months.
@@ -63,4 +63,5 @@ This document outlines the product requirements for the Minimum Viable Product (
 - **Activation Rate:** >30% of new users submit at least one task or inquiry within their first week.
 - **Provider Network Growth:** Onboard 50 vetted service providers (Sanad offices and freelancers) within 3 months of launch.
 - **User Satisfaction:** Achieve a CSAT score of 4.5/5 or higher from post-task completion surveys.
+
 

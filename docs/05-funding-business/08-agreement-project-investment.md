@@ -1,6 +1,7 @@
+
 # Project-Specific Investment Term Sheet - DRAFT
 
-**This Term Sheet** outlines the principal terms for an investment by **[Investor Name]** ("Investor") into a specific project by **Innovative Enterprises** ("Company").
+**This Term Sheet** outlines the principal terms for an investment by **[Investor Name]** ("Investor") into a specific project by **innovative-enterprises** ("Company").
 
 **Project:** **[Project Name, e.g., PANOSPACE, RAAHA]** ("The Project")
 
@@ -30,3 +31,4 @@ This Term Sheet is non-binding. The parties will work in good faith to negotiate
 
 ---
 ***Disclaimer:** This is a basic Term Sheet template. It is NOT a substitute for professional legal and financial advice. Consult with legal counsel before using.*
+

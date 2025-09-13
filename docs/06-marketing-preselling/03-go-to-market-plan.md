@@ -1,7 +1,7 @@
 
 # Go-To-Market (GTM) Plan
 
-## Project: Innovative Enterprises - AI Business Platform
+## Project: innovative-enterprises - AI Business Platform
 **Launch Date:** 2024-09-15
 
 ---
@@ -31,7 +31,7 @@
 - **Launch Day:**
   - **Morning (9 AM):**
     - Deploy the live application.
-    - Publish "Innovative Enterprises is Live!" blog post and send email announcement to all lists.
+    - Publish "innovative-enterprises is Live!" blog post and send email announcement to all lists.
     - Update all social media profiles with links and launch announcements.
   - **Afternoon (12 PM):**
     - Distribute press release to media contacts.

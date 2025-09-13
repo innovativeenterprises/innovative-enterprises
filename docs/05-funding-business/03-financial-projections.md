@@ -1,7 +1,7 @@
 
 # Financial Projections (3-5 Years) - DRAFT
 
-## Project: Innovative Enterprises - AI Business Platform
+## Project: innovative-enterprises - AI Business Platform
 
 | Metric                      | Year 1      | Year 2      | Year 3      | Notes                                    |
 | :-------------------------- | :---------- | :---------- | :---------- | :--------------------------------------- |
@@ -20,4 +20,5 @@
 | Operational & Admin         | 14,400      | 20,000      | 35,000      |                                          |
 | **Total Expenses**          | **117,720** | **210,000** | **405,000** |                                          |
 | **Profit / Loss (OMR)**     | **(90,120)**| **(60,000)**| **265,000** | **Breakeven expected during Year 3.**      |
+
 

@@ -1,3 +1,4 @@
+
 # Training Manual / FAQ
 
 ## For Internal Team & Customer Support

@@ -1,7 +1,7 @@
 
 # Branding Guide - DRAFT
 
-## Project: Innovative Enterprises
+## Project: innovative-enterprises
 
 ---
 
@@ -9,7 +9,7 @@
 *Insert the final logo versions here (Primary, Secondary, Icon/Favicon).*
 
 **Primary Logo:**
-![Placeholder for Primary Logo](https://placehold.co/400x100/293462/F0F4F8?text=Innovative%20Enterprises&font=inter)
+![Placeholder for Primary Logo](https://placehold.co/400x100/293462/F0F4F8?text=innovative-enterprises&font=inter)
 
 **Icon:**
 ![Placeholder for Icon](https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png)
@@ -18,7 +18,7 @@
 - Use the primary, full-text logo whenever possible, especially in headers.
 - The Icon can be used for favicons, social media profile pictures, and in-app elements where space is limited.
 - Do not stretch, distort, or change the colors of the logo.
-- Maintain a minimum clear space around the logo equal to the height of the "I" in "INNOVATIVE".
+- Maintain a minimum clear space around the logo equal to the height of the "i" in "innovative-enterprises".
 
 ---
 

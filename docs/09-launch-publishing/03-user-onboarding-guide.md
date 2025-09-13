@@ -1,3 +1,4 @@
+
 # User Onboarding Guide
 
 *This document outlines the initial experience for a new **Service Provider (Freelancer/Sanad Office)**, intended to guide them to their "Aha!" moment—receiving their first task—as quickly as possible.*
@@ -33,7 +34,7 @@
 ---
 
 ### Onboarding Email Sequence
-- **Email 1 (Immediately after sign-up):** "Welcome to the Innovative Enterprises Partner Network!" - Confirms registration, includes a copy of their signed agreements, and provides a link to their E-Briefcase.
+- **Email 1 (Immediately after sign-up):** "Welcome to the innovative-enterprises Partner Network!" - Confirms registration, includes a copy of their signed agreements, and provides a link to their E-Briefcase.
 - **Email 2 (After 24 hours if profile not complete):** "Complete Your Profile to Start Receiving Job Offers" - A reminder to add more details (e.g., portfolio, detailed service list) to increase their chances of being selected for tasks.
 - **Email 3 (After first task bid/assignment):** "You've Submitted Your First Bid!" - Congratulates the user on their first engagement and provides tips for winning projects.
 

@@ -1,7 +1,7 @@
 
 # Technical Architecture Document
 
-## Project: Innovative Enterprises - AI Business Platform
+## Project: innovative-enterprises - AI Business Platform
 **Version:** 1.0
 **Date:** 2024-08-01
 
@@ -69,4 +69,5 @@ The platform is a monolithic Next.js application built with the App Router. It s
 - **Authentication:** Managed by Firebase Authentication, providing robust and secure user login. Custom tokens are used for the WhatsApp OTP flow.
 - **Database:** Firestore Security Rules will be implemented to restrict data access (e.g., users can only read/write their own data).
 - **API Keys:** All secret keys (e.g., `GEMINI_API_KEY`, `WHATSAPP_TOKEN`) are stored in environment variables (`.env`) and are only accessed on the server-side, never exposed to the client.
+
 

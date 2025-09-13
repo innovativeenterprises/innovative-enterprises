@@ -5,7 +5,7 @@
 
 **BETWEEN:**
 
-1.  **Innovative Enterprises**, an Omani SME (CRN: 1435192) ("Company")
+1.  **innovative-enterprises**, an Omani SME (CRN: 1435192) ("Company")
 2.  **[Partner/Agent Name]** ("Partner")
 
 ### 1. Purpose

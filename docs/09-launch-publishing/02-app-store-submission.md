@@ -1,6 +1,7 @@
+
 # App Store / Marketplace Submission Checklist
 
-## App Name: Innovative Enterprises
+## App Name: innovative-enterprises
 
 *Note: As this is a web application, this document serves as a template for a potential future Progressive Web App (PWA) submission or a native app wrapper.*
 
@@ -8,10 +9,10 @@
 
 ### 1. App Store Connect (for iOS)
 
-- [ ] **App Name:** Innovative Enterprises
+- [ ] **App Name:** innovative-enterprises
 - [ ] **Subtitle:** AI-Powered Business Services
 - [ ] **Bundle ID:** `tech.innovativeenterprises.platform`
-- [ ] **SKU:** `INNOVATIVE_PLATFORM_V1`
+- [ ] **SKU:** `innovative-enterprises_PLATFORM_V1`
 - [ ] **Primary Language:** English
 - [ ] **Category:** Business, Productivity
 
@@ -31,8 +32,8 @@
 - [ ] **Marketing URL:** `https://innovativeenterprises.tech`
 
 - [ ] **Version Number:** `1.0.0`
-- [ ] **What's New in This Version:** "Initial release of the Innovative Enterprises platform! Connect with Sanad offices, delegate tasks, and use our powerful AI tools."
-- [ ] **Copyright:** `2024 Innovative Enterprises`
+- [ ] **What's New in This Version:** "Initial release of the innovative-enterprises platform! Connect with Sanad offices, delegate tasks, and use our powerful AI tools."
+- [ ] **Copyright:** `2024 innovative-enterprises`
 - [ ] **Contact Information:** (Provide primary contact details for App Review team)
 - [ ] **Demo Account:** (Provide a test user account with credentials for both a 'Client' and a 'Provider' role).
 - [ ] **Privacy Policy URL:** `https://innovativeenterprises.tech/privacy`
@@ -41,7 +42,7 @@
 
 ### 2. Google Play Console (for Android)
 
-- [ ] **App Name:** Innovative Enterprises (50 characters)
+- [ ] **App Name:** innovative-enterprises (50 characters)
 - [ ] **Short Description:** (80 characters) - "The AI-powered platform for Omani SMEs. Delegate tasks, automate, and grow."
 - [ ] **Full Description:** (4000 characters) - Same as the iOS description.
 

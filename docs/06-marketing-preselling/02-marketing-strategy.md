@@ -1,12 +1,12 @@
 
 # Marketing Strategy Document
 
-## Project: Innovative Enterprises
+## Project: innovative-enterprises
 
 ---
 
 ### 1. Marketing Goals
-1.  **Awareness:** Establish Innovative Enterprises as the leading and most visible AI-powered digital transformation platform for SMEs in Oman.
+1.  **Awareness:** Establish innovative-enterprises as the leading and most visible AI-powered digital transformation platform for SMEs in Oman.
 2.  **Acquisition:** Onboard 500 active SMEs and 100 active service providers (Sanad offices & freelancers) onto the platform within 6 months of launch.
 3.  **Engagement:** Foster a community of users who actively use the platform's tools and marketplaces, with a target of 1,000 transactions/tasks processed per month by month 6.
 4.  **Thought Leadership:** Position our CEO and CTO as key voices in Oman's tech scene through articles, workshops, and media appearances.
@@ -17,7 +17,7 @@
 - **Tertiary Audience:** Sanad Service Centre Owners & Freelancers. They are looking for a reliable source of new clients and digital tools to professionalize their operations.
 
 ### 3. Key Messaging & Value Proposition
-- **Core Message:** "Innovative Enterprises: Your AI-powered partner for digital transformation. We automate your operations and connect you to a trusted network, so you can focus on what matters most—growing your business."
+- **Core Message:** "innovative-enterprises: Your AI-powered partner for digital transformation. We automate your operations and connect you to a trusted network, so you can focus on what matters most—growing your business."
 - **Value Proposition:** "We are the only platform in Oman that integrates a services marketplace with a suite of AI agents specifically trained for the Omani business environment."
 - **Key Pillars:**
   1.  **Efficiency:** Save time and reduce costs with AI automation.

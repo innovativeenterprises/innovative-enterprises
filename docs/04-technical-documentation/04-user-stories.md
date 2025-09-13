@@ -1,7 +1,7 @@
 
 # User Stories
 
-## Project: Innovative Enterprises - AI Business Platform
+## Project: innovative-enterprises - AI Business Platform
 
 | ID  | As a... (User Role) | I want to... (Action)                               | So that I can... (Benefit)                          | Priority | Acceptance Criteria                                                                   |
 | :-- | :------------------ | :-------------------------------------------------- | :-------------------------------------------------- | :------: | :------------------------------------------------------------------------------------ |
@@ -12,3 +12,4 @@
 | US-05 | Freelancer | Access my signed NDA and Service Agreement in a secure portal. | Easily find my legal documents without having to search through my emails. | P1 | - A "My E-Briefcase" page exists. <br> - It contains links to view/download agreements. |
 | US-06 | User | Upload an official document and get an accurate translation. | Get a reliable translation for legal or business use without waiting for a human translator. | P1 | - User can upload a PDF/Image. <br> - User selects source/target languages. <br> - Translated text is displayed. |
 | US-07 | Marketing Manager | Generate social media posts for a new campaign from a single topic. | Save time by not having to write separate copy for Twitter, LinkedIn, and Facebook. | P2 | - Form to enter a topic and select platforms. <br> - AI generates tailored content for each selected platform. |
+

@@ -1,8 +1,9 @@
+
 # Investor Pitch Deck Outline
 
 ---
 ### Slide 1: Title Slide
-- **Content:** Innovative Enterprises Logo, Project Name: "Innovative Enterprises", Tagline: "The Digital Operating System for Business in Oman."
+- **Content:** innovative-enterprises Logo, Project Name: "innovative-enterprises", Tagline: "The Digital Operating System for Business in Oman."
 - **Image:** A sleek, modern image representing technology and Oman's landscape.
 
 ---
@@ -13,7 +14,7 @@
 ---
 ### Slide 3: The Solution
 - **Content:** Introduce your platform as the all-in-one solution. A single, powerful sentence.
-- **Example:** "Innovative Enterprises is an AI-powered platform that automates your business operations, connects you to a trusted network of service providers, and provides the tools to scale."
+- **Example:** "innovative-enterprises is an AI-powered platform that automates your business operations, connects you to a trusted network of service providers, and provides the tools to scale."
 
 ---
 ### Slide 4: Market Opportunity (TAM, SAM, SOM)

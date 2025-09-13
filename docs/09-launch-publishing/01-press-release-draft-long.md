@@ -1,12 +1,13 @@
+
 # Press Release - DRAFT (Long Version)
 
 **FOR IMMEDIATE RELEASE**
 
 ---
 
-### **INNOVATIVE ENTERPRISES Launches as Oman’s First Fully AI-Powered SME, Unveiling a Digital Workforce and a Portfolio of Over 30 Tech Products**
+### **innovative-enterprises Launches as Oman’s First Fully AI-Powered SME, Unveiling a Digital Workforce and a Portfolio of Over 30 Tech Products**
 
-**Muscat, Oman – [Date]** – INNOVATIVE ENTERPRISES today announced its official launch, positioning itself as the Sultanate of Oman's first Small or Medium-sized Enterprise (SME) built from the ground up on a foundation of artificial intelligence. Helmed by CEO Jumaa Salim Al Hadidi and CTO Anwar Ahmed Sharif, the company is pioneering a new business model where a "digital workforce" of specialized AI agents collaborates with a human team to accelerate innovation and deliver a comprehensive suite of technology solutions.
+**Muscat, Oman – [Date]** – innovative-enterprises today announced its official launch, positioning itself as the Sultanate of Oman's first Small or Medium-sized Enterprise (SME) built from the ground up on a foundation of artificial intelligence. Helmed by CEO Jumaa Salim Al Hadidi and CTO Anwar Ahmed Sharif, the company is pioneering a new business model where a "digital workforce" of specialized AI agents collaborates with a human team to accelerate innovation and deliver a comprehensive suite of technology solutions.
 
 With an ambitious portfolio of over 30 digital products, the company is already demonstrating remarkable productivity. Currently, **10 products are live and operational**, including the flagship **Sanad Hub** and **Business Hub** platforms. An additional **7 products are in the active development and planning stages**, with a further **14 in the idea and research phase**, showcasing a deep pipeline of future innovation.
 
@@ -16,19 +17,19 @@ This unique structure is made possible by a team of over 20 specialized AI agent
 
 Anwar Ahmed Sharif, the CTO and chief architect behind the company's technology, elaborated on the model. "We have engineered an ecosystem where our AI agents are not just tools, but collaborators. They analyze market data, draft contracts, write code, generate marketing campaigns, and even help us design the next wave of products. This synergy between human talent and a digital workforce is our core competitive advantage."
 
-INNOVATIVE ENTERPRISES is launching with a powerful suite of platforms aimed at solving key challenges for businesses in Oman and the GCC. The company's diverse portfolio includes:
+innovative-enterprises is launching with a powerful suite of platforms aimed at solving key challenges for businesses in Oman and the GCC. The company's diverse portfolio includes:
 
 -   **Live Platforms:** Flagship services like **Sanad Hub** (for government service delegation), **Business Hub** (a B2B marketplace), **Nova Commerce** (e-commerce solutions), and the **GENIUS Career Platform**.
 -   **Platforms in Development:** Projects nearing completion, such as **APPI** (an AI-powered utility management app) and **KHIDMA** (a dynamic service provider marketplace).
 -   **Industry-Specific Hubs:** Dedicated solution portfolios for the **Real Estate** and **Construction** industries, featuring tools like the AI Property Valuator and the BidWise Estimator.
 -   **Early-Stage Innovations (Idea & Research):** A glimpse into the future with projects like **Fintech Super-App**, **Smart City OS**, a gamified AR social app (**MATCH CUP GAME**), and an AI-driven **Smart-POS** system for small businesses.
 
-Financially, the company is on a strong growth trajectory. Based on its diversified revenue model—which includes SaaS subscriptions, transaction fees, and premium AI tool access—Innovative Enterprises is projected to achieve profitability within three years, with revenue forecasts exceeding **OMR 670,000** in its third year of operation.
+Financially, the company is on a strong growth trajectory. Based on its diversified revenue model—which includes SaaS subscriptions, transaction fees, and premium AI tool access—innovative-enterprises is projected to achieve profitability within three years, with revenue forecasts exceeding **OMR 670,000** in its third year of operation.
 
-By leveraging its AI-powered operational model, INNOVATIVE ENTERPRISES is set to become a key player in Oman's digital transformation, aligning with the goals of Oman Vision 2040 to foster a diversified, knowledge-based economy.
+By leveraging its AI-powered operational model, innovative-enterprises is set to become a key player in Oman's digital transformation, aligning with the goals of Oman Vision 2040 to foster a diversified, knowledge-based economy.
 
-### **About Innovative Enterprises**
-Innovative Enterprises is a Muscat-based Omani SME specializing in emerging technology solutions, including artificial intelligence, cloud computing, and cybersecurity. The company is dedicated to delivering high-impact digital products and services to both government and commercial clients in the Sultanate of Oman and the GCC, operating with a unique model that integrates human expertise with a sophisticated digital workforce.
+### **About innovative-enterprises**
+innovative-enterprises is a Muscat-based Omani SME specializing in emerging technology solutions, including artificial intelligence, cloud computing, and cybersecurity. The company is dedicated to delivering high-impact digital products and services to both government and commercial clients in the Sultanate of Oman and the GCC, operating with a unique model that integrates human expertise with a sophisticated digital workforce.
 
 ### **Media Contact**
 Huda Al Salmi
