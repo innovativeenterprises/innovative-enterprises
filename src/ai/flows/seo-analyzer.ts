@@ -73,7 +73,7 @@ const seoAnalyzerFlow = ai.defineFlow(
     const scrapedData = await scrapeAndSummarize({ source: url, isUrl: true });
     
     if (!scrapedData.summary) {
-      throw new Error(`Could not scrape content from ${"'" + url + "'"}. The URL may be inaccessible or javascript-rendered.`);
+      throw new Error(`Could not retrieve content from the URL. It might be inaccessible or require JavaScript to render.`);
     }
 
     // Step 2: Use the SEO specialist agent to get structured analysis.
