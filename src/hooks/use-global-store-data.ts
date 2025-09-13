@@ -42,7 +42,7 @@ export const setServices = (updater: (prev: Service[]) => Service[]) => {
 };
 export const useServicesData = () => {
     const services = useStoreData(state => state.services);
-    return useMemo(() => ({ services, isClient: true }), [services]);
+    return { services, isClient: true };
 };
 
 export const setProducts = (updater: (prev: Product[]) => Product[]) => {
@@ -50,7 +50,7 @@ export const setProducts = (updater: (prev: Product[]) => Product[]) => {
 };
 export const useProductsData = () => {
     const products = useStoreData(state => state.products);
-    return useMemo(() => ({ products, isClient: true }), [products]);
+    return { products, isClient: true };
 };
 
 export const setClients = (updater: (prev: Client[]) => Client[]) => {
@@ -261,7 +261,7 @@ export const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => {
 };
 export const usePricingData = () => {
     const pricing = useStoreData(state => state.pricing);
-    return { pricing, isClient: true };
+    return { pricing, setPricing, isClient: true };
 };
 
 export const useCfoData = () => {
@@ -284,3 +284,5 @@ export const useStudentsData = () => {
     const students = useStoreData(state => state.students);
     return { students, setStudents, isClient: true };
 };
+
+    
