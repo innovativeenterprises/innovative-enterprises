@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useRef, useState, useEffect } from "react";
@@ -128,16 +127,20 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    const { leadership } = useStaffData();
-    const { services } = useServicesData();
-    const { settings } = useSettingsData();
+    const { leadership, isClient: isStaffClient } = useStaffData();
+    const { services, isClient: isServicesClient } = useServicesData();
+    const { settings, isClient: isSettingsClient } = useSettingsData();
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-
-    // Set the date only on the client-side to prevent hydration mismatch
+    const [isReady, setIsReady] = useState(false);
+    
+    // This effect runs only once on the client after initial mount.
     useEffect(() => {
+        // We set isReady to true here to indicate we are on the client.
+        // The data hooks will handle fetching the actual data.
+        setIsReady(true);
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
     }, []);
 
@@ -188,10 +191,10 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    // The component is only fully "ready" on the client, after all hooks have run and returned data.
-    const isReady = !!(settings && leadership && services && generatedDate);
+    // The component is fully ready only on the client and when all data has been loaded.
+    const isDataLoaded = isReady && isStaffClient && isServicesClient && isSettingsClient;
     
-    if (!isReady) {
+    if (!isDataLoaded) {
         return (
             <Button variant="outline" size="lg" disabled>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
@@ -206,14 +209,16 @@ export default function CompanyProfileDownloader() {
     return (
         <>
             <div style={{ position: 'fixed', left: '-200vw', top: 0, zIndex: -100 }}>
-                 <ProfileTemplate 
-                    innerRef={profileRef}
-                    leadership={enabledLeadership}
-                    services={enabledServices}
-                    products={products}
-                    settings={settings}
-                    generatedDate={generatedDate}
-                />
+                 {isDataLoaded && (
+                    <ProfileTemplate 
+                        innerRef={profileRef}
+                        leadership={enabledLeadership}
+                        services={enabledServices}
+                        products={products}
+                        settings={settings}
+                        generatedDate={generatedDate}
+                    />
+                 )}
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
                  {isGenerating ? (
@@ -229,3 +234,5 @@ export default function CompanyProfileDownloader() {
         </>
     );
 }
+
+    
