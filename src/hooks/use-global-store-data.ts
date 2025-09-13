@@ -333,3 +333,28 @@ export function useStudentsData() {
         isClient: true,
     };
 };
+// Export setters directly
+export const { setServices } = useServicesData();
+export const { setProducts } = useProductsData();
+export const { setClients, setTestimonials } = useClientsData();
+export const { setProviders } = useProvidersData();
+export const { setLeadership, setStaff, setAgentCategories } = useStaffData();
+export const { setCommunities } = useCommunitiesData();
+export const { setCommunityEvents, setCommunityFinances } = useCommunityHubData();
+export const { setMembers } = useMembersData();
+export const { setProjectStages } = useProjectStagesData();
+export const { setSettings } = useSettingsData();
+export const { setAssets } = useAssetsData();
+export const { setInvestors } = useInvestorsData();
+export const { setKnowledgeBase } = useKnowledgeData();
+export const { setAgencies } = useAgenciesData();
+export const { setWorkers } = useWorkersData();
+export const { setRaahaRequests } = useRequestsData();
+export const { setLeases } = useLeasesData();
+export const { setProperties } = usePropertiesData();
+export const { setStairspaceListings } = useStairspaceData();
+export const { setStairspaceRequests } = useStairspaceRequestsData();
+export const { setOpportunities } = useOpportunitiesData();
+export const { setCostSettings } = useCostSettingsData();
+export const { setPricing } = usePricingData();
+export const { setStudents } = useStudentsData();
