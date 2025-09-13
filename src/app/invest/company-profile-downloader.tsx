@@ -126,7 +126,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    // All hooks are called unconditionally at the top level.
+    // All hooks are called unconditionally at the top of the component.
     const { leadership } = useStaffData();
     const { services } = useServicesData();
     const { settings } = useSettingsData();
@@ -136,9 +136,9 @@ export default function CompanyProfileDownloader() {
     const profileRef = useRef<HTMLDivElement>(null);
     const [isReady, setIsReady] = useState(false);
 
+    // This effect now correctly depends on the data from the hooks.
+    // It will run once on the client after the data is loaded.
     useEffect(() => {
-        // This effect runs on the client after hydration.
-        // We set the date and readiness state once all data is available.
         if (settings && leadership && services) {
             setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
             setIsReady(true);
@@ -214,7 +214,7 @@ export default function CompanyProfileDownloader() {
                     leadership={enabledLeadership}
                     services={enabledServices}
                     products={products}
-                    settings={settings}
+                    settings={settings!}
                     generatedDate={generatedDate || ''}
                 />
             </div>
