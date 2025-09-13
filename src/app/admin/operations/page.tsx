@@ -9,11 +9,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Palette } from "lucide-react";
 import KnowledgeTable from '../knowledge-table';
 import ThemeGenerator from "./theme-generator";
-import { useKnowledgeData } from "@/hooks/use-global-store-data";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 
 export default function AdminOperationsPage() {
-  const { knowledgeBase, isClient } = useKnowledgeData();
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -56,3 +54,5 @@ export default function AdminOperationsPage() {
     </div>
   );
 }
+
+    

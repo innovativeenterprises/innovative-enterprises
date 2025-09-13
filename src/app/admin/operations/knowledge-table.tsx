@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -26,7 +25,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useKnowledgeData } from "@/hooks/use-global-store-data";
+import { useKnowledgeData, setKnowledgeBase } from "@/hooks/use-global-store-data";
 import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
 
 const UploadDocumentSchema = z.object({
@@ -311,7 +310,8 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase, isClient }: { knowledgeBase: KnowledgeDocument[], setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => void) => void, isClient: boolean }) {
+export default function KnowledgeTable() {
+    const { knowledgeBase, isClient } = useKnowledgeData();
     const { toast } = useToast();
 
     const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {
@@ -461,3 +461,4 @@ export default function KnowledgeTable({ knowledgeBase, setKnowledgeBase, isClie
         </Card>
     );
 }
+    
