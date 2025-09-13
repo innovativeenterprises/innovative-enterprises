@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useRef, useState, useEffect } from "react";
@@ -127,7 +128,6 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    // Call all hooks unconditionally at the top level
     const { leadership } = useStaffData();
     const { services } = useServicesData();
     const { settings } = useSettingsData();
@@ -135,19 +135,14 @@ export default function CompanyProfileDownloader() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-    const [isReady, setIsReady] = useState(false);
-    
-    // This effect runs on the client and sets the isReady flag
-    // once all the necessary data from our custom hooks is available.
+
+    // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
-        if (settings && leadership && services) {
-            setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-            setIsReady(true);
-        }
-    }, [settings, leadership, services]);
+        setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+    }, []);
 
     const handleDownload = async () => {
-        if (!profileRef.current || !isReady) return;
+        if (!profileRef.current || !settings) return;
         setIsGenerating(true);
         toast({ title: 'Generating PDF...', description: 'Please wait while we create your company profile.' });
         
@@ -193,6 +188,9 @@ export default function CompanyProfileDownloader() {
         }
     };
     
+    // The component is only fully "ready" on the client, after all hooks have run and returned data.
+    const isReady = !!(settings && leadership && services && generatedDate);
+    
     if (!isReady) {
         return (
             <Button variant="outline" size="lg" disabled>
@@ -213,8 +211,8 @@ export default function CompanyProfileDownloader() {
                     leadership={enabledLeadership}
                     services={enabledServices}
                     products={products}
-                    settings={settings!}
-                    generatedDate={generatedDate || ''}
+                    settings={settings}
+                    generatedDate={generatedDate}
                 />
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
