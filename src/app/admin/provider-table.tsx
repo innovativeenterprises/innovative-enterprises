@@ -269,48 +269,6 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
     );
 };
 
-const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
-
-    useEffect(() => {
-        if (!expiry) {
-            setDaysUntilExpiry(null);
-            return;
-        }
-        const expiryDate = new Date(expiry);
-        const now = new Date();
-        const diffTime = expiryDate.getTime() - now.getTime();
-        setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
-    }, [expiry]);
-
-
-    if (tier === 'None') {
-        return <Badge variant="secondary">No Subscription</Badge>;
-    }
-    if (tier === 'Lifetime') {
-        return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
-    }
-    
-    if (daysUntilExpiry === null) {
-         return <Badge variant="outline">{tier}</Badge>;
-    }
-    
-    const totalDuration = tier === 'Yearly' ? 365 : 30;
-    const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
-
-    return (
-        <div className="w-full min-w-[150px]">
-            <div className="flex justify-between items-center mb-1">
-                <Badge variant="outline">{tier}</Badge>
-                <div className="text-xs text-muted-foreground">
-                    {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
-                </div>
-            </div>
-            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progressValue}%`} />
-        </div>
-    )
-}
-
 export default function ProviderTable() {
     const { providers, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
@@ -359,6 +317,40 @@ export default function ProviderTable() {
             default: return <Badge variant="outline">{status}</Badge>;
         }
     }
+    
+    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
+         if (tier === 'None') {
+            return <Badge variant="secondary">No Subscription</Badge>;
+        }
+        if (tier === 'Lifetime') {
+            return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
+        }
+
+        if (!expiry) {
+            return <Badge variant="outline">{tier}</Badge>;
+        }
+        
+        const now = new Date();
+        const expiryDate = new Date(expiry);
+        const diffTime = expiryDate.getTime() - now.getTime();
+        const daysUntilExpiry = Math.ceil(diffTime / (1000 * 3600 * 24));
+        
+        const totalDuration = tier === 'Yearly' ? 365 : 30;
+        const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
+
+        return (
+            <div className="w-full min-w-[150px]">
+                <div className="flex justify-between items-center mb-1">
+                    <Badge variant="outline">{tier}</Badge>
+                    <div className="text-xs text-muted-foreground">
+                        {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
+                    </div>
+                </div>
+                <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progressValue}%`} />
+            </div>
+        )
+    }
+
 
     return (
         <Card>
@@ -410,7 +402,7 @@ export default function ProviderTable() {
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell>
-                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} />
+                                    {isClient ? <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} /> : <Skeleton className="h-8 w-full" />}
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
@@ -439,3 +431,4 @@ export default function ProviderTable() {
         </Card>
     );
 }
+

@@ -13,13 +13,17 @@ type GenericRequest = Record<string, any>;
 
 // Client-side component to prevent hydration errors with time formatting
 export const TimeAgoCell = ({ date }: { date: string }) => {
-    const [timeAgo, setTimeAgo] = useState<string>("...");
+    const [timeAgo, setTimeAgo] = useState<string | null>(null);
 
     useEffect(() => {
         if (date) {
            setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
         }
     }, [date]);
+
+    if (timeAgo === null) {
+        return <Skeleton className="h-4 w-[100px]" />;
+    }
 
     return <span>{timeAgo}</span>;
 };
