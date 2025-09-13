@@ -54,7 +54,7 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
 
 // Main Dashboard Component
 export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, isClient } = useCfoData();
+  const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
