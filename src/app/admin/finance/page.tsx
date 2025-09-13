@@ -2,17 +2,16 @@
 'use client';
 
 import InvestorTable from "../investor-table";
-import { useInvestorsData, useCfoData } from "@/hooks/use-global-store-data";
+import { useInvestorsData, setInvestors } from "@/hooks/use-global-store-data";
 import CfoDashboard from "../cfo-dashboard";
 
 export default function AdminFinancePage() {
-  const investorData = useInvestorsData();
-  const cfoData = useCfoData();
+  const { investors, isClient } = useInvestorsData();
 
   return (
     <div className="space-y-8">
-        <CfoDashboard {...cfoData}/>
-        <InvestorTable {...investorData} />
+        <CfoDashboard />
+        <InvestorTable investors={investors} setInvestors={setInvestors} isClient={isClient} />
     </div>
   );
 }
