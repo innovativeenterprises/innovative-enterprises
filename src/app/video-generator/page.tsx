@@ -10,7 +10,6 @@ import type { GenerateVideoOutput } from '@/ai/flows/video-generator';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Download, Video, Mic } from 'lucide-react';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
