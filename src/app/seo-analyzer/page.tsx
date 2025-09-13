@@ -130,7 +130,7 @@ export default function SeoAnalyzerPage() {
                             <CardHeader><CardTitle className="text-lg">Content Analysis</CardTitle></CardHeader>
                             <CardContent>
                                 <p className="text-sm"><strong>Keyword Density:</strong> <Badge variant="secondary">{response.contentAnalysis.keywordDensity}</Badge></p>
-                                <p className="text-sm mt-4 text-muted-foreground">{response.contentAnalysis.contentAnalysis.recommendation}</p>
+                                <p className="text-sm mt-4 text-muted-foreground">{response.contentAnalysis.recommendation}</p>
                             </CardContent>
                          </Card>
                     </CardContent>
