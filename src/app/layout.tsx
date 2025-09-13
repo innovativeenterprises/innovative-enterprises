@@ -1,3 +1,4 @@
+
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,11 @@ export const metadata: Metadata = {
     description: "The digital operating system for SMEs in Oman. Automate, delegate, and grow with our integrated suite of AI tools and service marketplaces.",
     images: ["https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png"],
   },
+  verification: {
+    other: {
+      "facebook-domain-verification": "7hbqn30n21c3su6iuyi0ndrbodkhgv",
+    },
+  },
 }
 
 
@@ -49,9 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <head>
-        <meta name="facebook-domain-verification" content="7hbqn30n21c3su6iuyi0ndrbodkhgv" />
-      </head>
+      <head />
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <ClientLayout>{children}</ClientLayout>
       </body>
