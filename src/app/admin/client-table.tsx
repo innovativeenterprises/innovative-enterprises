@@ -19,7 +19,7 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fileToDataURI } from "@/lib/utils";
-import { useClientsData } from "@/hooks/use-global-store-data";
+import { useClientsData, setClients, setTestimonials } from "@/hooks/use-global-store-data";
 
 // Schemas
 const ClientSchema = z.object({
@@ -49,38 +49,34 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
     const form = useForm<z.infer<typeof ClientSchema>>({
         resolver: zodResolver(ClientSchema),
-        defaultValues: {
+    });
+
+    const watchLogoFile = form.watch('logoFile');
+    const watchLogoUrl = form.watch('logoUrl');
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        form.reset({
             name: client?.name || "",
             aiHint: client?.aiHint || "",
             logoUrl: client?.logo || "",
             logoFile: undefined,
-        },
-    });
+        });
 
-    const watchLogoUrl = form.watch('logoUrl');
-    const watchLogoFile = form.watch('logoFile');
+        setImagePreview(client?.logo || null);
+    }, [isOpen, client, form]);
 
     useEffect(() => {
+        if (!isOpen) return;
         if (watchLogoFile && watchLogoFile.length > 0) {
             fileToDataURI(watchLogoFile[0]).then(setImagePreview);
         } else if (watchLogoUrl) {
             setImagePreview(watchLogoUrl);
         } else {
-             setImagePreview(client?.logo || null);
+            setImagePreview(client?.logo || null);
         }
-    }, [watchLogoUrl, watchLogoFile, client?.logo]);
-    
-    useEffect(() => { 
-        if(isOpen) {
-            form.reset({ 
-                name: client?.name || "", 
-                aiHint: client?.aiHint || "",
-                logoUrl: client?.logo || "",
-                logoFile: undefined,
-            });
-             setImagePreview(client?.logo || null);
-        }
-    }, [client, form, isOpen]);
+    }, [watchLogoUrl, watchLogoFile, client?.logo, isOpen]);
     
     const onSubmit: SubmitHandler<z.infer<typeof ClientSchema>> = async (data) => {
         let logoValue = "";
@@ -156,7 +152,12 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
         resolver: zodResolver(TestimonialSchema),
         defaultValues: testimonial || { quote: "", author: "", company: "" },
     });
-    useEffect(() => { if(isOpen) {form.reset(testimonial || { quote: "", author: "", company: "" })} }, [testimonial, form, isOpen]);
+    
+    useEffect(() => { 
+        if(isOpen) {
+            form.reset(testimonial || { quote: "", author: "", company: "" });
+        }
+    }, [testimonial, form, isOpen]);
 
     const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
         onSave(data, testimonial?.id);
@@ -193,7 +194,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 // Main Component
 export default function ClientTable() { 
-    const { clients, setClients, testimonials, setTestimonials } = useClientsData();
+    const { clients, testimonials } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');

@@ -17,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { ProjectStage } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProjectStagesData } from "@/hooks/use-global-store-data";
+import { useProjectStagesData, setStages } from "@/hooks/use-global-store-data";
 
 const StageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -38,7 +38,6 @@ const AddEditStageDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<StageValues>({
         resolver: zodResolver(StageSchema),
-        defaultValues: stage || { name: "", description: "" },
     });
 
     useEffect(() => {
@@ -80,7 +79,7 @@ const AddEditStageDialog = ({
 
 
 export default function StageTable() {
-    const { stages, setStages, isClient } = useProjectStagesData();
+    const { stages, isClient } = useProjectStagesData();
     const { toast } = useToast();
 
     const handleSave = (values: StageValues, id?: string) => {

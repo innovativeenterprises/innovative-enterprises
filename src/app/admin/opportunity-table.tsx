@@ -19,7 +19,7 @@ import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities";
 import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { useOpportunitiesData } from "@/hooks/use-global-store-data";
+import { useOpportunitiesData, setOpportunities } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -35,7 +35,6 @@ const AddEditOpportunityDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<OpportunityValues>({
         resolver: zodResolver(OpportunitySchema),
-        defaultValues: opportunity || { title: "", type: "", prize: "", deadline: "", description: "", status: "Open" },
     });
 
     useEffect(() => {
@@ -106,13 +105,8 @@ const AddEditOpportunityDialog = ({
 }
 
 export default function OpportunityTable() {
-    const { opportunities, setOpportunities } = useOpportunitiesData();
-    const [isClient, setIsClient] = useState(false);
+    const { opportunities, isClient } = useOpportunitiesData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
         if (id) {
