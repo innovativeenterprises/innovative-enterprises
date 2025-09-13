@@ -33,7 +33,7 @@ export default function ProviderDetailPage() {
         }
     }
     
-    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry: string }) => {
+    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string }) => {
         const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
         const [isSubClient, setIsSubClient] = useState(false);
 
