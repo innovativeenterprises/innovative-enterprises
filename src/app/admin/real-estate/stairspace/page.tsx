@@ -8,7 +8,7 @@ import { ArrowLeft, GripVertical, Search, CheckCircle, Clock } from 'lucide-reac
 import Link from 'next/link';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { useToast } from '@/hooks/use-toast';
-import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
+import { useStairspaceRequestsData, setStairspaceRequests } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -138,7 +138,7 @@ const StatusColumn = ({ status, requests, onScheduleInterview }: { status: typeo
 
 
 export default function StairspaceRequestsPage() {
-    const { stairspaceRequests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
+    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
