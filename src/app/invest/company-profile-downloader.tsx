@@ -126,6 +126,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
+    // Call all hooks unconditionally at the top level
     const { leadership } = useStaffData();
     const { services } = useServicesData();
     const { settings } = useSettingsData();
@@ -133,15 +134,14 @@ export default function CompanyProfileDownloader() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-
+    
+    // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
-        // Set the date only on the client-side to prevent hydration mismatch
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
     }, []);
 
-    // This is the correct position for the early return.
-    // It is after all hooks have been called.
-    if (!settings) {
+    // Conditional logic and rendering should come *after* all hooks.
+    if (!settings || !leadership || !services) {
         return (
             <Button variant="outline" size="lg" disabled>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
@@ -204,16 +204,14 @@ export default function CompanyProfileDownloader() {
     return (
         <>
             <div style={{ position: 'fixed', left: '-200vw', top: 0, zIndex: -100 }}>
-                {settings && (
-                    <ProfileTemplate 
-                        innerRef={profileRef}
-                        leadership={enabledLeadership}
-                        services={enabledServices}
-                        products={products}
-                        settings={settings}
-                        generatedDate={generatedDate || ''}
-                    />
-                )}
+                 <ProfileTemplate 
+                    innerRef={profileRef}
+                    leadership={enabledLeadership}
+                    services={enabledServices}
+                    products={products}
+                    settings={settings}
+                    generatedDate={generatedDate || ''}
+                />
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating || !generatedDate}>
                  {isGenerating ? (
