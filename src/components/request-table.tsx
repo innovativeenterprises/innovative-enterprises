@@ -21,7 +21,11 @@ export const TimeAgoCell = ({ date }: { date: string }) => {
         }
     }, [date]);
 
-    return <span>{timeAgo ?? '...'}</span>;
+    if(timeAgo === null) {
+      return <span>...</span>
+    }
+
+    return <span>{timeAgo}</span>;
 };
 
 

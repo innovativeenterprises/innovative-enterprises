@@ -39,7 +39,6 @@ const AddEditEventDialog = ({ event, onSave, children }: { event?: CommunityEven
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<EventValues>({
         resolver: zodResolver(EventSchema),
-        defaultValues: event ? { ...event, date: new Date(event.date) } : { title: "", date: new Date(), location: "", description: "" },
     });
 
     useEffect(() => {

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -270,10 +269,20 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => setIsClient(true), []);
+    const [clientState, setClientState] = useState<{ isClient: boolean, daysUntilExpiry: number | null }>({ isClient: false, daysUntilExpiry: null });
 
-    if (!isClient) {
+    useEffect(() => {
+        let days: number | null = null;
+        if (expiry) {
+            const expiryDate = new Date(expiry);
+            const now = new Date();
+            const diffTime = expiryDate.getTime() - now.getTime();
+            days = Math.ceil(diffTime / (1000 * 3600 * 24));
+        }
+        setClientState({ isClient: true, daysUntilExpiry: days });
+    }, [expiry]);
+
+    if (!clientState.isClient) {
         return <Skeleton className="h-6 w-24" />;
     }
     
@@ -284,14 +293,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
     }
     
-    let daysUntilExpiry: number | null = null;
-    if (expiry) {
-        const expiryDate = new Date(expiry);
-        const now = new Date();
-        const diffTime = expiryDate.getTime() - now.getTime();
-        daysUntilExpiry = Math.ceil(diffTime / (1000 * 3600 * 24));
-    }
-    
+    const { daysUntilExpiry } = clientState;
     if (daysUntilExpiry === null) {
          return <Badge variant="outline">{tier}</Badge>;
     }
@@ -440,4 +442,3 @@ export default function ProviderTable() {
         </Card>
     );
 }
-
