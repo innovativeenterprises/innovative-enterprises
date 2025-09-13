@@ -32,6 +32,9 @@ import type { CartItem } from '@/lib/global-store';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
+import SanadHubIcon from '../icons/sanad-hub-icon';
+import BusinessHubIcon from '../icons/business-hub-icon';
+import AmeenSmartLockIcon from '../icons/ameen-smart-lock-icon';
 
 const navLinks: { href: string; label: string }[] = [
   { href: "/team", label: "Our Team" },
@@ -45,13 +48,13 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 title: "Sanad Hub Platform",
                 href: "/sanad-hub",
                 description: "A digital gateway connecting users with Sanad Service Centres across Oman for task delegation and service bidding.",
-                icon: Shield,
+                icon: SanadHubIcon,
             },
             {
                 title: "Business Hub",
                 href: "/business-hub",
                 description: "A B2B marketplace connecting businesses with each other and with new clients for opportunities.",
-                icon: Handshake,
+                icon: BusinessHubIcon,
             },
              {
                 title: "Community Hub",
