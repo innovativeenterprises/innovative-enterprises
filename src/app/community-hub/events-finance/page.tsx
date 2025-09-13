@@ -24,7 +24,7 @@ import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { AddEditTransactionDialog, type TransactionValues } from './transaction-form';
-import { useCommunityHubData } from '@/hooks/use-global-store-data';
+import { useCommunityHubData, setCommunityEvents, setCommunityFinances } from '@/hooks/use-global-store-data';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const EventSchema = z.object({
@@ -106,38 +106,38 @@ const AddEditEventDialog = ({ event, onSave, children }: { event?: CommunityEven
 };
 
 export default function EventsFinancePage() {
-    const { events, setEvents, finances, setFinances, isClient } = useCommunityHubData();
+    const { events, finances, isClient } = useCommunityHubData();
     const { toast } = useToast();
 
     const handleSaveEvent = (values: EventValues, id?: string) => {
         const eventData = { ...values, date: values.date.toISOString() };
         if (id) {
-            setEvents(prev => prev.map(e => e.id === id ? { ...e, ...eventData } : e));
+            setCommunityEvents(prev => prev.map(e => e.id === id ? { ...e, ...eventData } : e));
             toast({ title: "Event updated." });
         } else {
             const newEvent: CommunityEvent = { ...eventData, id: `event_${Date.now()}`, rsvps: 0 };
-            setEvents(prev => [newEvent, ...prev]);
+            setCommunityEvents(prev => [newEvent, ...prev]);
             toast({ title: "Event created." });
         }
     };
 
     const handleDeleteEvent = (id: string) => {
-        setEvents(prev => prev.filter(e => e.id !== id));
+        setCommunityEvents(prev => prev.filter(e => e.id !== id));
         toast({ title: "Event removed.", variant: "destructive" });
     };
 
     const handleSaveTransaction = (values: TransactionValues, id?: string) => {
         if (id) {
-            setFinances(prev => prev.map(f => f.id === id ? { ...f, ...values, date: new Date().toISOString() } : f));
+            setCommunityFinances(prev => prev.map(f => f.id === id ? { ...f, ...values, date: new Date().toISOString() } : f));
             toast({ title: "Transaction updated." });
         } else {
             const newTransaction: CommunityFinance = { ...values, id: `fin_${Date.now()}`, date: new Date().toISOString() };
-            setFinances(prev => [newTransaction, ...prev]);
+            setCommunityFinances(prev => [newTransaction, ...prev]);
             toast({ title: "Transaction added." });
         }
     };
      const handleDeleteTransaction = (id: string) => {
-        setFinances(prev => prev.filter(f => f.id !== id));
+        setCommunityFinances(prev => prev.filter(f => f.id !== id));
         toast({ title: "Transaction removed.", variant: "destructive" });
     };
 
