@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Community } from "@/lib/communities";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { useStaffData, useCommunitiesData, setCommunities } from '@/hooks/use-global-store-data';
+import { useStaffData, useCommunitiesData, setCommunities } from "@/hooks/use-global-store-data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";

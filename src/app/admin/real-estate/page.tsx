@@ -2,7 +2,7 @@
 'use client';
 
 import PropertyTable from "../property-table";
-import { useStairspaceData } from "@/hooks/use-global-store-data";
+import { useStairspaceData, useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 import StairspaceListingGrid from "../stairspace-listing-grid";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
