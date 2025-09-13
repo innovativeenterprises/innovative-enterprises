@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [displayState, setDisplayState] = useState<{isClient: boolean, daysRemaining: number | null}>({ isClient: false, daysRemaining: null });
+    const [displayState, setDisplayState] = useState<{isClient: boolean, daysRemaining: number | null, formattedDate: string}>({ isClient: false, daysRemaining: null, formattedDate: '' });
 
     useEffect(() => {
         const dueDate = new Date(date);
@@ -24,18 +24,22 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
         today.setHours(0, 0, 0, 0);
         const diffTime = dueDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
-        setDisplayState({ isClient: true, daysRemaining: diffDays });
+        setDisplayState({ 
+            isClient: true, 
+            daysRemaining: diffDays,
+            formattedDate: new Intl.DateTimeFormat('en-US').format(dueDate),
+        });
     }, [date]);
 
     if (!displayState.isClient) {
         return <Skeleton className="h-4 w-24 mt-1" />;
     }
 
-    const { daysRemaining } = displayState;
+    const { daysRemaining, formattedDate } = displayState;
 
     return (
         <div className={`text-sm text-muted-foreground ${className}`}>
-            Due: {date}
+            Due: {formattedDate}
             {daysRemaining !== null && (
                 daysRemaining >= 0 ? (
                     <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
@@ -50,7 +54,7 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
 
 // Main Dashboard Component
 export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
+  const { kpiData, transactionData, upcomingPayments, vatPayment, isClient } = useCfoData();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {

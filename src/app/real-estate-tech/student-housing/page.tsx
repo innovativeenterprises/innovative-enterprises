@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
+import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
 import { useLeasesData, setSignedLeases as setLeases } from '@/hooks/use-global-store-data';
@@ -16,19 +17,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
 export default function StudentHousingPage() {
-    const { leases, setLeases } = useLeasesData();
+    const { leases, isClient } = useLeasesData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
 
     const handleDelete = (id: string) => {
         setLeases(prev => prev.filter(lease => lease.id !== id));
         toast({ title: "Housing Agreement Deleted", description: "The student housing agreement has been removed from your dashboard.", variant: "destructive" });
     };
+
+    const totalMonthlyRent = leases.reduce((sum, lease) => {
+        if (lease.status === 'Active' && lease.contractType === 'Tenancy Agreement' && lease.pricePeriod === 'per month') {
+            return sum + lease.price;
+        }
+        return sum;
+    }, 0);
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -48,6 +50,21 @@ export default function StudentHousingPage() {
                         <p className="mt-4 text-lg text-muted-foreground">
                             A centralized dashboard to view, manage, and track all student housing and accommodation agreements.
                         </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6 mb-8">
+                         <Card>
+                             <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
+                             <CardContent className="text-3xl font-bold text-primary">{isClient ? leases.filter(l => l.status === 'Active').length : <Skeleton className="h-8 w-1/2" />}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">{isClient ? `OMR ${totalMonthlyRent.toLocaleString()}`: <Skeleton className="h-8 w-3/4" />}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">{isClient ? leases.filter(l => l.endDate && new Date(l.endDate) > new Date() && new Date(l.endDate).getMonth() === new Date().getMonth() + 1).length : <Skeleton className="h-8 w-1/2" />}</CardContent>
+                        </Card>
                     </div>
 
                     <Card>

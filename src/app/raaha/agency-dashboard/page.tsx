@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAgenciesData, useWorkersData, useRequestsData, setRaahaRequests, setRaahaWorkers, setAgencies } from '@/hooks/use-global-store-data';
+import { useAgenciesData, useWorkersData, useRequestsData, setRaahaRequests } from '@/hooks/use-global-store-data';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { WorkerTable } from './worker-table';
 import { Badge } from '@/components/ui/badge';
@@ -42,7 +42,7 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
 export default function AgencyDashboardPage() {
     const { workers, isClient: isWorkersClient } = useWorkersData();
     const { requests, isClient: isRequestsClient } = useRequestsData();
-    const { agencies, isClient: isAgenciesClient } = useAgenciesData();
+    const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
     const { toast } = useToast();
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');

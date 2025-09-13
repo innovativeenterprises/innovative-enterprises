@@ -13,17 +13,13 @@ type GenericRequest = Record<string, any>;
 
 // Client-side component to prevent hydration errors with time formatting
 export const TimeAgoCell = ({ date }: { date: string }) => {
-    const [timeAgo, setTimeAgo] = useState<string | null>(null);
+    const [timeAgo, setTimeAgo] = useState<string>("...");
 
     useEffect(() => {
         if (date) {
            setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
         }
     }, [date]);
-
-    if(timeAgo === null) {
-      return <span>...</span>
-    }
 
     return <span>{timeAgo}</span>;
 };
@@ -132,24 +128,24 @@ import { setRaahaWorkers } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-export function WorkerTable({ workers, setWorkers, columns, agencyId, isClient }: { workers: Worker[], setWorkers: (updater: (workers: Worker[]) => void) => void, columns: any[], agencyId: string, isClient: boolean }) { 
+export function WorkerTable({ workers, columns, agencyId, isClient }: { workers: Worker[], columns: any[], agencyId: string, isClient: boolean }) { 
     const { toast } = useToast();
 
     const handleSave = (values: any, id?: string) => {
         const skillsArray = values.skills.map((s: { value: any; }) => s.value).filter((s: string) => s.trim() !== '');
         
         if (id) {
-            setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
+            setRaahaWorkers(prev => prev.map(w => w.id === id ? { ...w, ...values, skills: skillsArray } : w));
             toast({ title: "Candidate updated." });
         } else {
             const newWorker: Worker = { ...values, id: `worker_${values.name.toLowerCase().replace(/\s+/g, '_')}`, skills: skillsArray, agencyId: agencyId };
-            setWorkers(prev => [newWorker, ...prev]);
+            setRaahaWorkers(prev => [newWorker, ...prev]);
             toast({ title: "Candidate added." });
         }
     };
     
     const handleDelete = (id: string) => {
-        setWorkers(prev => prev.filter(w => w.id !== id));
+        setRaahaWorkers(prev => prev.filter(w => w.id !== id));
         toast({ title: "Candidate removed.", variant: "destructive" });
     };
 
