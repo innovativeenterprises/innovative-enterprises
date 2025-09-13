@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAgenciesData, useWorkersData, useRequestsData, setRequests, setWorkers } from '@/hooks/use-global-store-data';
+import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-global-store-data';
+import { store } from '@/lib/global-store';
 import { RequestTable } from '@/components/request-table';
 import { WorkerTable } from '@/app/raaha/agency-dashboard/worker-table';
 import { formatDistanceToNow, format } from 'date-fns';
@@ -18,7 +19,6 @@ import type { Worker } from '@/lib/raaha-workers';
 import { ScheduleInterviewDialog, type InterviewValues } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
-
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -41,13 +41,13 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
 
 // Client-side component to prevent hydration errors with time formatting
 const TimeAgoCell = ({ date }: { date: string }) => {
-    const [timeAgo, setTimeAgo] = useState('');
+    const [timeAgo, setTimeAgo] = useState<string | null>(null);
 
     useEffect(() => {
         setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
     }, [date]);
 
-    return <span>{timeAgo || '...'}</span>;
+    return <span>{timeAgo ?? '...'}</span>;
 };
 
 export default function AgencyDashboardPage() {
@@ -68,9 +68,12 @@ export default function AgencyDashboardPage() {
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
     const onSchedule = (id: string, values: InterviewValues) => {
-        setRequests(prev => prev.map(r => 
-            r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
-        ));
+        store.set(state => ({
+            ...state,
+            raahaRequests: state.raahaRequests.map(r => 
+                r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+            )
+        }));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
     };
 
