@@ -110,7 +110,6 @@ const AddEditStaffDialog = ({
             });
             setImagePreview(staffMember?.photo || null);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, staffMember]);
 
     useEffect(() => {
