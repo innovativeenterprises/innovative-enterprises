@@ -42,9 +42,10 @@ import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
 import { initialMembers, type CommunityMember } from './community-members';
 import { initialStockItems, type StockItem } from './stock-items';
-import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
-import { initialBeautyServices, type BeautyService, initialSpecialists, type Specialist } from './beauty-services';
-import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
+import { initialCars, type Car } from './cars';
+import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
+import { initialDailySales, type DailySales, type Transaction as PosTransaction } from './pos-data';
+import { initialGiftCards, type GiftCard } from './gift-cards';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -94,10 +95,10 @@ export type AppState = {
   upcomingPayments: UpcomingPayment[];
   vatPayment: VatPayment;
   cashFlowData: { month: string; income: number; expenses: number }[];
-  beautyCenters: BeautyCenter[];
-  beautyServices: BeautyService[];
-  beautySpecialists: Specialist[];
-  beautyAppointments: BeautyAppointment[];
+  cars: Car[];
+  rentalAgencies: RentalAgency[];
+  dailySales: PosTransaction[];
+  giftCards: GiftCard[];
 };
 
 export const initialState: AppState = {
@@ -137,10 +138,10 @@ export const initialState: AppState = {
   upcomingPayments: upcomingPayments,
   vatPayment: vatPayment,
   cashFlowData: cashFlowData,
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautySpecialists: initialSpecialists,
-  beautyAppointments: initialBeautyAppointments,
+  cars: initialCars,
+  rentalAgencies: initialRentalAgencies,
+  dailySales: initialDailySales,
+  giftCards: initialGiftCards,
 };
 
 // The single source of truth for our application's shared state.

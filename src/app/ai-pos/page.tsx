@@ -5,10 +5,10 @@ import { initialPosProducts, type PosProduct, type CartItem } from '@/lib/pos-da
 import { PosGrid } from './pos-grid';
 import { CheckoutPanel } from './checkout-panel';
 import { useToast } from '@/hooks/use-toast';
-import { store, setDailySales } from '@/hooks/use-global-store-data';
+import { setDailySales } from '@/hooks/use-global-store-data';
 import { BrainCircuit } from 'lucide-react';
 import { SalesAnalyticsChat } from './sales-analytics-chat';
-import { Dialog, DialogTrigger, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 export default function AiPosPage() {

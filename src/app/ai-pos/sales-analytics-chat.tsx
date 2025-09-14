@@ -1,6 +1,6 @@
 'use client';
 
-import { useSettingsData } from "@/hooks/use-global-store-data";
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from "@/components/chat/chat-component";
 import { BarChart, BrainCircuit } from 'lucide-react';
 import { analyzeSalesData } from '@/ai/flows/pos-agent';

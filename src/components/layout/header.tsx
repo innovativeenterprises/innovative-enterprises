@@ -185,6 +185,12 @@ const industriesByCategory: { category: string; items: { title: string; href: st
                 description: "Solutions for car rental agencies, including AI booking agents and fleet management.",
                 icon: Car,
             },
+             {
+                title: "Beauty & Wellness Tech",
+                href: "/beauty-hub/agency-dashboard",
+                description: "A complete management dashboard for salons, spas, and barbershops.",
+                icon: Car,
+            },
         ]
     },
     {
