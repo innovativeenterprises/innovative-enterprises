@@ -183,5 +183,3 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
-
-    

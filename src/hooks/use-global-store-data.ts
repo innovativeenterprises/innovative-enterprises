@@ -281,5 +281,3 @@ export const useStudentsData = () => {
         isClient: true,
     };
 };
-
-    
