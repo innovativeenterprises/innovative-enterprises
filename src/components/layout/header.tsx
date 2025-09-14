@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, Image as ImageIcon, MapPin, Gift } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, Image as ImageIcon, MapPin, Gift, VrHeadset } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -212,7 +212,7 @@ const industriesByCategory: { category: string; items: { title: string; href: st
                 title: "VMALL",
                 href: "/vmall",
                 description: "A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences.",
-                icon: VmallIcon,
+                icon: VrHeadset,
             },
              {
                 title: "AlumniConnect",
