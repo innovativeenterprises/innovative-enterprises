@@ -10,49 +10,39 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import { useCfoData } from '@/hooks/use-global-store-data';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { format } from 'date-fns';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => setIsClient(true), []);
+    const [displayState, setDisplayState] = useState<{isClient: boolean, daysRemaining: number | null, formattedDate: string}>({ isClient: false, daysRemaining: null, formattedDate: '' });
 
-    const { formattedDate, statusText, statusClass } = useMemo(() => {
-        // This calculation now only runs once per date, or when isClient becomes true,
-        // and it won't run on the server.
-        if (!isClient) {
-            return { formattedDate: '', statusText: '', statusClass: '' };
-        }
+    useEffect(() => {
         const dueDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const diffTime = dueDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
         const formatted = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
-        
-        let text = '';
-        if (diffDays >= 0) {
-            text = `(${diffDays} days left)`;
-        } else {
-            text = '(Overdue)';
-        }
+        setDisplayState({ isClient: true, daysRemaining: diffDays, formattedDate: `Due: ${formatted}` });
+    }, [date]);
 
-        return {
-            formattedDate: `Due: ${formatted}`,
-            statusText: text,
-            statusClass: diffDays < 7 ? 'text-destructive font-medium' : '',
-        };
-    }, [date, isClient]);
-
-    if (!isClient) {
+    if (!displayState.isClient) {
         return <Skeleton className="h-4 w-48 mt-1" />;
     }
 
+    const { daysRemaining, formattedDate } = displayState;
+
     return (
         <div className={`text-sm text-muted-foreground ${className}`}>
-           {formattedDate} <span className={statusClass}>{statusText}</span>
+            {formattedDate}
+            {daysRemaining !== null && (
+                daysRemaining >= 0 ? (
+                    <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
+                ) : (
+                    <span className="text-destructive font-medium"> (Overdue)</span>
+                )
+            )}
         </div>
     );
 }
@@ -196,3 +186,5 @@ export default function CfoDashboard() {
     </div>
   );
 }
+
+    

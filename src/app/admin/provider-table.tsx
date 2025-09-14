@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -196,7 +195,7 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
                 const newProviders: Provider[] = rows.map((row, index) => {
                     const columns = row.split(',');
                     if (columns.length !== 8) {
-                        console.warn(`Skipping malformed row ${"'" + (index + 2) + "'"}: ${row}`);
+                        console.warn(`Skipping malformed row ${index + 2}: ${row}`);
                         return null;
                     }
                     return {
@@ -311,13 +310,13 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
                     {clientState.daysUntilExpiry !== null ? (clientState.daysUntilExpiry > 0 ? `Expires in ${Math.ceil(clientState.daysUntilExpiry)} days` : 'Expired') : 'N/A'}
                 </div>
             </div>
-            <Progress value={clientState.progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${'${clientState.progress}'}%`} />
+            <Progress value={clientState.progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${clientState.progress}%`} />
         </div>
     )
 }
 
 export default function ProviderTable() {
-    const { providers, setProviders, isClient } = useProvidersData();
+    const { providers, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
@@ -444,3 +443,5 @@ export default function ProviderTable() {
         </Card>
     );
 }
+
+    
