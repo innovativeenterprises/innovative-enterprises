@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useSyncExternalStore, useState, useEffect, useCallback } from 'react';
@@ -33,10 +34,12 @@ import type { Pricing } from '@/lib/pricing';
 
 
 function useStoreData<T>(selector: (state: any) => T): T {
+    const memoizedSelector = useCallback(selector, []);
+    
     const state = useSyncExternalStore(
-        store.subscribe,
-        () => selector(store.get()),
-        () => selector(store.getSsrState())
+        store.subscribe, 
+        () => memoizedSelector(store.get()), 
+        () => memoizedSelector(store.getSsrState()) // Use the stable server state snapshot
     );
     return state;
 }
@@ -48,7 +51,7 @@ export const useServicesData = () => {
         setServices: (updater: (services: Service[]) => Service[]) => {
             store.set(state => ({ ...state, services: updater(state.services) }));
         },
-        isClient: true, // Now always client-safe due to useSyncExternalStore
+        isClient: true,
     };
 };
 
