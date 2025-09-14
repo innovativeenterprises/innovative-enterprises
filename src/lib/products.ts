@@ -516,7 +516,7 @@ export const initialProducts: Product[] = [
         aiHint: "smart home technology",
         rating: 0,
         enabled: true,
-        href: "/cctv-estimator",
+        href: "/surveillance-estimator",
         adminStatus: "Completed",
     },
     {
