@@ -332,7 +332,7 @@ export const initialProducts: Product[] = [
     {
         id: 30,
         name: "AI Interior Designer",
-        description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
+        description: "Get instant interior design ideas. Upload a photo of your room, describe the style you want, and let our AI generate a stunning new design concept for you.",
         stage: "Live & Operating",
         category: "AI & Creative Tools",
         price: 0,
@@ -356,7 +356,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/pdf-form-filler",
-        adminStatus: 'Completed',
+        adminStatus: "Completed",
         adminNotes: "Service is live and ready for public use.",
     },
     {
