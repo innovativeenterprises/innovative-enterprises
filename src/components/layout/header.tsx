@@ -110,7 +110,7 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
             },
             {
                 title: "DriveSync AI",
-                href: "/drivesync-ai",
+                href: "/drivesync-ai/find-a-car",
                 description: "An AI-powered SaaS platform for car rental agencies with an intelligent booking agent.",
                 icon: Car,
             },

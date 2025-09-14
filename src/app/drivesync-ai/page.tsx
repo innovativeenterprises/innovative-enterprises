@@ -2,15 +2,17 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Car, Search } from 'lucide-react';
+import { Car, Search, ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { initialCars } from '@/lib/cars';
 import { initialRentalAgencies } from '@/lib/rental-agencies';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "DriveSync AI | Innovative Enterprises",
@@ -52,6 +54,11 @@ export default function DriveSyncAiPage() {
                     <p className="mt-4 text-lg text-muted-foreground">
                         Welcome, {agency.name}. Manage your fleet and bookings from one intelligent dashboard.
                     </p>
+                    <div className="mt-6">
+                        <Button asChild>
+                            <Link href="/drivesync-ai/find-a-car">Go to Customer Booking Assistant <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                        </Button>
+                    </div>
                 </div>
                 <div className="max-w-6xl mx-auto mt-12">
                     <Card>
