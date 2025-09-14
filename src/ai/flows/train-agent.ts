@@ -65,13 +65,13 @@ const trainAgentFlow = ai.defineFlow(
   async (input) => {
     let scrapedContent: string[] = [];
 
-    // If URLs are provided, scrape them using the web-scraper agent.
+    // If URLs are provided, scrape them using the web-scraper agent in parallel.
     if (input.knowledgeUrls && input.knowledgeUrls.length > 0) {
         console.log(`Scraping ${input.knowledgeUrls.length} URLs for training data...`);
         const scrapingJobs = input.knowledgeUrls.map(url => scrapeAndSummarize({ source: url, isUrl: true }));
         const results = await Promise.all(scrapingJobs);
         scrapedContent = results.map(r => r.summary);
-        console.log(`Scraped content:`, scrapedContent);
+        console.log(`Scraped content from ${results.length} URLs.`);
     }
     
     // In a real application, you would connect this to a fine-tuning service

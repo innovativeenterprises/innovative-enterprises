@@ -311,7 +311,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
 }
 
 export default function KnowledgeTable() {
-    const { knowledgeBase, isClient } = useKnowledgeData();
+    const { knowledgeBase, setKnowledgeBase, isClient } = useKnowledgeData();
     const { toast } = useToast();
 
     const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {
@@ -327,7 +327,7 @@ export default function KnowledgeTable() {
                 const results = await Promise.all(urlPromises);
                 const newDocs = results.map((analysis, index) => ({
                     id: `kb_${Date.now()}_${index}`,
-                    documentName: analysis.documentName,
+                    documentName: analysis.documentName || `Source ${index+1}`,
                     documentNumber: analysis.documentNumber,
                     institutionName: analysis.institutionName,
                     version: analysis.version,
@@ -349,7 +349,7 @@ export default function KnowledgeTable() {
 
                 const newDoc: KnowledgeDocument = {
                     id: docIdToReplace || `kb_${Date.now()}`,
-                    documentName: analysis.documentName,
+                    documentName: analysis.documentName || 'Unnamed Document',
                     documentNumber: analysis.documentNumber,
                     institutionName: analysis.institutionName,
                     version: analysis.version,
@@ -461,3 +461,4 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
+    
