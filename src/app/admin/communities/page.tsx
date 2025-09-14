@@ -1,7 +1,7 @@
 
 'use client';
 
-import CommunityTable from "../community-table";
+import CommunityTable from "@/app/admin/community-table";
 
 export default function AdminCommunitiesPage() {
   return (
