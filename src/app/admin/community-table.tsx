@@ -92,7 +92,7 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
 };
 
 export default function CommunityTable() {
-    const { communities, setCommunities, isClient } = useCommunitiesData();
+    const { communities, isClient } = useCommunitiesData();
     const { leadership, staff } = useStaffData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
