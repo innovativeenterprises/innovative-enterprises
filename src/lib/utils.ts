@@ -1,3 +1,4 @@
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -18,6 +19,9 @@ export const fileToDataURI = (file: File): Promise<string> => {
 };
 
 export const fileToText = (file: File): Promise<string> => {
+    if (!file) {
+        return Promise.reject(new Error("No file provided."));
+    }
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (event) => resolve(event.target?.result as string);
@@ -50,3 +54,5 @@ export const fileToBase64ContentOnly = (file: File): Promise<string> => {
         reader.readAsDataURL(file);
     });
 };
+
+    

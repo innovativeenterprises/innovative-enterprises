@@ -29,7 +29,10 @@ const prompt = ai.definePrompt({
 {{#if documentDataUri}}
   - Document File: {{media url=documentDataUri}}
 {{else if documentContent}}
-  - Document Text Content: {{{documentContent}}}
+  - Document Text Content:
+  """
+  {{{documentContent}}}
+  """
 {{/if}}
 
 **Instructions:**
@@ -56,3 +59,5 @@ const knowledgeDocumentAnalysisFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    
