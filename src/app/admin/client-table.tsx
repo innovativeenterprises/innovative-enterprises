@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -291,15 +292,15 @@ export default function ClientTable() {
                                     <TableRow><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
                                 ) : (
                                     filteredClients.map(client => (
-                                    <TableRow key={client.id} className="cursor-pointer">
+                                    <TableRow key={client.id}>
                                         <TableCell>
                                             <AddEditClientDialog client={client} onSave={handleSaveClient}>
-                                                <div className="p-2 rounded-md hover:bg-muted">
+                                                <div className="p-2 rounded-md hover:bg-muted cursor-pointer">
                                                     <Image src={client.logo || "https://placehold.co/150x60.png"} alt={client.name} width={100} height={40} className="object-contain" />
                                                 </div>
                                             </AddEditClientDialog>
                                         </TableCell>
-                                        <TableCell><AddEditClientDialog client={client} onSave={handleSaveClient}><div>{client.name}</div></AddEditClientDialog></TableCell>
+                                        <TableCell><AddEditClientDialog client={client} onSave={handleSaveClient}><div className="font-medium cursor-pointer">{client.name}</div></AddEditClientDialog></TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
                                                 <AlertDialog>
@@ -324,15 +325,15 @@ export default function ClientTable() {
                                      <TableRow><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
                                 ) : (
                                 filteredTestimonials.map(t => (
-                                    <TableRow key={t.id} className="cursor-pointer">
+                                    <TableRow key={t.id}>
                                         <TableCell className="italic max-w-md truncate">
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
-                                                <div className="p-2 -m-2 rounded-md hover:bg-muted">"{t.quote}"</div>
+                                                <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>
                                             </AddEditTestimonialDialog>
                                         </TableCell>
                                         <TableCell>
                                             <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
-                                                <div>{t.author}, <span className="text-muted-foreground">{t.company}</span></div>
+                                                <div className="cursor-pointer">{t.author}, <span className="text-muted-foreground">{t.company}</span></div>
                                             </AddEditTestimonialDialog>
                                         </TableCell>
                                         <TableCell className="text-right">

@@ -319,30 +319,28 @@ export default function ProviderTable() {
     }
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-        const [clientState, setClientState] = useState<{daysUntilExpiry: number | null} | null>(null);
+        const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
 
         useEffect(() => {
             if (!expiry) {
-                setClientState({ daysUntilExpiry: null });
+                setDaysUntilExpiry(null);
                 return;
             }
             const now = new Date();
             const diffTime = new Date(expiry).getTime() - now.getTime();
-            setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
+            setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
         }, [expiry]);
 
+        if (!isClient) {
+            return <Skeleton className="h-8 w-full" />;
+        }
+        
          if (tier === 'None') {
             return <Badge variant="secondary">No Subscription</Badge>;
         }
         if (tier === 'Lifetime') {
             return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
         }
-        
-        if (!clientState) {
-            return <Skeleton className="h-8 w-full" />;
-        }
-
-        const { daysUntilExpiry } = clientState;
         
         if (daysUntilExpiry === null) {
              return <Badge variant="outline">{tier}</Badge>;

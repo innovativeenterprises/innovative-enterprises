@@ -21,7 +21,7 @@ export const TimeAgoCell = ({ date }: { date: string }) => {
         }
     }, [date]);
 
-    if (timeAgo === null) {
+    if (!timeAgo) {
         return <Skeleton className="h-4 w-[100px]" />;
     }
 

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useSyncExternalStore } from 'react';
@@ -84,7 +85,10 @@ export function useMembersData() {
 
 export function useProjectStagesData() {
     const stages = useStoreData(state => state.stages);
-    return { stages, isClient: true };
+    return {
+        stages,
+        isClient: true,
+    };
 };
 
 export function useSettingsData() {
@@ -126,6 +130,9 @@ export function useLeasesData() {
     const leases = useStoreData(state => state.signedLeases);
     return {
         leases,
+        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
+            store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
+        },
         isClient: true,
     };
 };
@@ -139,6 +146,9 @@ export function useStairspaceData() {
     const stairspaceListings = useStoreData(state => state.stairspaceListings);
     return {
         stairspaceListings,
+        setStairspaceListings: (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => {
+            store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
+        },
         isClient: true,
     };
 };
@@ -176,6 +186,9 @@ export function useStudentsData() {
     const students = useStoreData(state => state.students);
     return {
         students,
+        setStudents: (updater: (students: Student[]) => Student[]) => {
+            store.set(state => ({...state, students: updater(state.students)}));
+        },
         isClient: true,
     };
 };
