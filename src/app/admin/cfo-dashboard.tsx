@@ -12,6 +12,7 @@ import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/li
 import { useCfoData } from '@/hooks/use-global-store-data';
 import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { format } from 'date-fns';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
@@ -59,7 +60,7 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
 
 // Main Dashboard Component
 export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
+  const { kpiData, transactionData, upcomingPayments, vatPayment, isClient } = useCfoData();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
