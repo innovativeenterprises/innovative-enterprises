@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo } from "react";
@@ -12,11 +11,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { AddEditProductDialog, type ProductValues } from './product-form-dialog';
-import { useProductsData, useProjectStagesData } from "@/hooks/use-global-store-data";
+import { useProductsData, setProducts, useProjectStagesData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProductTable() {
-    const { products, setProducts, isClient } = useProductsData();
+    const { products, isClient } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
