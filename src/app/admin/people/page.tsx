@@ -2,7 +2,8 @@
 'use client';
 
 import StaffTable from "../staff-table";
-import { useStaffData, setLeadership, setStaff, setAgentCategories } from '@/hooks/use-global-store-data';
+import { useStaffData } from '@/hooks/use-global-store-data';
+import { setLeadership, setStaff, setAgentCategories } from "@/hooks/use-global-store-data";
 
 export default function AdminPeoplePage() {
   const staffData = useStaffData();

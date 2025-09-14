@@ -6,6 +6,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { initialStaffData } from '@/lib/agents';
 
 export const AnswerQuestionInputSchema = z.object({
   question: z.string().describe('The user question about Innovative Enterprises.'),
@@ -24,13 +25,18 @@ export const AnswerQuestionOutputSchema = z.object({
 export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
 
-// A simple map of specialists for our tool
-const specialists: Record<string, { name: string; email: string; whatsapp: string }> = {
-    'legal': { name: 'Lexi', email: 'lexi.legal@innovative.om', whatsapp: '+96899123456' },
-    'marketing': { name: 'Mira', email: 'mira.marketing@innovative.om', whatsapp: '+96899123457' },
-    'hr': { name: 'Hira', email: 'hira.hr@innovative.om', whatsapp: '+96899123458' },
-    'sales': { name: 'Sami', email: 'sami.sales@innovative.om', whatsapp: '+96899123459' },
-};
+const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
+
+const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales'): { name: string; email?: string; whatsapp?: string } | null => {
+    switch(department) {
+        case 'legal': return allStaff.find(s => s.name === 'Lexi') || allStaff.find(s => s.name === 'Legal Counsel Office') || null;
+        case 'marketing': return allStaff.find(s => s.name === 'Mira') || null;
+        case 'hr': return allStaff.find(s => s.name === 'Hira') || null;
+        case 'sales': return allStaff.find(s => s.name === 'Sami') || null;
+        default: return null;
+    }
+}
+
 
 export const routeToSpecialistTool = ai.defineTool(
     {
@@ -52,7 +58,7 @@ export const routeToSpecialistTool = ai.defineTool(
         })
     },
     async ({ department, userQuery }) => {
-        const specialist = specialists[department];
+        const specialist = getSpecialist(department);
         if (!specialist) {
             return { isAvailable: false, response: "I'm sorry, I can't find the right person to help with that." };
         }
@@ -73,8 +79,8 @@ export const routeToSpecialistTool = ai.defineTool(
                 response: `I'm sorry, ${specialist.name} is currently assisting other clients. I can help you book a meeting, or you can contact them directly via email or WhatsApp. What works best for you?`,
                 meetingUrl: 'https://calendly.com/your-username',
                 contactOptions: {
-                    email: specialist.email,
-                    whatsapp: specialist.whatsapp,
+                    email: specialist.socials?.email,
+                    whatsapp: specialist.socials?.phone,
                 },
                 suggestedReplies: ["Book a meeting", `Email ${specialist.name}`, `WhatsApp ${specialist.name}`],
             };
