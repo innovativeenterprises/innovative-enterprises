@@ -644,6 +644,20 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/seo-analyzer",
         adminStatus: "Completed",
+    },
+    {
+        id: 50,
+        name: "VEO Video Factory",
+        description: "Generate high-quality video clips from a simple text description using Google's Veo model.",
+        stage: "Live & Operating",
+        category: "AI & Creative Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/video-factory/400/400",
+        aiHint: "video production film",
+        rating: 0,
+        enabled: true,
+        href: "/video-generator",
+        adminStatus: "Completed",
     }
 ];
 

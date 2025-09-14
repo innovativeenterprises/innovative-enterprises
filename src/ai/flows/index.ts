@@ -20,6 +20,7 @@ import {generateLetterOfInterest} from './letter-of-interest';
 import {generateSocialMediaPost} from './social-media-post-generator';
 import {generateTenderResponse} from './tender-response-assistant';
 import {generateImage} from './image-generator';
+import {generateVideo} from './video-generator';
 import {generateProjectPlan} from './project-inception';
 import {generateIctProposal} from './cctv-quotation';
 import {generateAssetRentalProposal} from './asset-rental-agent';
@@ -61,6 +62,7 @@ export {
   generateEnhancedCv,
   generateIctProposal,
   generateImage,
+  generateVideo,
   generateLetterOfInterest,
   generateProjectPlan,
   generateSocialMediaPost,

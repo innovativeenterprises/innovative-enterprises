@@ -185,6 +185,33 @@ const industriesByCategory: { category: string; items: { title: string; href: st
     }
 ]
 
+const aiToolsMenu: { title: string; href: string; description: string, icon: LucideIcon }[] = [
+    {
+        title: "VEO Video Factory",
+        href: "/video-generator",
+        description: "Generate high-quality video clips from a simple text description using Google's Veo model.",
+        icon: Video,
+    },
+    {
+        title: "AI Image Generator",
+        href: "/image-generator",
+        description: "Describe anything you can imagine, and our AI will create a unique, high-quality image for you.",
+        icon: Cpu,
+    },
+    {
+        title: "AI SEO Analyzer",
+        href: "/seo-analyzer",
+        description: "Get on-page SEO analysis and actionable recommendations for any webpage.",
+        icon: Search,
+    },
+    {
+        title: "AI Feasibility Study",
+        href: "/feasibility-study",
+        description: "Let our AI research and generate a comprehensive feasibility study for your next big idea.",
+        icon: BrainCircuit,
+    },
+];
+
 
 const opportunitiesLinks: { title: string; href: string; description: string, icon: LucideIcon }[] = [
    {
@@ -379,6 +406,24 @@ export default function Header() {
                 <NavigationMenuContent>
                   <ul className="grid w-[600px] grid-cols-2 gap-3 p-4">
                     {networkLinks.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        onClick={handleLinkClick}
+                        icon={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+               <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">AI Tools</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[600px] grid-cols-2 gap-3 p-4">
+                    {aiToolsMenu.map((component) => (
                       <ListItem
                         key={component.title}
                         title={component.title}
