@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -193,5 +192,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
-    

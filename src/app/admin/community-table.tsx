@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -16,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Community } from "@/lib/communities";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import { useStaffData, useCommunitiesData, setCommunities } from "@/hooks/use-global-store-data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -96,6 +95,7 @@ export default function CommunityTable() {
     const { communities, setCommunities, isClient } = useCommunitiesData();
     const { leadership, staff } = useStaffData();
     const { toast } = useToast();
+    const [searchTerm, setSearchTerm] = useState('');
 
     const staffMap = useMemo(() => {
         return [...leadership, ...staff].reduce((map, person) => {
@@ -103,6 +103,15 @@ export default function CommunityTable() {
             return map;
         }, {} as Record<string, typeof leadership[0]>);
     }, [leadership, staff]);
+    
+    const filteredCommunities = useMemo(() => {
+        return communities.filter(community =>
+            community.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            community.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            community.manager.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [communities, searchTerm]);
+
 
     const handleSave = (values: CommunityValues, id?: string) => {
         if (id) {
@@ -122,21 +131,32 @@ export default function CommunityTable() {
 
     return (
         <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
                     <CardTitle>Community Hubs</CardTitle>
                     <CardDescription>A list of all created community instances.</CardDescription>
                 </div>
-                <AddEditCommunityDialog onSave={handleSave}>
-                    <Button><PlusCircle /> Create New Community</Button>
-                </AddEditCommunityDialog>
+                 <div className="flex w-full md:w-auto items-center gap-2">
+                    <div className="relative flex-grow">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search communities..."
+                            className="pl-8"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                     <AddEditCommunityDialog onSave={handleSave}>
+                        <Button className="shrink-0"><PlusCircle /> Create New</Button>
+                    </AddEditCommunityDialog>
+                </div>
             </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Country</TableHead><TableHead>Manager</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {!isClient ? (
-                            Array.from({ length: 5 }).map((_, i) => (
+                            Array.from({ length: 3 }).map((_, i) => (
                                 <TableRow key={i}>
                                     <TableCell colSpan={4}>
                                         <Skeleton className="h-10 w-full" />
@@ -144,7 +164,7 @@ export default function CommunityTable() {
                                 </TableRow>
                             ))
                         ) : (
-                            communities.map(community => (
+                            filteredCommunities.map(community => (
                                 <TableRow key={community.id}>
                                     <TableCell className="font-medium">{community.name}</TableCell>
                                     <TableCell>{community.country}</TableCell>
@@ -185,3 +205,4 @@ export default function CommunityTable() {
         </Card>
     );
 }
+

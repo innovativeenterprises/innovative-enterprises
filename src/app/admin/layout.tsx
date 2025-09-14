@@ -13,6 +13,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarSeparator
 } from '@/components/ui/sidebar';
 import {
   LayoutDashboard,
@@ -45,20 +48,49 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
 
-  const menuItems = [
-    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin/coo-dashboard', label: 'AI COO', icon: BrainCircuit },
-    { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
-    { href: '/admin/opportunities', label: 'Opportunities', icon: Trophy },
-    { href: '/admin/finance', label: 'Finance', icon: WalletCards },
-    { href: '/admin/content', label: 'Site Content', icon: FileText },
-    { href: '/admin/network', label: 'Network', icon: Network },
-    { href: '/admin/people', label: 'People', icon: UserCog },
-    { href: '/admin/communities', label: 'Communities', icon: Handshake },
-    { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
-    { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
-    { href: '/admin/operations', label: 'Operations', icon: GanttChartSquare },
+  const dashboards = [
+      { href: '/admin', label: 'Main Dashboard', icon: LayoutDashboard },
+      { href: '/admin/coo-dashboard', label: 'AI COO', icon: BrainCircuit },
   ];
+
+  const contentManagement = [
+      { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
+      { href: '/admin/opportunities', label: 'Opportunities', icon: Trophy },
+      { href: '/admin/content', label: 'Site Content', icon: FileText },
+  ];
+  
+  const networkAndPeople = [
+      { href: '/admin/network', label: 'Partner Network', icon: Network },
+      { href: '/admin/people', label: 'People', icon: UserCog },
+      { href: '/admin/communities', label: 'Communities', icon: Handshake },
+  ];
+  
+  const operations = [
+      { href: '/admin/finance', label: 'Finance', icon: WalletCards },
+      { href: '/admin/operations', label: 'Operations & AI', icon: GanttChartSquare },
+      { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
+      { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
+  ];
+
+
+  const renderMenuItem = (item: { href: string; label: string; icon: React.ElementType }) => (
+    <SidebarMenuItem key={item.href}>
+      <SidebarMenuButton
+        asChild
+        isActive={item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)}
+        tooltip={{
+          children: item.label,
+          side: 'right',
+          align: 'center',
+        }}
+      >
+        <Link href={item.href}>
+          <item.icon />
+          <span>{item.label}</span>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
 
   return (
     <SidebarProvider>
@@ -73,24 +105,25 @@ export default function AdminLayout({
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)}
-                  tooltip={{
-                    children: item.label,
-                    side: 'right',
-                    align: 'center',
-                  }}
-                >
-                  <Link href={item.href}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            <SidebarGroup>
+                <SidebarGroupLabel>Dashboards</SidebarGroupLabel>
+                {dashboards.map(renderMenuItem)}
+            </SidebarGroup>
+             <SidebarSeparator />
+            <SidebarGroup>
+                <SidebarGroupLabel>Content</SidebarGroupLabel>
+                {contentManagement.map(renderMenuItem)}
+            </SidebarGroup>
+            <SidebarSeparator />
+             <SidebarGroup>
+                <SidebarGroupLabel>Network & People</SidebarGroupLabel>
+                {networkAndPeople.map(renderMenuItem)}
+            </SidebarGroup>
+             <SidebarSeparator />
+            <SidebarGroup>
+                <SidebarGroupLabel>Operations</SidebarGroupLabel>
+                {operations.map(renderMenuItem)}
+            </SidebarGroup>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
