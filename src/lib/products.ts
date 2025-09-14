@@ -405,7 +405,7 @@ export const initialProducts: Product[] = [
     {
         id: 35,
         name: "EduFlow Suite",
-        description: "An all-in-one administrative automation platform for schools, featuring smart timetabling, automated admissions workflows, and AI-powered resource allocation.",
+        description: "An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions workflows.",
         stage: "Live & Operating",
         category: "Education Tech",
         price: 0,
@@ -629,6 +629,20 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/drivesync-ai",
+        adminStatus: "Completed",
+    },
+    {
+        id: 49,
+        name: "AI SEO Analyzer",
+        description: "Get on-page SEO analysis and actionable recommendations for any webpage.",
+        stage: "Live & Operating",
+        category: "AI & Creative Tools",
+        price: 0,
+        image: "https://picsum.photos/seed/seo-analyzer/400/400",
+        aiHint: "search engine optimization",
+        rating: 0,
+        enabled: true,
+        href: "/seo-analyzer",
         adminStatus: "Completed",
     }
 ];

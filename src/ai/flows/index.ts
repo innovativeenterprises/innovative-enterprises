@@ -31,12 +31,10 @@ import {generateQuiz} from './quiz-generator';
 import {generateTimetable} from './timetable-generator';
 import {generateElectionMaterials} from './community-elections-agent';
 import {fillPdfForm} from './pdf-form-filler';
-import { findScholarships } from './scholarship-agent';
-import { generateScholarshipEssay } from './scholarship-essay-assistant';
+import { findScholarships } from './guardian-ai/scholarship-agent';
+import { generateScholarshipEssay } from './guardian-ai/scholarship-essay-assistant';
+import { wellbeingCheckin } from './guardian-ai/wellbeing-checkin';
 import { analyzeSeo } from './seo-analyzer';
-import { analyzeExamSession } from './proctoring-agent';
-import { estimateFireSafety } from './fire-safety-estimator';
-import { annotateImage } from './image-annotation';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -77,8 +75,6 @@ export {
   generateElectionMaterials,
   fillPdfForm,
   generateScholarshipEssay,
+  wellbeingCheckin,
   analyzeSeo,
-  analyzeExamSession,
-  estimateFireSafety,
-  annotateImage,
 };

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -12,8 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Download, Copy, PenSquare } from 'lucide-react';
-import { ScholarshipSchema, ScholarshipEssayInputSchema, type ScholarshipEssayOutput } from '@/ai/flows/scholarship-essay-assistant.schema';
-import { generateScholarshipEssay } from '@/ai/flows/scholarship-essay-assistant';
+import { ScholarshipSchema, type ScholarshipEssayOutput } from '@/ai/flows/guardian-ai/scholarship-agent.schema';
+import { generateScholarshipEssay } from '@/ai/flows/guardian-ai/scholarship-essay-assistant';
 import type { Student } from '@/lib/students';
 
 const fileToDataURI = (file: File): Promise<string> => {

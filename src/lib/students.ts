@@ -93,5 +93,3 @@ export const initialStudents: Student[] = [
         amountPaid: 4500,
     },
 ];
-
-    
