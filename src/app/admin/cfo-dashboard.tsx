@@ -26,12 +26,12 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
         setClientState({
             daysRemaining: diffDays,
-            formattedDate: new Intl.DateTimeFormat('en-US').format(dueDate),
+            formattedDate: new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate),
         });
     }, [date]);
 
     if (!clientState) {
-        return <Skeleton className="h-4 w-24 mt-1" />;
+        return <Skeleton className="h-4 w-48 mt-1" />;
     }
 
     const { daysRemaining, formattedDate } = clientState;

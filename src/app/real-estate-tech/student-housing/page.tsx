@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -23,7 +24,13 @@ export default function StudentHousingPage() {
 
     useEffect(() => {
         if(isClient) {
-            const expiringCount = leases.filter(l => l.endDate && new Date(l.endDate) > new Date() && new Date(l.endDate).getMonth() === new Date().getMonth() + 1).length;
+            const expiringCount = leases.filter(l => {
+                if (!l.endDate) return false;
+                const endDate = new Date(l.endDate);
+                const now = new Date();
+                // Check if expiry is in the future but within the next month.
+                return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() === now.getMonth() + 1;
+            }).length;
             setExpiringLeasesCount(expiringCount);
         }
     }, [isClient, leases]);
@@ -44,21 +51,23 @@ export default function StudentHousingPage() {
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
-                <div className="max-w-5xl mx-auto">
-                    <Button asChild variant="outline" className="mb-4">
-                        <Link href="/education-tech/eduflow">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to EduFlow Suite
-                        </Link>
-                    </Button>
-                    <div className="text-center mb-12">
-                        <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                            <Home className="w-10 h-10 text-primary" />
+                <div className="max-w-5xl mx-auto space-y-8">
+                    <div>
+                        <Button asChild variant="outline" className="mb-4">
+                            <Link href="/education-tech/eduflow">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to EduFlow Suite
+                            </Link>
+                        </Button>
+                        <div className="text-center mb-12">
+                            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                                <Home className="w-10 h-10 text-primary" />
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-bold text-primary">Student Housing Management</h1>
+                            <p className="mt-4 text-lg text-muted-foreground">
+                                A centralized dashboard to view, manage, and track all student housing and accommodation agreements.
+                            </p>
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-bold text-primary">Student Housing Management</h1>
-                        <p className="mt-4 text-lg text-muted-foreground">
-                            A centralized dashboard to view, manage, and track all student housing and accommodation agreements.
-                        </p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
