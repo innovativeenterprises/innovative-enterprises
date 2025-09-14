@@ -316,7 +316,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
 }
 
 export default function ProviderTable() {
-    const { providers, isClient } = useProvidersData();
+    const { providers, setProviders } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
@@ -398,50 +398,41 @@ export default function ProviderTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                            <TableRow>
-                                <TableCell colSpan={5} className="h-24">
-                                    <Skeleton className="h-10 w-full" />
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            providers.map(p => (
-                            <TableRow key={p.id} onClick={() => router.push(`/admin/network/${p.id}`)} className="cursor-pointer">
-                                <TableCell className="font-medium">
-                                    <p>{p.name}</p>
-                                    <p className="text-sm text-muted-foreground">{p.email}</p>
-                                </TableCell>
-                                <TableCell>{p.services}</TableCell>
-                                <TableCell>{getStatusBadge(p.status)}</TableCell>
-                                <TableCell>
-                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} />
-                                </TableCell>
-                                <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                                    <div className="flex justify-end gap-1">
-                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)} aria-label={`Edit ${p.name}`}><Edit className="h-4 w-4" /></Button>
-                                        {p.portfolio && (
-                                            <Button asChild variant="ghost" size="icon" aria-label={`View ${p.name}'s portfolio`}>
-                                                <a href={p.portfolio} target="_blank" rel="noopener noreferrer"><LinkIcon /></a>
-                                            </Button>
-                                        )}
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon" aria-label={`Delete ${p.name}`}><Trash2 className="text-destructive" /></Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this provider from your network.</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(p.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        )))}
+                        {providers.map(p => (
+                        <TableRow key={p.id} onClick={() => router.push(`/admin/network/${p.id}`)} className="cursor-pointer">
+                            <TableCell className="font-medium">
+                                <p>{p.name}</p>
+                                <p className="text-sm text-muted-foreground">{p.email}</p>
+                            </TableCell>
+                            <TableCell>{p.services}</TableCell>
+                            <TableCell>{getStatusBadge(p.status)}</TableCell>
+                            <TableCell>
+                                <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} />
+                            </TableCell>
+                            <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                                <div className="flex justify-end gap-1">
+                                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)} aria-label={`Edit ${p.name}`}><Edit className="h-4 w-4" /></Button>
+                                    {p.portfolio && (
+                                        <Button asChild variant="ghost" size="icon" aria-label={`View ${p.name}'s portfolio`}>
+                                            <a href={p.portfolio} target="_blank" rel="noopener noreferrer"><LinkIcon /></a>
+                                        </Button>
+                                    )}
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="ghost" size="icon" aria-label={`Delete ${p.name}`}><Trash2 className="text-destructive" /></Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this provider from your network.</AlertDialogDescription></AlertDialogHeader>
+                                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(p.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
     );
 }
-
-    

@@ -8,14 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import { useCfoData } from '@/hooks/use-global-store-data';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [displayState, setDisplayState] = useState<{isClient: boolean, daysRemaining: number | null, formattedDate: string}>({ isClient: false, daysRemaining: null, formattedDate: '' });
+    const [displayState, setDisplayState] = useState<{ formattedDate: string, daysRemaining: number | null }>({ formattedDate: '', daysRemaining: null });
 
     useEffect(() => {
         const dueDate = new Date(date);
@@ -24,10 +23,10 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
         const diffTime = dueDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
         const formatted = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
-        setDisplayState({ isClient: true, daysRemaining: diffDays, formattedDate: `Due: ${formatted}` });
+        setDisplayState({ formattedDate: `Due: ${formatted}`, daysRemaining: diffDays });
     }, [date]);
 
-    if (!displayState.isClient) {
+    if (!displayState.formattedDate) {
         return <Skeleton className="h-4 w-48 mt-1" />;
     }
 
@@ -50,7 +49,7 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
 
 // Main Dashboard Component
 export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, isClient } = useCfoData();
+  const { kpiData, transactionData, upcomingPayments, vatPayment } = useCfoData();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -186,5 +185,3 @@ export default function CfoDashboard() {
     </div>
   );
 }
-
-    

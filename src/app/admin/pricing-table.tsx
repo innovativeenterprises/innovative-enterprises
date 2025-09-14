@@ -76,7 +76,7 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable() { 
-    const { pricing, isClient, setPricing } = usePricingData();
+    const { pricing, setPricing } = usePricingData();
     const { toast } = useToast();
 
     const handleSave = (values: PricingValues, id: string) => {
@@ -113,28 +113,20 @@ export default function PricingTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                             <TableRow>
-                                <TableCell colSpan={4}>
-                                    <Skeleton className="h-24 w-full" />
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                             Object.entries(pricingByGroup).flatMap(([group, items]) => (
-                                items.map(item => (
-                                    <TableRow key={item.id}>
-                                        <TableCell className="font-medium">{item.type}</TableCell>
-                                        <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                        <TableCell>OMR {item.price.toFixed(2)}</TableCell>
-                                        <TableCell className="text-right">
-                                            <EditPriceDialog item={item} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon" aria-label={`Edit price for ${'${item.type}'}`}><Edit /></Button>
-                                            </EditPriceDialog>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                        {Object.entries(pricingByGroup).flatMap(([group, items]) => (
+                            items.map(item => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="font-medium">{item.type}</TableCell>
+                                    <TableCell className="text-muted-foreground">{item.group}</TableCell>
+                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <EditPriceDialog item={item} onSave={handleSave}>
+                                            <Button variant="ghost" size="icon" aria-label={`Edit price for ${item.type}`}><Edit /></Button>
+                                        </EditPriceDialog>
+                                    </TableCell>
+                                </TableRow>
                             ))
-                        )}
+                        ))}
                     </TableBody>
                 </Table>
             </CardContent>
