@@ -40,11 +40,9 @@ import type { Pricing } from '@/lib/pricing';
 function useStoreData<T>(selector: (state: any) => T): T {
     const state = useSyncExternalStore(
         store.subscribe,
-        store.get, // The client-side snapshot
-        store.getSsrState // The server-side snapshot (must be stable)
+        store.get,
+        store.getSsrState
     );
-    // The selector is applied here, outside the hook, to the stable state.
-    // useMemo ensures the selector only re-runs if the state it depends on changes.
     return useMemo(() => selector(state), [state, selector]);
 }
 
@@ -97,6 +95,9 @@ export const useCommunitiesData = () => {
     const communities = useStoreData(state => state.communities);
     return {
         communities,
+        setCommunities: (updater: (communities: Community[]) => Community[]) => {
+            store.set(state => ({ ...state, communities: updater(state.communities) }));
+        },
         isClient: true,
     };
 };

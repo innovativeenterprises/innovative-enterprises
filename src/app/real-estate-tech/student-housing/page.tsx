@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
+import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -22,17 +23,15 @@ export default function StudentHousingPage() {
 
 
     useEffect(() => {
-        if(isClient) {
-            const expiringCount = leases.filter(l => {
-                if (!l.endDate) return false;
-                const endDate = new Date(l.endDate);
-                const now = new Date();
-                // Check if expiry is in the future but within the next month.
-                return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() === now.getMonth() + 1;
-            }).length;
-            setExpiringLeasesCount(expiringCount);
-        }
-    }, [isClient, leases]);
+        const expiringCount = leases.filter(l => {
+            if (!l.endDate) return false;
+            const endDate = new Date(l.endDate);
+            const now = new Date();
+            // Check if expiry is in the future but within the next month.
+            return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() === now.getMonth() + 1;
+        }).length;
+        setExpiringLeasesCount(expiringCount);
+    }, [leases]);
 
 
     const handleDelete = (id: string) => {
