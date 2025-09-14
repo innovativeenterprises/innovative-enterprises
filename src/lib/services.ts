@@ -1,5 +1,4 @@
-
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car, Trophy } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -168,7 +167,7 @@ export const initialServices: Service[] = [
     title: "Education Tech",
     description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
     enabled: true,
-href: "/education-tech",
+    href: "/education-tech",
     category: "Business Tech Solutions"
   },
     {
@@ -209,5 +208,13 @@ href: "/education-tech",
     enabled: true,
     href: "/cv-enhancer",
     category: "Essential Business Services"
+  },
+  {
+    icon: Trophy,
+    title: "Opportunities & Competitions",
+    description: "View open projects, tasks, and competitions for our network of freelancers and partners.",
+    enabled: true,
+    href: "/opportunities",
+    category: "Essential Business Services",
   }
 ];

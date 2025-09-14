@@ -657,7 +657,21 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/khidma",
         adminStatus: "On Track"
-    }
+    },
+    {
+        id: 53,
+        name: "GENIUS Career Platform",
+        description: "An end-to-end AI career coach that helps job seekers optimize their CVs for modern Applicant Tracking Systems (ATS) and prepare for interviews with confidence.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/genius-platform/400/400",
+        aiHint: "career coaching cv",
+        rating: 0,
+        enabled: true,
+        href: "/cv-enhancer",
+        adminStatus: "Completed",
+    },
 ];
 
 // This is where e-commerce products should live in a real application,

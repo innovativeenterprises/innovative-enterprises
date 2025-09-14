@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -12,6 +10,8 @@ import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator'
 import { type GenerateSocialMediaPostOutput, GenerateSocialMediaPostInputSchema } from '@/ai/flows/social-media-post-generator.schema';
 import { generateInterviewQuestions } from '@/ai/flows/interview-coach';
 import type { InterviewQuestion } from '@/ai/flows/interview-coach.schema';
+import { getInterviewFeedback } from '@/ai/flows/interview-feedback';
+import type { InterviewFeedbackOutput } from '@/ai/flows/interview-feedback.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';

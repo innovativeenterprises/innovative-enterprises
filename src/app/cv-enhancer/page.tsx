@@ -1,10 +1,16 @@
-
 'use client';
 
 import CvForm from "./cv-form";
 import InterviewCoachForm from "../interview-coach/coach-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FileText, Mic } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "GENIUS Career Platform | Innovative Enterprises",
+  description: "Your end-to-end AI partner for career development. Enhance your CV to beat applicant tracking systems, then practice for your interview with our AI coach.",
+};
+
 
 export default function GeniusPlatformPage() {
   return (
