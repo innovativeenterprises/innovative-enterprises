@@ -46,8 +46,6 @@ import { initialBeautyServices, type BeautyService, initialSpecialists, type Spe
 import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 import { initialCars, type Car } from './cars';
 import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
-import { initialPosProducts, initialDailySales, type PosProduct, type Transaction as PosTransaction } from './pos-data';
-import { initialGiftCards, type GiftCard } from './gift-cards';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -103,9 +101,6 @@ export type AppState = {
   beautyAppointments: BeautyAppointment[];
   cars: Car[];
   rentalAgencies: typeof initialRentalAgencies;
-  posProducts: PosProduct[];
-  dailySales: PosTransaction[];
-  giftCards: GiftCard[];
 };
 
 export const initialState: AppState = {
@@ -151,9 +146,6 @@ export const initialState: AppState = {
   beautyAppointments: initialBeautyAppointments,
   cars: initialCars,
   rentalAgencies: initialRentalAgencies,
-  posProducts: initialPosProducts,
-  dailySales: initialDailySales,
-  giftCards: initialGiftCards,
 };
 
 // The single source of truth for our application's shared state.
@@ -191,5 +183,3 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
-
-    

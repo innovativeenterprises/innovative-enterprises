@@ -29,7 +29,7 @@ const driveSyncAgentPrompt = ai.definePrompt({
 **Available Car Inventory:**
 You MUST only recommend cars from this JSON list of available vehicles.
 '''json
-{{{availableCarsJson}}}
+{{{json availableCarsJson}}}
 '''
 
 **Your Task:**

@@ -6,8 +6,7 @@ import { Car, Search, ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { initialCars } from '@/lib/cars';
-import { initialRentalAgencies } from '@/lib/rental-agencies';
+import { useDriveSyncData } from '@/hooks/use-global-store-data';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -29,19 +28,21 @@ const getStatusBadge = (status: string) => {
 
 export default function DriveSyncAiPage() {
     const [searchTerm, setSearchTerm] = useState('');
+    const { cars, rentalAgencies, isClient } = useDriveSyncData();
     
     // In a real app, you'd have a user session to determine the agency.
     // For this prototype, we'll just assume we're managing 'agency_1'.
-    const agency = initialRentalAgencies[0];
-    const cars = initialCars.filter(c => c.rentalAgencyId === agency.id);
-
+    const agency = rentalAgencies[0];
+    
     const filteredCars = useMemo(() => {
-        if (!searchTerm) return cars;
-        return cars.filter(car => 
+        if (!isClient) return [];
+        const agencyCars = cars.filter(c => c.rentalAgencyId === agency.id);
+        if (!searchTerm) return agencyCars;
+        return agencyCars.filter(car => 
             car.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
             car.model.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [cars, searchTerm]);
+    }, [cars, searchTerm, agency, isClient]);
 
     return (
         <div className="bg-background min-h-screen">
