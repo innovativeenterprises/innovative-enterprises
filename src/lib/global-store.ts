@@ -44,7 +44,7 @@ import { initialMembers, type CommunityMember } from './community-members';
 import { initialStockItems, type StockItem } from './stock-items';
 import { initialCars, type Car } from './cars';
 import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
-import { initialDailySales, type DailySales, type Transaction as PosTransaction } from './pos-data';
+import { initialDailySales, type Transaction as PosTransaction, initialPosProducts, type PosProduct } from './pos-data';
 import { initialGiftCards, type GiftCard } from './gift-cards';
 import { initialJobs, type JobPosting } from './alumni-jobs';
 import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
@@ -103,6 +103,7 @@ export type AppState = {
   cars: Car[];
   rentalAgencies: RentalAgency[];
   dailySales: PosTransaction[];
+  posProducts: PosProduct[];
   giftCards: GiftCard[];
   alumniJobs: JobPosting[];
   beautyCenters: BeautyCenter[];
@@ -151,6 +152,7 @@ export const initialState: AppState = {
   cars: initialCars,
   rentalAgencies: initialRentalAgencies,
   dailySales: initialDailySales,
+  posProducts: initialPosProducts,
   giftCards: initialGiftCards,
   alumniJobs: initialJobs,
   beautyCenters: initialBeautyCenters,

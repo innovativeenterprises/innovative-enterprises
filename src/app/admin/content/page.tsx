@@ -7,6 +7,7 @@ import ProductTable from "../product-table";
 import ClientTable from "../client-table";
 import PricingTable from "../pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PosProductTable from "../pos-product-table";
 
 
 export default function AdminContentPage() {
@@ -20,11 +21,12 @@ export default function AdminContentPage() {
             </p>
         </div>
         <Tabs defaultValue="services" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
                 <TabsTrigger value="services">Services</TabsTrigger>
                 <TabsTrigger value="products">Products</TabsTrigger>
                 <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
                 <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
+                <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
             </TabsList>
             <TabsContent value="services" className="mt-6">
                 <ServiceTable />
@@ -38,8 +40,12 @@ export default function AdminContentPage() {
             <TabsContent value="pricing" className="mt-6">
                 <PricingTable />
             </TabsContent>
+            <TabsContent value="pos" className="mt-6">
+                <PosProductTable />
+            </TabsContent>
         </Tabs>
     </div>
   );
 }
+
 

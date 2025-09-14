@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useSyncExternalStore, useState, useEffect } from 'react';
@@ -26,14 +27,19 @@ import type { Property } from '@/lib/properties';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-requests';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
-import type { CostRate } from '@/lib/cost-settings.schema';
+import type { CostRate } from './cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
 import type { Car } from '@/lib/cars';
 import type { RentalAgency } from '@/lib/rental-agencies';
-import type { Transaction as PosTransaction } from '@/lib/pos-data';
+import type { Transaction as PosTransaction, PosProduct } from '@/lib/pos-data';
 import type { GiftCard } from '@/lib/gift-cards';
+import type { JobPosting } from '@/lib/alumni-jobs';
+import type { BeautyCenter } from '@/lib/beauty-centers';
+import type { BeautyService, Specialist as BeautySpecialist } from '@/lib/beauty-services';
+import type { BeautyAppointment } from '@/lib/beauty-appointments';
+
 
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
@@ -81,18 +87,19 @@ export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[])
 export const setCars = (updater: (prev: Car[]) => Car[]) => store.set(state => ({ ...state, cars: updater(state.cars) }));
 export const setRentalAgencies = (updater: (prev: RentalAgency[]) => RentalAgency[]) => store.set(state => ({ ...state, rentalAgencies: updater(state.rentalAgencies) }));
 export const setDailySales = (updater: (prev: PosTransaction[]) => PosTransaction[]) => store.set(state => ({...state, dailySales: updater(state.dailySales) }));
+export const setPosProducts = (updater: (prev: PosProduct[]) => PosProduct[]) => store.set(state => ({...state, posProducts: updater(state.posProducts) }));
 export const setGiftCards = (updater: (prev: GiftCard[]) => GiftCard[]) => store.set(state => ({ ...state, giftCards: updater(state.giftCards) }));
 
 
 // Data hooks that return the reactive state slice. isClient is now always true.
 export const useServicesData = () => ({ services: useStoreData(s => s.services), isClient: true });
-export const useProductsData = () => ({ products: useStoreData(s => s.products), isClient: true });
+export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts, isClient: true });
 export const useClientsData = () => ({
     clients: useStoreData(s => s.clients),
     testimonials: useStoreData(s => s.testimonials),
     isClient: true,
 });
-export const useProvidersData = () => ({ providers: useStoreData(s => s.providers), isClient: true });
+export const useProvidersData = () => ({ providers: useStoreData(s => s.providers), setProviders, isClient: true });
 export const useStaffData = () => ({
     leadership: useStoreData(s => s.leadership),
     staff: useStoreData(s => s.staff),
@@ -110,7 +117,7 @@ export const useMembersData = () => ({ members: useStoreData(s => s.communityMem
 export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages: setProjectStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), isClient: true });
 export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), isClient: true });
-export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), isClient: true });
+export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), setInvestors, isClient: true });
 export const useKnowledgeData = () => ({
     knowledgeBase: useStoreData(s => s.knowledgeBase),
     setKnowledgeBase,
@@ -133,6 +140,7 @@ export const useStairspaceRequestsData = () => ({
 });
 export const useOpportunitiesData = () => ({
     opportunities: useStoreData(s => s.opportunities),
+    setOpportunities,
     isClient: true,
 });
 export const useCostSettingsData = () => ({
@@ -174,6 +182,8 @@ export const useDriveSyncData = () => ({
 });
 export const usePosData = () => ({
     dailySales: useStoreData(s => s.dailySales),
+    products: useStoreData(s => s.posProducts),
+    setProducts: setPosProducts,
     isClient: true,
 });
 export const useGiftCardsData = () => ({

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -5,13 +6,14 @@ import { initialPosProducts, type PosProduct, type CartItem } from '@/lib/pos-da
 import { PosGrid } from './pos-grid';
 import { CheckoutPanel } from './checkout-panel';
 import { useToast } from '@/hooks/use-toast';
-import { setDailySales } from '@/hooks/use-global-store-data';
+import { usePosData, setDailySales } from '@/hooks/use-global-store-data';
 import { BrainCircuit } from 'lucide-react';
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 export default function AiPosPage() {
+    const { products } = usePosData();
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -89,7 +91,7 @@ export default function AiPosPage() {
             <main className="flex-1 overflow-hidden p-4">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
                     <div className="lg:col-span-2 h-full overflow-y-auto">
-                        <PosGrid products={initialPosProducts} onAddToCart={handleAddToCart} />
+                        <PosGrid products={products} onAddToCart={handleAddToCart} />
                     </div>
                     <div className="lg:col-span-1 h-full">
                          <CheckoutPanel 
