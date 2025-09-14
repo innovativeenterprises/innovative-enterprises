@@ -497,7 +497,7 @@ export const initialProducts: Product[] = [
         stage: "Live & Operating",
         category: "General Platforms & SaaS",
         price: 0,
-        image: "https://images.unsplash.com/photo-1615552319349-43a15a81d4b2?q=80&amp;w=1920&amp;auto=format&amp;fit=crop",
+        image: "https://images.unsplash.com/photo-1615552319349-43a15a81d4b2?q=80&w=1920&auto=format&fit=crop",
         aiHint: "digital identity security",
         rating: 0,
         enabled: true,

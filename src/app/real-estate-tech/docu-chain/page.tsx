@@ -1,10 +1,9 @@
 
-
 'use client';
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -21,7 +20,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import { store } from '@/lib/global-store';
+import { setSignedLeases } from '@/hooks/use-global-store-data';
 import type { SignedLease } from '@/lib/leases';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import type { Metadata } from 'next';
@@ -123,10 +122,7 @@ export default function DocuChainPage() {
     };
     
     // In a real app, this would be an API call. For the prototype, we use global state.
-    store.set(state => ({
-        ...state,
-        signedLeases: [newLease, ...state.signedLeases],
-    }));
+    setSignedLeases(prev => [newLease, ...prev]);
 
     setTimeout(() => {
         setIsLoading(false);

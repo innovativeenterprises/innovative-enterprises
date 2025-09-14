@@ -3,24 +3,24 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData } from '@/hooks/use-global-store-data';
+import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
 export default function SmartLeaseManagerPage() {
-    const { leases, setLeases, isClient } = useLeasesData();
+    const { leases, isClient } = useLeasesData();
     const { toast } = useToast();
 
     const handleDelete = (id: string) => {
-        setLeases(prev => prev.filter(lease => lease.id !== id));
+        setSignedLeases(prev => prev.filter(lease => lease.id !== id));
         toast({ title: "Agreement Deleted", description: "The lease agreement has been removed from your dashboard.", variant: "destructive" });
     };
 
@@ -47,14 +47,9 @@ export default function SmartLeaseManagerPage() {
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle>Your Agreements</CardTitle>
-                            <div className="flex gap-2">
-                                <Button asChild variant="secondary">
-                                    <Link href="/education-tech/student-housing">Manage Student Housing</Link>
-                                </Button>
-                                <Button asChild>
-                                    <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Contract</Link>
-                                </Button>
-                            </div>
+                            <Button asChild>
+                                <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Contract</Link>
+                            </Button>
                         </CardHeader>
                         <CardContent>
                             <Table>

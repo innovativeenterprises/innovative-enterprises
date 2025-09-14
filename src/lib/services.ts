@@ -168,7 +168,7 @@ export const initialServices: Service[] = [
     title: "Education Tech",
     description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
     enabled: true,
-    href: "/education-tech",
+href: "/education-tech",
     category: "Business Tech Solutions"
   },
     {
