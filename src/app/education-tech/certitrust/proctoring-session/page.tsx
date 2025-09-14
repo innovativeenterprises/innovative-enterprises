@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -18,6 +17,7 @@ import { analyzeExamSession } from '@/ai/flows/proctoring-agent';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import type { Metadata } from 'next';
+import { Badge } from '@/components/ui/badge';
 
 export const metadata: Metadata = {
   title: "AI Proctoring Assistant | Innovative Enterprises",

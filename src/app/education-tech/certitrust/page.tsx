@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, ShieldCheck, Camera, Bot, Layers, CheckSquare } from "lucide-react";
+import { CheckCircle, ShieldCheck, Camera, Bot, Layers, CheckSquare, ArrowRight } from "lucide-react";
 import Link from 'next/link';
 
 const features = [
@@ -55,6 +55,13 @@ export default function CertiTrustPage() {
                                 <CardContent>
                                     <p className="text-muted-foreground">{feature.description}</p>
                                 </CardContent>
+                                {feature.title === "AI-Powered Proctoring" && (
+                                     <CardFooter>
+                                         <Button asChild className="w-full">
+                                            <Link href="/education-tech/certitrust/proctoring-session">Launch Proctoring Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                                        </Button>
+                                     </CardFooter>
+                                )}
                             </Card>
                         ))}
                     </div>

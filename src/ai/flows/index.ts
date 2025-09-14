@@ -1,5 +1,4 @@
 
-
 'use server';
 import {answerQuestion as answerFaqQuestion} from './ai-powered-faq';
 import {analyzeApplication} from './admissions-agent';
@@ -36,6 +35,7 @@ import {fillPdfForm} from './pdf-form-filler';
 import { findScholarships } from './scholarship-agent';
 import { generateScholarshipEssay } from './scholarship-essay-assistant';
 import { analyzeSeo } from './seo-analyzer';
+import { analyzeExamSession } from './proctoring-agent';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -78,5 +78,5 @@ export {
   fillPdfForm,
   generateScholarshipEssay,
   analyzeSeo,
+  analyzeExamSession,
 };
-
