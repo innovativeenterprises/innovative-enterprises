@@ -37,6 +37,7 @@ import { generateScholarshipEssay } from './guardian-ai/scholarship-essay-assist
 import { wellbeingCheckin } from './guardian-ai/wellbeing-checkin';
 import { analyzeSeo } from './seo-analyzer';
 import { analyzeOperations } from './agentic-coo';
+import { findAndBookCar } from './drivesync-agent';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -81,4 +82,5 @@ export {
   wellbeingCheckin,
   analyzeSeo,
   analyzeOperations,
+  findAndBookCar,
 };
