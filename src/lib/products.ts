@@ -559,7 +559,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/tender-assistant",
-        adminStatus: "Completed"
+        adminStatus: "Completed",
     },
     {
         id: 46,

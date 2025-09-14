@@ -225,6 +225,12 @@ const aiToolsMenu: { title: string; href: string; description: string, icon: Luc
         description: "Create a professional Facebook cover photo in seconds. Describe your business and let our AI handle the design.",
         icon: ImageIcon,
     },
+     {
+        title: "AI PDF Form Filler",
+        href: "/pdf-form-filler",
+        description: "Upload any PDF form and let our AI intelligently fill it out based on your profile data.",
+        icon: FileText,
+    },
     {
         title: "AI SEO Analyzer",
         href: "/seo-analyzer",
