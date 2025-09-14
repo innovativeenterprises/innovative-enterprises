@@ -35,6 +35,8 @@ import { findScholarships } from './scholarship-agent';
 import { generateScholarshipEssay } from './scholarship-essay-assistant';
 import { analyzeSeo } from './seo-analyzer';
 import { analyzeExamSession } from './proctoring-agent';
+import { estimateFireSafety } from './fire-safety-estimator';
+import { annotateImage } from './image-annotation';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -77,4 +79,6 @@ export {
   generateScholarshipEssay,
   analyzeSeo,
   analyzeExamSession,
+  estimateFireSafety,
+  annotateImage,
 };
