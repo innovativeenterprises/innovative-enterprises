@@ -29,7 +29,7 @@ const sampleUserProfile = {
 const prompt = ai.definePrompt(
   {
     name: 'pdfFormFillerPrompt',
-    input: { schema: PdfFormFillerInputSchema },
+    input: { schema: PdfFormFillerInputSchema.extend({ userProfile: z.any() }) },
     output: { schema: PdfFormFillerOutputSchema },
     prompt: `You are an expert data entry assistant with computer vision capabilities. Your task is to analyze a PDF form, identify all fillable fields, and map them to a provided user profile. You must also determine the exact coordinates and font size for each field.
 
