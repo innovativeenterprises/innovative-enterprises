@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -18,6 +19,7 @@ import { findBestStairspaceMatch } from '@/ai/flows/stairspace-matcher';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from "@/components/ui/progress";
 import type { StairspaceListing } from '@/lib/stairspace.schema';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const AiMatcher = () => {
     const [isLoading, setIsLoading] = useState(false);

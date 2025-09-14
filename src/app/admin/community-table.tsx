@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -97,10 +97,12 @@ export default function CommunityTable() {
     const { leadership, staff } = useStaffData();
     const { toast } = useToast();
 
-    const staffMap = [...leadership, ...staff].reduce((map, person) => {
-        map[person.name] = person;
-        return map;
-    }, {} as Record<string, typeof leadership[0]>);
+    const staffMap = useMemo(() => {
+        return [...leadership, ...staff].reduce((map, person) => {
+            map[person.name] = person;
+            return map;
+        }, {} as Record<string, typeof leadership[0]>);
+    }, [leadership, staff]);
 
     const handleSave = (values: CommunityValues, id?: string) => {
         if (id) {

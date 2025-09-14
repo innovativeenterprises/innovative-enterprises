@@ -270,11 +270,11 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null } | null>(null);
+    const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
 
     useEffect(() => {
         if (!expiry) {
-            setClientState({ daysUntilExpiry: null });
+            setDaysUntilExpiry(null);
             return;
         }
         const now = new Date();
@@ -283,35 +283,26 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         expiryDate.setHours(0, 0, 0, 0);
 
         const timeDiff = expiryDate.getTime() - now.getTime();
-        setClientState({ daysUntilExpiry: Math.ceil(timeDiff / (1000 * 3600 * 24)) });
+        setDaysUntilExpiry(Math.ceil(timeDiff / (1000 * 3600 * 24)));
     }, [expiry]);
 
-    if (!clientState) {
-        return <Skeleton className="h-8 w-full" />;
+    if (daysUntilExpiry === null && tier !== 'Lifetime') {
+        return tier === 'None' ? <Badge variant="secondary">No Subscription</Badge> : <Badge variant="outline">{tier}</Badge>;
     }
     
-     if (tier === 'None') {
-        return <Badge variant="secondary">No Subscription</Badge>;
-    }
-    if (tier === 'Lifetime') {
+     if (tier === 'Lifetime') {
         return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
     }
     
-    const { daysUntilExpiry } = clientState;
-
-    if (daysUntilExpiry === null) {
-         return <Badge variant="outline">{tier}</Badge>;
-    }
-    
     const totalDuration = tier === 'Yearly' ? 365 : 30;
-    const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
+    const progressValue = daysUntilExpiry !== null ? Math.max(0, (daysUntilExpiry / totalDuration) * 100) : 0;
 
     return (
         <div className="w-full min-w-[150px]">
             <div className="flex justify-between items-center mb-1">
                 <Badge variant="outline">{tier}</Badge>
                 <div className="text-xs text-muted-foreground">
-                    {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
+                    {daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : ''}
                 </div>
             </div>
             <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progressValue}%`} />
