@@ -35,19 +35,16 @@ export default function ProviderDetailPage() {
     }
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-        const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
-        const [isSubClient, setIsSubClient] = useState(false);
+        const [clientState, setClientState] = useState<{daysUntilExpiry: number | null} | null>(null);
 
         useEffect(() => {
-            setIsSubClient(true);
             if (!expiry) {
-                setDaysUntilExpiry(null);
+                setClientState({ daysUntilExpiry: null });
                 return;
             }
-            const expiryDate = new Date(expiry);
             const now = new Date();
-            const diffTime = expiryDate.getTime() - now.getTime();
-            setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
+            const diffTime = new Date(expiry).getTime() - now.getTime();
+            setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
         }, [expiry]);
 
 
@@ -61,9 +58,15 @@ export default function ProviderDetailPage() {
                  </div>
             )
         }
+        
+        if (!clientState) {
+            return <Skeleton className="h-8 w-48"/>;
+        }
 
-        if (!isSubClient || daysUntilExpiry === null) {
-            return <Badge variant="secondary">Loading...</Badge>;
+        const { daysUntilExpiry } = clientState;
+        
+        if (daysUntilExpiry === null) {
+            return <Badge variant="outline">{tier}</Badge>;
         }
         
         const totalDuration = tier === 'Yearly' ? 365 : 30;

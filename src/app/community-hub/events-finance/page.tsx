@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -144,6 +145,15 @@ export default function EventsFinancePage() {
     const totalExpenses = finances.filter(f => f.type === 'Expense').reduce((sum, item) => sum + item.amount, 0);
     const netBalance = totalIncome - totalExpenses;
 
+    const DateDisplay = ({ dateString }: { dateString: string }) => {
+        const [displayDate, setDisplayDate] = useState('');
+        useEffect(() => {
+            setDisplayDate(format(new Date(dateString), "PPP"));
+        }, [dateString]);
+        if (!displayDate) return <Skeleton className="h-4 w-24" />;
+        return <>{displayDate}</>;
+    };
+
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -212,7 +222,7 @@ export default function EventsFinancePage() {
                                                     {item.type}
                                                 </span>
                                             </TableCell>
-                                            <TableCell>{isClient ? format(new Date(item.date), "PPP") : '...'}</TableCell>
+                                            <TableCell><DateDisplay dateString={item.date} /></TableCell>
                                             <TableCell className="text-right font-mono">{item.amount.toFixed(2)}</TableCell>
                                              <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
@@ -254,7 +264,7 @@ export default function EventsFinancePage() {
                                         <div className="flex-grow">
                                             <h3 className="font-semibold text-lg">{event.title}</h3>
                                             <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> {isClient ? format(new Date(event.date), "PPP") : '...'}</span>
+                                                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4"/> <DateDisplay dateString={event.date} /></span>
                                                 <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4"/> {event.location}</span>
                                                 <span className="flex items-center gap-1.5"><Users className="h-4 w-4"/> {event.rsvps} attending</span>
                                             </div>
