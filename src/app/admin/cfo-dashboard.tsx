@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [clientState, setClientState] = useState<{ daysRemaining: number | null, formattedDate: string } | null>(null);
+    const [clientState, setClientState] = useState<{ daysRemaining: number; formattedDate: string } | null>(null);
 
     useEffect(() => {
         const dueDate = new Date(date);
