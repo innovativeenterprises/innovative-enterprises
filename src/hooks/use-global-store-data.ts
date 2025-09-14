@@ -32,14 +32,12 @@ import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
 
-
 function useStoreData<T>(selector: (state: any) => T): T {
-    const state = useSyncExternalStore(
+    return useSyncExternalStore(
         store.subscribe,
-        () => store.get(),
-        () => store.getSsrState()
+        () => selector(store.get()),
+        () => selector(store.getSsrState())
     );
-    return selector(state);
 }
 
 export const useServicesData = () => {
