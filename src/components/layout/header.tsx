@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, ImageIcon, MapPin, Gift, VrHeadset, Layers } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, ImageIcon, MapPin, Gift, VrHeadset, Layers, Home } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -272,6 +272,12 @@ const aiToolsMenu: { title: string; href: string; description: string, icon: Luc
         href: "/measurement-analyzer",
         description: "Use your camera to scan an object and get AI-powered estimations of its dimensions.",
         icon: Layers,
+    },
+    {
+        title: "AI Interior Designer",
+        href: "/interior-designer",
+        description: "Get instant interior design ideas. Upload a photo of your room, describe the style you want, and let our AI generate a stunning new design concept for you.",
+        icon: Home
     },
 ];
 
