@@ -16,15 +16,10 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Bot, FileText, BadgePercent, TrendingUp, Impact, Lightbulb } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
+import { fileToDataURI } from '@/lib/utils';
+import { useOpportunitiesData } from '@/hooks/use-global-store-data';
+import type { Opportunity } from '@/lib/opportunities';
+import { opportunityIconMap } from '@/lib/opportunities';
 
 const FormSchema = WorkOrderInputSchema.extend({
   documentFile: z.any().optional(),
@@ -35,6 +30,8 @@ export default function WorkOrderForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<WorkOrderAnalysisOutput | null>(null);
   const { toast } = useToast();
+  const { setOpportunities } = useOpportunitiesData();
+
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -61,6 +58,24 @@ export default function WorkOrderForm() {
       });
       setResponse(result);
       toast({ title: 'Analysis Complete!', description: 'Your idea has been analyzed by our AI.' });
+
+      // Automatically add the new opportunity to the global state
+      const iconName = Object.keys(opportunityIconMap).find(key => key.toLowerCase().includes(result.category.split(" ")[0].toLowerCase())) as keyof typeof opportunityIconMap || 'Trophy';
+
+      const newOpportunity: Opportunity = {
+          id: `opp_${data.title.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}`,
+          title: data.title,
+          type: result.category,
+          prize: data.budget || 'Negotiable',
+          deadline: data.timeline || 'To be determined',
+          description: result.summary,
+          iconName,
+          badgeVariant: 'outline',
+          status: 'Open',
+          questions: result.generatedQuestions,
+      };
+      setOpportunities(prev => [newOpportunity, ...prev]);
+
     } catch (error) {
       console.error(error);
       toast({

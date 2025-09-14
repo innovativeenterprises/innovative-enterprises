@@ -30,6 +30,7 @@ import {
   Handshake,
   BrainCircuit,
   Warehouse,
+  Trophy,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -48,6 +49,7 @@ export default function AdminLayout({
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/coo-dashboard', label: 'AI COO', icon: BrainCircuit },
     { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
+    { href: '/admin/opportunities', label: 'Opportunities', icon: Trophy },
     { href: '/admin/finance', label: 'Finance', icon: WalletCards },
     { href: '/admin/content', label: 'Site Content', icon: FileText },
     { href: '/admin/network', label: 'Network', icon: Network },
