@@ -146,10 +146,14 @@ export const store = {
   
   /**
    * Returns a stable, cached snapshot of the initial state for SSR.
+   * This function is designed to be called only on the server. It creates
+   * a deep copy of the initial state once and reuses it for all subsequent
+   * server-side renders to prevent infinite loops in `useSyncExternalStore`.
    */
   getSsrState: (): Readonly<AppState> => {
     if (serverState === null) {
         // Create a deep enough copy to be safe.
+        // This is the critical fix: ensuring the server always gets the exact same object reference.
         serverState = JSON.parse(JSON.stringify(state));
     }
     return serverState;

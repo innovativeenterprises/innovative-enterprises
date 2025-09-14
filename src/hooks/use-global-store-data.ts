@@ -34,8 +34,7 @@ import type { Pricing } from '@/lib/pricing';
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
  * It uses useSyncExternalStore to be compatible with React 18's concurrent features.
- * The getServerSnapshot returns the entire cached state to prevent infinite loops during SSR.
- * The selector is then applied to the result of the hook.
+ * The selector is applied *after* the state is retrieved to prevent infinite loops.
  */
 function useStoreData<T>(selector: (state: any) => T): T {
     const state = useSyncExternalStore(
