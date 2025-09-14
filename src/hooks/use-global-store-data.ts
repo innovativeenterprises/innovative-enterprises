@@ -178,6 +178,9 @@ export function useLeasesData() {
     const leases = useStoreData(state => state.signedLeases);
     return {
         leases,
+        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
+            store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
+        },
         isClient: true,
     };
 };
@@ -194,6 +197,9 @@ export function useStairspaceData() {
     const stairspaceListings = useStoreData(state => state.stairspaceListings);
     return {
         stairspaceListings,
+        setStairspaceListings: (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => {
+            store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
+        },
         isClient: true,
     };
 };

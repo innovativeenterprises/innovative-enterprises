@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRef, useState, useEffect } from "react";
@@ -135,16 +136,12 @@ export default function CompanyProfileDownloader() {
     const profileRef = useRef<HTMLDivElement>(null);
     const [isReady, setIsReady] = useState(false);
     
-    // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
+      // isClient flags become true only after hydration
+      if (isStaffClient && isServicesClient && isSettingsClient) {
+        setIsReady(true);
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-    }, []);
-
-    // The component is fully ready only on the client and when all data has been loaded.
-    useEffect(() => {
-        if(isStaffClient && isServicesClient && isSettingsClient) {
-            setIsReady(true);
-        }
+      }
     }, [isStaffClient, isServicesClient, isSettingsClient]);
     
     
