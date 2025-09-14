@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -85,13 +85,13 @@ export default function PricingTable() {
         toast({ title: "Price updated successfully." });
     };
 
-    const pricingByGroup = useMemo(() => pricing.reduce((acc, item) => {
+    const pricingByGroup = pricing.reduce((acc, item) => {
         if (!acc[item.group]) {
             acc[item.group] = [];
         }
         acc[item.group].push(item);
         return acc;
-    }, {} as Record<string, Pricing[]>), [pricing]);
+    }, {} as Record<string, Pricing[]>);
 
 
     return (
@@ -139,3 +139,5 @@ export default function PricingTable() {
         </Card>
     );
 }
+
+    

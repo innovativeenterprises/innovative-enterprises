@@ -233,21 +233,15 @@ export default function ClientTable() {
         toast({ title: "Testimonial removed.", variant: "destructive" });
     };
 
-    const filteredClients = useMemo(() => {
-        if (!isClient) return [];
-        return clients.filter(client =>
-            client.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [clients, searchTerm, isClient]);
-
-    const filteredTestimonials = useMemo(() => {
-        if (!isClient) return [];
-        return testimonials.filter(t =>
-            t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            t.company.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [testimonials, searchTerm, isClient]);
+    const filteredClients = clients.filter(client =>
+        client.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    const filteredTestimonials = testimonials.filter(t =>
+        t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.company.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
 
     return (
@@ -357,10 +351,5 @@ export default function ClientTable() {
         </Card>
     );
 }
-    
 
     
-
-
-
-

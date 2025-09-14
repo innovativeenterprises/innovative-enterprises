@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -14,14 +15,11 @@ import { useEffect, useState, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboardPage() {
-  const { products } = useProductsData();
-  const { providers } = useProvidersData();
-  const { leadership, staff, agentCategories } = useStaffData();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { products, isClient: isProductsClient } = useProductsData();
+  const { providers, isClient: isProvidersClient } = useProvidersData();
+  const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
+  
+  const isClient = isProductsClient && isProvidersClient && isStaffClient;
   
   const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
   const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);
@@ -195,3 +193,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
+    

@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [clientState, setClientState] = useState<{ daysRemaining: number; formattedDate: string } | null>(null);
+    const [displayDate, setDisplayDate] = useState<string | null>(null);
 
     useEffect(() => {
         const dueDate = new Date(date);
@@ -24,27 +24,28 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
         today.setHours(0, 0, 0, 0);
         const diffTime = dueDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
-        setClientState({
-            daysRemaining: diffDays,
-            formattedDate: new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate),
-        });
+        const formattedDate = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
+        
+        let statusText = '';
+        if (diffDays >= 0) {
+            statusText = `(${diffDays} days left)`;
+        } else {
+            statusText = '(Overdue)';
+        }
+
+        const finalDisplay = `Due: ${formattedDate} <span class="${diffDays < 7 ? 'text-destructive font-medium' : ''}">${statusText}</span>`;
+        setDisplayDate(finalDisplay);
     }, [date]);
 
-    if (!clientState) {
+    if (!displayDate) {
         return <Skeleton className="h-4 w-48 mt-1" />;
     }
 
-    const { daysRemaining, formattedDate } = clientState;
-
     return (
-        <div className={`text-sm text-muted-foreground ${className}`}>
-            Due: {formattedDate}
-            {daysRemaining >= 0 ? (
-                <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
-            ) : (
-                <span className="text-destructive font-medium"> (Overdue)</span>
-            )}
-        </div>
+        <div 
+            className={`text-sm text-muted-foreground ${className}`}
+            dangerouslySetInnerHTML={{ __html: displayDate }}
+        />
     );
 }
 
@@ -187,3 +188,5 @@ export default function CfoDashboard() {
     </div>
   );
 }
+
+    

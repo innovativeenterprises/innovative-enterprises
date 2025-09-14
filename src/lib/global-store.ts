@@ -53,7 +53,7 @@ export interface SavedBoQ {
     items: BoQItem[];
 }
 
-type AppState = {
+export type AppState = {
   services: Service[];
   products: Product[];
   clients: Client[];
@@ -143,7 +143,7 @@ export const store = {
   /**
    * Returns a snapshot of the current state.
    */
-  get: (): Readonly<AppState> => state,
+  get: (): AppState => state,
   
   /**
    * Returns a stable, cached snapshot of the initial state for SSR.
@@ -151,7 +151,7 @@ export const store = {
    * a deep copy of the initial state once and reuses it for all subsequent
    * server-side renders to prevent infinite loops in `useSyncExternalStore`.
    */
-  getSsrState: (): Readonly<AppState> => {
+  getSsrState: (): AppState => {
     if (serverState === null) {
         // Create a deep enough copy to be safe.
         // This is the critical fix: ensuring the server always gets the exact same object reference.
@@ -182,3 +182,5 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
+
+    
