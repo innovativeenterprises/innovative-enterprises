@@ -39,10 +39,10 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed |
-| CognitaLearn | A personalized adaptive learning platform that uses AI to create custom learning paths and gamified modules. | Idea Phase | On Track |
-| Guardian AI | A student wellbeing and success platform offering risk profiling, AI career advisory, and mental health support. | Idea Phase | On Track |
-| CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Idea Phase | On Track |
-| CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Idea Phase | On Track |
+| CognitaLearn | A personalized adaptive learning platform that uses AI to create custom learning paths and gamified modules. | Live & Operating | Completed |
+| Guardian AI | A student wellbeing and success platform offering risk profiling, AI career advisory, and mental health support. | Live & Operating | Completed |
+| CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Live & Operating | Completed |
+| CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed |
 
 ### Category: Automotive Tech (1)
 | Name | Description | Stage | Status |

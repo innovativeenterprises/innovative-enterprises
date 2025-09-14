@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,7 +8,7 @@ import { Check, BookOpen, AlertTriangle, GanttChartSquare, ClipboardCheck, Users
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products";
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -30,7 +29,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "CognitaLearn": Cpu,
         "Guardian AI": ShieldCheck,
         "CertiTrust": ShieldCheck,
-        "CampusOS": Users,
+        "CampusOS": Cpu,
         "AI Scholarship Finder": BrainCircuit,
     };
     const Icon = iconMap[product.name] || GraduationCap;

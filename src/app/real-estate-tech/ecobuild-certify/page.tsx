@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -53,7 +52,7 @@ export default function EcoBuildCertifyPage() {
              return (
                 <ChartContainer config={energyChartConfig} className="h-48 w-full">
                     <LineChart data={energyData} margin={{ left: -20, right: 20 }}>
-                        <YAxis tickFormatter={(value) => `${'${value/1000}'}k`} />
+                        <YAxis tickFormatter={(value) => `${value/1000}k`} />
                         <Tooltip content={<ChartTooltipContent />} />
                         <Line type="monotone" dataKey="consumption" stroke="var(--color-consumption)" strokeWidth={2} dot={false} />
                     </LineChart>
@@ -65,7 +64,7 @@ export default function EcoBuildCertifyPage() {
             return (
                 <ChartContainer config={waterChartConfig} className="h-48 w-full">
                     <BarChart data={waterData} accessibilityLayer>
-                        <YAxis tickFormatter={(value) => `${'${value/1000}'}k`} />
+                        <YAxis tickFormatter={(value) => `${value/1000}k`} />
                         <Tooltip content={<ChartTooltipContent />} />
                         <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
                     </BarChart>
@@ -77,7 +76,7 @@ export default function EcoBuildCertifyPage() {
             return (
                  <ChartContainer config={carbonChartConfig} className="h-48 w-full">
                      <BarChart data={carbonData} accessibilityLayer>
-                        <YAxis tickFormatter={(value) => `${'${value/1000}'}k`} />
+                        <YAxis tickFormatter={(value) => `${value/1000}k`} />
                         <Tooltip content={<ChartTooltipContent />} />
                         <Bar dataKey="footprint" fill="var(--color-footprint)" radius={4} />
                     </BarChart>
@@ -115,7 +114,7 @@ export default function EcoBuildCertifyPage() {
                             </Card>
                             <Card>
                                 <CardHeader>
-                                    <CardTitle className="text-lg flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Energy Usage</CardTitle>
+                                    <CardTitle className="text-lg flex items-center gap-2"><Leaf className="h-5 w-5 text-green-500" /> Energy Usage</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     {renderChart('energy')}
