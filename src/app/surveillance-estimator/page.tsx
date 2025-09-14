@@ -3,7 +3,7 @@
 'use client';
 
 import { Siren } from "lucide-react";
-import EstimatorForm from "@/app/cctv-estimator/estimator-form";
+import EstimatorForm from "./estimator-form";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

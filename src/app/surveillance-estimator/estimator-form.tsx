@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -170,7 +171,7 @@ export default function EstimatorForm() {
         console.error("Floor plan analysis failed:", e);
         toast({
           title: "Analysis Failed",
-          description: "Could not analyze the floor plan. Please check the file and try again.",
+          description: "Could not analyze the floor plan. Please check the file and try again, or describe your needs manually.",
           variant: "destructive",
         });
     } finally {
