@@ -39,6 +39,7 @@ import type { JobPosting } from '@/lib/alumni-jobs';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyService, Specialist as BeautySpecialist } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
+import type { StockItem } from '@/lib/stock-items';
 
 
 /**
@@ -89,6 +90,7 @@ export const setRentalAgencies = (updater: (prev: RentalAgency[]) => RentalAgenc
 export const setDailySales = (updater: (prev: PosTransaction[]) => PosTransaction[]) => store.set(state => ({...state, dailySales: updater(state.dailySales) }));
 export const setPosProducts = (updater: (prev: PosProduct[]) => PosProduct[]) => store.set(state => ({...state, posProducts: updater(state.posProducts) }));
 export const setGiftCards = (updater: (prev: GiftCard[]) => GiftCard[]) => store.set(state => ({ ...state, giftCards: updater(state.giftCards) }));
+export const setStockItems = (updater: (prev: StockItem[]) => StockItem[]) => store.set(state => ({...state, stockItems: updater(state.stockItems) }));
 
 
 // Data hooks that return the reactive state slice. isClient is now always true.
@@ -191,5 +193,9 @@ export const useGiftCardsData = () => ({
     setGiftCards,
     isClient: true,
 });
-
+export const useStockItemsData = () => ({
+    stockItems: useStoreData(s => s.stockItems),
+    setStockItems,
+    isClient: true,
+});
     
