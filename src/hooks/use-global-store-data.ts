@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useSyncExternalStore, useCallback } from 'react';
 import { store, type AppState, initialState } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -34,23 +34,15 @@ import type { Pricing } from '@/lib/pricing';
 
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
- * It uses a combination of useState and useEffect to manage state and avoid hydration
- * mismatches between server and client.
+ * It uses useSyncExternalStore, which is the officially recommended way to handle
+ * external stores with React 18+ and server-side rendering to prevent hydration mismatches.
  */
 function useStoreData<T>(selector: (state: AppState) => T): T {
-    const [state, setState] = useState(() => selector(initialState));
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setState(selector(store.get()));
-        });
-        
-        // Initial sync with client-side state after mount
-        setState(selector(store.get()));
-
-        return () => unsubscribe();
-    }, [selector]);
-
+    const state = useSyncExternalStore(
+        store.subscribe,
+        () => selector(store.get()),
+        () => selector(initialState) // Use the static initial state for the server-side render.
+    );
     return state;
 }
 
@@ -86,6 +78,7 @@ export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[])
 
 
 // Data hooks that return the reactive state slice and the setter functions.
+// Note: `isClient` is no longer needed as useSyncExternalStore handles SSR correctly.
 export const useServicesData = () => ({ services: useStoreData(s => s.services) });
 export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts: useCallback(setProducts, []) });
 export const useClientsData = () => ({
@@ -152,3 +145,5 @@ export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
     setStudents: useCallback(setStudents, []),
 });
+
+    
