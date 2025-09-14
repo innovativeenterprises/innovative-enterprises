@@ -17,19 +17,21 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
 export default function StudentHousingPage() {
-    const { leases, setLeases } = useLeasesData();
+    const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
     const [expiringLeasesCount, setExpiringLeasesCount] = useState<number | null>(null);
 
 
     useEffect(() => {
-        setIsClient(true);
-        if(isClient) {
-            const expiringCount = leases.filter(l => l.endDate && new Date(l.endDate) > new Date() && new Date(l.endDate).getMonth() === new Date().getMonth() + 1).length;
-            setExpiringLeasesCount(expiringCount);
-        }
-    }, [isClient, leases]);
+        const expiringCount = leases.filter(l => {
+            if (!l.endDate) return false;
+            const endDate = new Date(l.endDate);
+            const now = new Date();
+            // Check if expiry is in the future but within the next month.
+            return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() === now.getMonth() + 1;
+        }).length;
+        setExpiringLeasesCount(expiringCount);
+    }, [leases]);
 
 
     const handleDelete = (id: string) => {

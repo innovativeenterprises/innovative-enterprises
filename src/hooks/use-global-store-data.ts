@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useSyncExternalStore, useMemo, useCallback } from 'react';
@@ -107,6 +108,12 @@ export const useCommunityHubData = () => {
     }));
     return {
         ...data,
+        setCommunityEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
+            store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
+        },
+        setCommunityFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
+            store.set(state => ({ ...state, communityFinances: updater(state.communityFinances) }));
+        },
         isClient: true,
     };
 };
@@ -126,6 +133,9 @@ export const useProjectStagesData = () => {
     const stages = useStoreData(state => state.stages);
     return {
         stages,
+        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
+            store.set(state => ({ ...state, stages: updater(state.stages) }));
+        },
         isClient: true,
     };
 };
@@ -134,6 +144,9 @@ export const useSettingsData = () => {
     const settings = useStoreData(state => state.settings);
     return {
         settings,
+        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
+            store.set(state => ({ ...state, settings: updater(state.settings) }));
+        },
         isClient: true,
     };
 };
@@ -142,6 +155,9 @@ export const useAssetsData = () => {
     const assets = useStoreData(state => state.assets);
     return {
         assets,
+        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
+            store.set(state => ({ ...state, assets: updater(state.assets) }));
+        },
         isClient: true,
     };
 };
@@ -158,6 +174,9 @@ export const useKnowledgeData = () => {
     const knowledgeBase = useStoreData(state => state.knowledgeBase);
     return {
         knowledgeBase,
+        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
+            store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
+        },
         isClient: true,
     };
 };
@@ -204,6 +223,9 @@ export const usePropertiesData = () => {
     const properties = useStoreData(state => state.properties);
     return {
         properties,
+        setProperties: (updater: (properties: Property[]) => Property[]) => {
+            store.set(state => ({ ...state, properties: updater(state.properties) }));
+        },
         isClient: true,
     };
 };
@@ -223,6 +245,9 @@ export const useStairspaceRequestsData = () => {
     const stairspaceRequests = useStoreData(state => state.stairspaceRequests);
     return {
         stairspaceRequests,
+        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => StairspaceRequest[]) => {
+            store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
+        },
         isClient: true,
     };
 };
@@ -231,6 +256,9 @@ export const useOpportunitiesData = () => {
     const opportunities = useStoreData(state => state.opportunities);
     return {
         opportunities,
+        setOpportunities: (updater: (opps: Opportunity[]) => Opportunity[]) => {
+            store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
+        },
         isClient: true,
     };
 };
@@ -239,6 +267,9 @@ export const useCostSettingsData = () => {
     const costSettings = useStoreData(state => state.costSettings);
     return { 
         costSettings,
+        setCostSettings: (updater: (items: CostRate[]) => CostRate[]) => {
+            store.set(state => ({...state, costSettings: updater(state.costSettings)}));
+        },
         isClient: true 
     };
 }
