@@ -7,6 +7,7 @@ import { z } from 'zod';
  * data shape used across the application.
  */
 export const ProviderSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(3, "Name is required"),
   email: z.string().email("A valid email is required"),
   services: z.string().min(3, "Services are required"),

@@ -36,7 +36,6 @@ import type { Pricing } from '@/lib/pricing';
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
  * It uses useSyncExternalStore to be compatible with React 18's concurrent features.
- * The selector is applied *after* the state is retrieved to prevent infinite loops.
  */
 function useStoreData<T>(selector: (state: any) => T): T {
     const state = useSyncExternalStore(
@@ -54,7 +53,7 @@ export const useServicesData = () => {
         setServices: (updater: (services: Service[]) => Service[]) => {
             store.set(state => ({ ...state, services: updater(state.services) }));
         },
-        isClient: true, // Now always client-safe due to useSyncExternalStore
+        isClient: true,
     };
 };
 

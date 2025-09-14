@@ -270,11 +270,11 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
+    const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null } | null>(null);
 
     useEffect(() => {
         if (!expiry) {
-            setDaysUntilExpiry(null);
+            setClientState({ daysUntilExpiry: null });
             return;
         }
         const now = new Date();
@@ -283,10 +283,14 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         expiryDate.setHours(0, 0, 0, 0);
 
         const timeDiff = expiryDate.getTime() - now.getTime();
-        setDaysUntilExpiry(Math.ceil(timeDiff / (1000 * 3600 * 24)));
+        setClientState({ daysUntilExpiry: Math.ceil(timeDiff / (1000 * 3600 * 24)) });
     }, [expiry]);
 
-    if (daysUntilExpiry === null && tier !== 'Lifetime') {
+    if (!clientState) {
+        return <Skeleton className="h-8 w-full" />
+    }
+
+    if (clientState.daysUntilExpiry === null && tier !== 'Lifetime') {
         return tier === 'None' ? <Badge variant="secondary">No Subscription</Badge> : <Badge variant="outline">{tier}</Badge>;
     }
     
@@ -295,14 +299,14 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
     }
     
     const totalDuration = tier === 'Yearly' ? 365 : 30;
-    const progressValue = daysUntilExpiry !== null ? Math.max(0, (daysUntilExpiry / totalDuration) * 100) : 0;
+    const progressValue = clientState.daysUntilExpiry !== null ? Math.max(0, (clientState.daysUntilExpiry / totalDuration) * 100) : 0;
 
     return (
         <div className="w-full min-w-[150px]">
             <div className="flex justify-between items-center mb-1">
                 <Badge variant="outline">{tier}</Badge>
                 <div className="text-xs text-muted-foreground">
-                    {daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : ''}
+                    {clientState.daysUntilExpiry !== null ? (clientState.daysUntilExpiry > 0 ? `Expires in ${Math.ceil(clientState.daysUntilExpiry)} days` : 'Expired') : ''}
                 </div>
             </div>
             <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${'${progressValue}'}%`} />
@@ -440,4 +444,5 @@ export default function ProviderTable() {
 }
 
     
+
 

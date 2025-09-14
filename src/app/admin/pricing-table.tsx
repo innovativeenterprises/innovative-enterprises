@@ -85,15 +85,13 @@ export default function PricingTable() {
         toast({ title: "Price updated successfully." });
     };
 
-    const pricingByGroup = useMemo(() => {
-        return pricing.reduce((acc, item) => {
-            if (!acc[item.group]) {
-                acc[item.group] = [];
-            }
-            acc[item.group].push(item);
-            return acc;
-        }, {} as Record<string, Pricing[]>);
-    }, [pricing]);
+    const pricingByGroup = useMemo(() => pricing.reduce((acc, item) => {
+        if (!acc[item.group]) {
+            acc[item.group] = [];
+        }
+        acc[item.group].push(item);
+        return acc;
+    }, {} as Record<string, Pricing[]>), [pricing]);
 
 
     return (

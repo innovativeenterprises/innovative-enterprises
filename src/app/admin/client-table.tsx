@@ -234,18 +234,20 @@ export default function ClientTable() {
     };
 
     const filteredClients = useMemo(() => {
+        if (!isClient) return [];
         return clients.filter(client =>
             client.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [clients, searchTerm]);
+    }, [clients, searchTerm, isClient]);
 
     const filteredTestimonials = useMemo(() => {
+        if (!isClient) return [];
         return testimonials.filter(t =>
             t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
             t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
             t.company.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [testimonials, searchTerm]);
+    }, [testimonials, searchTerm, isClient]);
 
 
     return (
@@ -358,6 +360,7 @@ export default function ClientTable() {
     
 
     
+
 
 
 
