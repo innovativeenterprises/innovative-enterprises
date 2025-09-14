@@ -15,6 +15,14 @@ import { SeoAnalysisInputSchema, type SeoAnalysisOutput } from '@/ai/flows/seo-a
 import { analyzeSeo } from '@/ai/flows/seo-analyzer';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI SEO Analyzer | Innovative Enterprises",
+  description: "Enter a webpage URL and a target keyword. Serp, our SEO agent, will perform a detailed on-page analysis and provide actionable recommendations.",
+};
+
 
 const FormSchema = SeoAnalysisInputSchema;
 type FormValues = z.infer<typeof FormSchema>;
