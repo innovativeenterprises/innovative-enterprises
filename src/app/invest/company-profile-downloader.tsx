@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useRef, useState, useEffect } from "react";
@@ -134,15 +135,18 @@ export default function CompanyProfileDownloader() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
+    const [isReady, setIsReady] = useState(false);
     
     // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-    }, []);
-    
+        if (leadership && services && settings) {
+            setIsReady(true);
+        }
+    }, [leadership, services, settings]);
     
     const handleDownload = async () => {
-        if (!profileRef.current || !settings) return;
+        if (!profileRef.current || !settings || !isReady) return;
         setIsGenerating(true);
         toast({ title: 'Generating PDF...', description: 'Please wait while we create your company profile.' });
         
@@ -192,6 +196,14 @@ export default function CompanyProfileDownloader() {
     const enabledLeadership = leadership.filter(l => l.enabled);
     const products = initialProducts.filter(p => p.enabled);
 
+    if (!isReady) {
+        return (
+            <Button variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary" disabled>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile Data...
+            </Button>
+        );
+    }
+
     return (
         <>
             <div style={{ position: 'fixed', left: '-200vw', top: 0, zIndex: -100 }}>
@@ -218,5 +230,3 @@ export default function CompanyProfileDownloader() {
         </>
     );
 }
-
-    

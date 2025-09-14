@@ -39,129 +39,128 @@ function useStoreData<T>(selector: (state: any) => T): T {
 
 export function useServicesData() {
     const services = useStoreData(state => state.services);
-    return { services };
+    return { services, isClient: true };
 };
 
 export function useProductsData() {
     const products = useStoreData(state => state.products);
-    return { products };
+    return { products, isClient: true };
 };
 
 
 export function useClientsData() {
     const clients = useStoreData(state => state.clients);
     const testimonials = useStoreData(state => state.testimonials);
-    return { clients, testimonials };
+    return { clients, testimonials, isClient: true };
 };
 
 export function useProvidersData() {
     const providers = useStoreData(state => state.providers);
-    return { providers };
+    return { providers, isClient: true };
 };
 
 export function useStaffData() {
     const leadership = useStoreData(state => state.leadership);
     const staff = useStoreData(state => state.staff);
     const agentCategories = useStoreData(state => state.agentCategories);
-    return { leadership, staff, agentCategories };
+    return { leadership, staff, agentCategories, isClient: true };
 };
 
 export function useCommunitiesData() {
     const communities = useStoreData(state => state.communities);
-    return { communities };
+    return { communities, isClient: true };
 };
 
 export function useCommunityHubData() {
     const events = useStoreData(state => state.communityEvents);
     const finances = useStoreData(state => state.communityFinances);
-    return { events, finances };
+    return { events, finances, isClient: true };
 };
 
 export function useMembersData() {
     const members = useStoreData(state => state.communityMembers);
-    return { members };
+    return { members, isClient: true };
 };
 
 export function useProjectStagesData() {
     const stages = useStoreData(state => state.stages);
-    return { stages };
+    return { stages, isClient: true };
 };
 
 export function useSettingsData() {
     const settings = useStoreData(state => state.settings);
-    return { settings };
+    return { settings, isClient: true };
 };
 
 export function useAssetsData() {
     const assets = useStoreData(state => state.assets);
-    return { assets };
+    return { assets, isClient: true };
 };
 
 export function useInvestorsData() {
     const investors = useStoreData(state => state.investors);
-    return { investors };
+    return { investors, isClient: true };
 };
 
 export function useKnowledgeData() {
     const knowledgeBase = useStoreData(state => state.knowledgeBase);
-    return { knowledgeBase };
+    return { knowledgeBase, isClient: true };
 };
 
 export function useAgenciesData() {
     const agencies = useStoreData(state => state.raahaAgencies);
-    return { agencies };
+    return { agencies, isClient: true };
 };
 
 export function useWorkersData() {
     const workers = useStoreData(state => state.raahaWorkers);
-    return { workers };
+    return { workers, isClient: true };
 };
 
 export function useRequestsData() {
     const requests = useStoreData(state => state.raahaRequests);
-    return { requests };
+    return { requests, isClient: true };
 };
 
 export function useLeasesData() {
     const leases = useStoreData(state => state.signedLeases);
     return {
         leases,
-        setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
-            store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
-        },
+        isClient: true,
     };
 };
 
 export function usePropertiesData() {
     const properties = useStoreData(state => state.properties);
-    return { properties };
+    return { properties, isClient: true };
 };
 
 export function useStairspaceData() {
     const stairspaceListings = useStoreData(state => state.stairspaceListings);
     return {
         stairspaceListings,
+        isClient: true,
     };
 };
 
 export function useStairspaceRequestsData() {
     const stairspaceRequests = useStoreData(state => state.stairspaceRequests);
-    return { stairspaceRequests };
+    return { stairspaceRequests, isClient: true };
 };
 
 export function useOpportunitiesData() {
     const opportunities = useStoreData(state => state.opportunities);
-    return { opportunities };
+    return { opportunities, isClient: true };
 };
 
 export function useCostSettingsData() {
     const costSettings = useStoreData(state => state.costSettings);
-    return { costSettings };
+    return { costSettings, isClient: true };
 }
 
 export function usePricingData() {
     const pricing = useStoreData(state => state.pricing);
-    return { pricing };
+    return { pricing, isClient: true };
 }
 
 export function useCfoData() {
@@ -170,13 +169,14 @@ export function useCfoData() {
     const upcomingPayments = useStoreData(state => state.upcomingPayments);
     const vatPayment = useStoreData(state => state.vatPayment);
     const cashFlowData = useStoreData(state => state.cashFlowData);
-    return { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData };
+    return { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, isClient: true };
 };
 
 export function useStudentsData() {
     const students = useStoreData(state => state.students);
     return {
         students,
+        isClient: true,
     };
 };
 
