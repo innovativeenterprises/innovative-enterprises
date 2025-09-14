@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -268,6 +269,52 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
     );
 };
 
+const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
+    const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null } | null>(null);
+
+    useEffect(() => {
+        if (!expiry) {
+            setClientState({ daysUntilExpiry: null });
+            return;
+        }
+        const now = new Date();
+        const diffTime = new Date(expiry).getTime() - now.getTime();
+        setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
+    }, [expiry]);
+
+    if (!clientState) {
+        return <Skeleton className="h-8 w-full" />;
+    }
+    
+     if (tier === 'None') {
+        return <Badge variant="secondary">No Subscription</Badge>;
+    }
+    if (tier === 'Lifetime') {
+        return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
+    }
+    
+    const { daysUntilExpiry } = clientState;
+
+    if (daysUntilExpiry === null) {
+         return <Badge variant="outline">{tier}</Badge>;
+    }
+    
+    const totalDuration = tier === 'Yearly' ? 365 : 30;
+    const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
+
+    return (
+        <div className="w-full min-w-[150px]">
+            <div className="flex justify-between items-center mb-1">
+                <Badge variant="outline">{tier}</Badge>
+                <div className="text-xs text-muted-foreground">
+                    {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
+                </div>
+            </div>
+            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progressValue}%`} />
+        </div>
+    )
+}
+
 export default function ProviderTable() {
     const { providers, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
@@ -316,53 +363,6 @@ export default function ProviderTable() {
             default: return <Badge variant="outline">{status}</Badge>;
         }
     }
-    
-    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-        const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null } | null>(null);
-
-        useEffect(() => {
-            if (!expiry) {
-                setClientState({ daysUntilExpiry: null });
-                return;
-            }
-            const now = new Date();
-            const diffTime = new Date(expiry).getTime() - now.getTime();
-            setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
-        }, [expiry]);
-
-        if (!clientState) {
-            return <Skeleton className="h-8 w-full" />;
-        }
-        
-         if (tier === 'None') {
-            return <Badge variant="secondary">No Subscription</Badge>;
-        }
-        if (tier === 'Lifetime') {
-            return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
-        }
-        
-        const { daysUntilExpiry } = clientState;
-
-        if (daysUntilExpiry === null) {
-             return <Badge variant="outline">{tier}</Badge>;
-        }
-        
-        const totalDuration = tier === 'Yearly' ? 365 : 30;
-        const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
-
-        return (
-            <div className="w-full min-w-[150px]">
-                <div className="flex justify-between items-center mb-1">
-                    <Badge variant="outline">{tier}</Badge>
-                    <div className="text-xs text-muted-foreground">
-                        {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
-                    </div>
-                </div>
-                <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progressValue}%`} />
-            </div>
-        )
-    }
-
 
     return (
         <Card>

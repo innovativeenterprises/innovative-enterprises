@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useSyncExternalStore } from 'react';
@@ -29,7 +28,7 @@ import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-reque
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
 
 
@@ -222,5 +221,3 @@ export const setOpportunities = (updater: (opps: Opportunity[]) => Opportunity[]
 export const setCostSettings = (updater: (items: CostRate[]) => CostRate[]) => store.set(state => ({...state, costSettings: updater(state.costSettings)}));
 export const setPricing = (updater: (items: Pricing[]) => Pricing[]) => store.set(state => ({...state, pricing: updater(state.pricing)}));
 export const setStudents = (updater: (students: Student[]) => Student[]) => store.set(state => ({...state, students: updater(state.students)}));
-
-    

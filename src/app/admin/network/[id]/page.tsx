@@ -13,6 +13,57 @@ import { Progress } from '@/components/ui/progress';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
+const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
+    const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null } | null>(null);
+
+    useEffect(() => {
+        if (!expiry) {
+            setClientState({ daysUntilExpiry: null });
+            return;
+        }
+        const now = new Date();
+        const diffTime = new Date(expiry).getTime() - now.getTime();
+        setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
+    }, [expiry]);
+
+
+    if (tier === 'None') {
+        return <Badge variant="secondary">No Subscription</Badge>;
+    }
+    if (tier === 'Lifetime') {
+        return (
+             <div className="flex items-center gap-2 text-purple-700 font-semibold">
+                <Star className="h-5 w-5 fill-purple-500 text-purple-500" /> Lifetime
+             </div>
+        )
+    }
+    
+    if (!clientState) {
+        return <Skeleton className="h-8 w-48"/>;
+    }
+
+    const { daysUntilExpiry } = clientState;
+    
+    if (daysUntilExpiry === null) {
+        return <Badge variant="outline">{tier}</Badge>;
+    }
+    
+    const totalDuration = tier === 'Yearly' ? 365 : 30;
+    const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
+
+    return (
+        <div className="w-full min-w-[200px] space-y-2">
+            <div className="flex justify-between items-center">
+                <Badge variant="outline">{tier}</Badge>
+                <p className="text-xs text-muted-foreground">
+                    {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
+                </p>
+            </div>
+            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
+        </div>
+    )
+}
+
 export default function ProviderDetailPage() {
     const params = useParams();
     const { id } = params;
@@ -32,57 +83,6 @@ export default function ProviderDetailPage() {
             case "On Hold": return <Badge variant="destructive" className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">On Hold</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
         }
-    }
-    
-    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-        const [clientState, setClientState] = useState<{daysUntilExpiry: number | null} | null>(null);
-
-        useEffect(() => {
-            if (!expiry) {
-                setClientState({ daysUntilExpiry: null });
-                return;
-            }
-            const now = new Date();
-            const diffTime = new Date(expiry).getTime() - now.getTime();
-            setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
-        }, [expiry]);
-
-
-        if (tier === 'None') {
-            return <Badge variant="secondary">No Subscription</Badge>;
-        }
-        if (tier === 'Lifetime') {
-            return (
-                 <div className="flex items-center gap-2 text-purple-700 font-semibold">
-                    <Star className="h-5 w-5 fill-purple-500 text-purple-500" /> Lifetime
-                 </div>
-            )
-        }
-        
-        if (!clientState) {
-            return <Skeleton className="h-8 w-48"/>;
-        }
-
-        const { daysUntilExpiry } = clientState;
-        
-        if (daysUntilExpiry === null) {
-            return <Badge variant="outline">{tier}</Badge>;
-        }
-        
-        const totalDuration = tier === 'Yearly' ? 365 : 30;
-        const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
-
-        return (
-            <div className="w-full min-w-[200px] space-y-2">
-                <div className="flex justify-between items-center">
-                    <Badge variant="outline">{tier}</Badge>
-                    <p className="text-xs text-muted-foreground">
-                        {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
-                    </p>
-                </div>
-                <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
-            </div>
-        )
     }
 
     return (
