@@ -110,7 +110,7 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
             },
             {
                 title: "DriveSync AI",
-                href: "/drivesync-ai/find-a-car",
+                href: "/drivesync-ai",
                 description: "An AI-powered SaaS platform for car rental agencies with an intelligent booking agent.",
                 icon: Car,
             },
@@ -151,6 +151,12 @@ const industriesByCategory: { category: string; items: { title: string; href: st
                 href: "/education-tech",
                 description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
                 icon: GraduationCap,
+            },
+             {
+                title: "Automotive Tech",
+                href: "/drivesync-ai",
+                description: "Solutions for car rental agencies, including AI booking agents and fleet management.",
+                icon: Car,
             },
         ]
     },

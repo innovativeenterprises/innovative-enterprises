@@ -616,6 +616,20 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/community-hub",
         adminStatus: "Completed",
+    },
+    {
+        id: 48,
+        name: "DriveSync AI",
+        description: "An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS for real-time tracking.",
+        stage: "Live & Operating",
+        category: "Automotive Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/drivesync/400/400",
+        aiHint: "car rental dashboard",
+        rating: 0,
+        enabled: true,
+        href: "/drivesync-ai",
+        adminStatus: "Completed",
     }
 ];
 

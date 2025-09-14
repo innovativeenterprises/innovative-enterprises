@@ -1,6 +1,6 @@
 
 
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -161,6 +161,14 @@ export const initialServices: Service[] = [
     description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
     enabled: true,
     href: "/education-tech",
+    category: "Business Tech Solutions"
+  },
+    {
+    icon: Car,
+    title: "Automotive Tech",
+    description: "Solutions for car rental agencies, including AI booking agents and fleet management.",
+    enabled: true,
+    href: "/drivesync-ai",
     category: "Business Tech Solutions"
   },
   // Essential Business Services
