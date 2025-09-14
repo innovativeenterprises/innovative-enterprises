@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useSyncExternalStore, useMemo } from 'react';
@@ -32,13 +31,19 @@ import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
 
+/**
+ * Custom hook to safely subscribe to the global store and select a slice of state.
+ * It uses useSyncExternalStore to be compatible with React 18's concurrent features.
+ * The getServerSnapshot returns the entire cached state to prevent infinite loops during SSR.
+ * The selector is then applied to the result of the hook.
+ */
 function useStoreData<T>(selector: (state: any) => T): T {
     const state = useSyncExternalStore(
         store.subscribe,
-        () => selector(store.get()),
-        () => selector(store.getSsrState())
+        () => store.get(),
+        () => store.getSsrState()
     );
-    return state;
+    return useMemo(() => selector(state), [state, selector]);
 }
 
 export const useServicesData = () => {
@@ -120,9 +125,6 @@ export const useProjectStagesData = () => {
     const stages = useStoreData(state => state.stages);
     return {
         stages,
-        setStages: (updater: (stages: ProjectStage[]) => ProjectStage[]) => {
-            store.set(state => ({ ...state, stages: updater(state.stages) }));
-        },
         isClient: true,
     };
 };
