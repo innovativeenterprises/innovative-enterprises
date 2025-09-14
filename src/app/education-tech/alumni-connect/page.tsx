@@ -4,7 +4,7 @@
 import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Briefcase, Calendar, GraduationCap, HandCoins, Search, Building2, User } from "lucide-react";
+import { ArrowRight, Briefcase, Calendar, GraduationCap, HandCoins, Search, Building2, User, MapPin } from "lucide-react";
 import Link from "next/link";
 import { initialMembers, type CommunityMember } from '@/lib/community-members';
 import { initialEvents, type CommunityEvent } from '@/lib/community-events';

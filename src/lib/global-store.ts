@@ -46,6 +46,7 @@ import { initialCars, type Car } from './cars';
 import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
 import { initialDailySales, type DailySales, type Transaction as PosTransaction } from './pos-data';
 import { initialGiftCards, type GiftCard } from './gift-cards';
+import { initialJobs, type JobPosting } from './alumni-jobs';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -99,6 +100,7 @@ export type AppState = {
   rentalAgencies: RentalAgency[];
   dailySales: PosTransaction[];
   giftCards: GiftCard[];
+  alumniJobs: JobPosting[];
 };
 
 export const initialState: AppState = {
@@ -142,6 +144,7 @@ export const initialState: AppState = {
   rentalAgencies: initialRentalAgencies,
   dailySales: initialDailySales,
   giftCards: initialGiftCards,
+  alumniJobs: initialJobs,
 };
 
 // The single source of truth for our application's shared state.

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -218,7 +219,7 @@ const industriesByCategory: { category: string; items: { title: string; href: st
                 title: "VMALL",
                 href: "/vmall",
                 description: "A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences.",
-                icon: VrHeadset,
+                icon: VmallIcon,
             },
              {
                 title: "AlumniConnect",
