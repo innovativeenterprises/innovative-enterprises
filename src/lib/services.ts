@@ -1,11 +1,11 @@
 
-
 import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
 import SanadHubIcon from '@/components/icons/sanad-hub-icon';
 import AmeenSmartLockIcon from '@/components/icons/ameen-smart-lock-icon';
+import KhidmaIcon from '@/components/icons/khidma-icon';
 
 export interface Service {
   icon: LucideIcon;
@@ -32,6 +32,14 @@ export const initialServices: Service[] = [
     description: "An exclusive, AI-managed ecosystem for VIPs, executives, and their trusted networks, focusing on discreet problem-solving and curated opportunities.",
     enabled: true,
     href: "/vip-hub",
+    category: "Digital Transformations"
+  },
+   {
+    icon: KhidmaIcon,
+    title: "KHIDMA",
+    description: "A dynamic marketplace connecting service seekers with qualified providers through an innovative auction/tender system.",
+    enabled: true,
+    href: "/khidma",
     category: "Digital Transformations"
   },
   // Data Analytics

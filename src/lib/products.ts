@@ -663,7 +663,7 @@ export const initialProducts: Product[] = [
         id: 51,
         name: "StockClear",
         description: "B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales.",
-        stage: "Planning Phase",
+        stage: "Live & Operating",
         category: "General Platforms & SaaS",
         price: 0,
         image: "https://picsum.photos/seed/stockclear/400/400",
@@ -671,7 +671,21 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/stock-clear",
-        adminStatus: "On Track"
+        adminStatus: "Completed"
+    },
+    {
+        id: 52,
+        name: "KHIDMA",
+        description: "A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/khidma/400/400",
+        aiHint: "service marketplace app",
+        rating: 0,
+        enabled: true,
+        href: "/khidma",
+        adminStatus: "Completed"
     }
 ];
 
