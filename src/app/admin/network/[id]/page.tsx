@@ -27,7 +27,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         expiryDate.setHours(0, 0, 0, 0);
 
         const timeDiff = expiryDate.getTime() - now.getTime();
-        setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
+        setClientState({ daysUntilExpiry: Math.ceil(timeDiff / (1000 * 3600 * 24)) });
     }, [expiry]);
 
 
@@ -133,3 +133,5 @@ export default function ProviderDetailPage() {
         </div>
     );
 }
+
+    
