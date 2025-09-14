@@ -246,7 +246,7 @@ export default function ClientTable() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Client &amp; Testimonial Management</CardTitle>
+                <CardTitle>Client & Testimonial Management</CardTitle>
                 <CardDescription>Manage the logos and testimonials on your homepage.</CardDescription>
             </CardHeader>
             <CardContent>

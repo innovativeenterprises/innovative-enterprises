@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useSyncExternalStore, useState, useEffect } from 'react';
@@ -103,26 +102,29 @@ export const useCommunityHubData = () => ({
     members: useStoreData(s => s.communityMembers),
     isClient: true,
 });
-export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), isClient: true });
-export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), isClient: true });
+export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
+export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages: setProjectStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), isClient: true });
 export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), isClient: true });
 export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), isClient: true });
 export const useKnowledgeData = () => ({
     knowledgeBase: useStoreData(s => s.knowledgeBase),
+    setKnowledgeBase,
     isClient: true,
 });
-export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), isClient: true });
+export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), isClient: true });
 export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
-export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), isClient: true });
+export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), isClient: true });
 export const useStairspaceData = () => ({
     stairspaceListings: useStoreData(s => s.stairspaceListings),
+    setStairspaceListings,
     isClient: true,
 });
 export const useStairspaceRequestsData = () => ({
     stairspaceRequests: useStoreData(s => s.stairspaceRequests),
+    setStairspaceRequests,
     isClient: true,
 });
 export const useOpportunitiesData = () => ({
@@ -131,10 +133,12 @@ export const useOpportunitiesData = () => ({
 });
 export const useCostSettingsData = () => ({
     costSettings: useStoreData(s => s.costSettings),
+    setCostSettings: setCostSettings,
     isClient: true,
 });
 export const usePricingData = () => ({
     pricing: useStoreData(s => s.pricing),
+    setPricing: setPricing,
     isClient: true,
 });
 export const useCfoData = () => ({
@@ -147,6 +151,7 @@ export const useCfoData = () => ({
 });
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
+    setStudents: setStudents,
     isClient: true,
 });
 export const useBeautyData = () => ({
@@ -154,6 +159,8 @@ export const useBeautyData = () => ({
     services: useStoreData(s => s.beautyServices),
     specialists: useStoreData(s => s.beautySpecialists),
     appointments: useStoreData(s => s.beautyAppointments),
+    setBeautyCenters: (updater: (prev: BeautyCenter[]) => BeautyCenter[]) => store.set(state => ({...state, beautyCenters: updater(state.beautyCenters)})),
+    setBeautyAppointments: (updater: (prev: BeautyAppointment[]) => BeautyAppointment[]) => store.set(state => ({...state, beautyAppointments: updater(state.beautyAppointments)})),
     isClient: true,
 });
 export const useDriveSyncData = () => ({
