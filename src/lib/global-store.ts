@@ -13,7 +13,7 @@
 import { initialServices, type Service } from './services';
 import { initialProducts, type Product, initialStoreProducts } from './products';
 import { initialClients, type Client, initialTestimonials, type Testimonial } from './clients';
-import { initialStaffData, type Agent, type AgentCategory } from './agents';
+import { initialStaffData, type Agent, type AgentCategory, initialAgentCategories } from './agents';
 import { initialOpportunities, type Opportunity } from './opportunities';
 import { initialPricing, type Pricing } from './pricing';
 import { initialStages, type ProjectStage } from './stages';
@@ -98,7 +98,7 @@ let state: AppState = {
   testimonials: initialTestimonials,
   leadership: initialStaffData.leadership,
   staff: initialStaffData.staff,
-  agentCategories: initialStaffData.agentCategories,
+  agentCategories: initialAgentCategories,
   opportunities: initialOpportunities,
   pricing: initialPricing,
   stages: initialStages,

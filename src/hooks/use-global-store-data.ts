@@ -35,8 +35,8 @@ import type { Pricing } from '@/lib/pricing';
 function useStoreData<T>(selector: (state: any) => T): T {
     const state = useSyncExternalStore(
         store.subscribe,
-        () => selector(store.get()), // client-side
-        () => selector(store.getSsrState()) // server-side
+        () => selector(store.get()),
+        () => selector(store.getSsrState())
     );
     return state;
 }
