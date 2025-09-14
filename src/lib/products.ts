@@ -648,7 +648,7 @@ export const initialProducts: Product[] = [
     {
         id: 52,
         name: "KHIDMA",
-        description: "A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers.",
+        description: "A revolutionary AI-powered mobile application that transforms the traditional service industry. It acts as a dynamic marketplace connecting service seekers with qualified providers through an innovative auction and tender system.",
         stage: "In Development",
         category: "General Platforms & SaaS",
         price: 0,
