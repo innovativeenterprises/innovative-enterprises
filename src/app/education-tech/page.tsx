@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -122,7 +121,7 @@ export default function EducationTechPage() {
                 <p className="mt-4 text-lg text-muted-foreground">A preview of our dedicated solutions for the education sector.</p>
             </div>
             {isClient ? (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {edtechProducts.map(product => (
                         <ProductCard key={product.id} product={product} />
                     ))}
