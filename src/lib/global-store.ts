@@ -129,6 +129,10 @@ let state: AppState = {
   cashFlowData: cashFlowData,
 };
 
+// This will hold the single, cached version of the state for the server render.
+let serverState: AppState | null = null;
+
+
 // A list of all component update functions to call when state changes.
 const listeners = new Set<() => void>();
 
@@ -139,6 +143,17 @@ export const store = {
    * Returns a snapshot of the current state.
    */
   get: (): Readonly<AppState> => state,
+  
+  /**
+   * Returns a stable, cached snapshot of the initial state for SSR.
+   */
+  getSsrState: (): Readonly<AppState> => {
+    if (serverState === null) {
+        serverState = { ...state };
+    }
+    return serverState;
+  },
+
 
   /**
    * Updates a part of the state and notifies all listeners.
