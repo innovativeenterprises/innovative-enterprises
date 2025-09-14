@@ -32,6 +32,7 @@ import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowDat
 import type { Pricing } from '@/lib/pricing';
 import type { Car } from '@/lib/cars';
 import type { RentalAgency } from '@/lib/rental-agencies';
+import type { Transaction as PosTransaction } from '@/lib/pos-data';
 
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
@@ -78,7 +79,7 @@ export const setStudents = (updater: (prev: Student[]) => Student[]) => store.se
 export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
 export const setCars = (updater: (prev: Car[]) => Car[]) => store.set(state => ({ ...state, cars: updater(state.cars) }));
 export const setRentalAgencies = (updater: (prev: RentalAgency[]) => RentalAgency[]) => store.set(state => ({ ...state, rentalAgencies: updater(state.rentalAgencies) }));
-
+export const setDailySales = (updater: (prev: PosTransaction[]) => PosTransaction[]) => store.set(state => ({...state, dailySales: updater(state.dailySales) }));
 
 // Data hooks that return the reactive state slice. isClient is now always true.
 export const useServicesData = () => ({ services: useStoreData(s => s.services), isClient: true });
@@ -95,7 +96,7 @@ export const useStaffData = () => ({
     agentCategories: useStoreData(s => s.agentCategories),
     isClient: true,
 });
-export const useCommunitiesData = () => ({ communities: useStoreData(s => s.communities), isClient: true });
+export const useCommunitiesData = () => ({ communities: useStoreData(s => s.communities), setCommunities, isClient: true });
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
@@ -116,7 +117,7 @@ export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgenc
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), isClient: true });
 export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
 export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
-export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), isClient: true });
+export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties: setProperties, isClient: true });
 export const useStairspaceData = () => ({
     stairspaceListings: useStoreData(s => s.stairspaceListings),
     setStairspaceListings,
@@ -166,5 +167,9 @@ export const useBeautyData = () => ({
 export const useDriveSyncData = () => ({
     cars: useStoreData(s => s.cars),
     rentalAgencies: useStoreData(s => s.rentalAgencies),
+    isClient: true,
+});
+export const usePosData = () => ({
+    dailySales: useStoreData(s => s.dailySales),
     isClient: true,
 });
