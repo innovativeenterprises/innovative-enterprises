@@ -649,7 +649,7 @@ export const initialProducts: Product[] = [
         id: 52,
         name: "KHIDMA",
         description: "A revolutionary AI-powered mobile application that transforms the traditional service industry. It acts as a dynamic marketplace connecting service seekers with qualified providers through an innovative auction and tender system.",
-        stage: "In Development",
+        stage: "Live & Operating",
         category: "General Platforms & SaaS",
         price: 0,
         image: "https://picsum.photos/seed/khidma/400/400",
@@ -657,7 +657,7 @@ export const initialProducts: Product[] = [
         rating: 0,
         enabled: true,
         href: "/khidma",
-        adminStatus: "On Track"
+        adminStatus: "Completed"
     },
     {
         id: 53,
