@@ -41,7 +41,7 @@ const synthesizerPrompt = ai.definePrompt({
 {{/if}}
 
 **Scraped Research Data:**
-'''
+'''json
 {{{json researchData}}}
 '''
 
