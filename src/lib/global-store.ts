@@ -46,7 +46,7 @@ import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
 import { initialBeautyServices, type BeautyService, initialSpecialists, type Specialist } from './beauty-services';
 import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 import { initialCars, type Car } from './cars';
-import { initialRentalAgencies } from './rental-agencies';
+import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
 
 
 export interface CartItem extends Product {
