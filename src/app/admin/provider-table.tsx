@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -319,19 +318,19 @@ export default function ProviderTable() {
     }
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-        const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
+        const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null } | null>(null);
 
         useEffect(() => {
             if (!expiry) {
-                setDaysUntilExpiry(null);
+                setClientState({ daysUntilExpiry: null });
                 return;
             }
             const now = new Date();
             const diffTime = new Date(expiry).getTime() - now.getTime();
-            setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
+            setClientState({ daysUntilExpiry: Math.ceil(diffTime / (1000 * 3600 * 24)) });
         }, [expiry]);
 
-        if (!isClient) {
+        if (!clientState) {
             return <Skeleton className="h-8 w-full" />;
         }
         
@@ -342,6 +341,8 @@ export default function ProviderTable() {
             return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
         }
         
+        const { daysUntilExpiry } = clientState;
+
         if (daysUntilExpiry === null) {
              return <Badge variant="outline">{tier}</Badge>;
         }
