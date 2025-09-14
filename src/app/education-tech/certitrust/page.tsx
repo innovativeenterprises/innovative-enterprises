@@ -45,7 +45,7 @@ export default function CertiTrustPage() {
                     </div>
                     <div className="grid md:grid-cols-3 gap-8">
                         {features.map((feature) => (
-                            <Card key={feature.title} className="text-center bg-card">
+                            <Card key={feature.title} className="text-center bg-card flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                                  <CardHeader className="items-center">
                                     <div className="bg-primary/10 p-3 rounded-full">
                                         <feature.icon className="w-8 h-8 text-primary" />

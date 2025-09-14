@@ -310,7 +310,7 @@ export const initialProducts: Product[] = [
         aiHint: "green building energy",
         rating: 0,
         enabled: true,
-        href: "/education-tech/campus-os",
+        href: "/real-estate-tech/ecobuild-certify",
         adminStatus: 'Completed',
         adminNotes: "Awaiting government regulations on green building standards before proceeding."
     },

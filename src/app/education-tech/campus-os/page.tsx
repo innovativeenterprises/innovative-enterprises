@@ -1,10 +1,9 @@
 
-
 'use client';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Leaf, Droplets, Wind, Upload, Download, CheckCircle, Cpu } from "lucide-react";
+import { Leaf, Droplets, Wind, Upload, Download, CheckCircle, Cpu, Wrench } from "lucide-react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
@@ -129,6 +128,21 @@ export default function CampusOsPage() {
                                 (Full reporting and automated data ingestion features coming soon)
                             </p>
                         </CardFooter>
+                    </Card>
+                    
+                    <Card>
+                        <CardHeader>
+                             <CardTitle className="text-lg flex items-center gap-2"><Wrench className="h-5 w-5 text-primary" /> Predictive Maintenance</CardTitle>
+                             <CardDescription>Use AI to predict equipment failures before they happen.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-center text-muted-foreground py-10">
+                                This feature is currently in development. It will connect to IoT sensors on campus equipment (AC units, elevators, pumps) to monitor health and predict maintenance needs.
+                            </div>
+                        </CardContent>
+                         <CardFooter>
+                            <Button disabled variant="secondary">View Maintenance Schedule (Coming Soon)</Button>
+                         </CardFooter>
                     </Card>
                 </div>
             </div>
