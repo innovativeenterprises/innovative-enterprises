@@ -32,33 +32,19 @@ export async function generateEnhancedCv(input: CvGenerationInput): Promise<CvGe
   return cvGenerationFlow(input);
 }
 
-// New Step 1: A robust prompt to just extract and repair text from the document.
-const repairPrompt = ai.definePrompt({
-    name: 'cvRepairPrompt',
-    input: { schema: CvAnalysisInputSchema },
-    output: { schema: z.object({ repairedText: z.string().describe("The clean, repaired text extracted from the CV document.") }) },
-    prompt: `You are an OCR and text extraction expert. Your only task is to read the provided document, which is a CV, and extract all of its text content.
-    The document may be a messy PDF, an image, or a Word file. Do your best to reconstruct the text, correct OCR errors, and present it as a clean, readable block of text.
-
-    CV Document: {{media url=cvDataUri}}
-
-    Return ONLY the cleaned text in the 'repairedText' field.`,
-});
-
 
 const analysisPrompt = ai.definePrompt({
   name: 'cvAnalysisPrompt',
-  input: { schema: z.object({ cvText: z.string() }) }, // Input is now clean text
+  input: { schema: CvAnalysisInputSchema }, // Input is now the data URI
   output: { schema: CvAnalysisOutputSchema },
   prompt: `You are an expert HR professional specializing in optimizing resumes for Applicant Tracking Systems (ATS).
-Your task is to analyze the provided CV text and give detailed, actionable feedback to improve its ATS compatibility.
+Your task is to analyze the provided CV document and give detailed, actionable feedback to improve its ATS compatibility.
 
-CV Text:
-"""
-{{{cvText}}}
-"""
+CV Document:
+{{media url=cvDataUri}}
 
-Analyze the CV text based on the following criteria and provide a structured response.
+First, perform robust OCR and text extraction to get the clean text from the document, which may be a PDF, image, or Word file.
+Then, analyze the extracted CV text based on the following criteria and provide a structured response.
 1.  **Overall Score**: Provide a score from 0 to 100 representing how well the CV is optimized for ATS.
 2.  **Summary**: Briefly summarize the key areas for improvement.
 3.  **Contact Information**: Check for standard format (Name, Phone, Email, LinkedIn URL). Ensure it's easily parsable.
@@ -78,17 +64,11 @@ const cvAnalysisFlow = ai.defineFlow(
     outputSchema: CvAnalysisOutputSchema,
   },
   async (input) => {
-    // Step 1: Repair and extract clean text from the document.
-    const repairResult = await repairPrompt(input);
-    const cvText = repairResult.output?.repairedText;
-
-    if (!cvText) {
-        throw new Error("Could not extract any text from the provided CV document.");
+    const { output } = await analysisPrompt(input);
+    if (!output) {
+      throw new Error("Could not analyze the provided CV document.");
     }
-    
-    // Step 2: Analyze the clean text.
-    const { output } = await analysisPrompt({ cvText });
-    return output!;
+    return output;
   }
 );
 
