@@ -1,4 +1,3 @@
-
 'use client';
 
 import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Users, Home } from "lucide-react";
@@ -122,7 +121,7 @@ export default function EduFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/education-tech/student-housing">
+                        <Link href="/real-estate-tech/student-housing">
                             Launch Housing Manager <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>

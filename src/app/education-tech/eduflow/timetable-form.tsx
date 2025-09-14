@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -97,8 +96,8 @@ export default function TimetableForm() {
                         {subjectFields.map((field, index) => (
                              <Card key={field.id} className="p-4 bg-muted/50 relative">
                                 <div className="grid grid-cols-2 gap-4">
-                                     <FormField control={form.control} name={`subjects.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Subject</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)} />
-                                     <FormField control={form.control} name={`subjects.${index}.teacher`} render={({ field }) => (<FormItem><FormLabel>Teacher</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                     <FormField control={form.control} name={`subjects.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Subject</FormLabel><FormControl><Input placeholder="e.g., Mathematics" {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                     <FormField control={form.control} name={`subjects.${index}.teacher`} render={({ field }) => (<FormItem><FormLabel>Teacher</FormLabel><FormControl><Input placeholder="e.g., Mr. Ahmed" {...field} /></FormControl><FormMessage/></FormItem>)} />
                                 </div>
                                 <FormField control={form.control} name={`subjects.${index}.requiredSlots`} render={({ field }) => (<FormItem className="mt-4"><FormLabel>Weekly Slots</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)} />
                                 <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => removeSubject(index)}><Trash2 className="h-4 w-4" /></Button>
@@ -111,7 +110,7 @@ export default function TimetableForm() {
                         <h3 className="text-lg font-semibold">Classrooms</h3>
                         {classroomFields.map((field, index) => (
                              <Card key={field.id} className="p-4 bg-muted/50 relative">
-                                <FormField control={form.control} name={`classrooms.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Classroom Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                <FormField control={form.control} name={`classrooms.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Classroom Name</FormLabel><FormControl><Input placeholder="e.g., Classroom 101" {...field} /></FormControl><FormMessage/></FormItem>)} />
                                 <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => removeClassroom(index)}><Trash2 className="h-4 w-4" /></Button>
                             </Card>
                         ))}

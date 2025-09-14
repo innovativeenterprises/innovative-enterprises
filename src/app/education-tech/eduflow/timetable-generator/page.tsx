@@ -1,4 +1,3 @@
-
 'use client';
 
 import { GanttChartSquare } from "lucide-react";
