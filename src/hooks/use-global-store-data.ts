@@ -127,7 +127,8 @@ export const useCommunityHubData = () => {
         finances: state.communityFinances,
     }));
     return {
-        ...data,
+        events: data.events,
+        finances: data.finances,
         setCommunityEvents: useCallback(setCommunityEvents, []),
         setCommunityFinances: useCallback(setCommunityFinances, []),
         isClient: true,

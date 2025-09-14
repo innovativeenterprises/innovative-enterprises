@@ -8,37 +8,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { store } from '@/lib/global-store';
-import type { SignedLease } from '@/lib/leases';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
+import { useLeasesData } from '@/hooks/use-global-store-data';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { SignedLease } from '@/lib/leases';
 
 export default function SmartLeaseManagerPage() {
-    const [leases, setLeases] = useState<SignedLease[]>([]);
+    const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
 
-    useEffect(() => {
-        const updateLeases = () => setLeases(store.get().signedLeases);
-        updateLeases();
-        const unsubscribe = store.subscribe(updateLeases);
-        return () => unsubscribe();
-    }, []);
-
     const handleDelete = (id: string) => {
-        store.set(state => ({
-            ...state,
-            signedLeases: state.signedLeases.filter(lease => lease.id !== id)
-        }));
+        setLeases(prev => prev.filter(lease => lease.id !== id));
         toast({ title: "Agreement Deleted", description: "The lease agreement has been removed from your dashboard.", variant: "destructive" });
     };
-    
-    const totalMonthlyRent = leases.reduce((sum, lease) => {
-        if (lease.status === 'Active' && lease.contractType === 'Tenancy Agreement' && lease.pricePeriod === 'per month') {
-            return sum + lease.price;
-        }
-        return sum;
-    }, 0);
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -60,27 +44,17 @@ export default function SmartLeaseManagerPage() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6 mb-8">
-                         <Card>
-                             <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
-                             <CardContent className="text-3xl font-bold text-primary">{leases.filter(l => l.status === 'Active').length}</CardContent>
-                        </Card>
-                         <Card>
-                            <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">OMR {totalMonthlyRent.toLocaleString()}</CardContent>
-                        </Card>
-                         <Card>
-                            <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{leases.filter(l => l.endDate && new Date(l.endDate) > new Date() && new Date(l.endDate).getMonth() === new Date().getMonth() + 1).length}</CardContent>
-                        </Card>
-                    </div>
-
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle>Your Agreements</CardTitle>
-                            <Button asChild>
-                                <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Contract</Link>
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button asChild variant="secondary">
+                                    <Link href="/education-tech/student-housing">Manage Student Housing</Link>
+                                </Button>
+                                <Button asChild>
+                                    <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Contract</Link>
+                                </Button>
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <Table>
@@ -94,7 +68,13 @@ export default function SmartLeaseManagerPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {leases.length === 0 ? (
+                                    {!isClient ? (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center h-24">
+                                                <Skeleton className="h-10 w-full" />
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : leases.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
                                                 You have no signed agreements yet. Generate a new contract to get started.
