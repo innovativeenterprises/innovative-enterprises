@@ -10,16 +10,17 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Provider } from '@/lib/providers';
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null } | null>(null);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => setIsClient(true), []);
 
-    useEffect(() => {
-        if (!expiry) {
-            setClientState({ daysUntilExpiry: null });
-            return;
+    const { daysUntilExpiry, progressValue } = useMemo(() => {
+        if (!isClient || !expiry) {
+            return { daysUntilExpiry: null, progressValue: 0 };
         }
         const now = new Date();
         now.setHours(0, 0, 0, 0);
@@ -27,9 +28,17 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         expiryDate.setHours(0, 0, 0, 0);
 
         const timeDiff = expiryDate.getTime() - now.getTime();
-        setClientState({ daysUntilExpiry: Math.ceil(timeDiff / (1000 * 3600 * 24)) });
-    }, [expiry]);
+        const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        
+        const totalDuration = tier === 'Yearly' ? 365 : 30;
+        const progress = Math.max(0, (days / totalDuration) * 100);
 
+        return { daysUntilExpiry: days, progressValue: progress };
+    }, [expiry, tier, isClient]);
+
+    if (!isClient) {
+        return <Skeleton className="h-8 w-48"/>;
+    }
 
     if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;
@@ -42,25 +51,12 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         )
     }
     
-    if (!clientState) {
-        return <Skeleton className="h-8 w-48"/>;
-    }
-
-    const { daysUntilExpiry } = clientState;
-    
-    if (daysUntilExpiry === null) {
-        return <Badge variant="outline">{tier}</Badge>;
-    }
-    
-    const totalDuration = tier === 'Yearly' ? 365 : 30;
-    const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
-
     return (
         <div className="w-full min-w-[200px] space-y-2">
             <div className="flex justify-between items-center">
                 <Badge variant="outline">{tier}</Badge>
                 <p className="text-xs text-muted-foreground">
-                    {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
+                    {daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : 'N/A'}
                 </p>
             </div>
             <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
@@ -71,14 +67,28 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
 export default function ProviderDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { providers } = useProvidersData();
-    
-    const provider = providers.find(p => p.id === id);
+    const { providers, isClient } = useProvidersData();
+    const [provider, setProvider] = useState<Provider | undefined>();
 
-    if (!provider) {
-        return notFound();
+     useEffect(() => {
+        if (isClient && id) {
+            const foundProvider = providers.find(p => p.id === id);
+            if (foundProvider) {
+                setProvider(foundProvider);
+            } else {
+                notFound();
+            }
+        }
+    }, [id, providers, isClient]);
+
+    if (!isClient || !provider) {
+        return (
+            <div className="space-y-8">
+                <div><Skeleton className="h-10 w-40" /></div>
+                <Skeleton className="h-64 w-full" />
+            </div>
+        )
     }
-
 
     const getStatusBadge = (status: string) => {
         switch (status) {

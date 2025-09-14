@@ -19,7 +19,9 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
     useEffect(() => setIsClient(true), []);
 
     const { formattedDate, statusText, statusClass } = useMemo(() => {
-        if (typeof window === 'undefined') {
+        // This calculation now only runs once per date, or when isClient becomes true,
+        // and it won't run on the server.
+        if (!isClient) {
             return { formattedDate: '', statusText: '', statusClass: '' };
         }
         const dueDate = new Date(date);
@@ -41,7 +43,7 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
             statusText: text,
             statusClass: diffDays < 7 ? 'text-destructive font-medium' : '',
         };
-    }, [date]);
+    }, [date, isClient]);
 
     if (!isClient) {
         return <Skeleton className="h-4 w-48 mt-1" />;
