@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -41,6 +42,9 @@ import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
 import { initialMembers, type CommunityMember } from './community-members';
 import { initialStockItems, type StockItem } from './stock-items';
+import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
+import { initialBeautyServices, type BeautyService, initialSpecialists, type Specialist } from './beauty-services';
+import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -90,6 +94,10 @@ export type AppState = {
   upcomingPayments: UpcomingPayment[];
   vatPayment: VatPayment;
   cashFlowData: { month: string; income: number; expenses: number }[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautySpecialists: Specialist[];
+  beautyAppointments: BeautyAppointment[];
 };
 
 export const initialState: AppState = {
@@ -129,6 +137,10 @@ export const initialState: AppState = {
   upcomingPayments: upcomingPayments,
   vatPayment: vatPayment,
   cashFlowData: cashFlowData,
+  beautyCenters: initialBeautyCenters,
+  beautyServices: initialBeautyServices,
+  beautySpecialists: initialSpecialists,
+  beautyAppointments: initialBeautyAppointments,
 };
 
 // The single source of truth for our application's shared state.
