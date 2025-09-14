@@ -41,6 +41,44 @@ const gasChartConfig = { consumption: { label: "Units", color: "hsl(var(--chart-
 
 export default function AppiPage() {
 
+    const renderChart = (chartType: 'energy' | 'water' | 'gas') => {
+        if (chartType === 'energy') {
+             return (
+                <ChartContainer config={energyChartConfig} className="h-48 w-full">
+                    <LineChart data={energyData} margin={{ left: -20, right: 20 }}>
+                        <YAxis />
+                        <Tooltip content={<ChartTooltipContent />} />
+                        <Line type="monotone" dataKey="consumption" stroke="var(--color-consumption)" strokeWidth={2} dot={false} />
+                    </LineChart>
+                </ChartContainer>
+            );
+        }
+
+        if (chartType === 'water') {
+            return (
+                <ChartContainer config={waterChartConfig} className="h-48 w-full">
+                    <BarChart data={waterData} accessibilityLayer>
+                        <YAxis />
+                        <Tooltip content={<ChartTooltipContent />} />
+                        <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
+                    </BarChart>
+                </ChartContainer>
+            );
+        }
+        
+        if (chartType === 'gas') {
+            return (
+                 <ChartContainer config={gasChartConfig} className="h-48 w-full">
+                     <BarChart data={gasData} accessibilityLayer>
+                        <YAxis />
+                        <Tooltip content={<ChartTooltipContent />} />
+                        <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
+                    </BarChart>
+                </ChartContainer>
+            );
+        }
+    };
+
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -107,13 +145,7 @@ export default function AppiPage() {
                                     <CardTitle className="text-lg flex items-center gap-2"><Flame className="h-5 w-5 text-orange-500" /> Gas Usage</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <ChartContainer config={gasChartConfig} className="h-48 w-full">
-                                        <BarChart data={gasData} accessibilityLayer>
-                                            <YAxis />
-                                            <Tooltip content={<ChartTooltipContent />} />
-                                            <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
-                                        </BarChart>
-                                    </ChartContainer>
+                                    {renderChart('gas')}
                                 </CardContent>
                             </Card>
                         </CardContent>
