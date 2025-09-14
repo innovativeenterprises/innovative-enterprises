@@ -16,6 +16,7 @@ import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
 import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
 import { fileToDataURI } from '@/lib/utils';
+import { setBeautyCenters } from "@/hooks/use-global-store-data";
 
 const AgencySchema = z.object({
   name: z.string().min(2, "Name is required"),
