@@ -269,12 +269,12 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [clientState, setClientState] = useState<{ daysUntilExpiry: number | null, progress: number } | null>(null);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => { setIsClient(true) }, []);
 
-    useEffect(() => {
-        if (!expiry) {
-            setClientState({ daysUntilExpiry: null, progress: 0 });
-            return;
+    const { daysUntilExpiry, progress } = useMemo(() => {
+        if (!isClient || !expiry) {
+            return { daysUntilExpiry: null, progress: 0 };
         }
         const now = new Date();
         now.setHours(0, 0, 0, 0);
@@ -287,11 +287,10 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         const totalDuration = tier === 'Yearly' ? 365 : 30;
         const progressValue = Math.max(0, (daysRemaining / totalDuration) * 100);
 
-        setClientState({ daysUntilExpiry: daysRemaining, progress: progressValue });
-    }, [expiry, tier]);
+        return { daysUntilExpiry: daysRemaining, progress: progressValue };
+    }, [isClient, expiry, tier]);
 
-
-    if (!clientState) {
+    if (!isClient) {
         return <Skeleton className="h-8 w-full" />
     }
     
@@ -307,10 +306,10 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
             <div className="flex justify-between items-center mb-1">
                 <Badge variant="outline">{tier}</Badge>
                 <div className="text-xs text-muted-foreground">
-                    {clientState.daysUntilExpiry !== null ? (clientState.daysUntilExpiry > 0 ? `Expires in ${Math.ceil(clientState.daysUntilExpiry)} days` : 'Expired') : 'N/A'}
+                    {daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : 'N/A'}
                 </div>
             </div>
-            <Progress value={clientState.progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${clientState.progress}%`} />
+            <Progress value={progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progress}%`} />
         </div>
     )
 }

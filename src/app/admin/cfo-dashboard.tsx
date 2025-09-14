@@ -9,28 +9,33 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { useCfoData } from '@/hooks/use-global-store-data';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [displayState, setDisplayState] = useState<{ formattedDate: string, daysRemaining: number | null }>({ formattedDate: '', daysRemaining: null });
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    const { formattedDate, daysRemaining } = useMemo(() => {
+        if (!isClient) {
+            return { formattedDate: null, daysRemaining: null };
+        }
         const dueDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const diffTime = dueDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
         const formatted = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
-        setDisplayState({ formattedDate: `Due: ${formatted}`, daysRemaining: diffDays });
-    }, [date]);
+        return { formattedDate: `Due: ${formatted}`, daysRemaining: diffDays };
+    }, [date, isClient]);
 
-    if (!displayState.formattedDate) {
+    if (!isClient) {
         return <Skeleton className="h-4 w-48 mt-1" />;
     }
-
-    const { daysRemaining, formattedDate } = displayState;
 
     return (
         <div className={`text-sm text-muted-foreground ${className}`}>
