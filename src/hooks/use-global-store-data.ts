@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useMemo } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -45,9 +45,6 @@ export const useServicesData = () => {
     const services = useStoreData(state => state.services);
     return {
         services,
-        setServices: (updater: (services: Service[]) => Service[]) => {
-            store.set(state => ({ ...state, services: updater(state.services) }));
-        },
         isClient: true, // Now always client-safe due to useSyncExternalStore
     };
 };
@@ -56,9 +53,6 @@ export const useProductsData = () => {
     const products = useStoreData(state => state.products);
     return {
         products,
-        setProducts: (updater: (products: Product[]) => Product[]) => {
-            store.set(state => ({ ...state, products: updater(state.products) }));
-        },
         isClient: true,
     };
 };
@@ -68,12 +62,6 @@ export const useClientsData = () => {
     const data = useStoreData(state => ({ clients: state.clients, testimonials: state.testimonials }));
     return {
         ...data,
-        setClients: (updater: (clients: Client[]) => Client[]) => {
-            store.set(state => ({ ...state, clients: updater(state.clients) }));
-        },
-        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
-            store.set(state => ({ ...state, testimonials: updater(state.testimonials) }));
-        },
         isClient: true,
     };
 };
@@ -82,9 +70,6 @@ export const useProvidersData = () => {
     const providers = useStoreData(state => state.providers);
     return {
         providers,
-        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
-            store.set(state => ({ ...state, providers: updater(state.providers) }));
-        },
         isClient: true,
     };
 };
@@ -97,15 +82,6 @@ export const useStaffData = () => {
     }));
     return {
         ...data,
-        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
-            store.set(state => ({ ...state, leadership: updater(state.leadership) }));
-        },
-        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
-            store.set(state => ({ ...state, staff: updater(state.staff) }));
-        },
-        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
-            store.set(state => ({ ...state, agentCategories: updater(state.agentCategories) }));
-        },
         isClient: true,
     };
 };
@@ -114,9 +90,6 @@ export const useCommunitiesData = () => {
     const communities = useStoreData(state => state.communities);
     return {
         communities,
-        setCommunities: (updater: (communities: Community[]) => Community[]) => {
-            store.set(state => ({ ...state, communities: updater(state.communities) }));
-        },
         isClient: true,
     };
 };
@@ -128,12 +101,6 @@ export const useCommunityHubData = () => {
     }));
     return {
         ...data,
-        setCommunityEvents: (updater: (events: CommunityEvent[]) => CommunityEvent[]) => {
-            store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
-        },
-        setCommunityFinances: (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => {
-            store.set(state => ({ ...state, communityFinances: updater(state.communityFinances) }));
-        },
         isClient: true,
     };
 };
@@ -164,9 +131,6 @@ export const useSettingsData = () => {
     const settings = useStoreData(state => state.settings);
     return {
         settings,
-        setSettings: (updater: (settings: AppSettings) => AppSettings) => {
-            store.set(state => ({ ...state, settings: updater(state.settings) }));
-        },
         isClient: true,
     };
 };
@@ -175,9 +139,6 @@ export const useAssetsData = () => {
     const assets = useStoreData(state => state.assets);
     return {
         assets,
-        setAssets: (updater: (assets: Asset[]) => Asset[]) => {
-            store.set(state => ({ ...state, assets: updater(state.assets) }));
-        },
         isClient: true,
     };
 };
@@ -186,9 +147,6 @@ export const useInvestorsData = () => {
     const investors = useStoreData(state => state.investors);
     return {
         investors,
-        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
-            store.set(state => ({ ...state, investors: updater(state.investors) }));
-        },
         isClient: true,
     };
 };
@@ -197,9 +155,6 @@ export const useKnowledgeData = () => {
     const knowledgeBase = useStoreData(state => state.knowledgeBase);
     return {
         knowledgeBase,
-        setKnowledgeBase: (updater: (docs: KnowledgeDocument[]) => KnowledgeDocument[]) => {
-            store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
-        },
         isClient: true,
     };
 };
@@ -219,9 +174,6 @@ export const useWorkersData = () => {
     const workers = useStoreData(state => state.raahaWorkers);
     return {
         workers,
-        setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
-            store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
-        },
         isClient: true,
     };
 };
@@ -230,9 +182,6 @@ export const useRequestsData = () => {
     const requests = useStoreData(state => state.raahaRequests);
     return {
         requests,
-        setRaahaRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
-            store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
-        },
         isClient: true,
     };
 };
@@ -252,9 +201,6 @@ export const usePropertiesData = () => {
     const properties = useStoreData(state => state.properties);
     return {
         properties,
-        setProperties: (updater: (properties: Property[]) => Property[]) => {
-            store.set(state => ({ ...state, properties: updater(state.properties) }));
-        },
         isClient: true,
     };
 };
@@ -274,9 +220,6 @@ export const useStairspaceRequestsData = () => {
     const stairspaceRequests = useStoreData(state => state.stairspaceRequests);
     return {
         stairspaceRequests,
-        setStairspaceRequests: (updater: (requests: StairspaceRequest[]) => StairspaceRequest[]) => {
-            store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
-        },
         isClient: true,
     };
 };
@@ -285,9 +228,6 @@ export const useOpportunitiesData = () => {
     const opportunities = useStoreData(state => state.opportunities);
     return {
         opportunities,
-        setOpportunities: (updater: (opps: Opportunity[]) => Opportunity[]) => {
-            store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
-        },
         isClient: true,
     };
 };
@@ -296,9 +236,6 @@ export const useCostSettingsData = () => {
     const costSettings = useStoreData(state => state.costSettings);
     return { 
         costSettings,
-        setCostSettings: (updater: (items: CostRate[]) => CostRate[]) => {
-            store.set(state => ({...state, costSettings: updater(state.costSettings)}));
-        },
         isClient: true 
     };
 }
@@ -307,9 +244,6 @@ export const usePricingData = () => {
     const pricing = useStoreData(state => state.pricing);
     return {
         pricing,
-        setPricing: (updater: (items: Pricing[]) => Pricing[]) => {
-            store.set(state => ({...state, pricing: updater(state.pricing)}));
-        },
         isClient: true,
     };
 }
