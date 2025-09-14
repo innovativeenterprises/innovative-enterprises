@@ -1,4 +1,3 @@
-
 'use server';
 import {answerQuestion as answerFaqQuestion} from './ai-powered-faq';
 import {analyzeApplication} from './admissions-agent';
