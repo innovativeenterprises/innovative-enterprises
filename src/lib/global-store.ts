@@ -149,7 +149,8 @@ export const store = {
    */
   getSsrState: (): Readonly<AppState> => {
     if (serverState === null) {
-        serverState = { ...state };
+        // Create a deep enough copy to be safe.
+        serverState = JSON.parse(JSON.stringify(state));
     }
     return serverState;
   },

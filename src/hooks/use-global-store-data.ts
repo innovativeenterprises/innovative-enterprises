@@ -33,13 +33,10 @@ import type { Pricing } from '@/lib/pricing';
 
 
 function useStoreData<T>(selector: (state: any) => T): T {
-    // The selector function is memoized to prevent re-creating it on every render.
-    const memoizedSelector = useCallback(selector, []);
-    
     const state = useSyncExternalStore(
-        store.subscribe, 
-        () => memoizedSelector(store.get()), 
-        () => memoizedSelector(store.getSsrState()) // Use the stable server state snapshot
+        store.subscribe,
+        () => selector(store.get()),
+        () => selector(store.getSsrState()) // Use the stable server state snapshot
     );
     return state;
 }
@@ -318,17 +315,12 @@ export const usePricingData = () => {
 }
 
 export const useCfoData = () => {
-    const data = useStoreData(state => ({
-        kpiData: state.kpiData,
-        transactionData: state.transactionData,
-        upcomingPayments: state.upcomingPayments,
-        vatPayment: state.vatPayment,
-        cashFlowData: state.cashFlowData,
-    }));
-    return {
-        ...data,
-        isClient: true,
-    };
+    const kpiData = useStoreData(state => state.kpiData);
+    const transactionData = useStoreData(state => state.transactionData);
+    const upcomingPayments = useStoreData(state => state.upcomingPayments);
+    const vatPayment = useStoreData(state => state.vatPayment);
+    const cashFlowData = useStoreData(state => state.cashFlowData);
+    return { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, isClient: true };
 };
 
 export const useStudentsData = () => {
