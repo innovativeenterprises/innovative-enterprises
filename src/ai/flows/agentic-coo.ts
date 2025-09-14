@@ -71,4 +71,3 @@ const cooAnalysisFlow = ai.defineFlow(
     return output!;
   }
 );
-

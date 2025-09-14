@@ -1,3 +1,4 @@
+
 'use server';
 import {answerQuestion as answerFaqQuestion} from './ai-powered-faq';
 import {analyzeApplication} from './admissions-agent';
@@ -35,6 +36,7 @@ import { findScholarships } from './guardian-ai/scholarship-agent';
 import { generateScholarshipEssay } from './guardian-ai/scholarship-essay-assistant';
 import { wellbeingCheckin } from './guardian-ai/wellbeing-checkin';
 import { analyzeSeo } from './seo-analyzer';
+import { analyzeOperations } from './agentic-coo';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -78,6 +80,5 @@ export {
   generateScholarshipEssay,
   wellbeingCheckin,
   analyzeSeo,
+  analyzeOperations,
 };
-
-    
