@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import KhidmaIcon from '@/components/icons/khidma-icon';
@@ -51,23 +52,6 @@ export default function KhidmaPage() {
                         </Card>
                     ))}
                 </div>
-
-                <div className="max-w-3xl mx-auto mt-20">
-                     <Card className="bg-accent/10 border-accent">
-                        <CardHeader className="items-center text-center">
-                            <CardTitle className="text-2xl text-accent">Try Our AI-Powered Tools</CardTitle>
-                            <CardDescription className="text-accent-foreground/80">
-                                As part of KHIDMA, we offer AI tools to help businesses improve their online presence. Try our AI Facebook Cover Designer.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardFooter className="justify-center">
-                            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                <Link href="/khidma/facebook-cover">Launch Facebook Cover Designer</Link>
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                </div>
-
             </div>
         </div>
     )
