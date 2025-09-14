@@ -20,8 +20,8 @@ export default function AdminSettingsPage() {
         </div>
          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="general">General &amp; Pricing</TabsTrigger>
-                <TabsTrigger value="costing">BoQ Costing</TabsTrigger>
+                <TabsTrigger value="general">General &amp; API</TabsTrigger>
+                <TabsTrigger value="costing">BoQ &amp; Pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="general" className="mt-6">
                 <SettingsTable />

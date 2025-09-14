@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useSyncExternalStore, useMemo, useCallback } from 'react';
-import { store, type AppState } from '@/lib/global-store';
+import { useSyncExternalStore, useCallback } from 'react';
+import { store, type AppState, initialState } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
 import type { Client, Testimonial } from '@/lib/clients';
@@ -35,12 +35,14 @@ import type { Pricing } from '@/lib/pricing';
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
  * It uses useSyncExternalStore to be compatible with React 18's concurrent features.
+ * The getServerSnapshot ensures that the server render and the first client render
+ * use the same initial state, preventing hydration mismatches.
  */
 function useStoreData<T>(selector: (state: AppState) => T): T {
     return useSyncExternalStore(
         store.subscribe,
         () => selector(store.get()),
-        () => selector(store.getSsrState()),
+        () => selector(initialState) // Use the stable initial state for the server snapshot.
     );
 }
 
@@ -74,72 +76,71 @@ const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => store.set(state 
 const setStudents = (updater: (prev: Student[]) => Student[]) => store.set(state => ({ ...state, students: updater(state.students) }));
 const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
 
-// Data hooks that return both the state slice and the memoized setter.
-export const useServicesData = () => ({ services: useStoreData(s => s.services), setServices: useCallback(setServices, []), isClient: true });
-export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts: useCallback(setProducts, []), isClient: true });
+// Export all setter functions for use in components
+export {
+    setServices, setProducts, setClients, setTestimonials, setProviders,
+    setLeadership, setStaff, setAgentCategories, setCommunities,
+    setCommunityEvents, setCommunityFinances, setCommunityMembers,
+    setProjectStages, setSettings, setAssets, setInvestors,
+    setKnowledgeBase, setRaahaAgencies, setRaahaWorkers, setRaahaRequests,
+    setProperties, setStairspaceListings, setStairspaceRequests,
+    setOpportunities, setCostSettings, setPricing, setStudents, setSignedLeases,
+};
+
+// Data hooks that return the reactive state slice.
+// The `isClient` property is now redundant because useSyncExternalStore is safe, but we keep it for compatibility.
+export const useServicesData = () => ({ services: useStoreData(s => s.services), isClient: true });
+export const useProductsData = () => ({ products: useStoreData(s => s.products), isClient: true });
 export const useClientsData = () => ({
     clients: useStoreData(s => s.clients),
     testimonials: useStoreData(s => s.testimonials),
-    setClients: useCallback(setClients, []),
-    setTestimonials: useCallback(setTestimonials, []),
     isClient: true,
 });
-export const useProvidersData = () => ({ providers: useStoreData(s => s.providers), setProviders: useCallback(setProviders, []), isClient: true });
+export const useProvidersData = () => ({ providers: useStoreData(s => s.providers), isClient: true });
 export const useStaffData = () => ({
     leadership: useStoreData(s => s.leadership),
     staff: useStoreData(s => s.staff),
     agentCategories: useStoreData(s => s.agentCategories),
-    setLeadership: useCallback(setLeadership, []),
-    setStaff: useCallback(setStaff, []),
-    setAgentCategories: useCallback(setAgentCategories, []),
     isClient: true,
 });
-export const useCommunitiesData = () => ({ communities: useStoreData(s => s.communities), setCommunities: useCallback(setCommunities, []), isClient: true });
+export const useCommunitiesData = () => ({ communities: useStoreData(s => s.communities), isClient: true });
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
-    setCommunityEvents: useCallback(setCommunityEvents, []),
-    setCommunityFinances: useCallback(setCommunityFinances, []),
     isClient: true,
 });
-export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: useCallback(setCommunityMembers, []), isClient: true });
-export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages: useCallback(setProjectStages, []), isClient: true });
-export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings: useCallback(setSettings, []), isClient: true });
-export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), setAssets: useCallback(setAssets, []), isClient: true });
-export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), setInvestors: useCallback(setInvestors, []), isClient: true });
+export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), isClient: true });
+export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), isClient: true });
+export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), isClient: true });
+export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), isClient: true });
+export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), isClient: true });
 export const useKnowledgeData = () => ({
     knowledgeBase: useStoreData(s => s.knowledgeBase),
-    setKnowledgeBase: useCallback(setKnowledgeBase, []),
     isClient: true,
 });
-export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: useCallback(setRaahaAgencies, []), isClient: true });
-export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), setWorkers: useCallback(setRaahaWorkers, []), isClient: true });
-export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRequests: useCallback(setRaahaRequests, []), isClient: true });
-export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: useCallback(setSignedLeases, []), isClient: true });
-export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties: useCallback(setProperties, []), isClient: true });
+export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), isClient: true });
+export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), isClient: true });
+export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
+export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), isClient: true });
+export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), isClient: true });
 export const useStairspaceData = () => ({
     stairspaceListings: useStoreData(s => s.stairspaceListings),
-    setStairspaceListings: useCallback(setStairspaceListings, []),
     isClient: true,
 });
 export const useStairspaceRequestsData = () => ({
     stairspaceRequests: useStoreData(s => s.stairspaceRequests),
-    setStairspaceRequests: useCallback(setStairspaceRequests, []),
     isClient: true,
 });
 export const useOpportunitiesData = () => ({
     opportunities: useStoreData(s => s.opportunities),
-    setOpportunities: useCallback(setOpportunities, []),
     isClient: true,
 });
 export const useCostSettingsData = () => ({
     costSettings: useStoreData(s => s.costSettings),
-    setCostSettings: useCallback(setCostSettings, []),
     isClient: true,
 });
 export const usePricingData = () => ({
     pricing: useStoreData(s => s.pricing),
-    setPricing: useCallback(setPricing, []),
     isClient: true,
 });
 export const useCfoData = () => ({
@@ -152,6 +153,5 @@ export const useCfoData = () => ({
 });
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
-    setStudents: useCallback(setStudents, []),
     isClient: true,
 });

@@ -34,7 +34,7 @@ import { type BoQItem } from '@/ai/flows/boq-generator.schema';
 import { initialCostSettings } from './cost-settings';
 import type { CostRate } from './cost-settings.schema';
 import { initialStudents, type Student } from './students';
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from './cfo-data';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from './cfo-data';
 import { initialCommunities, type Community } from './communities';
 import { initialEvents, type CommunityEvent } from './community-events';
@@ -93,8 +93,7 @@ export type AppState = {
   cashFlowData: { month: string; income: number; expenses: number }[];
 };
 
-// The single source of truth for our application's shared state.
-let state: AppState = {
+export const initialState: AppState = {
   services: initialServices,
   products: initialProducts,
   clients: initialClients,
@@ -133,9 +132,8 @@ let state: AppState = {
   cashFlowData: cashFlowData,
 };
 
-// This will hold the single, cached version of the state for the server render.
-let serverState: AppState | null = null;
-
+// The single source of truth for our application's shared state.
+let state: AppState = { ...initialState };
 
 // A list of all component update functions to call when state changes.
 const listeners = new Set<() => void>();
@@ -147,22 +145,6 @@ export const store = {
    * Returns a snapshot of the current state.
    */
   get: (): AppState => state,
-  
-  /**
-   * Returns a stable, cached snapshot of the initial state for SSR.
-   * This function is designed to be called only on the server. It creates
-   * a deep copy of the initial state once and reuses it for all subsequent
-   * server-side renders to prevent infinite loops in `useSyncExternalStore`.
-   */
-  getSsrState: (): AppState => {
-    if (serverState === null) {
-        // Create a deep enough copy to be safe.
-        // This is the critical fix: ensuring the server always gets the exact same object reference.
-        serverState = JSON.parse(JSON.stringify(state));
-    }
-    return serverState;
-  },
-
 
   /**
    * Updates a part of the state and notifies all listeners.

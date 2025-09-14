@@ -20,10 +20,10 @@ import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import CostSettingsTable from "./cost-settings-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettingsData, setSettings } from "@/hooks/use-global-store-data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { fileToDataURI } from "@/lib/utils";
 
 const SanadPricingSchema = z.object({
   registrationFee: z.coerce.number().min(0),
@@ -38,15 +38,6 @@ const LegalPricingSchema = z.object({
   b2bFee: z.coerce.number().min(0),
   b2gFee: z.coerce.number().min(0),
 });
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
 
 const BrandingSchema = z.object({
   headerImageFile: z.any().optional(),
@@ -420,283 +411,274 @@ export default function SettingsTable() {
 
 
     return (
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="general">General &amp; Pricing</TabsTrigger>
-                <TabsTrigger value="costing">BoQ Costing</TabsTrigger>
-            </TabsList>
-            <TabsContent value="general" className="mt-6 space-y-8">
-                {isClient ? <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} /> : <Skeleton className="h-96 w-full"/>}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Operational & Layout Settings</CardTitle>
-                        <CardDescription>Manage core operational and visual settings for your application.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
+         <div className="space-y-8">
+            {isClient ? <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} /> : <Skeleton className="h-96 w-full"/>}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Operational & Layout Settings</CardTitle>
+                    <CardDescription>Manage core operational and visual settings for your application.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Setting</TableHead>
+                                <TableHead>Configuration</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {!isClient ? (
                                 <TableRow>
-                                    <TableHead>Setting</TableHead>
-                                    <TableHead>Configuration</TableHead>
+                                    <TableCell colSpan={2}><Skeleton className="h-24 w-full" /></TableCell>
                                 </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {!isClient ? (
-                                    <TableRow>
-                                        <TableCell colSpan={2}><Skeleton className="h-24 w-full" /></TableCell>
-                                    </TableRow>
-                                ) : (
-                                    <>
-                                        <TableRow>
-                                            <TableCell>
-                                                <p className="font-medium">Translation Assignment Mode</p>
-                                                <p className="text-sm text-muted-foreground">Control how new translation jobs are assigned.</p>
-                                            </TableCell>
-                                            <TableCell>
-                                                <RadioGroup 
-                                                    value={settings.translationAssignmentMode} 
-                                                    onValueChange={handleModeChange}
-                                                    className="gap-3"
-                                                >
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="builtin" id="builtin" />
-                                                        <Label htmlFor="builtin">Built-in AI Translator</Label>
-                                                    </div>
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="direct" id="direct" />
-                                                        <Label htmlFor="direct">Direct Assignment to Partner</Label>
-                                                    </div>
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="tender" id="tender" />
-                                                        <Label htmlFor="tender">Tender to Partner Network</Label>
-                                                    </div>
-                                                </RadioGroup>
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>
-                                                <p className="font-medium">Chatbot Voice Interaction</p>
-                                                <p className="text-sm text-muted-foreground">Globally enable or disable voice input/output on all AI chatbots.</p>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center space-x-2">
-                                                    <Switch
-                                                        id="voice-interaction-switch"
-                                                        checked={settings.voiceInteractionEnabled}
-                                                        onCheckedChange={handleVoiceChange}
-                                                    />
-                                                    <Label htmlFor="voice-interaction-switch">
-                                                        {settings.voiceInteractionEnabled ? "Enabled" : "Disabled"}
-                                                    </Label>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>
-                                                <p className="font-medium">Value-Added Tax (VAT)</p>
-                                                <p className="text-sm text-muted-foreground">Enable or disable VAT on all commercial services and invoices.</p>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center gap-4">
-                                                    <div className="flex items-center space-x-2">
-                                                        <Switch
-                                                            id="vat-enabled-switch"
-                                                            checked={settings.vat.enabled}
-                                                            onCheckedChange={handleVatEnabledChange}
-                                                        />
-                                                        <Label htmlFor="vat-enabled-switch">
-                                                            {settings.vat.enabled ? "Enabled" : "Disabled"}
-                                                        </Label>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <Label htmlFor="vat-rate-input">Rate:</Label>
-                                                        <Input
-                                                            id="vat-rate-input"
-                                                            type="number"
-                                                            defaultValue={settings.vat.rate * 100}
-                                                            onBlur={handleVatRateChange}
-                                                            disabled={!settings.vat.enabled}
-                                                            className="w-24"
-                                                            min="0"
-                                                            step="0.1"
-                                                        />
-                                                        <span className="text-muted-foreground">%</span>
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>
-                                                <p className="font-medium">Services Menu Layout</p>
-                                                <p className="text-sm text-muted-foreground">Number of columns in the 'Services' header dropdown.</p>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Select
-                                                    value={String(settings.servicesMenuColumns)}
-                                                    onValueChange={handleServicesMenuColumnChange}
-                                                >
-                                                    <SelectTrigger className="w-[180px]">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="1">1 Column</SelectItem>
-                                                        <SelectItem value="2">2 Columns</SelectItem>
-                                                        <SelectItem value="3">3 Columns</SelectItem>
-                                                        <SelectItem value="4">4 Columns</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>
-                                                <p className="font-medium">AI Tools Menu Layout</p>
-                                                <p className="text-sm text-muted-foreground">Number of columns in the 'AI Tools' header dropdown.</p>
-                                            </TableCell>
-                                            <TableCell>
-                                            <Select
-                                                    value={String(settings.aiToolsMenuColumns)}
-                                                    onValueChange={handleAiToolsMenuColumnChange}
-                                                >
-                                                    <SelectTrigger className="w-[180px]">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="1">1 Column</SelectItem>
-                                                        <SelectItem value="2">2 Columns</SelectItem>
-                                                        <SelectItem value="3">3 Columns</SelectItem>
-                                                        <SelectItem value="4">4 Columns</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </TableCell>
-                                        </TableRow>
-                                    </>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
-                
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle>Document Branding</CardTitle>
-                            <CardDescription>Manage the header and footer for generated PDFs.</CardDescription>
-                        </div>
-                        {isClient && <EditBrandingDialog settings={settings} onSave={handleSaveBranding} />}
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label>Header Image</Label>
-                                <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
-                                    {settings.headerImageUrl ? <Image src={settings.headerImageUrl} alt="Header Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No header image set</p>}
-                                </div>
-                            </div>
-                            <div>
-                                <Label>Footer Image</Label>
-                                <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
-                                    {settings.footerImageUrl ? <Image src={settings.footerImageUrl} alt="Footer Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No footer image set</p>}
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle>AI Legal Assistant Fees</CardTitle>
-                            <CardDescription>Manage the fees for contract analysis.</CardDescription>
-                        </div>
-                        {isClient && <EditLegalPricingDialog settings={settings} onSave={handleSaveLegalPricing} />}
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Contract Type</TableHead>
-                                    <TableHead className="text-right">Analysis Fee (OMR)</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {!isClient ? (
-                                    <TableRow>
-                                        <TableCell colSpan={2}><Skeleton className="h-10 w-full" /></TableCell>
-                                    </TableRow>
-                                ) : (
+                            ) : (
                                 <>
                                     <TableRow>
-                                        <TableCell>B2C (Business-to-Consumer)</TableCell>
-                                        <TableCell className="text-right">{settings.legalAgentPricing.b2cFee.toFixed(2)}</TableCell>
+                                        <TableCell>
+                                            <p className="font-medium">Translation Assignment Mode</p>
+                                            <p className="text-sm text-muted-foreground">Control how new translation jobs are assigned.</p>
+                                        </TableCell>
+                                        <TableCell>
+                                            <RadioGroup 
+                                                value={settings.translationAssignmentMode} 
+                                                onValueChange={handleModeChange}
+                                                className="gap-3"
+                                            >
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="builtin" id="builtin" />
+                                                    <Label htmlFor="builtin">Built-in AI Translator</Label>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="direct" id="direct" />
+                                                    <Label htmlFor="direct">Direct Assignment to Partner</Label>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="tender" id="tender" />
+                                                    <Label htmlFor="tender">Tender to Partner Network</Label>
+                                                </div>
+                                            </RadioGroup>
+                                        </TableCell>
                                     </TableRow>
                                     <TableRow>
-                                        <TableCell>B2B (Business-to-Business)</TableCell>
-                                        <TableCell className="text-right">{settings.legalAgentPricing.b2bFee.toFixed(2)}</TableCell>
+                                        <TableCell>
+                                            <p className="font-medium">Chatbot Voice Interaction</p>
+                                            <p className="text-sm text-muted-foreground">Globally enable or disable voice input/output on all AI chatbots.</p>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    id="voice-interaction-switch"
+                                                    checked={settings.voiceInteractionEnabled}
+                                                    onCheckedChange={handleVoiceChange}
+                                                />
+                                                <Label htmlFor="voice-interaction-switch">
+                                                    {settings.voiceInteractionEnabled ? "Enabled" : "Disabled"}
+                                                </Label>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
                                     <TableRow>
-                                        <TableCell>B2G (Business-to-Government)</TableCell>
-                                        <TableCell className="text-right">{settings.legalAgentPricing.b2gFee.toFixed(2)}</TableCell>
+                                        <TableCell>
+                                            <p className="font-medium">Value-Added Tax (VAT)</p>
+                                            <p className="text-sm text-muted-foreground">Enable or disable VAT on all commercial services and invoices.</p>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex items-center space-x-2">
+                                                    <Switch
+                                                        id="vat-enabled-switch"
+                                                        checked={settings.vat.enabled}
+                                                        onCheckedChange={handleVatEnabledChange}
+                                                    />
+                                                    <Label htmlFor="vat-enabled-switch">
+                                                        {settings.vat.enabled ? "Enabled" : "Disabled"}
+                                                    </Label>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Label htmlFor="vat-rate-input">Rate:</Label>
+                                                    <Input
+                                                        id="vat-rate-input"
+                                                        type="number"
+                                                        defaultValue={settings.vat.rate * 100}
+                                                        onBlur={handleVatRateChange}
+                                                        disabled={!settings.vat.enabled}
+                                                        className="w-24"
+                                                        min="0"
+                                                        step="0.1"
+                                                    />
+                                                    <span className="text-muted-foreground">%</span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            <p className="font-medium">Services Menu Layout</p>
+                                            <p className="text-sm text-muted-foreground">Number of columns in the 'Services' header dropdown.</p>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Select
+                                                value={String(settings.servicesMenuColumns)}
+                                                onValueChange={handleServicesMenuColumnChange}
+                                            >
+                                                <SelectTrigger className="w-[180px]">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="1">1 Column</SelectItem>
+                                                    <SelectItem value="2">2 Columns</SelectItem>
+                                                    <SelectItem value="3">3 Columns</SelectItem>
+                                                    <SelectItem value="4">4 Columns</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>
+                                            <p className="font-medium">AI Tools Menu Layout</p>
+                                            <p className="text-sm text-muted-foreground">Number of columns in the 'AI Tools' header dropdown.</p>
+                                        </TableCell>
+                                        <TableCell>
+                                        <Select
+                                                value={String(settings.aiToolsMenuColumns)}
+                                                onValueChange={handleAiToolsMenuColumnChange}
+                                            >
+                                                <SelectTrigger className="w-[180px]">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="1">1 Column</SelectItem>
+                                                    <SelectItem value="2">2 Columns</SelectItem>
+                                                    <SelectItem value="3">3 Columns</SelectItem>
+                                                    <SelectItem value="4">4 Columns</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </TableCell>
                                     </TableRow>
                                 </>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
+                            )}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+            
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Document Branding</CardTitle>
+                        <CardDescription>Manage the header and footer for generated PDFs.</CardDescription>
+                    </div>
+                    {isClient && <EditBrandingDialog settings={settings} onSave={handleSaveBranding} />}
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <CardTitle>Sanad Hub Subscription Pricing</CardTitle>
-                            <CardDescription>Manage the fees for Sanad Office registrations.</CardDescription>
+                            <Label>Header Image</Label>
+                            <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
+                                {settings.headerImageUrl ? <Image src={settings.headerImageUrl} alt="Header Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No header image set</p>}
+                            </div>
                         </div>
-                        {isClient && <EditSanadPricingDialog settings={settings} onSave={handleSaveSanadPricing} />}
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
+                        <div>
+                            <Label>Footer Image</Label>
+                            <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
+                                {settings.footerImageUrl ? <Image src={settings.footerImageUrl} alt="Footer Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No footer image set</p>}
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>AI Legal Assistant Fees</CardTitle>
+                        <CardDescription>Manage the fees for contract analysis.</CardDescription>
+                    </div>
+                    {isClient && <EditLegalPricingDialog settings={settings} onSave={handleSaveLegalPricing} />}
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Contract Type</TableHead>
+                                <TableHead className="text-right">Analysis Fee (OMR)</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {!isClient ? (
                                 <TableRow>
-                                    <TableHead>Fee Type</TableHead>
-                                    <TableHead className="text-right">Amount (OMR)</TableHead>
+                                    <TableCell colSpan={2}><Skeleton className="h-10 w-full" /></TableCell>
                                 </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {!isClient ? (
-                                     <TableRow>
-                                        <TableCell colSpan={2}><Skeleton className="h-20 w-full" /></TableCell>
+                            ) : (
+                            <>
+                                <TableRow>
+                                    <TableCell>B2C (Business-to-Consumer)</TableCell>
+                                    <TableCell className="text-right">{settings.legalAgentPricing.b2cFee.toFixed(2)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>B2B (Business-to-Business)</TableCell>
+                                    <TableCell className="text-right">{settings.legalAgentPricing.b2bFee.toFixed(2)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>B2G (Business-to-Government)</TableCell>
+                                    <TableCell className="text-right">{settings.legalAgentPricing.b2gFee.toFixed(2)}</TableCell>
+                                </TableRow>
+                            </>
+                            )}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Sanad Hub Subscription Pricing</CardTitle>
+                        <CardDescription>Manage the fees for Sanad Office registrations.</CardDescription>
+                    </div>
+                    {isClient && <EditSanadPricingDialog settings={settings} onSave={handleSaveSanadPricing} />}
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Fee Type</TableHead>
+                                <TableHead className="text-right">Amount (OMR)</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {!isClient ? (
+                                 <TableRow>
+                                    <TableCell colSpan={2}><Skeleton className="h-20 w-full" /></TableCell>
+                                </TableRow>
+                            ) : (
+                                <>
+                                    <TableRow>
+                                        <TableCell>One-time Registration Fee</TableCell>
+                                        <TableCell className="text-right">{settings.sanadOffice.registrationFee.toFixed(2)}</TableCell>
                                     </TableRow>
-                                ) : (
-                                    <>
-                                        <TableRow>
-                                            <TableCell>One-time Registration Fee</TableCell>
-                                            <TableCell className="text-right">{settings.sanadOffice.registrationFee.toFixed(2)}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Monthly Subscription Fee</TableCell>
-                                            <TableCell className="text-right">{settings.sanadOffice.monthlyFee.toFixed(2)}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Yearly Subscription Fee</TableCell>
-                                            <TableCell className="text-right">{settings.sanadOffice.yearlyFee.toFixed(2)}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Lifetime Subscription Fee</TableCell>
-                                            <TableCell className="text-right">{settings.sanadOffice.lifetimeFee.toFixed(2)}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>First-time Discount</TableCell>
-                                            <TableCell className="text-right">{(settings.sanadOffice.firstTimeDiscountPercentage * 100).toFixed(0)}%</TableCell>
-                                        </TableRow>
-                                    </>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
-            </TabsContent>
-            <TabsContent value="costing" className="mt-6">
-                <CostSettingsTable />
-            </TabsContent>
-        </Tabs>
+                                    <TableRow>
+                                        <TableCell>Monthly Subscription Fee</TableCell>
+                                        <TableCell className="text-right">{settings.sanadOffice.monthlyFee.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Yearly Subscription Fee</TableCell>
+                                        <TableCell className="text-right">{settings.sanadOffice.yearlyFee.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Lifetime Subscription Fee</TableCell>
+                                        <TableCell className="text-right">{settings.sanadOffice.lifetimeFee.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>First-time Discount</TableCell>
+                                        <TableCell className="text-right">{(settings.sanadOffice.firstTimeDiscountPercentage * 100).toFixed(0)}%</TableCell>
+                                    </TableRow>
+                                </>
+                            )}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+        </div>
     );
 }
