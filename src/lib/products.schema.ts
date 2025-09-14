@@ -7,15 +7,15 @@ import { z } from 'zod';
  * and other parts of the application without importing server-only code.
  */
 export const ProductSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  description: z.string(),
-  stage: z.string(),
-  category: z.string(),
-  price: z.number(),
+  id: z.number().optional(), // id is optional as it's assigned on creation
+  name: z.string().min(3, "Name is required"),
+  description: z.string().min(10, "Description is required"),
+  stage: z.string().min(1, "Stage is required"),
+  category: z.string().min(1, "Category is required."),
+  price: z.coerce.number().min(0, "Price is required."),
   image: z.string(),
-  aiHint: z.string(),
-  rating: z.number(),
+  aiHint: z.string().min(2, "AI hint is required"),
+  rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5."),
   enabled: z.boolean(),
   adminStatus: z.enum(['On Track', 'At Risk', 'On Hold', 'Completed']).optional(),
   adminNotes: z.string().optional(),

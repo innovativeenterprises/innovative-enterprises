@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/lib/products";
+import { ProductSchema } from "@/lib/products.schema";
 import type { ProjectStage } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2, GripVertical, Sparkles, Loader2 } from "lucide-react";
 import Image from 'next/image';
@@ -22,23 +23,15 @@ import { generateImage } from "@/ai/flows/image-generator";
 import { Card, CardContent } from "@/components/ui/card";
 import { fileToDataURI } from "@/lib/utils";
 
-const ProductSchema = z.object({
-  name: z.string().min(3, "Name is required"),
-  description: z.string().min(10, "Description is required"),
+const DialogProductSchema = ProductSchema.extend({
   imageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   imageFile: z.any().optional(),
-  aiHint: z.string().min(2, "AI hint is required"),
-  enabled: z.boolean(),
-  stage: z.string().min(1, "Stage is required"),
-  price: z.coerce.number().min(0, "Price is required."),
-  rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5."),
-  category: z.string().min(1, "Category is required."),
 }).refine(data => data.imageUrl || (data.imageFile && data.imageFile.length > 0), {
     message: "Either an Image URL or an Image File is required.",
     path: ["imageUrl"], // Point error to imageUrl field
 });
 
-export type ProductValues = z.infer<typeof ProductSchema> & { image: string };
+export type ProductValues = z.infer<typeof ProductSchema>;
 
 export const AddEditProductDialog = ({ 
     product, 
@@ -59,8 +52,8 @@ export const AddEditProductDialog = ({
     const [isGenerating, setIsGenerating] = useState(false);
     const { toast } = useToast();
 
-    const form = useForm<z.infer<typeof ProductSchema>>({
-        resolver: zodResolver(ProductSchema),
+    const form = useForm<z.infer<typeof DialogProductSchema>>({
+        resolver: zodResolver(DialogProductSchema),
         defaultValues: {
             name: product?.name || "",
             description: product?.description || "",
@@ -127,7 +120,7 @@ export const AddEditProductDialog = ({
         }
     }
 
-    const onSubmit: SubmitHandler<z.infer<typeof ProductSchema>> = async (data) => {
+    const onSubmit: SubmitHandler<z.infer<typeof DialogProductSchema>> = async (data) => {
         let imageValue = "";
         
         if (data.imageFile && data.imageFile.length > 0) {

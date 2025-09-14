@@ -195,7 +195,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 // Main Component
 export default function ClientTable() { 
-    const { clients, testimonials, isClient } = useClientsData();
+    const { clients, testimonials, isClient, setClients, setTestimonials } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
@@ -233,15 +233,15 @@ export default function ClientTable() {
         toast({ title: "Testimonial removed.", variant: "destructive" });
     };
 
-    const filteredClients = clients.filter(client =>
+    const filteredClients = useMemo(() => clients.filter(client =>
         client.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ), [clients, searchTerm]);
     
-    const filteredTestimonials = testimonials.filter(t =>
+    const filteredTestimonials = useMemo(() => testimonials.filter(t =>
         t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
         t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
         t.company.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ), [testimonials, searchTerm]);
 
 
     return (
