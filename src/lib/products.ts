@@ -673,6 +673,20 @@ export const initialProducts: Product[] = [
         href: "/cv-enhancer",
         adminStatus: "Completed",
     },
+    {
+        id: 54,
+        name: "VMALL",
+        description: "A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/vmall/400/400",
+        aiHint: "virtual reality shopping",
+        rating: 0,
+        enabled: true,
+        href: "/vmall",
+        adminStatus: "Completed",
+    },
 ];
 
 // This is where e-commerce products should live in a real application,

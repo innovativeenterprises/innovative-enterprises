@@ -1,10 +1,11 @@
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car, Trophy } from 'lucide-react';
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car, Trophy, VrHeadset } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
 import SanadHubIcon from '@/components/icons/sanad-hub-icon';
 import AmeenSmartLockIcon from '@/components/icons/ameen-smart-lock-icon';
 import KhidmaIcon from '@/components/icons/khidma-icon';
+import VmallIcon from '@/components/icons/vmall-icon';
 
 export interface Service {
   icon: LucideIcon;
@@ -176,6 +177,14 @@ export const initialServices: Service[] = [
     description: "Solutions for car rental agencies, including AI booking agents and fleet management.",
     enabled: true,
     href: "/drivesync-ai",
+    category: "Business Tech Solutions"
+  },
+  {
+    icon: VmallIcon,
+    title: "VMALL",
+    description: "A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences.",
+    enabled: true,
+    href: "/vmall",
     category: "Business Tech Solutions"
   },
   // Essential Business Services
