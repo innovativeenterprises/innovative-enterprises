@@ -16,7 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { ChatComponent } from '@/components/chat/chat-component';
-import { wellbeingCheckin } from '@/ai/flows/wellbeing-checkin';
+import { wellbeingCheckin } from '@/ai/flows/guardian-ai/wellbeing-checkin';
 import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
