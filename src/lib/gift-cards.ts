@@ -7,7 +7,7 @@ export interface GiftCard {
     recipientName: string;
     recipientEmail: string;
     senderName: string;
-    message: string;
+    message?: string;
     status: 'Active' | 'Redeemed' | 'Expired';
     issueDate: string; // ISO String
 }

@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Gift, CheckCircle, Send } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useGiftCardsData } from '@/hooks/use-global-store-data';
 import type { GiftCard } from '@/lib/gift-cards';
 import Image from 'next/image';
@@ -164,5 +163,4 @@ export default function HadeeyaPage() {
         </div>
     );
 }
-
     
