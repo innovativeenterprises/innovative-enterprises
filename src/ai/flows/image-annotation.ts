@@ -13,6 +13,7 @@ import {
     ImageAnnotatorInputSchema,
     ImageAnnotatorOutputSchema
 } from './image-annotation.schema';
+import { z } from 'zod';
 
 
 const prompt = `You are a sophisticated computer vision AI specializing in photogrammetry and technical illustration. Your task is to analyze an image of an object or floor plan and provide estimated real-world measurements and annotations.
@@ -52,7 +53,16 @@ export const annotateImage = ai.defineFlow(
             ],
             output: {
                 format: 'json',
-                schema: ImageAnnotatorOutputSchema,
+                schema: z.object({
+                    imageDataUri: z.string().url().describe("The new, annotated image as a data URI."),
+                    identifiedObject: z.string().describe("The name of the main object identified in the image."),
+                    estimatedDimensions: z.object({
+                        height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
+                        width: z.string().describe("Estimated width with units (e.g., '10 cm')."),
+                        depth: z.string().describe("Estimated depth with units (e.g., '8 cm')."),
+                    }),
+                    otherMetrics: z.string().optional().describe("Any other relevant metrics identified, such as volume or weight."),
+                }),
             },
             config: {
                 responseModalities: ['IMAGE', 'TEXT'],
@@ -63,6 +73,11 @@ export const annotateImage = ai.defineFlow(
             throw new Error('Image analysis failed to return a valid response.');
         }
         
-        return output;
+        return {
+            annotatedImageUri: output.imageDataUri,
+            identifiedObject: output.identifiedObject,
+            estimatedDimensions: output.estimatedDimensions,
+            otherMetrics: output.otherMetrics,
+        };
     }
 );

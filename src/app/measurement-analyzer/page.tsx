@@ -2,8 +2,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Loader2, Camera, Wand2, Download, ArrowRight, Layers } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -74,6 +74,9 @@ export default function MeasurementAnalyzerPage() {
         <div className="bg-background min-h-[calc(100vh-8rem)]">
           <div className="container mx-auto px-4 py-16">
             <div className="max-w-3xl mx-auto text-center">
+                <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                    <Layers className="w-10 h-10 text-primary" />
+                </div>
               <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Measurement Analyzer</h1>
               <p className="mt-4 text-lg text-muted-foreground">
                 Use your device's camera for live object scanning and measurement analysis. Capture an image of an object, and our AI will attempt to estimate its physical dimensions.

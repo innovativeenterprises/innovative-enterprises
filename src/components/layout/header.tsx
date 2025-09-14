@@ -1,9 +1,10 @@
+
 'use client';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, Image as ImageIcon, MapPin, Gift, VrHeadset } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, Image as ImageIcon, MapPin, Gift, VrHeadset, Layers } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -259,6 +260,12 @@ const aiToolsMenu: { title: string; href: string; description: string, icon: Luc
         href: "/feasibility-study",
         description: "Let our AI research and generate a comprehensive feasibility study for your next big idea.",
         icon: BrainCircuit,
+    },
+     {
+        title: "Measurement Analyzer",
+        href: "/measurement-analyzer",
+        description: "Use your camera to scan an object and get AI-powered estimations of its dimensions.",
+        icon: Layers,
     },
 ];
 
