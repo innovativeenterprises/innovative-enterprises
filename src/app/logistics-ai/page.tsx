@@ -23,7 +23,7 @@ export default function LogisticsAiPage() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary">Logistics Chain AI</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            An AI-powered platform to optimize your supply chain and logistics. Define your delivery tasks, fleet, and destinations, and our AI will create an optimized, conflict-free schedule to maximize efficiency.
+            An AI-powered platform to optimize your supply chain and logistics. Define your delivery tasks, vehicles, and destinations, and our AI will create an optimized, conflict-free schedule to maximize efficiency.
           </p>
         </div>
         <div className="max-w-6xl mx-auto mt-12 space-y-12">
