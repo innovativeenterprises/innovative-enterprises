@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -23,7 +22,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import CostSettingsTable from "./cost-settings-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSettingsData, useCostSettingsData, setSettings } from "@/hooks/use-global-store-data";
+import { useSettingsData, setSettings } from "@/hooks/use-global-store-data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const SanadPricingSchema = z.object({
@@ -701,4 +700,3 @@ export default function SettingsTable() {
         </Tabs>
     );
 }
-
