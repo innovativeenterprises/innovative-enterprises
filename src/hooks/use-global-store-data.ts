@@ -35,10 +35,10 @@ import type { Pricing } from '@/lib/pricing';
 function useStoreData<T>(selector: (state: any) => T): T {
     const state = useSyncExternalStore(
         store.subscribe,
-        store.get,
-        store.getSsrState
+        () => selector(store.get()),
+        () => selector(store.getSsrState())
     );
-    return selector(state);
+    return state;
 }
 
 export const useServicesData = () => {
@@ -48,7 +48,7 @@ export const useServicesData = () => {
         setServices: (updater: (services: Service[]) => Service[]) => {
             store.set(state => ({ ...state, services: updater(state.services) }));
         },
-        isClient: true,
+        isClient: true, // Now always client-safe due to useSyncExternalStore
     };
 };
 
@@ -351,7 +351,7 @@ export const setAgentCategories = (updater: (categories: AgentCategory[]) => Age
 export const setCommunities = (updater: (communities: Community[]) => Community[]) => store.set(state => ({ ...state, communities: updater(state.communities) }));
 export const setCommunityEvents = (updater: (events: CommunityEvent[]) => CommunityEvent[]) => store.set(state => ({ ...state, communityEvents: updater(state.communityEvents) }));
 export const setCommunityFinances = (updater: (finances: CommunityFinance[]) => CommunityFinance[]) => store.set(state => ({ ...state, communityFinances: updater(state.communityFinances) }));
-export const setMembers = (updater: (members: CommunityMember[]) => CommunityMember[]) => store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
+export const setCommunityMembers = (updater: (members: CommunityMember[]) => CommunityMember[]) => store.set(state => ({...state, communityMembers: updater(state.communityMembers)}));
 export const setProjectStages = (updater: (stages: ProjectStage[]) => ProjectStage[]) => store.set(state => ({ ...state, stages: updater(state.stages) }));
 export const setSettings = (updater: (settings: AppSettings) => AppSettings) => store.set(state => ({ ...state, settings: updater(state.settings) }));
 export const setAssets = (updater: (assets: Asset[]) => Asset[]) => store.set(state => ({ ...state, assets: updater(state.assets) }));

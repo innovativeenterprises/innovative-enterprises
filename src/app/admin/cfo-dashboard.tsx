@@ -39,12 +39,10 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
     return (
         <div className={`text-sm text-muted-foreground ${className}`}>
             Due: {formattedDate}
-            {daysRemaining !== null && (
-                daysRemaining >= 0 ? (
-                    <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
-                ) : (
-                    <span className="text-destructive font-medium"> (Overdue)</span>
-                )
+            {daysRemaining >= 0 ? (
+                <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
+            ) : (
+                <span className="text-destructive font-medium"> (Overdue)</span>
             )}
         </div>
     );
