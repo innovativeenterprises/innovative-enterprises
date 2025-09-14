@@ -377,13 +377,14 @@ export const initialProducts: Product[] = [
         id: 33,
         name: "Hadeeya",
         description: "A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.",
-        stage: "Research Phase",
+        stage: "Live & Operating",
         category: "Fintech",
         price: 0,
         image: "https://picsum.photos/seed/giftcard/400/400",
         aiHint: "digital gift card",
         rating: 0,
-        enabled: false,
+        enabled: true,
+        href: "/hadeeya",
         adminStatus: 'On Track',
         adminNotes: "Assessing potential merchant partnerships."
     },
@@ -398,7 +399,7 @@ export const initialProducts: Product[] = [
         aiHint: "point of sale system",
         rating: 0,
         enabled: true,
-        href: "/cfo",
+        href: "/ai-pos",
         adminStatus: 'Completed',
         adminNotes: "Evaluating hardware requirements and potential suppliers."
     },
@@ -687,6 +688,20 @@ export const initialProducts: Product[] = [
         href: "/vmall",
         adminStatus: "Completed",
     },
+    {
+        id: 55,
+        name: "APPI – عـبِّـي",
+        description: "An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/appi-icon/400/400",
+        aiHint: "smart meter utility",
+        rating: 0,
+        enabled: true,
+        href: "/appi",
+        adminStatus: "Completed"
+    },
 ];
 
 // This is where e-commerce products should live in a real application,
@@ -799,3 +814,5 @@ export const initialStoreProducts: Product[] = [
 ];
 
   
+
+    

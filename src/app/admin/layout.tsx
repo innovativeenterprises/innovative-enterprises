@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import * as React from 'react';
@@ -35,6 +34,7 @@ import {
   BrainCircuit,
   Warehouse,
   Trophy,
+  Gift,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -71,6 +71,7 @@ export default function AdminLayout({
       { href: '/admin/operations', label: 'Operations & AI', icon: GanttChartSquare },
       { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
       { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
+      { href: '/admin/hadeeya', label: 'Hadeeya Gift Cards', icon: Gift },
   ];
 
 
@@ -161,3 +162,5 @@ export default function AdminLayout({
     </SidebarProvider>
   );
 }
+
+    

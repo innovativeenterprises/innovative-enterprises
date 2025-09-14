@@ -1,3 +1,4 @@
+
 # Platform Overview
 
 This document provides a comprehensive, categorized list of all 83 current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
@@ -60,7 +61,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | On Track |
-| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
+| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Live & Operating | On Track |
 | StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | On Track |
 | Business Hub | A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities. | Live & Operating | Completed |
 | Community Hub | A digital platform for expatriate communities and charities to manage their own affairs, elections, and events. | Live & Operating | Completed |
@@ -140,3 +141,5 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Sage | Business Strategist: Conducts feasibility studies on new business ideas by leveraging other agents for research and analysis. | Enabled |
 | Navi | Innovation Agent: Analyzes market gaps and internal capabilities to suggest new products and service offerings. | Enabled |
 | Paz | Partnership Agent: Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network. | Enabled |
+
+    

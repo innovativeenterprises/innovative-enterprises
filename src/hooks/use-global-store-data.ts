@@ -33,6 +33,7 @@ import type { Pricing } from '@/lib/pricing';
 import type { Car } from '@/lib/cars';
 import type { RentalAgency } from '@/lib/rental-agencies';
 import type { Transaction as PosTransaction } from '@/lib/pos-data';
+import type { GiftCard } from '@/lib/gift-cards';
 
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
@@ -80,6 +81,8 @@ export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[])
 export const setCars = (updater: (prev: Car[]) => Car[]) => store.set(state => ({ ...state, cars: updater(state.cars) }));
 export const setRentalAgencies = (updater: (prev: RentalAgency[]) => RentalAgency[]) => store.set(state => ({ ...state, rentalAgencies: updater(state.rentalAgencies) }));
 export const setDailySales = (updater: (prev: PosTransaction[]) => PosTransaction[]) => store.set(state => ({...state, dailySales: updater(state.dailySales) }));
+export const setGiftCards = (updater: (prev: GiftCard[]) => GiftCard[]) => store.set(state => ({ ...state, giftCards: updater(state.giftCards) }));
+
 
 // Data hooks that return the reactive state slice. isClient is now always true.
 export const useServicesData = () => ({ services: useStoreData(s => s.services), isClient: true });
@@ -173,3 +176,10 @@ export const usePosData = () => ({
     dailySales: useStoreData(s => s.dailySales),
     isClient: true,
 });
+export const useGiftCardsData = () => ({
+    giftCards: useStoreData(s => s.giftCards),
+    setGiftCards,
+    isClient: true,
+});
+
+    

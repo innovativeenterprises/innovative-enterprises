@@ -1,5 +1,4 @@
 
-
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -48,6 +47,7 @@ import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appo
 import { initialCars, type Car } from './cars';
 import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
 import { initialPosProducts, initialDailySales, type PosProduct, type Transaction as PosTransaction } from './pos-data';
+import { initialGiftCards, type GiftCard } from './gift-cards';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -105,6 +105,7 @@ export type AppState = {
   rentalAgencies: typeof initialRentalAgencies;
   posProducts: PosProduct[];
   dailySales: PosTransaction[];
+  giftCards: GiftCard[];
 };
 
 export const initialState: AppState = {
@@ -152,6 +153,7 @@ export const initialState: AppState = {
   rentalAgencies: initialRentalAgencies,
   posProducts: initialPosProducts,
   dailySales: initialDailySales,
+  giftCards: initialGiftCards,
 };
 
 // The single source of truth for our application's shared state.
@@ -189,3 +191,5 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
+
+    
