@@ -86,10 +86,11 @@ export default function PricingTable() {
 
     const pricingByGroup = useMemo(() => {
         return pricing.reduce((acc, item) => {
-            if (!acc[item.group]) {
-                acc[item.group] = [];
+            const groupName = item.group || 'Uncategorized';
+            if (!acc[groupName]) {
+                acc[groupName] = [];
             }
-            acc[item.group].push(item);
+            acc[groupName].push(item);
             return acc;
         }, {} as Record<string, Pricing[]>);
     }, [pricing]);

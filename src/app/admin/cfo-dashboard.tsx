@@ -19,6 +19,9 @@ const DueDateDisplay = ({ date, className }: { date: string, className?: string 
     useEffect(() => setIsClient(true), []);
 
     const { formattedDate, statusText, statusClass } = useMemo(() => {
+        if (typeof window === 'undefined') {
+            return { formattedDate: '', statusText: '', statusClass: '' };
+        }
         const dueDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
