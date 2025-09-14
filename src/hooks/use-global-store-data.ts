@@ -29,19 +29,17 @@ import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-reque
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
 
 
 function useStoreData<T>(selector: (state: any) => T): T {
-    const memoizedSelector = useCallback(selector, []);
-    
     const state = useSyncExternalStore(
-        store.subscribe, 
-        () => memoizedSelector(store.get()), 
-        () => memoizedSelector(store.getSsrState()) // Use the stable server state snapshot
+        store.subscribe,
+        () => store.get(),
+        () => store.getSsrState()
     );
-    return state;
+    return selector(state);
 }
 
 export const useServicesData = () => {
@@ -318,12 +316,17 @@ export const usePricingData = () => {
 }
 
 export const useCfoData = () => {
-    const kpiData = useStoreData(state => state.kpiData);
-    const transactionData = useStoreData(state => state.transactionData);
-    const upcomingPayments = useStoreData(state => state.upcomingPayments);
-    const vatPayment = useStoreData(state => state.vatPayment);
-    const cashFlowData = useStoreData(state => state.cashFlowData);
-    return { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, isClient: true };
+    const data = useStoreData(state => ({
+        kpiData: state.kpiData,
+        transactionData: state.transactionData,
+        upcomingPayments: state.upcomingPayments,
+        vatPayment: state.vatPayment,
+        cashFlowData: state.cashFlowData,
+    }));
+    return {
+        ...data,
+        isClient: true,
+    };
 };
 
 export const useStudentsData = () => {
