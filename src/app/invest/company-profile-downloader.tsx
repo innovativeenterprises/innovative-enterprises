@@ -127,22 +127,18 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    const { leadership, isClient: isStaffClient } = useStaffData();
-    const { services, isClient: isServicesClient } = useServicesData();
-    const { settings, isClient: isSettingsClient } = useSettingsData();
+    const { leadership } = useStaffData();
+    const { services } = useServicesData();
+    const { settings } = useSettingsData();
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-    const [isReady, setIsReady] = useState(false);
     
+    // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
-      // isClient flags become true only after hydration
-      if (isStaffClient && isServicesClient && isSettingsClient) {
-        setIsReady(true);
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-      }
-    }, [isStaffClient, isServicesClient, isSettingsClient]);
+    }, []);
     
     
     const handleDownload = async () => {
@@ -192,14 +188,6 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    if (!isReady) {
-        return (
-            <Button variant="outline" size="lg" disabled>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
-            </Button>
-        );
-    }
-    
     const enabledServices = services.filter(s => s.enabled);
     const enabledLeadership = leadership.filter(l => l.enabled);
     const products = initialProducts.filter(p => p.enabled);
@@ -207,16 +195,14 @@ export default function CompanyProfileDownloader() {
     return (
         <>
             <div style={{ position: 'fixed', left: '-200vw', top: 0, zIndex: -100 }}>
-                 {isReady && (
-                    <ProfileTemplate 
-                        innerRef={profileRef}
-                        leadership={enabledLeadership}
-                        services={enabledServices}
-                        products={products}
-                        settings={settings}
-                        generatedDate={generatedDate}
-                    />
-                 )}
+                <ProfileTemplate 
+                    innerRef={profileRef}
+                    leadership={enabledLeadership}
+                    services={enabledServices}
+                    products={products}
+                    settings={settings}
+                    generatedDate={generatedDate}
+                />
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
                  {isGenerating ? (
@@ -232,3 +218,5 @@ export default function CompanyProfileDownloader() {
         </>
     );
 }
+
+    

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useSyncExternalStore } from 'react';
@@ -40,138 +39,87 @@ function useStoreData<T>(selector: (state: any) => T): T {
 
 export function useServicesData() {
     const services = useStoreData(state => state.services);
-    return {
-        services,
-        isClient: true,
-    };
+    return { services };
 };
 
 export function useProductsData() {
     const products = useStoreData(state => state.products);
-    return {
-        products,
-        isClient: true,
-    };
+    return { products };
 };
 
 
 export function useClientsData() {
-    const data = useStoreData(state => ({ clients: state.clients, testimonials: state.testimonials }));
-    return {
-        ...data,
-        isClient: true,
-    };
+    const clients = useStoreData(state => state.clients);
+    const testimonials = useStoreData(state => state.testimonials);
+    return { clients, testimonials };
 };
 
 export function useProvidersData() {
     const providers = useStoreData(state => state.providers);
-    return {
-        providers,
-        isClient: true,
-    };
+    return { providers };
 };
 
 export function useStaffData() {
-    const data = useStoreData(state => ({
-        leadership: state.leadership,
-        staff: state.staff,
-        agentCategories: state.agentCategories,
-    }));
-    return {
-        ...data,
-        isClient: true,
-    };
+    const leadership = useStoreData(state => state.leadership);
+    const staff = useStoreData(state => state.staff);
+    const agentCategories = useStoreData(state => state.agentCategories);
+    return { leadership, staff, agentCategories };
 };
 
 export function useCommunitiesData() {
     const communities = useStoreData(state => state.communities);
-    return {
-        communities,
-        isClient: true,
-    };
+    return { communities };
 };
 
 export function useCommunityHubData() {
-    const data = useStoreData(state => ({
-        events: state.communityEvents,
-        finances: state.communityFinances,
-    }));
-    return {
-        ...data,
-        isClient: true,
-    };
+    const events = useStoreData(state => state.communityEvents);
+    const finances = useStoreData(state => state.communityFinances);
+    return { events, finances };
 };
 
 export function useMembersData() {
     const members = useStoreData(state => state.communityMembers);
-    return {
-        members,
-        isClient: true,
-    };
+    return { members };
 };
 
 export function useProjectStagesData() {
     const stages = useStoreData(state => state.stages);
-    return {
-        stages,
-        isClient: true,
-    };
+    return { stages };
 };
 
 export function useSettingsData() {
     const settings = useStoreData(state => state.settings);
-    return {
-        settings,
-        isClient: true,
-    };
+    return { settings };
 };
 
 export function useAssetsData() {
     const assets = useStoreData(state => state.assets);
-    return {
-        assets,
-        isClient: true,
-    };
+    return { assets };
 };
 
 export function useInvestorsData() {
     const investors = useStoreData(state => state.investors);
-    return {
-        investors,
-        isClient: true,
-    };
+    return { investors };
 };
 
 export function useKnowledgeData() {
     const knowledgeBase = useStoreData(state => state.knowledgeBase);
-    return {
-        knowledgeBase,
-        isClient: true,
-    };
+    return { knowledgeBase };
 };
 
 export function useAgenciesData() {
     const agencies = useStoreData(state => state.raahaAgencies);
-    return {
-        agencies,
-        isClient: true,
-    };
+    return { agencies };
 };
 
 export function useWorkersData() {
     const workers = useStoreData(state => state.raahaWorkers);
-    return {
-        workers,
-        isClient: true,
-    };
+    return { workers };
 };
 
 export function useRequestsData() {
     const requests = useStoreData(state => state.raahaRequests);
-    return {
-        requests,
-        isClient: true,
-    };
+    return { requests };
 };
 
 export function useLeasesData() {
@@ -181,80 +129,54 @@ export function useLeasesData() {
         setLeases: (updater: (leases: SignedLease[]) => SignedLease[]) => {
             store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
         },
-        isClient: true,
     };
 };
 
 export function usePropertiesData() {
     const properties = useStoreData(state => state.properties);
-    return {
-        properties,
-        isClient: true,
-    };
+    return { properties };
 };
 
 export function useStairspaceData() {
     const stairspaceListings = useStoreData(state => state.stairspaceListings);
     return {
         stairspaceListings,
-        setStairspaceListings: (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => {
-            store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
-        },
-        isClient: true,
     };
 };
 
 export function useStairspaceRequestsData() {
     const stairspaceRequests = useStoreData(state => state.stairspaceRequests);
-    return {
-        stairspaceRequests,
-        isClient: true,
-    };
+    return { stairspaceRequests };
 };
 
 export function useOpportunitiesData() {
     const opportunities = useStoreData(state => state.opportunities);
-    return {
-        opportunities,
-        isClient: true,
-    };
+    return { opportunities };
 };
 
 export function useCostSettingsData() {
     const costSettings = useStoreData(state => state.costSettings);
-    return {
-        costSettings,
-        isClient: true,
-    };
+    return { costSettings };
 }
 
 export function usePricingData() {
     const pricing = useStoreData(state => state.pricing);
-    return {
-        pricing,
-        isClient: true,
-    };
+    return { pricing };
 }
 
 export function useCfoData() {
-    const data = useStoreData(state => ({
-        kpiData: state.kpiData,
-        transactionData: state.transactionData,
-        upcomingPayments: state.upcomingPayments,
-        vatPayment: state.vatPayment,
-        cashFlowData: state.cashFlowData,
-    }));
-    return {
-        ...data,
-        isClient: true,
-    };
+    const kpiData = useStoreData(state => state.kpiData);
+    const transactionData = useStoreData(state => state.transactionData);
+    const upcomingPayments = useStoreData(state => state.upcomingPayments);
+    const vatPayment = useStoreData(state => state.vatPayment);
+    const cashFlowData = useStoreData(state => state.cashFlowData);
+    return { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData };
 };
 
 export function useStudentsData() {
     const students = useStoreData(state => state.students);
     return {
         students,
-        isClient: true,
     };
 };
 
@@ -287,3 +209,5 @@ export const setOpportunities = (updater: (opps: Opportunity[]) => Opportunity[]
 export const setCostSettings = (updater: (items: CostRate[]) => CostRate[]) => store.set(state => ({...state, costSettings: updater(state.costSettings)}));
 export const setPricing = (updater: (items: Pricing[]) => Pricing[]) => store.set(state => ({...state, pricing: updater(state.pricing)}));
 export const setStudents = (updater: (students: Student[]) => Student[]) => store.set(state => ({...state, students: updater(state.students)}));
+
+    
