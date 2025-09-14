@@ -35,6 +35,7 @@ import { findScholarships } from './guardian-ai/scholarship-agent';
 import { generateScholarshipEssay } from './guardian-ai/scholarship-essay-assistant';
 import { wellbeingCheckin } from './guardian-ai/wellbeing-checkin';
 import { analyzeSeo } from './seo-analyzer';
+import { generateFeasibilityStudy } from './feasibility-study';
 import { analyzeOperations } from './agentic-coo';
 import { findAndBookCar } from './drivesync-agent';
 import { analyzeExamSession } from './proctoring-agent';
@@ -83,6 +84,7 @@ export {
   generateScholarshipEssay,
   wellbeingCheckin,
   analyzeSeo,
+  generateFeasibilityStudy,
   analyzeOperations,
   findAndBookCar,
   analyzeExamSession,

@@ -492,7 +492,7 @@ export default function Header() {
                <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-base font-medium">AI Tools</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[600px] grid-cols-2 gap-3 p-4">
+                  <ul className={cn("grid gap-3 p-4", `md:w-[500px] lg:w-[600px] lg:grid-cols-${settings.aiToolsMenuColumns}`)}>
                     {aiToolsMenu.map((component) => (
                       <ListItem
                         key={component.title}
