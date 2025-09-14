@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useSyncExternalStore, useState, useEffect } from 'react';
@@ -27,7 +26,7 @@ import type { Property } from '@/lib/properties';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { BookingRequest as StairspaceRequest } from '@/lib/stairspace-requests';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
-import type { CostRate } from './cost-settings.schema';
+import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
@@ -186,6 +185,7 @@ export const usePosData = () => ({
     dailySales: useStoreData(s => s.dailySales),
     products: useStoreData(s => s.posProducts),
     setProducts: setPosProducts,
+    setDailySales: setDailySales,
     isClient: true,
 });
 export const useGiftCardsData = () => ({
