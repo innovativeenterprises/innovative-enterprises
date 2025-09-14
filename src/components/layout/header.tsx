@@ -65,6 +65,12 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
                 icon: Users,
             },
+             {
+                title: "KHIDMA",
+                href: "/khidma",
+                description: "A dynamic marketplace connecting service seekers with qualified providers through an innovative auction/tender system.",
+                icon: KhidmaIcon,
+            },
         ]
     },
      {

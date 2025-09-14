@@ -1,4 +1,3 @@
-
 # Platform Overview
 
 This document provides a comprehensive, categorized list of all 83 current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
@@ -54,14 +53,14 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
-| APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | Live & Operating | Completed |
+| APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | In Development | On Track |
 | KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
-| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | Live & Operating | Completed |
-| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | Live & Operating | Completed |
+| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | In Development | On Track |
+| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
-| AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | On Track |
-| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Live & Operating | On Track |
+| AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
+| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
 | StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | On Track |
 | Business Hub | A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities. | Live & Operating | Completed |
 | Community Hub | A digital platform for expatriate communities and charities to manage their own affairs, elections, and events. | Live & Operating | Completed |
@@ -71,7 +70,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
 | AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | On Track |
-| AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Live & Operating | On Track |
+| AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Research Phase | On Track |
 
 ## Core Business Services (19 Total)
 
