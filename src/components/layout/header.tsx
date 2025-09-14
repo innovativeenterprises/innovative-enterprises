@@ -1,9 +1,10 @@
+
 'use client';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, ImageIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -203,6 +204,12 @@ const aiToolsMenu: { title: string; href: string; description: string, icon: Luc
         href: "/image-generator",
         description: "Describe anything you can imagine, and our AI will create a unique, high-quality image for you.",
         icon: Cpu,
+    },
+     {
+        title: "Facebook Cover Generator",
+        href: "/facebook-cover-generator",
+        description: "Create a professional Facebook cover photo in seconds. Describe your business and let our AI handle the design.",
+        icon: ImageIcon,
     },
     {
         title: "AI SEO Analyzer",

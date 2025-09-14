@@ -40,6 +40,7 @@ import { analyzeOperations } from './agentic-coo';
 import { findAndBookCar } from './drivesync-agent';
 import { analyzeExamSession } from './proctoring-agent';
 import { findHelpers } from './raaha-matcher';
+import { generateFacebookCover } from './facebook-cover-generator';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -87,4 +88,5 @@ export {
   findAndBookCar,
   analyzeExamSession,
   findHelpers,
+  generateFacebookCover,
 };
