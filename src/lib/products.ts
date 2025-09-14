@@ -658,6 +658,20 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/video-generator",
         adminStatus: "Completed",
+    },
+    {
+        id: 51,
+        name: "StockClear",
+        description: "B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales.",
+        stage: "Planning Phase",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/stockclear/400/400",
+        aiHint: "warehouse boxes inventory",
+        rating: 0,
+        enabled: true,
+        href: "/stock-clear",
+        adminStatus: "On Track"
     }
 ];
 

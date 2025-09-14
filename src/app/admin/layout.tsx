@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import * as React from 'react';
@@ -30,6 +29,7 @@ import {
   UserCog,
   Handshake,
   BrainCircuit,
+  Warehouse,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -54,6 +54,7 @@ export default function AdminLayout({
     { href: '/admin/people', label: 'People', icon: UserCog },
     { href: '/admin/communities', label: 'Communities', icon: Handshake },
     { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
+    { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
     { href: '/admin/operations', label: 'Operations', icon: GanttChartSquare },
   ];
 
