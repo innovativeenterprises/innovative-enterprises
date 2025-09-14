@@ -98,6 +98,8 @@ export const useProductsData = () => ({ products: useStoreData(s => s.products),
 export const useClientsData = () => ({
     clients: useStoreData(s => s.clients),
     testimonials: useStoreData(s => s.testimonials),
+    setClients,
+    setTestimonials,
     isClient: true,
 });
 export const useProvidersData = () => ({ providers: useStoreData(s => s.providers), setProviders, isClient: true });
@@ -112,6 +114,8 @@ export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
     members: useStoreData(s => s.communityMembers),
+    setCommunityEvents,
+    setCommunityFinances,
     isClient: true,
 });
 export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
