@@ -1,5 +1,4 @@
 
-
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -41,6 +40,7 @@ import { initialCommunities, type Community } from './communities';
 import { initialEvents, type CommunityEvent } from './community-events';
 import { initialFinances, type CommunityFinance } from './community-finances';
 import { initialMembers, type CommunityMember } from './community-members';
+import { initialStockItems, type StockItem } from './stock-items';
 
 
 export interface CartItem extends Product {
@@ -77,6 +77,7 @@ export type AppState = {
   properties: Property[];
   stairspaceListings: StairspaceListing[];
   stairspaceRequests: StairspaceRequest[];
+  stockItems: StockItem[];
   students: Student[];
   communities: Community[];
   communityEvents: CommunityEvent[];
@@ -116,6 +117,7 @@ let state: AppState = {
   properties: initialProperties,
   stairspaceListings: initialStairspaceListings,
   stairspaceRequests: initialStairspaceRequests,
+  stockItems: initialStockItems,
   students: initialStudents,
   communities: initialCommunities,
   communityEvents: initialEvents,

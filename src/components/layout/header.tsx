@@ -35,6 +35,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import SanadHubIcon from '../icons/sanad-hub-icon';
 import BusinessHubIcon from '../icons/business-hub-icon';
 import AmeenSmartLockIcon from '../icons/ameen-smart-lock-icon';
+import KhidmaIcon from '../icons/khidma-icon';
 
 const navLinks: { href: string; label: string }[] = [
   { href: "/team", label: "Our Team" },
