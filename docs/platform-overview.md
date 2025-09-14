@@ -49,7 +49,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | :--- | :--- | :--- | :--- |
 | DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Planning Phase | On Track |
 
-### Category: General Platforms & SaaS (10)
+### Category: General Platforms & SaaS (12)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
@@ -62,7 +62,8 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
 | StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Planning Phase | On Track |
-
+| Business Hub | A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities. | Live & Operating | Completed |
+| Community Hub | A digital platform for expatriate communities and charities to manage their own affairs, elections, and events. | Live & Operating | Completed |
 
 ### Category: AI & Creative Tools (3)
 | Name | Description | Stage | Status |

@@ -27,22 +27,6 @@ export const initialServices: Service[] = [
     category: "Digital Transformations"
   },
   {
-    icon: BusinessHubIcon,
-    title: "Business Hub",
-    description: "A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities.",
-    enabled: true,
-    href: "/business-hub",
-    category: "Digital Transformations"
-  },
-  {
-    icon: Users,
-    title: "Community Hub",
-    description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
-    enabled: true,
-    href: "/community-hub",
-    category: "Digital Transformations"
-  },
-  {
     icon: Gem,
     title: "The Majlis (VIP Hub)",
     description: "An exclusive, AI-managed ecosystem for VIPs, executives, and their trusted networks, focusing on discreet problem-solving and curated opportunities.",
@@ -116,6 +100,22 @@ export const initialServices: Service[] = [
     category: "AI Powered & Automation"
   },
   // Business Tech Solutions
+  {
+    icon: BusinessHubIcon,
+    title: "Business Hub",
+    description: "A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities.",
+    enabled: true,
+    href: "/business-hub",
+    category: "Business Tech Solutions"
+  },
+   {
+    icon: Users,
+    title: "Community Hub",
+    description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
+    enabled: true,
+    href: "/community-hub",
+    category: "Business Tech Solutions"
+  },
   {
     icon: Cloud,
     title: "Orion Cloud",

@@ -588,6 +588,34 @@ export const initialProducts: Product[] = [
         enabled: true,
         href: "/tender-assistant",
         adminStatus: "Completed"
+    },
+    {
+        id: 46,
+        name: "Business Hub",
+        description: "A B2B marketplace connecting businesses with each other and with new clients for opportunities.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/business-hub/400/400",
+        aiHint: "business network connection",
+        rating: 4.8,
+        enabled: true,
+        href: "/business-hub",
+        adminStatus: "Completed",
+    },
+    {
+        id: 47,
+        name: "Community Hub",
+        description: "A digital platform for expatriate communities and charities to manage their own affairs, elections, and events.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://picsum.photos/seed/community-hub/400/400",
+        aiHint: "community people gathering",
+        rating: 4.7,
+        enabled: true,
+        href: "/community-hub",
+        adminStatus: "Completed",
     }
 ];
 
@@ -705,3 +733,4 @@ export const initialStoreProducts: Product[] = [
     
 
     
+
