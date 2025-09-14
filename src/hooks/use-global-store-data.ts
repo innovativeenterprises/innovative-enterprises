@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useSyncExternalStore, useMemo } from 'react';
+import { useSyncExternalStore, useMemo, useCallback } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -39,9 +39,11 @@ import type { Pricing } from '@/lib/pricing';
 function useStoreData<T>(selector: (state: any) => T): T {
     const state = useSyncExternalStore(
         store.subscribe,
-        () => store.get(),
-        () => store.getSsrState()
+        store.get, // The client-side snapshot
+        store.getSsrState // The server-side snapshot (must be stable)
     );
+    // The selector is applied here, outside the hook, to the stable state.
+    // useMemo ensures the selector only re-runs if the state it depends on changes.
     return useMemo(() => selector(state), [state, selector]);
 }
 
