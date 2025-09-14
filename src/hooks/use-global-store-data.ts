@@ -32,6 +32,7 @@ import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
 
+
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
  * It uses useSyncExternalStore to be compatible with React 18's concurrent features.
@@ -50,6 +51,9 @@ export const useServicesData = () => {
     const services = useStoreData(state => state.services);
     return {
         services,
+        setServices: (updater: (services: Service[]) => Service[]) => {
+            store.set(state => ({ ...state, services: updater(state.services) }));
+        },
         isClient: true, // Now always client-safe due to useSyncExternalStore
     };
 };
@@ -58,6 +62,9 @@ export const useProductsData = () => {
     const products = useStoreData(state => state.products);
     return {
         products,
+        setProducts: (updater: (products: Product[]) => Product[]) => {
+            store.set(state => ({ ...state, products: updater(state.products) }));
+        },
         isClient: true,
     };
 };
@@ -67,6 +74,12 @@ export const useClientsData = () => {
     const data = useStoreData(state => ({ clients: state.clients, testimonials: state.testimonials }));
     return {
         ...data,
+        setClients: (updater: (clients: Client[]) => Client[]) => {
+            store.set(state => ({ ...state, clients: updater(state.clients) }));
+        },
+        setTestimonials: (updater: (testimonials: Testimonial[]) => Testimonial[]) => {
+            store.set(state => ({ ...state, testimonials: updater(state.testimonials) }));
+        },
         isClient: true,
     };
 };
@@ -75,6 +88,9 @@ export const useProvidersData = () => {
     const providers = useStoreData(state => state.providers);
     return {
         providers,
+        setProviders: (updater: (providers: Provider[]) => Provider[]) => {
+            store.set(state => ({ ...state, providers: updater(state.providers) }));
+        },
         isClient: true,
     };
 };
@@ -87,6 +103,15 @@ export const useStaffData = () => {
     }));
     return {
         ...data,
+        setLeadership: (updater: (agents: Agent[]) => Agent[]) => {
+            store.set(state => ({ ...state, leadership: updater(state.leadership) }));
+        },
+        setStaff: (updater: (agents: Agent[]) => Agent[]) => {
+            store.set(state => ({ ...state, staff: updater(state.staff) }));
+        },
+        setAgentCategories: (updater: (categories: AgentCategory[]) => AgentCategory[]) => {
+            store.set(state => ({ ...state, agentCategories: updater(state.agentCategories) }));
+        },
         isClient: true,
     };
 };
@@ -211,7 +236,7 @@ export const useRequestsData = () => {
     const requests = useStoreData(state => state.raahaRequests);
     return {
         requests,
-        setRaahaRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
+        setRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
             store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
         },
         isClient: true,
@@ -341,7 +366,6 @@ export const setKnowledgeBase = (updater: (docs: KnowledgeDocument[]) => Knowled
 export const setRaahaAgencies = (updater: (agencies: Agency[]) => Agency[]) => store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
 export const setRaahaWorkers = (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
 export const setRaahaRequests = (updater: (requests: HireRequest[]) => HireRequest[]) => store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
-export const setLeases = (updater: (leases: SignedLease[]) => SignedLease[]) => store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
 export const setProperties = (updater: (properties: Property[]) => Property[]) => store.set(state => ({ ...state, properties: updater(state.properties) }));
 export const setStairspaceListings = (updater: (listings: StairspaceListing[]) => StairspaceListing[]) => store.set(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
 export const setStairspaceRequests = (updater: (requests: StairspaceRequest[]) => StairspaceRequest[]) => store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
@@ -349,4 +373,4 @@ export const setOpportunities = (updater: (opps: Opportunity[]) => Opportunity[]
 export const setCostSettings = (updater: (items: CostRate[]) => CostRate[]) => store.set(state => ({...state, costSettings: updater(state.costSettings)}));
 export const setPricing = (updater: (items: Pricing[]) => Pricing[]) => store.set(state => ({...state, pricing: updater(state.pricing)}));
 export const setStudents = (updater: (students: Student[]) => Student[]) => store.set(state => ({...state, students: updater(state.students)}));
-
+export const setSignedLeases = (updater: (leases: SignedLease[]) => SignedLease[]) => store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
