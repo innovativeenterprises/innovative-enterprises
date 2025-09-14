@@ -92,6 +92,9 @@ The platform is a monolithic **Next.js 14+ (App Router)** application serving bo
 -   **CertiTrust:** Blockchain-based digital credentialing and AI proctoring.
 -   **CampusOS:** Smart campus management platform using IoT.
 
+#### Automotive Tech (1)
+-   **DriveSync AI:** An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking.
+
 #### General Platforms & SaaS (10)
 -   **ameen:** Secure digital identity and Smart Lost & Found.
 -   **APPI – عـبِّـي:** Real-time insights into household utility consumption.

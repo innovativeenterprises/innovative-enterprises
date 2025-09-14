@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "DriveSync AI | Innovative Enterprises",
-  description: "An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent and a comprehensive fleet management dashboard.",
+  description: "An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS for real-time tracking.",
 };
 
 export default function DriveSyncAiPage() {
@@ -19,7 +19,7 @@ export default function DriveSyncAiPage() {
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-primary">DriveSync AI</h1>
                     <p className="mt-4 text-lg text-muted-foreground">
-                        Coming Soon: An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent and a comprehensive fleet management dashboard.
+                        Coming Soon: An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking.
                     </p>
                 </div>
             </div>

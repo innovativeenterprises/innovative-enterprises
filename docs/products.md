@@ -40,6 +40,11 @@
 | CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Idea Phase | On Track |
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Idea Phase | On Track |
 
+## Category: Automotive Tech (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Planning Phase | On Track |
+
 ## Category: General Platforms & SaaS (10)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
@@ -61,4 +66,3 @@
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
 | AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Idea Phase | On Track |
 | AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Research Phase | On Track |
-

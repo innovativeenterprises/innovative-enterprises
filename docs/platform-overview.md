@@ -44,6 +44,11 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Idea Phase | On Track |
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Idea Phase | On Track |
 
+### Category: Automotive Tech (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Planning Phase | On Track |
+
 ### Category: General Platforms & SaaS (10)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
