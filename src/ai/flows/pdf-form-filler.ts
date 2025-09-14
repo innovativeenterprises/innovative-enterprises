@@ -32,7 +32,7 @@ const prompt = ai.definePrompt(
     name: 'pdfFormFillerPrompt',
     input: { schema: PdfFormFillerInputSchema },
     output: { schema: PdfFormFillerOutputSchema },
-    prompt: `You are an expert data entry assistant. Your task is to analyze a PDF form and fill it out intelligently using a provided user profile.
+    prompt: `You are an expert data entry assistant with computer vision capabilities. Your task is to analyze a PDF form, identify all fillable fields, and map them to a provided user profile. You must also determine the exact coordinates and font size for each field.
 
 **User Profile Data:**
 '''json
@@ -43,13 +43,16 @@ const prompt = ai.definePrompt(
 {{media url=pdfDataUri}}
 
 **Instructions:**
-1.  **Analyze PDF Fields:** Carefully examine the PDF. Identify all the form fields (e.g., text inputs, checkboxes).
-2.  **Intelligent Mapping:** For each identified field, determine its most likely purpose (e.g., "Full Name," "Date of Birth," "Mobile Number").
-3.  **Fill from Profile:** Match the identified field to the most appropriate piece of data from the User Profile.
-4.  **Provide Reasoning:** For each field you fill, provide a brief reasoning for your choice. For example, for a field you label "Name," your reasoning might be "The field was labeled 'Applicant Name'." For a field where you put a phone number, your reasoning might be "The field was next to a phone icon."
-5.  **Return Structured Data:** Create a JSON array where each object represents a filled form field. Each object must contain the \`fieldName\`, the \`value\` you've filled in, and your \`reasoning\`.
+1.  **Analyze PDF Layout:** Carefully examine the PDF's structure. Identify all the form fields (e.g., text inputs, checkboxes).
+2.  **Intelligent Mapping:** For each identified field, determine its most likely purpose (e.g., "Full Name," "Date of Birth," "Mobile Number"). Match the identified field to the most appropriate piece of data from the User Profile.
+3.  **Coordinate & Font Extraction:** This is CRITICAL. For each field, you must determine its precise location and font size.
+    *   \`x\`: The x-coordinate (from the left edge) in PDF points/pixels where the text should begin.
+    *   \`y\`: The y-coordinate (from the top edge) in PDF points/pixels where the text should begin. This should align with the baseline of the form field's text.
+    *   \`fontSize\`: Estimate the font size used for the form fields. This is usually between 8 and 12.
+4.  **Provide Reasoning:** For each field you fill, provide a brief reasoning for your choice. For example, for a field you label "Name," your reasoning might be "The field was labeled 'Applicant Name'."
+5.  **Return Structured Data:** Create a JSON array where each object represents a filled form field. Each object must contain the \`fieldName\`, the \`value\`, your \`reasoning\`, and the precise \`x\`, \`y\`, and \`fontSize\` values.
 
-Return only the JSON array of filled form data.
+Return only the JSON array of filled form data. Be precise with the coordinates.
 `,
   },
 );

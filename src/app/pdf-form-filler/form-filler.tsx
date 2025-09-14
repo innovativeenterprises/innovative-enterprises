@@ -7,13 +7,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileText, Download } from 'lucide-react';
 import { fillPdfForm } from '@/ai/flows/pdf-form-filler';
 import { type FilledFormData } from '@/ai/flows/pdf-form-filler.schema';
 import { fileToDataURI } from '@/lib/utils';
+import jsPDF from 'jspdf';
+import { Label } from '@/components/ui/label';
+
 
 const FormSchema = z.object({
   pdfDocument: z.any().refine(file => file?.length == 1, 'PDF document is required.'),
@@ -22,7 +25,9 @@ type FormValues = z.infer<typeof FormSchema>;
 
 export default function FormFiller() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [response, setResponse] = useState<FilledFormData[] | null>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -32,6 +37,7 @@ export default function FormFiller() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setResponse(null);
+    setPdfFile(data.pdfDocument[0]);
     try {
         const pdfDataUri = await fileToDataURI(data.pdfDocument[0]);
         const result = await fillPdfForm({ pdfDataUri });
@@ -48,6 +54,44 @@ export default function FormFiller() {
       setIsLoading(false);
     }
   };
+
+  const handleDownload = async () => {
+    if (!response || !pdfFile) return;
+    setIsDownloading(true);
+    toast({ title: 'Generating PDF...', description: 'Please wait while we create the filled document.'});
+    try {
+      const pdfDataUri = await fileToDataURI(pdfFile);
+      const img = new Image();
+      img.src = pdfDataUri;
+      img.onload = () => {
+        const pdf = new jsPDF({
+          orientation: img.width > img.height ? 'landscape' : 'portrait',
+          unit: 'pt', // Use points to match font sizes
+          format: [img.width, img.height],
+        });
+        
+        // Add the original PDF as a background image
+        pdf.addImage(img, 'PNG', 0, 0, img.width, img.height);
+        
+        // Add the text
+        response.forEach(field => {
+          pdf.setFontSize(field.fontSize);
+          pdf.text(field.value, field.x, field.y, {
+            align: 'left',
+            baseline: 'top',
+          });
+        });
+
+        pdf.save('filled_form.pdf');
+        toast({ title: 'PDF Downloaded!', description: 'Your filled PDF has been downloaded.' });
+        setIsDownloading(false);
+      }
+    } catch (e) {
+      console.error(e);
+      toast({ title: 'PDF Generation Failed', variant: 'destructive'});
+      setIsDownloading(false);
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -103,8 +147,9 @@ export default function FormFiller() {
             ))}
           </CardContent>
            <CardFooter className="justify-end">
-            <Button variant="outline" disabled>
-              <Download className="mr-2 h-4 w-4" /> Download Filled PDF (Coming Soon)
+            <Button onClick={handleDownload} disabled={isDownloading}>
+              {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+               Download Filled PDF
             </Button>
           </CardFooter>
         </Card>
