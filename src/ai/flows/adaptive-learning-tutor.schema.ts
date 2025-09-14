@@ -17,3 +17,5 @@ export const AdaptiveTutorOutputSchema = z.object({
   practiceQuestion: z.string().describe("A single practice question to test the student's understanding of the explained concept."),
 });
 export type AdaptiveTutorOutput = z.infer<typeof AdaptiveTutorOutputSchema>;
+
+  

@@ -30,3 +30,5 @@ export const LearningPathOutputSchema = z.object({
   modules: z.array(ModuleSchema).describe("A list of structured modules for the learning path."),
 });
 export type LearningPathOutput = z.infer<typeof LearningPathOutputSchema>;
+
+  

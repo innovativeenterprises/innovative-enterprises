@@ -24,3 +24,5 @@ export const QuizGeneratorOutputSchema = z.object({
   questions: z.array(QuestionSchema),
 });
 export type QuizGeneratorOutput = z.infer<typeof QuizGeneratorOutputSchema>;
+
+  
