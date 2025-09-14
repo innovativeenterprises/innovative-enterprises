@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -45,20 +46,30 @@ const sendBookingConfirmation = (request: BookingRequest) => {
     console.log("--------------------------------------");
 };
 
+const TimeAgoCell = ({ date }: { date: string }) => {
+    const [timeAgo, setTimeAgo] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (date) {
+           setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
+        }
+    }, [date]);
+
+    if (!timeAgo) {
+        return <Skeleton className="h-4 w-[100px]" />;
+    }
+
+    return <span>{timeAgo}</span>;
+};
+
 const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest, onScheduleInterview: (id: string, values: InterviewValues) => void }) => {
     const { stairspaceListings } = useStairspaceData();
     const listing = stairspaceListings.find(l => l.id === request.listingId);
-    const [dateText, setDateText] = useState('...');
     
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ 
         id: request.id,
         data: { type: 'Request', request },
     });
-
-    useEffect(() => {
-        // Calculate date on the client to avoid hydration mismatch
-        setDateText(formatDistanceToNow(new Date(request.requestDate), { addSuffix: true }));
-    }, [request.requestDate]);
 
     const style = {
         transition,
@@ -78,7 +89,7 @@ const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest
                                 <div className="flex-grow">
                                     <p className="font-semibold text-sm leading-tight group-hover:text-primary">{request.listingTitle}</p>
                                     <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5"><CheckCircle className="h-3 w-3"/>{request.clientName}</p>
-                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/>{dateText}</p>
+                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/><TimeAgoCell date={request.requestDate} /></p>
                                 </div>
                             </div>
                         </DialogTrigger>
@@ -145,7 +156,7 @@ export default function StairspaceRequestsPage() {
     
     const onScheduleInterview = (id: string, values: InterviewValues) => {
         setStairspaceRequests(prev => prev.map(r => 
-            r.id === id ? { ...r, interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+            r.id === id ? { ...r, status: 'Contacted', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
     };

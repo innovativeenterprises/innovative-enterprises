@@ -147,6 +147,9 @@ export const useMembersData = () => {
     const members = useStoreData(state => state.communityMembers);
     return {
         members,
+        setCommunityMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
+            store.set(state => ({...state, communityMembers: updater(state.communityMembers)}));
+        },
         setMembers: (updater: (members: CommunityMember[]) => CommunityMember[]) => {
             store.set(state => ({ ...state, communityMembers: updater(state.communityMembers) }));
         },
