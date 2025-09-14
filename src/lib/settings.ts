@@ -57,7 +57,7 @@ export const initialSettings: AppSettings = {
     },
     headerImageUrl: "https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png",
     footerImageUrl: "",
-    servicesMenuColumns: 4,
+    servicesMenuColumns: 3,
     aiToolsMenuColumns: 4,
     whatsapp: {
         businessAccountId: 'YOUR_WHATSAPP_BUSINESS_ACCOUNT_ID',
