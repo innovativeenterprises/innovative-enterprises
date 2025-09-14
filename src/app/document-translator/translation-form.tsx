@@ -99,10 +99,11 @@ export default function TranslationForm({ pricing, settings }: { pricing: Pricin
 
   const documentTypeGroups = useMemo(() => {
       return pricing.reduce((acc, item) => {
-          if (!acc[item.group]) {
-              acc[item.group] = [];
+          const group = item.group;
+          if (!acc[group]) {
+              acc[group] = [];
           }
-          acc[item.group].push(item.type);
+          acc[group].push(item.type);
           return acc;
       }, {} as Record<string, string[]>);
   }, [pricing]);

@@ -1,4 +1,7 @@
 
+import type { LucideIcon } from "lucide-react";
+import { ShieldCheck, FileText, Banknote } from "lucide-react";
+
 export interface Pricing {
     id: string;
     group: string;
@@ -8,7 +11,7 @@ export interface Pricing {
 
 export interface PricingGroup {
     group: string;
-    icon: any; // LucideIcon is a client component, can't be used in data files directly
+    icon: LucideIcon;
     items: { [key: string]: number };
 }
 
