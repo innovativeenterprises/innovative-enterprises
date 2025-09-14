@@ -45,6 +45,8 @@ import { initialStockItems, type StockItem } from './stock-items';
 import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
 import { initialBeautyServices, type BeautyService, initialSpecialists, type Specialist } from './beauty-services';
 import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
+import { initialCars, type Car } from './cars';
+import { initialRentalAgencies } from './rental-agencies';
 
 
 export interface CartItem extends Product {
@@ -99,6 +101,8 @@ export type AppState = {
   beautyServices: BeautyService[];
   beautySpecialists: Specialist[];
   beautyAppointments: BeautyAppointment[];
+  cars: Car[];
+  rentalAgencies: typeof initialRentalAgencies;
 };
 
 export const initialState: AppState = {
@@ -142,6 +146,8 @@ export const initialState: AppState = {
   beautyServices: initialBeautyServices,
   beautySpecialists: initialSpecialists,
   beautyAppointments: initialBeautyAppointments,
+  cars: initialCars,
+  rentalAgencies: initialRentalAgencies,
 };
 
 // The single source of truth for our application's shared state.

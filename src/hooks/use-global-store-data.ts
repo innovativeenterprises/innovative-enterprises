@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useState, useEffect } from 'react';
 import { store, type AppState, initialState } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -30,7 +31,8 @@ import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Student } from '@/lib/students';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
 import type { Pricing } from '@/lib/pricing';
-
+import type { Car } from '@/lib/cars';
+import type { RentalAgency } from '@/lib/rental-agencies';
 
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
@@ -75,6 +77,8 @@ export const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => st
 export const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => store.set(state => ({ ...state, pricing: updater(state.pricing) }));
 export const setStudents = (updater: (prev: Student[]) => Student[]) => store.set(state => ({ ...state, students: updater(state.students) }));
 export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
+export const setCars = (updater: (prev: Car[]) => Car[]) => store.set(state => ({ ...state, cars: updater(state.cars) }));
+export const setRentalAgencies = (updater: (prev: RentalAgency[]) => RentalAgency[]) => store.set(state => ({ ...state, rentalAgencies: updater(state.rentalAgencies) }));
 
 
 // Data hooks that return the reactive state slice. isClient is now always true.
@@ -96,6 +100,7 @@ export const useCommunitiesData = () => ({ communities: useStoreData(s => s.comm
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
+    members: useStoreData(s => s.communityMembers),
     isClient: true,
 });
 export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), isClient: true });
@@ -142,5 +147,17 @@ export const useCfoData = () => ({
 });
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
+    isClient: true,
+});
+export const useBeautyData = () => ({
+    centers: useStoreData(s => s.beautyCenters),
+    services: useStoreData(s => s.beautyServices),
+    specialists: useStoreData(s => s.beautySpecialists),
+    appointments: useStoreData(s => s.beautyAppointments),
+    isClient: true,
+});
+export const useDriveSyncData = () => ({
+    cars: useStoreData(s => s.cars),
+    rentalAgencies: useStoreData(s => s.rentalAgencies),
     isClient: true,
 });
