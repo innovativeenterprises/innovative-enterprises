@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, ImageIcon } from 'lucide-react';
+import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, Image as ImageIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -37,6 +37,7 @@ import BusinessHubIcon from '../icons/business-hub-icon';
 import AmeenSmartLockIcon from '../icons/ameen-smart-lock-icon';
 import KhidmaIcon from '../icons/khidma-icon';
 import AppiIcon from '../icons/appi-icon';
+import VmallIcon from '../icons/vmall-icon';
 
 const navLinks: { href: string; label: string }[] = [
   { href: "/team", label: "Our Team" },
@@ -119,7 +120,7 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
             {
                 title: "StockClear",
                 href: "/stock-clear",
-                description: "B2B marketplace for liquidating excess or near-expiry stock through auctions and bulk sales.",
+                description: "B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales.",
                 icon: Warehouse,
             },
             {
@@ -127,6 +128,12 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 href: "/appi",
                 description: "Real-time insights into household utility consumption (electricity, water, gas).",
                 icon: AppiIcon,
+            },
+            {
+                title: "Logistics Chain AI",
+                href: "/logistics-ai",
+                description: "AI model to optimize supply chain and logistics for local and regional distributors.",
+                icon: Truck,
             },
              {
                 title: "AI-Powered FAQ",
@@ -188,6 +195,12 @@ const industriesByCategory: { category: string; items: { title: string; href: st
                 href: "/vip-hub",
                 description: "An exclusive, AI-managed ecosystem for VIPs, executives, and their trusted networks.",
                 icon: Gem,
+            },
+             {
+                title: "VMALL",
+                href: "/vmall",
+                description: "A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences.",
+                icon: VmallIcon,
             },
         ]
     }
