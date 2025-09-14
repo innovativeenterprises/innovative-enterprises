@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useSyncExternalStore, useCallback } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store, type AppState, initialState } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -114,7 +114,7 @@ export const useKnowledgeData = () => ({
 });
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), setWorkers: setRaahaWorkers, isClient: true });
-export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
+export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRaahaRequests, isClient: true });
 export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({
@@ -155,5 +155,3 @@ export const useStudentsData = () => ({
     setStudents,
     isClient: true,
 });
-
-    
