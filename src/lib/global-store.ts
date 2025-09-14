@@ -13,7 +13,7 @@
 import { initialServices, type Service } from './services';
 import { initialProducts, type Product, initialStoreProducts } from './products';
 import { initialClients, type Client, initialTestimonials, type Testimonial } from './clients';
-import { initialStaffData, type Agent, type AgentCategory, initialAgentCategories } from './agents';
+import { initialStaffData, type Agent, type AgentCategory } from './agents';
 import { initialOpportunities, type Opportunity } from './opportunities';
 import { initialPricing, type Pricing } from './pricing';
 import { initialStages, type ProjectStage } from './stages';
@@ -33,7 +33,7 @@ import { type BoQItem } from '@/ai/flows/boq-generator.schema';
 import { initialCostSettings } from './cost-settings';
 import type { CostRate } from './cost-settings.schema';
 import { initialStudents, type Student } from './students';
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from './cfo-data';
+import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from './cfo-data';
 import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from './cfo-data';
 import { initialCommunities, type Community } from './communities';
 import { initialEvents, type CommunityEvent } from './community-events';
@@ -98,7 +98,7 @@ let state: AppState = {
   testimonials: initialTestimonials,
   leadership: initialStaffData.leadership,
   staff: initialStaffData.staff,
-  agentCategories: initialAgentCategories,
+  agentCategories: initialStaffData.agentCategories,
   opportunities: initialOpportunities,
   pricing: initialPricing,
   stages: initialStages,
