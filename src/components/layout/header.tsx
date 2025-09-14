@@ -36,6 +36,7 @@ import SanadHubIcon from '../icons/sanad-hub-icon';
 import BusinessHubIcon from '../icons/business-hub-icon';
 import AmeenSmartLockIcon from '../icons/ameen-smart-lock-icon';
 import KhidmaIcon from '../icons/khidma-icon';
+import AppiIcon from '../icons/appi-icon';
 
 const navLinks: { href: string; label: string }[] = [
   { href: "/team", label: "Our Team" },
@@ -121,11 +122,11 @@ const solutionsByCategory: { category: string; items: { title: string; href: str
                 description: "B2B marketplace for liquidating excess or near-expiry stock through auctions and bulk sales.",
                 icon: Warehouse,
             },
-             {
-                title: "SaaS Portfolio",
-                href: "/saas-portfolio",
-                description: "A complete overview of all our digital products and platforms.",
-                icon: BarChart3,
+            {
+                title: "APPI – عـبِّـي",
+                href: "/appi",
+                description: "Real-time insights into household utility consumption (electricity, water, gas).",
+                icon: AppiIcon,
             },
              {
                 title: "AI-Powered FAQ",
