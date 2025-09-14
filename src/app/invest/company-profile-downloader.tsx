@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRef, useState, useEffect } from "react";
@@ -136,14 +135,19 @@ export default function CompanyProfileDownloader() {
     const profileRef = useRef<HTMLDivElement>(null);
     const [isReady, setIsReady] = useState(false);
     
-    // This effect runs only once on the client after initial mount.
+    // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
-        // We set isReady to true here to indicate we are on the client.
-        // The data hooks will handle fetching the actual data.
-        setIsReady(true);
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
     }, []);
 
+    // The component is fully ready only on the client and when all data has been loaded.
+    useEffect(() => {
+        if(isStaffClient && isServicesClient && isSettingsClient) {
+            setIsReady(true);
+        }
+    }, [isStaffClient, isServicesClient, isSettingsClient]);
+    
+    
     const handleDownload = async () => {
         if (!profileRef.current || !settings) return;
         setIsGenerating(true);
@@ -191,10 +195,7 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    // The component is fully ready only on the client and when all data has been loaded.
-    const isDataLoaded = isReady && isStaffClient && isServicesClient && isSettingsClient;
-    
-    if (!isDataLoaded) {
+    if (!isReady) {
         return (
             <Button variant="outline" size="lg" disabled>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile...
@@ -209,7 +210,7 @@ export default function CompanyProfileDownloader() {
     return (
         <>
             <div style={{ position: 'fixed', left: '-200vw', top: 0, zIndex: -100 }}>
-                 {isDataLoaded && (
+                 {isReady && (
                     <ProfileTemplate 
                         innerRef={profileRef}
                         leadership={enabledLeadership}
@@ -234,5 +235,3 @@ export default function CompanyProfileDownloader() {
         </>
     );
 }
-
-    
