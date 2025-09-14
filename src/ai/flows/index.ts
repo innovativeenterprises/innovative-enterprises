@@ -15,7 +15,6 @@ import {answerEcommerceQuery} from './ecommerce-agent';
 import {controlSmartLock} from './ameen-smart-lock';
 import {evaluateProperty} from './property-valuation';
 import {generateAgreement} from './generate-agreement';
-import {generateEnhancedCv as generateCv} from './cv-enhancement';
 import {generateLetterOfInterest} from './letter-of-interest';
 import {generateSocialMediaPost} from './social-media-post-generator';
 import {generateTenderResponse} from './tender-response-assistant';
@@ -58,7 +57,6 @@ export {
   evaluateProperty,
   findScholarships,
   generateAgreement,
-  generateCv,
   generateEnhancedCv,
   generateIctProposal,
   generateImage,
