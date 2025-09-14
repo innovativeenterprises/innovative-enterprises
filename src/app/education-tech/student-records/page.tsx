@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -95,13 +96,8 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 };
 
 export default function StudentRecordsPage() {
-    const { students, setStudents } = useStudentsData();
+    const { students, setStudents, isClient } = useStudentsData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: StudentValues, id?: string) => {
         if (id) {
@@ -204,3 +200,5 @@ export default function StudentRecordsPage() {
         </div>
     );
 }
+
+    
