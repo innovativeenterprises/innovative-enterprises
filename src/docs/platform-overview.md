@@ -54,10 +54,10 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
-| APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | Live & Operating | On Track |
+| APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | Live & Operating | Completed |
 | KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
 | VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | Live & Operating | Completed |
-| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | Live & Operating | On Track |
+| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | Live & Operating | Completed |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | On Track |
@@ -141,5 +141,3 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Sage | Business Strategist: Conducts feasibility studies on new business ideas by leveraging other agents for research and analysis. | Enabled |
 | Navi | Innovation Agent: Analyzes market gaps and internal capabilities to suggest new products and service offerings. | Enabled |
 | Paz | Partnership Agent: Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network. | Enabled |
-
-    
