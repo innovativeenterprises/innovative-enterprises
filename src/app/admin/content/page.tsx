@@ -1,10 +1,13 @@
 
+
 'use client';
 
 import ServiceTable from "../service-table";
 import ProductTable from "../product-table";
 import ClientTable from "../client-table";
 import PricingTable from "../pricing-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 
 export default function AdminContentPage() {
 
@@ -13,13 +16,30 @@ export default function AdminContentPage() {
         <div>
             <h1 className="text-3xl font-bold">Site Content</h1>
             <p className="text-muted-foreground">
-                Manage your public-facing services, products, and client testimonials.
+                Manage your public-facing services, products, clients, and pricing.
             </p>
         </div>
-        <ServiceTable />
-        <ProductTable />
-        <ClientTable />
-        <PricingTable />
+        <Tabs defaultValue="services" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="services">Services</TabsTrigger>
+                <TabsTrigger value="products">Products</TabsTrigger>
+                <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
+                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
+            </TabsList>
+            <TabsContent value="services" className="mt-6">
+                <ServiceTable />
+            </TabsContent>
+            <TabsContent value="products" className="mt-6">
+                <ProductTable />
+            </TabsContent>
+            <TabsContent value="clients" className="mt-6">
+                 <ClientTable />
+            </TabsContent>
+            <TabsContent value="pricing" className="mt-6">
+                <PricingTable />
+            </TabsContent>
+        </Tabs>
     </div>
   );
 }
+
