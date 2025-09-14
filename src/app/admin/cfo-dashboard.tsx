@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -11,41 +10,44 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment } from '@/lib/cfo-data';
 import { useCfoData } from '@/hooks/use-global-store-data';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
 const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [displayDate, setDisplayDate] = useState<string | null>(null);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => setIsClient(true), []);
 
-    useEffect(() => {
+    const { formattedDate, statusText, statusClass } = useMemo(() => {
         const dueDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const diffTime = dueDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
-        const formattedDate = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
+        const formatted = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
         
-        let statusText = '';
+        let text = '';
         if (diffDays >= 0) {
-            statusText = `(${diffDays} days left)`;
+            text = `(${diffDays} days left)`;
         } else {
-            statusText = '(Overdue)';
+            text = '(Overdue)';
         }
 
-        const finalDisplay = `Due: ${formattedDate} <span class="${diffDays < 7 ? 'text-destructive font-medium' : ''}">${statusText}</span>`;
-        setDisplayDate(finalDisplay);
+        return {
+            formattedDate: `Due: ${formatted}`,
+            statusText: text,
+            statusClass: diffDays < 7 ? 'text-destructive font-medium' : '',
+        };
     }, [date]);
 
-    if (!displayDate) {
+    if (!isClient) {
         return <Skeleton className="h-4 w-48 mt-1" />;
     }
 
     return (
-        <div 
-            className={`text-sm text-muted-foreground ${className}`}
-            dangerouslySetInnerHTML={{ __html: displayDate }}
-        />
+        <div className={`text-sm text-muted-foreground ${className}`}>
+           {formattedDate} <span className={statusClass}>{statusText}</span>
+        </div>
     );
 }
 
@@ -188,5 +190,3 @@ export default function CfoDashboard() {
     </div>
   );
 }
-
-    

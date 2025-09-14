@@ -2,11 +2,8 @@
 'use client';
 
 import CommunityTable from "../community-table";
-import { useCommunitiesData } from '@/hooks/use-global-store-data';
 
 export default function AdminCommunitiesPage() {
-  const communityData = useCommunitiesData();
-
   return (
     <div className="space-y-8">
         <div>
@@ -16,7 +13,7 @@ export default function AdminCommunitiesPage() {
             </p>
         </div>
 
-        <CommunityTable {...communityData} />
+        <CommunityTable />
     </div>
   );
 }
