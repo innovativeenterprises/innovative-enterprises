@@ -13,7 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Download, Copy, PenSquare } from 'lucide-react';
-import { ScholarshipSchema, type ScholarshipEssayOutput } from '@/ai/flows/guardian-ai/scholarship-agent.schema';
+import { ScholarshipSchema } from '@/ai/flows/guardian-ai/scholarship-agent.schema';
+import type { ScholarshipEssayOutput } from '@/ai/flows/guardian-ai/scholarship-essay-assistant.schema';
 import { generateScholarshipEssay } from '@/ai/flows/guardian-ai/scholarship-essay-assistant';
 import type { Student } from '@/lib/students';
 
