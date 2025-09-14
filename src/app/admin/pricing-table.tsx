@@ -76,13 +76,8 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable() { 
-    const { pricing, setPricing } = usePricingData();
+    const { pricing, setPricing, isClient } = usePricingData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
@@ -146,3 +141,5 @@ export default function PricingTable() {
         </Card>
     );
 }
+
+    

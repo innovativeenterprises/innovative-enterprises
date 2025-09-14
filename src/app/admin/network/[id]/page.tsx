@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
@@ -68,7 +67,7 @@ export default function ProviderDetailPage() {
     const params = useParams();
     const { id } = params;
     const { providers, isClient } = useProvidersData();
-    const [provider, setProvider] = useState<Provider | undefined>();
+    const [provider, setProvider] = useState<Provider | undefined>(undefined);
 
      useEffect(() => {
         if (isClient && id) {
@@ -143,5 +142,7 @@ export default function ProviderDetailPage() {
         </div>
     );
 }
+
+    
 
     

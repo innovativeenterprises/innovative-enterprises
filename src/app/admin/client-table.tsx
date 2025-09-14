@@ -194,7 +194,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 // Main Component
 export default function ClientTable() { 
-    const { clients, testimonials, setClients, setTestimonials } = useClientsData();
+    const { clients, testimonials, setClients, setTestimonials, isClient } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
@@ -246,7 +246,7 @@ export default function ClientTable() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Client & Testimonial Management</CardTitle>
+                <CardTitle>Client &amp; Testimonial Management</CardTitle>
                 <CardDescription>Manage the logos and testimonials on your homepage.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -281,29 +281,32 @@ export default function ClientTable() {
                         <Table>
                              <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {filteredClients.map(client => (
-                                <TableRow key={client.id}>
-                                    <TableCell>
-                                        <AddEditClientDialog client={client} onSave={handleSaveClient}>
-                                            <div className="p-2 rounded-md hover:bg-muted cursor-pointer">
-                                                <Image src={client.logo || "https://placehold.co/150x60.png"} alt={client.name} width={100} height={40} className="object-contain" />
+                                {!isClient ? (
+                                    <TableRow><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
+                                ) : (
+                                    filteredClients.map(client => (
+                                    <TableRow key={client.id}>
+                                        <TableCell>
+                                            <AddEditClientDialog client={client} onSave={handleSaveClient}>
+                                                <div className="p-2 rounded-md hover:bg-muted cursor-pointer">
+                                                    <Image src={client.logo || "https://placehold.co/150x60.png"} alt={client.name} width={100} height={40} className="object-contain" />
+                                                </div>
+                                            </AddEditClientDialog>
+                                        </TableCell>
+                                        <TableCell><AddEditClientDialog client={client} onSave={handleSaveClient}><div className="font-medium cursor-pointer">{client.name}</div></AddEditClientDialog></TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex justify-end gap-2">
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove the client "{client.name}" from your homepage.</AlertDialogDescription></AlertDialogHeader>
+                                                        <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteClient(client.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </div>
-                                        </AddEditClientDialog>
-                                    </TableCell>
-                                    <TableCell><AddEditClientDialog client={client} onSave={handleSaveClient}><div className="font-medium cursor-pointer">{client.name}</div></AddEditClientDialog></TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove the client "{client.name}" from your homepage.</AlertDialogDescription></AlertDialogHeader>
-                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteClient(client.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                                        </TableCell>
+                                    </TableRow>
+                                )))}
                             </TableBody>
                         </Table>
                     </TabsContent>
@@ -311,31 +314,35 @@ export default function ClientTable() {
                          <Table>
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {filteredTestimonials.map(t => (
-                                    <TableRow key={t.id}>
-                                        <TableCell className="italic max-w-md truncate">
-                                            <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
-                                                <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>
-                                            </AddEditTestimonialDialog>
-                                        </TableCell>
-                                        <TableCell>
-                                            <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
-                                                <div className="cursor-pointer">{t.author}, <span className="text-muted-foreground">{t.company}</span></div>
-                                            </AddEditTestimonialDialog>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader><AlertDialogTitle>Delete Testimonial?</AlertDialogTitle><AlertDialogDescription>This will remove the testimonial by {t.author}.</AlertDialogDescription></AlertDialogHeader>
-                                                        <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteTestimonial(t.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                {!isClient ? (
+                                     <TableRow><TableCell colSpan={3}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
+                                ) : (
+                                    filteredTestimonials.map(t => (
+                                        <TableRow key={t.id}>
+                                            <TableCell className="italic max-w-md truncate">
+                                                <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
+                                                    <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>
+                                                </AddEditTestimonialDialog>
+                                            </TableCell>
+                                            <TableCell>
+                                                <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
+                                                    <div className="cursor-pointer">{t.author}, <span className="text-muted-foreground">{t.company}</span></div>
+                                                </AddEditTestimonialDialog>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader><AlertDialogTitle>Delete Testimonial?</AlertDialogTitle><AlertDialogDescription>This will remove the testimonial by {t.author}.</AlertDialogDescription></AlertDialogHeader>
+                                                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteTestimonial(t.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
                             </TableBody>
                         </Table>
                     </TabsContent>
@@ -344,3 +351,5 @@ export default function ClientTable() {
         </Card>
     );
 }
+
+    
