@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -19,7 +18,7 @@ import { ProductSchema } from "@/lib/products.schema";
 import type { ProjectStage } from "@/lib/stages";
 import { PlusCircle, Edit, Trash2, GripVertical, Sparkles, Loader2 } from "lucide-react";
 import Image from 'next/image';
-import { generateImage } from "@/ai/flows/image-generator";
+import { generateImage } from '@/ai/flows/image-generator';
 import { Card, CardContent } from "@/components/ui/card";
 import { fileToDataURI } from "@/lib/utils";
 
