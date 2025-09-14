@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -386,7 +385,7 @@ export default function EstimatorForm() {
             </div>
             
             <div className="space-y-3">
-                <FormLabel>7. Select Viewing & Audio Options</FormLabel>
+                <FormLabel>7. Select Viewing &amp; Audio Options</FormLabel>
                 <div className="flex flex-col sm:flex-row gap-x-6 gap-y-2">
                     <FormField control={form.control} name="remoteViewing" render={({ field }) => (
                         <FormItem className="flex items-center gap-2 space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange}/></FormControl><Label>Remote Viewing via Mobile App</Label></FormItem>

@@ -359,19 +359,19 @@ export const initialProducts: Product[] = [
         adminStatus: "Completed",
         adminNotes: "Service is live and ready for public use.",
     },
-    {
+     {
         id: 32,
-        name: "AlumniConnect",
-        description: "A comprehensive digital platform for universities, colleges, and schools to engage their alumni network, fostering connections and professional opportunities.",
-        stage: "Research Phase",
-        category: "SaaS",
+        name: "AI Smart Home Estimator",
+        description: "Upload a floor plan and receive an automated quotation for a complete smart home installation, including CCTV, smart locks, and other devices.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
         price: 0,
-        image: "https://picsum.photos/seed/alumni/400/400",
-        aiHint: "university alumni network",
+        image: "https://picsum.photos/seed/smarthome/400/400",
+        aiHint: "smart home technology",
         rating: 0,
-        enabled: false,
-        adminStatus: 'On Track',
-        adminNotes: "Market research in progress to identify target institutions."
+        enabled: true,
+        href: "/surveillance-estimator",
+        adminStatus: "Completed",
     },
     {
         id: 33,
@@ -676,7 +676,7 @@ export const initialProducts: Product[] = [
     {
         id: 54,
         name: "VMALL",
-        description: "A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences.",
+        description: "A revolutionary Web &amp; Mobile application that leverages VR and AR to create immersive shopping experiences.",
         stage: "Live & Operating",
         category: "General Platforms & SaaS",
         price: 0,
