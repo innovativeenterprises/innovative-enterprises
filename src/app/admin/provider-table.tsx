@@ -36,15 +36,6 @@ const CsvImportSchema = z.object({
 });
 type CsvImportValues = z.infer<typeof CsvImportSchema>;
 
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
-
 const AddEditProviderDialog = ({ 
     provider, 
     onSave,
@@ -315,7 +306,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
 }
 
 export default function ProviderTable() {
-    const { providers, setProviders, isClient } = useProvidersData();
+    const { providers, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();

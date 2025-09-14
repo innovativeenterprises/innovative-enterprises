@@ -142,7 +142,3 @@ export default function ProviderDetailPage() {
         </div>
     );
 }
-
-    
-
-    
