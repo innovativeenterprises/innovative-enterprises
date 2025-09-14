@@ -28,8 +28,9 @@ import { initialRequests, type HireRequest } from './raaha-requests';
 import { initialAgencies, type Agency } from './raaha-agencies';
 import { initialLeases, type SignedLease } from './leases';
 import { initialProperties, type Property } from './properties';
-import { initialStairspaceListings, type StairspaceListing } from './stairspace-listings';
+import { initialStairspaceListings } from './stairspace-listings';
 import { initialStairspaceRequests, type BookingRequest as StairspaceRequest } from './stairspace-requests';
+import type { StairspaceListing } from './stairspace.schema';
 import { type BoQItem } from '@/ai/flows/boq-generator.schema';
 import { initialCostSettings } from './cost-settings';
 import type { CostRate } from './cost-settings.schema';
@@ -182,5 +183,3 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
-
-    
