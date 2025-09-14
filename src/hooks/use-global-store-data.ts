@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useSyncExternalStore, useState, useEffect, useCallback } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -33,11 +33,12 @@ import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowDat
 import type { Pricing } from '@/lib/pricing';
 
 function useStoreData<T>(selector: (state: any) => T): T {
-    return useSyncExternalStore(
+    const state = useSyncExternalStore(
         store.subscribe,
-        () => selector(store.get()),
-        () => selector(store.getSsrState())
+        store.get,
+        store.getSsrState
     );
+    return selector(state);
 }
 
 export const useServicesData = () => {
