@@ -167,6 +167,9 @@ export const useInvestorsData = () => {
     const investors = useStoreData(state => state.investors);
     return {
         investors,
+        setInvestors: (updater: (investors: Investor[]) => Investor[]) => {
+            store.set(state => ({ ...state, investors: updater(state.investors) }));
+        },
         isClient: true,
     };
 };
@@ -197,6 +200,9 @@ export const useWorkersData = () => {
     const workers = useStoreData(state => state.raahaWorkers);
     return {
         workers,
+        setWorkers: (updater: (workers: RaahaWorker[]) => RaahaWorker[]) => {
+            store.set(state => ({...state, raahaWorkers: updater(state.raahaWorkers)}));
+        },
         isClient: true,
     };
 };
@@ -205,6 +211,9 @@ export const useRequestsData = () => {
     const requests = useStoreData(state => state.raahaRequests);
     return {
         requests,
+        setRaahaRequests: (updater: (requests: HireRequest[]) => HireRequest[]) => {
+            store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
+        },
         isClient: true,
     };
 };
@@ -279,6 +288,9 @@ export const usePricingData = () => {
     const pricing = useStoreData(state => state.pricing);
     return {
         pricing,
+        setPricing: (updater: (items: Pricing[]) => Pricing[]) => {
+            store.set(state => ({...state, pricing: updater(state.pricing)}));
+        },
         isClient: true,
     };
 }
@@ -337,3 +349,4 @@ export const setOpportunities = (updater: (opps: Opportunity[]) => Opportunity[]
 export const setCostSettings = (updater: (items: CostRate[]) => CostRate[]) => store.set(state => ({...state, costSettings: updater(state.costSettings)}));
 export const setPricing = (updater: (items: Pricing[]) => Pricing[]) => store.set(state => ({...state, pricing: updater(state.pricing)}));
 export const setStudents = (updater: (students: Student[]) => Student[]) => store.set(state => ({...state, students: updater(state.students)}));
+

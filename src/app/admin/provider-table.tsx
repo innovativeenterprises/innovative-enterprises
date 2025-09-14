@@ -305,7 +305,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
                     {daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : ''}
                 </div>
             </div>
-            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progressValue}%`} />
+            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${'${progressValue}'}%`} />
         </div>
     )
 }
@@ -440,3 +440,4 @@ export default function ProviderTable() {
 }
 
     
+
