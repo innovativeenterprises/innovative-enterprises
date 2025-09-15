@@ -406,17 +406,19 @@ export default function KnowledgeTable() {
                 </div>
                 <div className="flex gap-2">
                     <TrainAgentDialog knowledgeBase={knowledgeBase} />
-                    <UploadDocumentDialog
-                        isOpen={isDialogOpen}
-                        onOpenChange={setIsDialogOpen}
-                        onUpload={handleUpload}
-                        documentToReplace={selectedDoc}
-                    >
-                        <Button onClick={() => handleOpenDialog()}><Upload className="mr-2 h-4 w-4" /> Add Source</Button>
-                    </UploadDocumentDialog>
+                     <Button onClick={() => handleOpenDialog()}><Upload className="mr-2 h-4 w-4" /> Add Source</Button>
                 </div>
             </CardHeader>
             <CardContent>
+                 <UploadDocumentDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    onUpload={handleUpload}
+                    documentToReplace={selectedDoc}
+                >
+                   {/* This is a controlled dialog, trigger is external */}
+                   <div/>
+                </UploadDocumentDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>

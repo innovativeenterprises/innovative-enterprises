@@ -66,4 +66,4 @@
 | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
 | AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | Completed |
-| AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Research Phase | On Track |
+| AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Live & Operating | Completed |
