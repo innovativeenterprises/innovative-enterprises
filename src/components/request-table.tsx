@@ -30,13 +30,11 @@ export function RequestTable({
     columns,
     isClient,
     renderActions,
-    onSchedule, // Added to props
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     renderActions?: (request: GenericRequest) => React.ReactNode,
-    onSchedule?: (id: string, values: any) => void, // Added to props
 }) { 
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
 

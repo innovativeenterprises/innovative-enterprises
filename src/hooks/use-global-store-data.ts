@@ -172,7 +172,7 @@ export const useCfoData = () => ({
 });
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
-    setStudents: setStudents,
+    setStudents,
     isClient: true,
 });
 export const useBeautyData = () => ({
