@@ -26,7 +26,7 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
                         <Image src={settings.headerImageUrl} alt="Company Header" width={240} height={80} style={{width: 'auto'}} className="h-20 w-auto object-contain" />
                     ) : (
                          <div className="flex items-center gap-4">
-                            <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={240} height={60} className="h-16 w-auto object-contain" />
+                            <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={240} height={60} className="h-16 w-auto object-contain" />
                         </div>
                     )}
                     <div className="text-right text-xs text-gray-500">
@@ -128,9 +128,9 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    const { leadership } = useStaffData();
-    const { services } = useServicesData();
-    const { settings } = useSettingsData();
+    const { leadership, isClient: isStaffClient } = useStaffData();
+    const { services, isClient: isServicesClient } = useServicesData();
+    const { settings, isClient: isSettingsClient } = useSettingsData();
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
@@ -140,10 +140,10 @@ export default function CompanyProfileDownloader() {
     // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-        if (leadership && services && settings) {
+        if (isStaffClient && isServicesClient && isSettingsClient) {
             setIsReady(true);
         }
-    }, [leadership, services, settings]);
+    }, [isStaffClient, isServicesClient, isSettingsClient]);
     
     const handleDownload = async () => {
         if (!profileRef.current || !settings || !isReady) return;
@@ -192,8 +192,8 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    const enabledServices = services.filter(s => s.enabled);
-    const enabledLeadership = leadership.filter(l => l.enabled);
+    const enabledServices = isReady ? services.filter(s => s.enabled) : [];
+    const enabledLeadership = isReady ? leadership.filter(l => l.enabled) : [];
     const products = initialProducts.filter(p => p.enabled);
 
     if (!isReady) {
@@ -230,4 +230,3 @@ export default function CompanyProfileDownloader() {
         </>
     );
 }
-

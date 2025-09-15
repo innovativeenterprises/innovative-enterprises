@@ -47,7 +47,7 @@ import { initialDailySales, type Transaction as PosTransaction, initialPosProduc
 import { initialGiftCards, type GiftCard } from './gift-cards';
 import { initialJobs, type JobPosting } from './alumni-jobs';
 import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
-import { initialBeautyServices, type BeautyService, initialBeautySpecialists, type Specialist as BeautySpecialist } from './beauty-services';
+import { initialBeautyServices, type BeautyService, initialSpecialists, type Specialist as BeautySpecialist } from './beauty-services';
 import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 
 
@@ -156,7 +156,7 @@ export const initialState: AppState = {
   alumniJobs: initialJobs,
   beautyCenters: initialBeautyCenters,
   beautyServices: initialBeautyServices,
-  beautySpecialists: initialBeautySpecialists,
+  beautySpecialists: initialSpecialists,
   beautyAppointments: initialBeautyAppointments,
 };
 
@@ -195,7 +195,3 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
-
-    
-
-    
