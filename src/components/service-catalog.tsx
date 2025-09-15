@@ -1,7 +1,3 @@
-
-
-'use client';
-
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { type Service } from "@/lib/services";
 import Link from "next/link";

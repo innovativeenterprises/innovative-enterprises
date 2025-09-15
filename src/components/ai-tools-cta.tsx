@@ -1,5 +1,3 @@
-
-
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { FileText, MessageSquareQuote, Bot, Scale, BrainCircuit, Search } from "lucide-react";
