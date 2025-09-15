@@ -1,3 +1,4 @@
+
 'use client';
 
 import KhidmaIcon from '@/components/icons/khidma-icon';
@@ -5,6 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "KHIDMA - Your Service Marketplace",
+    description: "KHIDMA is a revolutionary AI-powered marketplace connecting service seekers with qualified providers through an innovative auction and tender system.",
+};
+
 
 const features = [
     {
