@@ -6,14 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
+import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft, TrendingUp, TrendingDown, Percent } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData } from '@/hooks/use-global-store-data';
+import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
+
+const DateDisplay = ({ dateString, isClient }: { dateString: string, isClient: boolean }) => {
+    const formattedDate = useMemo(() => {
+        if (!isClient) return null;
+        return format(new Date(dateString), "PPP");
+    }, [dateString, isClient]);
+
+    if (!isClient) {
+        return <Skeleton className="h-4 w-24" />;
+    }
+    return <>{formattedDate}</>;
+};
 
 export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
@@ -25,6 +37,7 @@ export default function StudentHousingPage() {
         return leases.filter(l => {
             if (!l.endDate) return false;
             const endDate = new Date(l.endDate);
+            // Check if expiry is in the future but within the next month.
             return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() === now.getMonth() + 1;
         }).length;
     }, [leases, isClient]);

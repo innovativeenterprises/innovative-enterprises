@@ -185,3 +185,4 @@ export function WorkerTable({ workers, columns, agencyId, isClient }: { workers:
         </Card>
     );
 }
+

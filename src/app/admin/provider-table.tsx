@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { useProvidersData, setProviders } from "@/hooks/use-global-store-data";
+import { fileToDataURI } from "@/lib/utils";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -259,9 +260,9 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
     );
 };
 
-const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
+const SubscriptionStatus = ({ tier, expiry, isClient }: { tier: string, expiry?: Date, isClient: boolean }) => {
     const { daysUntilExpiry, progress } = useMemo(() => {
-        if (!expiry) {
+        if (!isClient || !expiry) {
             return { daysUntilExpiry: null, progress: 0 };
         }
         const now = new Date();
@@ -276,7 +277,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         const progressValue = Math.max(0, (daysRemaining / totalDuration) * 100);
 
         return { daysUntilExpiry: daysRemaining, progress: progressValue };
-    }, [expiry, tier]);
+    }, [expiry, tier, isClient]);
     
     if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;
@@ -290,7 +291,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
             <div className="flex justify-between items-center mb-1">
                 <Badge variant="outline">{tier}</Badge>
                 <div className="text-xs text-muted-foreground">
-                    {daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : 'N/A'}
+                    {!isClient ? <Skeleton className="h-4 w-20"/> : daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : 'N/A'}
                 </div>
             </div>
             <Progress value={progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progress}%`} />
@@ -397,7 +398,7 @@ export default function ProviderTable() {
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell>
-                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} />
+                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} isClient={isClient} />
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
