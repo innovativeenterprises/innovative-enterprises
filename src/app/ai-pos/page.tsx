@@ -11,6 +11,13 @@ import { BrainCircuit } from 'lucide-react';
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI-POS for Education | Innovative Enterprises",
+  description: "A smart, AI-driven Point-of-Sale system for university canteens or school stores, featuring inventory management and real-time sales analytics.",
+};
+
 
 export default function AiPosPage() {
     const { products } = usePosData();
