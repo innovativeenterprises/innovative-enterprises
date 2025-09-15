@@ -1,69 +1,171 @@
-# Digital Products & SaaS Platforms (40 Total)
 
-## Category: Construction Tech (11)
-| Name | Description | Stage | Status |
-| :--- | :--- | :--- | :--- |
-| Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Live & Operating | Completed |
-| BidWise Estimator | Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing. | Live & Operating | Completed |
-| SiteGuard Compliance | Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking. | Live & Operating | Completed |
-| WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed |
-| ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Live & Operating | Completed |
-| ConstructFin | Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects. | Live & Operating | Completed |
-| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. | Live & Operating | Completed |
-| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
-| ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
-| BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
-| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
+'use client';
 
-## Category: Real Estate Tech (12)
-| Name | Description | Stage | Status |
-| :--- | :--- | :--- | :--- |
-| AI Property Valuator | Automates property appraisal using AI, considering location, size, amenities, and market trends for instant valuations. | Live & Operating | Completed |
-| Smart Listing & Matching | AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget. | Live & Operating | Completed |
-| 3D Virtual Tour SaaS | Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties. | Live & Operating | Completed |
-| DocuChain Compliance | Auto-generates sale agreements and tenancy contracts, tracking compliance with local laws and renewal dates. | Live & Operating | Completed |
-| SmartLease Manager | Automates online rent collection, reminders, and late fee calculations, including tenant background checks. | Live & Operating | Completed |
-| InvestiSight AI | Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps. | Live & Operating | Completed |
-| FacilityFlow SaaS | A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking. | Live & Operating | Completed |
-| PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Live & Operating | Completed |
-| Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed |
-| EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed |
-| PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed |
-| StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed |
+import { useState, useEffect, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from '@/components/ui/badge';
+import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft, TrendingUp, TrendingDown, Percent } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import Link from 'next/link';
+import { useLeasesData } from '@/hooks/use-global-store-data';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { SignedLease } from '@/lib/leases';
 
-## Category: Education Tech (6)
-| Name | Description | Stage | Status |
-| :--- | :--- | :--- | :--- |
-| EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed |
-| CognitaLearn | A personalized adaptive learning platform that uses AI to create custom learning paths and gamified modules. | Live & Operating | Completed |
-| Guardian AI | A student wellbeing and success platform offering risk profiling, AI career advisory, and mental health support. | Live & Operating | Completed |
-| CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Live & Operating | Completed |
-| CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed |
-| AI Scholarship Finder | An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level. | Live & Operating | Completed |
+export default function StudentHousingPage() {
+    const { leases, setLeases, isClient } = useLeasesData();
+    const { toast } = useToast();
 
-## Category: Automotive Tech (1)
-| Name | Description | Stage | Status |
-| :--- | :--- | :--- | :--- |
-| DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Live & Operating | Completed |
-
-## Category: General Platforms & SaaS (10)
-| Name | Description | Stage | Status |
-| :--- | :--- | :--- | :--- |
-| ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
-| APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | In Development | On Track |
-| KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
-| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | In Development | On Track |
-| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
-| RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
-| Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
-| AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
-| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
-| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
+    const expiringLeasesCount = useMemo(() => {
+        if (!isClient) return null;
+        const now = new Date();
+        return leases.filter(l => {
+            if (!l.endDate) return false;
+            const endDate = new Date(l.endDate);
+            // Check if expiry is in the future but within the next month.
+            return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() === now.getMonth() + 1;
+        }).length;
+    }, [leases, isClient]);
 
 
-## Category: AI & Creative Tools (3)
-| Name | Description | Stage | Status |
-| :--- | :--- | :--- | :--- |
-| AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
-| AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | On Track |
-| AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Research Phase | On Track |
+    const handleDelete = (id: string) => {
+        setLeases(prev => prev.filter(lease => lease.id !== id));
+        toast({ title: "Housing Agreement Deleted", description: "The student housing agreement has been removed from your dashboard.", variant: "destructive" });
+    };
+
+    const totalMonthlyRent = useMemo(() => isClient ? leases.reduce((sum, lease) => {
+        if (lease.status === 'Active' && lease.contractType === 'Tenancy Agreement' && lease.pricePeriod === 'per month') {
+            return sum + lease.price;
+        }
+        return sum;
+    }, 0) : 0, [leases, isClient]);
+
+    const DateDisplay = ({ dateString }: { dateString: string }) => {
+        const formattedDate = useMemo(() => {
+            if (!isClient) return null;
+            try {
+                return format(new Date(dateString), "PPP");
+            } catch {
+                return "Invalid Date";
+            }
+        }, [dateString, isClient]);
+    
+        if (!isClient) return <Skeleton className="h-4 w-24" />;
+        return <>{formattedDate || "N/A"}</>;
+    };
+
+    return (
+        <div className="bg-background min-h-[calc(100vh-8rem)]">
+            <div className="container mx-auto px-4 py-16">
+                <div className="max-w-5xl mx-auto space-y-8">
+                    <div>
+                        <Button asChild variant="outline" className="mb-4">
+                            <Link href="/education-tech/eduflow">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to EduFlow Suite
+                            </Link>
+                        </Button>
+                        <div className="text-center mb-12">
+                            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                                <Home className="w-10 h-10 text-primary" />
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-bold text-primary">Student Housing Management</h1>
+                            <p className="mt-4 text-lg text-muted-foreground">
+                                A centralized dashboard to view, manage, and track all student housing and accommodation agreements.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6 mb-8">
+                         <Card>
+                             <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
+                             <CardContent className="text-3xl font-bold text-primary">{isClient ? leases.filter(l => l.status === 'Active').length : <Skeleton className="h-8 w-1/2" />}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">{isClient ? `OMR ${totalMonthlyRent.toLocaleString()}`: <Skeleton className="h-8 w-3/4" />}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">{expiringLeasesCount === null ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
+                        </Card>
+                    </div>
+
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle>Housing Agreements</CardTitle>
+                            <Button asChild>
+                                <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Agreement</Link>
+                            </Button>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Property/Room</TableHead>
+                                        <TableHead>Student Name (Lessee)</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {!isClient ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-center h-24">
+                                                <Skeleton className="h-10 w-full" />
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : leases.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                                                You have no student housing agreements yet.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        leases.map(lease => (
+                                            <TableRow key={lease.id}>
+                                                <TableCell>
+                                                    <p className="font-medium">{lease.propertyAddress}</p>
+                                                    <p className="text-sm text-muted-foreground">{lease.propertyType}</p>
+                                                </TableCell>
+                                                 <TableCell>
+                                                    <p className="font-medium">{lease.lesseeName}</p>
+                                                    <p className="text-sm text-muted-foreground">Lessor: {lease.lessorName}</p>
+                                                 </TableCell>
+                                                 <TableCell>
+                                                     <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
+                                                 </TableCell>
+                                                 <TableCell className="text-right">
+                                                     <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4 text-destructive"/></Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This will permanently delete the agreement for {lease.propertyAddress}. This action cannot be undone.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={() => handleDelete(lease.id)}>Delete</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                 </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        </div>
+    );
+}
