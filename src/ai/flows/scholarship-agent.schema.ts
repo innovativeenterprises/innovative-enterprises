@@ -30,4 +30,4 @@ export const ScholarshipFinderOutputSchema = z.object({
 });
 export type ScholarshipFinderOutput = z.infer<typeof ScholarshipFinderOutputSchema>;
 
-    
+export type Scholarship = z.infer<typeof ScholarshipSchema>;
