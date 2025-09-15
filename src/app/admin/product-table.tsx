@@ -1,11 +1,12 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +14,7 @@ import type { Product } from "@/lib/products";
 import { ProductSchema } from "@/lib/products.schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Sparkles, Loader2 } from "lucide-react";
+import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
 import { useProductsData, setProducts, useProjectStagesData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -256,10 +257,10 @@ export default function ProductTable() {
         toast({ title: "Product status updated." });
     };
 
-    const handleEdit = (product: Product) => {
+    const openDialog = (product?: Product) => {
         setSelectedProduct(product);
         setIsDialogOpen(true);
-    };
+    }
 
     const handleSave = (values: ProductValues, id?: number) => {
         if (id !== undefined) {
@@ -277,9 +278,14 @@ export default function ProductTable() {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>Product Management</CardTitle>
-                <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Product Management</CardTitle>
+                    <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
+                </div>
+                 <Button onClick={() => openDialog()}>
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add Product
+                </Button>
             </CardHeader>
             <CardContent>
                  <AddEditProductDialog
@@ -327,7 +333,7 @@ export default function ProductTable() {
                                         />
                                     </TableCell>
                                      <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon" onClick={() => handleEdit(product)}>
+                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
                                             <Edit />
                                         </Button>
                                     </TableCell>
@@ -340,4 +346,3 @@ export default function ProductTable() {
         </Card>
     );
 }
-
