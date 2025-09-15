@@ -223,7 +223,7 @@ export default function InvestorTable() {
         await processDoc('vatId', values.vatIdDoc);
         await processDoc('passport', values.passportDoc);
         await processDoc('civilId', values.civilIdDoc);
-        await processDoc('incomeProof', values.incomeProof);
+        await processDoc('incomeProof', values.incomeProofDoc);
 
         if (id) {
             setInvestors(prev => prev.map(inv => inv.id === id ? { ...inv, ...values, documents: { ...inv.documents, ...uploadedDocs } } : inv));
