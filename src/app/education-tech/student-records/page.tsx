@@ -18,10 +18,9 @@ import type { Student } from "@/lib/students";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
-import { useStudentsData } from '@/hooks/use-global-store-data';
+import { useStudentsData, setStudents } from '@/hooks/use-global-store-data';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-
 
 const StudentSchema = z.object({
   id: z.string().min(3, "Student ID is required"),
@@ -200,5 +199,3 @@ export default function StudentRecordsPage() {
         </div>
     );
 }
-
-    

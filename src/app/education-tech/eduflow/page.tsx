@@ -5,6 +5,7 @@ import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Us
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 export default function EduFlowPage() {
   return (
@@ -122,7 +123,7 @@ export default function EduFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/real-estate-tech/smart-lease-manager">
+                        <Link href="/real-estate-tech/student-housing">
                             Launch Housing Manager <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>

@@ -91,7 +91,6 @@ export const setGiftCards = (updater: (prev: GiftCard[]) => GiftCard[]) => store
 export const setStockItems = (updater: (prev: StockItem[]) => StockItem[]) => store.set(state => ({...state, stockItems: updater(state.stockItems) }));
 export const setAlumniJobs = (updater: (prev: JobPosting[]) => JobPosting[]) => store.set(state => ({ ...state, alumniJobs: updater(state.alumniJobs) }));
 
-
 // Data hooks that return the reactive state slice and a flag for client-side rendering.
 export const useServicesData = () => ({ services: useStoreData(s => s.services), setServices, isClient: true });
 export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts, isClient: true });
@@ -125,7 +124,7 @@ export const useCfoData = () => ({ ...useStoreData(s => ({
 })), isClient: true });
 export const useStudentsData = () => ({ students: useStoreData(s => s.students), setStudents, isClient: true });
 export const useDriveSyncData = () => ({ cars: useStoreData(s => s.cars), rentalAgencies: useStoreData(s => s.rentalAgencies), setRentalAgencies, isClient: true });
-export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), products: useStoreData(s => s.posProducts), setProducts: setPosProducts, setDailySales: setDailySales, isClient: true });
+export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), products: useStoreData(s => s.posProducts), setPosProducts, setDailySales, isClient: true });
 export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCards), setGiftCards, isClient: true });
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
 export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });

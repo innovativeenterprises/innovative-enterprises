@@ -1,125 +1,118 @@
+
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import type { Product } from "@/lib/products";
-import { ProductSchema } from "@/lib/products.schema";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
-import { useProductsData, useProjectStagesData } from "@/hooks/use-global-store-data";
+import Link from "next/link";
+import { useProductsData } from "@/hooks/use-global-store-data";
+import type { Product } from "@/lib/products";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
+import { GraduationCap, GanttChartSquare, Cpu, ShieldCheck, Layers } from 'lucide-react';
+import type { Metadata } from 'next';
 
-
-export default function ProductTable() {
-    const { products, setProducts, isClient } = useProductsData();
-    const { toast } = useToast();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
-    const { stages } = useProjectStagesData();
-
-    const handleToggle = (id: number) => {
-        setProducts(prev =>
-            prev.map(product =>
-                product.id === id ? { ...product, enabled: !product.enabled } : product
-            )
-        );
-        toast({ title: "Product status updated." });
+const ProductCard = ({ product }: { product: Product }) => {
+    const iconMap: { [key: string]: React.ElementType } = {
+        "EduFlow Suite": GanttChartSquare,
+        "CognitaLearn": Cpu,
+        "Guardian AI": ShieldCheck,
+        "CertiTrust": ShieldCheck,
+        "CampusOS": Layers,
+        "AI Scholarship Finder": GraduationCap,
     };
-
-    const openDialog = (product?: Product) => {
-        setSelectedProduct(product);
-        setIsDialogOpen(true);
-    }
-
-    const handleSave = (values: ProductValues, id?: number) => {
-        if (id !== undefined) {
-            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values, id } : p));
-            toast({ title: "Product updated successfully." });
-        } else {
-            const newProduct: Product = {
-                ...values,
-                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
-            };
-            setProducts(prev => [newProduct, ...prev]);
-            toast({ title: "Product added successfully." });
-        }
-    };
+    const Icon = iconMap[product.name] || GraduationCap;
 
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                    <CardTitle>Product Management</CardTitle>
-                    <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
+        <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <CardHeader className="flex-row items-center gap-4">
+                <div className="bg-primary/10 p-3 rounded-lg">
+                    <Icon className="w-6 h-6 text-primary" />
                 </div>
-                 <Button onClick={() => openDialog()}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Product
-                </Button>
+                <CardTitle>{product.name}</CardTitle>
             </CardHeader>
-            <CardContent>
-                 <AddEditProductDialog
-                    isOpen={isDialogOpen}
-                    onOpenChange={setIsDialogOpen}
-                    product={selectedProduct}
-                    onSave={handleSave}
-                    stages={stages}
-                >
-                    {/* This is a controlled dialog, so the trigger is handled programmatically */}
-                    <div />
-                </AddEditProductDialog>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Product Name</TableHead>
-                            <TableHead>Category</TableHead>
-                            <TableHead>Price (OMR)</TableHead>
-                            <TableHead className="text-center">Status</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {!isClient ? (
-                            Array.from({ length: 5 }).map((_, i) => (
-                                <TableRow key={i}>
-                                    <TableCell colSpan={5}>
-                                        <Skeleton className="h-10 w-full" />
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            products.map((product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell className="font-medium">{product.name}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{product.category}</Badge>
-                                    </TableCell>
-                                    <TableCell>{product.price > 0 ? `OMR ${product.price.toFixed(2)}` : 'N/A'}</TableCell>
-                                    <TableCell className="text-center">
-                                        <Switch
-                                            checked={product.enabled}
-                                            onCheckedChange={() => handleToggle(product.id)}
-                                            aria-label={`Enable/disable ${product.name}`}
-                                        />
-                                    </TableCell>
-                                     <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
-                                            <Edit />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
+            <CardContent className="flex-grow">
+                <CardDescription>{product.description}</CardDescription>
             </CardContent>
+            <CardFooter>
+                {product.href ? (
+                    <Button asChild className="w-full">
+                        <Link href={product.href}>Use Tool</Link>
+                    </Button>
+                ) : (
+                    <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
+                )}
+            </CardFooter>
         </Card>
+    );
+};
+
+const ProductGridSkeleton = () => (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i} className="flex flex-col h-full">
+                <CardHeader className="flex-row items-center gap-4">
+                    <Skeleton className="h-12 w-12 rounded-lg" />
+                    <Skeleton className="h-6 w-32" />
+                </CardHeader>
+                <CardContent className="flex-grow space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                </CardContent>
+                <CardFooter>
+                    <Skeleton className="h-10 w-full" />
+                </CardFooter>
+            </Card>
+        ))}
+    </div>
+);
+
+export default function EducationTechPage() {
+    const { products, isClient } = useProductsData();
+
+    const edutechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
+    
+    return (
+        <div className="bg-background min-h-[calc(100vh-8rem)]">
+            <div className="container mx-auto px-4 py-16">
+                <div className="max-w-4xl mx-auto text-center">
+                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                        <GraduationCap className="w-12 h-12 text-primary" />
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-bold text-primary">Education Technology Solutions</h1>
+                    <p className="mt-4 text-lg text-muted-foreground">
+                        AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.
+                    </p>
+                </div>
+
+                <div className="max-w-6xl mx-auto mt-20">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Ed-Tech Platforms</h2>
+                    </div>
+                    {isClient ? (
+                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {edutechProducts.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    ) : <ProductGridSkeleton />}
+                </div>
+
+                 <div className="max-w-3xl mx-auto mt-20 text-center">
+                    <Card className="bg-accent/10 border-accent">
+                        <CardHeader>
+                            <CardTitle className="text-2xl text-accent">Partner with Us</CardTitle>
+                            <CardDescription className="text-accent-foreground/80">
+                               Are you an educational institution looking to innovate? Contact us to pilot our solutions.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardFooter className="justify-center">
+                            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                <Link href="/partner">Request a Demo</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+
+            </div>
+        </div>
     );
 }
