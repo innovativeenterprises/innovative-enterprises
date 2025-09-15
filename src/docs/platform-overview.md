@@ -35,7 +35,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed |
 | StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed |
 
-### Category: Education Tech (5)
+### Category: Education Tech (6)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed |
@@ -49,7 +49,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 ### Category: Automotive Tech (1)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
-| DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Live & Operating | On Track |
+| DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Live & Operating | Completed |
 
 ### Category: General Platforms & SaaS (12)
 | Name | Description | Stage | Status |
@@ -63,7 +63,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
-| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | On Track |
+| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
 | Business Hub | A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities. | Live & Operating | Completed |
 | Community Hub | A digital platform for expatriate communities and charities to manage their own affairs, elections, and events. | Live & Operating | Completed |
 
@@ -71,7 +71,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
-| AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | On Track |
+| AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | Completed |
 | AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Research Phase | On Track |
 
 ## Core Business Services (19 Total)
