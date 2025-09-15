@@ -27,7 +27,7 @@ export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
 const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
 
-const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales'): { name: string; email?: string; whatsapp?: string } | null => {
+const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales'): { name: string; socials?: { email?: string; phone?: string } } | null => {
     switch(department) {
         case 'legal': return allStaff.find(s => s.name === 'Lexi') || allStaff.find(s => s.name === 'Legal Counsel Office') || null;
         case 'marketing': return allStaff.find(s => s.name === 'Mira') || null;
@@ -64,7 +64,7 @@ export const routeToSpecialistTool = ai.defineTool(
         }
 
         // Use a deterministic method instead of Math.random() to simulate availability.
-        // This makes the behavior predictable for testing.
+        // This makes the behavior predictable for testing and prevents hydration mismatches.
         const isAvailable = userQuery.length % 2 === 0;
 
         if (isAvailable) {
