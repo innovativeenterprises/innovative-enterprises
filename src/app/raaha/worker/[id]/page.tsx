@@ -21,6 +21,32 @@ import { store } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { setRaahaRequests } from '@/hooks/use-global-store-data';
+import type { HireRequest } from '@/lib/raaha-requests';
+import type { Metadata } from 'next';
+import { initialWorkers } from '@/lib/raaha-workers';
+
+export async function generateStaticParams() {
+  return initialWorkers.map((worker) => ({
+    id: worker.id,
+  }));
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const worker = initialWorkers.find(w => w.id === params.id);
+
+  if (!worker) {
+    return {
+      title: 'Candidate Not Found',
+    };
+  }
+
+  return {
+    title: `${worker.name} | Candidate Profile`,
+    description: `Professional profile for ${worker.name}, a ${worker.nationality} domestic helper specializing in ${worker.skills.join(', ')}.`,
+  };
+}
+
 
 const HireRequestSchema = z.object({
     clientName: z.string().min(3, "Name is required."),
@@ -36,22 +62,19 @@ const HireRequestDialog = ({ worker, agency }: { worker: Worker, agency?: Agency
     });
 
     const onSubmit: SubmitHandler<HireRequestValues> = (data) => {
-        store.set(state => ({
-            ...state,
-            raahaRequests: [
-                ...state.raahaRequests,
-                {
-                    id: `req_${worker.id}_${data.clientName.toLowerCase().replace(/\s+/g, '_')}`,
-                    workerId: worker.id,
-                    workerName: worker.name,
-                    clientName: data.clientName,
-                    clientContact: data.clientContact,
-                    requestDate: new Date().toISOString(),
-                    status: 'Pending',
-                    agencyId: worker.agencyId,
-                }
-            ]
-        }));
+        setRaahaRequests(prev => [
+            ...prev,
+            {
+                id: `req_${worker.id}_${data.clientName.toLowerCase().replace(/\s+/g, '_')}`,
+                workerId: worker.id,
+                workerName: worker.name,
+                clientName: data.clientName,
+                clientContact: data.clientContact,
+                requestDate: new Date().toISOString(),
+                status: 'Pending',
+                agencyId: worker.agencyId,
+            }
+        ]);
         toast({
             title: "Request Submitted!",
             description: `Your interest in ${worker.name} has been sent to ${agency?.name || 'the agency'}. They will contact you shortly.`,

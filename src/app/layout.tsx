@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "INNOVATIVE ENTERPRISES",
     images: [
       {
-        url: "https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "INNOVATIVE ENTERPRISES Logo"
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "INNOVATIVE ENTERPRISES - AI-Powered Business Platform",
     description: "The digital operating system for SMEs in Oman. Automate, delegate, and grow with our integrated suite of AI tools and service marketplaces.",
-    images: ["https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png"],
+    images: ["/og-image.png"],
   },
   verification: {
     other: {

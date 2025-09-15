@@ -13,12 +13,16 @@ import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
 import type { Metadata } from 'next';
-import { store } from '@/lib/global-store';
+import { initialProviders } from '@/lib/providers';
 
+export async function generateStaticParams() {
+  return initialProviders.map((provider) => ({
+    id: provider.id,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { providers } = store.get();
-  const provider = providers.find(p => p.id === params.id);
+  const provider = initialProviders.find(p => p.id === params.id);
 
   if (!provider) {
     return {

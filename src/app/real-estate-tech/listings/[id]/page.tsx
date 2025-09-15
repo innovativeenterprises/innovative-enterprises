@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
@@ -11,6 +10,30 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePropertiesData } from '@/hooks/use-global-store-data';
+import type { Metadata } from 'next';
+import { initialProperties } from '@/lib/properties';
+
+
+export async function generateStaticParams() {
+  return initialProperties.map((property) => ({
+    id: property.id,
+  }));
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const property = initialProperties.find(p => p.id === params.id);
+
+  if (!property) {
+    return {
+      title: 'Property Not Found',
+    };
+  }
+
+  return {
+    title: `${property.title} | Real Estate`,
+    description: property.description,
+  };
+}
 
 export default function PropertyDetailPage() {
     const params = useParams();

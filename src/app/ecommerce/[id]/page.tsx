@@ -17,11 +17,17 @@ import type { CartItem } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useProductsData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
+import { initialStoreProducts } from '@/lib/products';
+
+export async function generateStaticParams() {
+  return initialStoreProducts.map((product) => ({
+    id: String(product.id),
+  }));
+}
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const id = parseInt(params.id, 10);
-  const { products } = store.get();
-  const product = products.find(p => p.id === id);
+  const product = initialStoreProducts.find(p => p.id === id);
 
   if (!product) {
     return {
