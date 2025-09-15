@@ -136,6 +136,7 @@ export const useBeautyData = () => ({
     setBeautyCenters,
     setBeautyServices,
     setBeautyAppointments,
+    setBeautySpecialists,
     isClient: true,
 });
 export const useDriveSyncData = () => ({ cars: useStoreData(s => s.cars), rentalAgencies: useStoreData(s => s.rentalAgencies), setRentalAgencies, isClient: true });
@@ -143,3 +144,5 @@ export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), 
 export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCards), setGiftCards, isClient: true });
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
 export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });
+
+  
