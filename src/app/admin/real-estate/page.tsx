@@ -2,7 +2,7 @@
 'use client';
 
 import PropertyTable from "../property-table";
-import StairspaceTable from "../stairspace-table";
+import StairspaceTable from "@/app/admin/stairspace-table";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -37,5 +37,3 @@ export default function AdminRealEstatePage() {
     </div>
   );
 }
-
-    
