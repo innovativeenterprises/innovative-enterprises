@@ -15,5 +15,17 @@
             "alt": "Client 3",
             "aiHint": "person portrait"
         }
-    ]
+    ],
+    "testimonialAvatars": {
+        "gov1": { "src": "https://picsum.photos/seed/gov1/100/100", "alt": "Government Official" },
+        "corp1": { "src": "https://picsum.photos/seed/corp1/100/100", "alt": "Corporate CEO" },
+        "startup1": { "src": "https://picsum.photos/seed/startup1/100/100", "alt": "Startup Founder" },
+        "freelancer1": { "src": "https://picsum.photos/seed/freelancer1/100/100", "alt": "Software Engineer" },
+        "legal1": { "src": "https://picsum.photos/seed/legal1/100/100", "alt": "Lawyer" },
+        "sanad1": { "src": "https://picsum.photos/seed/sanad1/100/100", "alt": "Business Owner" },
+        "prop1": { "src": "https://picsum.photos/seed/prop1/100/100", "alt": "Property Manager" },
+        "raaha1": { "src": "https://picsum.photos/seed/raaha1/100/100", "alt": "Agency Director" },
+        "tender1": { "src": "https://picsum.photos/seed/tender1/100/100", "alt": "Bidding Manager" },
+        "infra1": { "src": "https://picsum.photos/seed/infra1/100/100", "alt": "Event Coordinator" }
+    }
 }
