@@ -13,12 +13,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
-const DueDateDisplay = ({ date, className }: { date: string, className?: string }) => {
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+const DueDateDisplay = ({ date, className, isClient }: { date: string, className?: string, isClient: boolean }) => {
 
     const { formattedDate, daysRemaining } = useMemo(() => {
         if (!isClient) {
@@ -160,7 +155,7 @@ export default function CfoDashboard() {
                 </CardHeader>
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <DueDateDisplay date={vatPayment.dueDate} />
+                    <DueDateDisplay date={vatPayment.dueDate} isClient={isClient} />
                 </CardContent>
             </Card>
 
@@ -176,7 +171,7 @@ export default function CfoDashboard() {
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
-                                       <DueDateDisplay date={payment.dueDate} />
+                                       <DueDateDisplay date={payment.dueDate} isClient={isClient} />
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>
