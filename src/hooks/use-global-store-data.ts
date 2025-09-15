@@ -94,7 +94,7 @@ export const setBeautyCenters = (updater: (prev: BeautyCenter[]) => BeautyCenter
 export const setBeautyServices = (updater: (prev: BeautyService[]) => BeautyService[]) => store.set(state => ({ ...state, beautyServices: updater(state.beautyServices) }));
 export const setBeautyAppointments = (updater: (prev: BeautyAppointment[]) => BeautyAppointment[]) => store.set(state => ({...state, beautyAppointments: updater(state.beautyAppointments) }));
 
-// Data hooks that return the reactive state slice.
+// Data hooks that return the reactive state slice and a flag for client-side rendering.
 export const useServicesData = () => ({ services: useStoreData(s => s.services), setServices, isClient: true });
 export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts, isClient: true });
 export const useClientsData = () => ({ clients: useStoreData(s => s.clients), testimonials: useStoreData(s => s.testimonials), setClients, setTestimonials, isClient: true });
@@ -110,7 +110,7 @@ export const useInvestorsData = () => ({ investors: useStoreData(s => s.investor
 export const useKnowledgeData = () => ({ knowledgeBase: useStoreData(s => s.knowledgeBase), setKnowledgeBase, isClient: true });
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), setWorkers: setRaahaWorkers, isClient: true });
-export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRequests: setRaahaRequests, isClient: true });
+export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRaahaRequests, isClient: true });
 export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({ stairspaceListings: useStoreData(s => s.stairspaceListings), setStairspaceListings, isClient: true });
