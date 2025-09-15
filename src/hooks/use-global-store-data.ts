@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useSyncExternalStore, useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store, type AppState, initialState } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -90,10 +90,13 @@ export const setDailySales = (updater: (prev: PosTransaction[]) => PosTransactio
 export const setPosProducts = (updater: (prev: PosProduct[]) => PosProduct[]) => store.set(state => ({...state, posProducts: updater(state.posProducts) }));
 export const setGiftCards = (updater: (prev: GiftCard[]) => GiftCard[]) => store.set(state => ({ ...state, giftCards: updater(state.giftCards) }));
 export const setStockItems = (updater: (prev: StockItem[]) => StockItem[]) => store.set(state => ({...state, stockItems: updater(state.stockItems) }));
+export const setBeautyCenters = (updater: (prev: BeautyCenter[]) => BeautyCenter[]) => store.set(state => ({ ...state, beautyCenters: updater(state.beautyCenters) }));
+export const setBeautyServices = (updater: (prev: BeautyService[]) => BeautyService[]) => store.set(state => ({ ...state, beautyServices: updater(state.beautyServices) }));
+export const setBeautyAppointments = (updater: (prev: BeautyAppointment[]) => BeautyAppointment[]) => store.set(state => ({...state, beautyAppointments: updater(state.beautyAppointments) }));
 
 
-// Data hooks that return the reactive state slice. isClient is now always true.
-export const useServicesData = () => ({ services: useStoreData(s => s.services), isClient: true });
+// Data hooks that return the reactive state slice and setters.
+export const useServicesData = () => ({ services: useStoreData(s => s.services), setServices, isClient: true });
 export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts, isClient: true });
 export const useClientsData = () => ({
     clients: useStoreData(s => s.clients),
@@ -132,7 +135,7 @@ export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgenc
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), isClient: true });
 export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
 export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
-export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties: setProperties, isClient: true });
+export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({
     stairspaceListings: useStoreData(s => s.stairspaceListings),
     setStairspaceListings,
@@ -176,8 +179,9 @@ export const useBeautyData = () => ({
     services: useStoreData(s => s.beautyServices),
     specialists: useStoreData(s => s.beautySpecialists),
     appointments: useStoreData(s => s.beautyAppointments),
-    setBeautyCenters: (updater: (prev: BeautyCenter[]) => BeautyCenter[]) => store.set(state => ({...state, beautyCenters: updater(state.beautyCenters)})),
-    setBeautyAppointments: (updater: (prev: BeautyAppointment[]) => BeautyAppointment[]) => store.set(state => ({...state, beautyAppointments: updater(state.beautyAppointments)})),
+    setBeautyCenters,
+    setBeautyServices,
+    setBeautyAppointments,
     isClient: true,
 });
 export const useDriveSyncData = () => ({
@@ -202,4 +206,5 @@ export const useStockItemsData = () => ({
     setStockItems,
     isClient: true,
 });
+
     

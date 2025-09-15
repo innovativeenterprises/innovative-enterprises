@@ -31,8 +31,8 @@ export default function Footer() {
               <span className="sr-only">GitHub</span>
             </Link>
             <Link href="/platform-statistics" className="text-sm text-muted-foreground hover:text-primary transition-colors">Statistics</Link>
-            <Link href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link href="/terms-and-conditions" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link>
+            <Link href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy</Link>
+            <Link href="/terms-and-conditions" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms</Link>
           </div>
         </div>
       </div>
@@ -40,3 +40,4 @@ export default function Footer() {
   );
 }
 
+    
