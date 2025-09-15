@@ -46,8 +46,8 @@ import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
 import { initialDailySales, type Transaction as PosTransaction, initialPosProducts, type PosProduct } from './pos-data';
 import { initialGiftCards, type GiftCard } from './gift-cards';
 import { initialJobs, type JobPosting } from './alumni-jobs';
-import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
 import { initialBeautyServices, type BeautyService, initialSpecialists, type Specialist as BeautySpecialist } from './beauty-services';
+import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
 import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 
 

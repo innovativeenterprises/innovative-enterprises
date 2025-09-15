@@ -207,7 +207,7 @@ const SubscriptionStatus = ({ tier, expiry, isClient }: { tier: string, expiry?:
 }
 
 export default function ProviderTable() {
-    const { providers, isClient } = useProvidersData();
+    const { providers, setProviders, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
@@ -217,6 +217,12 @@ export default function ProviderTable() {
         setSelectedProvider(provider);
         setIsDialogOpen(true);
     }
+    
+     const handleRowClick = (providerId?: string) => {
+        if (providerId) {
+            router.push(`/admin/network/${providerId}`);
+        }
+    };
 
     const handleSave = (values: ProviderValues, id?: string) => {
         const providerData = {
@@ -290,7 +296,7 @@ export default function ProviderTable() {
                             </TableRow>
                         ) : (
                             providers.map(p => (
-                            <TableRow key={p.id} onClick={() => router.push(`/admin/network/${p.id}`)} className="cursor-pointer">
+                            <TableRow key={p.id} onClick={() => handleRowClick(p.id)} className="cursor-pointer">
                                 <TableCell className="font-medium">
                                     <p>{p.name}</p>
                                     <p className="text-sm text-muted-foreground">{p.email}</p>
