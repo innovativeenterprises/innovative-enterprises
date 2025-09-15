@@ -4,13 +4,13 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable } from '@/components/request-table';
-import { formatDistanceToNow, format } from 'date-fns';
+import { RequestTable, TimeAgoCell } from '@/components/request-table';
+import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 
@@ -33,7 +33,7 @@ const columns = [
             <div>
                 <p className="font-medium">{row.original.listingTitle}</p>
                 <p className="text-sm text-muted-foreground">
-                    Requested: {formatDistanceToNow(new Date(row.original.requestDate), { addSuffix: true })}
+                    <TimeAgoCell date={row.original.requestDate} />
                 </p>
             </div>
         )
