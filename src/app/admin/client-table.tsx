@@ -68,15 +68,12 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     }, [isOpen, client, form]);
 
     useEffect(() => {
-        if (!isOpen) return;
         if (watchLogoFile && watchLogoFile.length > 0) {
             fileToDataURI(watchLogoFile[0]).then(setImagePreview);
         } else if (watchLogoUrl) {
             setImagePreview(watchLogoUrl);
-        } else {
-            setImagePreview(client?.logo || null);
         }
-    }, [isOpen, watchLogoFile, watchLogoUrl, client]);
+    }, [watchLogoUrl, watchLogoFile]);
     
     const onSubmit: SubmitHandler<z.infer<typeof ClientSchema>> = async (data) => {
         let logoValue = "";
@@ -202,7 +199,7 @@ export default function ClientTable() {
     // Handlers
     const handleSaveClient = (values: ClientValues, id?: string) => {
         if (id) {
-            setClients(prev => prev.map(c => c.id === id ? { ...c, ...values } : c));
+            setClients(prev => prev.map(c => c.id === id ? { ...c, ...values, id } : c));
             toast({ title: "Client updated." });
         } else {
             const newClient: Client = { ...values, id: `client_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
@@ -218,7 +215,7 @@ export default function ClientTable() {
     
     const handleSaveTestimonial = (values: TestimonialValues, id?: string) => {
         if (id) {
-            setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...values } : t));
+            setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...values, id } : t));
             toast({ title: "Testimonial updated." });
         } else {
             const newTestimonial: Testimonial = { ...values, id: `test_${values.author.toLowerCase().replace(/\s+/g, '_')}` };
