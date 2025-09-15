@@ -39,6 +39,7 @@ const TestimonialSchema = z.object({
   quote: z.string().min(10, "Quote is required"),
   author: z.string().min(2, "Author is required"),
   company: z.string().min(2, "Company/Title is required"),
+  avatarId: z.string().min(1, "Avatar ID is required"),
 });
 type TestimonialValues = z.infer<typeof TestimonialSchema>;
 
@@ -147,12 +148,12 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<TestimonialValues>({
         resolver: zodResolver(TestimonialSchema),
-        defaultValues: testimonial || { quote: "", author: "", company: "" },
+        defaultValues: testimonial || { quote: "", author: "", company: "", avatarId: "" },
     });
     
     useEffect(() => { 
         if(isOpen) {
-            form.reset(testimonial || { quote: "", author: "", company: "" });
+            form.reset(testimonial || { quote: "", author: "", company: "", avatarId: "" });
         }
     }, [isOpen, testimonial, form]);
 
@@ -176,6 +177,9 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
                         )} />
                         <FormField control={form.control} name="company" render={({ field }) => (
                             <FormItem><FormLabel>Author's Company / Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="avatarId" render={({ field }) => (
+                            <FormItem><FormLabel>Avatar ID</FormLabel><FormControl><Input placeholder="e.g., 'gov1' or 'corp2'" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
