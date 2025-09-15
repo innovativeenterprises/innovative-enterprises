@@ -36,12 +36,12 @@ import { findScholarships } from './guardian-ai/scholarship-agent';
 import { generateScholarshipEssay } from './guardian-ai/scholarship-essay-assistant';
 import { wellbeingCheckin } from './guardian-ai/wellbeing-checkin';
 import { analyzeSeo } from './seo-analyzer';
-import { generateFeasibilityStudy } from './feasibility-study';
-import { analyzeOperations } from './agentic-coo';
-import { findAndBookCar } from './drivesync-agent';
-import { analyzeExamSession } from './proctoring-agent';
-import { findHelpers } from './raaha-matcher';
-import { generateFacebookCover } from './facebook-cover-generator';
+import {generateFeasibilityStudy} from './feasibility-study';
+import {analyzeOperations} from './agentic-coo';
+import {findAndBookCar} from './drivesync-agent';
+import {analyzeExamSession} from './proctoring-agent';
+import {findHelpers} from './raaha-matcher';
+import {generateFacebookCover} from './facebook-cover-generator';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
