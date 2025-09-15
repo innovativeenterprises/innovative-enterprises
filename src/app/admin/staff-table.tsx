@@ -259,46 +259,46 @@ export default function StaffTable() {
             photo: values.photo,
         };
 
-        const updateList = (list: Agent[], name?: string) => 
-            name 
-                ? list.map(member => member.name === name ? { ...member, ...newStaffMember } : member)
+        const updateList = (list: Agent[]) => 
+            originalName 
+                ? list.map(member => member.name === originalName ? { ...member, ...newStaffMember } : member)
                 : [...list, newStaffMember];
-
-        const updateAgentCategories = (categories: AgentCategory[], name?: string) => {
-            if (name) { // Editing existing agent
-                return categories.map(cat => ({
-                    ...cat,
-                    agents: cat.agents.map(agent => agent.name === name ? { ...agent, ...newStaffMember } : agent)
-                }));
-            } else { // Adding new agent
-                const newCats = [...categories];
-                let targetCat = newCats.find(c => c.category === "Core Business Operations Agents"); // Default category
-                if (targetCat) {
-                    targetCat.agents.push(newStaffMember);
-                } else { // Fallback if default category doesn't exist
-                    newCats.push({ category: 'General Agents', agents: [newStaffMember] });
-                }
-                return newCats;
-            }
-        };
-
-        // If editing, first remove the member from all lists to handle type changes.
-        if (originalName) {
-            setLeadership(prev => prev.filter(m => m.name !== originalName));
-            setStaff(prev => prev.filter(m => m.name !== originalName));
-            setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
+        
+        const addNewToCategory = (categories: AgentCategory[]) => {
+             const newCats = JSON.parse(JSON.stringify(categories));
+             let targetCat = newCats.find((c: AgentCategory) => c.category === "Core Business Operations Agents"); // Default category
+             if (targetCat) {
+                 targetCat.agents.push(newStaffMember);
+             } else {
+                 newCats.push({ category: 'General Agents', agents: [newStaffMember] });
+             }
+             return newCats;
         }
 
-        // Add the new/updated member to the correct list.
+        // If editing, find the member and update them in their current list.
+        if (originalName) {
+            setLeadership(prev => prev.map(m => m.name === originalName ? { ...m, ...newStaffMember, type: 'Leadership' } : m));
+            setStaff(prev => prev.map(m => m.name === originalName ? { ...m, ...newStaffMember, type: 'Staff' } : m));
+            setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.map(a => a.name === originalName ? { ...a, ...newStaffMember, type: 'AI Agent' } : a) })));
+        }
+
+        // Remove from old list if type changes
+        if (originalName && staffMember?.type !== values.type) {
+            if (staffMember?.type === 'Leadership') setLeadership(prev => prev.filter(m => m.name !== originalName));
+            if (staffMember?.type === 'Staff') setStaff(prev => prev.filter(m => m.name !== originalName));
+            if (staffMember?.type === 'AI Agent') setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
+        }
+        
+        // Add to new list
         switch (values.type) {
             case 'Leadership':
-                setLeadership(prev => updateList(prev, originalName ? undefined : originalName));
+                setLeadership(prev => updateList(prev));
                 break;
             case 'Staff':
-                setStaff(prev => updateList(prev, originalName ? undefined : originalName));
+                setStaff(prev => updateList(prev));
                 break;
             case 'AI Agent':
-                setAgentCategories(prev => updateAgentCategories(prev, originalName ? undefined : originalName));
+                setAgentCategories(prev => addNewToCategory(prev));
                 break;
         }
 
@@ -320,6 +320,10 @@ export default function StaffTable() {
         }
         toast({ title: "Staff member removed.", variant: "destructive" });
     };
+
+    const staffMember = leadership.find(m => m.name === 'originalName') 
+        || staff.find(m => m.name === 'originalName') 
+        || agentCategories.flatMap(c => c.agents).find(a => a.name === 'originalName');
 
     const renderStaffRow = (member: Agent, type: 'leadership' | 'staff' | 'agent') => (
         <TableRow key={member.name}>
