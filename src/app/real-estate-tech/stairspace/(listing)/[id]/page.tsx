@@ -10,7 +10,7 @@ import { ArrowLeft, MapPin, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
-import { BookingRequestForm } from '../booking-form';
+import { BookingRequestForm } from '../../booking-form';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -116,5 +116,3 @@ export default function StairspaceDetailPage() {
         </div>
     );
 }
-
-    
