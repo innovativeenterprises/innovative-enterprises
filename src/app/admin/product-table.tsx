@@ -20,16 +20,11 @@ import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-fo
 
 
 export default function ProductTable() {
-    const products = useStoreData(s => s.products);
+    const { products, setProducts, isClient } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     const { stages } = useProjectStagesData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleToggle = (id: number) => {
         setProducts(prev =>
