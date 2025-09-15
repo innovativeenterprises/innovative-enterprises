@@ -162,14 +162,18 @@ export const usePricingData = () => ({
     setPricing: setPricing,
     isClient: true,
 });
-export const useCfoData = () => ({
-    kpiData: useStoreData(s => s.kpiData),
-    transactionData: useStoreData(s => s.transactionData),
-    upcomingPayments: useStoreData(s => s.upcomingPayments),
-    vatPayment: useStoreData(s => s.vatPayment),
-    cashFlowData: useStoreData(s => s.cashFlowData),
-    isClient: true,
-});
+export const useCfoData = () => {
+    return {
+        ...useStoreData(s => ({
+            kpiData: s.kpiData,
+            transactionData: s.transactionData,
+            upcomingPayments: s.upcomingPayments,
+            vatPayment: s.vatPayment,
+            cashFlowData: s.cashFlowData,
+        })),
+        isClient: true
+    };
+};
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
     setStudents: setStudents,
@@ -207,5 +211,3 @@ export const useStockItemsData = () => ({
     setStockItems,
     isClient: true,
 });
-
-    
