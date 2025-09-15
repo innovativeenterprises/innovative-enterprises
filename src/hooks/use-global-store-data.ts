@@ -137,7 +137,7 @@ export const useKnowledgeData = () => ({
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), isClient: true });
 export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
-export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setSignedLeases, isClient: true });
+export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({
     stairspaceListings: useStoreData(s => s.stairspaceListings),
@@ -164,21 +164,14 @@ export const usePricingData = () => ({
     setPricing: setPricing,
     isClient: true,
 });
-export const useCfoData = () => {
-    const kpiData = useStoreData(s => s.kpiData);
-    const transactionData = useStoreData(s => s.transactionData);
-    const upcomingPayments = useStoreData(s => s.upcomingPayments);
-    const vatPayment = useStoreData(s => s.vatPayment);
-    const cashFlowData = useStoreData(s => s.cashFlowData);
-    return {
-        kpiData,
-        transactionData,
-        upcomingPayments,
-        vatPayment,
-        cashFlowData,
-        isClient: true,
-    };
-};
+export const useCfoData = () => ({
+    kpiData: useStoreData(s => s.kpiData),
+    transactionData: useStoreData(s => s.transactionData),
+    upcomingPayments: useStoreData(s => s.upcomingPayments),
+    vatPayment: useStoreData(s => s.vatPayment),
+    cashFlowData: useStoreData(s => s.cashFlowData),
+    isClient: true,
+});
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
     setStudents: setStudents,

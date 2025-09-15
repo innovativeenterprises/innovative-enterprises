@@ -2,7 +2,7 @@
 
 This document provides a comprehensive, categorized list of all 83 current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
 
-## Digital Products & SaaS Platforms (39 Total)
+## Digital Products & SaaS Platforms (40 Total)
 
 ### Category: Construction Tech (11)
 | Name | Description | Stage | Status |
@@ -13,8 +13,8 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed |
 | ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Live & Operating | Completed |
 | ConstructFin | Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects. | Live & Operating | Completed |
-| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual) | Idea Phase | On Track |
-| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual) | Development Phase | At Risk |
+| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. | Live & Operating | Completed |
+| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
 | StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
@@ -45,13 +45,12 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed |
 | AI Scholarship Finder | An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level. | Live & Operating | Completed |
 
-
 ### Category: Automotive Tech (1)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Live & Operating | Completed |
 
-### Category: General Platforms & SaaS (12)
+### Category: General Platforms & SaaS (10)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
@@ -64,8 +63,7 @@ This document provides a comprehensive, categorized list of all 83 current proje
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
 | StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
-| Business Hub | A B2B and B2C marketplace to connect with other businesses and clients for services and job opportunities. | Live & Operating | Completed |
-| Community Hub | A digital platform for expatriate communities and charities to manage their own affairs, elections, and events. | Live & Operating | Completed |
+
 
 ### Category: AI & Creative Tools (3)
 | Name | Description | Stage | Status |
