@@ -12,6 +12,25 @@ import { Progress } from '@/components/ui/progress';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
+import type { Metadata } from 'next';
+import { store } from '@/lib/global-store';
+
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const { providers } = store.get();
+  const provider = providers.find(p => p.id === params.id);
+
+  if (!provider) {
+    return {
+      title: 'Provider Not Found',
+    };
+  }
+
+  return {
+    title: `${provider.name} | Partner Profile`,
+    description: `Service provider profile for ${provider.name}, specializing in ${provider.services}.`,
+  };
+}
 
 export default function ProviderProfilePage() {
     const params = useParams();
@@ -146,5 +165,3 @@ export default function ProviderProfilePage() {
         </div>
     );
 }
-
-    

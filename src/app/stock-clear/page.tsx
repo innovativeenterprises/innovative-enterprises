@@ -10,6 +10,12 @@ import Link from 'next/link';
 import { initialStockItems, type StockItem } from '@/lib/stock-items';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "StockClear B2B Marketplace | Innovative Enterprises",
+  description: "A B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. Unlock trapped capital and prevent waste.",
+};
 
 const categories = ['All', 'Food & Beverage', 'Electronics', 'Apparel', 'Cosmetics', 'General Merchandise'];
 const saleTypes = ['All', 'Fixed Price', 'Auction'];

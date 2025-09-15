@@ -15,6 +15,12 @@ import { sendOtpViaWhatsApp, verifyOtp } from '@/ai/flows/whatsapp-agent';
 import { controlSmartLock } from '@/ai/flows/ameen-smart-lock';
 import { cn } from '@/lib/utils';
 import AmeenSmartLockIcon from '@/components/icons/ameen-smart-lock-icon';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Ameen: Smart Identity & Home | Innovative Enterprises",
+  description: "Your single, secure point of control. Log in with your WhatsApp-based digital ID to manage your smart home devices.",
+};
 
 const PhoneSchema = z.object({
   phone: z.string().min(8, 'Please enter a valid phone number with country code.'),

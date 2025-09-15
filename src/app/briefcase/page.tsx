@@ -19,16 +19,14 @@ import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
+import { fileToDataURI } from '@/lib/utils';
+import type { Metadata } from 'next';
 
-
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
+export const metadata: Metadata = {
+  title: "My E-Briefcase",
+  description: "Your secure digital vault. Manage your documents, legal agreements, and registered services all in one place as a partner of Innovative Enterprises.",
 };
+
 
 const businessCategories = [
     "Tech & IT Services",

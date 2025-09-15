@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,13 @@ import { Leaf, Droplets, Wind, Upload, Download, CheckCircle, Flame } from "luci
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import AppiIcon from "@/components/icons/appi-icon";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "APPI - AI Utility Monitoring | Innovative Enterprises",
+  description: "Real-time, personalized insights into your household utility consumption (electricity, water, gas), empowering you with predictive analytics and convenient service booking.",
+};
+
 
 const energyData = [
   { month: 'Jan', consumption: 450 },
