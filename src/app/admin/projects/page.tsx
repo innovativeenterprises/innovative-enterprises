@@ -1,10 +1,9 @@
 
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,8 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2, GripVertical } from 'lucide-react';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import type { Product } from '@/lib/products';
-import { useProductsData } from "@/hooks/use-global-store-data";
-import { useProjectStagesData } from '../stage-table';
+import { useProductsData, setProducts, useProjectStagesData } from "@/hooks/use-global-store-data";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
@@ -100,7 +98,7 @@ export default function ProjectsPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    const { products, setProducts, isClient } = useProductsData();
+    const { products, isClient } = useProductsData();
     const { stages } = useProjectStagesData();
     const { toast } = useToast();
 
