@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -146,12 +145,13 @@ export default function EventsFinancePage() {
     const netBalance = totalIncome - totalExpenses;
 
     const DateDisplay = ({ dateString }: { dateString: string }) => {
-        const [displayDate, setDisplayDate] = useState('');
-        useEffect(() => {
-            setDisplayDate(format(new Date(dateString), "PPP"));
-        }, [dateString]);
-        if (!displayDate) return <Skeleton className="h-4 w-24" />;
-        return <>{displayDate}</>;
+        const formattedDate = useMemo(() => {
+            if (!isClient) return null;
+            return format(new Date(dateString), "PPP");
+        }, [dateString, isClient]);
+    
+        if (!isClient) return <Skeleton className="h-4 w-24" />;
+        return <>{formattedDate}</>;
     };
 
     return (

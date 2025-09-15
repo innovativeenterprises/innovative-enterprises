@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -50,7 +49,7 @@ export default function MyRequestsPage() {
                 <div>
                     <p className="font-medium">{row.original.workerName}</p>
                     <div className="text-sm text-muted-foreground">
-                        <TimeAgoCell date={row.original.requestDate} />
+                        <TimeAgoCell date={row.original.requestDate} isClient={isClient} />
                     </div>
                 </div>
             )
@@ -98,6 +97,7 @@ export default function MyRequestsPage() {
                                 data={myRequests} 
                                 columns={columns}
                                 isClient={isClient}
+                                onSchedule={onSchedule}
                                 renderActions={(request) => <ScheduleInterviewDialog request={request as GenericRequest} onSchedule={onSchedule} />}
                             />
                         </CardContent>

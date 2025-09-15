@@ -11,16 +11,13 @@ import { formatDistanceToNow } from 'date-fns';
 type GenericRequest = Record<string, any>;
 
 // Client-side component to prevent hydration errors with time formatting
-export const TimeAgoCell = ({ date }: { date: string }) => {
-    const [timeAgo, setTimeAgo] = useState<string | null>(null);
+export const TimeAgoCell = ({ date, isClient }: { date: string, isClient: boolean }) => {
+    const timeAgo = useMemo(() => {
+        if (!isClient || !date) return null;
+        return formatDistanceToNow(new Date(date), { addSuffix: true });
+    }, [date, isClient]);
 
-    useEffect(() => {
-        if (date) {
-           setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
-        }
-    }, [date]);
-
-    if (!timeAgo) {
+    if (!isClient) {
         return <Skeleton className="h-4 w-[100px]" />;
     }
 
@@ -33,11 +30,13 @@ export function RequestTable({
     columns,
     isClient,
     renderActions,
+    onSchedule, // Added to props
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     renderActions?: (request: GenericRequest) => React.ReactNode,
+    onSchedule?: (id: string, values: any) => void, // Added to props
 }) { 
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
 
@@ -185,4 +184,3 @@ export function WorkerTable({ workers, columns, agencyId, isClient }: { workers:
         </Card>
     );
 }
-
