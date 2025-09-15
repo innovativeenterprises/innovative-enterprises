@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import OpportunityTable from '../opportunity-table';
