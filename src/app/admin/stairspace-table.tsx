@@ -17,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { StairspaceListing } from "@/lib/stairspace.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useStairspaceData } from "@/hooks/use-global-store-data";
+import { useStairspaceData, setStairspaceListings } from "@/hooks/use-global-store-data";
 import Image from 'next/image';
 
 const ListingSchema = z.object({
@@ -163,3 +163,4 @@ export default function StairspaceTable() {
         </Card>
     );
 }
+
