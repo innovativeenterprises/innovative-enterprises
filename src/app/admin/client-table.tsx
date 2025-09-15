@@ -19,7 +19,7 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fileToDataURI } from "@/lib/utils";
-import { useClientsData } from "@/hooks/use-global-store-data";
+import { useClientsData, setClients, setTestimonials } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Schemas
