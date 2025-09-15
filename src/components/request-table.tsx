@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -34,13 +33,11 @@ export function RequestTable({
     columns,
     isClient,
     renderActions,
-    onSchedule,
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     renderActions?: (request: GenericRequest) => React.ReactNode,
-    onSchedule?: (id: string, values: any) => void
 }) { 
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
 
