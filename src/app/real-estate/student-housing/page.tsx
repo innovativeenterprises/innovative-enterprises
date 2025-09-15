@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData } from '@/hooks/use-global-store-data';
+import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
@@ -36,12 +36,26 @@ export default function StudentHousingPage() {
         toast({ title: "Housing Agreement Deleted", description: "The student housing agreement has been removed from your dashboard.", variant: "destructive" });
     };
 
-    const totalMonthlyRent = useMemo(() => leases.reduce((sum, lease) => {
+    const totalMonthlyRent = useMemo(() => isClient ? leases.reduce((sum, lease) => {
         if (lease.status === 'Active' && lease.contractType === 'Tenancy Agreement' && lease.pricePeriod === 'per month') {
             return sum + lease.price;
         }
         return sum;
-    }, 0), [leases]);
+    }, 0) : 0, [leases, isClient]);
+
+    const DateDisplay = ({ dateString }: { dateString: string }) => {
+        const formattedDate = useMemo(() => {
+            if (!isClient) return null;
+            try {
+                return format(new Date(dateString), "PPP");
+            } catch {
+                return "Invalid Date";
+            }
+        }, [dateString, isClient]);
+    
+        if (!isClient) return <Skeleton className="h-4 w-24" />;
+        return <>{formattedDate}</>;
+    };
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">

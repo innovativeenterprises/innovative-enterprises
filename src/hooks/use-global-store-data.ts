@@ -125,7 +125,7 @@ export const useCommunityHubData = () => ({
 export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
 export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages: setProjectStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
-export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), setAssets, isClient: true });
+export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), isClient: true });
 export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), isClient: true });
 export const useKnowledgeData = () => ({
     knowledgeBase: useStoreData(s => s.knowledgeBase),
@@ -135,7 +135,7 @@ export const useKnowledgeData = () => ({
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), isClient: true });
 export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
-export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
+export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), isClient: true });
 export const useStairspaceData = () => ({
     stairspaceListings: useStoreData(s => s.stairspaceListings),
@@ -158,9 +158,9 @@ export const useCostSettingsData = () => ({
 });
 export const usePricingData = () => ({
     pricing: useStoreData(s => s.pricing),
-    setPricing,
     isClient: true,
 });
+
 export const useCfoData = () => {
     return {
         ...useStoreData(s => ({
@@ -210,5 +210,3 @@ export const useStockItemsData = () => ({
     setStockItems,
     isClient: true,
 });
-
-    
