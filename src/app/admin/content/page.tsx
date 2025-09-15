@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import ServiceTable from "../service-table";
@@ -47,4 +46,3 @@ export default function AdminContentPage() {
     </div>
   );
 }
-
