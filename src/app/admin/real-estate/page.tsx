@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import PropertyTable from "../property-table";
@@ -37,3 +38,4 @@ export default function AdminRealEstatePage() {
     </div>
   );
 }
+

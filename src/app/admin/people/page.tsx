@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import StaffTable from "../staff-table";
+import StaffTable from "@/app/admin/staff-table";
 
 export default function AdminPeoplePage() {
   return (
@@ -17,3 +18,4 @@ export default function AdminPeoplePage() {
     </div>
   );
 }
+
