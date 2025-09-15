@@ -91,7 +91,7 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
     );
 };
 
-export default function CommunityTable() {
+export default function AdminCommunitiesPage() {
     const { communities, isClient } = useCommunitiesData();
     const { leadership, staff } = useStaffData();
     const { toast } = useToast();
@@ -206,5 +206,3 @@ export default function CommunityTable() {
         </Card>
     );
 }
-
-    

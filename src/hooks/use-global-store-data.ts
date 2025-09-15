@@ -118,8 +118,8 @@ export const useCommunitiesData = () => ({ communities: useStoreData(s => s.comm
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
-    setEvents: setCommunityEvents,
-    setFinances: setCommunityFinances,
+    setCommunityEvents,
+    setCommunityFinances,
     isClient: true,
 });
 export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
@@ -172,7 +172,7 @@ export const useCfoData = () => ({
 });
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
-    setStudents,
+    setStudents: setStudents,
     isClient: true,
 });
 export const useBeautyData = () => ({
