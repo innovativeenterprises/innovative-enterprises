@@ -131,78 +131,84 @@ export default function AdminCommunitiesPage() {
     };
 
     return (
-        <Card>
-            <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div>
-                    <CardTitle>Community Hubs</CardTitle>
-                    <CardDescription>A list of all created community instances.</CardDescription>
-                </div>
-                 <div className="flex w-full md:w-auto items-center gap-2">
-                    <div className="relative flex-grow">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            placeholder="Search communities..."
-                            className="pl-8"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+        <div className="space-y-8">
+            <div>
+                <h1 className="text-3xl font-bold">Community Hubs</h1>
+                <p className="text-muted-foreground">Manage and oversee all active community instances on the platform.</p>
+            </div>
+            <Card>
+                <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <CardTitle>Community Instances</CardTitle>
+                        <CardDescription>A list of all created community instances.</CardDescription>
                     </div>
-                     <AddEditCommunityDialog onSave={handleSave}>
-                        <Button className="shrink-0"><PlusCircle /> Create New</Button>
-                    </AddEditCommunityDialog>
-                </div>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Country</TableHead><TableHead>Manager</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
-                    <TableBody>
-                        {!isClient ? (
-                            Array.from({ length: 3 }).map((_, i) => (
-                                <TableRow key={i}>
-                                    <TableCell colSpan={4}>
-                                        <Skeleton className="h-10 w-full" />
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            filteredCommunities.map(community => (
-                                <TableRow key={community.id}>
-                                    <TableCell className="font-medium">{community.name}</TableCell>
-                                    <TableCell>{community.country}</TableCell>
-                                    <TableCell>
-                                        {staffMap[community.manager] ? (
-                                            <div className="flex items-center gap-2">
-                                                <Avatar className="h-8 w-8">
-                                                    <AvatarImage src={staffMap[community.manager].photo} />
-                                                    <AvatarFallback>{community.manager.charAt(0)}</AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <p className="font-medium text-sm">{community.manager}</p>
-                                                    <p className="text-xs text-muted-foreground">{staffMap[community.manager].role}</p>
+                     <div className="flex w-full md:w-auto items-center gap-2">
+                        <div className="relative flex-grow">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Search communities..."
+                                className="pl-8"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                         <AddEditCommunityDialog onSave={handleSave}>
+                            <Button className="shrink-0"><PlusCircle /> Create New</Button>
+                        </AddEditCommunityDialog>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Country</TableHead><TableHead>Manager</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                        <TableBody>
+                            {!isClient ? (
+                                Array.from({ length: 3 }).map((_, i) => (
+                                    <TableRow key={i}>
+                                        <TableCell colSpan={4}>
+                                            <Skeleton className="h-10 w-full" />
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                filteredCommunities.map(community => (
+                                    <TableRow key={community.id}>
+                                        <TableCell className="font-medium">{community.name}</TableCell>
+                                        <TableCell>{community.country}</TableCell>
+                                        <TableCell>
+                                            {staffMap[community.manager] ? (
+                                                <div className="flex items-center gap-2">
+                                                    <Avatar className="h-8 w-8">
+                                                        <AvatarImage src={staffMap[community.manager].photo} />
+                                                        <AvatarFallback>{community.manager.charAt(0)}</AvatarFallback>
+                                                    </Avatar>
+                                                    <div>
+                                                        <p className="font-medium text-sm">{community.manager}</p>
+                                                        <p className="text-xs text-muted-foreground">{staffMap[community.manager].role}</p>
+                                                    </div>
                                                 </div>
+                                            ) : (
+                                                community.manager
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex justify-end gap-2">
+                                                <AddEditCommunityDialog community={community} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditCommunityDialog>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader><AlertDialogTitle>Delete Community Hub?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{community.name}" hub.</AlertDialogDescription></AlertDialogHeader>
+                                                        <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(community.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </div>
-                                        ) : (
-                                            community.manager
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <AddEditCommunityDialog community={community} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditCommunityDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader><AlertDialogTitle>Delete Community Hub?</AlertDialogTitle><AlertDialogDescription>This will permanently delete the "{community.name}" hub.</AlertDialogDescription></AlertDialogHeader>
-                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(community.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+        </div>
     );
 }

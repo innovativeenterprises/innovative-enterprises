@@ -80,7 +80,7 @@ export const setStairspaceListings = (updater: (prev: StairspaceListing[]) => St
 export const setStairspaceRequests = (updater: (prev: StairspaceRequest[]) => StairspaceRequest[]) => store.set(state => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
 export const setOpportunities = (updater: (prev: Opportunity[]) => Opportunity[]) => store.set(state => ({ ...state, opportunities: updater(state.opportunities) }));
 export const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => store.set(state => ({ ...state, costSettings: updater(state.costSettings) }));
-export const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => store.set(state => ({ ...state, pricing: updater(state.pricing) }));
+export const setPricing = (updater: (prev: Pricing[]) => Pricing[]) => store.set(state => ({...state, pricing: updater(state.pricing)}));
 export const setStudents = (updater: (prev: Student[]) => Student[]) => store.set(state => ({ ...state, students: updater(state.students) }));
 export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set(state => ({ ...state, signedLeases: updater(state.signedLeases) }));
 export const setCars = (updater: (prev: Car[]) => Car[]) => store.set(state => ({ ...state, cars: updater(state.cars) }));
@@ -104,7 +104,7 @@ export const useClientsData = () => ({
     setTestimonials,
     isClient: true,
 });
-export const useProvidersData = () => ({ providers: useStoreData(s => s.providers), isClient: true });
+export const useProvidersData = () => ({ providers: useStoreData(s => s.providers), setProviders, isClient: true });
 export const useStaffData = () => ({
     leadership: useStoreData(s => s.leadership),
     staff: useStoreData(s => s.staff),
@@ -114,18 +114,18 @@ export const useStaffData = () => ({
     setAgentCategories,
     isClient: true,
 });
-export const useCommunitiesData = () => ({ communities: useStoreData(s => s.communities), isClient: true });
+export const useCommunitiesData = () => ({ communities: useStoreData(s => s.communities), setCommunities, isClient: true });
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
-    setEvents: setCommunityEvents,
-    setFinances: setCommunityFinances,
+    setCommunityEvents,
+    setCommunityFinances,
     isClient: true,
 });
-export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
-export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages: setProjectStages, isClient: true });
+export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers, isClient: true });
+export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
-export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), isClient: true });
+export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), setAssets, isClient: true });
 export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), isClient: true });
 export const useKnowledgeData = () => ({
     knowledgeBase: useStoreData(s => s.knowledgeBase),
@@ -153,29 +153,28 @@ export const useOpportunitiesData = () => ({
 });
 export const useCostSettingsData = () => ({
     costSettings: useStoreData(s => s.costSettings),
-    setCostSettings: setCostSettings,
+    setCostSettings,
     isClient: true,
 });
 export const usePricingData = () => ({
     pricing: useStoreData(s => s.pricing),
+    setPricing,
     isClient: true,
 });
 
-export const useCfoData = () => {
-    return {
-        ...useStoreData(s => ({
-            kpiData: s.kpiData,
-            transactionData: s.transactionData,
-            upcomingPayments: s.upcomingPayments,
-            vatPayment: s.vatPayment,
-            cashFlowData: s.cashFlowData,
-        })),
-        isClient: true
-    };
-};
+export const useCfoData = () => ({
+    ...useStoreData(s => ({
+        kpiData: s.kpiData,
+        transactionData: s.transactionData,
+        upcomingPayments: s.upcomingPayments,
+        vatPayment: s.vatPayment,
+        cashFlowData: s.cashFlowData,
+    })),
+    isClient: true
+});
 export const useStudentsData = () => ({
     students: useStoreData(s => s.students),
-    setStudents: setStudents,
+    setStudents,
     isClient: true,
 });
 export const useBeautyData = () => ({
