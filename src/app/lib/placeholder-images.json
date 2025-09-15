@@ -1,0 +1,19 @@
+{
+    "overviewAvatars": [
+        {
+            "src": "https://picsum.photos/seed/client1/40/40",
+            "alt": "Client 1",
+            "aiHint": "person portrait"
+        },
+        {
+            "src": "https://picsum.photos/seed/client2/40/40",
+            "alt": "Client 2",
+            "aiHint": "person portrait"
+        },
+        {
+            "src": "https://picsum.photos/seed/client3/40/40",
+            "alt": "Client 3",
+            "aiHint": "person portrait"
+        }
+    ]
+}

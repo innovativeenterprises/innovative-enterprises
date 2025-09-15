@@ -1,11 +1,11 @@
-
-
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import imageData from '@/app/lib/placeholder-images.json';
 
 export default function CompanyOverview() {
+  const { overviewAvatars } = imageData;
   return (
     <section className="bg-background">
       <div className="container mx-auto px-4 py-24 md:py-32">
@@ -34,9 +34,17 @@ export default function CompanyOverview() {
             </div>
             <div className="flex items-center gap-4 pt-4">
                 <div className="flex -space-x-2">
-                    <Image src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde" alt="Client 1" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
-                    <Image src="https://images.unsplash.com/photo-1599566150163-29194dcaad36" alt="Client 2" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
-                    <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2" alt="Client 3" width={40} height={40} className="rounded-full border-2 border-background" data-ai-hint="person portrait" />
+                    {overviewAvatars.map((avatar, index) => (
+                         <Image 
+                            key={index}
+                            src={avatar.src} 
+                            alt={avatar.alt} 
+                            width={40} 
+                            height={40} 
+                            className="rounded-full border-2 border-background" 
+                            data-ai-hint={avatar.aiHint}
+                        />
+                    ))}
                 </div>
                 <div>
                     <div className="flex text-yellow-400">
