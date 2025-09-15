@@ -216,11 +216,11 @@ export const ChatComponent = ({
                                         ? 'bg-primary text-primary-foreground' 
                                         : 'bg-muted'
                                 )}>
-                                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                                    <div className="text-sm whitespace-pre-wrap prose prose-sm max-w-full" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, '<br />') }} />
                                      {msg.itemAddedToCart && (
                                         <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex items-center gap-3">
                                             <div className="relative w-12 h-12 rounded-md overflow-hidden">
-                                                <img src={msg.itemAddedToCart.image} alt={msg.itemAddedToCart.name} className="object-cover w-full h-full"/>
+                                                <Image src={msg.itemAddedToCart.image} alt={msg.itemAddedToCart.name} fill className="object-cover"/>
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-sm">{msg.itemAddedToCart.name}</p>
@@ -241,7 +241,7 @@ export const ChatComponent = ({
                                     )}
                                     {msg.imageUrl && (
                                          <div className="mt-3 relative aspect-video w-full overflow-hidden rounded-md border">
-                                            <img src={msg.imageUrl} alt="Generated for social media post" className="object-cover w-full h-full"/>
+                                            <Image src={msg.imageUrl} alt="Generated for social media post" fill className="object-cover"/>
                                         </div>
                                     )}
                                 </div>
@@ -309,3 +309,5 @@ export const ChatComponent = ({
     </Card>
   );
 };
+
+    

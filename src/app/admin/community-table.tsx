@@ -91,7 +91,7 @@ const AddEditCommunityDialog = ({ community, onSave, children }: { community?: C
     );
 };
 
-const CommunityTable = () => {
+export default function CommunityTable() {
     const { communities, isClient } = useCommunitiesData();
     const { leadership, staff } = useStaffData();
     const { toast } = useToast();
@@ -207,17 +207,4 @@ const CommunityTable = () => {
     );
 }
 
-export default function AdminCommunitiesPage() {
-  return (
-    <div className="space-y-8">
-        <div>
-            <h1 className="text-3xl font-bold">Community Hub Management</h1>
-            <p className="text-muted-foreground">
-                Create, manage, and oversee all community instances on the platform.
-            </p>
-        </div>
-
-        <CommunityTable />
-    </div>
-  );
-}
+    
