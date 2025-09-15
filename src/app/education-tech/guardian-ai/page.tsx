@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot, PenSquare, Search } from 'lucide-react';
+import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot, PenSquare, Search, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 import { type Student } from '@/lib/students';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -20,7 +20,6 @@ import { wellbeingCheckin } from '@/ai/flows/guardian-ai/wellbeing-checkin';
 import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ScholarshipFinder from '../scholarships/page';
 import { useStudentsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -153,10 +152,17 @@ export default function GuardianAiPage() {
                             <StudentDashboard />
                         </TabsContent>
                          <TabsContent value="scholarships" className="mt-6">
-                            <ScholarshipFinder />
+                             <Link href="/education-tech/scholarships">
+                                <Card className="hover:bg-muted/50 cursor-pointer text-center">
+                                  <CardHeader>
+                                    <CardTitle>Navigate to Scholarship Finder</CardTitle>
+                                    <CardDescription>The AI Scholarship Finder has been moved to its own dedicated page for a better user experience.</CardDescription>
+                                  </CardHeader>
+                                </Card>
+                            </Link>
                         </TabsContent>
                          <TabsContent value="interview" className="mt-6">
-                             <Link href="/interview-coach">
+                             <Link href="/cv-enhancer?tab=interview">
                                 <Card className="hover:bg-muted/50 cursor-pointer">
                                   <CardHeader>
                                     <CardTitle>Navigate to GENIUS Platform</CardTitle>
