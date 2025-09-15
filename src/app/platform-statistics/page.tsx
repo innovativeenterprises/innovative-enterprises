@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +9,7 @@ import { useMemo } from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Platform Statistics | Innovative Enterprises",
+  title: "Platform Statistics",
   description: "A real-time overview of our ecosystem, showcasing the scale of our AI and human workforce, project pipeline, partner network, and product portfolio.",
 };
 

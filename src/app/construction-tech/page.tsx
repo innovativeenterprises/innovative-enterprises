@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Construction Technology Solutions | Innovative Enterprises",
+  title: "Construction Technology Solutions",
   description: "Explore a suite of AI-powered SaaS platforms designed to automate, optimize, and revolutionize the construction industry in Oman and the GCC.",
 };
 

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -14,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "SaaS Portfolio | Innovative Enterprises",
+  title: "SaaS Portfolio",
   description: "Browse the complete portfolio of over 30+ digital products and SaaS platforms developed by Innovative Enterprises, spanning construction, real estate, education, and AI tools.",
 };
 

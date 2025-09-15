@@ -1,3 +1,4 @@
+
 'use client';
 
 import CvForm from "./cv-form";
@@ -7,7 +8,7 @@ import { FileText, Mic } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "GENIUS Career Platform | Innovative Enterprises",
+  title: "GENIUS Career Platform",
   description: "Your end-to-end AI partner for career development. Enhance your CV to beat applicant tracking systems, then practice for your interview with our AI coach.",
 };
 

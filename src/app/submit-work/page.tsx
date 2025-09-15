@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import WorkOrderForm from "@/app/tender-assistant/work-order-form";
@@ -7,7 +6,7 @@ import { Lightbulb } from "lucide-react";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Innovation Gateway & E-Incubator | Innovative Enterprises",
+  title: "Innovation Gateway & E-Incubator",
   description: "Have a brilliant idea for a new startup or project? Submit it to our e-incubator. Our AI will analyze its potential, and the best ideas may be selected for sponsorship.",
 };
 

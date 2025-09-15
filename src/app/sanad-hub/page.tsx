@@ -10,7 +10,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Sanad Hub | Innovative Enterprises",
+  title: "Sanad Hub",
   description: "A digital gateway connecting you to Sanad Service Centres across Oman. Delegate government service tasks, receive competitive offers, and get your work done faster.",
 };
 

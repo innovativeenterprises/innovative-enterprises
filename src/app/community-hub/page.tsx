@@ -6,6 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowRight, Users, Heart, PieChart, Landmark, UserCog, HandCoins } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Community Hub",
+  description: "A comprehensive digital solution for expatriate communities and charitable organizations to manage their affairs, foster engagement, and build a stronger, self-sufficient network.",
+};
 
 const platformPillars = [
     {

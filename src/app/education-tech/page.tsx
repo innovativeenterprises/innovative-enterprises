@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Education Technology Solutions | Innovative Enterprises",
+  title: "Education Technology Solutions",
   description: "Transforming education with AI. Explore SaaS platforms for learning, administration, and improving student outcomes in Oman and beyond.",
 };
 

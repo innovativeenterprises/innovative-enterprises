@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -12,6 +11,12 @@ import { opportunityIconMap } from "@/lib/opportunities";
 import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Opportunities & Competitions",
+  description: "Explore open projects, tasks, and competitions for our network of talented freelancers, subcontractors, and partners. Find a challenge that excites you.",
+};
 
 const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
     const getStatusColor = () => {

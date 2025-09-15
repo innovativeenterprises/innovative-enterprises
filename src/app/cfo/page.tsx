@@ -5,7 +5,7 @@ import CfoDashboard from "../admin/cfo-dashboard";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Finley CFO Dashboard | Innovative Enterprises",
+  title: "Finley CFO Dashboard",
   description: "AI-powered CFO dashboard to monitor financial health, track transactions, and view cash flow for your business operations.",
 };
 

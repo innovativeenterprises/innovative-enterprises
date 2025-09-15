@@ -8,7 +8,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "The Majlis - VIP Hub | Innovative Enterprises",
+  title: "The Majlis - VIP Hub",
   description: "An exclusive, invitation-only ecosystem for VIPs, executives, and their trusted networks to solve complex challenges with absolute confidentiality.",
 };
 
