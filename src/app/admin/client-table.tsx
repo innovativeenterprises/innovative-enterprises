@@ -19,7 +19,7 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fileToDataURI } from "@/lib/utils";
-import { useClientsData, setClients, setTestimonials } from "@/hooks/use-global-store-data";
+import { useClientsData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Schemas
@@ -195,7 +195,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 // Main Component
 export default function ClientTable() { 
-    const { clients, testimonials, isClient } = useClientsData();
+    const { clients, testimonials, isClient, setClients, setTestimonials } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
@@ -233,15 +233,21 @@ export default function ClientTable() {
         toast({ title: "Testimonial removed.", variant: "destructive" });
     };
 
-    const filteredClients = useMemo(() => clients.filter(client =>
-        client.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ), [clients, searchTerm]);
+    const filteredClients = useMemo(() => {
+        if(!isClient) return [];
+        return clients.filter(client =>
+            client.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    }, [clients, searchTerm, isClient]);
     
-    const filteredTestimonials = useMemo(() => testimonials.filter(t =>
-        t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.company.toLowerCase().includes(searchTerm.toLowerCase())
-    ), [testimonials, searchTerm]);
+    const filteredTestimonials = useMemo(() => {
+        if(!isClient) return [];
+        return testimonials.filter(t =>
+            t.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            t.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            t.company.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    }, [testimonials, searchTerm, isClient]);
 
 
     return (

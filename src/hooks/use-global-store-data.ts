@@ -34,6 +34,7 @@ import type { Car } from '@/lib/cars';
 import type { RentalAgency } from '@/lib/rental-agencies';
 import type { Transaction as PosTransaction, PosProduct } from '@/lib/pos-data';
 import type { GiftCard } from '@/lib/gift-cards';
+import type { StockItem } from '@/lib/stock-items';
 import type { JobPosting } from '@/lib/alumni-jobs';
 import { type BeautyService, type Specialist as BeautySpecialist } from '@/lib/beauty-services';
 import type { BeautyCenter } from '@/lib/beauty-centers';
@@ -122,7 +123,7 @@ export const useCommunityHubData = () => ({
     setCommunityFinances,
     isClient: true,
 });
-export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers, isClient: true });
+export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
 export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
 export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), setAssets, isClient: true });
@@ -133,8 +134,8 @@ export const useKnowledgeData = () => ({
     isClient: true,
 });
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
-export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), isClient: true });
-export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), isClient: true });
+export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), setWorkers: setRaahaWorkers, isClient: true });
+export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRequests: setRaahaRequests, isClient: true });
 export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({
