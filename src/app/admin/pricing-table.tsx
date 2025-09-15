@@ -85,6 +85,7 @@ export default function PricingTable() {
     };
 
     const pricingByGroup = useMemo(() => {
+        if (!isClient) return {};
         return pricing.reduce((acc, item) => {
             const groupName = item.group || 'Uncategorized';
             if (!acc[groupName]) {
@@ -93,7 +94,7 @@ export default function PricingTable() {
             acc[groupName].push(item);
             return acc;
         }, {} as Record<string, Pricing[]>);
-    }, [pricing]);
+    }, [pricing, isClient]);
 
 
     return (

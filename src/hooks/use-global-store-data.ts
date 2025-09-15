@@ -95,8 +95,8 @@ export const setBeautyAppointments = (updater: (prev: BeautyAppointment[]) => Be
 
 
 // Data hooks that return the reactive state slice and setters.
-export const useServicesData = () => ({ services: useStoreData(s => s.services), isClient: true });
-export const useProductsData = () => ({ products: useStoreData(s => s.products), isClient: true });
+export const useServicesData = () => ({ services: useStoreData(s => s.services), setServices, isClient: true });
+export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts, isClient: true });
 export const useClientsData = () => ({
     clients: useStoreData(s => s.clients),
     testimonials: useStoreData(s => s.testimonials),
@@ -118,14 +118,14 @@ export const useCommunitiesData = () => ({ communities: useStoreData(s => s.comm
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
-    setCommunityEvents,
-    setCommunityFinances,
+    setEvents: setCommunityEvents,
+    setFinances: setCommunityFinances,
     isClient: true,
 });
 export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
 export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages: setProjectStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
-export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), isClient: true });
+export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), setAssets, isClient: true });
 export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), setInvestors, isClient: true });
 export const useKnowledgeData = () => ({
     knowledgeBase: useStoreData(s => s.knowledgeBase),
