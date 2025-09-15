@@ -31,13 +31,16 @@ type PosProductValues = z.infer<typeof PosProductSchema>;
 const AddEditPosProductDialog = ({ 
     product, 
     onSave,
+    isOpen,
+    onOpenChange,
     children 
 }: { 
     product?: PosProduct, 
     onSave: (values: PosProductValues, id?: string) => void,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
     children: React.ReactNode 
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<PosProductValues>({
         resolver: zodResolver(PosProductSchema),
     });
@@ -50,11 +53,11 @@ const AddEditPosProductDialog = ({
 
     const onSubmit: SubmitHandler<PosProductValues> = (data) => {
         onSave(data, product?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -102,22 +105,29 @@ const AddEditPosProductDialog = ({
 };
 
 export default function PosProductTable() {
-    const { products, setProducts, isClient } = usePosData();
+    const { products, isClient } = usePosData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);
+
+    const openDialog = (product?: PosProduct) => {
+        setSelectedProduct(product);
+        setIsDialogOpen(true);
+    };
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
-            setProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
+            setPosProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Product updated." });
         } else {
             const newItem: PosProduct = { ...values, id: `pos_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
-            setProducts(prev => [newItem, ...prev]);
+            setPosProducts(prev => [newItem, ...prev]);
             toast({ title: "Product added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setProducts(prev => prev.filter(item => item.id !== id));
+        setPosProducts(prev => prev.filter(item => item.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
 
@@ -128,11 +138,18 @@ export default function PosProductTable() {
                     <CardTitle>AI-POS Product Management</CardTitle>
                     <CardDescription>Manage the products available in the canteen's point-of-sale system.</CardDescription>
                 </div>
-                 <AddEditPosProductDialog onSave={handleSave}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Product</Button>
-                </AddEditPosProductDialog>
+                 <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Product</Button>
             </CardHeader>
             <CardContent>
+                <AddEditPosProductDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    product={selectedProduct}
+                    onSave={handleSave}
+                >
+                    {/* The dialog is controlled externally, so trigger is just a placeholder */}
+                    <div />
+                </AddEditPosProductDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -161,9 +178,7 @@ export default function PosProductTable() {
                                     <TableCell className="text-right font-mono">{item.price.toFixed(2)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <AddEditPosProductDialog product={item} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditPosProductDialog>
+                                            <Button variant="ghost" size="icon" onClick={() => openDialog(item)}><Edit /></Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
