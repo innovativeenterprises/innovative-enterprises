@@ -1,10 +1,16 @@
 
 'use client';
 
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { legalAgentRouter } from '@/ai/flows/legal-agent';
 import { Scale } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Legal Assistant | Innovative Enterprises",
+  description: "Your AI-powered legal co-pilot. Ask general legal questions, request a new document draft (like an NDA), or get an analysis of an existing document by uploading it or providing a web link.",
+};
 
 
 export default function LegalAgentPage() {
