@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -72,7 +73,7 @@ export function CheckoutPanel({
                     </Table>
                 </ScrollArea>
             </CardContent>
-            <CardFooter className="flex-col gap-4 border-t pt-6">
+            <div className="border-t p-4 space-y-4">
                 <div className="w-full space-y-2 text-sm">
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Subtotal</span>
@@ -96,7 +97,7 @@ export function CheckoutPanel({
                         Pay
                     </Button>
                 </div>
-            </CardFooter>
+            </div>
         </Card>
     );
 }
