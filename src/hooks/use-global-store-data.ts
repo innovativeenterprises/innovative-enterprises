@@ -35,7 +35,7 @@ import type { RentalAgency } from '@/lib/rental-agencies';
 import type { Transaction as PosTransaction, PosProduct } from '@/lib/pos-data';
 import type { GiftCard } from '@/lib/gift-cards';
 import type { JobPosting } from '@/lib/alumni-jobs';
-import { initialBeautySpecialists, type BeautyService, type Specialist as BeautySpecialist } from '@/lib/beauty-services';
+import { type BeautyService, type Specialist as BeautySpecialist } from '@/lib/beauty-services';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 
@@ -118,8 +118,8 @@ export const useCommunitiesData = () => ({ communities: useStoreData(s => s.comm
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
-    setCommunityEvents,
-    setCommunityFinances,
+    setEvents: setCommunityEvents,
+    setFinances: setCommunityFinances,
     isClient: true,
 });
 export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
@@ -207,5 +207,3 @@ export const useStockItemsData = () => ({
     setStockItems,
     isClient: true,
 });
-
-    

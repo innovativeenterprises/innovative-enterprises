@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,7 +6,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -16,7 +15,7 @@ import type { CartItem } from '@/lib/global-store';
 import { Loader2, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const CheckoutSchema = z.object({
@@ -74,7 +73,7 @@ export default function CheckoutPage() {
     });
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const shipping = subtotal > 0 ? 5.00 : 0;
+    const shipping = subtotal > 0 ? 5.00 : 0; // Flat shipping rate
     const vatAmount = settings.vat.enabled ? (subtotal + shipping - discount) * settings.vat.rate : 0;
     const total = subtotal + shipping - discount + vatAmount;
 
