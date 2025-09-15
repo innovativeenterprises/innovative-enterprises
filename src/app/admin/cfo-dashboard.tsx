@@ -9,7 +9,7 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { useCfoData } from '@/hooks/use-global-store-data';
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // A new sub-component to safely render dates on the client.
