@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import type { Agency } from "@/lib/raaha-agencies";
+import type { Agency } from "@/lib/beauty-centers";
 import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
 import { analyzeCrDocument } from '@/ai/flows/cr-analysis';

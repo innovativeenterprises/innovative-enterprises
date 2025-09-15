@@ -187,9 +187,9 @@ const industriesByCategory: { category: string; items: { title: string; href: st
                 icon: Car,
             },
              {
-                title: "Beauty & Wellness Tech",
-                href: "/beauty-hub/agency-dashboard",
-                description: "A complete management dashboard for salons, spas, and barbershops.",
+                title: "Beauty & Wellness Hub",
+                href: "/beauty-hub",
+                description: "A complete SaaS solution for salons, spas, and barbershops.",
                 icon: Heart,
             },
         ]
