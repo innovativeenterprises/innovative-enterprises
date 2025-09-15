@@ -50,7 +50,9 @@ export function useStoreData<T>(selector: (state: AppState) => T): T {
     const state = useSyncExternalStore(
         store.subscribe,
         () => selector(store.get()),
-        () => selector(initialState) // Use the static initial state for the server-side render.
+        // CORRECTED: Apply the selector to the initial state for the server-side render.
+        // This ensures the hook returns the expected data shape on the server.
+        () => selector(initialState)
     );
     return state;
 }
@@ -105,7 +107,7 @@ export const useStaffData = () => ({ leadership: useStoreData(s => s.leadership)
 export const useCommunitiesData = () => ({ communities: useStoreData(s => s.communities), setCommunities, isClient: true });
 export const useCommunityHubData = () => ({ events: useStoreData(s => s.communityEvents), finances: useStoreData(s => s.communityFinances), setCommunityEvents, setCommunityFinances, isClient: true });
 export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
-export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages, isClient: true });
+export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages: setProjectStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
 export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), setAssets, isClient: true });
 export const useInvestorsData = () => ({ investors: useStoreData(s => s.investors), setInvestors, isClient: true });
@@ -145,4 +147,3 @@ export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCard
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
 export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });
 
-  
