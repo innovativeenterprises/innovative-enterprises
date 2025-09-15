@@ -12,6 +12,7 @@ import {
     AdmissionsAgentOutput,
     AdmissionsAgentOutputSchema,
 } from './admissions-agent.schema';
+import crypto from 'crypto';
 
 export async function analyzeApplication(input: AdmissionsAgentInput): Promise<AdmissionsAgentOutput> {
   return admissionsAgentFlow(input);
@@ -66,8 +67,8 @@ const admissionsAgentFlow = ai.defineFlow(
     outputSchema: AdmissionsAgentOutputSchema,
   },
   async (input) => {
-    // Generate a more deterministic ID.
-    const generatedId = `APP-${input.fullName.slice(0, 4).toUpperCase()}${String(new Date().getTime()).slice(-6)}`;
+    // Generate a unique ID using crypto for better uniqueness.
+    const generatedId = `APP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
     
     const { output } = await prompt({ ...input, generatedId });
     return output!;
