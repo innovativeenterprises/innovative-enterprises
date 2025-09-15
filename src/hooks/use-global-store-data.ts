@@ -138,7 +138,7 @@ export const useBeautyData = () => ({
     setBeautyAppointments,
     isClient: true,
 });
-export const useDriveSyncData = () => ({ cars: useStoreData(s => s.cars), rentalAgencies: useStoreData(s => s.rentalAgencies), isClient: true });
+export const useDriveSyncData = () => ({ cars: useStoreData(s => s.cars), rentalAgencies: useStoreData(s => s.rentalAgencies), setRentalAgencies, isClient: true });
 export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), products: useStoreData(s => s.posProducts), setProducts: setPosProducts, setDailySales: setDailySales, isClient: true });
 export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCards), setGiftCards, isClient: true });
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });

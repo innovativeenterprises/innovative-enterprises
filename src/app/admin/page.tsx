@@ -23,12 +23,16 @@ export default function AdminDashboardPage() {
   const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
   const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);
   
-  const dynamicStats = useMemo(() => [
-    { title: "Total Staff (Human + AI)", value: isClient ? (totalStaff + totalAgents).toString() : '...', icon: Users, href: "/admin/people" },
-    { title: "Active Projects", value: isClient ? products.filter(p => p.stage !== 'Live & Operating').length.toString() : '...', icon: FolderKanban, href: "/admin/projects" },
-    { title: "Live Products", value: isClient ? products.filter(p => p.stage === 'Live & Operating').length.toString() : '...', icon: Zap, href: "/saas-portfolio" },
-    { title: "Provider Network", value: isClient ? providers.length.toString() : '...', icon: Network, href: "/admin/network" },
-  ], [isClient, totalStaff, totalAgents, products, providers]);
+  const dynamicStats = useMemo(() => {
+    if (!isClient) {
+        return Array(4).fill({ value: '...' });
+    }
+    return [
+    { title: "Total Staff (Human + AI)", value: (totalStaff + totalAgents).toString(), icon: Users, href: "/admin/people" },
+    { title: "Active Projects", value: products.filter(p => p.stage !== 'Live & Operating').length.toString(), icon: FolderKanban, href: "/admin/projects" },
+    { title: "Live Products", value: products.filter(p => p.stage === 'Live & Operating').length.toString(), icon: Zap, href: "/saas-portfolio" },
+    { title: "Provider Network", value: providers.length.toString(), icon: Network, href: "/admin/network" },
+  ]}, [isClient, totalStaff, totalAgents, products, providers]);
 
   const projectStatusData = useMemo(() => {
     if (!isClient) return [];
@@ -79,11 +83,11 @@ export default function AdminDashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {dynamicStats.map((stat, index) => (
-              <Link href={stat.href} key={index}>
+              <Link href={stat.href || '#'} key={index}>
                 <Card className="hover:bg-muted/50 transition-colors">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                        <stat.icon className="h-4 w-4 text-muted-foreground" />
+                        {stat.icon && <stat.icon className="h-4 w-4 text-muted-foreground" />}
                     </CardHeader>
                     <CardContent>
                         {isClient ? (

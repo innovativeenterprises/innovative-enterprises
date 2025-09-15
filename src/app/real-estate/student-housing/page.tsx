@@ -43,9 +43,9 @@ export default function StudentHousingPage() {
         return sum;
     }, 0) : 0, [leases, isClient]);
 
-    const DateDisplay = ({ dateString }: { dateString: string }) => {
+    const DateDisplay = ({ dateString }: { dateString?: string }) => {
         const formattedDate = useMemo(() => {
-            if (!isClient) return null;
+            if (!isClient || !dateString) return null;
             try {
                 return format(new Date(dateString), "PPP");
             } catch {
