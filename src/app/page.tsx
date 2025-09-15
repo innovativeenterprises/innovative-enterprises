@@ -1,17 +1,14 @@
-'use client';
-
 import CompanyOverview from '@/components/company-overview';
 import ServiceCatalog from '@/components/service-catalog';
 import ProductShowcase from '@/components/product-showcase';
 import ClientTestimonials from '@/components/client-testimonials';
 import AiToolsCta from '@/components/ai-tools-cta';
 import ChatWidget from '@/components/chat-widget';
-import { useServicesData, useProductsData, useClientsData } from '@/hooks/use-global-store-data';
+import { store } from '@/lib/global-store';
 
 export default function Home() {
-  const { services } = useServicesData();
-  const { products } = useProductsData();
-  const { clients, testimonials } = useClientsData();
+  // Fetch data on the server
+  const { services, products, clients, testimonials } = store.get();
   
   return (
     <>
