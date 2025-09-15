@@ -90,8 +90,10 @@ export const setDailySales = (updater: (prev: PosTransaction[]) => PosTransactio
 export const setPosProducts = (updater: (prev: PosProduct[]) => PosProduct[]) => store.set(state => ({...state, posProducts: updater(state.posProducts) }));
 export const setGiftCards = (updater: (prev: GiftCard[]) => GiftCard[]) => store.set(state => ({ ...state, giftCards: updater(state.giftCards) }));
 export const setStockItems = (updater: (prev: StockItem[]) => StockItem[]) => store.set(state => ({...state, stockItems: updater(state.stockItems) }));
+export const setAlumniJobs = (updater: (prev: JobPosting[]) => JobPosting[]) => store.set(state => ({ ...state, alumniJobs: updater(state.alumniJobs) }));
 export const setBeautyCenters = (updater: (prev: BeautyCenter[]) => BeautyCenter[]) => store.set(state => ({ ...state, beautyCenters: updater(state.beautyCenters) }));
 export const setBeautyServices = (updater: (prev: BeautyService[]) => BeautyService[]) => store.set(state => ({ ...state, beautyServices: updater(state.beautyServices) }));
+export const setBeautySpecialists = (updater: (prev: BeautySpecialist[]) => BeautySpecialist[]) => store.set(state => ({...state, beautySpecialists: updater(state.beautySpecialists) }));
 export const setBeautyAppointments = (updater: (prev: BeautyAppointment[]) => BeautyAppointment[]) => store.set(state => ({...state, beautyAppointments: updater(state.beautyAppointments) }));
 
 // Data hooks that return the reactive state slice and a flag for client-side rendering.
@@ -110,7 +112,7 @@ export const useInvestorsData = () => ({ investors: useStoreData(s => s.investor
 export const useKnowledgeData = () => ({ knowledgeBase: useStoreData(s => s.knowledgeBase), setKnowledgeBase, isClient: true });
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), setWorkers: setRaahaWorkers, isClient: true });
-export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRaahaRequests, isClient: true });
+export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRequests: setRaahaRequests, isClient: true });
 export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({ stairspaceListings: useStoreData(s => s.stairspaceListings), setStairspaceListings, isClient: true });
@@ -140,3 +142,4 @@ export const useDriveSyncData = () => ({ cars: useStoreData(s => s.cars), rental
 export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), products: useStoreData(s => s.posProducts), setProducts: setPosProducts, setDailySales: setDailySales, isClient: true });
 export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCards), setGiftCards, isClient: true });
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
+export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });
