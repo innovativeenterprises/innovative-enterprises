@@ -26,13 +26,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 const AddEditOpportunityDialog = ({ 
     opportunity, 
     onSave,
-    children
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     opportunity?: Opportunity, 
     onSave: (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<OpportunityValues>({
         resolver: zodResolver(OpportunitySchema),
     });
@@ -47,11 +50,11 @@ const AddEditOpportunityDialog = ({
         const iconName = Object.keys(opportunityIconMap).find(key => key.toLowerCase().includes(data.type.split(" ")[0].toLowerCase())) as keyof typeof opportunityIconMap || 'Trophy';
         const badgeVariant: OpportunityBadgeVariant = data.type.toLowerCase().includes('competition') ? 'default' : data.type.toLowerCase().includes('project') ? 'destructive' : 'secondary';
         onSave({ ...data, iconName, badgeVariant }, opportunity?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -107,6 +110,13 @@ const AddEditOpportunityDialog = ({
 export default function OpportunityTable() {
     const { opportunities, isClient } = useOpportunitiesData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
+
+    const openDialog = (opp?: Opportunity) => {
+        setSelectedOpp(opp);
+        setIsDialogOpen(true);
+    }
 
     const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
         if (id) {
@@ -131,11 +141,18 @@ export default function OpportunityTable() {
                     <CardTitle>Opportunities & Competitions</CardTitle>
                     <CardDescription>Manage the open tasks and projects available to your partner network.</CardDescription>
                 </div>
-                 <AddEditOpportunityDialog onSave={handleSave}>
-                    <Button><PlusCircle /> Add Opportunity</Button>
-                </AddEditOpportunityDialog>
+                 <Button onClick={() => openDialog()}><PlusCircle /> Add Opportunity</Button>
             </CardHeader>
             <CardContent>
+                <AddEditOpportunityDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    opportunity={selectedOpp}
+                    onSave={handleSave}
+                >
+                    <div />
+                </AddEditOpportunityDialog>
+
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -164,7 +181,7 @@ export default function OpportunityTable() {
                                     <TableCell>{opp.status}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <AddEditOpportunityDialog opportunity={opp} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditOpportunityDialog>
+                                            <Button variant="ghost" size="icon" onClick={() => openDialog(opp)}><Edit /></Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                 <AlertDialogContent>
