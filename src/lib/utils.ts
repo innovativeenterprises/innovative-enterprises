@@ -54,5 +54,3 @@ export const fileToBase64ContentOnly = (file: File): Promise<string> => {
         reader.readAsDataURL(file);
     });
 };
-
-    

@@ -81,7 +81,7 @@ export default function AdminLayoutClient({
     <SidebarMenuItem key={item.href}>
       <SidebarMenuButton
         asChild
-        isActive={item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)}
+        isActive={pathname === item.href}
         tooltip={{
           children: item.label,
           side: 'right',
