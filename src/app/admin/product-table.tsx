@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
 import { useProductsData, setProducts, useProjectStagesData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AddEditProductDialog, type ProductValues } from './product-form-dialog';
+import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
 
 export default function ProductTable() {
