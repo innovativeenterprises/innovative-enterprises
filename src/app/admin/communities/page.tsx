@@ -98,11 +98,12 @@ export default function AdminCommunitiesPage() {
     const [searchTerm, setSearchTerm] = useState('');
 
     const staffMap = useMemo(() => {
+        if (!isClient) return {};
         return [...leadership, ...staff].reduce((map, person) => {
             map[person.name] = person;
             return map;
         }, {} as Record<string, typeof leadership[0]>);
-    }, [leadership, staff]);
+    }, [leadership, staff, isClient]);
     
     const filteredCommunities = useMemo(() => {
         if (!isClient) return [];

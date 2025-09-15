@@ -123,7 +123,7 @@ export const useCommunityHubData = () => ({
     setCommunityFinances,
     isClient: true,
 });
-export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers: setCommunityMembers, isClient: true });
+export const useMembersData = () => ({ members: useStoreData(s => s.communityMembers), setMembers, isClient: true });
 export const useProjectStagesData = () => ({ stages: useStoreData(s => s.stages), setStages, isClient: true });
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
 export const useAssetsData = () => ({ assets: useStoreData(s => s.assets), setAssets, isClient: true });
