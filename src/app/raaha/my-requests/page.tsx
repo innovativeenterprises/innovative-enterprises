@@ -14,6 +14,13 @@ import type { HireRequest } from '@/lib/raaha-requests';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "My Hire Requests | RAAHA",
+  description: "Track the status of your applications for domestic helpers and manage interview schedules.",
+};
+
 
 export default function MyRequestsPage() {
     const { requests, isClient } = useRequestsData();

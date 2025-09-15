@@ -18,6 +18,13 @@ import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } fr
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Agency Dashboard | RAAHA",
+  description: "Manage your domestic workforce agency. View client requests, manage your candidates, and update your agency settings.",
+};
+
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -65,7 +72,7 @@ export default function AgencyDashboardPage() {
     const requestsColumns = useMemo(() => [
         { Header: 'Candidate', accessor: 'workerName' },
         { Header: 'Client', accessor: 'clientName' },
-        { Header: 'Request Date', accessor: 'requestDate', Cell: ({ row }: { row: { original: HireRequest }}) => <TimeAgoCell date={row.original.requestDate} /> },
+        { Header: 'Request Date', accessor: 'requestDate', Cell: ({ row }: { row: { original: HireRequest }}) => <TimeAgoCell date={row.original.requestDate} isClient={isClient} /> },
         { Header: 'Status', accessor: 'status', Cell: ({ row }: { row: { original: HireRequest }}) => getStatusBadge(row.original.status) },
         { Header: 'Interview', accessor: 'interviewDate', Cell: ({ row }: { row: { original: HireRequest }}) => row.original.interviewDate ? (
             <div className="text-xs text-muted-foreground space-y-1">
@@ -81,7 +88,7 @@ export default function AgencyDashboardPage() {
                 )}
             </div>
         ) : null },
-    ], []);
+    ], [isClient]);
 
     const workersColumns = useMemo(() => [
         { Header: 'Candidate', accessor: 'name', Cell: ({ row }: { row: { original: Worker }}) => (

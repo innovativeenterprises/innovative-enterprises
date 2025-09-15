@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -19,6 +19,13 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { store } from '@/lib/global-store';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Find a Helper | RAAHA",
+  description: "Describe your needs for a domestic helper, and our AI will search our network of vetted candidates to find the perfect match for you.",
+};
+
 
 const FormSchema = RaahaMatcherInputSchema;
 type FormValues = z.infer<typeof FormSchema>;

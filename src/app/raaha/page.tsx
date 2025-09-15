@@ -6,6 +6,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { CheckCircle, ShieldCheck, Search, SlidersHorizontal, Bot, Briefcase, UserCheck } from "lucide-react";
 import Link from "next/link";
 import HomeWorkforceIcon from "@/components/icons/home-workforce-icon";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "RAAHA - AI-Powered Domestic Workforce Platform",
+  description: "An AI-powered, white-label SaaS platform designed to empower home workforce agencies, streamline recruitment, and build trust with clients in Oman and the GCC.",
+};
+
 
 const problems = [
     { title: "Match Inefficiency", description: "Traditional methods of finding domestic helpers are slow and rely on limited agency databases." },
