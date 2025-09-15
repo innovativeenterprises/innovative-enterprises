@@ -328,8 +328,4 @@ export default function AssetTable() {
     );
 }
 
-
-
-    
-
     

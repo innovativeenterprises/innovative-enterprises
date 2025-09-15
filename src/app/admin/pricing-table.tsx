@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Pricing, PricingGroup } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
+import { usePricingData, setPricing } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -76,7 +76,7 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable() { 
-    const { pricing, setPricing, isClient } = usePricingData();
+    const { pricing, isClient } = usePricingData();
     const { toast } = useToast();
 
     const handleSave = (values: PricingValues, id: string) => {
@@ -142,3 +142,5 @@ export default function PricingTable() {
         </Card>
     );
 }
+
+    
