@@ -2,13 +2,19 @@
 
 'use client';
 
-import { useSettingsData } from '@/app/admin/settings-table';
+import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerEcommerceQuery } from '@/ai/flows/ecommerce-agent';
 import { Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Shopping Assistant | Nova Commerce",
+  description: "Chat with Nova, your personal AI shopper, to find products, ask questions about shipping or returns, and get help with your order.",
+};
 
 const categories = [
     "Electronics",

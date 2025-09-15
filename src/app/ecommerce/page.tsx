@@ -11,6 +11,12 @@ import { initialStoreProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Nova Commerce | E-commerce Solutions",
+  description: "Your destination for quality products and seamless shopping. Explore our curated collections and experience the future of online retail.",
+};
 
 const categories = [
     "All",
