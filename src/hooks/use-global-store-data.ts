@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useSyncExternalStore, useState, useEffect } from 'react';
@@ -34,11 +35,10 @@ import type { Car } from '@/lib/cars';
 import type { RentalAgency } from '@/lib/rental-agencies';
 import type { Transaction as PosTransaction, PosProduct } from '@/lib/pos-data';
 import type { GiftCard } from '@/lib/gift-cards';
-import type { JobPosting } from '@/lib/alumni-jobs';
+import type { StockItem } from '@/lib/stock-items';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyService, Specialist as BeautySpecialist } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
-import type { StockItem } from '@/lib/stock-items';
 
 
 /**
