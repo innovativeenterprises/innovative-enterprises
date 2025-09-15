@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -12,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
+import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
@@ -31,7 +30,6 @@ const DateDisplay = ({ dateString }: { dateString?: string }) => {
     if (!isClient) return <Skeleton className="h-4 w-24" />;
     return <>{formattedDate || "N/A"}</>;
 };
-
 
 export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
@@ -60,7 +58,6 @@ export default function StudentHousingPage() {
         }
         return sum;
     }, 0) : 0, [leases, isClient]);
-
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">

@@ -21,7 +21,6 @@ import Link from 'next/link';
 import { analyzeIdentity } from '@/ai/flows/identity-analysis';
 import { fileToDataURI } from '@/lib/utils';
 
-
 const FormSchema = AdmissionsAgentInputSchema.extend({
     transcriptFile: z.any().optional(),
     identityDocument: z.any().optional(),
