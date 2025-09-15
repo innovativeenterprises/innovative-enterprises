@@ -2,17 +2,13 @@
 'use client';
 
 import PropertyTable from "../property-table";
-import { useStairspaceData, useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import StairspaceListingGrid from "../stairspace-listing-grid";
+import StairspaceTable from "../stairspace-table";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from 'next/link';
 
 export default function AdminRealEstatePage() {
-  const { stairspaceListings, setStairspaceListings } = useStairspaceData();
-  const { stairspaceRequests } = useStairspaceRequestsData();
-
   return (
     <div className="space-y-8">
         <div>
@@ -26,7 +22,7 @@ export default function AdminRealEstatePage() {
             <CardHeader>
                 <CardTitle>StairSpace Management</CardTitle>
                 <CardDescription>
-                    You have {stairspaceRequests.filter(r => r.status === 'Pending').length} new booking requests for your StairSpace listings.
+                    Review new booking requests for your StairSpace listings.
                 </CardDescription>
             </CardHeader>
             <CardFooter>
@@ -37,7 +33,7 @@ export default function AdminRealEstatePage() {
         </Card>
 
         <PropertyTable />
-        <StairspaceListingGrid stairspaceListings={stairspaceListings} setStairspaceListings={setStairspaceListings} isClient={true} />
+        <StairspaceTable />
     </div>
   );
 }
