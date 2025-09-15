@@ -11,16 +11,28 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
+import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
+const DateDisplay = ({ dateString }: { dateString: string }) => {
+    const [formattedDate, setFormattedDate] = useState('');
+
+    useEffect(() => {
+        if (dateString) {
+            setFormattedDate(format(new Date(dateString), "PPP"));
+        }
+    }, [dateString]);
+
+    return <>{formattedDate || 'N/A'}</>;
+};
+
 export default function SmartLeaseManagerPage() {
-    const { leases, setLeases, isClient } = useLeasesData();
+    const { leases, setSignedLeases, isClient } = useLeasesData();
     const { toast } = useToast();
 
     const handleDelete = (id: string) => {
-        setLeases(prev => prev.filter(lease => lease.id !== id));
+        setSignedLeases(prev => prev.filter(lease => lease.id !== id));
         toast({ title: "Agreement Deleted", description: "The lease agreement has been removed from your dashboard.", variant: "destructive" });
     };
 
