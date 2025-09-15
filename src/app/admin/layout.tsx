@@ -36,6 +36,7 @@ import {
   Warehouse,
   Trophy,
   Gift,
+  Package,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -57,6 +58,7 @@ export default function AdminLayout({
 
   const contentManagement = [
       { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
+      { href: '/admin/saas-portfolio', label: 'SaaS Portfolio', icon: Package },
       { href: '/admin/opportunities', label: 'Opportunities', icon: Trophy },
       { href: '/admin/content', label: 'Site Content', icon: FileText },
   ];
