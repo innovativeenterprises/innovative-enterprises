@@ -260,11 +260,8 @@ const ImportProvidersDialog = ({ onImport, children }: { onImport: (providers: P
 };
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => { setIsClient(true) }, []);
-
     const { daysUntilExpiry, progress } = useMemo(() => {
-        if (!isClient || !expiry) {
+        if (!expiry) {
             return { daysUntilExpiry: null, progress: 0 };
         }
         const now = new Date();
@@ -279,11 +276,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         const progressValue = Math.max(0, (daysRemaining / totalDuration) * 100);
 
         return { daysUntilExpiry: daysRemaining, progress: progressValue };
-    }, [isClient, expiry, tier]);
-
-    if (!isClient) {
-        return <Skeleton className="h-8 w-full" />
-    }
+    }, [expiry, tier]);
     
     if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;

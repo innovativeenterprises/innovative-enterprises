@@ -14,11 +14,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => setIsClient(true), []);
-
     const { daysUntilExpiry, progressValue } = useMemo(() => {
-        if (!isClient || !expiry) {
+        if (!expiry) {
             return { daysUntilExpiry: null, progressValue: 0 };
         }
         const now = new Date();
@@ -33,11 +30,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) =
         const progress = Math.max(0, (days / totalDuration) * 100);
 
         return { daysUntilExpiry: days, progressValue: progress };
-    }, [expiry, tier, isClient]);
-
-    if (!isClient) {
-        return <Skeleton className="h-8 w-48"/>;
-    }
+    }, [expiry, tier]);
 
     if (tier === 'None') {
         return <Badge variant="secondary">No Subscription</Badge>;
