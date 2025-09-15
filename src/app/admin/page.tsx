@@ -10,7 +10,7 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboardPage() {
@@ -23,25 +23,23 @@ export default function AdminDashboardPage() {
   const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
   const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);
   
-  const dynamicStats = [
+  const dynamicStats = useMemo(() => [
     { title: "Total Staff (Human + AI)", value: isClient ? (totalStaff + totalAgents).toString() : '...', icon: Users, href: "/admin/people" },
     { title: "Active Projects", value: isClient ? products.filter(p => p.stage !== 'Live & Operating').length.toString() : '...', icon: FolderKanban, href: "/admin/projects" },
     { title: "Live Products", value: isClient ? products.filter(p => p.stage === 'Live & Operating').length.toString() : '...', icon: Zap, href: "/saas-portfolio" },
     { title: "Provider Network", value: isClient ? providers.length.toString() : '...', icon: Network, href: "/admin/network" },
-  ];
+  ], [isClient, totalStaff, totalAgents, products, providers]);
 
   const projectStatusData = useMemo(() => {
     if (!isClient) return [];
-    return products.reduce((acc, product) => {
+    const stageCounts = products.reduce((acc, product) => {
         const stage = product.stage || 'Uncategorized';
-        const existing = acc.find(item => item.stage === stage);
-        if (existing) {
-        existing.count++;
-        } else {
-        acc.push({ stage, count: 1 });
-        }
+        acc[stage] = (acc[stage] || 0) + 1;
         return acc;
-    }, [] as { stage: string, count: number }[])
+    }, {} as Record<string, number>);
+    
+    return Object.entries(stageCounts).map(([stage, count]) => ({ stage, count }));
+
   }, [products, isClient]);
 
   const networkGrowthData = useMemo(() => {
