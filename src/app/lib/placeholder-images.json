@@ -17,15 +17,15 @@
         }
     ],
     "testimonialAvatars": {
-        "gov1": { "src": "https://picsum.photos/seed/gov1/100/100", "alt": "Government Official" },
-        "corp1": { "src": "https://picsum.photos/seed/corp1/100/100", "alt": "Corporate CEO" },
-        "startup1": { "src": "https://picsum.photos/seed/startup1/100/100", "alt": "Startup Founder" },
-        "freelancer1": { "src": "https://picsum.photos/seed/freelancer1/100/100", "alt": "Software Engineer" },
-        "legal1": { "src": "https://picsum.photos/seed/legal1/100/100", "alt": "Lawyer" },
-        "sanad1": { "src": "https://picsum.photos/seed/sanad1/100/100", "alt": "Business Owner" },
-        "prop1": { "src": "https://picsum.photos/seed/prop1/100/100", "alt": "Property Manager" },
-        "raaha1": { "src": "https://picsum.photos/seed/raaha1/100/100", "alt": "Agency Director" },
-        "tender1": { "src": "https://picsum.photos/seed/tender1/100/100", "alt": "Bidding Manager" },
-        "infra1": { "src": "https://picsum.photos/seed/infra1/100/100", "alt": "Event Coordinator" }
+        "gov1": { "src": "https://picsum.photos/seed/gov1/100/100", "alt": "Government Official", "aiHint": "government official" },
+        "corp1": { "src": "https://picsum.photos/seed/corp1/100/100", "alt": "Corporate CEO", "aiHint": "corporate ceo" },
+        "startup1": { "src": "https://picsum.photos/seed/startup1/100/100", "alt": "Startup Founder", "aiHint": "startup founder" },
+        "freelancer1": { "src": "https://picsum.photos/seed/freelancer1/100/100", "alt": "Software Engineer", "aiHint": "software engineer" },
+        "legal1": { "src": "https://picsum.photos/seed/legal1/100/100", "alt": "Lawyer", "aiHint": "lawyer portrait" },
+        "sanad1": { "src": "https://picsum.photos/seed/sanad1/100/100", "alt": "Business Owner", "aiHint": "business owner" },
+        "prop1": { "src": "https://picsum.photos/seed/prop1/100/100", "alt": "Property Manager", "aiHint": "property manager" },
+        "raaha1": { "src": "https://picsum.photos/seed/raaha1/100/100", "alt": "Agency Director", "aiHint": "agency director" },
+        "tender1": { "src": "https://picsum.photos/seed/tender1/100/100", "alt": "Bidding Manager", "aiHint": "bidding manager" },
+        "infra1": { "src": "https://picsum.photos/seed/infra1/100/100", "alt": "Event Coordinator", "aiHint": "event coordinator" }
     }
 }

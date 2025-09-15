@@ -47,7 +47,7 @@ export default function ClientTestimonials({
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {testimonials.map((testimonial) => {
-                    const avatarData = (testimonialAvatars as Record<string, {src: string, alt: string}>)[testimonial.avatarId];
+                    const avatarData = (testimonialAvatars as Record<string, {src: string, alt: string, aiHint: string}>)[testimonial.avatarId];
                     return (
                         <Card key={testimonial.id} className="bg-card">
                             <CardContent className="p-6">
@@ -56,7 +56,7 @@ export default function ClientTestimonials({
                                 </blockquote>
                                 <div className="flex items-center gap-4 mt-6">
                                 <Avatar>
-                                    {avatarData && <AvatarImage src={avatarData.src} alt={avatarData.alt} />}
+                                    {avatarData && <AvatarImage src={avatarData.src} alt={avatarData.alt} data-ai-hint={avatarData.aiHint} />}
                                     <AvatarFallback>{testimonial.author.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                     <div>
