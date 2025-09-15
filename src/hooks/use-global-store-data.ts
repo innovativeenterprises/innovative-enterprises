@@ -34,10 +34,9 @@ import type { Car } from '@/lib/cars';
 import type { RentalAgency } from '@/lib/rental-agencies';
 import type { Transaction as PosTransaction, PosProduct } from '@/lib/pos-data';
 import type { GiftCard } from '@/lib/gift-cards';
-import type { StockItem } from '@/lib/stock-items';
+import type { JobPosting } from '@/lib/alumni-jobs';
+import { initialBeautySpecialists, type BeautyService, type Specialist as BeautySpecialist } from '@/lib/beauty-services';
 import type { BeautyCenter } from '@/lib/beauty-centers';
-import type { BeautyService, Specialist as BeautySpecialist } from '@/lib/beauty-services';
-import { initialBeautySpecialists } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 
 
@@ -96,7 +95,7 @@ export const setBeautyAppointments = (updater: (prev: BeautyAppointment[]) => Be
 
 
 // Data hooks that return the reactive state slice and setters.
-export const useServicesData = () => ({ services: useStoreData(s => s.services), setServices, isClient: true });
+export const useServicesData = () => ({ services: useStoreData(s => s.services), isClient: true });
 export const useProductsData = () => ({ products: useStoreData(s => s.products), setProducts, isClient: true });
 export const useClientsData = () => ({
     clients: useStoreData(s => s.clients),
@@ -119,7 +118,6 @@ export const useCommunitiesData = () => ({ communities: useStoreData(s => s.comm
 export const useCommunityHubData = () => ({
     events: useStoreData(s => s.communityEvents),
     finances: useStoreData(s => s.communityFinances),
-    members: useStoreData(s => s.communityMembers),
     setCommunityEvents,
     setCommunityFinances,
     isClient: true,
