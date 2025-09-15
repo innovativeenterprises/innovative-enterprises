@@ -1,13 +1,9 @@
 
-
 'use client';
 
 import StaffTable from "../staff-table";
-import { useStaffData, setLeadership, setStaff, setAgentCategories } from "@/hooks/use-global-store-data";
 
 export default function AdminPeoplePage() {
-  const staffData = useStaffData();
-
   return (
     <div className="space-y-8">
         <div>
@@ -17,17 +13,7 @@ export default function AdminPeoplePage() {
             </p>
         </div>
 
-        <StaffTable 
-            leadership={staffData.leadership}
-            setLeadership={setLeadership}
-            staff={staffData.staff}
-            setStaff={setStaff}
-            agentCategories={staffData.agentCategories}
-            setAgentCategories={setAgentCategories}
-            isClient={staffData.isClient}
-        />
+        <StaffTable />
     </div>
   );
 }
-
-    

@@ -25,7 +25,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
-import { setLeadership, setStaff, setAgentCategories } from "@/hooks/use-global-store-data";
+import { useStaffData, setLeadership, setStaff, setAgentCategories } from "@/hooks/use-global-store-data";
 
 const SocialsSchema = z.object({
     email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
@@ -98,10 +98,8 @@ const AddEditStaffDialog = ({
     useEffect(() => {
         if (watchPhotoFile && watchPhotoFile.length > 0) {
             fileToDataURI(watchPhotoFile[0]).then(setImagePreview);
-        } else if (watchPhotoUrl) {
-            setImagePreview(watchPhotoUrl);
         } else {
-            setImagePreview(staffMember?.photo || null);
+            setImagePreview(watchPhotoUrl || staffMember?.photo || null);
         }
     }, [watchPhotoUrl, watchPhotoFile, staffMember?.photo]);
 
@@ -232,17 +230,8 @@ const AddEditStaffDialog = ({
     )
 }
 
-export default function StaffTable({ 
-    leadership, 
-    staff,
-    agentCategories, 
-    isClient,
-} : {
-    leadership: Agent[],
-    staff: Agent[],
-    agentCategories: AgentCategory[],
-    isClient: boolean,
-}) {
+export default function StaffTable() {
+    const { leadership, staff, agentCategories, isClient } = useStaffData();
     const { toast } = useToast();
 
     const handleToggle = (name: string, type: 'leadership' | 'staff' | 'agent') => {
@@ -293,27 +282,23 @@ export default function StaffTable({
             }
         };
 
-        if(originalName) {
-            // Find which list the original member was in
-            const wasLeadership = leadership.some(m => m.name === originalName);
-            const wasStaff = staff.some(m => m.name === originalName);
-            const wasAgent = agentCategories.some(c => c.agents.some(a => a.name === originalName));
-
-            // Remove from old list
-            if (wasLeadership) setLeadership(prev => prev.filter(m => m.name !== originalName));
-            if (wasStaff) setStaff(prev => prev.filter(m => m.name !== originalName));
-            if (wasAgent) setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
+        // If editing, first remove the member from all lists to handle type changes.
+        if (originalName) {
+            setLeadership(prev => prev.filter(m => m.name !== originalName));
+            setStaff(prev => prev.filter(m => m.name !== originalName));
+            setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
         }
 
+        // Add the new/updated member to the correct list.
         switch (values.type) {
             case 'Leadership':
-                setLeadership(prev => updateList(prev, undefined)); // always add to new list
+                setLeadership(prev => updateList(prev, originalName ? undefined : originalName));
                 break;
             case 'Staff':
-                setStaff(prev => updateList(prev, undefined));
+                setStaff(prev => updateList(prev, originalName ? undefined : originalName));
                 break;
             case 'AI Agent':
-                setAgentCategories(prev => updateAgentCategories(prev, undefined));
+                setAgentCategories(prev => updateAgentCategories(prev, originalName ? undefined : originalName));
                 break;
         }
 
