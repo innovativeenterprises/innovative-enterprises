@@ -223,7 +223,7 @@ export default function InvestorTable() {
         await processDoc('vatId', values.vatIdDoc);
         await processDoc('passport', values.passportDoc);
         await processDoc('civilId', values.civilIdDoc);
-        await processDoc('incomeProof', values.incomeProofDoc);
+        await processDoc('incomeProof', values.incomeProof);
 
         if (id) {
             setInvestors(prev => prev.map(inv => inv.id === id ? { ...inv, ...values, documents: { ...inv.documents, ...uploadedDocs } } : inv));
@@ -250,6 +250,16 @@ export default function InvestorTable() {
         setInvestors(prev => prev.filter(inv => inv.id !== id));
         toast({ title: "Record removed.", variant: "destructive" });
     };
+    
+    const handleDownload = (dataUri: string, filename: string) => {
+        const link = document.createElement("a");
+        link.href = dataUri;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
 
     const getTypeIcon = (type: string, subType: string) => {
         if (type === 'Funder') return <Banknote />;
@@ -317,7 +327,7 @@ export default function InvestorTable() {
                                     <TableCell>
                                         <div className="flex gap-2 flex-wrap">
                                             {Object.entries(inv.documents).map(([key, doc]) => (
-                                                doc && <a href={doc.dataUri} download={doc.name} key={key}><FileText className="h-5 w-5 text-muted-foreground hover:text-primary" /></a>
+                                                doc && <Button key={key} variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleDownload(doc.dataUri, doc.name)}><FileText className="h-5 w-5 text-muted-foreground hover:text-primary" /></Button>
                                             ))}
                                         </div>
                                     </TableCell>
@@ -346,6 +356,5 @@ export default function InvestorTable() {
         </Card>
     );
 }
-
 
     
