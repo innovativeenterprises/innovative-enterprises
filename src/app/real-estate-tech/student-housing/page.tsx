@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData } from '@/hooks/use-global-store-data';
+import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
@@ -43,9 +43,9 @@ export default function StudentHousingPage() {
         return sum;
     }, 0) : 0, [leases, isClient]);
 
-    const DateDisplay = ({ dateString }: { dateString: string }) => {
+    const DateDisplay = ({ dateString }: { dateString?: string }) => {
         const formattedDate = useMemo(() => {
-            if (!isClient) return null;
+            if (!isClient || !dateString) return null;
             try {
                 return format(new Date(dateString), "PPP");
             } catch {

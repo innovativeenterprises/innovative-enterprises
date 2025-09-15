@@ -481,6 +481,3 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
-    
-
-    

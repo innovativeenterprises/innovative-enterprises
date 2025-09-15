@@ -1,3 +1,4 @@
+
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "INNOVATIVE ENTERPRISES",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png",
         width: 1200,
         height: 630,
         alt: "INNOVATIVE ENTERPRISES Logo"
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "INNOVATIVE ENTERPRISES - AI-Powered Business Platform",
     description: "The digital operating system for SMEs in Oman. Automate, delegate, and grow with our integrated suite of AI tools and service marketplaces.",
-    images: ["/og-image.png"],
+    images: ["https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png"],
   },
   verification: {
     other: {

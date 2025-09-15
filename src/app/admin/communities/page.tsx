@@ -4,22 +4,19 @@
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Users, Search, Mail, Phone, Home, User, Edit, Trash2, PlusCircle } from "lucide-react";
-import Link from "next/link";
-import { useCommunitiesData, useMembersData } from '@/hooks/use-global-store-data';
-import type { Community } from "@/lib/communities";
-import type { CommunityMember } from "@/lib/community-members";
-import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Edit, Trash2, PlusCircle } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useToast } from "@/hooks/use-toast";
+import { useCommunitiesData, setCommunities } from '@/hooks/use-global-store-data';
+import type { Community } from "@/lib/communities";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CommunitySchema = z.object({
     name: z.string().min(3, "Name is required"),
@@ -165,5 +162,3 @@ export default function AdminCommunitiesPage() {
         </div>
     )
 }
-
-  

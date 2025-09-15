@@ -9,13 +9,6 @@ import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Education Technology Solutions",
-  description: "Transforming education with AI. Explore SaaS platforms for learning, administration, and improving student outcomes in Oman and beyond.",
-};
-
 
 const problems = [
     { title: "Manual Processes", description: "Administrative overhead from manual paperwork, scheduling, and approvals slows down institutions." },

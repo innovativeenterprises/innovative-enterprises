@@ -76,7 +76,7 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable() { 
-    const { pricing, setPricing, isClient } = usePricingData();
+    const { pricing, isClient } = usePricingData();
     const { toast } = useToast();
 
     const handleSave = (values: PricingValues, id: string) => {

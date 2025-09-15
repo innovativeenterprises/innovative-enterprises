@@ -210,12 +210,13 @@ export default function InvestorTable() {
         const processDoc = async (key: keyof Investor['documents'], fileList: any) => {
             if (fileList && fileList.length > 0) {
                 const file = fileList[0];
-                await fileToDataURI(file).then(dataUri => {
+                try {
+                    const dataUri = await fileToDataURI(file);
                     uploadedDocs[key] = { name: file.name, dataUri };
-                }).catch(error => {
+                } catch (error) {
                     toast({title: `Error reading ${file.name}`, description: 'Could not upload file.', variant: 'destructive'});
                     console.error(error);
-                });
+                }
             }
         };
 
@@ -326,7 +327,7 @@ export default function InvestorTable() {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2 flex-wrap">
-                                            {Object.entries(inv.documents).map(([key, doc]) => (
+                                            {inv.documents && Object.entries(inv.documents).map(([key, doc]) => (
                                                 doc && <Button key={key} variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleDownload(doc.dataUri, doc.name)}><FileText className="h-5 w-5 text-muted-foreground hover:text-primary" /></Button>
                                             ))}
                                         </div>
@@ -356,5 +357,3 @@ export default function InvestorTable() {
         </Card>
     );
 }
-
-    
