@@ -49,7 +49,7 @@ const DueDateDisplay = ({ date, className, isClient }: { date: string, className
 
 // Main Dashboard Component
 export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, isClient } = useCfoData();
+  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, isClient } = useCfoData();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -63,15 +63,6 @@ export default function CfoDashboard() {
         return <Badge variant="outline">{status}</Badge>;
     }
   };
-  
-  const chartData = [
-      { month: 'Mar', income: 4000, expenses: 2400 },
-      { month: 'Apr', income: 3000, expenses: 1398 },
-      { month: 'May', income: 2000, expenses: 9800 },
-      { month: 'Jun', income: 2780, expenses: 3908 },
-      { month: 'Jul', income: 1890, expenses: 4800 },
-      { month: 'Aug', income: 2390, expenses: 3800 },
-  ];
   
   const chartConfig = {
       income: { label: "Income", color: "hsl(var(--chart-1))" },
@@ -139,7 +130,7 @@ export default function CfoDashboard() {
                 <CardHeader><CardTitle>Monthly Cash Flow</CardTitle></CardHeader>
                 <CardContent>
                     <ChartContainer config={chartConfig} className="h-[200px] w-full">
-                        <BarChart data={chartData} accessibilityLayer>
+                        <BarChart data={cashFlowData} accessibilityLayer>
                             <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
                             <Tooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
                             <Bar dataKey="income" fill="var(--color-income)" radius={4} />

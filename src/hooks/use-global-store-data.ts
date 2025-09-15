@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { useSyncExternalStore, useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { store, type AppState, initialState } from '@/lib/global-store';
 import type { Service } from '@/lib/services';
 import type { Product } from '@/lib/products';
@@ -38,6 +37,7 @@ import type { GiftCard } from '@/lib/gift-cards';
 import type { StockItem } from '@/lib/stock-items';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyService, Specialist as BeautySpecialist } from '@/lib/beauty-services';
+import { initialBeautySpecialists } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 
 
@@ -216,3 +216,5 @@ export const useStockItemsData = () => ({
     setStockItems,
     isClient: true,
 });
+
+    

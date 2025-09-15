@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -41,21 +40,18 @@ const sendBookingConfirmation = (request: BookingRequest) => {
     console.log(`Dear ${request.clientName},`);
     console.log(`\nWe're pleased to inform you that your booking request for "${request.listingTitle}" has been approved by the owner.`);
     console.log(`To finalize your booking, please complete the payment at your earliest convenience.`);
-    console.log(`\nYou can complete the booking here: /real-estate-tech/stairspace/checkout/${request.id}`);
+    console.log(`\nYou can complete the booking here: /real-estate-tech/stairspace/booking-confirmed?requestId=${request.id}`);
     console.log(`\nThank you for using StairSpace.`);
     console.log("--------------------------------------");
 };
 
-const TimeAgoCell = ({ date }: { date: string }) => {
-    const [timeAgo, setTimeAgo] = useState<string | null>(null);
+const TimeAgoCell = ({ date, isClient }: { date: string, isClient: boolean }) => {
+    const timeAgo = useMemo(() => {
+        if (!isClient || !date) return null;
+        return formatDistanceToNow(new Date(date), { addSuffix: true });
+    }, [date, isClient]);
 
-    useEffect(() => {
-        if (date) {
-           setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
-        }
-    }, [date]);
-
-    if (!timeAgo) {
+    if (!isClient) {
         return <Skeleton className="h-4 w-[100px]" />;
     }
 
@@ -89,7 +85,7 @@ const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest
                                 <div className="flex-grow">
                                     <p className="font-semibold text-sm leading-tight group-hover:text-primary">{request.listingTitle}</p>
                                     <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5"><CheckCircle className="h-3 w-3"/>{request.clientName}</p>
-                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/><TimeAgoCell date={request.requestDate} /></p>
+                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5"><Clock className="h-3 w-3"/><TimeAgoCell date={request.requestDate} isClient={true} /></p>
                                 </div>
                             </div>
                         </DialogTrigger>
@@ -108,7 +104,7 @@ const RequestCard = ({ request, onScheduleInterview }: { request: BookingRequest
                     <div className="grid md:grid-cols-2 gap-6 pt-4">
                         {listing && (
                              <div className="space-y-4">
-                                <Link href={`/real-estate-tech/stairspace/${listing.id}`} target="_blank">
+                                <Link href={`/real-estate-tech/stairspace/list-your-space`} target="_blank">
                                     <Image src={listing.imageUrl} alt={listing.title} width={300} height={200} className="rounded-lg object-cover hover:opacity-80 transition-opacity" />
                                 </Link>
                                 <h3 className="font-bold">{listing.title}</h3>
@@ -149,7 +145,7 @@ const StatusColumn = ({ status, requests, onScheduleInterview }: { status: typeo
 
 
 export default function StairspaceRequestsPage() {
-    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const { stairspaceRequests, setStairspaceRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
