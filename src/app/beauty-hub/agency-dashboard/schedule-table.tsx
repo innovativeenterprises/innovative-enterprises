@@ -1,61 +1,125 @@
-
 'use client';
 
-import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { useState, useMemo, useEffect } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from '@/components/ui/badge';
-import type { BeautyAppointment } from '@/lib/beauty-appointments';
-import { format } from 'date-fns';
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import type { Product } from "@/lib/products";
+import { ProductSchema } from "@/lib/products.schema";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
+import { useProductsData, useProjectStagesData } from "@/hooks/use-global-store-data";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
-const getStatusBadge = (status: BeautyAppointment['status']) => {
-    switch (status) {
-        case 'Confirmed': return <Badge variant="default" className="bg-blue-500/20 text-blue-700">Confirmed</Badge>;
-        case 'Completed': return <Badge variant="default" className="bg-green-500/20 text-green-700">Completed</Badge>;
-        case 'Cancelled': return <Badge variant="destructive">Cancelled</Badge>;
+
+export default function ProductTable() {
+    const { products, setProducts, isClient } = useProductsData();
+    const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
+    const { stages } = useProjectStagesData();
+
+    const handleToggle = (id: number) => {
+        setProducts(prev =>
+            prev.map(product =>
+                product.id === id ? { ...product, enabled: !product.enabled } : product
+            )
+        );
+        toast({ title: "Product status updated." });
+    };
+
+    const openDialog = (product?: Product) => {
+        setSelectedProduct(product);
+        setIsDialogOpen(true);
     }
-};
 
-export function ScheduleTable({ appointments }: { appointments: BeautyAppointment[] }) {
-    
+    const handleSave = (values: ProductValues, id?: number) => {
+        if (id !== undefined) {
+            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values, id } : p));
+            toast({ title: "Product updated successfully." });
+        } else {
+            const newProduct: Product = {
+                ...values,
+                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
+            };
+            setProducts(prev => [newProduct, ...prev]);
+            toast({ title: "Product added successfully." });
+        }
+    };
+
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>Upcoming Appointments</CardTitle>
-                <CardDescription>A log of all scheduled client appointments.</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Product Management</CardTitle>
+                    <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
+                </div>
+                 <Button onClick={() => openDialog()}>
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add Product
+                </Button>
             </CardHeader>
             <CardContent>
+                 <AddEditProductDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    product={selectedProduct}
+                    onSave={handleSave}
+                    stages={stages}
+                >
+                    {/* This is a controlled dialog, so the trigger is handled programmatically */}
+                    <div />
+                </AddEditProductDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Client</TableHead>
-                            <TableHead>Service</TableHead>
-                            <TableHead>Specialist</TableHead>
-                            <TableHead>Date & Time</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>Product Name</TableHead>
+                            <TableHead>Category</TableHead>
+                            <TableHead>Price (OMR)</TableHead>
+                            <TableHead className="text-center">Status</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {appointments.map(appt => (
-                            <TableRow key={appt.id}>
-                                <TableCell>
-                                    <div className="font-medium">{appt.clientName}</div>
-                                    <div className="text-sm text-muted-foreground">{appt.clientContact}</div>
-                                </TableCell>
-                                <TableCell>{appt.serviceId}</TableCell> {/* In real app, look up service name */}
-                                <TableCell>{appt.specialistId}</TableCell> {/* In real app, look up specialist name */}
-                                <TableCell>{format(new Date(appt.appointmentDate), 'PPP p')}</TableCell>
-                                <TableCell>{getStatusBadge(appt.status)}</TableCell>
-                            </TableRow>
-                        ))}
-                         {appointments.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={5} className="text-center text-muted-foreground">No appointments found.</TableCell>
-                            </TableRow>
+                        {!isClient ? (
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell colSpan={5}>
+                                        <Skeleton className="h-10 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            products.map((product) => (
+                                <TableRow key={product.id}>
+                                    <TableCell className="font-medium">{product.name}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline">{product.category}</Badge>
+                                    </TableCell>
+                                    <TableCell>{product.price > 0 ? `OMR ${product.price.toFixed(2)}` : 'N/A'}</TableCell>
+                                    <TableCell className="text-center">
+                                        <Switch
+                                            checked={product.enabled}
+                                            onCheckedChange={() => handleToggle(product.id)}
+                                            aria-label={`Enable/disable ${product.name}`}
+                                        />
+                                    </TableCell>
+                                     <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
+                                            <Edit />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
                         )}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
-    )
+    );
 }

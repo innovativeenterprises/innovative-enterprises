@@ -1,108 +1,125 @@
-
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { AgencySettings } from './agency-settings';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import Image from 'next/image';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useBeautyData, setBeautyCenters, setBeautyAppointments } from '@/hooks/use-global-store-data';
-import { ScheduleTable } from './schedule-table';
-import { ServiceTable } from './service-table';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useMemo, useEffect } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import type { Product } from "@/lib/products";
+import { ProductSchema } from "@/lib/products.schema";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
+import { useProductsData, useProjectStagesData } from "@/hooks/use-global-store-data";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
 
-export default function AgencyDashboardPage() {
-    const { 
-        centers, 
-        services, 
-        appointments, 
-        specialists, 
-        isClient 
-    } = useBeautyData();
+export default function ProductTable() {
+    const { products, setProducts, isClient } = useProductsData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
+    const { stages } = useProjectStagesData();
 
-    const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    
-    useEffect(() => {
-        if (centers.length > 0 && !selectedAgencyId) {
-            setSelectedAgencyId(centers[0].id);
-        }
-    }, [centers, selectedAgencyId]);
+    const handleToggle = (id: number) => {
+        setProducts(prev =>
+            prev.map(product =>
+                product.id === id ? { ...product, enabled: !product.enabled } : product
+            )
+        );
+        toast({ title: "Product status updated." });
+    };
 
-    const selectedAgency = centers.find(a => a.id === selectedAgencyId);
-    
-    if (!isClient || !selectedAgency) {
-         return (
-            <div className="bg-background min-h-[calc(100vh-8rem)]">
-                <div className="container mx-auto px-4 py-16">
-                     <div className="max-w-7xl mx-auto space-y-8 text-center">
-                         <h1 className="text-2xl font-bold">Loading Agency Data...</h1>
-                         <Skeleton className="h-96 w-full" />
-                     </div>
-                </div>
-            </div>
-         );
+    const openDialog = (product?: Product) => {
+        setSelectedProduct(product);
+        setIsDialogOpen(true);
     }
-    
-    const filteredServices = services.filter(s => s.centerId === selectedAgency.id);
-    const filteredAppointments = appointments.filter(a => a.centerId === selectedAgency.id);
+
+    const handleSave = (values: ProductValues, id?: number) => {
+        if (id !== undefined) {
+            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values, id } : p));
+            toast({ title: "Product updated successfully." });
+        } else {
+            const newProduct: Product = {
+                ...values,
+                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
+            };
+            setProducts(prev => [newProduct, ...prev]);
+            toast({ title: "Product added successfully." });
+        }
+    };
 
     return (
-         <div className="bg-background min-h-[calc(100vh-8rem)]">
-            <div className="container mx-auto px-4 py-16">
-                <div className="max-w-7xl mx-auto space-y-8">
-                     <div>
-                        <h1 className="text-3xl font-bold">Beauty Center Dashboard</h1>
-                        <p className="text-muted-foreground">Manage your services, specialists, and client appointments.</p>
-                    </div>
-
-                    <Card className="p-4 bg-muted/50">
-                        <div className="flex items-center gap-4">
-                            <label htmlFor="agency-select" className="font-medium text-sm">Viewing Dashboard For:</label>
-                             <Select value={selectedAgencyId} onValueChange={setSelectedAgencyId}>
-                                <SelectTrigger className="w-[280px]" id="agency-select">
-                                     <SelectValue>
-                                        <div className="flex items-center gap-2">
-                                            {selectedAgency?.logo && <Image src={selectedAgency.logo} alt={selectedAgency.name} width={20} height={20} className="rounded-sm object-contain" />}
-                                            <span>{selectedAgency?.name}</span>
-                                        </div>
-                                     </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {centers.map(agency => (
-                                        <SelectItem key={agency.id} value={agency.id}>
-                                             <div className="flex items-center gap-2">
-                                                {agency.logo && <Image src={agency.logo} alt={agency.name} width={20} height={20} className="rounded-sm object-contain" />}
-                                                <span>{agency.name}</span>
-                                            </div>
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </Card>
-
-                     <Tabs defaultValue="schedule" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="schedule">Appointments ({filteredAppointments.length})</TabsTrigger>
-                            <TabsTrigger value="services">Services ({filteredServices.length})</TabsTrigger>
-                            <TabsTrigger value="settings">Center Settings</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="schedule" className="mt-6">
-                            <ScheduleTable appointments={filteredAppointments} />
-                        </TabsContent>
-                        <TabsContent value="services" className="mt-6">
-                            <ServiceTable services={filteredServices} specialists={specialists} agencyId={selectedAgency.id} />
-                        </TabsContent>
-                        <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setBeautyCenters} />}
-                        </TabsContent>
-                    </Tabs>
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Product Management</CardTitle>
+                    <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
                 </div>
-            </div>
-        </div>
-    )
+                 <Button onClick={() => openDialog()}>
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add Product
+                </Button>
+            </CardHeader>
+            <CardContent>
+                 <AddEditProductDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    product={selectedProduct}
+                    onSave={handleSave}
+                    stages={stages}
+                >
+                    {/* This is a controlled dialog, so the trigger is handled programmatically */}
+                    <div />
+                </AddEditProductDialog>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Product Name</TableHead>
+                            <TableHead>Category</TableHead>
+                            <TableHead>Price (OMR)</TableHead>
+                            <TableHead className="text-center">Status</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {!isClient ? (
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell colSpan={5}>
+                                        <Skeleton className="h-10 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            products.map((product) => (
+                                <TableRow key={product.id}>
+                                    <TableCell className="font-medium">{product.name}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline">{product.category}</Badge>
+                                    </TableCell>
+                                    <TableCell>{product.price > 0 ? `OMR ${product.price.toFixed(2)}` : 'N/A'}</TableCell>
+                                    <TableCell className="text-center">
+                                        <Switch
+                                            checked={product.enabled}
+                                            onCheckedChange={() => handleToggle(product.id)}
+                                            aria-label={`Enable/disable ${product.name}`}
+                                        />
+                                    </TableCell>
+                                     <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
+                                            <Edit />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
 }

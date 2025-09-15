@@ -46,10 +46,6 @@ import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
 import { initialDailySales, type Transaction as PosTransaction, initialPosProducts, type PosProduct } from './pos-data';
 import { initialGiftCards, type GiftCard } from './gift-cards';
 import { initialJobs, type JobPosting } from './alumni-jobs';
-import { initialBeautyServices, type BeautyService, initialSpecialists, type Specialist as BeautySpecialist } from './beauty-services';
-import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
-import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
-
 
 export interface CartItem extends Product {
   quantity: number;
@@ -105,10 +101,6 @@ export type AppState = {
   posProducts: PosProduct[];
   giftCards: GiftCard[];
   alumniJobs: JobPosting[];
-  beautyCenters: BeautyCenter[];
-  beautyServices: BeautyService[];
-  beautySpecialists: BeautySpecialist[];
-  beautyAppointments: BeautyAppointment[];
 };
 
 export const initialState: AppState = {
@@ -154,10 +146,6 @@ export const initialState: AppState = {
   posProducts: initialPosProducts,
   giftCards: initialGiftCards,
   alumniJobs: initialJobs,
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautySpecialists: initialSpecialists,
-  beautyAppointments: initialBeautyAppointments,
 };
 
 // The single source of truth for our application's shared state.

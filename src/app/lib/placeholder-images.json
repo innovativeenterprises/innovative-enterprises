@@ -1,31 +1,32 @@
+
 {
     "overviewAvatars": [
         {
-            "src": "https://picsum.photos/seed/client1/40/40",
+            "src": "https://i.pravatar.cc/40?img=1",
             "alt": "Client 1",
             "aiHint": "person portrait"
         },
         {
-            "src": "https://picsum.photos/seed/client2/40/40",
+            "src": "https://i.pravatar.cc/40?img=2",
             "alt": "Client 2",
             "aiHint": "person portrait"
         },
         {
-            "src": "https://picsum.photos/seed/client3/40/40",
+            "src": "https://i.pravatar.cc/40?img=3",
             "alt": "Client 3",
             "aiHint": "person portrait"
         }
     ],
     "testimonialAvatars": {
-        "gov1": { "src": "https://picsum.photos/seed/gov1/100/100", "alt": "Government Official", "aiHint": "government official" },
-        "corp1": { "src": "https://picsum.photos/seed/corp1/100/100", "alt": "Corporate CEO", "aiHint": "corporate ceo" },
-        "startup1": { "src": "https://picsum.photos/seed/startup1/100/100", "alt": "Startup Founder", "aiHint": "startup founder" },
-        "freelancer1": { "src": "https://picsum.photos/seed/freelancer1/100/100", "alt": "Software Engineer", "aiHint": "software engineer" },
-        "legal1": { "src": "https://picsum.photos/seed/legal1/100/100", "alt": "Lawyer", "aiHint": "lawyer portrait" },
-        "sanad1": { "src": "https://picsum.photos/seed/sanad1/100/100", "alt": "Business Owner", "aiHint": "business owner" },
-        "prop1": { "src": "https://picsum.photos/seed/prop1/100/100", "alt": "Property Manager", "aiHint": "property manager" },
-        "raaha1": { "src": "https://picsum.photos/seed/raaha1/100/100", "alt": "Agency Director", "aiHint": "agency director" },
-        "tender1": { "src": "https://picsum.photos/seed/tender1/100/100", "alt": "Bidding Manager", "aiHint": "bidding manager" },
-        "infra1": { "src": "https://picsum.photos/seed/infra1/100/100", "alt": "Event Coordinator", "aiHint": "event coordinator" }
+        "gov1": { "src": "https://i.pravatar.cc/100?img=4", "alt": "Government Official", "aiHint": "government official" },
+        "corp1": { "src": "https://i.pravatar.cc/100?img=5", "alt": "Corporate CEO", "aiHint": "corporate ceo" },
+        "startup1": { "src": "https://i.pravatar.cc/100?img=6", "alt": "Startup Founder", "aiHint": "startup founder" },
+        "freelancer1": { "src": "https://i.pravatar.cc/100?img=7", "alt": "Software Engineer", "aiHint": "software engineer" },
+        "legal1": { "src": "https://i.pravatar.cc/100?img=8", "alt": "Lawyer", "aiHint": "lawyer portrait" },
+        "sanad1": { "src": "https://i.pravatar.cc/100?img=9", "alt": "Business Owner", "aiHint": "business owner" },
+        "prop1": { "src": "https://i.pravatar.cc/100?img=10", "alt": "Property Manager", "aiHint": "property manager" },
+        "raaha1": { "src": "https://i.pravatar.cc/100?img=11", "alt": "Agency Director", "aiHint": "agency director" },
+        "tender1": { "src": "https://i.pravatar.cc/100?img=12", "alt": "Bidding Manager", "aiHint": "bidding manager" },
+        "infra1": { "src": "https://i.pravatar.cc/100?img=13", "alt": "Event Coordinator", "aiHint": "event coordinator" }
     }
 }
