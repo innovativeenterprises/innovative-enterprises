@@ -22,7 +22,12 @@ import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStudentsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Metadata } from 'next';
 
+export const metadata: Metadata = {
+  title: "Guardian AI Dashboard | Innovative Enterprises",
+  description: "A holistic overview of student wellbeing and career readiness, powered by AI.",
+};
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
     const { settings } = useSettingsData();

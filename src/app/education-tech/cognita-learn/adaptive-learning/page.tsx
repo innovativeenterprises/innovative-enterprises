@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -15,6 +15,12 @@ import { Loader2, Sparkles, BrainCircuit, ArrowLeft, BookOpen, Lightbulb, Pencil
 import Link from 'next/link';
 import { generateAdaptiveLesson } from '@/ai/flows/adaptive-learning-tutor';
 import { AdaptiveTutorInputSchema, type AdaptiveTutorOutput } from '@/ai/flows/adaptive-learning-tutor.schema';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Adaptive Learning Tutor | Innovative Enterprises",
+  description: "Struggling with a concept? Tell our AI tutor what you're having trouble with, and it will generate a custom explanation just for you.",
+};
 
 export default function AdaptiveLearningPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -141,5 +147,3 @@ export default function AdaptiveLearningPage() {
     </div>
   );
 }
-
-  

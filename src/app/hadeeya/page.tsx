@@ -18,6 +18,13 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Hadeeya Digital Gift Cards | Innovative Enterprises",
+  description: "The perfect gift for any occasion. Create and send a personalized digital gift card in minutes.",
+};
+
 
 const GiftCardSchema = z.object({
   design: z.enum(['Generic', 'Birthday', 'Thank You', 'Holiday']),
@@ -163,4 +170,3 @@ export default function HadeeyaPage() {
         </div>
     );
 }
-    

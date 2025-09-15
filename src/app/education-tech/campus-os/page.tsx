@@ -6,6 +6,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Leaf, Droplets, Wind, Upload, Download, CheckCircle, Cpu, Wrench } from "lucide-react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "CampusOS - Smart Campus Operations | Innovative Enterprises",
+  description: "A centralized platform leveraging IoT and AI to create a more efficient, sustainable, and responsive educational environment.",
+};
+
 
 const energyData = [
   { month: 'Jan', consumption: 45000 },

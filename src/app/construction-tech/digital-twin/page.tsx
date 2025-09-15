@@ -91,7 +91,6 @@ export default function DigitalTwinPage() {
                             <BarChart data={chartData}>
                                 <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false}/>
                                 <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value} kWh`}/>
-                                <Tooltip wrapperClassName="!bg-background !border-border" />
                                 <Bar dataKey="energy" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>

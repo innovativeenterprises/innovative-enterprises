@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Cpu, Target, BrainCircuit, ClipboardCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "CognitaLearn - Adaptive Learning Platform | Innovative Enterprises",
+  description: "Moving beyond one-size-fits-all education. CognitaLearn uses AI to create personalized, engaging, and effective learning experiences for every student.",
+};
 
 const platformPillars = [
     {
@@ -86,5 +92,3 @@ export default function CognitaLearnPage() {
         </div>
     );
 }
-
-  

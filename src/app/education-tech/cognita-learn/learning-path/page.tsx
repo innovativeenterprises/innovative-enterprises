@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -16,6 +16,13 @@ import { generateLearningPath } from '@/ai/flows/learning-path-generator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Learning Path Generator | Innovative Enterprises",
+  description: "Define your learning goal and let our AI curriculum designer create a structured, step-by-step learning path for you.",
+};
+
 
 export default function LearningPathGeneratorPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -191,5 +198,3 @@ export default function LearningPathGeneratorPage() {
     </div>
   );
 }
-
-  

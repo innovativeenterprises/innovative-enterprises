@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,13 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { useStudentsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Student Financials | EduFlow Suite",
+  description: "A centralized dashboard for managing student tuition fees, scholarships, and payment statuses within the EduFlow administrative platform.",
+};
+
 
 export default function StudentFinancialsPage() {
     const { students, isClient } = useStudentsData();

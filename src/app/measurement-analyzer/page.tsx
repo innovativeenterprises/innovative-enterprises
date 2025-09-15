@@ -10,6 +10,12 @@ import Image from 'next/image';
 import { annotateImage } from '@/ai/flows/image-annotation';
 import type { ImageAnnotatorOutput } from '@/ai/flows/image-annotation.schema';
 import { CameraCapture } from '@/components/camera-capture';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Measurement Analyzer | Innovative Enterprises",
+  description: "Use your device's camera for live object scanning and measurement analysis. Our AI will attempt to estimate physical dimensions from an image.",
+};
 
 export default function MeasurementAnalyzerPage() {
     const [isLoading, setIsLoading] = useState(false);
