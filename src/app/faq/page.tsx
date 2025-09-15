@@ -6,12 +6,6 @@ import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Bot, MessageSquare } from 'lucide-react';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "AI-Powered FAQ | Innovative Enterprises",
-  description: "Have questions? Our AI-powered assistant, Aida, is here to help. Ask anything about our services, products, or our unique value as an Omani SME.",
-};
 
 export default function FaqPage() {
     const { settings } = useSettingsData();

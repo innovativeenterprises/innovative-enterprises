@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -13,13 +14,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Download, Video, Mic } from 'lucide-react';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "VEO Video Factory | Innovative Enterprises",
-  description: "Turn your ideas into motion with AI. Describe a scene, and our AI, powered by Google's VEO model, will generate a short video clip for you.",
-};
-
 
 const FormSchema = z.object({
   prompt: z.string().min(10, 'Please enter a more descriptive prompt (at least 10 characters).'),

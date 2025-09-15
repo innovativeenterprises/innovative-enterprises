@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,6 +15,23 @@ import Link from 'next/link';
 import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
+
+const DateDisplay = ({ dateString }: { dateString?: string }) => {
+    const { isClient } = useLeasesData(); // A bit of a hack, but ensures this runs client-side
+
+    const formattedDate = useMemo(() => {
+        if (!isClient || !dateString) return null;
+        try {
+            return format(new Date(dateString), "PPP");
+        } catch {
+            return "Invalid Date";
+        }
+    }, [dateString, isClient]);
+
+    if (!isClient) return <Skeleton className="h-4 w-24" />;
+    return <>{formattedDate || "N/A"}</>;
+};
+
 
 export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
@@ -43,19 +61,6 @@ export default function StudentHousingPage() {
         return sum;
     }, 0) : 0, [leases, isClient]);
 
-    const DateDisplay = ({ dateString }: { dateString?: string }) => {
-        const formattedDate = useMemo(() => {
-            if (!isClient || !dateString) return null;
-            try {
-                return format(new Date(dateString), "PPP");
-            } catch {
-                return "Invalid Date";
-            }
-        }, [dateString, isClient]);
-    
-        if (!isClient) return <Skeleton className="h-4 w-24" />;
-        return <>{formattedDate || "N/A"}</>;
-    };
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
