@@ -105,12 +105,13 @@ export default function CommunityTable() {
     }, [leadership, staff]);
     
     const filteredCommunities = useMemo(() => {
+        if (!isClient) return [];
         return communities.filter(community =>
             community.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             community.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
             community.manager.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [communities, searchTerm]);
+    }, [communities, searchTerm, isClient]);
 
 
     const handleSave = (values: CommunityValues, id?: string) => {
@@ -205,4 +206,3 @@ export default function CommunityTable() {
         </Card>
     );
 }
-
