@@ -46,12 +46,15 @@ const AddEditAssetDialog = ({
     asset, 
     onSave,
     children,
+    isOpen,
+    onOpenChange,
 }: { 
     asset?: Asset, 
     onSave: (values: AssetValues, id?: string) => void,
-    children: React.ReactNode
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(asset?.image || null);
 
     const form = useForm<z.infer<typeof AssetSchema>>({
@@ -78,11 +81,11 @@ const AddEditAssetDialog = ({
         setImagePreview(asset?.image || null);
     }, [isOpen, asset, form]);
     
-     useEffect(() => {
+    useEffect(() => {
         if (watchImageFile && watchImageFile.length > 0) {
             fileToDataURI(watchImageFile[0]).then(setImagePreview);
-        } else if (watchImageUrl) {
-            setImagePreview(watchImageUrl);
+        } else {
+            setImagePreview(watchImageUrl || null);
         }
     }, [watchImageUrl, watchImageFile]);
     
@@ -99,11 +102,11 @@ const AddEditAssetDialog = ({
             ...data,
             image: imageValue,
         }, asset?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -187,6 +190,14 @@ export default function AssetTable() {
     const { assets, isClient } = useAssetsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(undefined);
+
+    const handleOpenDialog = (asset?: Asset) => {
+        setSelectedAsset(asset);
+        setIsDialogOpen(true);
+    };
+
     
     const handleSave = (values: AssetValues, id?: string) => {
         if (id) {
@@ -243,12 +254,18 @@ export default function AssetTable() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                     <AddEditAssetDialog onSave={handleSave}>
-                        <Button className="shrink-0"><PlusCircle /> Add Asset</Button>
-                    </AddEditAssetDialog>
+                     <Button className="shrink-0" onClick={() => handleOpenDialog()}><PlusCircle /> Add Asset</Button>
                 </div>
             </CardHeader>
             <CardContent>
+                 <AddEditAssetDialog 
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    asset={selectedAsset}
+                    onSave={handleSave}
+                  >
+                    <div />
+                </AddEditAssetDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -269,26 +286,22 @@ export default function AssetTable() {
                             ))
                         ) : (
                             filteredAssets.map(asset => (
-                                <TableRow key={asset.id}>
+                                <TableRow key={asset.id} className="cursor-pointer" onClick={() => handleOpenDialog(asset)}>
                                     <TableCell>
-                                         <AddEditAssetDialog asset={asset} onSave={handleSave}>
-                                            <div className="p-1 -m-1 rounded-md hover:bg-muted w-fit cursor-pointer">
-                                                <Image src={asset.image} alt={asset.name} width={60} height={45} className="rounded-md object-cover" />
-                                            </div>
-                                        </AddEditAssetDialog>
+                                        <div className="p-1 -m-1 rounded-md">
+                                            <Image src={asset.image} alt={asset.name} width={60} height={45} className="rounded-md object-cover" />
+                                        </div>
                                     </TableCell>
                                     <TableCell>
-                                        <AddEditAssetDialog asset={asset} onSave={handleSave}>
-                                            <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">
-                                                <p className="font-medium">{asset.name}</p>
-                                                <p className="text-sm text-muted-foreground truncate max-w-xs">{asset.specs}</p>
-                                            </div>
-                                        </AddEditAssetDialog>
+                                        <div className="p-2 -m-2 rounded-md">
+                                            <p className="font-medium">{asset.name}</p>
+                                            <p className="text-sm text-muted-foreground truncate max-w-xs">{asset.specs}</p>
+                                        </div>
                                     </TableCell>
                                     <TableCell>{asset.type}</TableCell>
                                     <TableCell>OMR {asset.monthlyPrice.toFixed(2)}</TableCell>
                                     <TableCell>{getStatusBadge(asset.status)}</TableCell>
-                                    <TableCell className="text-right">
+                                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                         <div className="flex justify-end gap-2">
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
