@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -84,8 +83,10 @@ const AddEditAssetDialog = ({
     useEffect(() => {
         if (watchImageFile && watchImageFile.length > 0) {
             fileToDataURI(watchImageFile[0]).then(setImagePreview);
+        } else if (watchImageUrl) {
+            setImagePreview(watchImageUrl);
         } else {
-            setImagePreview(watchImageUrl || null);
+             setImagePreview(null);
         }
     }, [watchImageUrl, watchImageFile]);
     
@@ -327,3 +328,6 @@ export default function AssetTable() {
     );
 }
 
+
+
+    
