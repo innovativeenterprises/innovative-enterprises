@@ -201,7 +201,7 @@ const SubscriptionStatus = ({ tier, expiry, isClient }: { tier: string, expiry?:
                     {!isClient ? <Skeleton className="h-4 w-20"/> : daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : 'N/A'}
                 </div>
             </div>
-            <Progress value={progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${progress}%`} />
+            <Progress value={progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${'${progress}'}%`} />
         </div>
     )
 }
