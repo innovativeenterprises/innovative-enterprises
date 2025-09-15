@@ -2,7 +2,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { useParams, useRouter, notFound } from 'next/navigation';
+import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, Home, Ticket } from 'lucide-react';
@@ -12,8 +12,8 @@ import type { BookingRequest } from '@/lib/stairspace-requests';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function SuccessContent() {
-    const params = useParams();
-    const requestId = params.id as string;
+    const searchParams = useSearchParams();
+    const requestId = searchParams.get('requestId');
     const { stairspaceRequests, isClient } = useStairspaceRequestsData();
     const [request, setRequest] = useState<BookingRequest | undefined>(undefined);
 
@@ -21,6 +21,7 @@ function SuccessContent() {
         if (isClient && requestId) {
             const foundRequest = stairspaceRequests.find(r => r.id === requestId);
             if (!foundRequest) {
+                // If no request is found for the given ID, redirect or show an error
                 notFound();
             } else {
                 setRequest(foundRequest);
@@ -79,7 +80,7 @@ function SuccessContent() {
 }
 
 
-export default function StairspaceCheckoutSuccessPage() {
+export default function StairspaceBookingConfirmedPage() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <SuccessContent />

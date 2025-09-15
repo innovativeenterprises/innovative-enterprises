@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,11 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
-import { RequestTable, TimeAgoCell } from '@/components/request-table';
+import { useStairspaceRequestsData, setStairspaceRequests } from '@/hooks/use-global-store-data';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { BookingRequest } from '@/lib/stairspace-requests';
+import { RequestTable, TimeAgoCell } from '@/components/request-table';
+import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -25,43 +27,59 @@ const getStatusBadge = (status: BookingRequest['status']) => {
     }
 };
 
-const columns = [
-    {
-        Header: 'Listing',
-        accessor: 'listingTitle',
-        Cell: ({ row }: { row: { original: BookingRequest }}) => (
-            <div>
-                <p className="font-medium">{row.original.listingTitle}</p>
-                <p className="text-sm text-muted-foreground">
-                    <TimeAgoCell date={row.original.requestDate} />
-                </p>
-            </div>
-        )
-    },
-    {
-        Header: 'Client',
-        accessor: 'clientName',
-    },
-    {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: ({ row }: { row: { original: BookingRequest }}) => getStatusBadge(row.original.status)
-    },
-];
-
 export default function MyStairspaceRequestsPage() {
     const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const { toast } = useToast();
+    const router = useRouter();
     
     // In a real app, you would filter requests by the logged-in user.
     const myRequests = isClient ? stairspaceRequests.filter(r => r.clientName === 'Anwar Ahmed') : [];
     
-    const renderActions = (request: BookingRequest) => {
+    const onSchedule = (id: string, values: InterviewValues) => {
+        setStairspaceRequests(prev => prev.map(r => 
+            r.id === id ? { ...r, status: 'Contacted', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
+        ));
+        toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
+    };
+
+    const handlePayment = (requestId: string) => {
+        // Simulate a payment process
+        toast({ title: 'Redirecting to payment...', description: 'Please wait.' });
+        setStairspaceRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
+        setTimeout(() => {
+            router.push(`/real-estate-tech/stairspace/booking-confirmed?requestId=${requestId}`);
+        }, 1000);
+    };
+
+    const columns = [
+        {
+            Header: 'Listing',
+            accessor: 'listingTitle',
+            Cell: ({ row }: { row: { original: BookingRequest }}) => (
+                <div>
+                    <p className="font-medium">{row.original.listingTitle}</p>
+                    <p className="text-sm text-muted-foreground">
+                        <TimeAgoCell date={row.original.requestDate} isClient={isClient} />
+                    </p>
+                </div>
+            )
+        },
+        {
+            Header: 'Client',
+            accessor: 'clientName',
+        },
+        {
+            Header: 'Status',
+            accessor: 'status',
+            Cell: ({ row }: { row: { original: BookingRequest }}) => getStatusBadge(row.original.status)
+        },
+    ];
+
+     const renderActions = (request: BookingRequest) => {
         if (request.status === 'Booked') {
             return (
-                <Button asChild size="sm" className="w-full sm:w-auto">
-                    <Link href={`/real-estate-tech/stairspace/checkout/${request.id}`}>
-                        <CreditCard className="mr-2 h-4 w-4"/> Complete Payment
-                    </Link>
+                <Button onClick={() => handlePayment(request.id)} size="sm" className="w-full sm:w-auto">
+                    <CreditCard className="mr-2 h-4 w-4"/> Complete Payment
                 </Button>
             );
         }
