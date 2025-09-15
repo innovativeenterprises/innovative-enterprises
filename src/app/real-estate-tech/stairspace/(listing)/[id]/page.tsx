@@ -2,7 +2,7 @@
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
-import { useStairspaceData } from '@/hooks/use-global-store-data';
+import { useStairspaceData, setStairspaceListings } from '@/hooks/use-global-store-data';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -13,6 +13,44 @@ import { useState, useEffect } from 'react';
 import { BookingRequestForm } from '../../booking-form';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Skeleton } from '@/components/ui/skeleton';
+import { initialStairspaceListings } from '@/lib/stairspace-listings';
+import type { Metadata } from 'next';
+
+// Generate static pages for each listing at build time
+export async function generateStaticParams() {
+  return initialStairspaceListings.map((listing) => ({
+    id: listing.id,
+  }));
+}
+
+// Generate metadata for each page
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const listing = initialStairspaceListings.find(l => l.id === params.id);
+
+  if (!listing) {
+    return {
+      title: 'Listing Not Found',
+    };
+  }
+
+  return {
+    title: `${listing.title} | StairSpace`,
+    description: `Details for the micro-retail space: ${listing.title}, located in ${listing.location}.`,
+    openGraph: {
+        title: listing.title,
+        description: `Rent this unique space: ${listing.title}`,
+        images: [
+            {
+            url: listing.imageUrl,
+            width: 1200,
+            height: 630,
+            alt: listing.title,
+            },
+        ],
+    },
+  };
+}
+
 
 export default function StairspaceDetailPage() {
     const params = useParams();
