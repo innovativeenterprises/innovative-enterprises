@@ -31,7 +31,3 @@ export default function AdminNetworkPage() {
     </div>
   );
 }
-
-    
-
-    
