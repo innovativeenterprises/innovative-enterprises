@@ -109,7 +109,8 @@ const prompt = ai.definePrompt({
     **Summary:**
     -   Based on the list of commercial activities, write a concise, one-paragraph summary of what the company does.
 
-3.  **Return Structured Data:** Populate all extracted information into the specified output format. You do not need to generate a filename; the application will handle that.
+3.  **Return Structured Data:** Populate all extracted information into the specified output format.
+4.  **Suggest a Filename:** Generate a descriptive filename for this document, e.g., 'CR_CompanyName_12345.pdf'. Use the most relevant name and ID number.
 `,
 });
 
@@ -125,7 +126,7 @@ const crAnalysisFlow = ai.defineFlow(
     if (output) {
       // Robust filename generation logic using the final analysis result.
       const rawName = output.companyInfo?.companyNameEnglish || output.companyInfo?.companyNameArabic || 'UnknownCompany';
-      const namePart = rawName.replace(/[\/\\?%*:|"<>]/g, '').replace(/\s+/g, '_');
+      const namePart = rawName.replace(/[\\/\\?%*:|"<>]/g, '').replace(/\s+/g, '_');
       const crnPart = output.companyInfo?.registrationNumber || 'UnknownCRN';
       output.suggestedFilename = `CR_${namePart}_${crnPart}.pdf`;
     }

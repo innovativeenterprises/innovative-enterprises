@@ -62,7 +62,8 @@ const prompt = ai.definePrompt({
     **Professional Summary:**
     -   If a CV is provided, write a concise, one-paragraph summary of the individual's professional background, key skills, and experience. If no CV is provided, leave this field empty.
 
-3.  **Return Structured Data:** Populate all extracted information into the specified JSON output format. You do not need to generate a filename; the application will handle that.
+3.  **Return Structured Data:** Populate all extracted information into the specified JSON output format.
+4.  **Suggest a Filename:** Generate a descriptive filename for these documents, e.g., 'ID_John_Doe.pdf' or 'CR_CompanyName_12345.pdf'. Use the most relevant name and ID number.
 `,
 });
 
