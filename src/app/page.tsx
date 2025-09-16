@@ -1,20 +1,10 @@
 
-import CompanyOverview from '@/components/company-overview';
-import ServiceCatalog from '@/components/service-catalog';
-import ProductShowcase from '@/components/product-showcase';
-import ClientTestimonials from '@/components/client-testimonials';
-import AiToolsCta from '@/components/ai-tools-cta';
-import ChatWidget from '@/components/chat-widget';
-
 export default function Home() {
   return (
-    <>
-      <CompanyOverview />
-      <ServiceCatalog />
-      <ClientTestimonials />
-      <ProductShowcase />
-      <AiToolsCta />
-      <ChatWidget />
-    </>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        <h1 className="text-4xl font-bold">Welcome to INNOVATIVE ENTERPRISES</h1>
+      </div>
+    </main>
   );
 }
