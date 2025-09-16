@@ -157,8 +157,19 @@ const AddEditClientDialog = ({
     );
 };
 
-const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimonial?: Testimonial, onSave: (v: TestimonialValues, id?: string) => void, children: React.ReactNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const AddEditTestimonialDialog = ({ 
+    testimonial, 
+    onSave, 
+    children,
+    isOpen,
+    onOpenChange,
+}: { 
+    testimonial?: Testimonial, 
+    onSave: (v: TestimonialValues, id?: string) => void, 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void
+}) => {
     const form = useForm<TestimonialValues>({
         resolver: zodResolver(TestimonialSchema),
         defaultValues: testimonial || { quote: "", author: "", company: "", avatarId: "" },
@@ -172,11 +183,11 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
     const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
         onSave(data, testimonial?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{testimonial ? "Edit" : "Add"} Testimonial</DialogTitle></DialogHeader>
@@ -215,10 +226,18 @@ export default function ClientTable() {
     
     const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<Client | undefined>(undefined);
+    
+    const [isTestimonialDialogOpen, setIsTestimonialDialogOpen] = useState(false);
+    const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | undefined>(undefined);
 
     const openClientDialog = (client?: Client) => {
         setSelectedClient(client);
         setIsClientDialogOpen(true);
+    };
+
+    const openTestimonialDialog = (testimonial?: Testimonial) => {
+        setSelectedTestimonial(testimonial);
+        setIsTestimonialDialogOpen(true);
     };
 
 
@@ -298,9 +317,7 @@ export default function ClientTable() {
                             {activeTab === 'clients' ? (
                                 <Button className="shrink-0" onClick={() => openClientDialog()}><PlusCircle /> Add Client</Button>
                             ) : (
-                                <AddEditTestimonialDialog onSave={handleSaveTestimonial}>
-                                    <Button className="shrink-0"><PlusCircle /> Add Testimonial</Button>
-                                </AddEditTestimonialDialog>
+                                <Button className="shrink-0" onClick={() => openTestimonialDialog()}><PlusCircle /> Add Testimonial</Button>
                             )}
                         </div>
                     </div>
@@ -348,6 +365,14 @@ export default function ClientTable() {
                         </Table>
                     </TabsContent>
                     <TabsContent value="testimonials">
+                         <AddEditTestimonialDialog
+                            isOpen={isTestimonialDialogOpen}
+                            onOpenChange={setIsTestimonialDialogOpen}
+                            testimonial={selectedTestimonial}
+                            onSave={handleSaveTestimonial}
+                         >
+                            <div/>
+                         </AddEditTestimonialDialog>
                          <Table>
                              <TableHeader><TableRow><TableHead>Quote</TableHead><TableHead>Author</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
@@ -357,17 +382,14 @@ export default function ClientTable() {
                                     filteredTestimonials.map(t => (
                                         <TableRow key={t.id}>
                                             <TableCell className="italic max-w-md truncate">
-                                                <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
-                                                    <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer">"{t.quote}"</div>
-                                                </AddEditTestimonialDialog>
+                                                <div className="p-2 -m-2 rounded-md hover:bg-muted cursor-pointer" onClick={() => openTestimonialDialog(t)}>"{t.quote}"</div>
                                             </TableCell>
                                             <TableCell>
-                                                <AddEditTestimonialDialog testimonial={t} onSave={handleSaveTestimonial}>
-                                                    <div className="cursor-pointer">{t.author}, <span className="text-muted-foreground">{t.company}</span></div>
-                                                </AddEditTestimonialDialog>
+                                                <div className="cursor-pointer" onClick={() => openTestimonialDialog(t)}>{t.author}, <span className="text-muted-foreground">{t.company}</span></div>
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
+                                                     <Button variant="ghost" size="icon" onClick={() => openTestimonialDialog(t)}><Edit/></Button>
                                                     <AlertDialog>
                                                         <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                         <AlertDialogContent>
