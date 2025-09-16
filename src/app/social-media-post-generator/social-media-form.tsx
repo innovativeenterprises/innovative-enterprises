@@ -7,7 +7,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { generateSocialMediaPost } from '@/ai/flows/social-media-post-generator';
-import { GenerateSocialMediaPostInputSchema, type GenerateSocialMediaPostOutput, type GeneratedPost } from '@/ai/flows/social-media-post-generator.schema';
+import { type GenerateSocialMediaPostOutput, type GeneratedPost, GenerateSocialMediaPostInputSchema } from '@/ai/flows/social-media-post-generator';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';

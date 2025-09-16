@@ -1,4 +1,5 @@
 
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -28,4 +29,21 @@ export const fileToText = (file: File): Promise<string> => {
         reader.onerror = (error) => reject(error);
         reader.readAsText(file, 'UTF-8'); // Specify encoding
     });
+};
+
+export const fileToBase64ContentOnly = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64Content = result.split(',')[1];
+      if (base64Content) {
+        resolve(base64Content);
+      } else {
+        reject(new Error("Could not extract Base64 content from file."));
+      }
+    };
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
 };

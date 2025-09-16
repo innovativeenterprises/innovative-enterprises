@@ -1,4 +1,6 @@
 
+'use client';
+
 import StaffTable from "@/app/admin/staff-table";
 import { initialStaffData } from "@/lib/agents";
 

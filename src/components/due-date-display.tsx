@@ -26,11 +26,13 @@ export const DueDateDisplay = ({
 
   useEffect(() => {
     // This effect runs only on the client, after hydration
-    let formatted: string;
-    let diffDays: number | null = null;
+    if (!date) {
+      setDisplayState({ isClient: true, formattedDate: `${prefix} N/A`, daysRemaining: null });
+      return;
+    }
     
     try {
-        const dueDate = new Date(date || '');
+        const dueDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -38,9 +40,10 @@ export const DueDateDisplay = ({
             throw new Error("Invalid date");
         }
         
-        diffDays = differenceInCalendarDays(dueDate, today);
-        formatted = format(dueDate, "PPP");
-         setDisplayState({
+        const diffDays = differenceInCalendarDays(dueDate, today);
+        const formatted = format(dueDate, "PPP");
+        
+        setDisplayState({
             isClient: true,
             formattedDate: `${prefix} ${formatted}`,
             daysRemaining: diffDays,

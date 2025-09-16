@@ -102,7 +102,7 @@ const prompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
   input: {schema: AnswerQuestionInputSchema},
   output: {schema: AnswerQuestionOutputSchema},
-  tools: [routeToSpecialistTool],
+  tools: [routeToSpecialestTool],
   prompt: `You are Aida, a master AI assistant for Innovative Enterprises. Your primary job is to understand a user's query and decide the best course of action.
 
 **Decision Process:**
