@@ -1,6 +1,6 @@
-
 import HadeeyaAdminPageClient from './client-page';
 import type { Metadata } from 'next';
+import { initialGiftCards } from '@/lib/gift-cards';
 
 export const metadata: Metadata = {
     title: "Hadeeya Gift Card Management",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function HadeeyaAdminPage() {
-    return <HadeeyaAdminPageClient />;
+    return <HadeeyaAdminPageClient initialGiftCards={initialGiftCards} />;
 }
