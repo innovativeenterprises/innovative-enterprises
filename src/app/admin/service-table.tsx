@@ -13,7 +13,6 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from "@/components/ui/button";
 import { GripVertical } from "lucide-react";
-import { useServicesData, setServices } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const SortableServiceRow = ({ service, handleToggle }: { service: Service, handleToggle: (title: string) => void }) => {
@@ -50,12 +49,13 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
 };
 
 export default function ServiceTable({ initialServices }: { initialServices: Service[] }) {
-    const { services, setServices, isClient } = useServicesData();
+    const [services, setServices] = useState(initialServices);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
 
-     useEffect(() => {
-        setServices(() => initialServices);
-    }, [initialServices, setServices]);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
