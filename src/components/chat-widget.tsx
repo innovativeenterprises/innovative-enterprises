@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -11,11 +12,15 @@ import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const { settings } = useSettingsData();
 
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
-    if (typeof window === 'undefined') {
-        return null; // Don't render the chat widget on the server
+    if (!isMounted) {
+        return null;
     }
 
     return (
