@@ -1,6 +1,6 @@
 # Platform Overview
 
-This document provides a comprehensive, categorized list of all 83 current projects, services, and tools within the Innovative Enterprises ecosystem, including their descriptions and current operational stage and status.
+This document provides a comprehensive, categorized list of all 84 current projects, services, and tools within the Innovative Enterprises ecosystem, including their descriptions and current operational stage and status.
 
 ## Digital Products & SaaS Platforms (39 Total)
 
