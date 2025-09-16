@@ -30,6 +30,7 @@ export const DueDateDisplay = ({
     try {
         const dueDate = new Date(date);
         const today = new Date();
+        today.setHours(0, 0, 0, 0);
         const diffDays = differenceInCalendarDays(dueDate, today);
         const formatted = format(dueDate, "PPP");
         
@@ -65,5 +66,3 @@ export const DueDateDisplay = ({
     </div>
   );
 };
-
-    

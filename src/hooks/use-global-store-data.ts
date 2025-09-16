@@ -32,5 +32,3 @@ export const useCartData = () => ({
   setCart,
   isClient: true,
 });
-
-    
