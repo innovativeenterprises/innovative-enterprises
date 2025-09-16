@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -146,7 +147,7 @@ export default function CfoDashboardClient({ initialCfoData }: { initialCfoData:
             </Card>
         </div>
       </div>
-      <InvestorTable initialInvestors={investors} />
+      <InvestorTable />
     </div>
   );
 }

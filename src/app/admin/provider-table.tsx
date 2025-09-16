@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { DueDateDisplay } from "@/components/due-date-display";
+import { useProvidersData } from "@/hooks/use-global-store-data";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -167,7 +168,8 @@ const AddEditProviderDialog = ({
     )
 }
 
-export default function ProviderTable({ providers, setProviders, isClient }: { providers: Provider[], setProviders: (updater: (prev: Provider[]) => void) => void, isClient: boolean }) {
+export default function ProviderTable() {
+    const { providers, setProviders, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
@@ -268,9 +270,9 @@ export default function ProviderTable({ providers, setProviders, isClient }: { p
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
-                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)} aria-label={`Edit ${p.name}`}><Edit className="h-4 w-4" /></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(p)} aria-label={`Edit ${"'" + p.name + "'"}`}><Edit className="h-4 w-4" /></Button>
                                         {p.portfolio && (
-                                            <Button asChild variant="ghost" size="icon" aria-label={`View ${p.name}'s portfolio`}>
+                                            <Button asChild variant="ghost" size="icon" aria-label={`View ${"'" + p.name + "'s portfolio"}`}>
                                                 <a href={p.portfolio} target="_blank" rel="noopener noreferrer"><LinkIcon /></a>
                                             </Button>
                                         )}
