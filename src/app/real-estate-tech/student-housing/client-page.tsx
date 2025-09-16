@@ -8,20 +8,22 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft, TrendingUp, TrendingDown, Percent } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
+import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const [leases, setLeases] = useState(initialLeases);
-    const [isClient, setIsClient] = useState(false);
+    const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        // Set the initial data from server props into the global store
+        setLeases(() => initialLeases);
+    }, [initialLeases, setLeases]);
 
 
     const expiringLeasesCount = useMemo(() => {

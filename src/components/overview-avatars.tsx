@@ -1,22 +1,25 @@
+
 'use client';
 
-import { useStoreData } from '@/hooks/use-global-store-data';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
+import imageData from '@/app/lib/placeholder-images.json';
 
 export default function OverviewAvatars() {
-  const { overviewAvatars, isClient } = useStoreData(state => ({
-    overviewAvatars: state.overviewAvatars,
-    isClient: true,
-  }));
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   if (!isClient) {
     return <Skeleton className="h-10 w-24" />;
   }
 
   return (
     <div className="flex -space-x-2">
-      {overviewAvatars.map((avatar, index) => (
+      {imageData.overviewAvatars.map((avatar, index) => (
         <Image
           key={index}
           src={avatar.src}

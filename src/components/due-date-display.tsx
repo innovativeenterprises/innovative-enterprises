@@ -21,9 +21,7 @@ export const DueDateDisplay = ({
   }, []);
 
   const { formattedDate, daysRemaining } = useMemo(() => {
-    if (!isClient) {
-      return { formattedDate: null, daysRemaining: null };
-    }
+    if (!date) return { formattedDate: null, daysRemaining: null };
     const dueDate = new Date(date);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to the start of the day
@@ -37,13 +35,14 @@ export const DueDateDisplay = ({
     }).format(dueDate);
 
     return { formattedDate: `${prefix} ${formatted}`, daysRemaining: diffDays };
-  }, [date, isClient, prefix]);
+  }, [date, prefix]);
 
   if (!isClient) {
     // Render a skeleton on the server and during the initial client mount.
     return <Skeleton className="h-4 w-40 mt-1" />;
   }
   
+  // This will only render on the client after hydration
   return (
     <div className={`text-sm text-muted-foreground ${className}`}>
       {formattedDate}
