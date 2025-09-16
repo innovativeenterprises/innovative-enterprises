@@ -22,8 +22,8 @@ interface CfoData {
   investors: Investor[];
 }
 
-export default function CfoDashboardClient({ initialCfoData }: { initialCfoData: CfoData }) {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, investors } = initialCfoData;
+export default function CfoDashboard({ cfoData }: { cfoData: CfoData }) {
+  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, investors } = cfoData;
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {

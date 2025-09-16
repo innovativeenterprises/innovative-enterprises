@@ -22,7 +22,6 @@ export const setSettings = (updater: (prev: AppSettings) => AppSettings) => stor
 export const useSettingsData = () => ({
   settings: useStoreData((s) => s.settings),
   setSettings,
-  isClient: true,
 });
 
 // Cart
@@ -30,5 +29,4 @@ export const setCart = (updater: (prev: CartItem[]) => CartItem[]) => store.set(
 export const useCartData = () => ({
   cart: useStoreData((s) => s.cart),
   setCart,
-  isClient: true,
 });
