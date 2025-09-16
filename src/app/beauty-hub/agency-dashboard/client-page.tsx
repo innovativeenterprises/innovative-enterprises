@@ -13,17 +13,15 @@ import { WorkerTable } from './worker-table';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests';
 import type { Worker } from '@/lib/raaha-workers';
-import type { Agency } from '@/lib/raaha-agencies';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import { type BeautyCenter } from '@/lib/beauty-centers';
-import { initialBeautyServices, type BeautyService } from '@/lib/beauty-services';
-import { initialBeautyAppointments, type BeautyAppointment } from '@/lib/beauty-appointments';
+import { type BeautyService } from '@/lib/beauty-services';
+import { type BeautyAppointment } from '@/lib/beauty-appointments';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
-import { useBeautyData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -46,19 +44,16 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
 
 
 export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
-    const { agencies, setAgencies, services, setServices, appointments, setAppointments, isClient } = useBeautyData();
+    const [agencies, setAgencies] = useState(initialAgencies);
+    const [services, setServices] = useState(initialServices);
+    const [appointments, setAppointments] = useState(initialAppointments);
+    const [isClient, setIsClient] = useState(false);
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const { toast } = useToast();
 
      useEffect(() => {
-        setAgencies(() => initialAgencies);
-        setServices(() => initialServices);
-        setAppointments(() => initialAppointments);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialAgencies, initialServices, initialAppointments]);
-
-    useEffect(() => {
+        setIsClient(true);
         if (agencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(agencies[0].id);
         }

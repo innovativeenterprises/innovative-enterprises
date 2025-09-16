@@ -7,13 +7,7 @@ import { StoreContext } from '@/components/layout/store-provider';
 import type { AppSettings } from '@/lib/settings';
 import type { CartItem } from '@/lib/global-store';
 import type { SignedLease } from '@/lib/leases';
-import type { StockItem } from '@/lib/stock-items';
-import type { Community } from '@/lib/communities';
-import type { CommunityMember } from '@/lib/community-members';
-import type { CommunityEvent } from '@/lib/community-events';
-import type { CommunityFinance } from '@/lib/community-finances';
 import type { BookingRequest as StairspaceBookingRequest } from '@/lib/stairspace-requests';
-import type { BeautyCenter, BeautyService, BeautyAppointment } from '@/lib/beauty-centers';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -56,19 +50,4 @@ export const useStairspaceRequestsData = () => ({
   stairspaceRequests: useStoreData((s) => s.stairspaceRequests),
   setStairspaceRequests,
   isClient: true,
-});
-
-// Beauty Hub
-export const setBeautyCenters = (updater: (prev: BeautyCenter[]) => BeautyCenter[]) => store.set((state) => ({ ...state, beautyCenters: updater(state.beautyCenters) }));
-export const setBeautyServices = (updater: (prev: BeautyService[]) => BeautyService[]) => store.set((state) => ({ ...state, beautyServices: updater(state.beautyServices) }));
-export const setBeautyAppointments = (updater: (prev: BeautyAppointment[]) => BeautyAppointment[]) => store.set((state) => ({ ...state, beautyAppointments: updater(state.beautyAppointments) }));
-
-export const useBeautyData = () => ({
-    agencies: useStoreData((s) => s.beautyCenters),
-    setAgencies: setBeautyCenters,
-    services: useStoreData((s) => s.beautyServices),
-    setServices: setBeautyServices,
-    appointments: useStoreData((s) => s.beautyAppointments),
-    setAppointments: setBeautyAppointments,
-    isClient: true,
 });
