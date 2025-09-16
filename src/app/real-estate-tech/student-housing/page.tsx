@@ -16,7 +16,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from "@/components/due-date-display";
 
-
 export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
