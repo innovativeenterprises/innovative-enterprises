@@ -31,7 +31,13 @@ export const DueDateDisplay = ({
     const diffTime = dueDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
     
-    const formatted = format(dueDate, "PPP");
+    let formatted;
+    try {
+        formatted = format(dueDate, "PPP");
+    } catch (e) {
+        // Fallback for invalid date string
+        return { formattedDate: `${prefix} Invalid Date`, daysRemaining: null };
+    }
 
     return { formattedDate: `${prefix} ${formatted}`, daysRemaining: diffDays };
   }, [date, prefix, isClient]);

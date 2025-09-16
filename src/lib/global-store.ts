@@ -28,11 +28,6 @@ export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
   leases: SignedLease[];
-  stockItems: StockItem[];
-  communities: Community[];
-  communityMembers: CommunityMember[];
-  communityEvents: CommunityEvent[];
-  communityFinances: CommunityFinance[];
   stairspaceRequests: StairspaceBookingRequest[];
   beautyCenters: BeautyCenter[];
   beautyServices: BeautyService[];
@@ -43,11 +38,6 @@ export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
   leases: initialLeases,
-  stockItems: initialStockItems,
-  communities: initialCommunities,
-  communityMembers: initialMembers,
-  communityEvents: initialEvents,
-  communityFinances: initialFinances,
   stairspaceRequests: initialStairspaceRequests,
   beautyCenters: initialBeautyCenters,
   beautyServices: initialBeautyServices,
