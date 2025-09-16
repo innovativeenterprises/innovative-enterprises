@@ -1,21 +1,19 @@
 
-'use client';
-
-import { useState, useEffect } from "react";
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useProvidersData } from "@/hooks/use-global-store-data";
-import { useAssetsData } from "@/hooks/use-global-store-data";
+import { initialProviders } from "@/lib/providers";
+import { initialAssets } from "@/lib/assets";
+import type { Metadata } from 'next';
 
+export const metadata: Metadata = {
+  title: "Network Management",
+  description: "Manage your external network of providers and rental assets.",
+};
 
 export default function AdminNetworkPage() {
-  const { providers, setProviders, isClient: isProvidersClient } = useProvidersData();
-  const { assets, setAssets, isClient: isAssetsClient } = useAssetsData();
-  const isClient = isProvidersClient && isAssetsClient;
-
-  // Since we are now passing data down, we don't fetch it here anymore.
-  // The use...Data hooks still manage the client-side state for interactivity.
+  const providers = initialProviders;
+  const assets = initialAssets;
 
   return (
     <div className="space-y-8">
@@ -32,10 +30,10 @@ export default function AdminNetworkPage() {
                 <TabsTrigger value="assets">Rental Assets</TabsTrigger>
             </TabsList>
             <TabsContent value="providers" className="mt-6">
-                <ProviderTable providers={providers} setProviders={setProviders} isClient={isClient} />
+                <ProviderTable initialProviders={providers} />
             </TabsContent>
             <TabsContent value="assets" className="mt-6">
-                <AssetTable assets={assets} setAssets={setAssets} isClient={isClient} />
+                <AssetTable initialAssets={assets} />
             </TabsContent>
         </Tabs>
 

@@ -9,7 +9,8 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { DueDateDisplay } from '@/components/due-date-display';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
-import InvestorTable from '../investor-table';
+import InvestorTable from '../admin/investor-table';
+import type { Investor } from '@/lib/investors';
 
 interface CfoData {
   kpiData: KpiData[];
@@ -17,10 +18,11 @@ interface CfoData {
   upcomingPayments: UpcomingPayment[];
   vatPayment: VatPayment;
   cashFlowData: CashFlowData[];
+  investors: Investor[];
 }
 
 export default function CfoDashboardClient({ initialCfoData }: { initialCfoData: CfoData }) {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = initialCfoData;
+  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, investors } = initialCfoData;
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -144,7 +146,7 @@ export default function CfoDashboardClient({ initialCfoData }: { initialCfoData:
             </Card>
         </div>
       </div>
-      <InvestorTable />
+      <InvestorTable initialInvestors={investors} />
     </div>
   );
 }

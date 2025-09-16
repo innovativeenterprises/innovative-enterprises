@@ -1,4 +1,5 @@
-import { saasProducts, type SaasCategory, type SaaSProduct } from '@/lib/saas-products';
+
+import { saasProducts } from '@/lib/saas-products';
 import SaasPortfolioClientPage from './client-page';
 import type { Metadata } from 'next';
 
