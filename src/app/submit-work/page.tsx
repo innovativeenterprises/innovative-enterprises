@@ -1,5 +1,3 @@
-'use client';
-
 import WorkOrderForm from "@/app/tender-assistant/work-order-form";
 import { Lightbulb } from "lucide-react";
 import type { Metadata } from 'next';

@@ -1,7 +1,3 @@
-
-
-'use client';
-
 import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Users, Cpu } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

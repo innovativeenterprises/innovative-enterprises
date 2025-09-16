@@ -1,12 +1,9 @@
-'use client';
-
-import { useState } from 'react';
 import TranslationForm from "./translation-form";
 import { Languages, FileText, Banknote, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pricing, PricingGroup } from '@/lib/pricing';
-import { usePricingData } from '@/hooks/use-global-store-data';
-import { useSettingsData } from '@/hooks/use-global-store-data';
+import { initialPricing } from '@/lib/pricing';
+import { initialSettings } from '@/lib/settings';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -90,9 +87,8 @@ const PriceList = ({ pricing }: { pricing: Pricing[] }) => {
 
 
 export default function DocumentTranslatorPage() {
-  // Pull data from our admin "sources of truth"
-  const { pricing } = usePricingData();
-  const { settings } = useSettingsData();
+  const pricing = initialPricing;
+  const settings = initialSettings;
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

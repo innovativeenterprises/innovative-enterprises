@@ -1,8 +1,5 @@
-'use client'
-
 import AgentList from "@/components/agent-list";
-import { useStaffData } from "@/hooks/use-global-store-data";
-import { Skeleton } from "@/components/ui/skeleton";
+import { initialStaffData } from "@/lib/agents";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +12,7 @@ export const metadata: Metadata = {
 
 
 export default function AutomationPage() {
-  const { agentCategories, isClient } = useStaffData();
+  const { agentCategories } = initialStaffData;
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -32,14 +29,7 @@ export default function AutomationPage() {
             </Button>
         </div>
         <div className="max-w-7xl mx-auto mt-12">
-            {isClient ? (
-                <AgentList categories={agentCategories} />
-            ) : (
-                <div className="space-y-12">
-                    <Skeleton className="h-96 w-full" />
-                    <Skeleton className="h-96 w-full" />
-                </div>
-            )}
+            <AgentList categories={agentCategories} />
         </div>
       </div>
     </div>

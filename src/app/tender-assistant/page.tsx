@@ -1,5 +1,3 @@
-'use client';
-
 import TenderForm from "./tender-form";
 import { FileText } from "lucide-react";
 import type { Metadata } from 'next';

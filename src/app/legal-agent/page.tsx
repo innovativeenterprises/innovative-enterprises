@@ -1,10 +1,9 @@
-'use client';
-
 import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { legalAgentRouter } from '@/ai/flows/legal-agent';
 import { Scale } from 'lucide-react';
 import type { Metadata } from 'next';
+import { initialSettings } from '@/lib/settings';
 
 export const metadata: Metadata = {
   title: "AI Admin & Legal Assistant",
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function LegalAgentPage() {
-    const { settings } = useSettingsData();
+    const settings = initialSettings;
 
     // This is the new router flow that will decide which sub-task to perform.
     const agentFlow = async (input: { [key: string]: any }) => {

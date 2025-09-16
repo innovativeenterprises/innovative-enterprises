@@ -1,10 +1,8 @@
-'use client';
-
-import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
 import { Search } from 'lucide-react';
 import type { Metadata } from 'next';
+import { initialSettings } from '@/lib/settings';
 
 export const metadata: Metadata = {
   title: "Rami - AI Research Agent",
@@ -12,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function ResearcherPage() {
-    const { settings } = useSettingsData();
+    const settings = initialSettings;
 
     // The AI flow can handle a generic query, which we'll get from the chat component's 'message' property.
     // The flow itself will determine if the source is a URL or a search term.

@@ -1,5 +1,3 @@
-'use client';
-
 import ImageForm from "./image-form";
 import { Image as ImageIcon } from "lucide-react";
 import type { Metadata } from 'next';

@@ -1,5 +1,3 @@
-'use client';
-
 import CvForm from "./cv-form";
 import InterviewCoachForm from "../interview-coach/coach-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"

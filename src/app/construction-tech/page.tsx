@@ -1,14 +1,9 @@
-
-'use client';
-
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren } from "lucide-react";
 import Link from "next/link";
-import { useProductsData } from "@/hooks/use-global-store-data";
+import { initialProducts } from "@/lib/products";
 import type { Product } from "@/lib/products";
-import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -64,30 +59,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-const ProductGridSkeleton = () => (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i} className="flex flex-col h-full">
-                <CardHeader className="flex-row items-center gap-4">
-                    <Skeleton className="h-12 w-12 rounded-full" />
-                    <Skeleton className="h-6 w-32" />
-                </CardHeader>
-                <CardContent className="flex-grow space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-5/6" />
-                </CardContent>
-                <CardFooter>
-                    <Skeleton className="h-10 w-full" />
-                </CardFooter>
-            </Card>
-        ))}
-    </div>
-);
-
 export default function ConstructionTechPage() {
-    const { products, isClient } = useProductsData();
-
-    const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
+    const contechProducts = initialProducts.filter(p => p.category === "Construction Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -103,13 +76,11 @@ export default function ConstructionTechPage() {
         </div>
 
         <div className="max-w-6xl mx-auto mt-20">
-            {isClient ? (
              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {contechProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                 ))}
             </div>
-            ) : <ProductGridSkeleton />}
         </div>
 
         <div className="max-w-3xl mx-auto mt-20 text-center">

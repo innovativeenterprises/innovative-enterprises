@@ -1,5 +1,3 @@
-'use client';
-
 import SocialMediaForm from "./social-media-form";
 import { Megaphone } from "lucide-react";
 import type { Metadata } from "next";
