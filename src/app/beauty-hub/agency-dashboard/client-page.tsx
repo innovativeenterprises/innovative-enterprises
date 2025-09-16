@@ -19,9 +19,9 @@ import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } fr
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
-import { BeautyCenter, initialBeautyCenters } from '@/lib/beauty-centers';
-import { initialBeautyServices, BeautyService } from '@/lib/beauty-services';
-import { initialBeautyAppointments, BeautyAppointment } from '@/lib/beauty-appointments';
+import { type BeautyCenter, initialBeautyCenters } from '@/lib/beauty-centers';
+import { initialBeautyServices, type BeautyService } from '@/lib/beauty-services';
+import { initialBeautyAppointments, type BeautyAppointment } from '@/lib/beauty-appointments';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
 
@@ -61,7 +61,7 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialServ
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-7xl mx-auto space-y-8">
                      <div>
-                        <h1 className="text-3xl font-bold">Beauty &amp; Wellness Dashboard</h1>
+                        <h1 className="text-3xl font-bold">Beauty & Wellness Dashboard</h1>
                         <p className="text-muted-foreground">Manage your salon, staff, and client appointments.</p>
                     </div>
 
