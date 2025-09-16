@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function CooDashboardPage() {
+    // In a real app, this data would be fetched from a database.
     const cfoData = {
         kpiData,
         transactionData,

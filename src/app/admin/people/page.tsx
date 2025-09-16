@@ -1,7 +1,11 @@
 
 import StaffTable from "@/app/admin/staff-table";
+import { initialStaffData } from "@/lib/agents";
 
 export default function AdminPeoplePage() {
+  // Data is fetched on the server and passed to the client component.
+  const { leadership, staff, agentCategories } = initialStaffData;
+
   return (
     <div className="space-y-8">
         <div>
@@ -11,7 +15,11 @@ export default function AdminPeoplePage() {
             </p>
         </div>
 
-        <StaffTable />
+        <StaffTable 
+            initialLeadership={leadership}
+            initialStaff={staff}
+            initialAgentCategories={agentCategories}
+        />
     </div>
   );
 }

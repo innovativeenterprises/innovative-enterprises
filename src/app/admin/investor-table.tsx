@@ -20,7 +20,6 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent, Wand2 } from "lucide-react";
 import { analyzeCrDocument } from "@/ai/flows/cr-analysis";
 import { Skeleton } from "../ui/skeleton";
-import { useInvestorsData, setInvestors } from "@/hooks/use-global-store-data";
 import { fileToDataURI } from "@/lib/utils";
 
 const InvestorSchema = z.object({
@@ -202,11 +201,16 @@ const AddEditInvestorDialog = ({
     )
 }
 
-export default function InvestorTable() {
-    const { investors, isClient } = useInvestorsData();
+export default function InvestorTable({ initialInvestors }: { initialInvestors: Investor[] }) {
+    const [investors, setInvestors] = useState(initialInvestors);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedInvestor, setSelectedInvestor] = useState<Investor | undefined>(undefined);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const openDialog = (investor?: Investor) => {
         setSelectedInvestor(investor);
