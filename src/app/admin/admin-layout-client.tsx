@@ -68,8 +68,7 @@ export default function AdminLayoutClient({
   ];
   
   const operations = [
-      { href: '/admin/coo-dashboard', label: 'AI COO', icon: BrainCircuit },
-      { href: '/admin/finance', label: 'Finance', icon: WalletCards },
+      { href: '/admin/finance', label: 'Finance & COO', icon: WalletCards },
       { href: '/admin/operations', label: 'Operations & AI', icon: GanttChartSquare },
       { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
       { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
