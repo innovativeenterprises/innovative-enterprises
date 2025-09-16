@@ -10,7 +10,7 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { DueDateDisplay } from '@/components/due-date-display';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
-import InvestorTable from '../investor-table';
+import InvestorTable from '@/app/admin/investor-table';
 import type { Investor } from '@/lib/investors';
 
 interface CfoData {
