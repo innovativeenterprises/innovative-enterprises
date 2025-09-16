@@ -126,5 +126,3 @@ export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), 
 export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCards), setGiftCards, isClient: true });
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
 export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });
-
-  
