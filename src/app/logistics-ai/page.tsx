@@ -1,10 +1,5 @@
 
-'use client';
-
-import { GanttChartSquare, Truck, ArrowRight, ClipboardCheck, DollarSign, Users, Home } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from 'next/link';
+import { Truck } from "lucide-react";
 import LogisticsSchedulerForm from "./scheduler-form";
 import type { Metadata } from 'next';
 
