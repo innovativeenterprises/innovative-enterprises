@@ -25,13 +25,16 @@ type PricingValues = z.infer<typeof PricingSchema>;
 const EditPriceDialog = ({ 
     item, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     item: Pricing, 
     onSave: (values: PricingValues, id: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<PricingValues>({
         resolver: zodResolver(PricingSchema),
         defaultValues: { price: item.price },
@@ -45,11 +48,11 @@ const EditPriceDialog = ({
 
     const onSubmit: SubmitHandler<PricingValues> = (data) => {
         onSave(data, item.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -78,11 +81,18 @@ const EditPriceDialog = ({
 export default function PricingTable() { 
     const { pricing, isClient } = usePricingData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
         toast({ title: "Price updated successfully." });
     };
+
+    const handleOpenDialog = (item: Pricing) => {
+        setSelectedItem(item);
+        setIsDialogOpen(true);
+    }
 
     const pricingByGroup = useMemo(() => {
         if (!isClient) return {};
@@ -104,6 +114,16 @@ export default function PricingTable() {
                 <CardDescription>Manage the per-page price for document translation.</CardDescription>
             </CardHeader>
             <CardContent>
+                {selectedItem && (
+                     <EditPriceDialog 
+                        isOpen={isDialogOpen}
+                        onOpenChange={setIsDialogOpen}
+                        item={selectedItem}
+                        onSave={handleSave}
+                     >
+                        <div/>
+                    </EditPriceDialog>
+                )}
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -128,9 +148,7 @@ export default function PricingTable() {
                                         <TableCell className="text-muted-foreground">{item.group}</TableCell>
                                         <TableCell>OMR {item.price.toFixed(2)}</TableCell>
                                         <TableCell className="text-right">
-                                            <EditPriceDialog item={item} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon" aria-label={`Edit price for ${item.type}`}><Edit /></Button>
-                                            </EditPriceDialog>
+                                            <Button variant="ghost" size="icon" aria-label={`Edit price for ${item.type}`} onClick={() => handleOpenDialog(item)}><Edit /></Button>
                                         </TableCell>
                                     </TableRow>
                                 ))
