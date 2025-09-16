@@ -52,8 +52,7 @@ const prompt = ai.definePrompt({
     **Summary:**
     -   Based on the list of commercial activities, write a concise, one-paragraph summary of what the company does.
 
-3.  **Generate a Filename:** Based on the extracted Company Name and CR Number, create a descriptive filename for the document. The format should be \`CR_{CompanyName}_{CRN}.pdf\`. If the name or CRN is not found, use a suitable placeholder.
-4.  **Return Structured Data:** Populate all extracted information into the specified output format.
+3.  **Return Structured Data:** Populate all extracted information into the specified output format. You do not need to generate a filename; the application will handle that.
 `,
 });
 
