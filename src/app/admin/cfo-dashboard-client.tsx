@@ -9,6 +9,7 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { DueDateDisplay } from '@/components/due-date-display';
 import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
+import InvestorTable from '../investor-table';
 
 interface CfoData {
   kpiData: KpiData[];
@@ -143,6 +144,7 @@ export default function CfoDashboardClient({ initialCfoData }: { initialCfoData:
             </Card>
         </div>
       </div>
+      <InvestorTable />
     </div>
   );
 }
