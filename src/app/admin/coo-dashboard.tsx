@@ -2,9 +2,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useProductsData } from "@/hooks/use-global-store-data";
-import { useProvidersData } from "@/hooks/use-global-store-data";
-import { useCfoData } from "@/hooks/use-global-store-data";
+import type { Product } from '@/lib/products';
+import type { Provider } from '@/lib/providers';
+import type { KpiData } from '@/lib/cfo-data';
+import { useStoreData } from "@/hooks/use-global-store-data";
 import { analyzeOperations } from '@/ai/flows/agentic-coo';
 import type { CooAnalysisOutput } from '@/ai/flows/agentic-coo.schema';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,10 +38,18 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
     )
 }
 
-export default function CooDashboard() {
-    const { products } = useProductsData();
-    const { providers } = useProvidersData();
-    const { kpiData } = useCfoData();
+export default function CooDashboard({
+    initialProducts,
+    initialProviders,
+    initialKpiData
+}: {
+    initialProducts: Product[],
+    initialProviders: Provider[],
+    initialKpiData: KpiData[]
+}) {
+    const { products } = useStoreData(() => ({ products: initialProducts }));
+    const { providers } = useStoreData(() => ({ providers: initialProviders }));
+    const { kpiData } = useStoreData(() => ({ kpiData: initialKpiData }));
 
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
@@ -62,7 +71,7 @@ export default function CooDashboard() {
     useEffect(() => {
         runAnalysis();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [products, providers, kpiData]); // Re-run if underlying data changes in the store
 
     return (
         <div className="space-y-8">
