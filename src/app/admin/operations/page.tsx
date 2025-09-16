@@ -1,7 +1,3 @@
-
-
-'use client';
-
 import ProForm from "@/app/admin/operations/pro-form";
 import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
@@ -55,6 +51,3 @@ export default function AdminOperationsPage() {
     </div>
   );
 }
-    
-
-    
