@@ -41,7 +41,7 @@ export default function ProviderProfilePage() {
     const [provider, setProvider] = useState<Provider | undefined>(undefined);
 
     useEffect(() => {
-        if (isClient && id) {
+        if (isClient) {
             const foundProvider = providers.find(p => p.id === id);
             if (foundProvider) {
                 setProvider(foundProvider);
