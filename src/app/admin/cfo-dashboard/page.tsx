@@ -1,4 +1,4 @@
-import CfoDashboardClient from './cfo-dashboard-client';
+import CfoDashboardClient from '@/app/cfo/cfo-dashboard-client';
 import type { Metadata } from 'next';
 import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from '@/lib/cfo-data';
 import { initialInvestors } from '@/lib/investors';
