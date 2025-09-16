@@ -12,7 +12,6 @@
 
 import { initialSettings, type AppSettings } from './settings';
 import type { Product } from './products';
-import { initialStockItems, type StockItem } from './stock-items';
 
 export interface CartItem extends Product {
   quantity: number;
