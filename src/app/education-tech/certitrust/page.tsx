@@ -1,6 +1,4 @@
 
-'use client';
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ShieldCheck, Camera, Bot, Layers, CheckSquare, ArrowRight } from "lucide-react";

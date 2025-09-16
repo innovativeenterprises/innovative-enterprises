@@ -1,11 +1,14 @@
 
-'use client';
-
 import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Users, Home } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "EduFlow Suite | Innovative Enterprises",
+    description: "An all-in-one administrative automation platform for schools, featuring smart timetabling, automated admissions workflows, and AI-powered resource allocation.",
+};
 
 export default function EduFlowPage() {
   return (

@@ -1,18 +1,13 @@
 
-'use client';
-
-import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Briefcase, Calendar, GraduationCap, HandCoins, Search, Building2, User, MapPin } from "lucide-react";
+import { Briefcase, Calendar, GraduationCap, HandCoins, Building2, User, MapPin } from "lucide-react";
 import Link from "next/link";
 import { initialMembers, type CommunityMember } from '@/lib/community-members';
 import { initialEvents, type CommunityEvent } from '@/lib/community-events';
 import { initialJobs, type JobPosting } from '@/lib/alumni-jobs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
-import { Progress } from '@/components/ui/progress';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -56,21 +51,9 @@ const JobCard = ({ job }: { job: JobPosting }) => (
 );
 
 export default function AlumniConnectPage() {
-    const [searchTerm, setSearchTerm] = useState('');
-    
-    // In a real app, this data would be fetched from an API
     const alumni = initialMembers.filter(m => m.status === 'Active');
     const events = initialEvents.slice(0, 3);
     const jobs = initialJobs.slice(0, 3);
-
-    const filteredAlumni = useMemo(() => {
-        if (!searchTerm) return alumni.slice(0, 4);
-        return alumni.filter(a => 
-            a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (a.position && a.position.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (a.employer && a.employer.toLowerCase().includes(searchTerm.toLowerCase()))
-        ).slice(0, 4);
-    }, [alumni, searchTerm]);
 
     return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -92,21 +75,12 @@ export default function AlumniConnectPage() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5"/> Alumni Directory</CardTitle>
                         <CardDescription>Connect with fellow graduates.</CardDescription>
-                         <div className="relative pt-2">
-                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search by name, position, or company..."
-                                className="pl-8"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
                     </CardHeader>
                     <CardContent className="grid md:grid-cols-2 gap-4">
-                        {filteredAlumni.map(member => <MemberCard key={member.id} member={member} />)}
+                        {alumni.slice(0,4).map(member => <MemberCard key={member.id} member={member} />)}
                     </CardContent>
                     <CardFooter>
-                         <Button variant="outline" className="w-full">View Full Directory</Button>
+                         <Button variant="outline" className="w-full" disabled>View Full Directory (Coming Soon)</Button>
                     </CardFooter>
                 </Card>
 
@@ -120,7 +94,7 @@ export default function AlumniConnectPage() {
                         {events.map(event => <EventCard key={event.id} event={event} />)}
                     </CardContent>
                      <CardFooter>
-                         <Button variant="outline" className="w-full">View All Events</Button>
+                         <Button variant="outline" className="w-full" disabled>View All Events (Coming Soon)</Button>
                     </CardFooter>
                 </Card>
 
@@ -134,7 +108,7 @@ export default function AlumniConnectPage() {
                         {jobs.map(job => <JobCard key={job.id} job={job} />)}
                     </CardContent>
                      <CardFooter>
-                         <Button variant="outline" className="w-full">View All Jobs</Button>
+                         <Button variant="outline" className="w-full" disabled>View All Jobs (Coming Soon)</Button>
                     </CardFooter>
                 </Card>
             </div>
@@ -149,11 +123,10 @@ export default function AlumniConnectPage() {
                         <div className="pt-2">
                              <p className="text-3xl font-bold text-primary">OMR 125,670</p>
                              <p className="text-xs text-muted-foreground">raised of OMR 200,000 goal</p>
-                             <Progress value={62.8} className="mt-2 h-3"/>
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button className="w-full bg-accent hover:bg-accent/90">Donate Now</Button>
+                        <Button className="w-full bg-accent hover:bg-accent/90" disabled>Donate Now</Button>
                     </CardFooter>
                 </Card>
                  <Card>
@@ -162,7 +135,7 @@ export default function AlumniConnectPage() {
                          <CardDescription>Post a job to our network of talented alumni.</CardDescription>
                     </CardHeader>
                     <CardFooter>
-                        <Button className="w-full" variant="secondary">Post a Job</Button>
+                        <Button className="w-full" variant="secondary" disabled>Post a Job</Button>
                     </CardFooter>
                  </Card>
             </div>
