@@ -357,3 +357,5 @@ export default function InvestorTable() {
         </Card>
     );
 }
+
+    
