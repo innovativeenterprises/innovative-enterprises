@@ -1,6 +1,7 @@
+
 import OpportunityTable from '../opportunity-table';
-import WorkOrderForm from '@/app/admin/opportunities/work-order-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { initialOpportunities } from '@/lib/opportunities';
 
 export default function AdminOpportunitiesPage() {
   return (
@@ -12,7 +13,7 @@ export default function AdminOpportunitiesPage() {
             </p>
         </div>
 
-        <OpportunityTable />
+        <OpportunityTable initialOpportunities={initialOpportunities} />
     </div>
   );
 }

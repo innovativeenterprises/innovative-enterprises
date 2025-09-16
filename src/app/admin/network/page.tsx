@@ -1,15 +1,10 @@
 
-'use client';
-
-import { useState, useEffect } from 'react';
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { initialProviders } from "@/lib/providers";
 import { initialAssets } from "@/lib/assets";
 import type { Metadata } from 'next';
-import type { Provider } from '@/lib/providers';
-import type { Asset } from '@/lib/assets';
 
 export const metadata: Metadata = {
   title: "Network Management",
@@ -17,13 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminNetworkPage() {
-  const [providers, setProviders] = useState<Provider[]>(initialProviders);
-  const [assets, setAssets] = useState<Asset[]>(initialAssets);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // Data is now fetched on the server and passed down as props.
+  const providers = initialProviders;
+  const assets = initialAssets;
 
   return (
     <div className="space-y-8">
@@ -40,10 +31,10 @@ export default function AdminNetworkPage() {
                 <TabsTrigger value="assets">Rental Assets</TabsTrigger>
             </TabsList>
             <TabsContent value="providers" className="mt-6">
-                <ProviderTable />
+                <ProviderTable initialProviders={providers} />
             </TabsContent>
             <TabsContent value="assets" className="mt-6">
-                <AssetTable initialAssets={assets} setAssets={setAssets} isClient={isClient} />
+                <AssetTable initialAssets={assets} />
             </TabsContent>
         </Tabs>
 

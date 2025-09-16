@@ -109,6 +109,10 @@ export default function ProjectsPage() {
         defaultValues: { idea: '' },
     });
     
+    useEffect(() => {
+        setProducts(() => initialProducts);
+    }, [setProducts]);
+
     const productsByStage = useMemo(() => {
         const grouped: Record<string, Product[]> = {};
         stages.forEach(stage => {

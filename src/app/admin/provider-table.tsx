@@ -168,12 +168,16 @@ const AddEditProviderDialog = ({
     )
 }
 
-export default function ProviderTable() {
+export default function ProviderTable({ initialProviders }: { initialProviders: Provider[] }) {
     const { providers, setProviders, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
+    
+    useEffect(() => {
+        setProviders(() => initialProviders);
+    }, [initialProviders, setProviders]);
 
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);
