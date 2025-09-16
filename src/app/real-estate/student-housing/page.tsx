@@ -16,18 +16,31 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 
 const DateDisplay = ({ dateString, isClient }: { dateString?: string; isClient: boolean; }) => {
-
-    const formattedDate = useMemo(() => {
-        if (!isClient || !dateString) return null;
-        try {
-            return format(new Date(dateString), "PPP");
-        } catch {
-            return "Invalid Date";
-        }
+    const { formattedDate, daysRemaining } = useMemo(() => {
+        if (!isClient || !dateString) return { formattedDate: null, daysRemaining: null };
+        const dueDate = new Date(dateString);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffTime = dueDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+        const formatted = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
+        return { formattedDate: `Ends: ${formatted}`, daysRemaining: diffDays };
     }, [dateString, isClient]);
 
-    if (!isClient) return <Skeleton className="h-4 w-24" />;
-    return <>{formattedDate || "N/A"}</>;
+    if (!isClient) return <Skeleton className="h-4 w-40" />;
+
+    return (
+        <div className="text-sm text-muted-foreground">
+            {formattedDate}
+            {daysRemaining !== null && (
+                daysRemaining >= 0 ? (
+                    <span className={daysRemaining < 30 ? "text-yellow-600 font-medium" : ""}> ({daysRemaining} days left)</span>
+                ) : (
+                    <span className="text-destructive font-medium"> (Expired)</span>
+                )
+            )}
+        </div>
+    );
 };
 
 export default function StudentHousingPage() {
@@ -134,7 +147,7 @@ export default function StudentHousingPage() {
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    <p className="text-sm text-muted-foreground">Lessor: {lease.lessorName}</p>
+                                                    <DateDisplay dateString={lease.endDate} isClient={isClient}/>
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
