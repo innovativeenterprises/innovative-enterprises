@@ -8,7 +8,7 @@ import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
 import { initialPricing } from "@/lib/pricing";
-import { initialProducts, initialStoreProducts } from "@/lib/products";
+import { initialProducts } from "@/lib/products";
 import { initialServices } from "@/lib/services";
 import { initialClients, initialTestimonials } from "@/lib/clients";
 import { initialPosProducts } from "@/lib/pos-data";

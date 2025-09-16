@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import type { Pricing, PricingGroup } from "@/lib/pricing";
+import type { Pricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -36,7 +36,6 @@ const EditPriceDialog = ({
 }) => {
     const form = useForm<PricingValues>({
         resolver: zodResolver(PricingSchema),
-        defaultValues: { price: item.price },
     });
 
     useEffect(() => {

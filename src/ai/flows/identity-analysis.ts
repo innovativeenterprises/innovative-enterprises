@@ -44,8 +44,9 @@ const prompt = ai.definePrompt({
 
     **Document Identification:**
     -   First, determine if the primary document (idDocumentFrontUri) is a National ID card, a Resident Card, or a Passport. The presence of an MRZ (Machine-Readable Zone) at the bottom usually indicates a passport.
-    -   If it's a Passport, extract all details into the \`passportDetails\` object.
-    -   If it's an ID/Resident Card, extract details into the \`idCardDetails\` object.
+    -   If the primary document is a Passport, extract all details into the \`passportDetails\` object and also populate the relevant fields in \`personalDetails\`.
+    -   If the primary document is an ID/Resident Card, extract details into the \`idCardDetails\` object and also populate \`personalDetails\`.
+    -   If a separate passport document is provided, prioritize it for name, nationality, and DOB.
 
     **Personal Details:**
     -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID. If the name is split into Surname and Given Names, combine them.
@@ -76,10 +77,14 @@ const identityAnalysisFlow = ai.defineFlow(
 
     if (output) {
         // More robust filename generation.
-        const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${output.passportDetails.givenNames} ${output.passportDetails.surname}`.trim() : null);
+        const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim() : null);
         
         if (fullName && !output.personalDetails?.fullName) {
-             output.personalDetails = { ...output.personalDetails, fullName: fullName };
+             if (!output.personalDetails) {
+                 output.personalDetails = { fullName };
+             } else {
+                 output.personalDetails.fullName = fullName;
+             }
         }
 
         const civilId = output.idCardDetails?.civilNumber;
