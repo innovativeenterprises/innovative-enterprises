@@ -34,7 +34,7 @@ const AssetSchema = z.object({
   aiHint: z.string().min(2, "AI hint is required"),
 }).refine(data => data.imageUrl || (data.imageFile && data.imageFile.length > 0), {
     message: "Either an Image URL or an Image File is required.",
-    path: ["imageUrl"], // Point error to imageUrl field
+    path: ["imageUrl"],
 });
 
 type AssetValues = z.infer<typeof AssetSchema> & { image: string };
@@ -325,9 +325,3 @@ export default function AssetTable({ assets, setAssets, isClient }: { assets: As
         </Card>
     );
 }
-
-    
-
-    
-
-    
