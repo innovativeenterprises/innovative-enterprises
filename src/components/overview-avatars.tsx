@@ -1,13 +1,16 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import imageData from '@/app/lib/placeholder-images.json';
+import type { Client } from '@/lib/clients';
 
-export default function OverviewAvatars() {
+export default function OverviewAvatars({ clients }: { clients: Client[] }) {
   const [isClient, setIsClient] = useState(false);
+  const { overviewAvatars } = imageData;
 
   useEffect(() => {
     setIsClient(true);
@@ -19,7 +22,7 @@ export default function OverviewAvatars() {
 
   return (
     <div className="flex -space-x-2">
-      {imageData.overviewAvatars.map((avatar, index) => (
+      {overviewAvatars.map((avatar, index) => (
         <Image
           key={index}
           src={avatar.src}

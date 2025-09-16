@@ -1,62 +1,48 @@
 
-'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useEffect } from "react";
-import { useProductsData, useProvidersData, useStaffData } from "@/hooks/use-global-store-data";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { initialProducts } from "@/lib/products";
+import { initialProviders } from "@/lib/providers";
+import { initialStaffData } from "@/lib/agents";
 
 export default function AdminDashboardPage() {
-  const { products, setProducts, isClient: isProductsClient } = useProductsData();
-  const { providers, isClient: isProvidersClient } = useProvidersData();
-  const { leadership, staff, agentCategories, setStaffData, isClient: isStaffClient } = useStaffData();
+  const products = initialProducts;
+  const providers = initialProviders;
+  const { leadership, staff, agentCategories } = initialStaffData;
+
+  const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
+  const totalStaff = leadership.length + staff.length;
   
-  const isClient = isProductsClient && isProvidersClient && isStaffClient;
-  
-  const totalAgents = useMemo(() => isClient ? agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0) : 0, [agentCategories, isClient]);
-  const totalStaff = useMemo(() => isClient ? leadership.length + staff.length : 0, [leadership, staff, isClient]);
-  
-  const dynamicStats = useMemo(() => {
-    if (!isClient) {
-        return Array(4).fill({ value: '...' });
-    }
-    return [
+  const dynamicStats = [
     { title: "Total Staff (Human + AI)", value: (totalStaff + totalAgents).toString(), icon: Users, href: "/admin/people" },
     { title: "Active Projects", value: products.filter(p => p.stage !== 'Live & Operating').length.toString(), icon: FolderKanban, href: "/admin/projects" },
     { title: "Live Products", value: products.filter(p => p.stage === 'Live & Operating').length.toString(), icon: Zap, href: "/saas-portfolio" },
     { title: "Provider Network", value: providers.length.toString(), icon: Network, href: "/admin/network" },
-  ]}, [isClient, totalStaff, totalAgents, products, providers]);
+  ];
 
-  const projectStatusData = useMemo(() => {
-    if (!isClient) return [];
-    const stageCounts = products.reduce((acc, product) => {
-        const stage = product.stage || 'Uncategorized';
-        acc[stage] = (acc[stage] || 0) + 1;
-        return acc;
-    }, {} as Record<string, number>);
-    
-    return Object.entries(stageCounts).map(([stage, count]) => ({ stage, count }));
+  const projectStatusData = products.reduce((acc, product) => {
+    const stage = product.stage || 'Uncategorized';
+    acc[stage] = (acc[stage] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  const projectStatusChartData = Object.entries(projectStatusData).map(([stage, count]) => ({ stage, count }));
 
-  }, [products, isClient]);
-
-  const networkGrowthData = useMemo(() => {
-      if (!isClient) return [];
-      return [
-          { month: 'Feb', count: 12 },
-          { month: 'Mar', count: 15 },
-          { month: 'Apr', count: 20 },
-          { month: 'May', count: 22 },
-          { month: 'Jun', count: 28 },
-          { month: 'Jul', count: providers.length },
-      ]
-  }, [providers, isClient]);
+  const networkGrowthData = [
+      { month: 'Feb', count: 12 },
+      { month: 'Mar', count: 15 },
+      { month: 'Apr', count: 20 },
+      { month: 'May', count: 22 },
+      { month: 'Jun', count: 28 },
+      { month: 'Jul', count: providers.length },
+  ];
 
   const chartConfig = {
       count: { label: "Count" },
@@ -90,11 +76,7 @@ export default function AdminDashboardPage() {
                         {stat.icon && <stat.icon className="h-4 w-4 text-muted-foreground" />}
                     </CardHeader>
                     <CardContent>
-                        {isClient ? (
-                            <div className="text-2xl font-bold">{stat.value}</div>
-                        ) : (
-                            <Skeleton className="h-8 w-20" />
-                        )}
+                        <div className="text-2xl font-bold">{stat.value}</div>
                     </CardContent>
                 </Card>
               </Link>
@@ -108,17 +90,15 @@ export default function AdminDashboardPage() {
             <CardDescription>Number of products in each development stage.</CardDescription>
           </CardHeader>
           <CardContent>
-            {isClient ? (
-                <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                    <BarChart data={projectStatusData} accessibilityLayer>
-                        <CartesianGrid vertical={false} />
-                        <XAxis dataKey="stage" tickLine={false} tickMargin={10} axisLine={false} />
-                        <YAxis />
-                        <Tooltip content={<ChartTooltipContent />} />
-                        <Bar dataKey="count" fill="var(--color-primary)" radius={4} />
-                    </BarChart>
-                </ChartContainer>
-            ) : <Skeleton className="h-[300px] w-full" />}
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <BarChart data={projectStatusChartData} accessibilityLayer>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="stage" tickLine={false} tickMargin={10} axisLine={false} />
+                    <YAxis />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="count" fill="var(--color-primary)" radius={4} />
+                </BarChart>
+            </ChartContainer>
           </CardContent>
         </Card>
         <Card>
@@ -127,17 +107,15 @@ export default function AdminDashboardPage() {
             <CardDescription>Growth of the freelancer and partner network over time.</CardDescription>
           </CardHeader>
           <CardContent>
-             {isClient ? (
-                <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                    <LineChart data={networkGrowthData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip content={<ChartTooltipContent indicator="dot" />} />
-                        <Line type="monotone" dataKey="count" stroke="var(--color-primary)" strokeWidth={2} dot={{ r: 4, fill: "var(--color-primary)" }} activeDot={{ r: 8 }} />
-                    </LineChart>
-                </ChartContainer>
-            ) : <Skeleton className="h-[300px] w-full" />}
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <LineChart data={networkGrowthData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip content={<ChartTooltipContent indicator="dot" />} />
+                    <Line type="monotone" dataKey="count" stroke="var(--color-primary)" strokeWidth={2} dot={{ r: 4, fill: "var(--color-primary)" }} activeDot={{ r: 8 }} />
+                </LineChart>
+            </ChartContainer>
           </CardContent>
         </Card>
       </div>
@@ -158,28 +136,22 @@ export default function AdminDashboardPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                            Array.from({ length: 5 }).map((_, i) => (
-                                <TableRow key={i}><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
-                            ))
-                        ) : (
-                            products.slice(0, 10).map((product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell className="font-medium">{product.name}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{product.stage}</Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant={product.enabled ? "default" : "secondary"}>
-                                            {product.enabled ? "Enabled" : "Disabled"}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        {getAdminStatusBadge(product.adminStatus)}
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
+                        {products.slice(0, 10).map((product) => (
+                            <TableRow key={product.id}>
+                                <TableCell className="font-medium">{product.name}</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">{product.stage}</Badge>
+                                </TableCell>
+                                <TableCell>
+                                    <Badge variant={product.enabled ? "default" : "secondary"}>
+                                        {product.enabled ? "Enabled" : "Disabled"}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell>
+                                    {getAdminStatusBadge(product.adminStatus)}
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </CardContent>

@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -43,9 +44,9 @@ const prompt = ai.definePrompt({
 2.  **Extract Information:** Carefully read all provided documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
 
     **Document Identification & Prioritization:**
-    -   First, determine the types of all provided documents (National ID, Resident Card, Driving License, Passport). A document with an MRZ (Machine-Readable Zone) is a passport.
+    -   First, determine the types of all provided documents (e.g., National ID, Resident Card, Passport). A document with an MRZ (Machine-Readable Zone) is a passport.
     -   **If a dedicated Passport document is provided in \`passportDocumentUri\`, use it as the primary source for \`personalDetails\` (Full Name, Nationality, DOB) and all \`passportDetails\`.**
-    -   If no dedicated passport is provided, check if the document in \`idDocumentFrontUri\` is a passport. If so, use it as the primary source for passport and personal details.
+    -   If no dedicated passport is provided, check if the document in \`idDocumentFrontUri\` is a passport (look for an MRZ). If so, use it as the primary source for passport and personal details.
     -   If the primary document is an ID/Resident Card/Driving License, extract its details into the \`idCardDetails\` object.
 
     **Personal Details:**
@@ -63,7 +64,7 @@ const prompt = ai.definePrompt({
     -   If a CV is provided, write a concise, one-paragraph summary of the individual's professional background, key skills, and experience. If no CV is provided, leave this field empty.
 
 3.  **Return Structured Data:** Populate all extracted information into the specified JSON output format.
-4.  **Suggest a Filename:** Generate a descriptive filename for these documents, e.g., 'ID_John_Doe.pdf' or 'CR_CompanyName_12345.pdf'. Use the most relevant name and ID number.
+4.  **Suggest a Filename:** Generate a descriptive filename for these documents, e.g., 'ID_John_Doe.pdf'. Use the most relevant name and ID number.
 `,
 });
 
