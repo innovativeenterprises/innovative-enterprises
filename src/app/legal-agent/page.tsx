@@ -1,4 +1,4 @@
-import { useSettingsData } from '@/hooks/use-global-store-data';
+
 import { ChatComponent } from '@/components/chat/chat-component';
 import { legalAgentRouter } from '@/ai/flows/legal-agent';
 import { Scale } from 'lucide-react';
