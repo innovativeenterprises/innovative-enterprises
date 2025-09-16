@@ -5,6 +5,8 @@ import { useSyncExternalStore } from 'react';
 import { store, type AppState, initialState } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import type { AppSettings } from '@/lib/settings';
+import type { Service } from '@/lib/services';
+import { Agent, AgentCategory } from '@/lib/agents';
 
 // Centralized setters to be used within the custom hooks
 export const setSettings = (updater: (prev: AppSettings) => AppSettings) => store.set(state => ({ ...state, settings: updater(state.settings) }));
@@ -26,3 +28,13 @@ function useStoreData<T>(selector: (state: AppState) => T): T {
 // Data hooks that return the reactive state slice and a flag for client-side rendering.
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), isClient: true });
 export const useCartData = () => ({ cart: useStoreData(s => s.cart), isClient: true });
+export const useStaffData = () => ({
+  leadership: useStoreData(s => s.leadership),
+  staff: useStoreData(s => s.staff),
+  agentCategories: useStoreData(s => s.agentCategories),
+  isClient: true,
+});
+export const useServicesData = () => ({
+    services: useStoreData(s => s.services),
+    isClient: true,
+});
