@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -8,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAgenciesData, useWorkersData, useRequestsData, setRaahaRequests } from '@/hooks/use-global-store-data';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { WorkerTable } from './worker-table';
 import { Badge } from '@/components/ui/badge';
@@ -40,21 +40,16 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
 };
 
 export default function AgencyDashboardClientPage({ initialAgencies, initialWorkers, initialRequests }: { initialAgencies: Agency[], initialWorkers: Worker[], initialRequests: HireRequest[] }) {
-    const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
-    const { requests, setRequests, isClient: isRequestsClient } = useRequestsData();
-    const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
+    const [workers, setWorkers] = useState(initialWorkers);
+    const [requests, setRequests] = useState(initialRequests);
+    const [agencies, setAgencies] = useState(initialAgencies);
     const { toast } = useToast();
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const isClient = isWorkersClient && isRequestsClient && isAgenciesClient;
+    const [isClient, setIsClient] = useState(false);
 
      useEffect(() => {
-        setAgencies(() => initialAgencies);
-        setWorkers(() => initialWorkers);
-        setRequests(() => initialRequests);
-    }, [initialAgencies, initialWorkers, initialRequests, setAgencies, setWorkers, setRequests]);
-
-    useEffect(() => {
+        setIsClient(true);
         if (agencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(agencies[0].id);
         }
@@ -63,7 +58,7 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
     const onSchedule = (id: string, values: InterviewValues) => {
-        setRaahaRequests(prev => prev.map(r => 
+        setRequests(prev => prev.map(r => 
             r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
@@ -176,7 +171,7 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <WorkerTable workers={filteredWorkers} columns={workersColumns} agencyId={selectedAgency.name} isClient={isClient} />
+                            <WorkerTable workers={filteredWorkers} setWorkers={setWorkers} columns={workersColumns} agencyId={selectedAgency.name} isClient={isClient} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
