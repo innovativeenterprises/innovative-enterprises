@@ -38,29 +38,37 @@ const UploadDocumentSchema = z.object({
 type UploadDocumentValues = z.infer<typeof UploadDocumentSchema>;
 
 const UploadDocumentDialog = ({
+    isOpen,
+    onOpenChange,
     onUpload,
     documentToReplace,
     children,
 }: { 
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
     onUpload: (source: { file?: File, urls?: string[] }, docIdToReplace?: string) => Promise<void>,
     documentToReplace?: KnowledgeDocument,
     children: React.ReactNode
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm<UploadDocumentValues>({ resolver: zodResolver(UploadDocumentSchema) });
+
+    useEffect(() => {
+        if (!isOpen) {
+            form.reset();
+        }
+    }, [isOpen, form]);
 
     const onSubmit: SubmitHandler<UploadDocumentValues> = async (data) => {
         setIsLoading(true);
         const urls = data.documentUrls?.split('\n').filter(url => url.trim() !== '');
         await onUpload({ file: data.documentFile?.[0], urls }, documentToReplace?.id);
         setIsLoading(false);
-        setIsOpen(false);
-        form.reset();
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -313,6 +321,13 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
 export default function KnowledgeTable() {
     const { knowledgeBase, setKnowledgeBase, isClient } = useKnowledgeData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | undefined>(undefined);
+
+    const handleOpenDialog = (doc?: KnowledgeDocument) => {
+        setSelectedDoc(doc);
+        setIsDialogOpen(true);
+    }
 
     const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {
         toast({ title: 'Analyzing Source(s)...', description: 'Please wait while the AI extracts key information.' });
@@ -325,9 +340,9 @@ export default function KnowledgeTable() {
                 });
 
                 const results = await Promise.all(urlPromises);
-                const newDocs = results.map((analysis, index) => ({
+                const newDocs: KnowledgeDocument[] = results.map((analysis, index) => ({
                     id: `kb_${Date.now()}_${index}`,
-                    documentName: analysis.documentName || `Source ${index+1}`,
+                    documentName: analysis.documentName,
                     documentNumber: analysis.documentNumber,
                     institutionName: analysis.institutionName,
                     version: analysis.version,
@@ -391,12 +406,19 @@ export default function KnowledgeTable() {
                 </div>
                 <div className="flex gap-2">
                     <TrainAgentDialog knowledgeBase={knowledgeBase} />
-                    <UploadDocumentDialog onUpload={handleUpload}>
-                        <Button><Upload className="mr-2 h-4 w-4" /> Add Source</Button>
-                    </UploadDocumentDialog>
+                     <Button onClick={() => handleOpenDialog()}><Upload className="mr-2 h-4 w-4" /> Add Source</Button>
                 </div>
             </CardHeader>
             <CardContent>
+                 <UploadDocumentDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    onUpload={handleUpload}
+                    documentToReplace={selectedDoc}
+                >
+                   {/* This is a controlled dialog, trigger is external */}
+                   <div/>
+                </UploadDocumentDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -438,9 +460,7 @@ export default function KnowledgeTable() {
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <UploadDocumentDialog onUpload={handleUpload} documentToReplace={doc}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </UploadDocumentDialog>
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(doc)}><Edit /></Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
@@ -461,4 +481,3 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
-    
