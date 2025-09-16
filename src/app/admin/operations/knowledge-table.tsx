@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -27,7 +26,6 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
-import { initialKnowledgeBase } from "@/lib/knowledge";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -319,7 +317,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable() {
+export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowledgeBase: KnowledgeDocument[] }) {
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeDocument[]>(initialKnowledgeBase);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();

@@ -1,3 +1,4 @@
+
 import { initialStudents } from '@/lib/students';
 import StudentRecordsClientPage from './client-page';
 import type { Metadata } from 'next';

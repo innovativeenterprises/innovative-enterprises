@@ -17,7 +17,6 @@ import { useToast } from "@/hooks/use-toast";
 import type { PosProduct } from "@/lib/pos-data";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePosData, setPosProducts } from "@/hooks/use-global-store-data";
 import Image from 'next/image';
 
 const PosProductSchema = z.object({
@@ -105,12 +104,13 @@ const AddEditPosProductDialog = ({
 };
 
 export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
-    const { products, setPosProducts, isClient } = usePosData();
+    const [products, setProducts] = useState(initialProducts);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
-        setPosProducts(() => initialProducts);
-    }, [initialProducts, setPosProducts]);
+        setIsClient(true);
+    }, []);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);
@@ -122,17 +122,17 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
-            setPosProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
+            setProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Product updated." });
         } else {
             const newItem: PosProduct = { ...values, id: `pos_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
-            setPosProducts(prev => [newItem, ...prev]);
+            setProducts(prev => [newItem, ...prev]);
             toast({ title: "Product added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setPosProducts(prev => prev.filter(item => item.id !== id));
+        setProducts(prev => prev.filter(item => item.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
 
@@ -202,5 +202,5 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
                 </Table>
             </CardContent>
         </Card>
-    )
+    );
 }

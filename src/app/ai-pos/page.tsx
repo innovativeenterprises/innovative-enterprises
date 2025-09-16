@@ -1,5 +1,5 @@
 
-import { initialPosProducts } from '@/lib/pos-data';
+import { initialPosProducts, initialDailySales } from '@/lib/pos-data';
 import AiPosClientPage from './client-page';
 import type { Metadata } from 'next';
 
@@ -10,5 +10,6 @@ export const metadata: Metadata = {
 
 export default function AiPosPage() {
     const products = initialPosProducts;
-    return <AiPosClientPage products={products} />;
+    const dailySales = initialDailySales;
+    return <AiPosClientPage products={products} initialDailySales={dailySales} />;
 }

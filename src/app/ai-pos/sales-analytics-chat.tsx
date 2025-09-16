@@ -1,16 +1,16 @@
 
 'use client';
 
-import { useSettingsData } from '@/hooks/use-global-store-data';
+import { useState, useEffect } from 'react';
 import { ChatComponent } from "@/components/chat/chat-component";
 import { BarChart, BrainCircuit } from 'lucide-react';
 import { analyzeSalesData } from '@/ai/flows/pos-agent';
-import { usePosData } from '@/hooks/use-global-store-data';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useSettingsData } from '@/hooks/use-global-store-data';
+import type { DailySales } from '@/lib/pos-data';
 
-export function SalesAnalyticsChat() {
+export function SalesAnalyticsChat({ dailySales }: { dailySales: DailySales }) {
     const { settings } = useSettingsData();
-    const { dailySales } = usePosData();
 
     const salesAnalyticsFlow = async (input: { [key: string]: any }) => {
         return await analyzeSalesData({

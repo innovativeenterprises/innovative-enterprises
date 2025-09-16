@@ -1,22 +1,27 @@
 
 'use client';
 
-import { useState } from 'react';
-import { type PosProduct, type CartItem } from '@/lib/pos-data';
+import { useState, useEffect } from 'react';
+import { type PosProduct, type CartItem, type DailySales } from '@/lib/pos-data';
 import { PosGrid } from './pos-grid';
 import { CheckoutPanel } from './checkout-panel';
 import { useToast } from '@/hooks/use-toast';
-import { usePosData, setDailySales } from '@/hooks/use-global-store-data';
 import { BrainCircuit } from 'lucide-react';
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
-export default function AiPosClientPage({ products }: { products: PosProduct[] }) {
+export default function AiPosClientPage({ products, initialDailySales }: { products: PosProduct[], initialDailySales: DailySales }) {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const [dailySales, setDailySales] = useState<DailySales>(initialDailySales);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleAddToCart = (product: PosProduct) => {
         setCart(prevCart => {
@@ -52,8 +57,6 @@ export default function AiPosClientPage({ products }: { products: PosProduct[] }
     const handleCheckout = () => {
         setIsCheckingOut(true);
         
-        // In a real app, this would integrate with a payment gateway.
-        // Here, we'll simulate processing and updating sales data.
         setTimeout(() => {
             const newTransaction = {
                 id: `trans_${Date.now()}`,
@@ -74,6 +77,10 @@ export default function AiPosClientPage({ products }: { products: PosProduct[] }
         }, 1500);
     };
 
+    if (!isClient) {
+        return <div>Loading Point of Sale...</div>; // Or a proper skeleton loader
+    }
+
     return (
         <div className="h-screen w-full bg-muted/30 flex flex-col">
             <header className="bg-background border-b p-4 flex justify-between items-center">
@@ -84,7 +91,7 @@ export default function AiPosClientPage({ products }: { products: PosProduct[] }
                             <BrainCircuit className="mr-2 h-4 w-4"/> Sales Analytics
                         </Button>
                     </DialogTrigger>
-                    <SalesAnalyticsChat />
+                    <SalesAnalyticsChat dailySales={dailySales}/>
                 </Dialog>
             </header>
             <main className="flex-1 overflow-hidden p-4">
