@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, PlusCircle } from "lucide-react";
 import Image from 'next/image';
 import { type StockItem } from '@/lib/stock-items';
@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import Link from 'next/link';
 
 const getStatusBadge = (status: string) => {
     switch(status) {
@@ -91,10 +92,10 @@ export default function StockClearClientPage({ initialItems }: { initialItems: S
                             {filteredItems.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell>
-                                        <div className="flex items-center gap-3">
+                                        <Link href={`/stock-clear/${item.id}`} className="flex items-center gap-3 group">
                                             <Image src={item.imageUrl} alt={item.name} width={40} height={40} className="rounded-md object-cover" />
-                                            <span className="font-medium">{item.name}</span>
-                                        </div>
+                                            <span className="font-medium group-hover:underline">{item.name}</span>
+                                        </Link>
                                     </TableCell>
                                     <TableCell>{item.category}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
