@@ -2,7 +2,6 @@
 'use client';
 
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useServicesData } from "@/hooks/use-global-store-data";
 import Link from "next/link";
 import { GitBranch } from "lucide-react";
 import type { Service } from "@/lib/services";
@@ -25,8 +24,7 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog() {
-  const { services } = useServicesData();
+export default function ServiceCatalog({ services }: { services: Service[] }) {
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = enabledServices.reduce((acc, service) => {

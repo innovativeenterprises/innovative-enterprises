@@ -55,7 +55,7 @@ export default function AdminLayoutClient({
   ];
 
   const finance = [
-      { href: '/admin/coo-dashboard', label: 'Finance & COO', icon: WalletCards },
+      { href: '/admin/cfo-dashboard', label: 'Finance & COO', icon: WalletCards },
   ];
 
   const contentManagement = [
@@ -157,10 +157,7 @@ export default function AdminLayoutClient({
           <div className="md:hidden">
             <SidebarTrigger />
           </div>
-           <div className="hidden text-xl font-medium md:block">
-            Admin Dashboard
-           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 ml-auto">
              <Button variant="outline" asChild>
                 <Link href="/">View Live Site</Link>
              </Button>

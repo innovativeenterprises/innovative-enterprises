@@ -21,7 +21,7 @@ export const DueDateDisplay = ({
   }, []);
 
   const { formattedDate, daysRemaining } = useMemo(() => {
-    if (!date) return { formattedDate: null, daysRemaining: null };
+    if (!date || !isClient) return { formattedDate: null, daysRemaining: null };
     const dueDate = new Date(date);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to the start of the day
@@ -35,7 +35,7 @@ export const DueDateDisplay = ({
     }).format(dueDate);
 
     return { formattedDate: `${prefix} ${formatted}`, daysRemaining: diffDays };
-  }, [date, prefix]);
+  }, [date, prefix, isClient]);
 
   if (!isClient) {
     return <div className={`text-sm text-muted-foreground ${className}`}><Skeleton className="h-4 w-40 mt-1" /></div>;
