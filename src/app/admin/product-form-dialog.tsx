@@ -32,7 +32,7 @@ const DialogProductSchema = ProductSchema.extend({
     path: ["imageUrl"],
 });
 
-export type ProductValues = z.infer<typeof ProductSchema>;
+export type ProductValues = z.infer<typeof ProductSchema> & { image?: string };
 
 export const AddEditProductDialog = ({ 
     product, 

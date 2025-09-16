@@ -13,7 +13,7 @@ export const ProductSchema = z.object({
   stage: z.string().min(1, "Stage is required"),
   category: z.string().min(1, "Category is required."),
   price: z.coerce.number().min(0, "Price is required."),
-  image: z.string(),
+  image: z.string().optional(),
   aiHint: z.string().min(2, "AI hint is required"),
   rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5."),
   enabled: z.boolean(),
