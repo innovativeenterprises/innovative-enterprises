@@ -228,7 +228,7 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
                     const dataUri = await fileToDataURI(file);
                     uploadedDocs[key] = { name: file.name, dataUri };
                 } catch (error) {
-                    toast({title: `Error reading ${file.name}`, description: 'Could not upload file.', variant: 'destructive'});
+                    toast({title: `Error reading ${"'" + file.name + "'"}`, description: 'Could not upload file.', variant: 'destructive'});
                     console.error(error);
                 }
             }
@@ -343,7 +343,7 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-1 font-medium">
-                                            {inv.sharePercentage ? `${inv.sharePercentage}%` : '-'}
+                                            {inv.sharePercentage ? `${"'" + inv.sharePercentage + "'"}%` : '-'}
                                         </div>
                                     </TableCell>
                                     <TableCell>
