@@ -13,7 +13,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import type { Metadata } from 'next';
-import { store } from '@/lib/global-store';
 
 export async function generateStaticParams() {
   return initialStockItems.map((item) => ({
@@ -22,8 +21,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { stockItems } = store.get();
-  const item = stockItems.find(i => i.id === params.id);
+  const item = initialStockItems.find(i => i.id === params.id);
 
   if (!item) {
     return {
