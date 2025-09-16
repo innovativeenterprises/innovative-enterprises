@@ -44,9 +44,9 @@ const prompt = ai.definePrompt({
 2.  **Extract Information:** Carefully read all provided documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
 
     **Document Identification:**
-    -   First, determine if the primary document (idDocumentFrontUri) is a National ID card, a Resident Card, or a Passport. The presence of an MRZ (Machine-Readable Zone) at the bottom usually indicates a passport.
-    -   If the primary document is a Passport, extract all details into the \`passportDetails\` object and also populate the relevant fields in \`personalDetails\`.
-    -   If the primary document is an ID/Resident Card, extract details into the \`idCardDetails\` object and also populate \`personalDetails\`.
+    -   First, determine if the primary document (idDocumentFrontUri) is a National ID card, a Resident Card, a Driving License, or a Passport. The presence of an MRZ (Machine-Readable Zone) at the bottom usually indicates a passport.
+    -   If the primary document is a Passport (based on MRZ or layout), extract all details into the \`passportDetails\` object and also populate the relevant fields in \`personalDetails\`.
+    -   If the primary document is an ID/Resident Card/Driving License, extract details into the \`idCardDetails\` object and also populate \`personalDetails\`.
     -   If a separate passport document is provided, prioritize it for name, nationality, and DOB.
 
     **Personal Details:**
