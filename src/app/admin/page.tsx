@@ -1,21 +1,22 @@
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network } from "lucide-react";
 import Link from "next/link";
-import { useProductsData, useStaffData, useProvidersData } from '@/hooks/use-global-store-data';
+import { useMemo, useEffect } from "react";
+import { useProductsData, useProvidersData, useStaffData } from "@/hooks/use-global-store-data";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboardPage() {
-  const { products, isClient: isProductsClient } = useProductsData();
+  const { products, setProducts, isClient: isProductsClient } = useProductsData();
   const { providers, isClient: isProvidersClient } = useProvidersData();
-  const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
+  const { leadership, staff, agentCategories, setStaffData, isClient: isStaffClient } = useStaffData();
   
   const isClient = isProductsClient && isProvidersClient && isStaffClient;
   

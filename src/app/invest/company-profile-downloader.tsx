@@ -192,8 +192,8 @@ export default function CompanyProfileDownloader() {
     const services = initialServices;
     const settings = initialSettings;
 
-    const enabledServices = services.filter(s => s.enabled);
-    const enabledLeadership = leadership.filter(l => l.enabled);
+    const enabledServices = services ? services.filter(s => s.enabled) : [];
+    const enabledLeadership = leadership ? leadership.filter(l => l.enabled) : [];
     const products = initialProducts.filter(p => p.enabled);
 
     if (!isClient) {
