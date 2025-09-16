@@ -33,9 +33,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const opportunity = initialOpportunities.find(o => o.id === params.id);
 
   if (!opportunity) {
-    return {
-      title: 'Opportunity Not Found',
-    };
+    notFound();
   }
 
   return {

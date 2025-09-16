@@ -36,9 +36,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const worker = initialWorkers.find(w => w.id === params.id);
 
   if (!worker) {
-    return {
-      title: 'Candidate Not Found',
-    };
+    notFound();
   }
 
   return {

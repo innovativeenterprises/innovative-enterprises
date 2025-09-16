@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
@@ -24,9 +25,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const property = initialProperties.find(p => p.id === params.id);
 
   if (!property) {
-    return {
-      title: 'Property Not Found',
-    };
+    notFound();
   }
 
   return {

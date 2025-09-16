@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
 import type { Metadata } from 'next';
@@ -25,9 +25,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const provider = initialProviders.find(p => p.id === params.id);
 
   if (!provider) {
-    return {
-      title: 'Provider Not Found',
-    };
+    notFound();
   }
 
   return {
@@ -75,17 +73,23 @@ export default function ProviderProfilePage() {
     }
     
     const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-        const [daysUntilExpiry, setDaysUntilExpiry] = useState<number | null>(null);
-        
-        useEffect(() => {
+        const { daysUntilExpiry, progressValue } = useMemo(() => {
             if (!expiry) {
-                setDaysUntilExpiry(null);
-                return;
+                return { daysUntilExpiry: null, progressValue: 0 };
             }
             const now = new Date();
-            const diffTime = new Date(expiry).getTime() - now.getTime();
-            setDaysUntilExpiry(Math.ceil(diffTime / (1000 * 3600 * 24)));
-        }, [expiry]);
+            now.setHours(0, 0, 0, 0);
+            const expiryDate = new Date(expiry);
+            expiryDate.setHours(0, 0, 0, 0);
+
+            const timeDiff = expiryDate.getTime() - now.getTime();
+            const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            const totalDuration = tier === 'Yearly' ? 365 : 30;
+            const progress = Math.max(0, (days / totalDuration) * 100);
+
+            return { daysUntilExpiry: days, progressValue: progress };
+        }, [expiry, tier]);
 
 
         if (tier === 'None') {
@@ -103,9 +107,6 @@ export default function ProviderProfilePage() {
              return <Badge variant="outline">{tier}</Badge>;
         }
         
-        const totalDuration = tier === 'Yearly' ? 365 : 30;
-        const progressValue = Math.max(0, (daysUntilExpiry / totalDuration) * 100);
-
         return (
             <div className="w-full min-w-[200px] space-y-2">
                 <div className="flex justify-between items-center">
