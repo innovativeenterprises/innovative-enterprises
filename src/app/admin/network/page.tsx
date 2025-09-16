@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +13,9 @@ export default function AdminNetworkPage() {
   const { providers, setProviders, isClient: isProvidersClient } = useProvidersData();
   const { assets, setAssets, isClient: isAssetsClient } = useAssetsData();
   const isClient = isProvidersClient && isAssetsClient;
+
+  // Since we are now passing data down, we don't fetch it here anymore.
+  // The use...Data hooks still manage the client-side state for interactivity.
 
   return (
     <div className="space-y-8">

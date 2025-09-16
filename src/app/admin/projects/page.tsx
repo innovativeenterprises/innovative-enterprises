@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2, GripVertical } from 'lucide-react';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import type { Product } from '@/lib/products';
-import { useStoreData, setProducts } from "@/hooks/use-global-store-data";
+import { useProductsData } from "@/hooks/use-global-store-data";
 import { useProjectStagesData } from "@/hooks/use-global-store-data";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
@@ -22,6 +22,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy, horizontalLi
 import { CSS } from '@dnd-kit/utilities';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { initialProducts } from '@/lib/products';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
@@ -99,7 +100,7 @@ export default function ProjectsPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    const { products, isClient } = useStoreData((state) => ({ products: state.products, isClient: true }));
+    const { products, setProducts, isClient } = useProductsData();
     const { stages } = useProjectStagesData();
     const { toast } = useToast();
 
@@ -232,7 +233,7 @@ export default function ProjectsPage() {
                     <AccordionTrigger>
                         <div className="flex items-center gap-3">
                             <Wand2 className="h-5 w-5 text-primary" />
-                             <h2 className="text-xl font-semibold">Project Inception</h2>
+                             <h2 className="text-xl font-semibold">AI-Powered Project Inception</h2>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent>
