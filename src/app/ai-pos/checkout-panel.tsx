@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Trash2, Plus, Minus, CreditCard, X, Loader2 } from "lucide-react";
-import type { CartItem, PosProduct } from "@/lib/pos-data";
+import type { CartItem } from "@/lib/pos-data";
 
 export function CheckoutPanel({
     cart,

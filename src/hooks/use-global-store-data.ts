@@ -47,6 +47,8 @@ export function useStoreData<T>(selector: (state: AppState) => T): T {
     const state = useSyncExternalStore(
         store.subscribe,
         () => selector(store.get()),
+        // CORRECTED: Apply the selector to the initial state for the server-side render.
+        // This ensures the hook returns the expected data shape on the server.
         () => selector(initialState)
     );
     return state;
@@ -105,7 +107,7 @@ export const useInvestorsData = () => ({ investors: useStoreData(s => s.investor
 export const useKnowledgeData = () => ({ knowledgeBase: useStoreData(s => s.knowledgeBase), setKnowledgeBase, isClient: true });
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), setWorkers: setRaahaWorkers, isClient: true });
-export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRequests: setRaahaRequests, isClient: true });
+export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRaahaRequests, isClient: true });
 export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({ stairspaceListings: useStoreData(s => s.stairspaceListings), setStairspaceListings, isClient: true });
