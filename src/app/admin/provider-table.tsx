@@ -177,8 +177,7 @@ export default function ProviderTable({ initialProviders }: { initialProviders: 
 
     useEffect(() => {
         setIsClient(true);
-        setProviders(initialProviders);
-    }, [initialProviders]);
+    }, []);
     
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);

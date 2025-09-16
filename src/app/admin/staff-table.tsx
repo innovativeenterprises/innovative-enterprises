@@ -25,7 +25,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
-import { useStaffData, setLeadership, setStaff, setAgentCategories } from "@/hooks/use-global-store-data";
+import { initialAgentCategories, initialLeadershipTeam, initialStaffTeam } from "@/lib/agents";
 
 const SocialsSchema = z.object({
     email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
@@ -233,11 +233,27 @@ const AddEditStaffDialog = ({
     )
 }
 
-export default function StaffTable() {
-    const { leadership, staff, agentCategories, isClient } = useStaffData();
+export default function StaffTable({ 
+    initialLeadership, 
+    initialStaff, 
+    initialAgentCategories 
+}: { 
+    initialLeadership: Agent[], 
+    initialStaff: Agent[], 
+    initialAgentCategories: AgentCategory[] 
+}) {
+    const [leadership, setLeadership] = useState(initialLeadership);
+    const [staff, setStaff] = useState(initialStaff);
+    const [agentCategories, setAgentCategories] = useState(initialAgentCategories);
+
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedStaff, setSelectedStaff] = useState<Agent | undefined>(undefined);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const openDialog = (member?: Agent) => {
         setSelectedStaff(member);
@@ -261,9 +277,8 @@ export default function StaffTable() {
     };
 
     const handleSave = (values: StaffValues, originalName?: string) => {
-        const staffMemberToUpdate = leadership.find(m => m.name === originalName) 
-            || staff.find(m => m.name === originalName) 
-            || agentCategories.flatMap(c => c.agents).find(a => a.name === originalName);
+        const allStaff = [...leadership, ...staff, ...agentCategories.flatMap(c => c.agents)];
+        const staffMemberToUpdate = allStaff.find(m => m.name === originalName);
 
         const newStaffMember: Agent = { 
             ...values,
@@ -427,3 +442,5 @@ export default function StaffTable() {
         </Card>
     );
 }
+
+    

@@ -1,5 +1,4 @@
 
-
 'use server';
 
 /**
@@ -26,7 +25,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert HR and compliance officer specializing in document verification. Your task is to analyze the provided identity documents and optional CV to extract key information with high accuracy.
 
 **Instructions:**
-1.  **Orient and Analyze:** The documents may be rotated. First, orient them correctly. Then, analyze the content. The 'Identity Document (Front)' might be a Passport instead of an ID card; handle this gracefully.
+1.  **Orient and Analyze:** The documents may be rotated. First, orient them correctly. Then, analyze the content. The 'Identity Document (Front)' might be a Passport instead of an ID card; handle this gracefully by extracting passport details if you identify a passport.
     -   Identity Document (Front): {{media url=idDocumentFrontUri}}
     {{#if idDocumentBackUri}}
     -   Identity Document (Back): {{media url=idDocumentBackUri}}
@@ -48,7 +47,7 @@ const prompt = ai.definePrompt({
     -   **Email & Phone:** Find the primary contact email and phone number. These are almost always found only in the CV.
     -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document.
 
-    **Passport Details:** (Only if a passport is provided, either in its own slot or in the ID card slot)
+    **Passport Details:** (Extract if a passport document is identified in any of the image slots)
     -   Extract all passport-specific fields: Type, Country Code, Passport Number, Surname, Given Names, Issue Date, Expiry Date, Issuing Authority.
 
     **ID Document Details:**

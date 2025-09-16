@@ -2,7 +2,6 @@
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
-import { useProvidersData } from '@/hooks/use-global-store-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
 import type { Metadata } from 'next';
 import { initialProviders } from '@/lib/providers';
+import { DueDateDisplay } from '@/components/due-date-display';
 
 export async function generateStaticParams() {
   return initialProviders.map((provider) => ({
@@ -37,19 +37,20 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default function ProviderProfilePage() {
     const params = useParams();
     const { id } = params;
-    const { providers, isClient } = useProvidersData();
     const [provider, setProvider] = useState<Provider | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        if (isClient) {
-            const foundProvider = providers.find(p => p.id === id);
+        setIsClient(true);
+        if (id) {
+            const foundProvider = initialProviders.find(p => p.id === id);
             if (foundProvider) {
                 setProvider(foundProvider);
             } else {
                 notFound();
             }
         }
-    }, [id, providers, isClient]);
+    }, [id]);
 
     if (!isClient || !provider) {
         return (
