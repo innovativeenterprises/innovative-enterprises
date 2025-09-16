@@ -27,12 +27,13 @@ export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
 const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
 
-const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales'): { name: string; socials?: { email?: string; phone?: string } } | null => {
+const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): { name: string; socials?: { email?: string; phone?: string } } | null => {
     switch(department) {
         case 'legal': return allStaff.find(s => s.name === 'Lexi') || allStaff.find(s => s.name === 'Legal Counsel Office') || null;
         case 'marketing': return allStaff.find(s => s.name === 'Mira') || null;
         case 'hr': return allStaff.find(s => s.name === 'Hira') || null;
         case 'sales': return allStaff.find(s => s.name === 'Sami') || null;
+        case 'partnership': return allStaff.find(s => s.name === 'Paz') || null;
         default: return null;
     }
 }
@@ -41,9 +42,9 @@ const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales'): { na
 export const routeToSpecialistTool = ai.defineTool(
     {
         name: 'routeToSpecialist',
-        description: 'Use this tool to route a complex user query to a specialist agent. You must determine the correct department (legal, marketing, hr, or sales) based on the user\'s question.',
+        description: 'Use this tool to route a complex user query to a specialist agent. You must determine the correct department based on the user\'s question.',
         inputSchema: z.object({
-            department: z.enum(['legal', 'marketing', 'hr', 'sales']).describe('The department to route the query to.'),
+            department: z.enum(['legal', 'marketing', 'hr', 'sales', 'partnership']).describe('The department to route the query to.'),
             userQuery: z.string().describe("The original user query."),
         }),
         outputSchema: z.object({
