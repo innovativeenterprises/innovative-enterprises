@@ -3,27 +3,30 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, UserCheck } from 'lucide-react';
 import Link from 'next/link';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useRequestsData, setRaahaRequests } from '@/hooks/use-global-store-data';
-import { format } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
+import { useRequestsData } from '@/hooks/use-global-store-data';
 import type { HireRequest } from '@/lib/raaha-requests';
-import { RequestTable, TimeAgoCell } from '@/components/request-table';
-import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
+import { RequestTable } from '@/components/request-table';
 import { useToast } from '@/hooks/use-toast';
-import type { Metadata } from 'next';
+import { Badge } from '@/components/ui/badge';
+import { TimeAgoCell } from '@/components/request-table';
+import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 
-export const metadata: Metadata = {
-  title: "My Hire Requests | RAAHA",
-  description: "Track the status of your applications for domestic helpers and manage interview schedules.",
+const getStatusBadge = (status: HireRequest['status']) => {
+    switch (status) {
+        case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
+        case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
+        case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
+        case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
+        case 'Closed': return <Badge variant="destructive">Closed</Badge>;
+        default: return <Badge variant="outline">{status}</Badge>;
+    }
 };
 
-
 export default function MyRequestsPage() {
-    const { requests, isClient } = useRequestsData();
+    const { requests, setRaahaRequests, isClient } = useRequestsData();
     const { toast } = useToast();
     
     // In a real app, you would filter requests by the logged-in user.
@@ -35,17 +38,6 @@ export default function MyRequestsPage() {
             r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
-    };
-
-    const getStatusBadge = (status: HireRequest['status']) => {
-        switch (status) {
-            case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
-            case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
-            case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
-            case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
-            case 'Closed': return <Badge variant="destructive">Closed</Badge>;
-            default: return <Badge variant="outline">{status}</Badge>;
-        }
     };
     
     const columns = [
@@ -104,7 +96,6 @@ export default function MyRequestsPage() {
                                 data={myRequests} 
                                 columns={columns}
                                 isClient={isClient}
-                                onSchedule={onSchedule}
                                 renderActions={(request) => <ScheduleInterviewDialog request={request as GenericRequest} onSchedule={onSchedule} />}
                             />
                         </CardContent>

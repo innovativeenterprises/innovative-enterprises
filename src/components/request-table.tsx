@@ -3,7 +3,6 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from 'date-fns';
@@ -76,9 +75,7 @@ export function RequestTable({
             <TableHeader>
                 <TableRow>
                     {columns.map(col => (
-                        col.sortable ? 
-                        <SortableHeader key={col.accessor || col.Header} label={col.Header} sortKey={col.accessor} /> :
-                        <TableHead key={col.Header}>{col.Header}</TableHead>
+                        <SortableHeader key={col.accessor || col.Header} label={col.Header} sortKey={col.accessor} />
                     ))}
                     {renderActions && <TableHead className="text-right">Actions</TableHead>}
                 </TableRow>
