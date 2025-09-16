@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -47,7 +48,7 @@ const prompt = ai.definePrompt({
     -   **Email & Phone:** Find the primary contact email and phone number. These are almost always found only in the CV.
     -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document.
 
-    **Passport Details:** (Extract if a passport document is identified in any of the image slots)
+    **Passport Details:** (Extract if a passport document is identified in any of the image slots, including the 'idDocumentFrontUri' slot)
     -   Extract all passport-specific fields: Type, Country Code, Passport Number, Surname, Given Names, Issue Date, Expiry Date, Issuing Authority.
 
     **ID Document Details:**
@@ -56,8 +57,7 @@ const prompt = ai.definePrompt({
     **Professional Summary:**
     -   If a CV is provided, write a concise, one-paragraph summary of the individual's professional background, key skills, and experience. If no CV is provided, leave this field empty.
 
-3.  **Generate a Filename:** Based on the extracted Full Name, create a descriptive filename. Format: \`ID_{FullName}.pdf\`. Replace spaces in the name with underscores. If the name is not found, use the Civil ID number if available.
-4.  **Return Structured Data:** Populate all extracted information into the specified JSON output format.
+3.  **Return Structured Data:** Populate all extracted information into the specified JSON output format. You do not need to generate a filename; the application will handle that.
 `,
 });
 

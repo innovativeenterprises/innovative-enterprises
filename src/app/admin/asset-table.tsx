@@ -21,7 +21,6 @@ import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon, Search } from "lu
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from "@/lib/utils";
-import { useAssetsData, setAssets } from "@/hooks/use-global-store-data";
 
 const AssetSchema = z.object({
   name: z.string().min(3, "Asset name is required"),
@@ -188,15 +187,16 @@ const AddEditAssetDialog = ({
 }
 
 export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }) {
-    const { assets, setAssets, isClient } = useAssetsData();
+    const [assets, setAssets] = useState(initialAssets);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(undefined);
     
     useEffect(() => {
-        setAssets(() => initialAssets);
-    }, [initialAssets, setAssets]);
+        setIsClient(true);
+    }, []);
 
     const handleOpenDialog = (asset?: Asset) => {
         setSelectedAsset(asset);
@@ -291,7 +291,7 @@ export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }
                             ))
                         ) : (
                             filteredAssets.map(asset => (
-                                <TableRow key={asset.id} className="cursor-pointer" onClick={() => handleOpenDialog(asset)}>
+                                <TableRow key={asset.id}>
                                     <TableCell>
                                         <div className="p-1 -m-1 rounded-md">
                                             <Image src={asset.image} alt={asset.name} width={60} height={45} className="rounded-md object-cover" />
@@ -308,6 +308,7 @@ export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }
                                     <TableCell>{getStatusBadge(asset.status)}</TableCell>
                                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                         <div className="flex justify-end gap-2">
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(asset)}><Edit /></Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
@@ -331,3 +332,4 @@ export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }
         </Card>
     );
 }
+
