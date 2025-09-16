@@ -1,29 +1,45 @@
 
 'use client';
 
-import { useSyncExternalStore } from 'react';
-import { store, type AppState, initialState } from '@/lib/global-store';
-import type { CartItem } from '@/lib/global-store';
+import { createContext, useContext, useSyncExternalStore } from 'react';
 import type { AppSettings } from '@/lib/settings';
+import type { CartItem } from '@/lib/global-store';
+import { initialState, store, type AppState } from '@/lib/global-store';
 
-/**
- * Custom hook to safely subscribe to the global store and select a slice of state.
- * It uses useSyncExternalStore for React 18+ to prevent hydration mismatches.
- */
+export type StoreType = typeof store;
+export const StoreContext = createContext<StoreType>(store);
+
 function useStoreData<T>(selector: (state: AppState) => T): T {
+  const store = useContext(StoreContext);
   const state = useSyncExternalStore(
     store.subscribe,
     () => selector(store.get()),
-    () => selector(initialState) // Return initial state for the server render
+    () => selector(initialState)
   );
   return state;
 }
 
-// Centralized setters to be used within the custom hooks
-export const setSettings = (updater: (prev: AppSettings) => AppSettings) => store.set(state => ({ ...state, settings: updater(state.settings) }));
-export const setCart = (updater: (prev: CartItem[]) => CartItem[]) => store.set(state => ({...state, cart: updater(state.cart)}));
+export const setSettings = (updater: (prev: AppSettings) => AppSettings) =>
+  store.set((state) => ({ ...state, settings: updater(state.settings) }));
+
+export const setCart = (updater: (prev: CartItem[]) => CartItem[]) =>
+  store.set((state) => ({ ...state, cart: updater(state.cart) }));
 
 
-// Data hooks that return the reactive state slice and a flag for client-side rendering.
-export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
-export const useCartData = () => ({ cart: useStoreData(s => s.cart), setCart, isClient: true });
+export const useSettingsData = () => {
+  return {
+    settings: useStoreData((s) => s.settings),
+    setSettings,
+    isClient: true,
+  };
+};
+
+export const useCartData = () => {
+  return {
+    cart: useStoreData((s) => s.cart),
+    setCart,
+    isClient: true,
+  };
+};
+
+    
