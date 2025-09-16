@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
-import { Progress } from '@/components/ui/progress';
 import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
@@ -65,7 +64,7 @@ const ProviderDetailClient = ({ provider }: { provider: Provider | undefined }) 
                     <div className="w-full md:w-auto">
                         <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Expiry</h3>
                         {provider.subscriptionExpiry ? (
-                            <DueDateDisplay date={provider.subscriptionExpiry.toISOString()} prefix="Expires:" />
+                            <DueDateDisplay date={new Date(provider.subscriptionExpiry).toISOString()} prefix="Expires:" />
                         ) : (
                              <Badge variant="secondary">No Subscription</Badge>
                         )}

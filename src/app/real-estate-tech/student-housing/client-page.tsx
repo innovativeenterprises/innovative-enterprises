@@ -10,7 +10,7 @@ import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft, Tr
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData } from '@/hooks/use-global-store-data';
+import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from "@/components/due-date-display";
