@@ -21,7 +21,7 @@ export const DueDateDisplay = ({
   }, []);
 
   const { formattedDate, daysRemaining } = useMemo(() => {
-    // Perform calculations only on the client side
+    // Perform calculations only on the client side to prevent hydration mismatch
     if (!date || !isClient) return { formattedDate: null, daysRemaining: null };
     
     const dueDate = new Date(date);
@@ -41,7 +41,7 @@ export const DueDateDisplay = ({
 
   if (!isClient) {
     // Render a skeleton on the server and during initial client hydration
-    return <div className={`text-sm text-muted-foreground ${className}`}><Skeleton className="h-4 w-40 mt-1" /></div>;
+    return <div className={`text-sm text-muted-foreground ${className}`}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   
   // This will only render on the client after hydration is complete
@@ -60,5 +60,3 @@ export const DueDateDisplay = ({
     </div>
   );
 };
-
-    
