@@ -41,7 +41,12 @@ const prompt = ai.definePrompt({
     -   Personal Photo: {{media url=photoUri}} (Note: You are only to acknowledge its presence, not analyze the photo itself).
     {{/if}}
 
-2.  **Extract Information:** Carefully read the documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
+2.  **Extract Information:** Carefully read all provided documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
+
+    **Document Identification:**
+    -   First, determine if the primary document (idDocumentFrontUri) is a National ID card, a Resident Card, or a Passport. The presence of an MRZ (Machine-Readable Zone) at the bottom usually indicates a passport.
+    -   If it's a Passport, extract all details into the \`passportDetails\` object.
+    -   If it's an ID/Resident Card, extract details into the \`idCardDetails\` object.
 
     **Personal Details:**
     -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID. If the name is split into Surname and Given Names, combine them.
@@ -72,10 +77,14 @@ const identityAnalysisFlow = ai.defineFlow(
 
     if (output) {
         // More robust filename generation.
-        const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${output.passportDetails.givenNames} ${output.passportDetails.surname}`.trim() : null);
+        const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim() : null);
         
         if (fullName && !output.personalDetails?.fullName) {
-             output.personalDetails = { ...output.personalDetails, fullName: fullName };
+             if (!output.personalDetails) {
+                 output.personalDetails = { fullName };
+             } else {
+                 output.personalDetails.fullName = fullName;
+             }
         }
 
         const civilId = output.idCardDetails?.civilNumber;

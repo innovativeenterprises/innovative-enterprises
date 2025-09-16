@@ -33,9 +33,9 @@ export const DueDateDisplay = ({
   }, [date, prefix]);
 
   if (!displayState.isClient) {
-    // Return a skeleton, but ensure it doesn't cause a hydration mismatch
-    // by only rendering it on the client during the initial mount.
-    return displayState.isClient ? null : <Skeleton className="h-4 w-48 mt-1" />;
+    // Render a skeleton on the server and during the initial client mount.
+    // This prevents the flash of null content.
+    return <Skeleton className="h-4 w-48 mt-1" />;
   }
 
   const { daysRemaining, formattedDate } = displayState;

@@ -187,7 +187,6 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    // Direct data imports for a self-contained component
     const leadership = initialStaffData.leadership;
     const services = initialServices;
     const settings = initialSettings;
@@ -195,8 +194,9 @@ export default function CompanyProfileDownloader() {
     const enabledServices = services ? services.filter(s => s.enabled) : [];
     const enabledLeadership = leadership ? leadership.filter(l => l.enabled) : [];
     const products = initialProducts.filter(p => p.enabled);
+    const isReady = isClient && enabledLeadership && enabledServices && products;
 
-    if (!isClient) {
+    if (!isReady) {
         return (
             <Button variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary" disabled>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile Data...
