@@ -14,12 +14,6 @@ import type { Provider } from "@/lib/providers";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "Business Hub",
-    description: "A B2B and B2C marketplace connecting businesses in Oman with each other and with new clients. Find opportunities, collaborate on projects, and grow your network.",
-};
 
 const categories = [
     "All", "Tech & IT Services", "Creative & Design", "Consulting & Professional Services", "Legal Services", "Financial & Banking"

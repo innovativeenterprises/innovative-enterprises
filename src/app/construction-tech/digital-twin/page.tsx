@@ -1,18 +1,9 @@
-
-'use client';
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle, Eye, Layers, Cpu, Thermometer, Droplets, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-
-export const metadata: Metadata = {
-  title: "Digital Twin Ops | Innovative Enterprises",
-  description: "An IoT platform for ongoing monitoring of building performance and predictive maintenance. Create a digital replica of your physical assets.",
-};
 
 const chartData = [
   { name: 'HVAC', energy: 4000, color: 'hsl(var(--chart-1))' },

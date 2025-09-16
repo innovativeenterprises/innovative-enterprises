@@ -1,17 +1,8 @@
-
-'use client';
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle, Eye, HardHat, Map, Layers } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "AeroSite AI (DaaS) | Innovative Enterprises",
-  description: "Drone-as-a-Service for automated aerial surveys, 3D mapping, and real-time construction progress tracking. Turn site data into actionable insights.",
-};
 
 const features = [
   {
