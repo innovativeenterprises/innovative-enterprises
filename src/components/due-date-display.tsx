@@ -14,33 +14,40 @@ export const DueDateDisplay = ({
   className?: string;
   prefix?: string;
 }) => {
-  const [displayState, setDisplayState] = useState<{ isClient: boolean; formattedDate: string | null; daysRemaining: number | null }>({
+  const [displayState, setDisplayState] = useState<{
+    isClient: boolean;
+    formattedDate: string | null;
+    daysRemaining: number | null;
+  }>({
     isClient: false,
     formattedDate: null,
     daysRemaining: null,
   });
 
   useEffect(() => {
-    if (typeof date !== 'string' || !date) {
-        setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null });
-        return;
-    }
+    // This effect runs only on the client, after hydration
+    let formatted: string;
+    let diffDays: number | null = null;
     
     try {
-        const dueDate = new Date(date);
+        const dueDate = new Date(date || '');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const diffDays = differenceInCalendarDays(dueDate, today);
-        const formatted = format(dueDate, "PPP");
+
+        if (isNaN(dueDate.getTime())) {
+            throw new Error("Invalid date");
+        }
         
-        setDisplayState({
+        diffDays = differenceInCalendarDays(dueDate, today);
+        formatted = format(dueDate, "PPP");
+         setDisplayState({
             isClient: true,
             formattedDate: `${prefix} ${formatted}`,
             daysRemaining: diffDays,
         });
 
     } catch (e) {
-        setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null });
+       setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null });
     }
   }, [date, prefix]);
 

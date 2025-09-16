@@ -40,7 +40,7 @@ const prompt = ai.definePrompt({
     -   Personal Photo: {{media url=photoUri}} (Note: You are only to acknowledge its presence, not analyze the photo itself).
     {{/if}}
 
-2.  **Extract Information:** Carefully read all provided documents and extract the following details. If a piece of information cannot be found, leave the field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
+2.  **Extract Information:** Carefully read all provided documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
 
     **Document Identification & Prioritization:**
     -   First, determine the types of all provided documents (National ID, Resident Card, Driving License, Passport). A document with an MRZ (Machine-Readable Zone) is a passport.
