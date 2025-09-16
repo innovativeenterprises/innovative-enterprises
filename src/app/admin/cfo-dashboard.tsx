@@ -11,41 +11,7 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { useCfoData } from '@/hooks/use-global-store-data';
 import { useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-
-// A new sub-component to safely render dates on the client.
-const DueDateDisplay = ({ date, className, isClient }: { date: string, className?: string, isClient: boolean }) => {
-
-    const { formattedDate, daysRemaining } = useMemo(() => {
-        if (!isClient) {
-            return { formattedDate: null, daysRemaining: null };
-        }
-        const dueDate = new Date(date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const diffTime = dueDate.getTime() - today.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
-        const formatted = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(dueDate);
-        return { formattedDate: `Due: ${formatted}`, daysRemaining: diffDays };
-    }, [date, isClient]);
-
-    if (!isClient) {
-        return <Skeleton className="h-4 w-48 mt-1" />;
-    }
-
-    return (
-        <div className={`text-sm text-muted-foreground ${className}`}>
-            {formattedDate}
-            {daysRemaining !== null && (
-                daysRemaining >= 0 ? (
-                    <span className={daysRemaining < 7 ? "text-destructive font-medium" : ""}> ({daysRemaining} days left)</span>
-                ) : (
-                    <span className="text-destructive font-medium"> (Overdue)</span>
-                )
-            )}
-        </div>
-    );
-}
-
+import { DueDateDisplay } from '@/components/due-date-display';
 
 // Main Dashboard Component
 export default function CfoDashboard() {

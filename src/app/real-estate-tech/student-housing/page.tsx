@@ -14,22 +14,8 @@ import Link from 'next/link';
 import { useLeasesData, setSignedLeases } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
+import { DueDateDisplay } from "@/components/due-date-display";
 
-const DateDisplay = ({ dateString }: { dateString?: string }) => {
-    const { isClient } = useLeasesData(); // A bit of a hack, but ensures this runs client-side
-
-    const formattedDate = useMemo(() => {
-        if (!isClient || !dateString) return null;
-        try {
-            return format(new Date(dateString), "PPP");
-        } catch {
-            return "Invalid Date";
-        }
-    }, [dateString, isClient]);
-
-    if (!isClient) return <Skeleton className="h-4 w-24" />;
-    return <>{formattedDate || "N/A"}</>;
-};
 
 export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
@@ -135,7 +121,7 @@ export default function StudentHousingPage() {
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    <p className="text-sm text-muted-foreground">Lessor: {lease.lessorName}</p>
+                                                    <DueDateDisplay date={lease.endDate!} isClient={isClient} prefix="Ends:" />
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>

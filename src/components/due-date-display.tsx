@@ -1,0 +1,53 @@
+
+'use client';
+
+import { useMemo } from 'react';
+import { Skeleton } from "@/components/ui/skeleton";
+
+export const DueDateDisplay = ({
+  date,
+  isClient,
+  className,
+  prefix = "Due:",
+}: {
+  date: string;
+  isClient: boolean;
+  className?: string;
+  prefix?: string;
+}) => {
+  const { formattedDate, daysRemaining } = useMemo(() => {
+    if (!isClient) {
+      return { formattedDate: null, daysRemaining: null };
+    }
+    const dueDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+    const formatted = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(dueDate);
+    return { formattedDate: `${prefix} ${formatted}`, daysRemaining: diffDays };
+  }, [date, isClient, prefix]);
+
+  if (!isClient) {
+    return <Skeleton className="h-4 w-48 mt-1" />;
+  }
+
+  return (
+    <div className={`text-sm text-muted-foreground ${className}`}>
+      {formattedDate}
+      {daysRemaining !== null &&
+        (daysRemaining >= 0 ? (
+          <span className={daysRemaining < 7 ? 'text-destructive font-medium' : ''}>
+            {' '}
+            ({daysRemaining} days left)
+          </span>
+        ) : (
+          <span className="text-destructive font-medium"> (Overdue)</span>
+        ))}
+    </div>
+  );
+};
