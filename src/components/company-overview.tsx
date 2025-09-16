@@ -1,11 +1,19 @@
+
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import imageData from '@/app/lib/placeholder-images.json';
+import { useStoreData } from '@/hooks/use-global-store-data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CompanyOverview() {
-  const { overviewAvatars } = imageData;
+  const { overviewAvatars, isClient } = useStoreData(state => ({
+    overviewAvatars: state.overviewAvatars,
+    isClient: true,
+  }));
+  
   return (
     <section className="bg-background">
       <div className="container mx-auto px-4 py-24 md:py-32">
@@ -33,19 +41,23 @@ export default function CompanyOverview() {
                 </Button>
             </div>
             <div className="flex items-center gap-4 pt-4">
-                <div className="flex -space-x-2">
-                    {overviewAvatars.map((avatar, index) => (
-                         <Image 
-                            key={index}
-                            src={avatar.src} 
-                            alt={avatar.alt} 
-                            width={40} 
-                            height={40} 
-                            className="rounded-full border-2 border-background" 
-                            data-ai-hint={avatar.aiHint}
-                        />
-                    ))}
-                </div>
+                {isClient ? (
+                    <div className="flex -space-x-2">
+                        {overviewAvatars.map((avatar, index) => (
+                            <Image 
+                                key={index}
+                                src={avatar.src} 
+                                alt={avatar.alt} 
+                                width={40} 
+                                height={40} 
+                                className="rounded-full border-2 border-background" 
+                                data-ai-hint={avatar.aiHint}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <Skeleton className="h-10 w-24" />
+                )}
                 <div>
                     <div className="flex text-yellow-400">
                         <Star className="w-5 h-5 fill-current" />
