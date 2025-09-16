@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import ServiceTable from "@/app/admin/service-table";
@@ -7,7 +8,7 @@ import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { initialPricing } from "@/lib/pricing";
+import { initialPricing, type Pricing } from "@/lib/pricing";
 import { initialProducts } from "@/lib/products";
 import { initialServices } from "@/lib/services";
 import { initialClients, initialTestimonials } from "@/lib/clients";
@@ -18,6 +19,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminContentPage() {
     const [isClient, setIsClient] = useState(false);
+    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+    
     useEffect(() => { setIsClient(true) }, []);
 
     return (
@@ -47,7 +50,7 @@ export default function AdminContentPage() {
                         <ClientTable initialClients={initialClients} initialTestimonials={initialTestimonials} />
                     </TabsContent>
                     <TabsContent value="pricing" className="mt-6">
-                        <PricingTable initialPricing={initialPricing} />
+                        <PricingTable pricing={pricing} setPricing={setPricing} />
                     </TabsContent>
                     <TabsContent value="pos" className="mt-6">
                         <PosProductTable initialProducts={initialPosProducts} />
