@@ -3,7 +3,7 @@ import ClientTestimonials from "@/components/client-testimonials";
 import CompanyOverview from "@/components/company-overview";
 import ProductShowcase from "@/components/product-showcase";
 import ServiceCatalog from "@/components/service-catalog";
-import { initialProducts } from "@/lib/products";
+import { initialProducts, initialStoreProducts } from "@/lib/products";
 import { initialServices } from "@/lib/services";
 import { initialClients, initialTestimonials } from "@/lib/clients";
 
