@@ -38,8 +38,7 @@ export const DueDateDisplay = ({
   }, [date, prefix]);
 
   if (!isClient) {
-    // Render a skeleton on the server and during the initial client mount.
-    return <Skeleton className="h-4 w-40 mt-1" />;
+    return <div className={`text-sm text-muted-foreground ${className}`}><Skeleton className="h-4 w-40 mt-1" /></div>;
   }
   
   // This will only render on the client after hydration
