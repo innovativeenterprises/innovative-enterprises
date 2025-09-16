@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -25,6 +24,7 @@ export function CameraCapture({
 }: CameraCaptureProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const streamRef = useRef<MediaStream | null>(null);
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const { toast } = useToast();
@@ -43,6 +43,7 @@ export function CameraCapture({
             }
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                streamRef.current = stream;
                 setHasCameraPermission(true);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
@@ -58,13 +59,47 @@ export function CameraCapture({
             }
         };
 
+        const stopStream = () => {
+             if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+                streamRef.current = null;
+                 if (videoRef.current) {
+                    videoRef.current.srcObject = null;
+                }
+            }
+        }
+        
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                stopStream();
+            } else {
+                getCameraPermission();
+            }
+        }
+
+        const handlePageHide = () => {
+            stopStream();
+        }
+
+        const handlePageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                 getCameraPermission();
+            }
+        }
+
+        // Initial call
         getCameraPermission();
         
+        // Add listeners for page lifecycle to handle bfcache
+        window.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pagehide', handlePageHide);
+        window.addEventListener('pageshow', handlePageShow);
+        
         return () => {
-             if (videoRef.current && videoRef.current.srcObject) {
-                const stream = videoRef.current.srcObject as MediaStream;
-                stream.getTracks().forEach(track => track.stop());
-            }
+            stopStream();
+            window.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('pagehide', handlePageHide);
+            window.removeEventListener('pageshow', handlePageShow);
         }
     }, [toast]);
 
