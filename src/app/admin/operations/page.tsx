@@ -9,6 +9,8 @@ import KnowledgeTable from './knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { initialKnowledgeBase } from "@/lib/knowledge";
+import { initialCostSettings } from '@/lib/cost-settings';
+import CostSettingsTable from "./cost-settings-table";
 
 export default function AdminOperationsPage() {
 
@@ -31,6 +33,7 @@ export default function AdminOperationsPage() {
 
         <ThemeGenerator />
         <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
+        <CostSettingsTable initialCostSettings={initialCostSettings} />
         
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>
