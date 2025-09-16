@@ -13,8 +13,8 @@ export default function Home() {
     <>
       <CompanyOverview />
       <ServiceCatalog />
-      <ProductShowcase />
       <ClientTestimonials />
+      <ProductShowcase />
       <AiToolsCta />
       <ChatWidget />
     </>
