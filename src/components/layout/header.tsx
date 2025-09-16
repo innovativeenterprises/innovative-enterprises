@@ -28,8 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
-import { store } from '@/lib/global-store';
-import type { CartItem } from '@/lib/global-store';
+import { useCartData } from '@/hooks/use-global-store-data';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
@@ -329,19 +328,8 @@ export default function Header() {
   const pathname = usePathname();
   const { settings } = useSettingsData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-    const updateCartCount = () => {
-        const currentCart = store.get().cart;
-        setCartCount(currentCart.reduce((sum, item) => sum + item.quantity, 0));
-    }
-    updateCartCount(); // Initial count
-    const unsubscribe = store.subscribe(updateCartCount);
-    return () => unsubscribe();
-  }, []);
+  const { cart, isClient } = useCartData();
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
