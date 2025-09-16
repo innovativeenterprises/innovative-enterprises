@@ -10,7 +10,8 @@
  * architectural piece to make the prototype function correctly across pages.
  */
 
-import { initialSettings, type AppSettings } from './settings';
+import type { AppSettings } from './settings';
+import { initialSettings } from './settings';
 import type { Product } from './products';
 
 export interface CartItem extends Product {
@@ -62,5 +63,3 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
-
-    
