@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -38,7 +37,7 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
     )
 }
 
-export default function CooDashboard({
+export default function CooDashboardClient({
     initialProducts,
     initialProviders,
     initialKpiData

@@ -1,4 +1,4 @@
-import CooDashboard from './coo-dashboard-client';
+import CooDashboardClient from './client-page';
 import type { Metadata } from 'next';
 import { initialProducts } from '@/lib/products';
 import { initialProviders } from '@/lib/providers';
@@ -14,7 +14,7 @@ export default function CooDashboardPage() {
     const products = initialProducts;
     const providers = initialProviders;
 
-    return <CooDashboard 
+    return <CooDashboardClient 
         initialProducts={products}
         initialProviders={providers}
         initialKpiData={kpiData}
