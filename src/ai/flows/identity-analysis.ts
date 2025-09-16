@@ -47,7 +47,7 @@ const prompt = ai.definePrompt({
     -   **Email & Phone:** Find the primary contact email and phone number. These are almost always found only in the CV.
     -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document.
 
-    **Passport Details:** (Extract if a passport document is identified in any of the image slots)
+    **Passport Details:** (Extract if a passport document is identified in any of the image slots, even the 'idDocumentFrontUri' slot)
     -   Extract all passport-specific fields: Type, Country Code, Passport Number, Surname, Given Names, Issue Date, Expiry Date, Issuing Authority.
 
     **ID Document Details:**

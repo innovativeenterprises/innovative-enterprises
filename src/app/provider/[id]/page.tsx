@@ -104,7 +104,7 @@ export default function ProviderProfilePage() {
             )
         }
         
-        if (daysUntilExpiry === null) {
+        if (!expiry) {
              return <Badge variant="outline">{tier}</Badge>;
         }
         
@@ -112,9 +112,7 @@ export default function ProviderProfilePage() {
             <div className="w-full min-w-[200px] space-y-2">
                 <div className="flex justify-between items-center">
                     <Badge variant="outline">{tier}</Badge>
-                    <p className="text-xs text-muted-foreground">
-                        {daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired'}
-                    </p>
+                    <DueDateDisplay date={new Date(expiry).toISOString()} prefix="" />
                 </div>
                 <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
             </div>

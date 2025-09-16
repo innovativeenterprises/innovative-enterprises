@@ -12,7 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
-import { DueDateDisplay } from "@/components/due-date-display";
+import { DueDateDisplay } from '@/components/due-date-display';
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
     const [leases, setLeases] = useState(initialLeases);
