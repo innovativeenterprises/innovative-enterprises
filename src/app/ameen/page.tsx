@@ -1,9 +1,8 @@
-
 'use client';
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -18,7 +17,7 @@ import AmeenSmartLockIcon from '@/components/icons/ameen-smart-lock-icon';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Ameen: Smart Identity & Home | Innovative Enterprises",
+  title: "Ameen: Smart Identity & Home",
   description: "Your single, secure point of control. Log in with your WhatsApp-based digital ID to manage your smart home devices.",
 };
 

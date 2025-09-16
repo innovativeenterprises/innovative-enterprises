@@ -1,4 +1,3 @@
-
 'use client';
 
 import CvForm from "./cv-form";

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -8,6 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import type { Pricing, PricingGroup } from '@/lib/pricing';
 import { usePricingData } from '@/hooks/use-global-store-data';
 import { useSettingsData } from '@/hooks/use-global-store-data';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Verified Document Translator",
+  description: "Translate legal, financial, and official documents with high accuracy. This service is managed by Voxi, our AI Translation Agent, ensuring professional results.",
+};
 
 const iconMap: { [key: string]: React.ElementType } = {
     "Legal & Official Documents": ShieldCheck,

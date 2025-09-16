@@ -1,9 +1,13 @@
-
-
 'use client';
 
 import ImageForm from "./image-form";
 import { Image as ImageIcon } from "lucide-react";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Image Generator | Innovative Enterprises",
+  description: "Bring your ideas to life. Describe anything you can imagine, and our AI will create a unique, high-quality image for you in seconds.",
+};
 
 
 export default function ImageGeneratorPage() {

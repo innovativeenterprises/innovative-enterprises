@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import VmallIcon from "@/components/icons/vmall-icon";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "VMALL - Immersive VR/AR Shopping | Innovative Enterprises",
+  title: "VMALL - Immersive VR/AR Shopping",
   description: "Experience the future of retail with VMALL. A revolutionary platform leveraging VR and AR to create immersive shopping experiences for retail, real estate, and more.",
 };
 

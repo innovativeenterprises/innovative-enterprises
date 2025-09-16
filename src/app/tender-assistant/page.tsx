@@ -1,4 +1,3 @@
-
 'use client';
 
 import TenderForm from "./tender-form";
@@ -6,7 +5,7 @@ import { FileText } from "lucide-react";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "AI Tender Response Assistant | Innovative Enterprises",
+  title: "AI Tender Response Assistant",
   description: "Save hours of work. Upload your tender documents and project requirements, and let our AI generate a comprehensive, professional draft response tailored to your company's strengths.",
 };
 

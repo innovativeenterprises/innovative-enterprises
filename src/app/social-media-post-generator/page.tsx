@@ -1,6 +1,13 @@
+'use client';
 
 import SocialMediaForm from "./social-media-form";
 import { Megaphone } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Social Media Management Platform | Innovative Enterprises",
+  description: "Craft the perfect social media post or generate engaging marketing copy with Mira, our Marketing & Content Agent.",
+};
 
 export default function SocialMediaManagementPage() {
   return (

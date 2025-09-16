@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useSettingsData } from '@/hooks/use-global-store-data';
@@ -8,7 +7,7 @@ import { Search } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Rami - AI Research Agent | Innovative Enterprises",
+  title: "Rami - AI Research Agent",
   description: "Chat with Rami, your AI-powered research assistant. Scrape data from any URL or perform a web search to gather and summarize information quickly.",
 };
 

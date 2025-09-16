@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import AppiIcon from "@/components/icons/appi-icon";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "APPI - AI Utility Monitoring | Innovative Enterprises",
+  title: "APPI - AI Utility Monitoring",
   description: "Real-time, personalized insights into your household utility consumption (electricity, water, gas), empowering you with predictive analytics and convenient service booking.",
 };
 

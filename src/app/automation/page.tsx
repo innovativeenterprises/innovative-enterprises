@@ -1,4 +1,3 @@
-
 'use client'
 
 import AgentList from "@/components/agent-list";
@@ -10,7 +9,7 @@ import Link from "next/link";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "AI Business Process Automation | Innovative Enterprises",
+  title: "AI Business Process Automation",
   description: "Explore our suite of specialized AI agents, designed to handle key business functions from legal analysis to marketing, so you can focus on growth and innovation.",
 };
 
