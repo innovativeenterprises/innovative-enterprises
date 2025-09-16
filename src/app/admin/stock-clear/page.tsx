@@ -1,3 +1,4 @@
+
 import { initialStockItems } from '@/lib/stock-items';
 import StockClearClientPage from './client-page';
 import type { Metadata } from 'next';
