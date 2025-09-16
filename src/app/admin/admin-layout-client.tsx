@@ -55,7 +55,7 @@ export default function AdminLayoutClient({
   ];
 
   const finance = [
-      { href: '/admin/finance', label: 'Finance & COO', icon: WalletCards },
+      { href: '/admin/coo-dashboard', label: 'Finance & COO', icon: WalletCards },
   ];
 
   const contentManagement = [
