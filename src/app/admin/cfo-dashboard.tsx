@@ -9,13 +9,12 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { useCfoData } from '@/hooks/use-global-store-data';
-import { useMemo } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { DueDateDisplay } from '@/components/due-date-display';
+
 
 // Main Dashboard Component
 export default function CfoDashboard() {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, isClient } = useCfoData();
+  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = useCfoData();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -112,7 +111,7 @@ export default function CfoDashboard() {
                 </CardHeader>
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <DueDateDisplay date={vatPayment.dueDate} isClient={isClient} />
+                    <DueDateDisplay date={vatPayment.dueDate} />
                 </CardContent>
             </Card>
 
@@ -128,7 +127,7 @@ export default function CfoDashboard() {
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
-                                       <DueDateDisplay date={payment.dueDate} isClient={isClient} />
+                                       <DueDateDisplay date={payment.dueDate} />
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>

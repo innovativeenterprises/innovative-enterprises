@@ -1,40 +1,41 @@
-
 'use client';
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const DueDateDisplay = ({
   date,
-  isClient,
   className,
   prefix = "Due:",
 }: {
   date: string;
-  isClient: boolean;
   className?: string;
   prefix?: string;
 }) => {
-  const { formattedDate, daysRemaining } = useMemo(() => {
-    if (!isClient) {
-      return { formattedDate: null, daysRemaining: null };
-    }
+  const [displayState, setDisplayState] = useState<{ isClient: boolean; daysRemaining: number | null, formattedDate: string | null }>({ isClient: false, daysRemaining: null, formattedDate: null });
+
+  useEffect(() => {
+    // This code now runs only on the client, after the initial render.
     const dueDate = new Date(date);
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0); // Normalize to the start of the day
     const diffTime = dueDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+    
     const formatted = new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     }).format(dueDate);
-    return { formattedDate: `${prefix} ${formatted}`, daysRemaining: diffDays };
-  }, [date, isClient, prefix]);
 
-  if (!isClient) {
+    setDisplayState({ isClient: true, daysRemaining: diffDays, formattedDate: `${prefix} ${formatted}` });
+  }, [date, prefix]);
+
+  if (!displayState.isClient) {
     return <Skeleton className="h-4 w-48 mt-1" />;
   }
+
+  const { daysRemaining, formattedDate } = displayState;
 
   return (
     <div className={`text-sm text-muted-foreground ${className}`}>
