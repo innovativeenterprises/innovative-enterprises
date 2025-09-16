@@ -1,5 +1,5 @@
-import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from '@/lib/cfo-data';
 import CfoDashboardClient from './cfo-dashboard-client';
+import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from '@/lib/cfo-data';
 
 export default function CfoDashboard() {
   const cfoData = {

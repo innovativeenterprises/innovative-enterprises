@@ -1,5 +1,6 @@
-import CfoDashboard from '../cfo-dashboard';
+import CfoDashboardClient from './cfo-dashboard-client';
 import type { Metadata } from 'next';
+import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from '@/lib/cfo-data';
 
 export const metadata: Metadata = {
   title: "AI COO & CFO Dashboard",
@@ -7,5 +8,12 @@ export const metadata: Metadata = {
 };
 
 export default function CooDashboardPage() {
-    return <CfoDashboard />;
+    const cfoData = {
+        kpiData,
+        transactionData,
+        upcomingPayments,
+        vatPayment,
+        cashFlowData,
+    };
+    return <CfoDashboardClient initialCfoData={cfoData} />;
 }
