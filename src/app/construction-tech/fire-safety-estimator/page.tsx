@@ -1,8 +1,12 @@
 
-'use client';
-
 import { Siren } from "lucide-react";
 import FireSafetyForm from "./fire-safety-form";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "AI Fire & Safety Estimator | Innovative Enterprises",
+  description: "Upload your building's floor plan and provide some basic details. Our AI will generate a preliminary list of required fire alarm and firefighting equipment, along with a cost estimate, and show you a proposed layout.",
+};
 
 export default function FireSafetyEstimatorPage() {
   return (

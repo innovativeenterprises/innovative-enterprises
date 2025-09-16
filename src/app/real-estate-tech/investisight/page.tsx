@@ -1,7 +1,5 @@
 
-'use client';
-
-import { DollarSign, BarChart } from "lucide-react";
+import { BarChart } from "lucide-react";
 import InvestisightForm from "./investisight-form";
 import type { Metadata } from 'next';
 
