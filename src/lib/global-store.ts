@@ -18,7 +18,7 @@ export interface CartItem extends Product {
 }
 
 export type AppState = {
-  settings: AppState['settings'];
+  settings: AppSettings;
   cart: CartItem[];
 };
 
