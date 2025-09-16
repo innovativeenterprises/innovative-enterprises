@@ -41,7 +41,7 @@ export const DueDateDisplay = ({
 
   if (!isClient) {
     // Render a skeleton on the server and during the initial client mount.
-    return <Skeleton className="h-4 w-48 mt-1" />;
+    return <Skeleton className="h-4 w-40 mt-1" />;
   }
   
   return (
