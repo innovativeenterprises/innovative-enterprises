@@ -45,8 +45,19 @@ type TestimonialValues = z.infer<typeof TestimonialSchema>;
 
 
 // Add/Edit Dialogs
-const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (v: ClientValues, id?: string) => void, children: React.ReactNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const AddEditClientDialog = ({ 
+    client, 
+    onSave, 
+    children, 
+    isOpen, 
+    onOpenChange 
+}: { 
+    client?: Client, 
+    onSave: (v: ClientValues, id?: string) => void, 
+    children: React.ReactNode, 
+    isOpen: boolean, 
+    onOpenChange: (open: boolean) => void 
+}) => {
     const [imagePreview, setImagePreview] = useState<string | null>(client?.logo || null);
 
     const form = useForm<z.infer<typeof ClientSchema>>({
@@ -73,6 +84,8 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
             fileToDataURI(watchLogoFile[0]).then(setImagePreview);
         } else if (watchLogoUrl) {
             setImagePreview(watchLogoUrl);
+        } else {
+            setImagePreview(null);
         }
     }, [watchLogoUrl, watchLogoFile]);
     
@@ -87,11 +100,11 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
         onSave({ ...data, logo: logoValue }, client?.id);
         setImagePreview(null);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{client ? "Edit" : "Add"} Client Logo</DialogTitle></DialogHeader>
@@ -199,6 +212,15 @@ export default function ClientTable() {
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
+    
+    const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
+    const [selectedClient, setSelectedClient] = useState<Client | undefined>(undefined);
+
+    const openClientDialog = (client?: Client) => {
+        setSelectedClient(client);
+        setIsClientDialogOpen(true);
+    };
+
 
     // Handlers
     const handleSaveClient = (values: ClientValues, id?: string) => {
@@ -274,9 +296,7 @@ export default function ClientTable() {
                                 />
                             </div>
                             {activeTab === 'clients' ? (
-                                <AddEditClientDialog onSave={handleSaveClient}>
-                                    <Button className="shrink-0"><PlusCircle /> Add Client</Button>
-                                </AddEditClientDialog>
+                                <Button className="shrink-0" onClick={() => openClientDialog()}><PlusCircle /> Add Client</Button>
                             ) : (
                                 <AddEditTestimonialDialog onSave={handleSaveTestimonial}>
                                     <Button className="shrink-0"><PlusCircle /> Add Testimonial</Button>
@@ -285,6 +305,14 @@ export default function ClientTable() {
                         </div>
                     </div>
                     <TabsContent value="clients">
+                        <AddEditClientDialog 
+                            isOpen={isClientDialogOpen} 
+                            onOpenChange={setIsClientDialogOpen} 
+                            client={selectedClient} 
+                            onSave={handleSaveClient}
+                        >
+                            <div/>
+                        </AddEditClientDialog>
                         <Table>
                              <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                             <TableBody>
@@ -294,13 +322,15 @@ export default function ClientTable() {
                                     filteredClients.map(client => (
                                     <TableRow key={client.id}>
                                         <TableCell>
-                                            <AddEditClientDialog client={client} onSave={handleSaveClient}>
-                                                <div className="p-2 rounded-md hover:bg-muted cursor-pointer">
-                                                    <Image src={client.logo || "https://placehold.co/150x60.png"} alt={client.name} width={100} height={40} className="object-contain" />
-                                                </div>
-                                            </AddEditClientDialog>
+                                            <div className="p-2 rounded-md hover:bg-muted cursor-pointer" onClick={() => openClientDialog(client)}>
+                                                <Image src={client.logo || "https://placehold.co/150x60.png"} alt={client.name} width={100} height={40} className="object-contain" />
+                                            </div>
                                         </TableCell>
-                                        <TableCell><AddEditClientDialog client={client} onSave={handleSaveClient}><div className="font-medium cursor-pointer">{client.name}</div></AddEditClientDialog></TableCell>
+                                        <TableCell>
+                                            <div className="font-medium cursor-pointer" onClick={() => openClientDialog(client)}>
+                                                {client.name}
+                                            </div>
+                                        </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
                                                 <AlertDialog>
