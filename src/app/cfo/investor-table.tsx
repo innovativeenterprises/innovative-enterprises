@@ -18,8 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 import type { Investor } from "@/lib/investors";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Upload, FileText, User, Building, Banknote, Loader2, Percent, Wand2 } from "lucide-react";
-import { analyzeCrDocument } from "@/ai/flows/cr-analysis";
-import { Skeleton } from "../ui/skeleton";
+import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
+import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from "@/lib/utils";
 
 const InvestorSchema = z.object({
