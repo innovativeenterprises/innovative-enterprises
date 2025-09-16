@@ -54,6 +54,10 @@ export default function AdminLayoutClient({
       { href: '/admin', label: 'Main Dashboard', icon: LayoutDashboard },
   ];
 
+  const finance = [
+      { href: '/admin/finance', label: 'Finance & COO', icon: WalletCards },
+  ];
+
   const contentManagement = [
       { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
       { href: '/admin/saas-portfolio', label: 'SaaS Portfolio', icon: Package },
@@ -68,7 +72,6 @@ export default function AdminLayoutClient({
   ];
   
   const operations = [
-      { href: '/admin/finance', label: 'Finance & COO', icon: WalletCards },
       { href: '/admin/operations', label: 'Operations & AI', icon: GanttChartSquare },
       { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
       { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
@@ -111,6 +114,11 @@ export default function AdminLayoutClient({
             <SidebarGroup>
                 <SidebarGroupLabel>Dashboards</SidebarGroupLabel>
                 {dashboards.map(renderMenuItem)}
+            </SidebarGroup>
+            <SidebarSeparator />
+             <SidebarGroup>
+                <SidebarGroupLabel>Finance</SidebarGroupLabel>
+                {finance.map(renderMenuItem)}
             </SidebarGroup>
              <SidebarSeparator />
             <SidebarGroup>
