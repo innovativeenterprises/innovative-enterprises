@@ -251,9 +251,9 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
                 profile: values.profile,
                 focusArea: values.focusArea,
                 country: values.country,
+                documents: uploadedDocs,
                 investmentValue: values.investmentValue,
                 sharePercentage: values.sharePercentage,
-                documents: uploadedDocs,
             };
             setInvestors(prev => [newInvestor, ...prev]);
             toast({ title: "Investor added successfully." });
@@ -373,5 +373,3 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
         </Card>
     );
 }
-
-    
