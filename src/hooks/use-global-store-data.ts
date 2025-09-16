@@ -37,21 +37,18 @@ import type { GiftCard } from '@/lib/gift-cards';
 import type { StockItem } from '@/lib/stock-items';
 import type { JobPosting } from '@/lib/alumni-jobs';
 
-
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
  * It uses useSyncExternalStore, which is the officially recommended way to handle
  * external stores with React 18+ and server-side rendering to prevent hydration mismatches.
  */
-export function useStoreData<T>(selector: (state: AppState) => T): T {
-    const state = useSyncExternalStore(
-        store.subscribe,
-        () => selector(store.get()),
-        // CORRECTED: Apply the selector to the initial state for the server-side render.
-        // This ensures the hook returns the expected data shape on the server.
-        () => selector(initialState)
-    );
-    return state;
+function useStoreData<T>(selector: (state: AppState) => T): T {
+  const state = useSyncExternalStore(
+    store.subscribe,
+    () => selector(store.get()),
+    () => selector(initialState) // Return initial state for the server render
+  );
+  return state;
 }
 
 // Centralized setters to be used within the custom hooks
@@ -108,7 +105,7 @@ export const useKnowledgeData = () => ({ knowledgeBase: useStoreData(s => s.know
 export const useAgenciesData = () => ({ agencies: useStoreData(s => s.raahaAgencies), setAgencies: setRaahaAgencies, isClient: true });
 export const useWorkersData = () => ({ workers: useStoreData(s => s.raahaWorkers), setWorkers: setRaahaWorkers, isClient: true });
 export const useRequestsData = () => ({ requests: useStoreData(s => s.raahaRequests), setRaahaRequests, isClient: true });
-export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setSignedLeases, isClient: true });
+export const useLeasesData = () => ({ leases: useStoreData(s => s.signedLeases), setLeases: setSignedLeases, isClient: true });
 export const usePropertiesData = () => ({ properties: useStoreData(s => s.properties), setProperties, isClient: true });
 export const useStairspaceData = () => ({ stairspaceListings: useStoreData(s => s.stairspaceListings), setStairspaceListings, isClient: true });
 export const useStairspaceRequestsData = () => ({ stairspaceRequests: useStoreData(s => s.stairspaceRequests), setStairspaceRequests, isClient: true });
@@ -128,3 +125,5 @@ export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), 
 export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCards), setGiftCards, isClient: true });
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
 export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });
+
+    
