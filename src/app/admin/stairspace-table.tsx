@@ -33,13 +33,16 @@ type ListingValues = z.infer<typeof ListingSchema>;
 const AddEditListingDialog = ({ 
     listing, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     listing?: StairspaceListing, 
     onSave: (values: ListingValues, id?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<ListingValues>({
         resolver: zodResolver(ListingSchema),
     });
@@ -55,11 +58,11 @@ const AddEditListingDialog = ({
 
     const onSubmit: SubmitHandler<ListingValues> = (data) => {
         onSave(data, listing?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -100,10 +103,17 @@ export default function StairspaceTable({ initialListings }: { initialListings: 
     const [listings, setListings] = useState(initialListings);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    const openDialog = (listing?: StairspaceListing) => {
+        setSelectedListing(listing);
+        setIsDialogOpen(true);
+    };
 
     const handleSave = (values: ListingValues, id?: string) => {
         const listingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
@@ -129,11 +139,17 @@ export default function StairspaceTable({ initialListings }: { initialListings: 
                     <CardTitle>StairSpace Listings</CardTitle>
                     <CardDescription>Manage all micro-retail space listings.</CardDescription>
                 </div>
-                 <AddEditListingDialog onSave={handleSave}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button>
-                </AddEditListingDialog>
+                 <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button>
             </CardHeader>
             <CardContent>
+                 <AddEditListingDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    listing={selectedListing}
+                    onSave={handleSave}
+                >
+                   <div/>
+                </AddEditListingDialog>
                 <Table>
                     <TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
@@ -148,7 +164,7 @@ export default function StairspaceTable({ initialListings }: { initialListings: 
                                     <TableCell>{listing.price}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <AddEditListingDialog listing={listing} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditListingDialog>
+                                            <Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                 <AlertDialogContent>
