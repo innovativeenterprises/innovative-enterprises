@@ -11,7 +11,7 @@
  * architectural piece to make the prototype function correctly across pages.
  */
 
-import { initialProducts, type Product, initialStoreProducts } from './products';
+import { type Product } from './products';
 import { initialSettings, type AppSettings } from './settings';
 
 
