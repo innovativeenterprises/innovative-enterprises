@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -13,9 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Bot, FileText, BadgePercent, TrendingUp, Impact, Lightbulb } from 'lucide-react';
+import { Loader2, Sparkles, Bot, FileText, BadgePercent, TrendingUp, Lightbulb } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
 import { fileToDataURI } from '@/lib/utils';
 import { useOpportunitiesData } from '@/hooks/use-global-store-data';
 import type { Opportunity } from '@/lib/opportunities';
@@ -155,7 +153,6 @@ export default function WorkOrderForm() {
                     <FormControl>
                       <Input type="file" onChange={(e) => field.onChange(e.target.files)} />
                     </FormControl>
-                     <FormDescription>e.g., a brief, business plan, or technical specs.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -186,7 +183,7 @@ export default function WorkOrderForm() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><Bot className="h-6 w-6"/> AI Analysis Report</CardTitle>
              <CardDescription>
-                Your submission has been categorized as a <span className="font-semibold text-primary">{response.category}</span>.
+                Your submission has been categorized as a <span className="font-semibold text-primary">{response.category}</span> and added to the Opportunities table below.
              </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
