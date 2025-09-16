@@ -1,3 +1,4 @@
+
 export interface BeautyCenter {
     id: string;
     name: string;

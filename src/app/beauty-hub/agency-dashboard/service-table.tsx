@@ -1,125 +1,152 @@
+
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import type { Product } from "@/lib/products";
-import { ProductSchema } from "@/lib/products.schema";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
-import { useProductsData, useProjectStagesData } from "@/hooks/use-global-store-data";
-import { Skeleton } from "@/components/ui/skeleton";
-import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
+import { useState, useMemo } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { type BeautyService } from '@/lib/beauty-services';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const ServiceSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  category: z.enum(['Hair', 'Nails', 'Skincare', 'Massage', 'Makeup']),
+  price: z.coerce.number().positive("Price must be a positive number"),
+  duration: z.coerce.number().positive("Duration in minutes is required"),
+});
+type ServiceValues = z.infer<typeof ServiceSchema>;
 
 
-export default function ProductTable() {
-    const { products, setProducts, isClient } = useProductsData();
-    const { toast } = useToast();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
-    const { stages } = useProjectStagesData();
+const AddEditServiceDialog = ({ 
+    service, 
+    onSave,
+    children,
+}: { 
+    service?: BeautyService, 
+    onSave: (values: ServiceValues, id?: string) => void,
+    children: React.ReactNode 
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const form = useForm<ServiceValues>({
+        resolver: zodResolver(ServiceSchema),
+        defaultValues: service || { name: "", category: "Hair", price: 0, duration: 30 },
+    });
 
-    const handleToggle = (id: number) => {
-        setProducts(prev =>
-            prev.map(product =>
-                product.id === id ? { ...product, enabled: !product.enabled } : product
-            )
-        );
-        toast({ title: "Product status updated." });
+    const onSubmit: SubmitHandler<ServiceValues> = (data) => {
+        onSave(data, service?.id);
+        setIsOpen(false);
+        form.reset();
     };
 
-    const openDialog = (product?: Product) => {
-        setSelectedProduct(product);
-        setIsDialogOpen(true);
-    }
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>{service ? "Edit" : "Add"} Service</DialogTitle>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="name" render={({ field }) => (
+                            <FormItem><FormLabel>Service Name</FormLabel><FormControl><Input placeholder="e.g., Classic Manicure" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <div className="grid grid-cols-2 gap-4">
+                             <FormField control={form.control} name="category" render={({ field }) => (
+                                <FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl><SelectContent>
+                                    <SelectItem value="Hair">Hair</SelectItem>
+                                    <SelectItem value="Nails">Nails</SelectItem>
+                                    <SelectItem value="Skincare">Skincare</SelectItem>
+                                    <SelectItem value="Massage">Massage</SelectItem>
+                                    <SelectItem value="Makeup">Makeup</SelectItem>
+                                </SelectContent></Select><FormMessage/></FormItem>
+                            )} />
+                            <FormField control={form.control} name="price" render={({ field }) => (
+                                <FormItem><FormLabel>Price (OMR)</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
+                        <FormField control={form.control} name="duration" render={({ field }) => (
+                            <FormItem><FormLabel>Duration (minutes)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit">Save Service</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
-    const handleSave = (values: ProductValues, id?: number) => {
-        if (id !== undefined) {
-            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values, id } : p));
-            toast({ title: "Product updated successfully." });
+export function ServiceTable({ services, setServices }: { services: BeautyService[], setServices: (updater: (prev: BeautyService[]) => BeautyService[]) => void }) {
+    const { toast } = useToast();
+
+    const handleSave = (values: ServiceValues, id?: string) => {
+        if (id) {
+            setServices(prev => prev.map(s => s.id === id ? { ...s, ...values } : s));
+            toast({ title: "Service updated." });
         } else {
-            const newProduct: Product = {
-                ...values,
-                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
-            };
-            setProducts(prev => [newProduct, ...prev]);
-            toast({ title: "Product added successfully." });
+            const newService = { ...values, id: `service_${Date.now()}` };
+            setServices(prev => [newService, ...prev]);
+            toast({ title: "Service added." });
         }
     };
+
+    const handleDelete = (id: string) => {
+        setServices(prev => prev.filter(s => s.id !== id));
+        toast({ title: "Service removed.", variant: "destructive" });
+    }
 
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                    <CardTitle>Product Management</CardTitle>
-                    <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
+                    <CardTitle>Services & Pricing</CardTitle>
+                    <CardDescription>Manage the services your center offers.</CardDescription>
                 </div>
-                 <Button onClick={() => openDialog()}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Product
-                </Button>
+                 <AddEditServiceDialog onSave={handleSave}>
+                    <Button><PlusCircle className="mr-2 h-4 w-4" /> Add Service</Button>
+                </AddEditServiceDialog>
             </CardHeader>
             <CardContent>
-                 <AddEditProductDialog
-                    isOpen={isDialogOpen}
-                    onOpenChange={setIsDialogOpen}
-                    product={selectedProduct}
-                    onSave={handleSave}
-                    stages={stages}
-                >
-                    {/* This is a controlled dialog, so the trigger is handled programmatically */}
-                    <div />
-                </AddEditProductDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Product Name</TableHead>
+                            <TableHead>Service</TableHead>
                             <TableHead>Category</TableHead>
-                            <TableHead>Price (OMR)</TableHead>
-                            <TableHead className="text-center">Status</TableHead>
+                            <TableHead>Duration</TableHead>
+                            <TableHead className="text-right">Price</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                            Array.from({ length: 5 }).map((_, i) => (
-                                <TableRow key={i}>
-                                    <TableCell colSpan={5}>
-                                        <Skeleton className="h-10 w-full" />
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            products.map((product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell className="font-medium">{product.name}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{product.category}</Badge>
-                                    </TableCell>
-                                    <TableCell>{product.price > 0 ? `OMR ${product.price.toFixed(2)}` : 'N/A'}</TableCell>
-                                    <TableCell className="text-center">
-                                        <Switch
-                                            checked={product.enabled}
-                                            onCheckedChange={() => handleToggle(product.id)}
-                                            aria-label={`Enable/disable ${product.name}`}
-                                        />
-                                    </TableCell>
-                                     <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
-                                            <Edit />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
+                        {services.map(service => (
+                            <TableRow key={service.id}>
+                                <TableCell className="font-medium">{service.name}</TableCell>
+                                <TableCell><Badge variant="outline">{service.category}</Badge></TableCell>
+                                <TableCell>{service.duration} mins</TableCell>
+                                <TableCell className="text-right font-mono">OMR {service.price.toFixed(2)}</TableCell>
+                                <TableCell className="text-right">
+                                    <AddEditServiceDialog service={service} onSave={handleSave}>
+                                        <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
+                                    </AddEditServiceDialog>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
     );
 }
+

@@ -1,31 +1,36 @@
-{
-    "overviewAvatars": [
-        {
-            "src": "https://i.pravatar.cc/40?img=1",
-            "alt": "Client 1",
-            "aiHint": "person portrait"
-        },
-        {
-            "src": "https://i.pravatar.cc/40?img=2",
-            "alt": "Client 2",
-            "aiHint": "person portrait"
-        },
-        {
-            "src": "https://i.pravatar.cc/40?img=3",
-            "alt": "Client 3",
-            "aiHint": "person portrait"
-        }
-    ],
-    "testimonialAvatars": {
-        "gov1": { "src": "https://i.pravatar.cc/100?img=4", "alt": "Government Official", "aiHint": "government official" },
-        "corp1": { "src": "https://i.pravatar.cc/100?img=5", "alt": "Corporate CEO", "aiHint": "corporate ceo" },
-        "startup1": { "src": "https://i.pravatar.cc/100?img=6", "alt": "Startup Founder", "aiHint": "startup founder" },
-        "freelancer1": { "src": "https://i.pravatar.cc/100?img=7", "alt": "Software Engineer", "aiHint": "software engineer" },
-        "legal1": { "src": "https://i.pravatar.cc/100?img=8", "alt": "Lawyer", "aiHint": "lawyer portrait" },
-        "sanad1": { "src": "https://i.pravatar.cc/100?img=9", "alt": "Business Owner", "aiHint": "business owner" },
-        "prop1": { "src": "https://i.pravatar.cc/100?img=10", "alt": "Property Manager", "aiHint": "property manager" },
-        "raaha1": { "src": "https://i.pravatar.cc/100?img=11", "alt": "Agency Director", "aiHint": "agency director" },
-        "tender1": { "src": "https://i.pravatar.cc/100?img=12", "alt": "Bidding Manager", "aiHint": "bidding manager" },
-        "infra1": { "src": "https://i.pravatar.cc/100?img=13", "alt": "Event Coordinator", "aiHint": "event coordinator" }
-    }
+
+export interface BeautyAppointment {
+    id: string;
+    clientName: string;
+    service: string;
+    specialist: string;
+    dateTime: string; // ISO String
+    status: 'Confirmed' | 'Pending' | 'Cancelled';
 }
+
+export const initialBeautyAppointments: BeautyAppointment[] = [
+    {
+        id: 'appt_1',
+        clientName: 'Aisha Al-Harthy',
+        service: 'Luxury Manicure & Pedicure',
+        specialist: 'Fatima',
+        dateTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours from now
+        status: 'Confirmed'
+    },
+    {
+        id: 'appt_2',
+        clientName: 'Sara Al-Balushi',
+        service: 'Haircut & Blowdry',
+        specialist: 'Nadia',
+        dateTime: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(), // 4 hours from now
+        status: 'Confirmed'
+    },
+    {
+        id: 'appt_3',
+        clientName: 'Asma Al-Riyami',
+        service: 'Deep Tissue Massage (60 min)',
+        specialist: 'Maria',
+        dateTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+        status: 'Pending'
+    }
+];

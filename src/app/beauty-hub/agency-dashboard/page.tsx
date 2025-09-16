@@ -1,12 +1,19 @@
 
 import AgencyDashboardClient from './client-page';
+import { initialBeautyCenters } from '@/lib/beauty-centers';
+import { initialBeautyServices } from '@/lib/beauty-services';
+import { initialBeautyAppointments } from '@/lib/beauty-appointments';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Agency Dashboard | RAAHA",
-  description: "Manage your domestic workforce agency. View client requests, manage your candidates, and update your agency settings.",
+  title: "Agency Dashboard | Beauty & Wellness Hub",
+  description: "Manage your salon or spa. View appointments, manage services, and update your settings.",
 };
 
 export default function AgencyDashboardPage() {
-    return <AgencyDashboardClient />;
+    return <AgencyDashboardClient 
+        initialAgencies={initialBeautyCenters}
+        initialServices={initialBeautyServices}
+        initialAppointments={initialBeautyAppointments}
+    />;
 }

@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -46,6 +47,10 @@ import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
 import { initialDailySales, type Transaction as PosTransaction, initialPosProducts, type PosProduct } from './pos-data';
 import { initialGiftCards, type GiftCard } from './gift-cards';
 import { initialJobs, type JobPosting } from './alumni-jobs';
+import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
+import { initialBeautyServices, type BeautyService } from './beauty-services';
+import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
+
 
 export interface CartItem extends Product {
   quantity: number;
@@ -101,6 +106,9 @@ export type AppState = {
   posProducts: PosProduct[];
   giftCards: GiftCard[];
   alumniJobs: JobPosting[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautyAppointments: BeautyAppointment[];
 };
 
 export const initialState: AppState = {
@@ -146,6 +154,9 @@ export const initialState: AppState = {
   posProducts: initialPosProducts,
   giftCards: initialGiftCards,
   alumniJobs: initialJobs,
+  beautyCenters: initialBeautyCenters,
+  beautyServices: initialBeautyServices,
+  beautyAppointments: initialBeautyAppointments,
 };
 
 // The single source of truth for our application's shared state.

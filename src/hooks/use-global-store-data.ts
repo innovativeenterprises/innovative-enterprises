@@ -36,6 +36,9 @@ import type { Transaction as PosTransaction, PosProduct } from '@/lib/pos-data';
 import type { GiftCard } from '@/lib/gift-cards';
 import type { StockItem } from '@/lib/stock-items';
 import type { JobPosting } from '@/lib/alumni-jobs';
+import type { BeautyCenter } from '@/lib/beauty-centers';
+import type { BeautyService } from '@/lib/beauty-services';
+import type { BeautyAppointment } from '@/lib/beauty-appointments';
 
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
@@ -87,6 +90,9 @@ export const setPosProducts = (updater: (prev: PosProduct[]) => PosProduct[]) =>
 export const setGiftCards = (updater: (prev: GiftCard[]) => GiftCard[]) => store.set(state => ({ ...state, giftCards: updater(state.giftCards) }));
 export const setStockItems = (updater: (prev: StockItem[]) => StockItem[]) => store.set(state => ({...state, stockItems: updater(state.stockItems) }));
 export const setAlumniJobs = (updater: (prev: JobPosting[]) => JobPosting[]) => store.set(state => ({ ...state, alumniJobs: updater(state.alumniJobs) }));
+export const setBeautyCenters = (updater: (prev: BeautyCenter[]) => BeautyCenter[]) => store.set(state => ({ ...state, beautyCenters: updater(state.beautyCenters) }));
+export const setBeautyServices = (updater: (prev: BeautyService[]) => BeautyService[]) => store.set(state => ({ ...state, beautyServices: updater(state.beautyServices) }));
+export const setBeautyAppointments = (updater: (prev: BeautyAppointment[]) => BeautyAppointment[]) => store.set(state => ({ ...state, beautyAppointments: updater(state.beautyAppointments) }));
 
 // Data hooks that return the reactive state slice and a flag for client-side rendering.
 export const useServicesData = () => ({ services: useStoreData(s => s.services), setServices, isClient: true });
@@ -125,5 +131,13 @@ export const usePosData = () => ({ dailySales: useStoreData(s => s.dailySales), 
 export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCards), setGiftCards, isClient: true });
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
 export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });
-
+export const useBeautyData = () => ({
+    beautyCenters: useStoreData(s => s.beautyCenters),
+    beautyServices: useStoreData(s => s.beautyServices),
+    beautyAppointments: useStoreData(s => s.beautyAppointments),
+    setBeautyCenters,
+    setBeautyServices,
+    setBeautyAppointments,
+    isClient: true,
+});
     
