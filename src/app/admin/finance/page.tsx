@@ -1,6 +1,4 @@
 
-'use client';
-
 import InvestorTable from "../investor-table";
 import CfoDashboard from "../cfo-dashboard";
 
