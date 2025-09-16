@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { DueDateDisplay } from "@/components/due-date-display";
-import { useProvidersData } from "@/hooks/use-global-store-data";
+import { useProvidersData, setProviders } from "@/hooks/use-global-store-data";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 

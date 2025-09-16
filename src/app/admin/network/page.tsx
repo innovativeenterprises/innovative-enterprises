@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,9 +21,9 @@ export default function AdminNetworkPage() {
   const [assets, setAssets] = useState<Asset[]>(initialAssets);
   const [isClient, setIsClient] = useState(false);
 
-  useState(() => {
+  useEffect(() => {
     setIsClient(true);
-  });
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -40,7 +40,7 @@ export default function AdminNetworkPage() {
                 <TabsTrigger value="assets">Rental Assets</TabsTrigger>
             </TabsList>
             <TabsContent value="providers" className="mt-6">
-                <ProviderTable initialProviders={providers} setProviders={setProviders} isClient={isClient} />
+                <ProviderTable />
             </TabsContent>
             <TabsContent value="assets" className="mt-6">
                 <AssetTable initialAssets={assets} setAssets={setAssets} isClient={isClient} />
