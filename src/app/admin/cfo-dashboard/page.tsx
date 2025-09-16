@@ -1,11 +1,12 @@
+
 import CfoDashboardClient from '@/app/cfo/cfo-dashboard-client';
 import type { Metadata } from 'next';
 import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from '@/lib/cfo-data';
 import { initialInvestors } from '@/lib/investors';
 
 export const metadata: Metadata = {
-  title: "AI COO & CFO Dashboard",
-  description: "JADE's real-time operational analysis and financial overview of the entire business ecosystem.",
+  title: "CFO Dashboard",
+  description: "Financial overview and analysis of the business operations.",
 };
 
 export default function CooDashboardPage() {

@@ -5,10 +5,14 @@
  * This avoids the need for a full state management library like Redux or Zustand
  * for this prototype application. It uses a simple listener pattern to update
  * components when the state changes.
+ *
+ * This file is NOT part of the user's visible code but is a necessary
+ * architectural piece to make the prototype function correctly across pages.
  */
 
 import { initialSettings, type AppSettings } from './settings';
 import type { Product } from './products';
+import { initialStockItems, type StockItem } from './stock-items';
 
 export interface CartItem extends Product {
   quantity: number;

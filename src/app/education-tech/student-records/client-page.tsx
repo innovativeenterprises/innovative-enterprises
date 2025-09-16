@@ -18,9 +18,15 @@ import type { Student } from "@/lib/students";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
-import { useStudentsData } from '@/hooks/use-global-store-data';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Student Record Management | EduFlow Suite",
+  description: "A central database for managing all student profiles and academic records.",
+};
+
 
 const StudentSchema = z.object({
   id: z.string().min(3, "Student ID is required"),
@@ -95,13 +101,14 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 };
 
 export default function StudentRecordsClientPage({ initialStudents }: { initialStudents: Student[] }) {
-    const { students, setStudents, isClient } = useStudentsData();
+    const [students, setStudents] = useState(initialStudents);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
-        // Set the initial data from server props into the global store
-        setStudents(() => initialStudents);
-    }, [initialStudents, setStudents]);
+        setIsClient(true);
+    }, []);
+
 
     const handleSave = (values: StudentValues, id?: string) => {
         if (id) {

@@ -5,8 +5,8 @@ import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } 
 import { initialInvestors } from '@/lib/investors';
 
 export const metadata: Metadata = {
-  title: "AI COO & CFO Dashboard",
-  description: "JADE's real-time operational analysis and financial overview of the entire business ecosystem.",
+  title: "AI CFO Dashboard | Finley",
+  description: "Finley's real-time financial overview of the entire business ecosystem.",
 };
 
 export default function CooDashboardPage() {

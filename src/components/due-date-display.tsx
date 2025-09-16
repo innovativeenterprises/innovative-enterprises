@@ -10,7 +10,7 @@ export const DueDateDisplay = ({
   className,
   prefix = "Due:",
 }: {
-  date: string;
+  date?: string;
   className?: string;
   prefix?: string;
 }) => {
@@ -21,8 +21,7 @@ export const DueDateDisplay = ({
   });
 
   useEffect(() => {
-    // This effect runs only on the client, after the initial mount, preventing hydration mismatch.
-    if (!date) {
+    if (typeof date !== 'string' || !date) {
         setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null });
         return;
     }
@@ -46,11 +45,9 @@ export const DueDateDisplay = ({
   }, [date, prefix]);
 
   if (!displayState.isClient) {
-    // Render a skeleton on the server and during initial client hydration
     return <div className={`text-sm text-muted-foreground ${className}`}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   
-  // This will only render on the client after hydration is complete
   return (
     <div className={`text-sm text-muted-foreground ${className}`}>
       {displayState.formattedDate}

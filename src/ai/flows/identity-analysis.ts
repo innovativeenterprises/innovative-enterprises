@@ -40,23 +40,23 @@ const prompt = ai.definePrompt({
     -   Personal Photo: {{media url=photoUri}} (Note: You are only to acknowledge its presence, not analyze the photo itself).
     {{/if}}
 
-2.  **Extract Information:** Carefully read all provided documents and extract the following details. If a piece of information cannot be found, leave the corresponding field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
+2.  **Extract Information:** Carefully read all provided documents and extract the following details. If a piece of information cannot be found, leave the field empty. Format dates as YYYY-MM-DD if possible. **Important: Some field values may be in Arabic or another language, even if the field label is in English. Extract the data exactly as it is written in the document.**
 
-    **Document Identification:**
-    -   First, determine if the primary document (idDocumentFrontUri) is a National ID card, a Resident Card, a Driving License, or a Passport. The presence of an MRZ (Machine-Readable Zone) at the bottom usually indicates a passport.
-    -   If the primary document is a Passport (based on MRZ or layout), extract all details into the \`passportDetails\` object and also populate the relevant fields in \`personalDetails\`.
-    -   If the primary document is an ID/Resident Card/Driving License, extract details into the \`idCardDetails\` object and also populate \`personalDetails\`.
-    -   If a separate passport document is provided, prioritize it for name, nationality, and DOB.
+    **Document Identification & Prioritization:**
+    -   First, determine the types of all provided documents (National ID, Resident Card, Driving License, Passport). A document with an MRZ (Machine-Readable Zone) is a passport.
+    -   **If a dedicated Passport document is provided in \`passportDocumentUri\`, use it as the primary source for \`personalDetails\` (Full Name, Nationality, DOB) and all \`passportDetails\`.**
+    -   If no dedicated passport is provided, check if the document in \`idDocumentFrontUri\` is a passport. If so, use it as the primary source.
+    -   If the primary document is an ID/Resident Card/Driving License, extract its details into the \`idCardDetails\` object.
 
     **Personal Details:**
     -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID. If the name is split into Surname and Given Names, combine them.
     -   **Email & Phone:** Find the primary contact email and phone number. These are almost always found only in the CV.
-    -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document.
+    -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document, prioritizing the Passport.
 
     **Passport Details:** (Extract if a passport document is identified in any of the image slots).
     -   Extract all passport-specific fields: Type, Country Code, Passport Number, Surname, Given Names, Issue Date, Expiry Date, Issuing Authority.
 
-    **ID Document Details:**
+    **ID Card Details:**
     -   Extract all ID-specific fields from the provided ID card, resident card, or driving license: Civil Number, Document Type, Document Number, License Number, Class, Expiry Date, Issuing Country, Issuing Authority.
 
     **Professional Summary:**
