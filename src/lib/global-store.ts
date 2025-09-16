@@ -9,8 +9,6 @@
 
 import { initialSettings, type AppSettings } from './settings';
 import type { Product } from './products';
-import { initialLeases, type SignedLease } from './leases';
-import { initialStairspaceRequests, type BookingRequest as StairspaceBookingRequest } from './stairspace-requests';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -19,15 +17,11 @@ export interface CartItem extends Product {
 export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
-  leases: SignedLease[];
-  stairspaceRequests: StairspaceBookingRequest[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  leases: initialLeases,
-  stairspaceRequests: initialStairspaceRequests,
 };
 
 // The single source of truth for our application's shared state.
@@ -65,3 +59,5 @@ export const store = {
     return () => listeners.delete(listener);
   },
 };
+
+    

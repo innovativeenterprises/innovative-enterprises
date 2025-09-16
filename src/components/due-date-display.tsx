@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
-import { format } from 'date-fns';
+import { format, differenceInCalendarDays } from 'date-fns';
 
 export const DueDateDisplay = ({
   date,
@@ -30,9 +30,7 @@ export const DueDateDisplay = ({
     try {
         const dueDate = new Date(date);
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const diffTime = dueDate.getTime() - today.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+        const diffDays = differenceInCalendarDays(dueDate, today);
         const formatted = format(dueDate, "PPP");
         
         setDisplayState({
@@ -67,3 +65,5 @@ export const DueDateDisplay = ({
     </div>
   );
 };
+
+    
