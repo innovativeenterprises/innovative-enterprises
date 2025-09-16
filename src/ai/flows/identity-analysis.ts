@@ -77,7 +77,7 @@ const identityAnalysisFlow = ai.defineFlow(
 
     if (output) {
         // More robust filename generation.
-        const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${"'" + output.passportDetails.givenNames + "'"} ${"'" + output.passportDetails.surname + "'"}`.trim() : null);
+        const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim() : null);
         
         if (fullName && !output.personalDetails?.fullName) {
              if (!output.personalDetails) {

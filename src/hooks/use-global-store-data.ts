@@ -23,7 +23,6 @@ function useStoreData<T>(selector: (state: AppState) => T): T {
 export const setSettings = (updater: (prev: AppSettings) => AppSettings) => store.set(state => ({ ...state, settings: updater(state.settings) }));
 export const setCart = (updater: (prev: CartItem[]) => CartItem[]) => store.set(state => ({...state, cart: updater(state.cart)}));
 
-
 // Data hooks that return the reactive state slice and a flag for client-side rendering.
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
 export const useCartData = () => ({ cart: useStoreData(s => s.cart), setCart, isClient: true });

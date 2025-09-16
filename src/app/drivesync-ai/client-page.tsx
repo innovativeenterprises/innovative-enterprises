@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Car, Search, ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -23,20 +23,26 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function DriveSyncClientPage({ initialCars, initialAgencies }: { initialCars: CarType[], initialAgencies: RentalAgency[] }) {
+    const [cars, setCars] = useState(initialCars);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     // In a real app, you'd have a user session to determine the agency.
     // For this prototype, we'll just assume we're managing 'agency_1'.
     const agency = initialAgencies[0];
     
     const filteredCars = useMemo(() => {
-        const agencyCars = initialCars.filter(c => c.rentalAgencyId === agency.id);
+        const agencyCars = cars.filter(c => c.rentalAgencyId === agency.id);
         if (!searchTerm) return agencyCars;
         return agencyCars.filter(car => 
             car.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
             car.model.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [initialCars, searchTerm, agency]);
+    }, [cars, searchTerm, agency]);
 
     return (
         <div className="bg-background min-h-screen">
@@ -84,23 +90,27 @@ export default function DriveSyncClientPage({ initialCars, initialAgencies }: { 
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {filteredCars.map(car => (
-                                        <TableRow key={car.id}>
-                                            <TableCell>
-                                                <div className="flex items-center gap-3">
-                                                     <Image src={car.imageUrl} alt={`${car.make} ${car.model}`} width={64} height={48} className="rounded-md object-cover"/>
-                                                     <div>
-                                                        <p className="font-medium">{car.make} {car.model}</p>
-                                                        <p className="text-sm text-muted-foreground">{car.year}</p>
-                                                     </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>{car.type}</TableCell>
-                                            <TableCell>{car.location}</TableCell>
-                                            <TableCell>{getStatusBadge(car.availability)}</TableCell>
-                                            <TableCell className="text-right font-mono">OMR {car.pricePerDay.toFixed(2)}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {!isClient ? (
+                                        <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full"/></TableCell></TableRow>
+                                    ) : (
+                                        filteredCars.map(car => (
+                                            <TableRow key={car.id}>
+                                                <TableCell>
+                                                    <div className="flex items-center gap-3">
+                                                         <Image src={car.imageUrl} alt={`${car.make} ${car.model}`} width={64} height={48} className="rounded-md object-cover"/>
+                                                         <div>
+                                                            <p className="font-medium">{car.make} {car.model}</p>
+                                                            <p className="text-sm text-muted-foreground">{car.year}</p>
+                                                         </div>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>{car.type}</TableCell>
+                                                <TableCell>{car.location}</TableCell>
+                                                <TableCell>{getStatusBadge(car.availability)}</TableCell>
+                                                <TableCell className="text-right font-mono">OMR {car.pricePerDay.toFixed(2)}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
                                 </TableBody>
                             </Table>
                         </CardContent>

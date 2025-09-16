@@ -12,6 +12,7 @@
 
 import { initialSettings, type AppSettings } from './settings';
 import type { Product } from './products';
+import { initialStockItems, type StockItem } from './stock-items';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -20,11 +21,13 @@ export interface CartItem extends Product {
 export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
+  stockItems: StockItem[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
+  stockItems: initialStockItems,
 };
 
 // The single source of truth for our application's shared state.

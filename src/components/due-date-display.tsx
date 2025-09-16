@@ -13,35 +13,34 @@ export const DueDateDisplay = ({
   className?: string;
   prefix?: string;
 }) => {
-  const [displayState, setDisplayState] = useState<{ isClient: boolean; daysRemaining: number | null, formattedDate: string | null }>({ isClient: false, daysRemaining: null, formattedDate: null });
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This code now runs only on the client, after the initial mount.
-    const dueDate = new Date(date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to the start of the day
-    const diffTime = dueDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
-    
-    const formatted = new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(dueDate);
+    // This effect runs only on the client, after the initial mount.
+    setIsClient(true);
+  }, []);
 
-    setDisplayState({ isClient: true, daysRemaining: diffDays, formattedDate: `${prefix} ${formatted}` });
-  }, [date, prefix]);
-
-  if (!displayState.isClient) {
+  if (!isClient) {
     // Render a skeleton on the server and during the initial client mount.
     return <Skeleton className="h-4 w-48 mt-1" />;
   }
 
-  const { daysRemaining, formattedDate } = displayState;
+  // Once we're on the client, we can safely perform date calculations.
+  const dueDate = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize to the start of the day
+  const diffTime = dueDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+    
+  const formattedDate = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+  }).format(dueDate);
 
   return (
     <div className={`text-sm text-muted-foreground ${className}`}>
-      {formattedDate}
+      {`${prefix} ${formattedDate}`}
       {daysRemaining !== null &&
         (daysRemaining >= 0 ? (
           <span className={daysRemaining < 7 ? 'text-destructive font-medium' : ''}>

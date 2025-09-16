@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -16,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
+import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { fileToDataURI } from '@/lib/utils';
@@ -349,41 +351,40 @@ export default function BriefcasePage() {
 
     const updateBriefcase = (newData: BriefcaseData) => {
         setBriefcaseData(newData);
-        localStorage.setItem('user_briefcase', JSON.stringify(newData));
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('user_briefcase', JSON.stringify(newData));
+        }
     };
     
     useEffect(() => {
-        try {
-            const storedData = localStorage.getItem('user_briefcase');
-            const storedBoqs = JSON.parse(localStorage.getItem('saved_boqs') || '[]');
-            
-            let dataToSet;
-            if (storedData) {
-                dataToSet = JSON.parse(storedData);
-            } else {
-                dataToSet = createEmptyBriefcase();
-            }
+        if (typeof window !== 'undefined') {
+            try {
+                const storedData = localStorage.getItem('user_briefcase');
+                const storedBoqs = JSON.parse(localStorage.getItem('saved_boqs') || '[]');
+                
+                let dataToSet;
+                if (storedData) {
+                    dataToSet = JSON.parse(storedData);
+                } else {
+                    dataToSet = createEmptyBriefcase();
+                }
 
-            // Always sync BoQs
-            dataToSet.savedBoqs = storedBoqs;
-            
-            // Backwards compatibility for old data structures
-            if (dataToSet.serviceChargesDataUri && !dataToSet.registrations) {
-                dataToSet.registrations = [{ category: 'General Services', priceListUrl: dataToSet.serviceChargesDataUri, priceListFilename: 'service-charges.csv' }];
-                delete dataToSet.serviceChargesDataUri;
-            }
-            if (!dataToSet.registrations) dataToSet.registrations = [];
-            if (!dataToSet.userDocuments) dataToSet.userDocuments = [];
-            
-            setBriefcaseData(dataToSet);
-            // Optionally re-save to update structure
-            localStorage.setItem('user_briefcase', JSON.stringify(dataToSet));
+                // Always sync BoQs
+                dataToSet.savedBoqs = storedBoqs;
+                
+                // Backwards compatibility for old data structures
+                if (!dataToSet.registrations) dataToSet.registrations = [];
+                if (!dataToSet.userDocuments) dataToSet.userDocuments = [];
+                
+                setBriefcaseData(dataToSet);
+                localStorage.setItem('user_briefcase', JSON.stringify(dataToSet));
 
-        } catch (error) {
-            console.error("Failed to load briefcase data from localStorage", error);
-            toast({ title: 'Error Loading Data', description: 'Could not retrieve your saved documents.', variant: 'destructive'});
-        } finally {
-            setIsLoading(false);
+            } catch (error) {
+                console.error("Failed to load briefcase data from localStorage", error);
+                toast({ title: 'Error Loading Data', description: 'Could not retrieve your saved documents.', variant: 'destructive'});
+            } finally {
+                setIsLoading(false);
+            }
         }
     }, [toast]);
     
