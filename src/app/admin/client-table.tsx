@@ -218,12 +218,17 @@ const AddEditTestimonialDialog = ({
 
 
 // Main Component
-export default function ClientTable() { 
-    const { clients, testimonials, isClient, setClients, setTestimonials } = useClientsData();
+export default function ClientTable({ initialClients, initialTestimonials }: { initialClients: Client[], initialTestimonials: Testimonial[] }) { 
+    const { clients, testimonials, setClients, setTestimonials, isClient } = useClientsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
     
+    useEffect(() => {
+        setClients(() => initialClients);
+        setTestimonials(() => initialTestimonials);
+    }, [initialClients, initialTestimonials, setClients, setTestimonials]);
+
     const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<Client | undefined>(undefined);
     

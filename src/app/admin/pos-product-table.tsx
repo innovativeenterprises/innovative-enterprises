@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from "@/hooks/use-toast";
 import type { PosProduct } from "@/lib/pos-data";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
@@ -104,9 +104,14 @@ const AddEditPosProductDialog = ({
     );
 };
 
-export default function PosProductTable() {
-    const { products, isClient } = usePosData();
+export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
+    const { products, setPosProducts, isClient } = usePosData();
     const { toast } = useToast();
+
+    useEffect(() => {
+        setPosProducts(() => initialProducts);
+    }, [initialProducts, setPosProducts]);
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);
 

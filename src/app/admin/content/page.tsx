@@ -1,18 +1,18 @@
-
-'use client';
-
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { usePricingData } from "@/hooks/use-global-store-data";
-
+import { initialPricing } from "@/lib/pricing";
+import { initialProducts, initialStoreProducts } from "@/lib/products";
+import { initialServices } from "@/lib/services";
+import { initialClients, initialTestimonials } from "@/lib/clients";
+import { initialPosProducts } from "@/lib/pos-data";
+import { initialStages } from "@/lib/stages";
 
 export default function AdminContentPage() {
-  const { pricing, isClient, setPricing } = usePricingData();
-
+  // Data is now fetched on the server and passed down as props.
   return (
     <div className="space-y-8">
         <div>
@@ -30,19 +30,19 @@ export default function AdminContentPage() {
                 <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
             </TabsList>
             <TabsContent value="services" className="mt-6">
-                <ServiceTable />
+                <ServiceTable initialServices={initialServices} />
             </TabsContent>
             <TabsContent value="products" className="mt-6">
-                <ProductTable />
+                <ProductTable initialProducts={initialProducts} initialStages={initialStages} />
             </TabsContent>
             <TabsContent value="clients" className="mt-6">
-                 <ClientTable />
+                 <ClientTable initialClients={initialClients} initialTestimonials={initialTestimonials} />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6">
-                <PricingTable pricing={pricing} setPricing={setPricing} isClient={isClient} />
+                <PricingTable initialPricing={initialPricing} />
             </TabsContent>
             <TabsContent value="pos" className="mt-6">
-                <PosProductTable />
+                <PosProductTable initialProducts={initialPosProducts} />
             </TabsContent>
         </Tabs>
     </div>

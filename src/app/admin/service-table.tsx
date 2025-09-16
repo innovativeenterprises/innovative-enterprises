@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -50,9 +49,13 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     );
 };
 
-export default function ServiceTable() {
-    const { services, isClient } = useServicesData();
+export default function ServiceTable({ initialServices }: { initialServices: Service[] }) {
+    const { services, setServices, isClient } = useServicesData();
     const { toast } = useToast();
+
+     useEffect(() => {
+        setServices(() => initialServices);
+    }, [initialServices, setServices]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {

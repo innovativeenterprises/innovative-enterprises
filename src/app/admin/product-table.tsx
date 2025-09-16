@@ -1,30 +1,29 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import type { Product } from "@/lib/products";
+import { useProductsData, setProducts } from "@/hooks/use-global-store-data";
+import type { ProjectStage } from "@/lib/stages";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import type { Product } from "@/lib/products";
-import { ProductSchema } from "@/lib/products.schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
-import { useProductsData, useProjectStagesData } from "@/hooks/use-global-store-data";
+import { Edit, PlusCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
-
-export default function ProductTable() {
+export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
     const { products, setProducts, isClient } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
-    const { stages } = useProjectStagesData();
+    
+    useEffect(() => {
+        setProducts(() => initialProducts);
+    }, [initialProducts, setProducts]);
 
     const handleToggle = (id: number) => {
         setProducts(prev =>
@@ -71,7 +70,7 @@ export default function ProductTable() {
                     onOpenChange={setIsDialogOpen}
                     product={selectedProduct}
                     onSave={handleSave}
-                    stages={stages}
+                    stages={initialStages}
                 >
                     {/* This is a controlled dialog, so the trigger is handled programmatically */}
                     <div />
