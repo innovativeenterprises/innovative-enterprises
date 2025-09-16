@@ -1,9 +1,13 @@
+
 'use client';
 
 import { useSyncExternalStore } from 'react';
 import { store, type AppState, initialState } from '@/lib/global-store';
 import type { CartItem } from '@/lib/global-store';
 import type { AppSettings } from '@/lib/settings';
+import type { Service } from '@/lib/services';
+import type { Agent, AgentCategory } from '@/lib/agents';
+
 
 /**
  * Custom hook to safely subscribe to the global store and select a slice of state.
@@ -26,3 +30,16 @@ export const setCart = (updater: (prev: CartItem[]) => CartItem[]) => store.set(
 // Data hooks that return the reactive state slice and a flag for client-side rendering.
 export const useSettingsData = () => ({ settings: useStoreData(s => s.settings), setSettings, isClient: true });
 export const useCartData = () => ({ cart: useStoreData(s => s.cart), setCart, isClient: true });
+
+// Restoring hooks needed by CompanyProfileDownloader
+export const useStaffData = () => ({
+  leadership: useStoreData(s => s.leadership),
+  staff: useStoreData(s => s.staff),
+  agentCategories: useStoreData(s => s.agentCategories),
+  isClient: true,
+});
+
+export const useServicesData = () => ({
+  services: useStoreData(s => s.services),
+  isClient: true,
+});
