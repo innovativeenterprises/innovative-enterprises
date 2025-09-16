@@ -78,8 +78,15 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() { 
-    const { pricing, isClient } = usePricingData();
+export default function PricingTable({ 
+    pricing, 
+    setPricing,
+    isClient,
+} : { 
+    pricing: Pricing[], 
+    setPricing: (updater: (pricing: Pricing[]) => void) => void,
+    isClient: boolean,
+}) {
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);

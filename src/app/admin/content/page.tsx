@@ -7,9 +7,11 @@ import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
+import { usePricingData, setPricing } from "@/hooks/use-global-store-data";
 
 
 export default function AdminContentPage() {
+  const { pricing, setPricing: setPricingData, isClient } = usePricingData();
 
   return (
     <div className="space-y-8">
@@ -37,7 +39,7 @@ export default function AdminContentPage() {
                  <ClientTable />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6">
-                <PricingTable />
+                <PricingTable pricing={pricing} setPricing={setPricingData} isClient={isClient} />
             </TabsContent>
             <TabsContent value="pos" className="mt-6">
                 <PosProductTable />
