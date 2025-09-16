@@ -1,14 +1,17 @@
+
+'use client';
+
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { initialPricing } from "@/lib/pricing";
+import { usePricingData, setPricing } from "@/hooks/use-global-store-data";
 
 
 export default function AdminContentPage() {
-  const pricing = initialPricing;
+  const { pricing, isClient, setPricing: setGlobalPricing } = usePricingData();
 
   return (
     <div className="space-y-8">
@@ -36,7 +39,7 @@ export default function AdminContentPage() {
                  <ClientTable />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6">
-                <PricingTable pricing={pricing} setPricing={() => {}} isClient={true} />
+                <PricingTable pricing={pricing} setPricing={setGlobalPricing} isClient={isClient} />
             </TabsContent>
             <TabsContent value="pos" className="mt-6">
                 <PosProductTable />
