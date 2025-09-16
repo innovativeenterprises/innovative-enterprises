@@ -45,12 +45,15 @@ const AddEditInvestorDialog = ({
     investor, 
     onSave,
     children,
+    isOpen,
+    onOpenChange,
 }: { 
     investor?: Investor, 
     onSave: (values: InvestorValues, id?: string) => Promise<void>,
-    children: React.ReactNode
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -103,11 +106,11 @@ const AddEditInvestorDialog = ({
         await onSave(data, investor?.id);
         setIsLoading(false);
         form.reset();
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -202,6 +205,13 @@ const AddEditInvestorDialog = ({
 export default function InvestorTable() {
     const { investors, isClient } = useInvestorsData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedInvestor, setSelectedInvestor] = useState<Investor | undefined>(undefined);
+
+    const openDialog = (investor?: Investor) => {
+        setSelectedInvestor(investor);
+        setIsDialogOpen(true);
+    };
 
     const handleSave = async (values: InvestorValues, id?: string) => {
         const uploadedDocs: Investor['documents'] = {};
@@ -275,11 +285,18 @@ export default function InvestorTable() {
                     <CardTitle>Investor & Funder Management</CardTitle>
                     <CardDescription>Manage all financial partners and funding sources.</CardDescription>
                 </div>
-                <AddEditInvestorDialog onSave={handleSave}>
-                    <Button><PlusCircle /> Add Record</Button>
-                </AddEditInvestorDialog>
+                 <Button onClick={() => openDialog()}><PlusCircle /> Add Record</Button>
             </CardHeader>
             <CardContent>
+                <AddEditInvestorDialog
+                    investor={selectedInvestor}
+                    onSave={handleSave}
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                >
+                    {/* The dialog is controlled externally, trigger is handled above */}
+                    <div/>
+                </AddEditInvestorDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -334,9 +351,7 @@ export default function InvestorTable() {
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <AddEditInvestorDialog investor={inv} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditInvestorDialog>
+                                            <Button variant="ghost" size="icon" onClick={() => openDialog(inv)}><Edit /></Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
@@ -357,5 +372,3 @@ export default function InvestorTable() {
         </Card>
     );
 }
-
-    
