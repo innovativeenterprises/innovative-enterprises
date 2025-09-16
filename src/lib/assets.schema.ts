@@ -13,6 +13,7 @@ export const AssetSchema = z.object({
   status: z.enum(['Available', 'Rented', 'Maintenance']),
   specs: z.string(),
   monthlyPrice: z.number(),
+  purchasePrice: z.number().optional(),
   image: z.string(),
   aiHint: z.string(),
 });
