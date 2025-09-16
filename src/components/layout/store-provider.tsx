@@ -1,9 +1,10 @@
-
 'use client';
 
-import { useRef, type ReactNode } from 'react';
-import { StoreContext, type StoreType } from '@/hooks/use-global-store-data';
+import { useRef, type ReactNode, createContext } from 'react';
+import { type StoreType } from '@/hooks/use-global-store-data';
 import { store } from '@/lib/global-store';
+
+export const StoreContext = createContext<StoreType>(store);
 
 export const StoreProvider = ({
   children,
