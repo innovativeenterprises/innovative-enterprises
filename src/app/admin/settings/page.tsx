@@ -687,7 +687,7 @@ const PricingAndBranding = () => {
 
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
-  const { settings, isClient, setSettings } = useSettingsData();
+  const { settings, isClient } = useSettingsData();
 
   const handleSaveWhatsAppSettings = (values: WhatsAppSettings) => {
       setSettings(prev => ({ ...prev, whatsapp: { ...prev.whatsapp, ...values } }));

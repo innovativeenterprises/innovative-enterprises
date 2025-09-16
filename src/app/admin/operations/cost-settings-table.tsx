@@ -15,9 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { CostRate } from "@/lib/cost-settings.schema";
+import { initialCostSettings } from '@/lib/cost-settings';
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCostSettingsData, setCostSettings } from "@/hooks/use-global-store-data";
 
 const CostSettingSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -98,15 +98,20 @@ const AddEditCostDialog = ({
 };
 
 export default function CostSettingsTable() {
-    const { costSettings, isClient } = useCostSettingsData();
+    const [costSettings, setCostSettings] = useState<CostRate[]>(initialCostSettings);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
 
     const handleSave = (values: CostSettingValues, id?: string) => {
         if (id) {
             setCostSettings(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Cost rate updated." });
         } else {
-            const newItem: CostRate = { ...values, id: `cost_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
+            const newItem: CostRate = { ...values, id: `cost_${values.name.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}` };
             setCostSettings(prev => [newItem, ...prev]);
             toast({ title: "Cost rate added." });
         }
