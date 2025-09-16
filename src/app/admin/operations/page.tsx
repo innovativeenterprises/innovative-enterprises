@@ -5,12 +5,14 @@ import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Palette, Gift } from "lucide-react";
-import KnowledgeTable from './knowledge-table';
+import KnowledgeTable from '../knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { initialKnowledgeBase } from "@/lib/knowledge";
 import { initialCostSettings } from '@/lib/cost-settings';
 import CostSettingsTable from "./cost-settings-table";
+import PricingTable from "../pricing-table";
+import { initialPricing } from "@/lib/pricing";
 
 export default function AdminOperationsPage() {
 
@@ -32,8 +34,9 @@ export default function AdminOperationsPage() {
         </div>
 
         <ThemeGenerator />
-        <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
+        <KnowledgeTable />
         <CostSettingsTable initialCostSettings={initialCostSettings} />
+        <PricingTable initialPricing={initialPricing} />
         
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>
@@ -56,3 +59,5 @@ export default function AdminOperationsPage() {
     </div>
   );
 }
+
+    

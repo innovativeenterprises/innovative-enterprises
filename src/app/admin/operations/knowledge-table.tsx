@@ -15,10 +15,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { KnowledgeDocument } from "@/lib/knowledge";
+import { initialKnowledgeBase } from "@/lib/knowledge";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
-import { analyzeKnowledgeDocument } from '@/ai/flows/knowledge-document-analysis';
-import { trainAgent } from '@/ai/flows/train-agent';
-import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
+import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
+import { trainAgent } from "@/ai/flows/train-agent";
+import { scrapeAndSummarize } from "@/ai/flows/web-scraper-agent";
 import { initialAgentCategories } from '@/lib/agents';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -317,7 +318,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowledgeBase: KnowledgeDocument[] }) {
+export default function KnowledgeTable() {
     const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeDocument[]>(initialKnowledgeBase);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
@@ -485,3 +486,5 @@ export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowle
         </Card>
     );
 }
+
+    

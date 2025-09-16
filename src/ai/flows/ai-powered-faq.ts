@@ -1,5 +1,4 @@
 
-
 'use server';
 
 /**
@@ -102,7 +101,7 @@ const prompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
   input: {schema: AnswerQuestionInputSchema},
   output: {schema: AnswerQuestionOutputSchema},
-  tools: [routeToSpecialestTool],
+  tools: [routeToSpecialistTool],
   prompt: `You are Aida, a master AI assistant for Innovative Enterprises. Your primary job is to understand a user's query and decide the best course of action.
 
 **Decision Process:**
@@ -157,3 +156,5 @@ const answerQuestionFlow = ai.defineFlow(
     };
   }
 );
+
+    
