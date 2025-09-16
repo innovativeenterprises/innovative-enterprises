@@ -1,16 +1,10 @@
-
-'use client';
-
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
-import { useClientsData } from "@/hooks/use-global-store-data";
 
-export default function ClientTestimonials() {
-  const { clients, testimonials, isClient } = useClientsData();
-
+export default function ClientTestimonials({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[]}) {
   const { testimonialAvatars } = imageData;
 
   const renderQuote = (quote: string) => {
@@ -19,16 +13,6 @@ export default function ClientTestimonials() {
       index % 2 === 1 ? <strong key={index} className="font-semibold text-foreground">{part}</strong> : part
     );
   };
-
-  if (!isClient) {
-    return (
-      <section id="testimonials" className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4">
-           <div className="animate-pulse h-64 bg-muted rounded-lg"></div>
-        </div>
-      </section>
-    )
-  }
 
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-white">

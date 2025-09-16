@@ -1,13 +1,7 @@
-
-'use client';
-
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import type { Service } from "@/lib/services";
 import Link from "next/link";
 import { GitBranch } from "lucide-react";
-import { useServicesData } from "@/hooks/use-global-store-data";
-import { Skeleton } from "@/components/ui/skeleton";
-
 
 const ServiceCard = ({ service }: { service: Service }) => (
     <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
@@ -27,22 +21,7 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog() {
-  const { services, isClient } = useServicesData();
-
-  if (!isClient) {
-    return (
-      <section id="services" className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="animate-pulse space-y-16">
-            <div className="h-64 bg-muted rounded-lg"></div>
-            <div className="h-64 bg-muted rounded-lg"></div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
+export default function ServiceCatalog({ services }: { services: Service[] }) {
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = enabledServices.reduce((acc, service) => {
