@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,7 +19,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, Languages } from 'lucide-react';
+import { Loader2, Sparkles, CheckCircle, XCircle, ChevronDown, ChevronUp, Download, Copy, Mail, Bot, Megaphone, Smile, ArrowRight, Lock, Briefcase, FileText, Languages, VideoOff } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
@@ -46,6 +47,7 @@ import { Label } from '@/components/ui/label';
 import InterviewCoachForm from '@/app/interview-coach/coach-form';
 import Link from 'next/link';
 import { fileToDataURI } from '@/lib/utils';
+import Image from 'next/image';
 
 const availableLanguages = [
     { id: 'english', label: 'English' },
@@ -373,7 +375,9 @@ export default function CvForm() {
       coverLetter: true,
       languages: [],
   });
-
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const { toast } = useToast();
 
   const uploadForm = useForm<UploadValues>({
@@ -388,6 +392,50 @@ export default function CvForm() {
       languages: ["english"],
     },
   });
+
+  const answerForm = useForm<AnswerValues>({
+      resolver: zodResolver(AnswerSchema),
+      defaultValues: { answer: '' }
+  });
+
+  // Effect for handling camera logic
+  useEffect(() => {
+    let stream: MediaStream | null = null;
+    const startCamera = async () => {
+        if (typeof window !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+             if (questions.length > 0 && hasCameraPermission === null) {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = stream;
+                    }
+                    setHasCameraPermission(true);
+                } catch (err) {
+                    console.error("Camera access denied:", err);
+                    setHasCameraPermission(false);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Camera Access Denied',
+                        description: 'Please enable camera permissions to use the video feature.',
+                    });
+                }
+             }
+        } else {
+             setHasCameraPermission(false);
+        }
+    };
+    startCamera();
+
+    // Cleanup function
+    return () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+         if (videoRef.current) {
+            videoRef.current.srcObject = null;
+        }
+    };
+  }, [questions.length, hasCameraPermission, toast]);
 
   const price = useMemo(() => {
     const CV_PRICE = 4;
@@ -525,6 +573,8 @@ export default function CvForm() {
   const handleGeneratedSocialPost = (output: GenerateSocialMediaPostOutput) => {
     setSocialPost(output);
   }
+
+  const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
 
   return (
     <div className="space-y-8">
@@ -719,7 +769,7 @@ export default function CvForm() {
                     </div>
                      <CardDescription>Your CV and Cover Letter are now highly optimized. The next step is to prepare for the interview.</CardDescription>
                        <Button asChild variant="secondary" className="mt-2">
-                        <Link href="/interview-coach" scroll={false}>Practice for Interview <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                        <Link href="/cv-enhancer?tab=interview" scroll={false}>Practice for Interview <ArrowRight className="ml-2 h-4 w-4"/></Link>
                       </Button>
                 </div>
             </CardHeader>
@@ -805,3 +855,5 @@ export default function CvForm() {
     </div>
   );
 }
+
+    
