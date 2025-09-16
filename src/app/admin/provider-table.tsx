@@ -27,7 +27,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
-import { useProvidersData, setProviders } from "@/hooks/use-global-store-data";
+import { DueDateDisplay } from "@/components/due-date-display";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -167,47 +167,7 @@ const AddEditProviderDialog = ({
     )
 }
 
-const SubscriptionStatus = ({ tier, expiry, isClient }: { tier: string, expiry?: Date, isClient: boolean }) => {
-    const { daysUntilExpiry, progress } = useMemo(() => {
-        if (!isClient || !expiry) {
-            return { daysUntilExpiry: null, progress: 0 };
-        }
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const expiryDate = new Date(expiry);
-        expiryDate.setHours(0, 0, 0, 0);
-
-        const timeDiff = expiryDate.getTime() - now.getTime();
-        const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
-        
-        const totalDuration = tier === 'Yearly' ? 365 : 30;
-        const progressValue = Math.max(0, (daysRemaining / totalDuration) * 100);
-
-        return { daysUntilExpiry: daysRemaining, progress: progressValue };
-    }, [expiry, tier, isClient]);
-    
-    if (tier === 'None') {
-        return <Badge variant="secondary">No Subscription</Badge>;
-    }
-    if (tier === 'Lifetime') {
-        return <Badge className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30 flex items-center gap-1"><Star className="h-3 w-3"/>Lifetime</Badge>;
-    }
-    
-    return (
-        <div className="w-full min-w-[150px]">
-            <div className="flex justify-between items-center mb-1">
-                <Badge variant="outline">{tier}</Badge>
-                <div className="text-xs text-muted-foreground">
-                    {!isClient ? <Skeleton className="h-4 w-20"/> : daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : 'N/A'}
-                </div>
-            </div>
-            <Progress value={progress} className="h-2 [&>div]:bg-green-500" aria-label={`Subscription progress: ${'${progress}'}%`} />
-        </div>
-    )
-}
-
-export default function ProviderTable() {
-    const { providers, setProviders, isClient } = useProvidersData();
+export default function ProviderTable({ providers, setProviders, isClient }: { providers: Provider[], setProviders: (updater: (prev: Provider[]) => void) => void, isClient: boolean }) {
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
@@ -283,7 +243,7 @@ export default function ProviderTable() {
                             <TableHead>Name</TableHead>
                             <TableHead>Services</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>Subscription</TableHead>
+                            <TableHead>Subscription Expiry</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -304,7 +264,7 @@ export default function ProviderTable() {
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell>
-                                    <SubscriptionStatus tier={p.subscriptionTier} expiry={p.subscriptionExpiry} isClient={isClient} />
+                                    {p.subscriptionExpiry && <DueDateDisplay date={p.subscriptionExpiry.toISOString()} prefix="Expires:" />}
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">

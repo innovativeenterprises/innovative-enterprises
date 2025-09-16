@@ -1,10 +1,18 @@
 
+'use client';
+
+import { useState } from "react";
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useProvidersData } from "@/hooks/use-global-store-data";
+import { useAssetsData } from "@/hooks/use-global-store-data";
 
 
 export default function AdminNetworkPage() {
+  const { providers, setProviders, isClient: isProvidersClient } = useProvidersData();
+  const { assets, setAssets, isClient: isAssetsClient } = useAssetsData();
+  const isClient = isProvidersClient && isAssetsClient;
 
   return (
     <div className="space-y-8">
@@ -21,10 +29,10 @@ export default function AdminNetworkPage() {
                 <TabsTrigger value="assets">Rental Assets</TabsTrigger>
             </TabsList>
             <TabsContent value="providers" className="mt-6">
-                <ProviderTable />
+                <ProviderTable providers={providers} setProviders={setProviders} isClient={isClient} />
             </TabsContent>
             <TabsContent value="assets" className="mt-6">
-                <AssetTable />
+                <AssetTable assets={assets} setAssets={setAssets} isClient={isClient} />
             </TabsContent>
         </Tabs>
 

@@ -2,7 +2,6 @@
 'use client';
 
 import { useParams, notFound, useRouter } from 'next/navigation';
-import { useProvidersData } from '@/hooks/use-global-store-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,68 +11,11 @@ import { Progress } from '@/components/ui/progress';
 import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
+import { initialProviders } from '@/lib/providers';
+import { DueDateDisplay } from '@/components/due-date-display';
 
-const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-    const { daysUntilExpiry, progressValue } = useMemo(() => {
-        if (!expiry) {
-            return { daysUntilExpiry: null, progressValue: 0 };
-        }
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const expiryDate = new Date(expiry);
-        expiryDate.setHours(0, 0, 0, 0);
-
-        const timeDiff = expiryDate.getTime() - now.getTime();
-        const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
-        
-        const totalDuration = tier === 'Yearly' ? 365 : 30;
-        const progress = Math.max(0, (days / totalDuration) * 100);
-
-        return { daysUntilExpiry: days, progressValue: progress };
-    }, [expiry, tier]);
-
-    if (tier === 'None') {
-        return <Badge variant="secondary">No Subscription</Badge>;
-    }
-    if (tier === 'Lifetime') {
-        return (
-             <div className="flex items-center gap-2 text-purple-700 font-semibold">
-                <Star className="h-5 w-5 fill-purple-500 text-purple-500" /> Lifetime
-             </div>
-        )
-    }
-    
-    return (
-        <div className="w-full min-w-[200px] space-y-2">
-            <div className="flex justify-between items-center">
-                <Badge variant="outline">{tier}</Badge>
-                <p className="text-xs text-muted-foreground">
-                    {daysUntilExpiry !== null ? (daysUntilExpiry > 0 ? `Expires in ${Math.ceil(daysUntilExpiry)} days` : 'Expired') : 'N/A'}
-                </p>
-            </div>
-            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
-        </div>
-    )
-}
-
-export default function ProviderDetailPage() {
-    const params = useParams();
-    const { id } = params;
-    const { providers, isClient } = useProvidersData();
-    const [provider, setProvider] = useState<Provider | undefined>(undefined);
-
-     useEffect(() => {
-        if (isClient && id) {
-            const foundProvider = providers.find(p => p.id === id);
-            if (foundProvider) {
-                setProvider(foundProvider);
-            } else {
-                notFound();
-            }
-        }
-    }, [id, providers, isClient]);
-
-    if (!isClient || !provider) {
+const ProviderDetailClient = ({ provider }: { provider: Provider | undefined }) => {
+    if (!provider) {
         return (
             <div className="space-y-8">
                 <div><Skeleton className="h-10 w-40" /></div>
@@ -121,8 +63,12 @@ export default function ProviderDetailPage() {
                         </div>
                     </div>
                     <div className="w-full md:w-auto">
-                        <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
-                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry} />
+                        <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Expiry</h3>
+                        {provider.subscriptionExpiry ? (
+                            <DueDateDisplay date={provider.subscriptionExpiry.toISOString()} prefix="Expires:" />
+                        ) : (
+                             <Badge variant="secondary">No Subscription</Badge>
+                        )}
                     </div>
                 </CardHeader>
                  <CardContent>
@@ -134,4 +80,16 @@ export default function ProviderDetailPage() {
             </Card>
         </div>
     );
+}
+
+
+export default function ProviderDetailPage({ params }: { params: { id: string } }) {
+    const { id } = params;
+    const provider = initialProviders.find(p => p.id === id);
+
+    if (!provider) {
+        notFound();
+    }
+
+    return <ProviderDetailClient provider={provider} />;
 }
