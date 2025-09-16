@@ -28,7 +28,6 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { DueDateDisplay } from "@/components/due-date-display";
-import { useProvidersData, setProviders } from "@/hooks/use-global-store-data";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -169,16 +168,18 @@ const AddEditProviderDialog = ({
 }
 
 export default function ProviderTable({ initialProviders }: { initialProviders: Provider[] }) {
-    const { providers, setProviders, isClient } = useProvidersData();
+    const [providers, setProviders] = useState(initialProviders);
+    const [isClient, setIsClient] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
-    
-    useEffect(() => {
-        setProviders(() => initialProviders);
-    }, [initialProviders, setProviders]);
 
+    useEffect(() => {
+        setIsClient(true);
+        setProviders(initialProviders);
+    }, [initialProviders]);
+    
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);
         setIsDialogOpen(true);
