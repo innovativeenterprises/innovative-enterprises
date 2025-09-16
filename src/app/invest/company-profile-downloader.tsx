@@ -3,9 +3,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from "react";
-import { useStaffData } from "@/hooks/use-global-store-data";
-import { useServicesData } from "@/hooks/use-global-store-data";
-import { useSettingsData } from "@/hooks/use-global-store-data";
+import { useStaffData, useServicesData, useSettingsData } from "@/hooks/use-global-store-data";
 import { initialProducts } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Download, Lightbulb, Loader2, Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
@@ -192,8 +190,11 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    const enabledServices = isReady ? services.filter(s => s.enabled) : [];
-    const enabledLeadership = isReady ? leadership.filter(l => l.enabled) : [];
+    const safeServices = services || [];
+    const safeLeadership = leadership || [];
+
+    const enabledServices = isReady ? safeServices.filter(s => s.enabled) : [];
+    const enabledLeadership = isReady ? safeLeadership.filter(l => l.enabled) : [];
     const products = initialProducts.filter(p => p.enabled);
 
     if (!isReady) {
