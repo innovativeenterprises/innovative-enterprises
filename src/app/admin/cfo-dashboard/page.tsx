@@ -1,4 +1,4 @@
-import CfoDashboard from '../cfo-dashboard';
+import CfoDashboardClient from '../cfo-dashboard-client';
 import type { Metadata } from 'next';
 import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from '@/lib/cfo-data';
 
@@ -15,5 +15,5 @@ export default function CooDashboardPage() {
         vatPayment,
         cashFlowData,
     };
-    return <CfoDashboard initialCfoData={cfoData} />;
+    return <CfoDashboardClient initialCfoData={cfoData} />;
 }
