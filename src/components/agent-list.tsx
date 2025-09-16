@@ -1,9 +1,8 @@
 
-
 'use client';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Linkedin, Twitter, Github, Globe, Mail, Users } from "lucide-react";
+import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
 import Link from 'next/link';
 import type { Agent, AgentCategory } from '@/lib/agents';
 

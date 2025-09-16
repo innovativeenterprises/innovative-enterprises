@@ -1,12 +1,9 @@
 
-
-'use client';
-
 import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useStaffData } from '@/hooks/use-global-store-data';
+import { initialStaffData } from '@/lib/agents';
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from 'next';
 
@@ -16,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function TeamPage() {
-    const { leadership, agentCategories, staff, isClient } = useStaffData();
+    const { leadership, agentCategories, staff } = initialStaffData;
 
     const enabledLeadership = leadership.filter(member => member.enabled);
     const enabledStaff = staff.filter(member => member.enabled);
@@ -41,18 +38,9 @@ export default function TeamPage() {
             </Button>
         </div>
         <div className="space-y-20 mt-20">
-            {!isClient ? (
-                <div className="space-y-8">
-                    <Skeleton className="h-40 w-full" />
-                    <Skeleton className="h-40 w-full" />
-                </div>
-            ) : (
-                <>
-                    <LeadershipTeam team={enabledLeadership} />
-                    <StaffTeam team={enabledStaff} />
-                    <DigitalWorkforce categories={enabledAgentCategories} />
-                </>
-            )}
+            <LeadershipTeam team={enabledLeadership} />
+            <StaffTeam team={enabledStaff} />
+            <DigitalWorkforce categories={enabledAgentCategories} />
         </div>
       </div>
     </div>
