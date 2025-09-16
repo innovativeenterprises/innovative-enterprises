@@ -21,7 +21,6 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePropertiesData, setProperties } from "@/hooks/use-global-store-data";
 
 const PropertySchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -42,11 +41,11 @@ type PropertyFormValues = z.infer<typeof PropertySchema>;
 const AddEditPropertyDialog = ({ 
     property, 
     onSave,
-    children,
+    children 
 }: { 
     property?: Property, 
     onSave: (values: PropertyFormValues, id?: string) => void,
-    children: React.ReactNode
+    children: React.ReactNode 
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -190,9 +189,14 @@ const AddEditPropertyDialog = ({
     )
 }
 
-export default function PropertyTable() {
-    const { properties, isClient } = usePropertiesData();
+export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
+    const [properties, setProperties] = useState(initialProperties);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
         const { ...propertyData } = values; // Exclude scraper URL from save data

@@ -1,3 +1,4 @@
+
 import ProForm from "@/app/admin/operations/pro-form";
 import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
@@ -7,6 +8,7 @@ import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Pa
 import KnowledgeTable from './knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
+import { initialKnowledgeBase } from "@/lib/knowledge";
 
 export default function AdminOperationsPage() {
 
@@ -28,7 +30,7 @@ export default function AdminOperationsPage() {
         </div>
 
         <ThemeGenerator />
-        <KnowledgeTable />
+        <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
         
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>

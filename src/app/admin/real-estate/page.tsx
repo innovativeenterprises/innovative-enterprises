@@ -5,6 +5,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/comp
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from 'next/link';
+import { initialProperties } from "@/lib/properties";
+import { initialStairspaceListings } from "@/lib/stairspace-listings";
 
 export default function AdminRealEstatePage() {
   return (
@@ -30,8 +32,8 @@ export default function AdminRealEstatePage() {
             </CardFooter>
         </Card>
 
-        <PropertyTable />
-        <StairspaceTable />
+        <PropertyTable initialProperties={initialProperties} />
+        <StairspaceTable initialListings={initialStairspaceListings} />
     </div>
   );
 }

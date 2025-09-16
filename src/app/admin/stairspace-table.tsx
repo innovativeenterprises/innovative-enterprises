@@ -17,7 +17,6 @@ import { useToast } from "@/hooks/use-toast";
 import type { StairspaceListing } from "@/lib/stairspace.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useStairspaceData, setStairspaceListings } from "@/hooks/use-global-store-data";
 import Image from 'next/image';
 
 const ListingSchema = z.object({
@@ -97,24 +96,29 @@ const AddEditListingDialog = ({
     );
 };
 
-export default function StairspaceTable() {
-    const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData();
+export default function StairspaceTable({ initialListings }: { initialListings: StairspaceListing[] }) {
+    const [listings, setListings] = useState(initialListings);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: ListingValues, id?: string) => {
         const listingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
         if (id) {
-            setStairspaceListings(prev => prev.map(l => l.id === id ? { ...l, ...listingData } : l));
+            setListings(prev => prev.map(l => l.id === id ? { ...l, ...listingData } : l));
             toast({ title: "Listing updated." });
         } else {
             const newListing: StairspaceListing = { ...listingData, id: `stair_${Date.now()}` };
-            setStairspaceListings(prev => [newListing, ...prev]);
+            setListings(prev => [newListing, ...prev]);
             toast({ title: "Listing added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setStairspaceListings(prev => prev.filter(l => l.id !== id));
+        setListings(prev => prev.filter(l => l.id !== id));
         toast({ title: "Listing removed.", variant: "destructive" });
     };
 
@@ -136,7 +140,7 @@ export default function StairspaceTable() {
                          {!isClient ? (
                             <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow>
                         ) : (
-                            stairspaceListings.map(listing => (
+                            listings.map(listing => (
                                 <TableRow key={listing.id}>
                                     <TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell>
                                     <TableCell className="font-medium">{listing.title}</TableCell>
@@ -163,4 +167,3 @@ export default function StairspaceTable() {
         </Card>
     );
 }
-
