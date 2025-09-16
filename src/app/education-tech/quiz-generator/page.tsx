@@ -1,4 +1,3 @@
-
 import { ClipboardCheck } from 'lucide-react';
 import QuizForm from './quiz-form';
 import type { Metadata } from 'next';
