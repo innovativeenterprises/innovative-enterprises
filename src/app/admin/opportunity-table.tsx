@@ -19,7 +19,6 @@ import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities";
 import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { useOpportunitiesData, setOpportunities } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -107,11 +106,16 @@ const AddEditOpportunityDialog = ({
     )
 }
 
-export default function OpportunityTable() {
-    const { opportunities, isClient } = useOpportunitiesData();
+export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
+    const [opportunities, setOpportunities] = useState(initialOpportunities);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const openDialog = (opp?: Opportunity) => {
         setSelectedOpp(opp);

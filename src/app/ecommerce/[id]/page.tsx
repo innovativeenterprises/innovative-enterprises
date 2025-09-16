@@ -13,9 +13,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { store } from '@/lib/global-store';
-import type { CartItem } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useProductsData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
 import { initialStoreProducts } from '@/lib/products';
 
@@ -78,21 +76,22 @@ export default function ProductDetailPage() {
     const params = useParams();
     const router = useRouter();
     const { id } = params;
-    const { products, isClient } = useProductsData();
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
     const [product, setProduct] = useState<Product | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
-        if (isClient && id) {
-            const foundProduct = products.find(p => p.id === parseInt(id as string, 10));
+        setIsClient(true);
+        if (id) {
+            const foundProduct = initialStoreProducts.find(p => p.id === parseInt(id as string, 10));
             if (foundProduct) {
                 setProduct(foundProduct);
             } else {
                 notFound();
             }
         }
-    }, [id, products, isClient]);
+    }, [id]);
 
     if (!isClient || !product) {
         return (
@@ -131,7 +130,7 @@ export default function ProductDetailPage() {
         })
     }
 
-    const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+    const relatedProducts = initialStoreProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
 
     return (
         <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">
@@ -199,5 +198,3 @@ export default function ProductDetailPage() {
         </div>
     );
 }
-
-    

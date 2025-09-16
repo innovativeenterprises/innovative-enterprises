@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -15,7 +16,6 @@ import { useToast } from "@/hooks/use-toast";
 import type { Pricing, PricingGroup } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -80,11 +80,12 @@ const EditPriceDialog = ({
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) {
     const { toast } = useToast();
-    const { pricing, setPricing, isClient } = usePricingData();
+    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setPricing(() => initialPricing);
-    }, [initialPricing, setPricing]);
+        setIsClient(true);
+    }, []);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
