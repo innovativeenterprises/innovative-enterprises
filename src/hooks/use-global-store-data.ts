@@ -129,4 +129,3 @@ export const useGiftCardsData = () => ({ giftCards: useStoreData(s => s.giftCard
 export const useStockItemsData = () => ({ stockItems: useStoreData(s => s.stockItems), setStockItems, isClient: true });
 export const useAlumniJobsData = () => ({ jobs: useStoreData(s => s.alumniJobs), setAlumniJobs, isClient: true });
 
-  
