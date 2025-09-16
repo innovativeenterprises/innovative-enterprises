@@ -11,9 +11,8 @@
  * architectural piece to make the prototype function correctly across pages.
  */
 
-import { type Product } from './products';
 import { initialSettings, type AppSettings } from './settings';
-
+import type { Product } from './products';
 
 export interface CartItem extends Product {
   quantity: number;

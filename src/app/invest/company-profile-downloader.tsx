@@ -3,7 +3,9 @@
 'use client';
 
 import { useRef, useState, useEffect } from "react";
-import { useStaffData, useServicesData, useSettingsData } from "@/hooks/use-global-store-data";
+import { initialStaffData } from "@/lib/agents";
+import { initialServices } from "@/lib/services";
+import { initialSettings } from "@/lib/settings";
 import { initialProducts } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Download, Lightbulb, Loader2, Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
@@ -126,25 +128,20 @@ const ProfileTemplate = ({ leadership, services, products, settings, innerRef, g
 
 
 export default function CompanyProfileDownloader() {
-    const { leadership, isClient: isStaffClient } = useStaffData();
-    const { services, isClient: isServicesClient } = useServicesData();
-    const { settings, isClient: isSettingsClient } = useSettingsData();
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedDate, setGeneratedDate] = useState<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-    const [isReady, setIsReady] = useState(false);
+    const [isClient, setIsClient] = useState(false);
     
     // Set the date only on the client-side to prevent hydration mismatch
     useEffect(() => {
         setGeneratedDate(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-        if (isStaffClient && isServicesClient && isSettingsClient) {
-            setIsReady(true);
-        }
-    }, [isStaffClient, isServicesClient, isSettingsClient]);
+        setIsClient(true);
+    }, []);
     
     const handleDownload = async () => {
-        if (!profileRef.current || !settings || !isReady) return;
+        if (!profileRef.current || !isClient) return;
         setIsGenerating(true);
         toast({ title: 'Generating PDF...', description: 'Please wait while we create your company profile.' });
         
@@ -190,14 +187,16 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    const safeServices = services || [];
-    const safeLeadership = leadership || [];
+    // Direct data imports for a self-contained component
+    const leadership = initialStaffData.leadership;
+    const services = initialServices;
+    const settings = initialSettings;
 
-    const enabledServices = isReady ? safeServices.filter(s => s.enabled) : [];
-    const enabledLeadership = isReady ? safeLeadership.filter(l => l.enabled) : [];
+    const enabledServices = services.filter(s => s.enabled);
+    const enabledLeadership = leadership.filter(l => l.enabled);
     const products = initialProducts.filter(p => p.enabled);
 
-    if (!isReady) {
+    if (!isClient) {
         return (
             <Button variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary" disabled>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile Data...
