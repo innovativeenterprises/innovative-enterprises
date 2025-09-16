@@ -77,7 +77,7 @@ const answerQuestionFlow = ai.defineFlow(
     // Fallback in case of unexpected response from the model
     return {
         answer: "I'm sorry, I'm not sure how to handle that request. Could you please rephrase it?",
-        suggestedReplies: ["What services do you offer?", "How do I become a partner?", "Tell me about your products."],
+        suggestedReplies: ["What are your services?", "How do I partner with you?", "Tell me about your products."],
     };
   }
 );

@@ -1,11 +1,11 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import type { Product } from '@/lib/products';
 import type { Provider } from '@/lib/providers';
 import type { KpiData } from '@/lib/cfo-data';
-import { useStoreData } from "@/hooks/use-global-store-data";
 import { analyzeOperations } from '@/ai/flows/agentic-coo';
 import type { CooAnalysisOutput } from '@/ai/flows/agentic-coo.schema';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,9 +47,9 @@ export default function CooDashboard({
     initialProviders: Provider[],
     initialKpiData: KpiData[]
 }) {
-    const { products } = useStoreData(() => ({ products: initialProducts }));
-    const { providers } = useStoreData(() => ({ providers: initialProviders }));
-    const { kpiData } = useStoreData(() => ({ kpiData: initialKpiData }));
+    const [products, setProducts] = useState(initialProducts);
+    const [providers, setProviders] = useState(initialProviders);
+    const [kpiData, setKpiData] = useState(initialKpiData);
 
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
@@ -71,7 +71,7 @@ export default function CooDashboard({
     useEffect(() => {
         runAnalysis();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products, providers, kpiData]); // Re-run if underlying data changes in the store
+    }, [products, providers, kpiData]);
 
     return (
         <div className="space-y-8">

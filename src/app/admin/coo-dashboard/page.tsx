@@ -1,4 +1,4 @@
-import CooDashboard from '../coo-dashboard';
+import CooDashboard from './coo-dashboard-client';
 import type { Metadata } from 'next';
 import { initialProducts } from '@/lib/products';
 import { initialProviders } from '@/lib/providers';
@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function CooDashboardPage() {
-    // In a real app, this would be a dynamic fetch.
-    // For the prototype, we use initial static data on the server.
+    // Data is fetched on the server and passed down as props.
     const products = initialProducts;
     const providers = initialProviders;
 
