@@ -7,7 +7,7 @@ import Image from 'next/image';
 import type { Product } from '@/lib/products';
 import Link from 'next/link';
 import { StageBadge } from '@/components/stage-badge';
-import { useProductsData } from '@/hooks/use-global-store-data';
+import { useProductsData } from "@/hooks/use-global-store-data";
 
 export default function ProductShowcase() {
   const { products } = useProductsData();

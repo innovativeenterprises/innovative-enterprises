@@ -220,7 +220,6 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
     const handleSave = async (values: InvestorValues, id?: string) => {
         const uploadedDocs: Investor['documents'] = {};
         
-        // Helper to process file uploads
         const processDoc = async (key: keyof Investor['documents'], fileList: any) => {
             if (fileList && fileList.length > 0) {
                 const file = fileList[0];
@@ -289,18 +288,16 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
                     <CardTitle>Investor & Funder Management</CardTitle>
                     <CardDescription>Manage all financial partners and funding sources.</CardDescription>
                 </div>
-                 <Button onClick={() => openDialog()}><PlusCircle /> Add Record</Button>
-            </CardHeader>
-            <CardContent>
-                <AddEditInvestorDialog
+                 <AddEditInvestorDialog
                     investor={selectedInvestor}
                     onSave={handleSave}
                     isOpen={isDialogOpen}
                     onOpenChange={setIsDialogOpen}
                 >
-                    {/* The dialog is controlled externally, trigger is handled above */}
-                    <div/>
+                    <Button onClick={() => openDialog()}><PlusCircle /> Add Record</Button>
                 </AddEditInvestorDialog>
+            </CardHeader>
+            <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
