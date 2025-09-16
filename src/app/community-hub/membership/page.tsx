@@ -1,6 +1,7 @@
 
 import MembershipClientPage from './client-page';
 import type { Metadata } from 'next';
+import { initialMembers } from '@/lib/community-members';
 
 export const metadata: Metadata = {
     title: "Membership Management",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function MembershipPage() {
-    return <MembershipClientPage />;
+    return <MembershipClientPage initialMembers={initialMembers} />;
 }

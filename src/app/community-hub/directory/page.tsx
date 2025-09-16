@@ -1,6 +1,7 @@
 
 import MemberDirectoryClient from './client-page';
 import type { Metadata } from 'next';
+import { initialMembers } from '@/lib/community-members';
 
 export const metadata: Metadata = {
     title: "Community Directory",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function MemberDirectoryPage() {
-    return <MemberDirectoryClient />;
+    return <MemberDirectoryClient initialMembers={initialMembers} />;
 }
