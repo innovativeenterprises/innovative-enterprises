@@ -11,152 +11,22 @@
  * architectural piece to make the prototype function correctly across pages.
  */
 
-import { initialServices, type Service } from './services';
 import { initialProducts, type Product, initialStoreProducts } from './products';
-import { initialClients, type Client, initialTestimonials, type Testimonial } from './clients';
-import { initialStaffData, type Agent, type AgentCategory } from './agents';
-import { initialOpportunities, type Opportunity } from './opportunities';
-import { initialPricing, type Pricing } from './pricing';
-import { initialStages, type ProjectStage } from './stages';
 import { initialSettings, type AppSettings } from './settings';
-import { initialProviders, type Provider } from './providers';
-import { initialAssets, type Asset } from './assets';
-import { initialInvestors, type Investor } from './investors';
-import { initialKnowledgeBase, type KnowledgeDocument } from './knowledge';
-import { initialWorkers, type Worker as RaahaWorker } from './raaha-workers';
-import { initialRequests, type HireRequest } from './raaha-requests';
-import { initialAgencies, type Agency } from './raaha-agencies';
-import { initialLeases, type SignedLease } from './leases';
-import { initialProperties, type Property } from './properties';
-import { initialStairspaceListings } from './stairspace-listings';
-import { initialStairspaceRequests, type BookingRequest as StairspaceRequest } from './stairspace-requests';
-import type { StairspaceListing } from './stairspace.schema';
-import { type BoQItem } from '@/ai/flows/boq-generator.schema';
-import { initialCostSettings } from './cost-settings';
-import type { CostRate } from './cost-settings.schema';
-import { initialStudents, type Student } from './students';
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from '@/lib/cfo-data';
-import { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } from './cfo-data';
-import { initialCommunities, type Community } from './communities';
-import { initialEvents, type CommunityEvent } from './community-events';
-import { initialFinances, type CommunityFinance } from './community-finances';
-import { initialMembers, type CommunityMember } from './community-members';
-import { initialStockItems, type StockItem } from './stock-items';
-import { initialCars, type Car } from './cars';
-import { initialRentalAgencies, type RentalAgency } from './rental-agencies';
-import { initialDailySales, type Transaction as PosTransaction, initialPosProducts, type PosProduct } from './pos-data';
-import { initialGiftCards, type GiftCard } from './gift-cards';
-import { initialJobs, type JobPosting } from './alumni-jobs';
-import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
-import { initialBeautyServices, type BeautyService } from './beauty-services';
-import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 
 
 export interface CartItem extends Product {
   quantity: number;
 }
 
-export interface SavedBoQ {
-    id: string;
-    name: string;
-    date: string;
-    items: BoQItem[];
-}
-
 export type AppState = {
-  services: Service[];
-  products: Product[];
-  clients: Client[];
-  testimonials: Testimonial[];
-  leadership: Agent[];
-  staff: Agent[];
-  agentCategories: AgentCategory[];
-  opportunities: Opportunity[];
-  pricing: Pricing[];
-  stages: ProjectStage[];
   settings: AppSettings;
-  providers: Provider[];
-  assets: Asset[];
-  investors: Investor[];
-  knowledgeBase: KnowledgeDocument[];
-  raahaWorkers: RaahaWorker[];
-  raahaRequests: HireRequest[];
-  raahaAgencies: Agency[];
-  signedLeases: SignedLease[];
-  properties: Property[];
-  stairspaceListings: StairspaceListing[];
-  stairspaceRequests: StairspaceRequest[];
-  stockItems: StockItem[];
-  students: Student[];
-  communities: Community[];
-  communityEvents: CommunityEvent[];
-  communityFinances: CommunityFinance[];
-  communityMembers: CommunityMember[];
-  savedBoqs: SavedBoQ[];
   cart: CartItem[];
-  costSettings: CostRate[];
-  kpiData: KpiData[];
-  transactionData: TransactionData[];
-  upcomingPayments: UpcomingPayment[];
-  vatPayment: VatPayment;
-  cashFlowData: { month: string; income: number; expenses: number }[];
-  cars: Car[];
-  rentalAgencies: RentalAgency[];
-  dailySales: PosTransaction[];
-  posProducts: PosProduct[];
-  giftCards: GiftCard[];
-  alumniJobs: JobPosting[];
-  beautyCenters: BeautyCenter[];
-  beautyServices: BeautyService[];
-  beautyAppointments: BeautyAppointment[];
 };
 
 export const initialState: AppState = {
-  services: initialServices,
-  products: initialProducts,
-  clients: initialClients,
-  testimonials: initialTestimonials,
-  leadership: initialStaffData.leadership,
-  staff: initialStaffData.staff,
-  agentCategories: initialStaffData.agentCategories,
-  opportunities: initialOpportunities,
-  pricing: initialPricing,
-  stages: initialStages,
   settings: initialSettings,
-  providers: initialProviders,
-  assets: initialAssets,
-  investors: initialInvestors,
-  knowledgeBase: initialKnowledgeBase,
-  raahaWorkers: initialWorkers,
-  raahaRequests: initialRequests,
-  raahaAgencies: initialAgencies,
-  signedLeases: initialLeases,
-  properties: initialProperties,
-  stairspaceListings: initialStairspaceListings,
-  stairspaceRequests: initialStairspaceRequests,
-  stockItems: initialStockItems,
-  students: initialStudents,
-  communities: initialCommunities,
-  communityEvents: initialEvents,
-  communityFinances: initialFinances,
-  communityMembers: initialMembers,
-  savedBoqs: [],
   cart: [],
-  costSettings: initialCostSettings,
-  kpiData: kpiData,
-  transactionData: transactionData,
-  upcomingPayments: upcomingPayments,
-  vatPayment: vatPayment,
-  cashFlowData: cashFlowData,
-  cars: initialCars,
-  rentalAgencies: initialRentalAgencies,
-  dailySales: initialDailySales,
-  posProducts: initialPosProducts,
-  giftCards: initialGiftCards,
-  alumniJobs: initialJobs,
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautyAppointments: initialBeautyAppointments,
 };
 
 // The single source of truth for our application's shared state.

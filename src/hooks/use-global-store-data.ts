@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useSyncExternalStore } from 'react';
@@ -25,6 +24,14 @@ function useStore<T>(selector: (state: AppState) => T): T {
 export const setSettings = (updater: (prev: AppSettings) => AppSettings) => store.set(state => ({ ...state, settings: updater(state.settings) }));
 export const setCart = (updater: (prev: CartItem[]) => CartItem[]) => store.set(state => ({...state, cart: updater(state.cart)}));
 
+
 // Data hooks that return the reactive state slice and a flag for client-side rendering.
-export const useSettingsData = () => ({ settings: useStore(s => s.settings), isClient: true });
-export const useCartData = () => ({ cart: useStore(s => s.cart), isClient: true });
+export const useSettingsData = () => {
+    const settings = useStore(s => s.settings);
+    return { settings, setSettings, isClient: true };
+};
+
+export const useCartData = () => {
+    const cart = useStore(s => s.cart);
+    return { cart, setCart, isClient: true };
+};

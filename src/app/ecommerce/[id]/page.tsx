@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { store } from '@/lib/global-store';
+import { setCart } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 import { initialStoreProducts } from '@/lib/products';
@@ -111,18 +111,12 @@ export default function ProductDetailPage() {
     }
     
     const handleAddToCart = () => {
-        store.set(state => {
-            const existingItem = state.cart.find(item => item.id === product.id);
+        setCart(prevCart => {
+            const existingItem = prevCart.find(item => item.id === product.id);
             if (existingItem) {
-                return {
-                    ...state,
-                    cart: state.cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item)
-                }
+                return prevCart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
             }
-            return {
-                ...state,
-                cart: [...state.cart, { ...product, quantity }]
-            }
+            return [...prevCart, { ...product, quantity }];
         });
         toast({
             title: "Added to Cart!",
