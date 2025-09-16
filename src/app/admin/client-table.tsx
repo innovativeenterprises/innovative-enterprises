@@ -19,7 +19,6 @@ import { PlusCircle, Edit, Trash2, Search } from "lucide-react";
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fileToDataURI } from "@/lib/utils";
-import { useClientsData, setClients, setTestimonials } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Schemas
@@ -219,15 +218,16 @@ const AddEditTestimonialDialog = ({
 
 // Main Component
 export default function ClientTable({ initialClients, initialTestimonials }: { initialClients: Client[], initialTestimonials: Testimonial[] }) { 
-    const { clients, testimonials, setClients, setTestimonials, isClient } = useClientsData();
+    const [clients, setClients] = useState(initialClients);
+    const [testimonials, setTestimonials] = useState(initialTestimonials);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('clients');
     
     useEffect(() => {
-        setClients(() => initialClients);
-        setTestimonials(() => initialTestimonials);
-    }, [initialClients, initialTestimonials, setClients, setTestimonials]);
+        setIsClient(true);
+    }, []);
 
     const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<Client | undefined>(undefined);
