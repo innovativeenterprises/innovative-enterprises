@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -23,23 +22,11 @@ export interface CartItem extends Product {
 export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
-  beautyCenters: BeautyCenter[];
-  beautyServices: BeautyService[];
-  beautyAppointments: BeautyAppointment[];
-  raahaWorkers: Worker[];
-  raahaRequests: HireRequest[];
-  stairspaceRequests: BookingRequest[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautyAppointments: initialBeautyAppointments,
-  raahaWorkers: initialWorkers,
-  raahaRequests: initialRequests,
-  stairspaceRequests: initialStairspaceRequests,
 };
 
 let state: AppState = { ...initialState };
