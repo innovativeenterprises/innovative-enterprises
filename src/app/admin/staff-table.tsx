@@ -47,7 +47,7 @@ const StaffSchema = z.object({
   socials: SocialsSchema.optional(),
 }).refine(data => data.photoUrl || (data.photoFile && data.photoFile.length > 0), {
     message: "Either a Photo URL or a Photo File is required.",
-    path: ["photoUrl"], // Point error to photoUrl field
+    path: ["photoUrl"],
 });
 
 type StaffValues = z.infer<typeof StaffSchema> & { photo: string };
@@ -56,13 +56,16 @@ type StaffValues = z.infer<typeof StaffSchema> & { photo: string };
 const AddEditStaffDialog = ({ 
     staffMember,
     onSave,
-    children
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     staffMember?: Agent,
     onSave: (values: StaffValues, name?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(staffMember?.photo || null);
     
     const form = useForm<z.infer<typeof StaffSchema>>({
@@ -115,11 +118,11 @@ const AddEditStaffDialog = ({
         onSave({ ...data, photo: photoValue }, staffMember?.name);
         form.reset();
         setImagePreview(null);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -233,6 +236,13 @@ const AddEditStaffDialog = ({
 export default function StaffTable() {
     const { leadership, staff, agentCategories, isClient } = useStaffData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedStaff, setSelectedStaff] = useState<Agent | undefined>(undefined);
+
+    const openDialog = (member?: Agent) => {
+        setSelectedStaff(member);
+        setIsDialogOpen(true);
+    };
 
     const handleToggle = (name: string, type: 'leadership' | 'staff' | 'agent') => {
         if (type === 'leadership') {
@@ -251,22 +261,26 @@ export default function StaffTable() {
     };
 
     const handleSave = (values: StaffValues, originalName?: string) => {
+        const staffMemberToUpdate = leadership.find(m => m.name === originalName) 
+            || staff.find(m => m.name === originalName) 
+            || agentCategories.flatMap(c => c.agents).find(a => a.name === originalName);
+
         const newStaffMember: Agent = { 
             ...values,
             socials: values.socials,
             icon: values.type === 'AI Agent' ? Bot : User, 
-            enabled: true, 
+            enabled: staffMemberToUpdate?.enabled ?? true, 
             photo: values.photo,
         };
 
-        const updateList = (list: Agent[]) => 
-            originalName 
-                ? list.map(member => member.name === originalName ? { ...member, ...newStaffMember } : member)
+        const updateList = (list: Agent[], name?: string) => 
+            name 
+                ? list.map(member => member.name === name ? { ...member, ...newStaffMember } : member)
                 : [...list, newStaffMember];
         
         const addNewToCategory = (categories: AgentCategory[]) => {
              const newCats = JSON.parse(JSON.stringify(categories));
-             let targetCat = newCats.find((c: AgentCategory) => c.category === "Core Business Operations Agents"); // Default category
+             let targetCat = newCats.find((c: AgentCategory) => c.category === "Core Business Operations Agents");
              if (targetCat) {
                  targetCat.agents.push(newStaffMember);
              } else {
@@ -275,31 +289,29 @@ export default function StaffTable() {
              return newCats;
         }
 
-        // If editing, find the member and update them in their current list.
         if (originalName) {
-            setLeadership(prev => prev.map(m => m.name === originalName ? { ...m, ...newStaffMember, type: 'Leadership' } : m));
-            setStaff(prev => prev.map(m => m.name === originalName ? { ...m, ...newStaffMember, type: 'Staff' } : m));
-            setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.map(a => a.name === originalName ? { ...a, ...newStaffMember, type: 'AI Agent' } : a) })));
-        }
+            if (staffMemberToUpdate?.type !== values.type) {
+                // If type changes, remove from old list
+                if (staffMemberToUpdate?.type === 'Leadership') setLeadership(prev => prev.filter(m => m.name !== originalName));
+                if (staffMemberToUpdate?.type === 'Staff') setStaff(prev => prev.filter(m => m.name !== originalName));
+                if (staffMemberToUpdate?.type === 'AI Agent') setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
+                
+                // Add to new list
+                if (values.type === 'Leadership') setLeadership(prev => [...prev, newStaffMember]);
+                if (values.type === 'Staff') setStaff(prev => [...prev, newStaffMember]);
+                if (values.type === 'AI Agent') setAgentCategories(addNewToCategory);
 
-        // Remove from old list if type changes
-        if (originalName && staffMember?.type !== values.type) {
-            if (staffMember?.type === 'Leadership') setLeadership(prev => prev.filter(m => m.name !== originalName));
-            if (staffMember?.type === 'Staff') setStaff(prev => prev.filter(m => m.name !== originalName));
-            if (staffMember?.type === 'AI Agent') setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
-        }
-        
-        // Add to new list
-        switch (values.type) {
-            case 'Leadership':
-                setLeadership(prev => updateList(prev));
-                break;
-            case 'Staff':
-                setStaff(prev => updateList(prev));
-                break;
-            case 'AI Agent':
-                setAgentCategories(prev => addNewToCategory(prev));
-                break;
+            } else {
+                 // Just update in the correct list
+                if (values.type === 'Leadership') setLeadership(prev => updateList(prev, originalName));
+                if (values.type === 'Staff') setStaff(prev => updateList(prev, originalName));
+                if (values.type === 'AI Agent') setAgentCategories(prev => prev.map(c => ({...c, agents: updateList(c.agents, originalName)})));
+            }
+        } else {
+             // Add new member
+            if (values.type === 'Leadership') setLeadership(prev => updateList(prev));
+            if (values.type === 'Staff') setStaff(prev => updateList(prev));
+            if (values.type === 'AI Agent') setAgentCategories(addNewToCategory);
         }
 
         toast({ title: originalName ? "Staff member updated." : "Staff member added." });
@@ -321,19 +333,14 @@ export default function StaffTable() {
         toast({ title: "Staff member removed.", variant: "destructive" });
     };
 
-    const staffMember = leadership.find(m => m.name === 'originalName') 
-        || staff.find(m => m.name === 'originalName') 
-        || agentCategories.flatMap(c => c.agents).find(a => a.name === 'originalName');
 
     const renderStaffRow = (member: Agent, type: 'leadership' | 'staff' | 'agent') => (
         <TableRow key={member.name}>
             <TableCell className="font-medium flex items-center gap-3">
-                <AddEditStaffDialog staffMember={member} onSave={handleSave}>
-                    <Avatar className="cursor-pointer">
-                        <AvatarImage src={member.photo} alt={member.name} />
-                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                </AddEditStaffDialog>
+                 <Avatar className="cursor-pointer" onClick={() => openDialog(member)}>
+                    <AvatarImage src={member.photo} alt={member.name} />
+                    <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                </Avatar>
                 {member.name}
             </TableCell>
             <TableCell>{member.role}</TableCell>
@@ -351,9 +358,9 @@ export default function StaffTable() {
             </TableCell>
             <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                    <AddEditStaffDialog staffMember={member} onSave={handleSave}>
-                        <Button variant="ghost" size="icon"><Edit /></Button>
-                    </AddEditStaffDialog>
+                    <Button variant="ghost" size="icon" onClick={() => openDialog(member)}>
+                        <Edit />
+                    </Button>
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
@@ -375,11 +382,19 @@ export default function StaffTable() {
                     <CardTitle>Workforce Management</CardTitle>
                     <CardDescription>Manage all human and AI staff members.</CardDescription>
                 </div>
-                <AddEditStaffDialog onSave={handleSave}>
-                     <Button><PlusCircle /> Add New Staff</Button>
-                </AddEditStaffDialog>
+                <Button onClick={() => openDialog()}>
+                    <PlusCircle /> Add New Staff
+                </Button>
             </CardHeader>
             <CardContent>
+                <AddEditStaffDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    staffMember={selectedStaff}
+                    onSave={handleSave}
+                >
+                    <div />
+                </AddEditStaffDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
