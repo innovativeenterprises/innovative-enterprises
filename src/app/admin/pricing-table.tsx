@@ -15,7 +15,6 @@ import { useToast } from "@/hooks/use-toast";
 import type { Pricing, PricingGroup } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData, setPricing } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -155,7 +154,7 @@ export default function PricingTable({
                                         <TableCell className="text-muted-foreground">{item.group}</TableCell>
                                         <TableCell>OMR {item.price.toFixed(2)}</TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" aria-label={`Edit price for ${item.type}`} onClick={() => handleOpenDialog(item)}><Edit /></Button>
+                                            <Button variant="ghost" size="icon" aria-label={`Edit price for ${"'" + item.type + "'"}`} onClick={() => handleOpenDialog(item)}><Edit /></Button>
                                         </TableCell>
                                     </TableRow>
                                 ))
