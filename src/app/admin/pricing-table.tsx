@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -80,15 +79,14 @@ const EditPriceDialog = ({
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) {
     const { toast } = useToast();
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+    const [pricing, setPricing] = useState(initialPricing);
     const [isClient, setIsClient] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
@@ -98,16 +96,15 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
     const handleOpenDialog = (item: Pricing) => {
         setSelectedItem(item);
         setIsDialogOpen(true);
-    }
+    };
 
     const pricingByGroup = useMemo(() => {
         if (!isClient) return {};
         return pricing.reduce((acc, item) => {
-            const groupName = item.group || 'Uncategorized';
-            if (!acc[groupName]) {
-                acc[groupName] = [];
+            if (!acc[item.group]) {
+                acc[item.group] = [];
             }
-            acc[groupName].push(item);
+            acc[item.group].push(item);
             return acc;
         }, {} as Record<string, Pricing[]>);
     }, [pricing, isClient]);
@@ -121,12 +118,12 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
             </CardHeader>
             <CardContent>
                 {selectedItem && (
-                     <EditPriceDialog 
+                    <EditPriceDialog 
                         isOpen={isDialogOpen}
                         onOpenChange={setIsDialogOpen}
                         item={selectedItem}
                         onSave={handleSave}
-                     >
+                    >
                         <div/>
                     </EditPriceDialog>
                 )}

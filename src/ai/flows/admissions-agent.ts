@@ -68,7 +68,7 @@ const admissionsAgentFlow = ai.defineFlow(
   },
   async (input) => {
     // Generate a unique ID using crypto for better uniqueness.
-    const generatedId = `APP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+    const generatedId = `APP-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
     
     const { output } = await prompt({ ...input, generatedId });
     return output!;

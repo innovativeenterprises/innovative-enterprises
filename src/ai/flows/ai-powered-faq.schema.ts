@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Schemas and types for the AI-Powered FAQ flow.
  *
@@ -64,9 +65,8 @@ export const routeToSpecialistTool = ai.defineTool(
             return { isAvailable: false, response: "I'm sorry, I can't find the right person to help with that." };
         }
 
-        // Use a deterministic method instead of Math.random() to simulate availability.
-        // This makes the behavior predictable for testing and prevents hydration mismatches.
-        const isAvailable = userQuery.length % 2 === 0;
+        // A more realistic (but still deterministic) simulation of availability.
+        const isAvailable = (userQuery.length + department.length) % 3 !== 0;
 
         if (isAvailable) {
             return {
