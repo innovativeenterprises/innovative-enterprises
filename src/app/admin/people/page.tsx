@@ -1,7 +1,4 @@
 
-
-'use client';
-
 import StaffTable from "@/app/admin/staff-table";
 
 export default function AdminPeoplePage() {
@@ -18,4 +15,3 @@ export default function AdminPeoplePage() {
     </div>
   );
 }
-

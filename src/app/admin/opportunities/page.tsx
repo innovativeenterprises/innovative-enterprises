@@ -1,6 +1,4 @@
 
-'use client';
-
 import OpportunityTable from '../opportunity-table';
 import WorkOrderForm from '@/app/tender-assistant/work-order-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
