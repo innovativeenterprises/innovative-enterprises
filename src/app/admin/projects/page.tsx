@@ -13,8 +13,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2, GripVertical } from 'lucide-react';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import type { Product } from '@/lib/products';
-import { useProductsData } from "@/hooks/use-global-store-data";
-import { useProjectStagesData } from "@/hooks/use-global-store-data";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
@@ -23,6 +21,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { initialProducts } from '@/lib/products';
+import { initialStages } from '@/lib/stages';
+import type { ProjectStage } from '@/lib/stages';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
@@ -100,8 +100,10 @@ export default function ProjectsPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    const { products, setProducts, isClient } = useProductsData();
-    const { stages } = useProjectStagesData();
+    const [products, setProducts] = useState<Product[]>(initialProducts);
+    const [stages, setStages] = useState<ProjectStage[]>(initialStages);
+    const [isClient, setIsClient] = useState(false);
+    
     const { toast } = useToast();
 
     const form = useForm<FormValues>({
@@ -110,8 +112,8 @@ export default function ProjectsPage() {
     });
     
     useEffect(() => {
-        setProducts(() => initialProducts);
-    }, [setProducts]);
+        setIsClient(true);
+    }, []);
 
     const productsByStage = useMemo(() => {
         const grouped: Record<string, Product[]> = {};
