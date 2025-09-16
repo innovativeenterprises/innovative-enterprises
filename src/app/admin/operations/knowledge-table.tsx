@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -25,7 +24,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
+import { fileToDataURI } from '@/lib/utils';
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
