@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAgenciesData, useWorkersData, useRequestsData, setRaahaRequests } from '@/hooks/use-global-store-data';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { WorkerTable } from './worker-table';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +23,26 @@ import { initialBeautyServices, type BeautyService } from '@/lib/beauty-services
 import { initialBeautyAppointments, type BeautyAppointment } from '@/lib/beauty-appointments';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
+
+const getStatusBadge = (status: HireRequest['status']) => {
+    switch (status) {
+        case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
+        case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
+        case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
+        case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
+        case 'Closed': return <Badge variant="destructive">Closed</Badge>;
+        default: return <Badge variant="outline">{status}</Badge>;
+    }
+};
+
+const getAvailabilityBadge = (availability: Worker['availability']) => {
+    return (
+        <Badge variant={availability === 'Available' ? 'default' : 'outline'} className={availability === 'Available' ? 'bg-green-500/20 text-green-700' : ''}>
+            {availability}
+        </Badge>
+    );
+};
+
 
 export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
     const [agencies, setAgencies] = useState(initialAgencies);

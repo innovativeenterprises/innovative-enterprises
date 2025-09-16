@@ -2,7 +2,6 @@
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
-import { useStairspaceData, setStairspaceListings } from '@/hooks/use-global-store-data';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -55,20 +54,21 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { stairspaceListings, isClient } = useStairspaceData();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [listing, setListing] = useState<StairspaceListing | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        if(isClient && id) {
-            const foundListing = stairspaceListings.find(l => l.id === id);
+        setIsClient(true);
+        if(id) {
+            const foundListing = initialStairspaceListings.find(l => l.id === id);
             if (foundListing) {
                 setListing(foundListing);
             } else {
                 notFound();
             }
         }
-    }, [id, stairspaceListings, isClient]);
+    }, [id]);
 
     if (!isClient || !listing) {
         return (

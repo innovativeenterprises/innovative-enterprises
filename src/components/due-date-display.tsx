@@ -16,7 +16,7 @@ export const DueDateDisplay = ({
   const [displayState, setDisplayState] = useState<{ isClient: boolean; daysRemaining: number | null, formattedDate: string | null }>({ isClient: false, daysRemaining: null, formattedDate: null });
 
   useEffect(() => {
-    // This code now runs only on the client, after the initial render.
+    // This code now runs only on the client, after the initial mount.
     const dueDate = new Date(date);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to the start of the day
@@ -34,7 +34,6 @@ export const DueDateDisplay = ({
 
   if (!displayState.isClient) {
     // Render a skeleton on the server and during the initial client mount.
-    // This prevents the flash of null content.
     return <Skeleton className="h-4 w-48 mt-1" />;
   }
 
