@@ -9,6 +9,16 @@
 
 import { initialSettings, type AppSettings } from './settings';
 import type { Product } from './products';
+import { initialLeases, type SignedLease } from './leases';
+import { initialStockItems, type StockItem } from './stock-items';
+import { initialCommunities, type Community } from './communities';
+import { initialMembers, type CommunityMember } from './community-members';
+import { initialEvents, type CommunityEvent } from './community-events';
+import { initialFinances, type CommunityFinance } from './community-finances';
+import { initialStairspaceRequests, type BookingRequest as StairspaceBookingRequest } from './stairspace-requests';
+import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
+import { initialBeautyServices, type BeautyService } from './beauty-services';
+import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -17,11 +27,31 @@ export interface CartItem extends Product {
 export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
+  leases: SignedLease[];
+  stockItems: StockItem[];
+  communities: Community[];
+  communityMembers: CommunityMember[];
+  communityEvents: CommunityEvent[];
+  communityFinances: CommunityFinance[];
+  stairspaceRequests: StairspaceBookingRequest[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautyAppointments: BeautyAppointment[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
+  leases: initialLeases,
+  stockItems: initialStockItems,
+  communities: initialCommunities,
+  communityMembers: initialMembers,
+  communityEvents: initialEvents,
+  communityFinances: initialFinances,
+  stairspaceRequests: initialStairspaceRequests,
+  beautyCenters: initialBeautyCenters,
+  beautyServices: initialBeautyServices,
+  beautyAppointments: initialBeautyAppointments,
 };
 
 // The single source of truth for our application's shared state.

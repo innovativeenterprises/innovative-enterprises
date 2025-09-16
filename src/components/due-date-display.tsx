@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
+import { format } from 'date-fns';
 
 export const DueDateDisplay = ({
   date,
@@ -30,11 +31,7 @@ export const DueDateDisplay = ({
     const diffTime = dueDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
     
-    const formatted = new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    }).format(dueDate);
+    const formatted = format(dueDate, "PPP");
 
     return { formattedDate: `${prefix} ${formatted}`, daysRemaining: diffDays };
   }, [date, prefix, isClient]);
