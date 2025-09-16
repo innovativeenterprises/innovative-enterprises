@@ -1,6 +1,3 @@
-
-'use client';
-    
 import CompanyOverview from '@/components/company-overview';
 import ServiceCatalog from '@/components/service-catalog';
 import ProductShowcase from '@/components/product-showcase';
@@ -18,5 +15,5 @@ export default function Home() {
       <AiToolsCta />
       <ChatWidget />
     </>
-  )
+  );
 }
