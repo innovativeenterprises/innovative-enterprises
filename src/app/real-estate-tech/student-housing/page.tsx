@@ -1,3 +1,4 @@
+
 import StudentHousingClientPage from './client-page';
 import { initialLeases } from '@/lib/leases';
 import type { Metadata } from 'next';
