@@ -8,7 +8,7 @@ import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Pa
 import KnowledgeTable from '../knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
-import { initialKnowledgeBase } from "@/lib/knowledge";
+import { initialKnowledgeBase } from '@/lib/knowledge';
 import { initialCostSettings } from '@/lib/cost-settings';
 import CostSettingsTable from "./cost-settings-table";
 
@@ -32,7 +32,7 @@ export default function AdminOperationsPage() {
         </div>
 
         <ThemeGenerator />
-        <KnowledgeTable />
+        <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
         <CostSettingsTable initialCostSettings={initialCostSettings} />
         
         <div className="pt-8">
