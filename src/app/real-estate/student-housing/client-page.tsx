@@ -124,7 +124,7 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    {lease.endDate && <DueDateDisplay date={lease.endDate} prefix="Ends:" />}
+                                                    <DueDateDisplay date={lease.endDate} prefix="Ends:" />
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
