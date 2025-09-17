@@ -9,5 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function MyStairspaceRequestsPage() {
-    return <StairspaceRequestsClientPage initialRequests={initialStairspaceRequests} />;
+    // Data is fetched on the server and passed to the client component.
+    const requests = initialStairspaceRequests;
+    return <StairspaceRequestsClientPage initialRequests={requests} />;
 }

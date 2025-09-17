@@ -6,6 +6,8 @@ import type { AppSettings } from '@/lib/settings';
 import type { CartItem } from '@/lib/global-store';
 import { initialState, store, type AppState } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
+import type { SignedLease } from '@/lib/leases';
+import type { BookingRequest } from '@/lib/stairspace-requests';
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext);
@@ -35,6 +37,28 @@ export const useCartData = () => {
     return {
         cart: useStoreData((s) => s.cart),
         setCart,
+        isClient,
+    };
+};
+
+// Signed Leases
+export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set((state) => ({ ...state, signedLeases: updater(state.signedLeases) }));
+export const useLeasesData = () => {
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    return {
+        leases: useStoreData((s) => s.signedLeases),
+        setLeases: setSignedLeases,
+        isClient,
+    };
+};
+
+// StairSpace Requests
+export const setStairspaceRequests = (updater: (prev: BookingRequest[]) => BookingRequest[]) => store.set((state) => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
+export const useStairspaceRequestsData = () => {
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    return {
+        stairspaceRequests: useStoreData((s) => s.stairspaceRequests),
+        setStairspaceRequests,
         isClient,
     };
 };

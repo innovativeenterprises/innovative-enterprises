@@ -1,6 +1,8 @@
 
-import StairspaceRequestsPageClient from './client-page';
+import StairspaceRequestsClientPage from './client-page';
 import type { Metadata } from 'next';
+import { initialStairspaceListings } from '@/lib/stairspace-listings';
+import { initialStairspaceRequests } from '@/lib/stairspace-requests';
 
 export const metadata: Metadata = {
     title: "StairSpace Booking Requests",
@@ -8,5 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default function StairspaceRequestsPage() {
-    return <StairspaceRequestsPageClient />;
+    // Data is fetched on the server and passed to the client component.
+    const listings = initialStairspaceListings;
+    const requests = initialStairspaceRequests;
+    return <StairspaceRequestsClientPage initialListings={listings} initialRequests={requests} />;
 }

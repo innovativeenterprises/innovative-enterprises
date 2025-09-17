@@ -12,6 +12,9 @@
 
 import { initialSettings, type AppSettings } from './settings';
 import type { Product } from './products';
+import { initialLeases, type SignedLease } from './leases';
+import type { BookingRequest } from './stairspace-requests';
+import { initialStairspaceRequests } from './stairspace-requests';
 
 export interface CartItem extends Product {
   quantity: number;
@@ -20,11 +23,15 @@ export interface CartItem extends Product {
 export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
+  signedLeases: SignedLease[];
+  stairspaceRequests: BookingRequest[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
+  signedLeases: initialLeases,
+  stairspaceRequests: initialStairspaceRequests,
 };
 
 // The single source of truth for our application's shared state.
