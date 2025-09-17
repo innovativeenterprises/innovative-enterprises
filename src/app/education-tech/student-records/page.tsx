@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 
 
 export default function StudentRecordsPage() {
-    return <StudentRecordsClientPage initialStudents={initialStudents} />;
+    const students = initialStudents;
+    return <StudentRecordsClientPage initialStudents={students} />;
 }
-
-    

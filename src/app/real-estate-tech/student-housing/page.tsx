@@ -14,3 +14,4 @@ export default function StudentHousingPage() {
     const leases = initialLeases;
     return <StudentHousingClientPage initialLeases={leases} />;
 }
+
