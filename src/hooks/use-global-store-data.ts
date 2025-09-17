@@ -58,7 +58,7 @@ export const useCartData = () => {
 
 // Signed Leases
 export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set((state) => ({ ...state, signedLeases: updater(state.signedLeases) }));
-export const useSignedLeasesData = () => {
+export const useLeasesData = () => {
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
     return {
         leases: useStoreData((s) => s.signedLeases),
@@ -66,6 +66,8 @@ export const useSignedLeasesData = () => {
         isClient,
     };
 };
+export const useSignedLeasesData = useLeasesData;
+
 
 // StairSpace Requests
 export const setStairspaceRequests = (updater: (prev: BookingRequest[]) => BookingRequest[]) => store.set((state) => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
@@ -133,6 +135,9 @@ export const useStaffData = () => {
         leadership: useStoreData(s => s.leadership),
         staff: useStoreData(s => s.staff),
         agentCategories: useStoreData(s => s.agentCategories),
+        setLeadership,
+        setStaff,
+        setAgentCategories,
         isClient
     };
 }
