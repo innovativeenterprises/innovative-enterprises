@@ -1,9 +1,9 @@
 
 # Platform Overview
 
-This document provides a comprehensive, categorized list of all 87 current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
+This document provides a comprehensive, categorized list of all 88 current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
 
-## Digital Products & SaaS Platforms (41 Total)
+## Digital Products & SaaS Platforms (42 Total)
 
 ### Category: Construction Tech (11)
 | Name | Description | Stage | Status |
@@ -53,7 +53,7 @@ This document provides a comprehensive, categorized list of all 87 current proje
 | :--- | :--- | :--- | :--- |
 | DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Live & Operating | Completed |
 
-### Category: General Platforms & SaaS (10)
+### Category: General Platforms & SaaS (11)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
@@ -66,6 +66,7 @@ This document provides a comprehensive, categorized list of all 87 current proje
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
 | StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
+| Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed |
 
 
 ### Category: AI & Creative Tools (3)
