@@ -1,6 +1,5 @@
-
 import { initialStockItems } from '@/lib/stock-items';
-import StockClearClientPage from './client-page';
+import StockClearMarketplacePage from './client-page';
 import type { Metadata } from 'next';
 import { Warehouse } from 'lucide-react';
 
@@ -24,7 +23,7 @@ export default function StockClearPage() {
                     </p>
                 </div>
                 <div className="max-w-6xl mx-auto mt-12">
-                     <StockClearClientPage initialItems={stockItems} />
+                     <StockClearMarketplacePage initialItems={stockItems} />
                 </div>
             </div>
         </div>

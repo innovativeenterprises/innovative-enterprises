@@ -1,4 +1,5 @@
 
+
 import EventsFinanceClient from './client-page';
 import type { Metadata } from 'next';
 import { initialCommunities } from '@/lib/communities';
