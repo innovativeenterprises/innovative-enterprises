@@ -6,9 +6,6 @@ import type { AppSettings } from '@/lib/settings';
 import type { CartItem } from '@/lib/global-store';
 import { initialState, store, type AppState } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
-import type { SignedLease } from '@/lib/leases';
-import type { BookingRequest } from '@/lib/stairspace-requests';
-import type { HireRequest } from '@/lib/raaha-requests';
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext);

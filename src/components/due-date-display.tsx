@@ -11,7 +11,7 @@ export const DueDateDisplay = ({
   className,
   prefix = "Due:",
 }: {
-  date?: string | Date;
+  date?: string;
   className?: string;
   prefix?: string;
 }) => {

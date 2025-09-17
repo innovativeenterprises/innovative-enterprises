@@ -9,5 +9,7 @@ export const metadata: Metadata = {
 
 
 export default function StudentHousingPage() {
-    return <StudentHousingClientPage initialLeases={initialLeases} />;
+    // Data is fetched on the server and passed to the client component.
+    const leases = initialLeases;
+    return <StudentHousingClientPage initialLeases={leases} />;
 }
