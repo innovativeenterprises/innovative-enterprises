@@ -20,13 +20,6 @@ import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Student Record Management | EduFlow Suite",
-  description: "A central database for managing all student profiles and academic records.",
-};
-
 
 const StudentSchema = z.object({
   id: z.string().min(3, "Student ID is required"),

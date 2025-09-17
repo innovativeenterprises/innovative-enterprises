@@ -80,6 +80,7 @@ const identityAnalysisFlow = ai.defineFlow(
         // More robust filename generation.
         const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim() : null);
         
+        // This logic is now a fallback, as the model is instructed to do this itself.
         if (fullName && !output.personalDetails?.fullName) {
              if (!output.personalDetails) {
                  output.personalDetails = { fullName };

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, UserCheck, ShieldCheck, Heart, FileText, Mic, MessageSquare, Bot, PenSquare, Search, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 import { type Student } from '@/lib/students';
+import { initialStudents } from '@/lib/students';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
@@ -20,7 +21,6 @@ import { wellbeingCheckin } from '@/ai/flows/guardian-ai/wellbeing-checkin';
 import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useStudentsData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 
@@ -51,9 +51,13 @@ const WellbeingChat = ({ studentName }: { studentName: string }) => {
     )
 }
 
-const StudentDashboard = () => {
-    const { students, isClient } = useStudentsData();
+const StudentDashboard = ({ students }: { students: Student[] }) => {
+    const [isClient, setIsClient] = useState(false);
     
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const getStatusBadge = (status: Student['status']) => {
         switch (status) {
             case 'On Track': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">On Track</Badge>;
@@ -125,6 +129,8 @@ const StudentDashboard = () => {
 
 
 export default function GuardianAiPage() {
+    const students = initialStudents;
+    
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -154,7 +160,7 @@ export default function GuardianAiPage() {
                             <TabsTrigger value="interview">AI Interview Coach</TabsTrigger>
                         </TabsList>
                         <TabsContent value="dashboard" className="mt-6">
-                            <StudentDashboard />
+                            <StudentDashboard students={students} />
                         </TabsContent>
                          <TabsContent value="scholarships" className="mt-6">
                              <Link href="/education-tech/scholarships">
