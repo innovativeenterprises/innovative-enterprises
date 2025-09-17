@@ -1,6 +1,6 @@
 
 import { initialStockItems } from '@/lib/stock-items';
-import StockClearClientPage from '@/app/stock-clear/client-page';
+import StockClearClientPage from './client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
