@@ -1,7 +1,7 @@
 
 
 import StaffTable from "@/app/admin/staff-table";
-import { getStaffData } from "@/lib/firestore";
+import { initialStaffData } from "@/lib/agents.schema";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 
 export default async function AdminPeoplePage() {
-  const { leadership, staff, agentCategories } = await getStaffData();
+  const { leadership, staff, agentCategories } = initialStaffData;
 
   return (
     <div className="space-y-8">

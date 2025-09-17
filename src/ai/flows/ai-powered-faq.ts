@@ -15,13 +15,18 @@ import {
     AnswerQuestionInputSchema,
     AnswerQuestionOutput,
     AnswerQuestionOutputSchema,
-    routeToSpecialistTool
+    routeToSpecialistTool,
+    initialStaffData
 } from './ai-powered-faq.schema';
 
 
 export async function answerQuestion(input: AnswerQuestionInput): Promise<AnswerQuestionOutput> {
   return answerQuestionFlow(input);
 }
+
+// Flatten the staff list once here to pass into the tool if needed.
+const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
+
 
 const prompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
@@ -54,7 +59,15 @@ const answerQuestionFlow = ai.defineFlow(
     
     // Check if the model decided to use a tool.
     if (response.toolRequest?.name === 'routeToSpecialist') {
-        const toolResponse = await response.toolRequest.run();
+        const toolRequestWithContext = {
+            ...response.toolRequest,
+            input: {
+                ...response.toolRequest.input,
+                allStaff: allStaff,
+            },
+        };
+
+        const toolResponse = await toolRequestWithContext.run();
         const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
 
         return {

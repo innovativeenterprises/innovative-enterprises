@@ -4,7 +4,7 @@ import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { getStaffData } from "@/lib/firestore";
+import { initialStaffData } from "@/lib/agents.schema";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TeamPage() {
-    const { leadership, agentCategories, staff } = await getStaffData();
+    const { leadership, agentCategories, staff } = initialStaffData;
 
     const enabledLeadership = leadership.filter(member => member.enabled);
     const enabledStaff = staff.filter(member => member.enabled);

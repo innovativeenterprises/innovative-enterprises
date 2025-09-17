@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -14,17 +15,18 @@ import {
     ProjectInceptionOutput,
     ProjectInceptionOutputSchema,
 } from './project-inception.schema';
+import { z } from 'zod';
 
 export async function generateProjectPlan(input: ProjectInceptionInput): Promise<ProjectInceptionOutput> {
   return projectInceptionFlow(input);
 }
 
 // Flatten the list of all available agents
-const allAgents = initialAgentCategories.flatMap(category => category.agents.map(agent => `${agent.name} (${agent.role})`));
+const allAgents = initialAgentCategories.flatMap(category => category.agents.map(agent => `'${agent.name}' ('${agent.role}')`));
 
 const prompt = ai.definePrompt({
   name: 'projectInceptionPrompt',
-  input: { schema: ProjectInceptionInputSchema },
+  input: { schema: ProjectInceptionInputSchema.extend({ allAgents: z.array(z.string()) }) },
   output: { schema: ProjectInceptionOutputSchema },
   prompt: `You are "Navi," an expert AI Product Manager and Innovation Agent.
 Your task is to take a raw product idea and transform it into a structured, initial project plan.
