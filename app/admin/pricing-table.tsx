@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,10 +12,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import type { Pricing, PricingGroup } from "@/lib/pricing";
+import type { Pricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -25,16 +24,18 @@ type PricingValues = z.infer<typeof PricingSchema>;
 const EditPriceDialog = ({ 
     item, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     item: Pricing, 
     onSave: (values: PricingValues, id: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<PricingValues>({
         resolver: zodResolver(PricingSchema),
-        defaultValues: { price: item.price },
     });
 
     useEffect(() => {
@@ -45,11 +46,11 @@ const EditPriceDialog = ({
 
     const onSubmit: SubmitHandler<PricingValues> = (data) => {
         onSave(data, item.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -76,14 +77,15 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable({ 
-    pricing, 
-    setPricing,
+    pricing: initialPricing,
 } : { 
     pricing: Pricing[], 
-    setPricing: (updater: (pricing: Pricing[]) => void) => void,
 }) {
+    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
     const { toast } = useToast();
     const [isClient, setIsClient] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     useEffect(() => {
         setIsClient(true);
@@ -93,14 +95,22 @@ export default function PricingTable({
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
         toast({ title: "Price updated successfully." });
     };
+    
+    const handleOpenDialog = (item: Pricing) => {
+        setSelectedItem(item);
+        setIsDialogOpen(true);
+    };
 
-    const pricingByGroup = pricing.reduce((acc, item) => {
-        if (!acc[item.group]) {
-            acc[item.group] = [];
-        }
-        acc[item.group].push(item);
-        return acc;
-    }, {} as Record<string, Pricing[]>);
+    const pricingByGroup = useMemo(() => {
+        if (!isClient) return {};
+        return pricing.reduce((acc, item) => {
+            if (!acc[item.group]) {
+                acc[item.group] = [];
+            }
+            acc[item.group].push(item);
+            return acc;
+        }, {} as Record<string, Pricing[]>);
+    }, [isClient, pricing]);
 
 
     return (
@@ -110,6 +120,16 @@ export default function PricingTable({
                 <CardDescription>Manage the per-page price for document translation.</CardDescription>
             </CardHeader>
             <CardContent>
+                {selectedItem && (
+                    <EditPriceDialog
+                      isOpen={isDialogOpen}
+                      onOpenChange={setIsDialogOpen}
+                      item={selectedItem}
+                      onSave={handleSave}
+                    >
+                      <div />
+                    </EditPriceDialog>
+                )}
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -134,9 +154,7 @@ export default function PricingTable({
                                         <TableCell className="text-muted-foreground">{item.group}</TableCell>
                                         <TableCell>OMR {item.price.toFixed(2)}</TableCell>
                                         <TableCell className="text-right">
-                                            <EditPriceDialog item={item} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </EditPriceDialog>
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
                                         </TableCell>
                                     </TableRow>
                                 ))
