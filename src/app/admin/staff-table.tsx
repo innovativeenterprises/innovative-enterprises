@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -19,13 +20,13 @@ import type { LucideIcon } from "lucide-react";
 import { User, Bot, PlusCircle, Trash2, Edit, Mail, Phone, Globe, Linkedin, Twitter, Github } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { Agent, AgentCategory } from '@/lib/agents';
+import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import { Textarea } from "@/components/ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
-import { initialAgentCategories, initialLeadershipTeam, initialStaffTeam } from "@/lib/agents";
+import { initialAgentCategories, initialLeadershipTeam, initialStaffTeam } from "@/lib/agents.schema";
 
 const SocialsSchema = z.object({
     email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
@@ -215,7 +216,7 @@ const AddEditStaffDialog = ({
                                         <FormItem><FormLabel>Twitter URL</FormLabel><FormControl><Input placeholder="https://twitter.com/..." {...field} /></FormControl><FormMessage /></FormItem>
                                     )} />
                                      <FormField control={form.control} name="socials.github" render={({ field }) => (
-                                        <FormItem><FormLabel>GitHub URL</FormLabel><FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl><FormMessage /></FormMessage>
+                                        <FormItem><FormLabel>GitHub URL</FormLabel><FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl><FormMessage /></FormItem>
                                     )} />
                                 </AccordionContent>
                             </AccordionItem>
@@ -368,7 +369,7 @@ export default function StaffTable({
                 <Switch
                     checked={member.enabled}
                     onCheckedChange={() => handleToggle(member.name, type)}
-                    aria-label={`Enable/disable ${member.name}`}
+                    aria-label={`Enable/disable '${member.name}'`}
                 />
             </TableCell>
             <TableCell className="text-right">
@@ -442,5 +443,3 @@ export default function StaffTable({
         </Card>
     );
 }
-
-    

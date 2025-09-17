@@ -1,1 +1,1 @@
-export * from '@/lib/agents.schema.ts';
+export * from '@/lib/agents.schema';

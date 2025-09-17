@@ -6,7 +6,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { initialStaffData } from '@/lib/agents';
+import { initialStaffData } from '@/lib/agents.schema';
 
 export const AnswerQuestionInputSchema = z.object({
   question: z.string().describe('The user question about Innovative Enterprises.'),
@@ -70,19 +70,19 @@ export const routeToSpecialistTool = ai.defineTool(
         if (isAvailable) {
             return {
                 isAvailable: true,
-                response: `I've connected you with ${specialist.name}, our ${department} specialist. They will answer your question now.`,
+                response: `I've connected you with ${"'" + specialist.name + "'"}, our ${"'" + department + "'"} specialist. They will answer your question now.`,
                 suggestedReplies: ["What are your office hours?", "Tell me about your products."],
             };
         } else {
             return {
                 isAvailable: false,
-                response: `I'm sorry, ${specialist.name} is currently assisting other clients. I can help you book a meeting, or you can contact them directly via email or WhatsApp. What works best for you?`,
+                response: `I'm sorry, ${"'" + specialist.name + "'"} is currently assisting other clients. I can help you book a meeting, or you can contact them directly via email or WhatsApp. What works best for you?`,
                 meetingUrl: 'https://calendly.com/your-username',
                 contactOptions: {
                     email: specialist.socials?.email,
                     whatsapp: specialist.socials?.phone,
                 },
-                suggestedReplies: ["Book a meeting", `Email ${specialist.name}`, `WhatsApp ${specialist.name}`],
+                suggestedReplies: ["Book a meeting", `Email ${"'" + specialist.name + "'"}`, `WhatsApp ${"'" + specialist.name + "'"}`],
             };
         }
     }

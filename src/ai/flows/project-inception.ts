@@ -7,7 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { initialAgentCategories } from '@/lib/agents';
+import { initialAgentCategories } from '@/lib/agents.schema';
 import {
     ProjectInceptionInput,
     ProjectInceptionInputSchema,

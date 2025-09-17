@@ -19,13 +19,14 @@ import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircui
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
 import { trainAgent } from "@/ai/flows/train-agent";
 import { scrapeAndSummarize } from "@/ai/flows/web-scraper-agent";
-import { initialAgentCategories } from '@/lib/agents';
+import { initialAgentCategories } from '@/lib/agents.schema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
+import { getKnowledgeBase } from '@/lib/firestore';
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),

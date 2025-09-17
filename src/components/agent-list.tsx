@@ -1,10 +1,11 @@
 
+
 'use client';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
 import Link from 'next/link';
-import type { Agent, AgentCategory } from '@/lib/agents';
+import type { Agent, AgentCategory } from '@/lib/agents.schema';
 
 const AgentCard = ({ agent }: { agent: Agent }) => (
     <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
@@ -65,7 +66,7 @@ const HumanCard = ({ member }: { member: Agent }) => {
                         </Link>
                     )}
                     {member.socials?.email && (
-                        <a href={`mailto:${member.socials.email}`} className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <a href={`mailto:${"'" + member.socials.email + "'"}`} className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
                             <Mail className="w-5 h-5" />
                             <span className="sr-only">Email</span>
                         </a>
