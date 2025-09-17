@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products";
 import { Skeleton } from "@/components/ui/skeleton";
-import { GraduationCap, GanttChartSquare, Cpu, ShieldCheck, Layers } from 'lucide-react';
+import { GraduationCap, GanttChartSquare, Cpu, ShieldCheck, Layers, BookOpen } from 'lucide-react';
 import type { Metadata } from 'next';
 
 const ProductCard = ({ product }: { product: Product }) => {
@@ -18,32 +18,32 @@ const ProductCard = ({ product }: { product: Product }) => {
         "CertiTrust": ShieldCheck,
         "CampusOS": Layers,
         "AI Scholarship Finder": GraduationCap,
+        "Teacher Toolkit": BookOpen,
     };
     const Icon = iconMap[product.name] || GraduationCap;
 
     return (
-        <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-            <CardHeader className="flex-row items-center gap-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
-                    <Icon className="w-6 h-6 text-primary" />
-                </div>
-                <CardTitle>{product.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-grow">
-                <CardDescription>{product.description}</CardDescription>
-            </CardContent>
-            <CardFooter>
-                {product.href ? (
-                    <Button asChild className="w-full">
-                        <Link href={product.href}>Use Tool</Link>
-                    </Button>
-                ) : (
-                    <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
-                )}
-            </CardFooter>
-        </Card>
-    );
-};
+    <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <CardHeader className="flex-row items-center gap-4">
+            <div className="bg-primary/10 p-3 rounded-lg">
+                <Icon className="w-6 h-6 text-primary" />
+            </div>
+            <CardTitle>{product.name}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex-grow">
+            <CardDescription>{product.description}</CardDescription>
+        </CardContent>
+        <CardFooter>
+            {product.href ? (
+                 <Button asChild className="w-full">
+                    <Link href={product.href}>Use Tool</Link>
+                </Button>
+            ) : (
+                <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
+            )}
+        </CardFooter>
+    </Card>
+)};
 
 const ProductGridSkeleton = () => (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -68,7 +68,23 @@ const ProductGridSkeleton = () => (
 export default function EducationTechPage() {
     const { products, isClient } = useProductsData();
 
-    const edutechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
+    const edutechProducts: Product[] = [
+        ...products.filter(p => p.category === "Education Tech" && p.enabled),
+        {
+            id: 101, // Assign a unique ID
+            name: "Teacher Toolkit",
+            description: "Convert any uploaded school book or lesson into a gamified, interactive experience with flashcards, quizzes, and presentations.",
+            stage: "Live & Operating",
+            category: "Education Tech",
+            price: 0,
+            image: "https://picsum.photos/seed/teachertoolkit/400/400",
+            aiHint: "teacher classroom technology",
+            rating: 5,
+            enabled: true,
+            href: "/education-tech/lesson-gamifier",
+            adminStatus: 'Completed',
+        }
+    ];
     
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
