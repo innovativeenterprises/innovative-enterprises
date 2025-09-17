@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -11,10 +12,23 @@
  */
 
 import { initialSettings, type AppSettings } from './settings';
-import type { Product } from './products';
+import { initialProducts, type Product } from './products';
+import { initialProviders, type Provider } from './providers';
+import { initialServices, type Service } from './services';
+import { initialOpportunities, type Opportunity } from './opportunities';
 import { initialLeases, type SignedLease } from './leases';
-import type { BookingRequest } from './stairspace-requests';
-import { initialStairspaceRequests } from './stairspace-requests';
+import { initialStairspaceRequests, type BookingRequest } from './stairspace-requests';
+import { initialStairspaceListings, type StairspaceListing } from './stairspace-listings';
+import { initialStaffData, type Agent, type AgentCategory } from './agents';
+import { initialAgencies as initialRaahaAgencies, type Agency as RaahaAgency } from './raaha-agencies';
+import { initialWorkers as initialRaahaWorkers, type Worker as RaahaWorker } from './raaha-workers';
+import { initialRequests as initialRaahaRequests, type HireRequest } from './raaha-requests';
+import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
+import { initialBeautyServices, type BeautyService } from './beauty-services';
+import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
+import { initialCostSettings, type CostRate } from './cost-settings';
+import { initialAssets, type Asset } from './assets';
+
 
 export interface CartItem extends Product {
   quantity: number;
@@ -23,15 +37,47 @@ export interface CartItem extends Product {
 export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
+  products: Product[];
+  providers: Provider[];
+  opportunities: Opportunity[];
+  services: Service[];
   signedLeases: SignedLease[];
   stairspaceRequests: BookingRequest[];
+  stairspaceListings: StairspaceListing[];
+  leadership: Agent[];
+  staff: Agent[];
+  agentCategories: AgentCategory[];
+  raahaAgencies: RaahaAgency[];
+  raahaWorkers: RaahaWorker[];
+  raahaRequests: HireRequest[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautyAppointments: BeautyAppointment[];
+  costSettings: CostRate[];
+  assets: Asset[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
+  products: initialProducts,
+  providers: initialProviders,
+  opportunities: initialOpportunities,
+  services: initialServices,
   signedLeases: initialLeases,
   stairspaceRequests: initialStairspaceRequests,
+  stairspaceListings: initialStairspaceListings,
+  leadership: initialStaffData.leadership,
+  staff: initialStaffData.staff,
+  agentCategories: initialStaffData.agentCategories,
+  raahaAgencies: initialRaahaAgencies,
+  raahaWorkers: initialRaahaWorkers,
+  raahaRequests: initialRaahaRequests,
+  beautyCenters: initialBeautyCenters,
+  beautyServices: initialBeautyServices,
+  beautyAppointments: initialBeautyAppointments,
+  costSettings: initialCostSettings,
+  assets: initialAssets,
 };
 
 // The single source of truth for our application's shared state.
