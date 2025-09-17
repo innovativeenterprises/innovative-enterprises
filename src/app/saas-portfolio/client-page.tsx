@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from "react";
@@ -53,12 +54,6 @@ export default function SaasPortfolioClientPage({ saasProducts }: { saasProducts
 
     return (
          <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold">SaaS Portfolio</h1>
-                <p className="text-muted-foreground">
-                    Browse, search, and filter through all {saasProducts.flatMap(c => c.products).length} of our current digital product initiatives.
-                </p>
-            </div>
             <Card>
                 <CardHeader>
                     <CardTitle>Digital Products & SaaS Platforms</CardTitle>

@@ -1,6 +1,6 @@
 
 import { saasProducts } from '@/lib/saas-products';
-import SaasPortfolioClientPage from '../admin/saas-portfolio/client-page';
+import SaasPortfolioClientPage from './client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
