@@ -4,7 +4,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
 import Link from 'next/link';
-import type { Agent, AgentCategory } from '@/lib/agents.schema';
+import type { Agent, AgentCategory } from '@/lib/agents';
 
 const AgentCard = ({ agent }: { agent: Agent }) => (
     <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
