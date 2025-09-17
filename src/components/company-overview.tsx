@@ -1,14 +1,14 @@
 
 
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
-import { initialClients } from '@/lib/clients';
+import type { Client } from '@/lib/clients';
 
-export default function CompanyOverview() {
-  const clients = initialClients;
+export default function CompanyOverview({ clients }: { clients: Client[] }) {
   
   return (
     <section className="bg-background">
