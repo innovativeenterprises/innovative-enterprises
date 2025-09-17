@@ -119,7 +119,7 @@ export default function StudentHousingPage() {
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    <p className="text-sm text-muted-foreground">Lessor: {lease.lessorName}</p>
+                                                    <DueDateDisplay date={lease.endDate} prefix="Ends:" />
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
