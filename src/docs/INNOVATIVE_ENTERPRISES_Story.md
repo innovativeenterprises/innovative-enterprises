@@ -177,6 +177,17 @@ This section covers our standalone Software-as-a-Service products.
     1.  Salon owners configure their services, prices, and staff in the agency dashboard.
     2.  Clients can view available services and book appointments online.
     3.  The system tracks all appointments, sends reminders, and maintains a history of each client's visits and preferences.
+    
+#### Teacher Toolkit
+-   **Executive Summary:** A suite of AI-powered tools designed to assist educators in creating engaging and dynamic learning materials, reducing preparation time and enhancing the student experience.
+-   **Concept:** The flagship tool, the "Lesson Gamifier," allows teachers to upload existing lesson materials (like a PDF or text from a textbook chapter). The AI then analyzes the content and generates a variety of new, interactive formats based on the educator's selection.
+-   **Objective:** To empower teachers with AI tools that automate the creation of high-quality, interactive educational content, freeing them up to focus on teaching.
+-   **Methodology (Lesson Gamifier):**
+    1.  An educator navigates to the `/education-tech/lesson-gamifier` page.
+    2.  They upload a document and provide key context: the lesson's topic and the target audience (e.g., "Grade 5 students").
+    3.  They select one or more desired outputs from a list: Interactive Book (HTML), Flashcards, Presentation Outline, or a PDF Study Guide. They can also choose "Let AI Decide," in which case the AI selects the most appropriate formats.
+    4.  The `generateGamifiedLesson` flow is triggered. The AI agent analyzes the source document and generates only the requested materials.
+    5.  The generated assets are displayed in a tabbed interface, where the teacher can review, copy, download, or (in a future version) share them or save them to their connected cloud drive.
 
 ---
 *This document will continue to be updated as the INNOVATIVE ENTERPRISES ecosystem evolves. It stands as a testament to our commitment to structured, AI-driven innovation.*
