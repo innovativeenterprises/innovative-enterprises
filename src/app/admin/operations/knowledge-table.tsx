@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { KnowledgeDocument } from "@/lib/knowledge";
 import { initialKnowledgeBase } from "@/lib/knowledge";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
@@ -486,5 +486,3 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
-
-    

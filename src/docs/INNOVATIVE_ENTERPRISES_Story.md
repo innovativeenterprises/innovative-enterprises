@@ -169,7 +169,7 @@ This section covers our standalone Software-as-a-Service products.
     5.  The agent then compares this query against the agency's private database of worker profiles, using vector embeddings or keyword matching to find the best candidates.
     6.  The flow returns a ranked list of the top 3-5 matches, each with a justification explaining why they are a good fit.
     7.  The client can review these profiles and submit a hire request, which appears in the agency's private dashboard for follow-up.
-
+    
 #### Beauty & Wellness Hub
 - **Executive Summary:** A complete SaaS solution for salons, spas, and barbershops. It provides tools for managing appointments, staff, services, and client relationships, all powered by an AI-assisted dashboard.
 - **Concept:** Salon owners get a dedicated dashboard to manage their services, pricing, and staff schedules. Clients can book appointments through a public-facing portal. The system helps manage bookings and client history.

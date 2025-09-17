@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { CostRate } from "@/lib/cost-settings.schema";
+import { initialCostSettings } from "@/lib/cost-settings";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -96,7 +97,7 @@ const AddEditCostDialog = ({
     );
 };
 
-export default function CostSettingsTable({ initialCostSettings }: { initialCostSettings: CostRate[]}) {
+export default function CostSettingsTable() {
     const [costSettings, setCostSettings] = useState<CostRate[]>(initialCostSettings);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
