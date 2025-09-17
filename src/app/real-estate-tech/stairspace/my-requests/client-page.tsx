@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,6 +13,7 @@ import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useRouter } from 'next/navigation';
 import type { BookingRequest } from '@/lib/stairspace-requests';
+import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -25,19 +27,20 @@ const getStatusBadge = (status: BookingRequest['status']) => {
 };
 
 export default function StairspaceRequestsClientPage({ initialRequests }: { initialRequests: BookingRequest[] }) {
-    const [requests, setRequests] = useState(initialRequests);
-    const [isClient, setIsClient] = useState(false);
+    const {stairspaceRequests, setStairspaceRequests, isClient} = useStairspaceRequestsData();
     const { toast } = useToast();
     const router = useRouter();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setStairspaceRequests(() => initialRequests);
+    }, [initialRequests, setStairspaceRequests]);
     
-    const myRequests = isClient ? requests.filter(r => r.clientName === 'Anwar Ahmed') : [];
+    // In a real app, you would filter requests by the logged-in user.
+    // For this prototype, we'll assume we're viewing requests for one client.
+    const myRequests = isClient ? stairspaceRequests.filter(r => r.clientName === 'Anwar Ahmed') : [];
     
     const onSchedule = (id: string, values: InterviewValues) => {
-        setRequests(prev => prev.map(r => 
+        setStairspaceRequests(prev => prev.map(r => 
             r.id === id ? { ...r, status: 'Contacted', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
@@ -45,7 +48,7 @@ export default function StairspaceRequestsClientPage({ initialRequests }: { init
 
     const handlePayment = (requestId: string) => {
         toast({ title: 'Redirecting to payment...', description: 'Please wait.' });
-        setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
+        setStairspaceRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
         setTimeout(() => {
             router.push(`/real-estate-tech/stairspace/booking-confirmed?requestId=${requestId}`);
         }, 1000);
