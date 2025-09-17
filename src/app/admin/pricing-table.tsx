@@ -92,7 +92,7 @@ export default function PricingTable() {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
         toast({ title: "Price updated successfully." });
     };
-
+    
     const handleOpenDialog = (item: Pricing) => {
         setSelectedItem(item);
         setIsDialogOpen(true);
@@ -107,7 +107,7 @@ export default function PricingTable() {
             acc[item.group].push(item);
             return acc;
         }, {} as Record<string, Pricing[]>);
-    }, [pricing, isClient]);
+    }, [isClient, pricing]);
 
 
     return (
@@ -118,13 +118,13 @@ export default function PricingTable() {
             </CardHeader>
             <CardContent>
                 {selectedItem && (
-                    <EditPriceDialog 
-                        isOpen={isDialogOpen}
-                        onOpenChange={setIsDialogOpen}
-                        item={selectedItem}
-                        onSave={handleSave}
+                    <EditPriceDialog
+                      isOpen={isDialogOpen}
+                      onOpenChange={setIsDialogOpen}
+                      item={selectedItem}
+                      onSave={handleSave}
                     >
-                        <div/>
+                      <div />
                     </EditPriceDialog>
                 )}
                 <Table>
@@ -151,7 +151,7 @@ export default function PricingTable() {
                                         <TableCell className="text-muted-foreground">{item.group}</TableCell>
                                         <TableCell>OMR {item.price.toFixed(2)}</TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" aria-label={`Edit price for ${"'" + item.type + "'"}`} onClick={() => handleOpenDialog(item)}><Edit /></Button>
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
                                         </TableCell>
                                     </TableRow>
                                 ))
