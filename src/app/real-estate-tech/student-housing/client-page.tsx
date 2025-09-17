@@ -160,3 +160,5 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
         </div>
     );
 }
+
+    
