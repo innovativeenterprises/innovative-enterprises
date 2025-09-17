@@ -105,7 +105,7 @@ export default function AdminLayoutClient({
           <Button asChild variant="ghost" className="h-auto w-auto p-1">
             <Link href="/admin" className="flex items-center gap-2">
                <Image src="/logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-32 h-auto object-contain group-data-[collapsible=icon]:hidden" priority />
-               <Image src="/icon.png" alt="Innovative Enterprises Logo" width={32} height={32} className="w-8 h-8 object-contain hidden group-data-[collapsible=icon]:block" priority />
+               <Image src="/icon.png" alt="Innovative Enterprises Logo" width={32} height={32} className="w-8 h-8 h-auto object-contain hidden group-data-[collapsible=icon]:block" priority />
             </Link>
           </Button>
         </SidebarHeader>
