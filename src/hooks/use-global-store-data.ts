@@ -14,13 +14,14 @@ import type { Provider } from '@/lib/providers';
 import type { Opportunity } from '@/lib/opportunities';
 import type { Service } from '@/lib/services';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
-import type { Worker } from '@/lib/raaha-workers';
+import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { HireRequest } from '@/lib/raaha-requests';
 import type { StairspaceListing } from '@/lib/stairspace-listings';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyService } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
+import type { UsedItem } from '@/lib/used-items';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -219,7 +220,7 @@ export const useRequestsData = () => {
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
     return {
         requests: useStoreData((s) => s.raahaRequests),
-        setRaahaRequests,
+        setRaahaRequests: setRaahaRequests,
         isClient,
     };
 };
@@ -230,6 +231,17 @@ export const useAssetsData = () => {
     return {
         assets: useStoreData((s) => s.assets),
         setAssets: (updater: (prev: AppState['assets']) => AppState['assets']) => store.set(state => ({ ...state, assets: updater(state.assets) })),
+        isClient,
+    };
+};
+
+// Used Items
+export const setUsedItems = (updater: (prev: UsedItem[]) => UsedItem[]) => store.set((state) => ({ ...state, usedItems: updater(state.usedItems) }));
+export const useUsedItemsData = () => {
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    return {
+        items: useStoreData((s) => s.usedItems),
+        setItems: setUsedItems,
         isClient,
     };
 };

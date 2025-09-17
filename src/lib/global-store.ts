@@ -28,6 +28,7 @@ import { initialBeautyServices, type BeautyService } from './beauty-services';
 import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
 import { initialCostSettings, type CostRate } from './cost-settings';
 import { initialAssets, type Asset } from './assets';
+import { initialUsedItems, type UsedItem } from './used-items';
 
 
 export interface CartItem extends Product {
@@ -55,6 +56,7 @@ export type AppState = {
   beautyAppointments: BeautyAppointment[];
   costSettings: CostRate[];
   assets: Asset[];
+  usedItems: UsedItem[];
 };
 
 export const initialState: AppState = {
@@ -78,6 +80,7 @@ export const initialState: AppState = {
   beautyAppointments: initialBeautyAppointments,
   costSettings: initialCostSettings,
   assets: initialAssets,
+  usedItems: initialUsedItems,
 };
 
 // The single source of truth for our application's shared state.

@@ -3,7 +3,7 @@
 
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { GitBranch } from "lucide-react";
+import { GitBranch, Recycle } from "lucide-react";
 import type { Service } from "@/lib/services";
 
 const ServiceCard = ({ service }: { service: Service }) => (

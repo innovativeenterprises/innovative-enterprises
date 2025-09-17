@@ -1,4 +1,5 @@
-import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car, Trophy, VrHeadset } from 'lucide-react';
+
+import { Cloud, Bot, ShieldCheck, ShoppingCart, Megaphone, BarChart, FileText, Languages, Scale, Briefcase, WalletCards, NotebookText, Users, Server, Mic, Shield, Video, UserRoundCheck, Lock, Database, BrainCircuit, HardHat, Building2, GraduationCap, Gem, GanttChartSquare, Package, Lightbulb, Home, GitBranch, Search, Zap, Handshake, Car, Trophy, VrHeadset, Recycle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
 import BusinessHubIcon from '@/components/icons/business-hub-icon';
@@ -41,6 +42,14 @@ export const initialServices: Service[] = [
     enabled: true,
     href: "/khidma",
     category: "Digital Transformations"
+  },
+  {
+    icon: Recycle,
+    title: "Swap & Sell Hub",
+    description: "An AI-powered marketplace for selling, gifting, or donating used or old items with automated classification and pricing.",
+    enabled: true,
+    href: "/swap-and-sell",
+    category: "Digital Transformations",
   },
   // Data Analytics
   {
