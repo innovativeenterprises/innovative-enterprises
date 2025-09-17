@@ -5,12 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, BookUser, BarChart3, XCircle, CheckCircle, Handshake, Briefcase, DollarSign } from "lucide-react";
 import Link from "next/link";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Professional Training & Education Hub",
-  description: "A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing, networking, and business management.",
-};
 
 const challenges = [
     { icon: XCircle, text: "Limited marketing knowledge and resources." },
