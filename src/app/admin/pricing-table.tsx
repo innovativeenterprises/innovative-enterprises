@@ -13,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing";
-import { initialPricing } from "@/lib/pricing";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -77,9 +76,13 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() {
-    const { toast } = useToast();
+export default function PricingTable({ 
+    pricing: initialPricing,
+} : { 
+    pricing: Pricing[], 
+}) {
     const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+    const { toast } = useToast();
     const [isClient, setIsClient] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);

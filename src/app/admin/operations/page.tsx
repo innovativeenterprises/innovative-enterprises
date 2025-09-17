@@ -1,4 +1,5 @@
 
+
 import ProForm from "@/app/admin/operations/pro-form";
 import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
@@ -9,6 +10,7 @@ import KnowledgeTable from '../operations/knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import CostSettingsTable from "./cost-settings-table";
+import { initialCostSettings } from "@/lib/cost-settings";
 
 export default function AdminOperationsPage() {
 
@@ -31,7 +33,6 @@ export default function AdminOperationsPage() {
 
         <ThemeGenerator />
         <KnowledgeTable />
-        <CostSettingsTable />
         
         <div className="pt-8">
            <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>

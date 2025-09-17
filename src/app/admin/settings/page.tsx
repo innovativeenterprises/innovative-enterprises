@@ -25,8 +25,8 @@ import { useSettingsData, setSettings } from "@/hooks/use-global-store-data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { fileToDataURI } from "@/lib/utils";
 import CostSettingsTable from "../operations/cost-settings-table";
-import { initialCostSettings } from "@/lib/cost-settings";
 import PricingTable from "../pricing-table";
+import { initialCostSettings } from "@/lib/cost-settings";
 import { initialPricing } from "@/lib/pricing";
 
 const SanadPricingSchema = z.object({
@@ -719,7 +719,7 @@ export default function AdminSettingsPage() {
             <TabsContent value="costing" className="mt-6">
                 <div className="space-y-8">
                     <CostSettingsTable initialCostSettings={initialCostSettings} />
-                    <PricingTable initialPricing={initialPricing} />
+                    <PricingTable pricing={initialPricing} />
                     <PricingAndBranding />
                 </div>
             </TabsContent>
