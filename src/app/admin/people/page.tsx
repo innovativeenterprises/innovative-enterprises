@@ -1,10 +1,17 @@
 
-import StaffTable from "@/app/admin/staff-table";
-import { initialStaffData } from "@/lib/agents";
 
-export default function AdminPeoplePage() {
-  // Data is fetched on the server and passed to the client component.
-  const { leadership, staff, agentCategories } = initialStaffData;
+import StaffTable from "@/app/admin/staff-table";
+import { getStaffData } from "@/lib/firestore";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "People Management | Admin Dashboard",
+  description: "Manage your internal human and AI workforce.",
+};
+
+
+export default async function AdminPeoplePage() {
+  const { leadership, staff, agentCategories } = await getStaffData();
 
   return (
     <div className="space-y-8">

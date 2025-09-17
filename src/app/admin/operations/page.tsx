@@ -1,6 +1,6 @@
 
 import AdminOperationsClientPage from "./client-page";
-import { initialCostSettings } from "@/lib/cost-settings";
+import { getCostSettings } from "@/lib/firestore";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,8 +8,7 @@ export const metadata: Metadata = {
     description: 'A suite of internal AI tools to enhance business operations.'
 }
 
-export default function AdminOperationsPage() {
-    // Data is fetched on the server and passed to the client component.
-    const costSettings = initialCostSettings;
+export default async function AdminOperationsPage() {
+    const costSettings = await getCostSettings();
     return <AdminOperationsClientPage initialCostSettings={costSettings} />;
 }

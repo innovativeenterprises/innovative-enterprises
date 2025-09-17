@@ -12,23 +12,23 @@
  */
 
 import { initialSettings, type AppSettings } from './settings';
-import { initialProducts, type Product } from './products';
-import { initialProviders, type Provider } from './providers';
-import { initialServices, type Service } from './services';
-import { initialOpportunities, type Opportunity } from './opportunities';
-import { initialLeases, type SignedLease } from './leases';
-import { initialStairspaceRequests, type BookingRequest } from './stairspace-requests';
-import { initialStairspaceListings, type StairspaceListing } from './stairspace-listings';
-import { initialStaffData, type Agent, type AgentCategory } from './agents';
-import { initialAgencies as initialRaahaAgencies, type Agency as RaahaAgency } from './raaha-agencies';
-import { initialWorkers as initialRaahaWorkers, type Worker as RaahaWorker } from './raaha-workers';
-import { initialRequests as initialRaahaRequests, type HireRequest } from './raaha-requests';
-import { initialBeautyCenters, type BeautyCenter } from './beauty-centers';
-import { initialBeautyServices, type BeautyService } from './beauty-services';
-import { initialBeautyAppointments, type BeautyAppointment } from './beauty-appointments';
-import { initialCostSettings, type CostRate } from './cost-settings';
-import { initialAssets, type Asset } from './assets';
-import { initialUsedItems, type UsedItem } from './used-items';
+import type { Product } from './products.schema';
+import type { Provider } from './providers.schema';
+import type { Service } from './services.schema';
+import type { Opportunity } from './opportunities.schema';
+import type { SignedLease } from './leases.schema';
+import type { BookingRequest } from './stairspace-requests.schema';
+import type { StairspaceListing } from './stairspace.schema';
+import type { Agent, AgentCategory } from './agents.schema';
+import type { Agency as RaahaAgency } from './raaha-agencies.schema';
+import type { Worker as RaahaWorker } from './raaha-workers.schema';
+import type { HireRequest } from './raaha-requests.schema';
+import type { BeautyCenter } from './beauty-centers.schema';
+import type { BeautyService } from './beauty-services.schema';
+import type { BeautyAppointment } from './beauty-appointments.schema';
+import type { CostRate } from './cost-settings.schema';
+import type { Asset } from './assets.schema';
+import type { UsedItem } from './used-items.schema';
 
 
 export interface CartItem extends Product {
@@ -62,25 +62,25 @@ export type AppState = {
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  products: initialProducts,
-  providers: initialProviders,
-  opportunities: initialOpportunities,
-  services: initialServices,
-  signedLeases: initialLeases,
-  stairspaceRequests: initialStairspaceRequests,
-  stairspaceListings: initialStairspaceListings,
-  leadership: initialStaffData.leadership,
-  staff: initialStaffData.staff,
-  agentCategories: initialStaffData.agentCategories,
-  raahaAgencies: initialRaahaAgencies,
-  raahaWorkers: initialRaahaWorkers,
-  raahaRequests: initialRaahaRequests,
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautyAppointments: initialBeautyAppointments,
-  costSettings: initialCostSettings,
-  assets: initialAssets,
-  usedItems: initialUsedItems,
+  products: [],
+  providers: [],
+  opportunities: [],
+  services: [],
+  signedLeases: [],
+  stairspaceRequests: [],
+  stairspaceListings: [],
+  leadership: [],
+  staff: [],
+  agentCategories: [],
+  raahaAgencies: [],
+  raahaWorkers: [],
+  raahaRequests: [],
+  beautyCenters: [],
+  beautyServices: [],
+  beautyAppointments: [],
+  costSettings: [],
+  assets: [],
+  usedItems: [],
 };
 
 // The single source of truth for our application's shared state.

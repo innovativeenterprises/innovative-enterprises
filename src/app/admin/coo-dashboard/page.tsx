@@ -1,7 +1,8 @@
+
 import CooDashboardClient from './client-page';
 import type { Metadata } from 'next';
-import { initialProducts } from '@/lib/products';
-import { initialProviders } from '@/lib/providers';
+import { getProducts } from '@/lib/products';
+import { getProviders } from '@/lib/providers';
 import { kpiData } from '@/lib/cfo-data';
 
 export const metadata: Metadata = {
@@ -9,10 +10,9 @@ export const metadata: Metadata = {
   description: "JADE's real-time operational analysis of the entire business ecosystem.",
 };
 
-export default function CooDashboardPage() {
-    // Data is fetched on the server and passed down as props.
-    const products = initialProducts;
-    const providers = initialProviders;
+export default async function CooDashboardPage() {
+    const products = await getProducts();
+    const providers = await getProviders();
 
     return <CooDashboardClient 
         initialProducts={products}

@@ -1,5 +1,4 @@
 
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network } from "lucide-react";
 import Link from "next/link";
@@ -8,14 +7,12 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { initialProducts } from "@/lib/products";
-import { initialProviders } from "@/lib/providers";
-import { initialStaffData } from "@/lib/agents";
+import { getProducts, getProviders, getStaffData } from "@/lib/firestore";
 
-export default function AdminDashboardPage() {
-  const products = initialProducts;
-  const providers = initialProviders;
-  const { leadership, staff, agentCategories } = initialStaffData;
+export default async function AdminDashboardPage() {
+  const products = await getProducts();
+  const providers = await getProviders();
+  const { leadership, staff, agentCategories } = await getStaffData();
 
   const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
   const totalStaff = leadership.length + staff.length;

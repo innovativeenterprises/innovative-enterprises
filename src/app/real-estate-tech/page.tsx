@@ -1,8 +1,9 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, Building2, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart } from "lucide-react";
 import Link from "next/link";
-import { initialProducts } from "@/lib/products";
+import { getProducts } from "@/lib/firestore";
 import type { Product } from "@/lib/products";
 import type { Metadata } from 'next';
 
@@ -57,8 +58,9 @@ const ProductCard = ({ product }: { product: Product }) => {
 )};
 
 
-export default function RealEstateTechPage() {
-    const realEstateProducts = initialProducts.filter(p => p.category === "Real Estate Tech" && p.enabled);
+export default async function RealEstateTechPage() {
+    const allProducts = await getProducts();
+    const realEstateProducts = allProducts.filter(p => p.category === "Real Estate Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

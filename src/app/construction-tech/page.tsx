@@ -1,8 +1,9 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren } from "lucide-react";
 import Link from "next/link";
-import { initialProducts } from "@/lib/products";
+import { getProducts } from "@/lib/firestore";
 import type { Product } from "@/lib/products";
 import type { Metadata } from 'next';
 
@@ -59,8 +60,9 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-export default function ConstructionTechPage() {
-    const contechProducts = initialProducts.filter(p => p.category === "Construction Tech" && p.enabled);
+export default async function ConstructionTechPage() {
+    const allProducts = await getProducts();
+    const contechProducts = allProducts.filter(p => p.category === "Construction Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

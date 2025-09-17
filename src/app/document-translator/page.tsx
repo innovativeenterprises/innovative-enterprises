@@ -1,9 +1,9 @@
+
 import TranslationForm from "./translation-form";
 import { Languages, FileText, Banknote, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Pricing, PricingGroup } from '@/lib/pricing';
-import { initialPricing } from '@/lib/pricing';
-import { initialSettings } from '@/lib/settings';
+import type { Pricing, PricingGroup } from '@/lib/pricing.schema';
+import { getPricing, getSettings } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -86,9 +86,11 @@ const PriceList = ({ pricing }: { pricing: Pricing[] }) => {
 }
 
 
-export default function DocumentTranslatorPage() {
-  const pricing = initialPricing;
-  const settings = initialSettings;
+export default async function DocumentTranslatorPage() {
+  const [pricing, settings] = await Promise.all([
+    getPricing(),
+    getSettings(),
+  ]);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

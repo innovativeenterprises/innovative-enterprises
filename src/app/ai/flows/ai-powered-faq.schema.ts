@@ -6,7 +6,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { initialStaffData } from '@/lib/agents';
+import { initialStaffData } from '@/lib/agents.schema';
 
 export const AnswerQuestionInputSchema = z.object({
   question: z.string().describe('The user question about Innovative Enterprises.'),

@@ -1,8 +1,8 @@
+
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { initialProviders } from "@/lib/providers";
-import { initialAssets } from "@/lib/assets";
+import { getProviders, getAssets } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,10 +10,11 @@ export const metadata: Metadata = {
   description: "Manage your external network of providers and rental assets.",
 };
 
-export default function AdminNetworkPage() {
-  // Data is now fetched on the server and passed down as props.
-  const providers = initialProviders;
-  const assets = initialAssets;
+export default async function AdminNetworkPage() {
+  const [providers, assets] = await Promise.all([
+    getProviders(),
+    getAssets(),
+  ]);
 
   return (
     <div className="space-y-8">

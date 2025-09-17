@@ -1,5 +1,5 @@
 import AgentList from "@/components/agent-list";
-import { initialStaffData } from "@/lib/agents";
+import { initialStaffData } from "@/lib/agents.schema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
