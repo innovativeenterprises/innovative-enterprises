@@ -11,9 +11,13 @@ export const metadata: Metadata = {
 };
 
 export default function AgencyDashboardPage() {
+    const agencies = initialBeautyCenters;
+    const services = initialBeautyServices;
+    const appointments = initialBeautyAppointments;
+
     return <AgencyDashboardClient 
-        initialAgencies={initialBeautyCenters}
-        initialServices={initialBeautyServices}
-        initialAppointments={initialBeautyAppointments}
+        initialAgencies={agencies}
+        initialServices={services}
+        initialAppointments={appointments}
     />;
 }

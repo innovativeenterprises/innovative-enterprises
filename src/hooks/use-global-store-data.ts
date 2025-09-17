@@ -57,7 +57,7 @@ export const useCartData = () => {
 
 // Signed Leases
 export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set((state) => ({ ...state, signedLeases: updater(state.signedLeases) }));
-export const useLeasesData = () => {
+export const useSignedLeasesData = () => {
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
     return {
         leases: useStoreData((s) => s.signedLeases),
@@ -189,7 +189,7 @@ export const useBeautyData = () => {
         appointments: useStoreData(s => s.beautyAppointments),
         setAgencies: setBeautyCenters,
         setServices: setBeautyServices,
-        setAppointments,
+        setAppointments: setBeautyAppointments,
         isClient,
     };
 };
