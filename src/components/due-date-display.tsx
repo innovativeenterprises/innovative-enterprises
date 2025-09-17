@@ -10,7 +10,7 @@ export const DueDateDisplay = ({
   className,
   prefix = "Due:",
 }: {
-  date?: string;
+  date?: string | Date;
   className?: string;
   prefix?: string;
 }) => {
@@ -61,11 +61,11 @@ export const DueDateDisplay = ({
   
   // After hydration on the client, render the actual formatted date.
   return (
-    <div className={`text-sm text-muted-foreground ${className}`}>
+    <div className={cn("text-sm text-muted-foreground", className)}>
       {displayState.formattedDate}
       {displayState.daysRemaining !== null &&
         (displayState.daysRemaining >= 0 ? (
-          <span className={displayState.daysRemaining < 7 ? 'text-destructive font-medium' : ''}>
+          <span className={cn('font-medium', displayState.daysRemaining < 7 ? 'text-destructive' : 'text-muted-foreground')}>
             {' '}
             ({displayState.daysRemaining} days left)
           </span>

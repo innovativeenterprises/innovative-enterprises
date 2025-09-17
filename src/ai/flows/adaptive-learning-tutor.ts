@@ -6,12 +6,20 @@
  */
 
 import { ai } from '@/ai/genkit';
-import {
-    AdaptiveTutorInputSchema,
-    AdaptiveTutorInput,
-    AdaptiveTutorOutputSchema,
-    AdaptiveTutorOutput,
-} from './adaptive-learning-tutor.schema';
+import { z } from 'zod';
+
+export const AdaptiveTutorInputSchema = z.object({
+  topic: z.string().describe("The topic or concept the student is studying."),
+  struggleDescription: z.string().describe("The student's own words describing what they are finding difficult."),
+});
+export type AdaptiveTutorInput = z.infer<typeof AdaptiveTutorInputSchema>;
+
+export const AdaptiveTutorOutputSchema = z.object({
+  tailoredExplanation: z.string().describe("A clear, simple explanation of the concept, tailored to the student's struggle."),
+  analogy: z.string().describe("A relatable, real-world analogy to help the student build intuition."),
+  practiceQuestion: z.string().describe("A simple practice question to test understanding."),
+});
+export type AdaptiveTutorOutput = z.infer<typeof AdaptiveTutorOutputSchema>;
 
 
 export async function generateAdaptiveLesson(input: AdaptiveTutorInput): Promise<AdaptiveTutorOutput> {
