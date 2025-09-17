@@ -1,5 +1,4 @@
 
-
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
@@ -33,12 +32,13 @@ export default function AdminContentPage() {
                 </p>
             </div>
             <Tabs defaultValue="services" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
+                <TabsList className="grid w-full grid-cols-6">
                     <TabsTrigger value="services">Services</TabsTrigger>
                     <TabsTrigger value="products">Products</TabsTrigger>
                     <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
                     <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
                     <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
+                    <TabsTrigger value="gift-cards">Hadeeya Gift Cards</TabsTrigger>
                 </TabsList>
                 <TabsContent value="services" className="mt-6">
                     <ServiceTable initialServices={services} />
@@ -54,6 +54,9 @@ export default function AdminContentPage() {
                 </TabsContent>
                 <TabsContent value="pos" className="mt-6">
                     <PosProductTable initialProducts={posProducts} />
+                </TabsContent>
+                 <TabsContent value="gift-cards" className="mt-6">
+                   <p>Hadeeya Gift Card management has been moved to its own admin page.</p>
                 </TabsContent>
             </Tabs>
         </div>
