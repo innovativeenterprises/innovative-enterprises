@@ -1,11 +1,11 @@
 
+
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { initialPricing } from "@/lib/pricing";
 import { initialProducts } from "@/lib/products";
 import { initialServices } from "@/lib/services";
 import { initialClients, initialTestimonials } from "@/lib/clients";
@@ -20,7 +20,6 @@ export default function AdminContentPage() {
     const stages = initialStages;
     const clients = initialClients;
     const testimonials = initialTestimonials;
-    const pricing = initialPricing;
     const posProducts = initialPosProducts;
 
     return (
@@ -49,7 +48,7 @@ export default function AdminContentPage() {
                     <ClientTable initialClients={clients} initialTestimonials={testimonials} />
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-6">
-                    <PricingTable initialPricing={pricing} />
+                    <PricingTable />
                 </TabsContent>
                 <TabsContent value="pos" className="mt-6">
                     <PosProductTable initialProducts={posProducts} />
