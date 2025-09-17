@@ -1,4 +1,3 @@
-
 # The INNOVATIVE ENTERPRISES Story: A Playbook for Building an AI-Powered Ecosystem
 
 **Version:** 1.0
