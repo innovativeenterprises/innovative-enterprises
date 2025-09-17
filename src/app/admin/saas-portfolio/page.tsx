@@ -10,6 +10,18 @@ export const metadata: Metadata = {
 
 export default function SaasPortfolioPage() {
     return (
-        <SaasPortfolioClientPage saasProducts={saasProducts} />
+      <div className="bg-background min-h-[calc(100vh-8rem)]">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-primary">SaaS Portfolio</h1>
+            <p className="mt-4 text-lg text-muted-foreground">
+                A complete overview of all our digital products and platforms.
+            </p>
+          </div>
+          <div className="mt-12">
+            <SaasPortfolioClientPage saasProducts={saasProducts} />
+          </div>
+        </div>
+      </div>
     );
 }
