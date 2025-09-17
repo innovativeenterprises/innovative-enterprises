@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function StockClearPage() {
+    const stockItems = initialStockItems;
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -23,7 +24,7 @@ export default function StockClearPage() {
                     </p>
                 </div>
                 <div className="max-w-6xl mx-auto mt-12">
-                     <StockClearClientPage initialItems={initialStockItems} />
+                     <StockClearClientPage initialItems={stockItems} />
                 </div>
             </div>
         </div>

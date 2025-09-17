@@ -9,9 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function StockClearAdminPage() {
+    const stockItems = initialStockItems;
     return (
          <div className="space-y-8">
-            <StockClearClientPage initialItems={initialStockItems} />
+            <StockClearClientPage initialItems={stockItems} />
         </div>
     );
 }

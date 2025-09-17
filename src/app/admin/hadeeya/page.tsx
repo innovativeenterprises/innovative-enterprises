@@ -8,5 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default function HadeeyaAdminPage() {
-    return <HadeeyaAdminPageClient initialGiftCards={initialGiftCards} />;
+    const giftCards = initialGiftCards;
+    return <HadeeyaAdminPageClient initialGiftCards={giftCards} />;
 }

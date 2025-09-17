@@ -10,5 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function DriveSyncAiPage() {
-    return <DriveSyncClientPage initialCars={initialCars} initialAgencies={initialRentalAgencies} />;
+    const cars = initialCars;
+    const agencies = initialRentalAgencies;
+    return <DriveSyncClientPage initialCars={cars} initialAgencies={agencies} />;
 }
