@@ -27,6 +27,12 @@ import type { Asset } from '@/lib/assets.schema';
 import type { Client, Testimonial } from '@/lib/clients.schema';
 import type { Car } from '@/lib/cars.schema';
 import type { GiftCard } from '@/lib/gift-cards.schema';
+import type { Student } from '@/lib/students.schema';
+import type { Community } from '@/lib/communities';
+import type { CommunityEvent } from '@/lib/community-events';
+import type { CommunityFinance } from '@/lib/community-finances';
+import type { CommunityMember } from '@/lib/community-members';
+import type { JobPosting } from '@/lib/alumni-jobs';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -324,6 +330,42 @@ export const useGiftCardsData = () => {
     return {
         giftCards: useStoreData((s) => s.giftCards),
         setGiftCards,
+        isClient,
+    };
+}
+
+// Members
+export const useMembersData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setMembers = (updater: (prev: AppState['communityMembers']) => AppState['communityMembers']) => store.set((state) => ({ ...state, communityMembers: updater(state.communityMembers) }));
+    return {
+        members: useStoreData((s) => s.communityMembers),
+        setMembers,
+        isClient,
+    };
+}
+
+// Events
+export const useEventsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setEvents = (updater: (prev: AppState['communityEvents']) => AppState['communityEvents']) => store.set((state) => ({ ...state, communityEvents: updater(state.communityEvents) }));
+    return {
+        events: useStoreData((s) => s.communityEvents),
+        setEvents,
+        isClient,
+    };
+}
+
+// Alumni Jobs
+export const useAlumniJobsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setAlumniJobs = (updater: (prev: AppState['alumniJobs']) => AppState['alumniJobs']) => store.set((state) => ({ ...state, alumniJobs: updater(state.alumniJobs) }));
+    return {
+        jobs: useStoreData((s) => s.alumniJobs),
+        setAlumniJobs,
         isClient,
     };
 }

@@ -1,14 +1,18 @@
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Briefcase, Calendar, GraduationCap, HandCoins, Building2, User, MapPin } from "lucide-react";
 import Link from "next/link";
-import { initialMembers, type CommunityMember } from '@/lib/community-members';
-import { initialEvents, type CommunityEvent } from '@/lib/community-events';
-import { initialJobs, type JobPosting } from '@/lib/alumni-jobs';
+import { useMembersData, useEventsData, useAlumniJobsData } from "@/hooks/use-global-store-data";
+import type { CommunityMember } from '@/lib/community-members';
+import type { CommunityEvent } from '@/lib/community-events';
+import type { JobPosting } from '@/lib/alumni-jobs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import type { Metadata } from 'next';
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
   title: "AlumniConnect | Innovative Enterprises",
@@ -51,9 +55,15 @@ const JobCard = ({ job }: { job: JobPosting }) => (
 );
 
 export default function AlumniConnectPage() {
-    const alumni = initialMembers.filter(m => m.status === 'Active');
-    const events = initialEvents.slice(0, 3);
-    const jobs = initialJobs.slice(0, 3);
+    const { members, isClient: isMembersClient } = useMembersData();
+    const { events, isClient: isEventsClient } = useEventsData();
+    const { jobs, isClient: isJobsClient } = useAlumniJobsData();
+    
+    const isClient = isMembersClient && isEventsClient && isJobsClient;
+
+    const alumni = isClient ? members.filter(m => m.status === 'Active').slice(0,4) : [];
+    const upcomingEvents = isClient ? events.slice(0, 3) : [];
+    const jobPostings = isClient ? jobs.slice(0, 3) : [];
 
     return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -77,7 +87,7 @@ export default function AlumniConnectPage() {
                         <CardDescription>Connect with fellow graduates.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid md:grid-cols-2 gap-4">
-                        {alumni.slice(0,4).map(member => <MemberCard key={member.id} member={member} />)}
+                        {!isClient ? Array.from({length: 4}).map((_, i) => <Skeleton key={i} className="h-20 w-full" />) : alumni.map(member => <MemberCard key={member.id} member={member} />)}
                     </CardContent>
                     <CardFooter>
                          <Button variant="outline" className="w-full" disabled>View Full Directory (Coming Soon)</Button>
@@ -91,7 +101,7 @@ export default function AlumniConnectPage() {
                         <CardDescription>Join our upcoming alumni meetups and networking events.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        {events.map(event => <EventCard key={event.id} event={event} />)}
+                        {!isClient ? Array.from({length: 3}).map((_, i) => <Skeleton key={i} className="h-16 w-full" />) : upcomingEvents.map(event => <EventCard key={event.id} event={event} />)}
                     </CardContent>
                      <CardFooter>
                          <Button variant="outline" className="w-full" disabled>View All Events (Coming Soon)</Button>
@@ -105,7 +115,7 @@ export default function AlumniConnectPage() {
                         <CardDescription>Explore opportunities from our partner network.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        {jobs.map(job => <JobCard key={job.id} job={job} />)}
+                        {!isClient ? Array.from({length: 3}).map((_, i) => <Skeleton key={i} className="h-16 w-full" />) : jobPostings.map(job => <JobCard key={job.id} job={job} />)}
                     </CardContent>
                      <CardFooter>
                          <Button variant="outline" className="w-full" disabled>View All Jobs (Coming Soon)</Button>
@@ -140,7 +150,6 @@ export default function AlumniConnectPage() {
                  </Card>
             </div>
         </div>
-
       </div>
     </div>
     );

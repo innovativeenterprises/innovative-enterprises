@@ -52,6 +52,31 @@ import { initialStages } from './stages';
 import { getCostSettings, getProviders } from './firestore';
 import { initialCostSettings } from './cost-settings';
 import { initialProviders } from './providers';
+import { initialStaffData } from './agents';
+import { initialRaahaAgencies } from './raaha-agencies';
+import { initialRaahaWorkers } from './raaha-workers';
+import { initialRaahaRequests } from './raaha-requests';
+import { initialLeases } from './leases';
+import { initialOpportunities } from './opportunities';
+import { initialStairspaceRequests } from './stairspace-requests';
+import { initialStairspaceListings } from './stairspace-listings';
+import { initialBeautyCenters } from './beauty-centers';
+import { initialBeautyServices } from './beauty-services';
+import { initialBeautyAppointments } from './beauty-appointments';
+import { initialAssets } from './assets';
+import { initialUsedItems } from './used-items';
+import { initialGiftCards } from './gift-cards';
+import { initialStudents } from './students';
+import { initialCommunities } from './communities';
+import { initialEvents } from './community-events';
+import { initialFinances } from './community-finances';
+import { initialMembers } from './community-members';
+import { initialAlumniJobs } from './alumni-jobs';
+import { initialRentalAgencies } from './rental-agencies';
+import { initialCars } from './cars';
+import { saasProducts } from './saas-products';
+import { initialStockItems } from './stock-items';
+
 
 export interface CartItem extends PosProduct {
   quantity: number;
@@ -105,38 +130,38 @@ export const initialState: AppState = {
   cart: [],
   products: initialProducts,
   providers: initialProviders,
-  opportunities: [],
+  opportunities: initialOpportunities,
   services: initialServices,
-  signedLeases: [],
-  stairspaceRequests: [],
-  stairspaceListings: [],
-  leadership: [],
-  staff: [],
-  agentCategories: [],
-  raahaAgencies: [],
-  raahaWorkers: [],
-  raahaRequests: [],
-  beautyCenters: [],
-  beautyServices: [],
-  beautyAppointments: [],
+  signedLeases: initialLeases,
+  stairspaceRequests: initialStairspaceRequests,
+  stairspaceListings: initialStairspaceListings,
+  leadership: initialStaffData.leadership,
+  staff: initialStaffData.staff,
+  agentCategories: initialStaffData.agentCategories,
+  raahaAgencies: initialRaahaAgencies,
+  raahaWorkers: initialRaahaWorkers,
+  raahaRequests: initialRaahaRequests,
+  beautyCenters: initialBeautyCenters,
+  beautyServices: initialBeautyServices,
+  beautyAppointments: initialBeautyAppointments,
   costSettings: initialCostSettings,
-  assets: [],
-  usedItems: [],
+  assets: initialAssets,
+  usedItems: initialUsedItems,
   clients: initialClients,
   testimonials: initialTestimonials,
-  giftCards: [],
-  students: [],
-  communities: [],
-  communityEvents: [],
-  communityFinances: [],
-  communityMembers: [],
-  alumniJobs: [],
-  rentalAgencies: [],
-  cars: [],
+  giftCards: initialGiftCards,
+  students: initialStudents,
+  communities: initialCommunities,
+  communityEvents: initialEvents,
+  communityFinances: initialFinances,
+  communityMembers: initialMembers,
+  alumniJobs: initialAlumniJobs,
+  rentalAgencies: initialRentalAgencies,
+  cars: initialCars,
   posProducts: initialPosProducts,
   dailySales: initialDailySales,
-  saasProducts: [],
-  stockItems: [],
+  saasProducts: saasProducts,
+  stockItems: initialStockItems,
   pricing: initialPricing,
 };
 

@@ -1,4 +1,5 @@
 
+
 import type { Product } from './products.schema';
 
 export const initialStoreProducts: Product[] = [
@@ -408,5 +409,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/education-tech/lesson-gamifier",
+    },
+     {
+        id: 28,
+        name: "AlumniConnect",
+        description: "A comprehensive digital platform for universities to engage their alumni network, fostering connections and professional opportunities.",
+        stage: "Live & Operating",
+        category: "Education Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop",
+        aiHint: "university alumni",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/education-tech/alumni-connect",
     }
 ];
