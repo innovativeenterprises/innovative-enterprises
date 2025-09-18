@@ -61,7 +61,7 @@ export default function AdminLayoutClient({
       { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
       { href: '/admin/saas-portfolio', label: 'SaaS Portfolio', icon: Package },
       { href: '/admin/opportunities', label: 'Opportunities', icon: Trophy },
-      { href: '/admin/content', label: 'Site Content', icon: FileText },
+      { href: '/admin/client-table', label: 'Clients & Testimonials', icon: Users },
   ];
   
   const networkAndPeople = [

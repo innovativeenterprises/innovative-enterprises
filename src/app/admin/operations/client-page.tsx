@@ -13,13 +13,22 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import CostSettingsTable from "./cost-settings-table";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { KnowledgeDocument } from "@/lib/knowledge";
+import PosProductTable from "../pos-product-table";
+import PricingTable from "../pricing-table";
+import type { PosProduct } from "@/lib/pos-data.schema";
+import type { Pricing } from "@/lib/pricing.schema";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AdminOperationsClientPage({ 
     initialCostSettings,
     initialKnowledgeBase,
+    initialPricing,
+    initialPosProducts,
 }: { 
     initialCostSettings: CostRate[],
     initialKnowledgeBase: KnowledgeDocument[],
+    initialPricing: Pricing[],
+    initialPosProducts: PosProduct[],
 }) {
 
   const internalTools = [
@@ -35,32 +44,46 @@ export default function AdminOperationsClientPage({
         <div>
             <h1 className="text-3xl font-bold">Operations</h1>
             <p className="text-muted-foreground">
-                A suite of internal AI tools to enhance business operations.
+                A suite of internal AI tools and configurations to enhance business operations.
             </p>
         </div>
 
-        <ThemeGenerator />
-        <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
-        <CostSettingsTable initialCostSettings={initialCostSettings} />
-        
-        <div className="pt-8">
-           <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>
-            <Accordion type="single" collapsible className="w-full">
-              {internalTools.map(tool => (
-                 <AccordionItem value={tool.id} key={tool.id}>
-                    <AccordionTrigger>
-                        <div className="flex items-center gap-3">
-                            <tool.icon className="h-5 w-5 text-primary" />
-                            <span className="text-lg font-semibold">{tool.title}</span>
-                        </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-4">
-                        {tool.component}
-                    </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-        </div>
+        <Tabs defaultValue="ai-tools" className="w-full">
+             <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
+                <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
+                <TabsTrigger value="costing">Costing & Pricing</TabsTrigger>
+            </TabsList>
+            <TabsContent value="ai-tools" className="mt-6 space-y-8">
+                 <ThemeGenerator />
+                <div className="pt-8">
+                    <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>
+                    <Accordion type="single" collapsible className="w-full">
+                    {internalTools.map(tool => (
+                        <AccordionItem value={tool.id} key={tool.id}>
+                            <AccordionTrigger>
+                                <div className="flex items-center gap-3">
+                                    <tool.icon className="h-5 w-5 text-primary" />
+                                    <span className="text-lg font-semibold">{tool.title}</span>
+                                </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="pt-4">
+                                {tool.component}
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                    </Accordion>
+                </div>
+            </TabsContent>
+            <TabsContent value="knowledge-base" className="mt-6">
+                <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
+            </TabsContent>
+             <TabsContent value="costing" className="mt-6 space-y-8">
+                <CostSettingsTable initialCostSettings={initialCostSettings} />
+                <PricingTable pricing={initialPricing} />
+                <PosProductTable initialProducts={initialPosProducts} />
+            </TabsContent>
+        </Tabs>
     </div>
   );
 }

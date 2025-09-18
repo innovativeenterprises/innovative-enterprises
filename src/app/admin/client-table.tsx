@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import type { Client, Testimonial } from "@/lib/clients";
+import type { Client, Testimonial } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
@@ -148,7 +148,7 @@ export default function ClientTable({ initialClients, initialTestimonials }: { i
     }
 
     return (
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="space-y-8">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Clients</CardTitle>
