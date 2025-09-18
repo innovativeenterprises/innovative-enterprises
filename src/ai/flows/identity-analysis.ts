@@ -49,7 +49,7 @@ const prompt = ai.definePrompt({
     -   If the primary document is an ID/Resident Card/Driving License, extract its details into the \`idCardDetails\` object.
 
     **Personal Details:**
-    -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID. If the name is split into Surname and Given Names fields in the source document, you MUST combine them into a single Full Name string in the \`personalDetails.fullName\` output field.
+    -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID. **Crucially, if the name is split into 'Surname' and 'Given Names' fields in the source document, you MUST combine them into a single 'fullName' string in the \`personalDetails.fullName\` output field.**
     -   **Email & Phone:** Find the primary contact email and phone number. These are almost always found only in the CV.
     -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document, prioritizing the Passport if both are available.
 
