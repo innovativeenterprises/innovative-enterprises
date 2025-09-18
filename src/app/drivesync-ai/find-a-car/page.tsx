@@ -8,16 +8,9 @@ import { Car } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import type { Metadata } from 'next';
 import Image from 'next/image';
-import type { Car as CarType } from '@/lib/cars';
+import type { Car as CarType } from '@/lib/cars.schema';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-
-export const metadata: Metadata = {
-  title: "AI Car Rental Assistant | DriveSync AI",
-  description: "Find the perfect rental car by telling our AI assistant what you need. Get personalized recommendations in seconds.",
-};
 
 const CarRecommendation = ({ car, reasoning }: { car: CarType, reasoning?: string }) => (
     <Card className="mt-4">
@@ -27,7 +20,7 @@ const CarRecommendation = ({ car, reasoning }: { car: CarType, reasoning?: strin
         </CardHeader>
         <CardContent>
             <div className="relative h-48 w-full rounded-md overflow-hidden">
-                <Image src={car.imageUrl} alt={`${"'" + car.make + "'"} ${car.model}`} fill className="object-cover" />
+                <Image src={car.imageUrl} alt={`${car.make} ${car.model}`} fill className="object-cover" />
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
                 <p><strong>Type:</strong> {car.type}</p>
@@ -57,7 +50,7 @@ export default function FindACarPage() {
             richResponse += `\n\nI recommend the **${result.recommendedCar.make} ${result.recommendedCar.model}**.`;
         }
         if (result.otherSuggestions && result.otherSuggestions.length > 0) {
-            richResponse += `\n\nI also found these other options: ${result.otherSuggestions.map(c => `${"'" + c.make + "'"} ${c.model}`).join(', ')}.`;
+            richResponse += `\n\nI also found these other options: ${result.otherSuggestions.map(c => `${c.make} ${c.model}`).join(', ')}.`;
         }
 
         // We can't directly render components in the chat, but we can pass structured data

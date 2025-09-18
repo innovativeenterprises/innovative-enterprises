@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import type { Car as CarType } from '@/lib/cars';
+import type { Car as CarType } from '@/lib/cars.schema';
 import type { RentalAgency } from '@/lib/rental-agencies';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -97,7 +97,7 @@ export default function DriveSyncClientPage({ initialCars, initialAgencies }: { 
                                             <TableRow key={car.id}>
                                                 <TableCell>
                                                     <div className="flex items-center gap-3">
-                                                         <Image src={car.imageUrl} alt={`${"'" + car.make + "'"} ${car.model}`} width={64} height={48} className="rounded-md object-cover"/>
+                                                         <Image src={car.imageUrl} alt={`${car.make} ${car.model}`} width={64} height={48} className="rounded-md object-cover"/>
                                                          <div>
                                                             <p className="font-medium">{car.make} {car.model}</p>
                                                             <p className="text-sm text-muted-foreground">{car.year}</p>
