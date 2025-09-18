@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -38,6 +39,17 @@ const FormSchema = z.object({
 });
 type FormValues = z.infer<typeof FormSchema>;
 
+interface ChatComponentProps {
+    agentName: string;
+    agentIcon: LucideIcon;
+    agentDescription: string;
+    welcomeMessage: string;
+    placeholder: string;
+    aiFlow: (input: { [key: string]: any }) => Promise<any>;
+    settings: AppSettings;
+    suggestedReplies?: string[];
+}
+
 export const ChatComponent = ({
     agentName,
     agentIcon: AgentIcon,
@@ -47,16 +59,7 @@ export const ChatComponent = ({
     aiFlow,
     settings,
     suggestedReplies: initialSuggestedReplies,
-}: {
-    agentName: string;
-    agentIcon: LucideIcon;
-    agentDescription: string;
-    welcomeMessage: string;
-    placeholder: string;
-    aiFlow: (input: { [key: string]: any }) => Promise<any>;
-    settings: AppSettings;
-    suggestedReplies?: string[];
-}) => {
+}: ChatComponentProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -97,8 +100,7 @@ export const ChatComponent = ({
     return () => {
       stopAudio();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [welcomeMessage, initialSuggestedReplies, stopAudio]);
 
   const handleTextToSpeech = async (text: string) => {
       stopAudio();
@@ -217,7 +219,7 @@ export const ChatComponent = ({
                                         ? 'bg-primary text-primary-foreground' 
                                         : 'bg-muted'
                                 )}>
-                                    <div className="text-sm whitespace-pre-wrap prose prose-sm max-w-full" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, '<br />') }} />
+                                    <div className="text-sm whitespace-pre-wrap prose prose-sm max-w-full" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\\n/g, '<br />') }} />
                                      {msg.itemAddedToCart && (
                                         <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex items-center gap-3">
                                             <div className="relative w-12 h-12 rounded-md overflow-hidden">
@@ -298,7 +300,6 @@ export const ChatComponent = ({
                                 }
                             }}
                             {...form.register("message")}
-                            name="message" // Pass name for react-hook-form
                         />
                          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                             <Button type="submit" size="icon" disabled={isLoading} variant="ghost"><Send className="h-5 w-5" /></Button>
