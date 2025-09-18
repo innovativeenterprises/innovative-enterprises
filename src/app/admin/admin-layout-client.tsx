@@ -52,6 +52,7 @@ export default function AdminLayoutClient({
 
   const dashboards = [
       { href: '/admin', label: 'Main Dashboard', icon: LayoutDashboard },
+      { href: '/admin/coo-dashboard', label: 'AI COO', icon: BrainCircuit },
   ];
 
   const finance = [

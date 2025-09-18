@@ -1,5 +1,4 @@
 
-
 'use server';
 import {answerQuestion as answerFaqQuestion} from './ai-powered-faq';
 import {analyzeApplication} from './admissions-agent';
@@ -44,6 +43,10 @@ import {analyzeExamSession} from './proctoring-agent';
 import {findHelpers} from './raaha-matcher';
 import {generateFacebookCover} from './facebook-cover-generator';
 import { analyzeUsedItem } from './used-item-analyzer';
+import { annotateImage } from './image-annotation';
+import { estimateFireSafety } from './fire-safety-estimator';
+import { generateBoqCategory, generateFullBoq } from './boq-generator';
+import { transformImage } from './image-transformer';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -93,5 +96,10 @@ export {
   analyzeExamSession,
   findHelpers,
   generateFacebookCover,
-  analyzeUsedItem
+  analyzeUsedItem,
+  annotateImage,
+  estimateFireSafety,
+  generateBoqCategory,
+  generateFullBoq,
+  transformImage,
 };
