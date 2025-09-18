@@ -91,6 +91,8 @@ export const initialState: AppState = {
 
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
+    // This was the error. It was merging the server data with stale empty arrays.
+    // The correct approach is to use the server data as the complete initial state.
     let state: AppState = { ...initialState, ...initState };
     const listeners = new Set<() => void>();
 
