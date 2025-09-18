@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import type { Client, Testimonial } from '@/lib/clients';
+import type { Client, Testimonial } from '@/lib/clients.schema';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
