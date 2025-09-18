@@ -1,12 +1,7 @@
 
 'use client';
 
-import { useRef, useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Download, Lightbulb, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { useRef } from "react";
 import { Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
 import Image from "next/image";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";

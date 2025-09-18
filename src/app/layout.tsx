@@ -4,7 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
-import { getServices, getProducts, getClients, getTestimonials, getProviders, getOpportunities, getSettings, getLeases, getStairspaceRequests, getStairspaceListings, getStaffData, getRaahaData, getBeautyData, getCostSettings, getAssets, getUsedItems, getAlumniJobs, getCars, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getDailySales, getGiftCards, getRentalAgencies, getSaasProducts, getStockItems, getStudents } from '@/lib/firestore';
+import { initialState } from '@/lib/global-store'; // Import the initial state
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,109 +54,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fetch all initial data needed for the global store here at the root.
-  const [
-    products, 
-    services, 
-    clients, 
-    testimonials, 
-    providers, 
-    opportunities, 
-    settings, 
-    signedLeases, 
-    stairspaceRequests,
-    stairspaceListings,
-    { leadership, staff, agentCategories },
-    { raahaAgencies, raahaWorkers, raahaRequests },
-    { beautyCenters, beautyServices, beautyAppointments },
-    costSettings,
-    assets,
-    usedItems,
-    alumniJobs,
-    cars,
-    communities,
-    communityEvents,
-    communityFinances,
-    communityMembers,
-    dailySales,
-    giftCards,
-    rentalAgencies,
-    saasProducts,
-    stockItems,
-    students
-  ] = await Promise.all([
-    getProducts(),
-    getServices(),
-    getClients(),
-    getTestimonials(),
-    getProviders(),
-    getOpportunities(),
-    getSettings(),
-    getLeases(),
-    getStairspaceRequests(),
-    getStairspaceListings(),
-    getStaffData(),
-    getRaahaData(),
-    getBeautyData(),
-    getCostSettings(),
-    getAssets(),
-    getUsedItems(),
-    getAlumniJobs(),
-    getCars(),
-    getCommunities(),
-    getCommunityEvents(),
-    getCommunityFinances(),
-    getCommunityMembers(),
-    getDailySales(),
-    getGiftCards(),
-    getRentalAgencies(),
-    getSaasProducts(),
-    getStockItems(),
-    getStudents(),
-  ]);
-
-  const initialData = { 
-    products, 
-    services, 
-    clients, 
-    testimonials, 
-    providers, 
-    opportunities, 
-    settings, 
-    signedLeases, 
-    stairspaceRequests,
-    stairspaceListings,
-    leadership, 
-    staff, 
-    agentCategories,
-    raahaAgencies, 
-    raahaWorkers, 
-    raahaRequests,
-    beautyCenters, 
-    beautyServices, 
-    beautyAppointments,
-    costSettings,
-    assets,
-    usedItems,
-    alumniJobs,
-    cars,
-    communities,
-    communityEvents,
-    communityFinances,
-    communityMembers,
-    dailySales,
-    giftCards,
-    rentalAgencies,
-    saasProducts,
-    stockItems,
-    students,
-  };
-
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <ClientLayout initialData={initialData}>{children}</ClientLayout>
+        <ClientLayout initialData={initialState}>{children}</ClientLayout>
       </body>
     </html>
   );

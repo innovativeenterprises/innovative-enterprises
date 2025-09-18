@@ -16,7 +16,6 @@ export default function CompanyProfileDownloader() {
     const [isClient, setIsClient] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
 
-    // Fetch data using hooks
     const staffData = useStaffData();
     const { services } = useServicesData();
     const { settings } = useSettingsData();

@@ -1,9 +1,8 @@
 
 'use server';
 
-import { getSettings } from "@/lib/firestore";
 import HeaderClient from "./header-client";
-import { Handshake, Store, Recycle, HomeWorkforceIcon as RaahaIcon, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2 } from "lucide-react";
+import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2 } from "lucide-react";
 import SanadHubIcon from "../icons/sanad-hub-icon";
 import BusinessHubIcon from "../icons/business-hub-icon";
 import AmeenSmartLockIcon from "../icons/ameen-smart-lock-icon";
@@ -11,6 +10,7 @@ import KhidmaIcon from "../icons/khidma-icon";
 import VmallIcon from "../icons/vmall-icon";
 import AppiIcon from "../icons/appi-icon";
 import { Gift, Warehouse } from "lucide-react";
+import { getSettings } from "@/lib/firestore";
 
 
 const solutions = [
@@ -40,7 +40,7 @@ const solutions = [
       href: "/raaha",
       description:
         "An AI-powered platform for domestic workforce agencies to streamline recruitment and management.",
-      icon: RaahaIcon,
+      icon: Home,
     },
      {
       title: "Ameen",
