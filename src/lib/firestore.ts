@@ -53,6 +53,7 @@ export const getClients = async () => { await delay(50); return initialClients; 
 export const getTestimonials = async () => { await delay(50); return initialTestimonials; };
 export const getPricing = async () => { await delay(50); return initialPricing; };
 export const getPosProducts = async () => { await delay(50); return initialPosProducts; };
+export const getDailySales = async () => { await delay(50); return initialDailySales; };
 export const getStages = async () => { await delay(50); return initialStages; };
 export const getAssets = async () => { await delay(50); return initialAssets; };
 export const getInvestors = async () => { await delay(50); return initialInvestors; };
@@ -85,7 +86,6 @@ export const getBeautyCenters = async () => { await delay(50); return initialBea
 export const getBeautyServices = async () => { await delay(50); return initialBeautyServices; };
 export const getBeautyAppointments = async () => { await delay(50); return initialBeautyAppointments; };
 export const getUsedItems = async () => { await delay(50); return initialUsedItems; };
-export const getDailySales = async () => { await delay(50); return initialDailySales; };
 export const getSettings = async () => { await delay(50); return initialSettings; };
 export const getKnowledgeBase = async (): Promise<KnowledgeDocument[]> => { await delay(50); return initialKnowledgeBase; };
 

@@ -1,5 +1,4 @@
 
-
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
