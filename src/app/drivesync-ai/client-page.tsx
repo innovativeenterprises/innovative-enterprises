@@ -97,7 +97,7 @@ export default function DriveSyncClientPage({ initialCars, initialAgencies }: { 
                                             <TableRow key={car.id}>
                                                 <TableCell>
                                                     <div className="flex items-center gap-3">
-                                                         <Image src={car.imageUrl} alt={`${car.make} ${car.model}`} width={64} height={48} className="rounded-md object-cover"/>
+                                                         <Image src={car.imageUrl} alt={`${"'" + car.make + "'"} ${car.model}`} width={64} height={48} className="rounded-md object-cover"/>
                                                          <div>
                                                             <p className="font-medium">{car.make} {car.model}</p>
                                                             <p className="text-sm text-muted-foreground">{car.year}</p>

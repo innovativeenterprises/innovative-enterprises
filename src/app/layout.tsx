@@ -5,7 +5,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
-import { getServices, getProducts, getClients, getTestimonials, getProviders, getOpportunities, getSettings, getLeases, getStairspaceRequests, getStairspaceListings, getStaffData, getRaahaData, getBeautyData, getCostSettings, getAssets, getUsedItems } from '@/lib/firestore';
+import { getServices, getProducts, getClients, getTestimonials, getProviders, getOpportunities, getSettings, getLeases, getStairspaceRequests, getStairspaceListings, getStaffData, getRaahaData, getBeautyData, getCostSettings, getAssets, getUsedItems, getAlumniJobs, getCars, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getDailySales, getGiftCards, getRentalAgencies, getSaasProducts, getStockItems, getStudents } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -72,7 +72,19 @@ export default async function RootLayout({
     { beautyCenters, beautyServices, beautyAppointments },
     costSettings,
     assets,
-    usedItems
+    usedItems,
+    alumniJobs,
+    cars,
+    communities,
+    communityEvents,
+    communityFinances,
+    communityMembers,
+    dailySales,
+    giftCards,
+    rentalAgencies,
+    saasProducts,
+    stockItems,
+    students
   ] = await Promise.all([
     getProducts(),
     getServices(),
@@ -90,6 +102,18 @@ export default async function RootLayout({
     getCostSettings(),
     getAssets(),
     getUsedItems(),
+    getAlumniJobs(),
+    getCars(),
+    getCommunities(),
+    getCommunityEvents(),
+    getCommunityFinances(),
+    getCommunityMembers(),
+    getDailySales(),
+    getGiftCards(),
+    getRentalAgencies(),
+    getSaasProducts(),
+    getStockItems(),
+    getStudents(),
   ]);
 
   const initialData = { 
@@ -115,6 +139,18 @@ export default async function RootLayout({
     costSettings,
     assets,
     usedItems,
+    alumniJobs,
+    cars,
+    communities,
+    communityEvents,
+    communityFinances,
+    communityMembers,
+    dailySales,
+    giftCards,
+    rentalAgencies,
+    saasProducts,
+    stockItems,
+    students,
   };
 
 

@@ -25,7 +25,7 @@ import { initialCommunities } from './communities';
 import { initialEvents } from './community-events';
 import { initialFinances } from './community-finances';
 import { initialMembers } from './community-members';
-import { initialJobs } from './alumni-jobs';
+import { initialAlumniJobs } from './alumni-jobs';
 import { initialRentalAgencies } from './rental-agencies';
 import { initialCars } from './cars';
 import { initialCostSettings } from './cost-settings';
@@ -34,6 +34,9 @@ import { initialBeautyServices } from './beauty-services';
 import { initialBeautyAppointments } from './beauty-appointments';
 import { initialUsedItems } from './used-items';
 import { initialSettings } from './settings';
+import { initialRaahaAgencies } from './raaha-agencies';
+import { initialRaahaWorkers } from './raaha-workers';
+import { initialRaahaRequests } from './raaha-requests';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -70,7 +73,7 @@ export const getCommunities = async () => { await delay(50); return initialCommu
 export const getCommunityEvents = async () => { await delay(50); return initialEvents; };
 export const getCommunityFinances = async () => { await delay(50); return initialFinances; };
 export const getCommunityMembers = async () => { await delay(50); return initialMembers; };
-export const getAlumniJobs = async () => { await delay(50); return initialJobs; };
+export const getAlumniJobs = async () => { await delay(50); return initialAlumniJobs; };
 export const getRentalAgencies = async () => { await delay(50); return initialRentalAgencies; };
 export const getCars = async () => { await delay(50); return initialCars; };
 export const getCostSettings = async () => { await delay(50); return initialCostSettings; };

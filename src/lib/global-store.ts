@@ -31,6 +31,18 @@ import type { Asset } from './assets.schema';
 import type { UsedItem } from './used-items.schema';
 import { initialSettings } from './settings';
 import type { Client, Testimonial } from './clients.schema';
+import type { GiftCard } from './gift-cards.schema';
+import type { Student } from './students.schema';
+import type { Community } from './communities';
+import type { CommunityEvent } from './community-events';
+import type { CommunityFinance } from './community-finances';
+import type { CommunityMember } from './community-members';
+import type { JobPosting } from './alumni-jobs';
+import type { RentalAgency } from './rental-agencies';
+import type { Car } from './cars.schema';
+import type { DailySales, PosProduct } from './pos-data.schema';
+import type { SaaSProduct, SaasCategory } from './saas-products.schema';
+import type { StockItem } from './stock-items.schema';
 
 
 export interface CartItem extends Product {
@@ -61,6 +73,19 @@ export type AppState = {
   usedItems: UsedItem[];
   clients: Client[];
   testimonials: Testimonial[];
+  giftCards: GiftCard[];
+  students: Student[];
+  communities: Community[];
+  communityEvents: CommunityEvent[];
+  communityFinances: CommunityFinance[];
+  communityMembers: CommunityMember[];
+  alumniJobs: JobPosting[];
+  rentalAgencies: RentalAgency[];
+  cars: Car[];
+  posProducts: PosProduct[];
+  dailySales: DailySales;
+  saasProducts: SaasCategory[];
+  stockItems: StockItem[];
 };
 
 export const initialState: AppState = {
@@ -87,6 +112,19 @@ export const initialState: AppState = {
   usedItems: [],
   clients: [],
   testimonials: [],
+  giftCards: [],
+  students: [],
+  communities: [],
+  communityEvents: [],
+  communityFinances: [],
+  communityMembers: [],
+  alumniJobs: [],
+  rentalAgencies: [],
+  cars: [],
+  posProducts: [],
+  dailySales: [],
+  saasProducts: [],
+  stockItems: [],
 };
 
 
