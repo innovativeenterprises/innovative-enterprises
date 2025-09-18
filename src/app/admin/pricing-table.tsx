@@ -101,6 +101,7 @@ export default function PricingTable({
         setIsDialogOpen(true);
     };
 
+
     return (
         <Card>
             <CardHeader>
