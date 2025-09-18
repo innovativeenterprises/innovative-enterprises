@@ -1,5 +1,4 @@
 
-
 // This file is a placeholder for your actual Firestore data fetching logic.
 // In a real application, you would use the Firebase SDK to interact with Firestore.
 // For this prototype, we are using static data from local files.

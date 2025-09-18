@@ -25,6 +25,8 @@ import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { UsedItem } from '@/lib/used-items.schema';
 import type { Asset } from '@/lib/assets.schema';
 import type { Client, Testimonial } from '@/lib/clients.schema';
+import type { Car } from '@/lib/cars.schema';
+import type { GiftCard } from '@/lib/gift-cards.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -298,6 +300,30 @@ export const useTestimonialsData = () => {
     return {
         testimonials: useStoreData((s) => s.testimonials),
         setTestimonials,
+        isClient,
+    };
+}
+
+// Cars
+export const useCarsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setCars = (updater: (prev: AppState['cars']) => AppState['cars']) => store.set((state) => ({ ...state, cars: updater(state.cars) }));
+    return {
+        cars: useStoreData((s) => s.cars),
+        setCars,
+        isClient,
+    };
+}
+
+// Gift Cards
+export const useGiftCardsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setGiftCards = (updater: (prev: AppState['giftCards']) => AppState['giftCards']) => store.set((state) => ({ ...state, giftCards: updater(state.giftCards) }));
+    return {
+        giftCards: useStoreData((s) => s.giftCards),
+        setGiftCards,
         isClient,
     };
 }
