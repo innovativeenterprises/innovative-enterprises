@@ -8,15 +8,14 @@ import type { Client, Testimonial } from '@/lib/clients';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useClientsData, useTestimonialsData } from '@/hooks/use-global-store-data';
 
-export default function ClientTestimonials({ initialClients, initialTestimonials }: { initialClients: Client[], initialTestimonials: Testimonial[] }) {
-  const [isClient, setIsClient] = useState(false);
+export default function ClientTestimonials() {
+  const { clients, isClient: isClientsClient } = useClientsData();
+  const { testimonials, isClient: isTestimonialsClient } = useTestimonialsData();
+  
+  const isClient = isClientsClient && isTestimonialsClient;
   const { testimonialAvatars } = imageData || {};
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
 
   const renderQuote = (quote: string) => {
     const parts = quote.split(/\*\*(.*?)\*\*/g);
@@ -35,7 +34,7 @@ export default function ClientTestimonials({ initialClients, initialTestimonials
           </p>
         </div>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
-          {!isClient ? Array.from({length: 6}).map((_, i) => <Skeleton key={i} className="h-[60px] w-[150px]" />) : initialClients.map((client) => (
+          {!isClient ? Array.from({length: 6}).map((_, i) => <Skeleton key={i} className="h-[60px] w-[150px]" />) : clients.map((client) => (
               <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300" title={client.name}>
                 <Image
                   src={client.logo}
@@ -50,7 +49,7 @@ export default function ClientTestimonials({ initialClients, initialTestimonials
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {!isClient ? Array.from({length: 2}).map((_, i) => <Skeleton key={i} className="h-48 w-full" />) : initialTestimonials.map((testimonial) => {
+            {!isClient ? Array.from({length: 2}).map((_, i) => <Skeleton key={i} className="h-48 w-full" />) : testimonials.map((testimonial) => {
                     const avatarData = testimonialAvatars && (testimonialAvatars as Record<string, {src: string, alt: string, aiHint: string}>)[testimonial.avatarId];
                     return (
                         <Card key={testimonial.id} className="bg-card">

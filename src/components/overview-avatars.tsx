@@ -4,16 +4,10 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import imageData from '@/app/lib/placeholder-images.json';
 import type { Client } from '@/lib/clients';
 
 export default function OverviewAvatars({ clients }: { clients: Client[] }) {
   const [isClient, setIsClient] = useState(false);
-  // Corrected to use testimonialAvatars which is the correct key in the JSON file
-  // and handle the case where it might be missing.
-  const { testimonialAvatars } = imageData || {};
-  const overviewAvatars = testimonialAvatars ? Object.values(testimonialAvatars).slice(0, 3) : [];
-
 
   useEffect(() => {
     setIsClient(true);
@@ -22,18 +16,21 @@ export default function OverviewAvatars({ clients }: { clients: Client[] }) {
   if (!isClient) {
     return <Skeleton className="h-10 w-24" />;
   }
+  
+  // Use the first 3 clients passed from the server props
+  const overviewClients = clients.slice(0, 3);
 
   return (
     <div className="flex -space-x-2">
-      {overviewAvatars.map((avatar, index) => (
+      {overviewClients.map((client) => (
         <Image
-          key={index}
-          src={avatar.src}
-          alt={avatar.alt}
+          key={client.id}
+          src={client.logo}
+          alt={client.name}
           width={40}
           height={40}
-          className="rounded-full border-2 border-background"
-          data-ai-hint={avatar.aiHint}
+          className="rounded-full border-2 border-background object-contain bg-white"
+          data-ai-hint={client.aiHint}
         />
       ))}
     </div>

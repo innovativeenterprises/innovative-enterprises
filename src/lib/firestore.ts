@@ -1,119 +1,100 @@
+// This file is a placeholder for your actual Firestore data fetching logic.
+// In a real application, you would use the Firebase SDK to interact with Firestore.
+// For this prototype, we are using static data from local files.
 
+import { initialProducts } from './products';
+import { initialServices } from './services';
+import { initialProviders } from './providers';
+import { initialOpportunities } from './opportunities';
+import { initialClients, initialTestimonials } from './clients';
+import { initialPricing } from './pricing';
+import { initialPosProducts, initialDailySales } from './pos-data';
+import { initialStages } from './stages';
+import { initialAssets } from './assets';
+import { initialInvestors, initialCfoData } from './investors';
+import { initialStaffData } from './agents';
+import { initialProperties } from './properties';
+import { initialStairspaceListings } from './stairspace-listings';
+import { initialStairspaceRequests } from './stairspace-requests';
+import { initialLeases } from './leases';
+import { saasProducts } from './saas-products';
+import { initialStockItems } from './stock-items';
+import { initialGiftCards } from './gift-cards';
+import { initialStudents } from './students';
+import { initialCommunities } from './communities';
+import { initialEvents } from './community-events';
+import { initialFinances } from './community-finances';
+import { initialMembers } from './community-members';
+import { initialJobs } from './alumni-jobs';
+import { initialRentalAgencies } from './rental-agencies';
+import { initialCars } from './cars';
+import { initialCostSettings } from './cost-settings';
+import { initialBeautyCenters } from './beauty-centers';
+import { initialBeautyServices } from './beauty-services';
+import { initialBeautyAppointments } from './beauty-appointments';
+import { initialUsedItems } from './used-items';
+import { initialSettings } from './settings';
 
-import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getFirestore, collection, getDocs, query, orderBy, doc, getDoc } from 'firebase/firestore';
-import type { Product } from './products.schema';
-import type { Service } from './services.schema';
-import type { Provider } from './providers.schema';
-import type { Opportunity } from './opportunities.schema';
-import type { Client, Testimonial } from './clients.schema';
-import type { Pricing } from './pricing.schema';
-import type { PosProduct, DailySales } from './pos-data.schema';
-import type { ProjectStage } from './stages.schema';
-import type { Asset } from './assets.schema';
-import type { Investor } from './investors.schema';
-import type { KpiData, TransactionData, UpcomingPayment, VatPayment, CashFlowData } from './cfo-data.schema';
-import type { Agent, AgentCategory } from './agents.schema';
-import type { Property } from './properties.schema';
-import type { StairspaceListing } from './stairspace.schema';
-import type { BookingRequest } from './stairspace-requests.schema';
-import type { SignedLease } from './leases.schema';
-import type { SaasCategory } from './saas-products.schema';
-import type { StockItem } from './stock-items.schema';
-import type { GiftCard } from './gift-cards.schema';
-import type { Student } from './students.schema';
-import type { Community } from './communities.schema';
-import type { CommunityEvent } from './community-events.schema';
-import type { CommunityFinance } from './community-finances.schema';
-import type { CommunityMember } from './community-members.schema';
-import type { JobPosting } from './alumni-jobs.schema';
-import type { RentalAgency } from './rental-agencies.schema';
-import type { Car } from './cars.schema';
-import type { CostRate } from './cost-settings.schema';
-import type { BeautyCenter } from './beauty-centers';
-import type { BeautyService } from './beauty-services';
-import type { BeautyAppointment } from './beauty-appointments';
-import type { UsedItem } from './used-items.schema';
-import type { AppSettings } from './settings';
-import { app } from './firebase';
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Simulate async data fetching
+export const getProducts = async () => { await delay(50); return initialProducts; };
+export const getServices = async () => { await delay(50); return initialServices; };
+export const getProviders = async () => { await delay(50); return initialProviders; };
+export const getOpportunities = async () => { await delay(50); return initialOpportunities; };
+export const getClients = async () => { await delay(50); return initialClients; };
+export const getTestimonials = async () => { await delay(50); return initialTestimonials; };
+export const getPricing = async () => { await delay(50); return initialPricing; };
+export const getPosProducts = async () => { await delay(50); return initialPosProducts; };
+export const getStages = async () => { await delay(50); return initialStages; };
+export const getAssets = async () => { await delay(50); return initialAssets; };
+export const getInvestors = async () => { await delay(50); return initialInvestors; };
 
-const db = getFirestore(app);
+// CFO Data
+export const getKpiData = async () => { await delay(50); return initialCfoData.kpiData; };
+export const getTransactionData = async () => { await delay(50); return initialCfoData.transactionData; };
+export const getUpcomingPayments = async () => { await delay(50); return initialCfoData.upcomingPayments; };
+export const getVatPayment = async () => { await delay(50); return initialCfoData.vatPayment; };
+export const getCashFlowData = async () => { await delay(50); return initialCfoData.cashFlowData; };
 
-const fetchCollection = async <T>(collectionName: string): Promise<T[]> => {
-    try {
-        const collectionRef = collection(db, collectionName);
-        const snapshot = await getDocs(collectionRef);
-        return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as T);
-    } catch (error) {
-        console.error(`Error fetching ${collectionName}:`, error);
-        return [];
+export const getStaffData = async () => { await delay(50); return initialStaffData; };
+export const getProperties = async () => { await delay(50); return initialProperties; };
+export const getStairspaceListings = async () => { await delay(50); return initialStairspaceListings; };
+export const getStairspaceRequests = async () => { await delay(50); return initialStairspaceRequests; };
+export const getLeases = async () => { await delay(50); return initialLeases; };
+export const getSaasProducts = async () => { await delay(50); return saasProducts; };
+export const getStockItems = async () => { await delay(50); return initialStockItems; };
+export const getGiftCards = async () => { await delay(50); return initialGiftCards; };
+export const getStudents = async () => { await delay(50); return initialStudents; };
+export const getCommunities = async () => { await delay(50); return initialCommunities; };
+export const getCommunityEvents = async () => { await delay(50); return initialEvents; };
+export const getCommunityFinances = async () => { await delay(50); return initialFinances; };
+export const getCommunityMembers = async () => { await delay(50); return initialMembers; };
+export const getAlumniJobs = async () => { await delay(50); return initialJobs; };
+export const getRentalAgencies = async () => { await delay(50); return initialRentalAgencies; };
+export const getCars = async () => { await delay(50); return initialCars; };
+export const getCostSettings = async () => { await delay(50); return initialCostSettings; };
+export const getBeautyCenters = async () => { await delay(50); return initialBeautyCenters; };
+export const getBeautyServices = async () => { await delay(50); return initialBeautyServices; };
+export const getBeautyAppointments = async () => { await delay(50); return initialBeautyAppointments; };
+export const getUsedItems = async () => { await delay(50); return initialUsedItems; };
+export const getDailySales = async () => { await delay(50); return initialDailySales; };
+export const getSettings = async () => { await delay(50); return initialSettings; };
+
+export const getRaahaData = async () => {
+    await delay(50);
+    return {
+        raahaAgencies: initialRaahaAgencies,
+        raahaWorkers: initialRaahaWorkers,
+        raahaRequests: initialRaahaRequests,
     }
-};
+}
 
-export const getProducts = () => fetchCollection<Product>('products');
-export const getServices = () => fetchCollection<Service>('services');
-export const getProviders = () => fetchCollection<Provider>('providers');
-export const getOpportunities = () => fetchCollection<Opportunity>('opportunities');
-export const getClients = () => fetchCollection<Client>('clients');
-export const getTestimonials = () => fetchCollection<Testimonial>('testimonials');
-export const getPricing = () => fetchCollection<Pricing>('pricing');
-export const getPosProducts = () => fetchCollection<PosProduct>('posProducts');
-export const getStages = () => fetchCollection<ProjectStage>('stages');
-export const getAssets = () => fetchCollection<Asset>('assets');
-export const getInvestors = () => fetchCollection<Investor>('investors');
-export const getKpiData = () => fetchCollection<KpiData>('kpiData');
-export const getTransactionData = () => fetchCollection<TransactionData>('transactionData');
-export const getUpcomingPayments = () => fetchCollection<UpcomingPayment>('upcomingPayments');
-export const getVatPayment = async (): Promise<VatPayment | null> => {
-    const data = await fetchCollection<VatPayment>('vatPayment');
-    return data[0] || null;
-};
-export const getCashFlowData = () => fetchCollection<CashFlowData>('cashFlowData');
-export const getStaffData = async (): Promise<{ leadership: Agent[], staff: Agent[], agentCategories: AgentCategory[] }> => {
-    const leadership = await fetchCollection<Agent>('leadership');
-    const staff = await fetchCollection<Agent>('staff');
-    const agentCategories = await fetchCollection<AgentCategory>('agentCategories');
-    return { leadership, staff, agentCategories };
-};
-export const getProperties = () => fetchCollection<Property>('properties');
-export const getStairspaceListings = () => fetchCollection<StairspaceListing>('stairspaceListings');
-export const getStairspaceRequests = () => fetchCollection<BookingRequest>('stairspaceRequests');
-export const getLeases = () => fetchCollection<SignedLease>('signedLeases');
-export const getSaasProducts = () => fetchCollection<SaasCategory>('saasProducts');
-export const getStockItems = () => fetchCollection<StockItem>('stockItems');
-export const getGiftCards = () => fetchCollection<GiftCard>('giftCards');
-export const getStudents = () => fetchCollection<Student>('students');
-export const getCommunities = () => fetchCollection<Community>('communities');
-export const getCommunityEvents = () => fetchCollection<CommunityEvent>('communityEvents');
-export const getCommunityFinances = () => fetchCollection<CommunityFinance>('communityFinances');
-export const getCommunityMembers = () => fetchCollection<CommunityMember>('communityMembers');
-export const getAlumniJobs = () => fetchCollection<JobPosting>('alumniJobs');
-export const getRentalAgencies = () => fetchCollection<RentalAgency>('rentalAgencies');
-export const getCars = () => fetchCollection<Car>('cars');
-export const getCostSettings = () => fetchCollection<CostRate>('costSettings');
-export const getBeautyCenters = () => fetchCollection<BeautyCenter>('beautyCenters');
-export const getBeautyServices = () => fetchCollection<BeautyService>('beautyServices');
-export const getBeautyAppointments = () => fetchCollection<BeautyAppointment>('beautyAppointments');
-export const getUsedItems = () => fetchCollection<UsedItem>('usedItems');
-export const getDailySales = () => fetchCollection<any>('dailySales');
-
-export const getSettings = async (): Promise<AppSettings> => {
-    try {
-        const docRef = doc(db, 'settings', 'app');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            return docSnap.data() as AppSettings;
-        } else {
-            console.log("No such document! Returning initial settings.");
-            // In a real app, you might want to initialize this document if it doesn't exist.
-            // For now, we'll fall back to a static default.
-            const { initialSettings } = await import('./settings');
-            return initialSettings;
-        }
-    } catch (error) {
-        console.error("Error fetching settings:", error);
-         const { initialSettings } = await import('./settings');
-        return initialSettings;
+export const getBeautyData = async () => {
+    await delay(50);
+    return {
+        beautyCenters: initialBeautyCenters,
+        beautyServices: initialBeautyServices,
+        beautyAppointments: initialBeautyAppointments,
     }
-};
+}

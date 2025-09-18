@@ -1,6 +1,7 @@
 
 
 
+
 import AiToolsCta from "@/components/ai-tools-cta";
 import ClientTestimonials from "@/components/client-testimonials";
 import CompanyOverview from "@/components/company-overview";
@@ -10,6 +11,8 @@ import { getServices, getProducts, getClients, getTestimonials } from '@/lib/fir
 
 
 export default async function Home() {
+  // Data is fetched on the server and passed down to the client components.
+  // This avoids client-side data fetching on initial load.
   const [products, services, clients, testimonials] = await Promise.all([
     getProducts(),
     getServices(),
@@ -20,9 +23,9 @@ export default async function Home() {
   return (
     <>
       <CompanyOverview clients={clients} />
-      <ServiceCatalog services={services} />
-      <ProductShowcase products={products} />
-      <ClientTestimonials initialClients={clients} initialTestimonials={testimonials} />
+      <ServiceCatalog />
+      <ProductShowcase />
+      <ClientTestimonials />
       <AiToolsCta />
     </>
   );

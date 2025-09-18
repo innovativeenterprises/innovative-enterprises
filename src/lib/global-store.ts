@@ -11,32 +11,26 @@
  * architectural piece to make the prototype function correctly across pages.
  */
 
-import { initialSettings, type AppSettings } from './settings';
+import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
-import { initialProducts } from './products';
 import type { Provider } from './providers.schema';
-import { initialProviders } from './providers';
 import type { Service } from './services.schema';
-import { initialServices } from './services';
 import type { Opportunity } from './opportunities.schema';
-import { initialOpportunities } from './opportunities';
 import type { SignedLease } from './leases';
-import { initialLeases } from './leases';
 import type { BookingRequest } from './stairspace-requests';
-import { initialStairspaceRequests } from './stairspace-requests';
 import type { StairspaceListing } from './stairspace.schema';
-import { initialStairspaceListings } from './stairspace-listings';
 import type { Agent, AgentCategory } from './agents.schema';
-import { initialStaffData } from './agents';
-import { initialAgencies as initialRaahaAgencies } from './raaha-agencies';
-import { initialWorkers as initialRaahaWorkers } from './raaha-workers';
-import { initialRequests as initialRaahaRequests } from './raaha-requests';
-import { initialBeautyCenters } from './beauty-centers';
-import { initialBeautyServices } from './beauty-services';
-import { initialBeautyAppointments } from './beauty-appointments';
-import { initialCostSettings } from './cost-settings';
-import { initialAssets } from './assets';
-import { initialUsedItems } from './used-items';
+import type { Agency as RaahaAgency } from './raaha-agencies';
+import type { Worker as RaahaWorker } from './raaha-workers';
+import type { HireRequest } from './raaha-requests';
+import type { BeautyCenter } from './beauty-centers';
+import type { BeautyService } from './beauty-services';
+import type { BeautyAppointment } from './beauty-appointments';
+import type { CostRate } from './cost-settings.schema';
+import type { Asset } from './assets.schema';
+import type { UsedItem } from './used-items.schema';
+import { initialSettings } from './settings';
+
 
 export interface CartItem extends Product {
   quantity: number;
@@ -55,44 +49,44 @@ export type AppState = {
   leadership: Agent[];
   staff: Agent[];
   agentCategories: AgentCategory[];
-  raahaAgencies: typeof initialRaahaAgencies;
-  raahaWorkers: typeof initialRaahaWorkers;
-  raahaRequests: typeof initialRaahaRequests;
-  beautyCenters: typeof initialBeautyCenters;
-  beautyServices: typeof initialBeautyServices;
-  beautyAppointments: typeof initialBeautyAppointments;
-  costSettings: typeof initialCostSettings;
-  assets: typeof initialAssets;
-  usedItems: typeof initialUsedItems;
+  raahaAgencies: RaahaAgency[];
+  raahaWorkers: RaahaWorker[];
+  raahaRequests: HireRequest[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautyAppointments: BeautyAppointment[];
+  costSettings: CostRate[];
+  assets: Asset[];
+  usedItems: UsedItem[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  products: initialProducts,
-  providers: initialProviders,
-  opportunities: initialOpportunities,
-  services: initialServices,
-  signedLeases: initialLeases,
-  stairspaceRequests: initialStairspaceRequests,
-  stairspaceListings: initialStairspaceListings,
-  leadership: initialStaffData.leadership,
-  staff: initialStaffData.staff,
-  agentCategories: initialStaffData.agentCategories,
-  raahaAgencies: initialRaahaAgencies,
-  raahaWorkers: initialRaahaWorkers,
-  raahaRequests: initialRaahaRequests,
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautyAppointments: initialBeautyAppointments,
-  costSettings: initialCostSettings,
-  assets: initialAssets,
-  usedItems: initialUsedItems,
+  products: [],
+  providers: [],
+  opportunities: [],
+  services: [],
+  signedLeases: [],
+  stairspaceRequests: [],
+  stairspaceListings: [],
+  leadership: [],
+  staff: [],
+  agentCategories: [],
+  raahaAgencies: [],
+  raahaWorkers: [],
+  raahaRequests: [],
+  beautyCenters: [],
+  beautyServices: [],
+  beautyAppointments: [],
+  costSettings: [],
+  assets: [],
+  usedItems: [],
 };
 
 
-export const createAppStore = (initState: AppState = initialState) => {
-    let state: AppState = { ...initState };
+export const createAppStore = (initState: Partial<AppState> = {}) => {
+    let state: AppState = { ...initialState, ...initState };
     const listeners = new Set<() => void>();
 
     return {

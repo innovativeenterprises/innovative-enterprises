@@ -1,9 +1,11 @@
 
+
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
+import { getServices, getProducts, getClients, getTestimonials, getProviders, getOpportunities, getSettings, getLeases, getStairspaceRequests, getStairspaceListings, getStaffData, getRaahaData, getBeautyData, getCostSettings, getAssets, getUsedItems } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -48,15 +50,78 @@ export const metadata: Metadata = {
 }
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch all initial data needed for the global store here at the root.
+  const [
+    products, 
+    services, 
+    clients, 
+    testimonials, 
+    providers, 
+    opportunities, 
+    settings, 
+    signedLeases, 
+    stairspaceRequests,
+    stairspaceListings,
+    { leadership, staff, agentCategories },
+    { raahaAgencies, raahaWorkers, raahaRequests },
+    { beautyCenters, beautyServices, beautyAppointments },
+    costSettings,
+    assets,
+    usedItems
+  ] = await Promise.all([
+    getProducts(),
+    getServices(),
+    getClients(),
+    getTestimonials(),
+    getProviders(),
+    getOpportunities(),
+    getSettings(),
+    getLeases(),
+    getStairspaceRequests(),
+    getStairspaceListings(),
+    getStaffData(),
+    getRaahaData(),
+    getBeautyData(),
+    getCostSettings(),
+    getAssets(),
+    getUsedItems(),
+  ]);
+
+  const initialData = { 
+    products, 
+    services, 
+    clients, 
+    testimonials, 
+    providers, 
+    opportunities, 
+    settings, 
+    signedLeases, 
+    stairspaceRequests,
+    stairspaceListings,
+    leadership, 
+    staff, 
+    agentCategories,
+    raahaAgencies, 
+    raahaWorkers, 
+    raahaRequests,
+    beautyCenters, 
+    beautyServices, 
+    beautyAppointments,
+    costSettings,
+    assets,
+    usedItems,
+  };
+
+
   return (
     <html lang="en">
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout initialData={initialData}>{children}</ClientLayout>
       </body>
     </html>
   );

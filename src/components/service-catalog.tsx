@@ -5,6 +5,7 @@ import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/com
 import Link from "next/link";
 import { GitBranch, Recycle } from "lucide-react";
 import type { Service } from "@/lib/services";
+import { useServicesData } from "@/hooks/use-global-store-data";
 
 const ServiceCard = ({ service }: { service: Service }) => (
     <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
@@ -24,7 +25,8 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog({ services }: { services: Service[] }) {
+export default function ServiceCatalog() {
+  const { services } = useServicesData();
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = enabledServices.reduce((acc, service) => {
