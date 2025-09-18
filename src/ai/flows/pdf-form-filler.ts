@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -8,8 +9,9 @@ import {
     PdfFormFillerInputSchema,
     type PdfFormFillerInput,
     PdfFormFillerOutputSchema,
-    type PdfFormFillerOutput
+    type FilledFormData
 } from './pdf-form-filler.schema';
+import { z } from 'zod';
 
 // This is a sample user profile. In a real app, this would be fetched
 // from the user's secure E-Briefcase or database.
@@ -56,7 +58,7 @@ Return only the JSON array of filled form data. Be precise with the coordinates.
   },
 );
 
-export async function fillPdfForm(input: PdfFormFillerInput): Promise<PdfFormFillerOutput> {
+export async function fillPdfForm(input: PdfFormFillerInput): Promise<FilledFormData> {
     const { output } = await prompt({
         ...input,
         userProfile: sampleUserProfile,
