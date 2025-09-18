@@ -283,4 +283,18 @@ export const initialProducts: Product[] = [
         adminStatus: "Completed",
         href: "/construction-tech/site-guard",
     },
+     {
+        id: 19,
+        name: "WorkforceFlow",
+        description: "AI-driven workforce scheduling, digital timecards, and IoT equipment tracking to optimize your construction site operations.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1581092918056-0c9c991e6024?q=80&w=600&auto=format&fit=crop",
+        aiHint: "construction workers",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/workforce-scheduler",
+    },
 ];

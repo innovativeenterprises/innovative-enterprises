@@ -15,7 +15,7 @@ import { generateTimetable } from '@/ai/flows/timetable-generator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-const timeSlots = ["08:00 - 10:00", "10:00 - 12:00", "13:00 - 15:00", "15:00 - 17:00"];
+const timeSlots = ["08:00 - 12:00 (Morning)", "13:00 - 17:00 (Afternoon)"];
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"];
 
 export default function WorkforceTimetableForm() {
