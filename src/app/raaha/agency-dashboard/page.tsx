@@ -1,11 +1,7 @@
 
 
-'use client';
-
 import AgencyDashboardClient from './client-page';
-import { initialAgencies } from '@/lib/raaha-agencies';
-import { initialWorkers } from '@/lib/raaha-workers';
-import { initialRequests } from '@/lib/raaha-requests';
+import { getRaahaData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,14 +9,12 @@ export const metadata: Metadata = {
   description: "Manage your domestic workforce agency. View client requests, manage your candidates, and update your agency settings.",
 };
 
-export default function AgencyDashboardPage() {
-    const agencies = initialAgencies;
-    const workers = initialWorkers;
-    const requests = initialRequests;
+export default async function AgencyDashboardPage() {
+    const { raahaAgencies, raahaWorkers, raahaRequests } = await getRaahaData();
 
     return <AgencyDashboardClient 
-        initialAgencies={agencies}
-        initialWorkers={workers}
-        initialRequests={requests}
+        initialAgencies={raahaAgencies}
+        initialWorkers={raahaWorkers}
+        initialRequests={raahaRequests}
     />;
 }

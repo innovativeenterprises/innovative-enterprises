@@ -1,4 +1,5 @@
 
+
 import PropertyTable from "../property-table";
 import StairspaceTable from "@/app/admin/stairspace-table";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";

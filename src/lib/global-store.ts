@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -51,8 +52,9 @@ export interface CartItem extends Product {
 export type AppState = {
   settings: AppSettings;
   cart: CartItem[];
-  // The following properties are now fetched by server components
-  // and are not part of the initial global state.
+  // All data previously held in the global store is now fetched by
+  // individual server components. The hooks remain to allow client
+  // components to optimistically update the UI, but the initial state is empty.
   products: Product[];
   providers: Provider[];
   opportunities: Opportunity[];
@@ -92,8 +94,6 @@ export type AppState = {
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  // All other properties are initialized as empty arrays as they will be
-  // populated by server components on a per-page basis.
   products: [],
   providers: [],
   opportunities: [],
