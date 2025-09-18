@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Calendar, Scissors, Sparkles as BeautySparkles, Users, UserCheck } from "lucide-react";

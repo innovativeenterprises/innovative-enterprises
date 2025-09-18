@@ -1,4 +1,3 @@
-
 export interface BeautyService {
     id: string;
     agencyId: string;

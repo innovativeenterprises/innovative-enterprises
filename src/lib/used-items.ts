@@ -1,4 +1,3 @@
-
 import type { UsedItem } from './used-items.schema';
 
 export const initialUsedItems: UsedItem[] = [

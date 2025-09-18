@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -51,7 +50,7 @@ export default function ProfessionalHubClientPage() {
             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
                 <BookUser className="w-12 h-12 text-primary" />
             </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">Professional Training & Education Hub</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">Professional Training &amp; Education Hub</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             A comprehensive digital platform designed to connect trainers, educators, and subject matter experts with their local markets, providing the tools you need to build a credible online presence and a sustainable business.
           </p>

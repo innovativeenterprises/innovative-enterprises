@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useMemo } from "react";
@@ -56,7 +54,7 @@ export default function SwapAndSellPage() {
             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
                 <Recycle className="w-12 h-12 text-primary" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-primary">Swap & Sell Hub</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-primary">Swap &amp; Sell Hub</h1>
             <p className="mt-4 text-lg text-muted-foreground">
                 Give your old items a new life. Our AI-powered platform makes it easy to sell, donate, or gift your used goods. Just upload a photo, and let the AI do the rest.
             </p>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
@@ -102,4 +101,3 @@ export default function ItemDetailPage() {
         </div>
     );
 }
-

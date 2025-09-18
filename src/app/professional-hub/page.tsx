@@ -1,4 +1,3 @@
-
 import ProfessionalHubClientPage from './client-page';
 import type { Metadata } from 'next';
 

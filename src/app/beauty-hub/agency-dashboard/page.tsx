@@ -1,4 +1,3 @@
-
 import AgencyDashboardClient from './client-page';
 import { initialBeautyCenters } from '@/lib/beauty-centers';
 import { initialBeautyServices } from '@/lib/beauty-services';

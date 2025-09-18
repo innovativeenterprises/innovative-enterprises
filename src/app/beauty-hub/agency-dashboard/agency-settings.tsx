@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -114,7 +113,7 @@ export function AgencySettings({ agency }: { agency: BeautyCenter }) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Agency Profile & Branding</CardTitle>
+                <CardTitle>Agency Profile &amp; Branding</CardTitle>
                 <CardDescription>Update your agency's public information and logo.</CardDescription>
             </CardHeader>
             <Form {...form}>
@@ -133,7 +132,7 @@ export function AgencySettings({ agency }: { agency: BeautyCenter }) {
                                             </FormControl>
                                             <Button type="button" variant="secondary" onClick={handleCrAnalysis} disabled={isAnalyzing}>
                                                 {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                                Analyze CR & Pre-fill
+                                                Analyze CR &amp; Pre-fill
                                             </Button>
                                         </div>
                                         <FormMessage />

@@ -1,4 +1,3 @@
-
 export interface BeautyAppointment {
     id: string;
     agencyId: string;
