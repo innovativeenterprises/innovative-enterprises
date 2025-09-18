@@ -1,8 +1,8 @@
 
 import CooDashboardClient from './client-page';
 import type { Metadata } from 'next';
-import { getProducts } from '@/lib/products';
-import { getProviders } from '@/lib/providers';
+import { getProducts } from '@/lib/firestore';
+import { getProviders } from '@/lib/firestore';
 import { kpiData } from '@/lib/cfo-data';
 
 export const metadata: Metadata = {

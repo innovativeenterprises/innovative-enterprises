@@ -9,10 +9,12 @@ import { getServices, getProducts, getClients, getTestimonials } from '@/lib/fir
 
 
 export default async function Home() {
-  const products = await getProducts();
-  const services = await getServices();
-  const clients = await getClients();
-  const testimonials = await getTestimonials();
+  const [products, services, clients, testimonials] = await Promise.all([
+    getProducts(),
+    getServices(),
+    getClients(),
+    getTestimonials(),
+  ]);
 
   return (
     <>
