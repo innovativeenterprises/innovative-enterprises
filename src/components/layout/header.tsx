@@ -104,7 +104,7 @@ const solutions = [
     },
     {
         title: "Fintech Super-App",
-        href: "/cfo",
+        href: "/cfo-dashboard",
         description: "An integrated financial services application providing AI-driven auditing, financial analysis, and CFO dashboard capabilities.",
         icon: DollarSign,
     }
