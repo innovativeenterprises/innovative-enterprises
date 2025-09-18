@@ -26,7 +26,7 @@ type FormValues = z.infer<typeof FormSchema>;
 export default function FormFiller() {
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [response, setResponse] = useState<FilledFormData[] | null>(null);
+  const [response, setResponse] = useState<FilledFormData | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const { toast } = useToast();
 
