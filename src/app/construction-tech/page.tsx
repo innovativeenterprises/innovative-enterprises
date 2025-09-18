@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren, ShieldCheck } from "lucide-react";
+import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren, ShieldCheck, Camera } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products.schema";
@@ -18,7 +18,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "ProcureChain SaaS": Package,
         "ConstructFin": DollarSign,
         "Digital Twin Ops": Cpu,
-        "AeroSite AI (DaaS)": Cpu,
+        "AeroSite AI (DaaS)": Camera,
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
         "Fire & Safety Estimator": Siren,

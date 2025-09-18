@@ -311,4 +311,18 @@ export const initialProducts: Product[] = [
         adminStatus: "Completed",
         href: "/real-estate-tech/facility-flow",
     },
+    {
+        id: 21,
+        name: "AeroSite AI (DaaS)",
+        description: "Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1519672102930-99a6a1f1035b?q=80&w=600&auto=format&fit=crop",
+        aiHint: "drone construction",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/aero-site",
+    }
 ];
