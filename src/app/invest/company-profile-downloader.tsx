@@ -8,12 +8,19 @@ import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ProfileDataLoader } from "./profile-data-loader";
+import { useStaffData, useServicesData, useSettingsData, useProductsData } from "@/hooks/use-global-store-data";
 
 export default function CompanyProfileDownloader() {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
+
+    // Fetch data using hooks
+    const staffData = useStaffData();
+    const { services } = useServicesData();
+    const { settings } = useSettingsData();
+    const { products } = useProductsData();
     
     useEffect(() => {
         setIsClient(true);
@@ -77,7 +84,13 @@ export default function CompanyProfileDownloader() {
     return (
         <>
             <div style={{ position: 'fixed', left: '-200vw', top: 0, zIndex: -100, opacity: 0 }}>
-                <ProfileDataLoader innerRef={profileRef} />
+                <ProfileDataLoader 
+                    innerRef={profileRef}
+                    staffData={staffData}
+                    services={services}
+                    settings={settings}
+                    products={products}
+                />
             </div>
             <Button onClick={handleDownload} variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary" disabled={isGenerating}>
                  {isGenerating ? (

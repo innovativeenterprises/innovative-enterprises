@@ -1,24 +1,36 @@
 
-import { getStaffData, getServices, getSettings, getProducts } from "@/lib/firestore";
+'use client';
+
+import { useRef, useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Download, Lightbulb, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { Mail, Phone, Globe, MapPin, Building2, CheckSquare } from "lucide-react";
 import Image from "next/image";
+import type { Agent, AgentCategory } from "@/lib/agents.schema";
+import type { Service } from "@/lib/services.schema";
+import type { AppSettings } from "@/lib/settings";
+import type { Product } from "@/lib/products.schema";
 
-// This is a pure server component responsible for fetching data and rendering the hidden template.
-export const ProfileDataLoader = ({ innerRef }: { innerRef: React.RefObject<HTMLDivElement> }) => {
+// This is a pure client component responsible for rendering the hidden template for PDF generation.
+export const ProfileDataLoader = ({ 
+    innerRef, 
+    staffData,
+    services,
+    settings,
+    products
+}: { 
+    innerRef: React.RefObject<HTMLDivElement>,
+    staffData: { leadership: Agent[], staff: Agent[], agentCategories: AgentCategory[] },
+    services: Service[],
+    settings: AppSettings,
+    products: Product[],
+}) => {
     const generatedDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     
-    // In a real app, you might fetch data here, but since we are passing it,
-    // we should use the data passed as props. For this component, it seems
-    // it was intended to fetch its own data, which we will simulate synchronously for the fix.
-    // NOTE: The 'async' was removed from the component definition. Data fetching
-    // should happen in a parent Server Component and be passed down.
-    // For this fix, we are assuming the `get...` functions can be called synchronously
-    // because they are reading from a local, in-memory store in this prototype.
-    const { leadership, staff, agentCategories } = initialStaffData;
-    const services = initialServices;
-    const settings = initialSettings;
-    const products = initialProducts;
-
+    const { leadership } = staffData;
     const enabledLeadership = leadership.filter(m => m.enabled);
     const enabledServices = services.filter(s => s.enabled);
     const enabledProducts = products.filter(p => p.enabled);
@@ -130,10 +142,3 @@ export const ProfileDataLoader = ({ innerRef }: { innerRef: React.RefObject<HTML
         </div>
     );
 };
-
-// We need to import the initial data here because the component is no longer async
-// and cannot call the async get... functions from firestore.ts
-import { initialStaffData } from '@/lib/agents';
-import { initialServices } from '@/lib/services';
-import { initialSettings } from '@/lib/settings';
-import { initialProducts } from '@/lib/products';
