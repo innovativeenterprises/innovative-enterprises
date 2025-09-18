@@ -1,5 +1,4 @@
 
-
 import StudentHousingClientPage from './client-page';
 import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
