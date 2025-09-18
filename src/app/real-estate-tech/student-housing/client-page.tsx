@@ -13,15 +13,15 @@ import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
-import { useLeasesData } from '@/hooks/use-global-store-data';
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const { leases, setLeases, isClient } = useLeasesData();
+    const [leases, setLeases] = useState<SignedLease[]>(initialLeases);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
-        setLeases(() => initialLeases);
-    }, [initialLeases, setLeases]);
+        setIsClient(true);
+    }, []);
 
 
     const expiringLeasesCount = useMemo(() => {
