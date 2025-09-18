@@ -1,3 +1,4 @@
+
 import HomePageClient from "@/app/home-page-client";
 import { getProducts } from "@/lib/firestore";
 import { getServices } from "@/lib/firestore";

@@ -29,7 +29,7 @@ export default function ClientLayout({
     >
         <StoreProvider initialData={initialData}>
         <div className="flex min-h-screen flex-col">
-            {!isHomePage && <Header />}
+            {isHomePage ? null : <Header />}
             <main className="flex-1">{children}</main>
             <Footer />
             <Toaster />
