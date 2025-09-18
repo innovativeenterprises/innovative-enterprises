@@ -3,7 +3,7 @@
 
 import { getSettings } from "@/lib/firestore";
 import HeaderClient from "./header-client";
-import { Handshake, Store, Recycle, HomeWorkforceIcon as RaahaIcon, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat } from "lucide-react";
+import { Handshake, Store, Recycle, HomeWorkforceIcon as RaahaIcon, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2 } from "lucide-react";
 import SanadHubIcon from "../icons/sanad-hub-icon";
 import BusinessHubIcon from "../icons/business-hub-icon";
 import AmeenSmartLockIcon from "../icons/ameen-smart-lock-icon";
@@ -87,7 +87,7 @@ const solutions = [
     {
         title: "Professional Hub",
         href: "/professional-hub",
-        description: "A platform connecting trainers, educators, and professionals with local markets, offering tools for marketing and networking.",
+        description: "A digital platform connecting trainers, educators, and professionals with local markets, offering tools for marketing and networking.",
         icon: BookUser,
     },
      {
@@ -228,12 +228,12 @@ const aiTools = [
     description: "Upload a PDF form and let the AI fill it out using your profile data.",
     icon: FileText,
   },
-  {
-    title: "Measurement Analyzer",
-    href: "/measurement-analyzer",
-    description: "Use your device's camera to scan an object and get its estimated physical dimensions.",
-    icon: Layers,
-  }
+   {
+    title: "Fintech Super-App (Finley CFO)",
+    href: "/cfo",
+    description: "Upload financial documents for an AI-powered preliminary audit and analysis.",
+    icon: DollarSign,
+  },
 ];
 
 
