@@ -3,6 +3,8 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -55,7 +57,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </ClientLayout>
       </body>
     </html>
   );
