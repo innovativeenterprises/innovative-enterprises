@@ -29,18 +29,4 @@ export const initialLeases: SignedLease[] = [
     status: 'Active',
     content: 'This is the full markdown content of the tenancy agreement for Fatima Al-Hinai...'
   },
-   {
-    id: 'lease_124',
-    contractType: 'Tenancy Agreement',
-    propertyAddress: 'GUtech Student Village, Building 3, Apt 10',
-    propertyType: 'Shared 2-bedroom Apartment',
-    lessorName: 'German University of Technology',
-    lesseeName: 'John Smith',
-    price: 250,
-    pricePeriod: 'per month',
-    startDate: '2023-10-15',
-    endDate: '2024-08-15',
-    status: 'Active',
-    content: 'This is the full markdown content of the tenancy agreement for John Smith...'
-  },
 ];

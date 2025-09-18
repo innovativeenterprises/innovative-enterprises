@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useContext, useSyncExternalStore } from 'react';
@@ -74,10 +75,10 @@ export const useCartData = () => {
 export const useLeasesData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
+    const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
     return {
         leases: useStoreData((s) => s.signedLeases),
-        setLeases,
+        setSignedLeases,
         isClient,
     };
 };
