@@ -6,20 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Check, GraduationCap, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
-import type { Product } from "@/lib/products";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Education Technology Solutions",
-  description: "Explore a suite of AI-driven SaaS platforms designed to automate, optimize, and revolutionize the construction industry in Oman and the GCC.",
-};
-
-
-const problems = [
-    { title: "Manual Processes", description: "Administrative overhead from manual paperwork, scheduling, and approvals slows down institutions." },
-    { title: "One-Size-Fits-All Learning", description: "Lack of personalized learning paths leads to disengaged students and teacher burnout." },
-    { title: "Student Success Gaps", description: "Identifying at-risk students and providing timely career guidance is a major challenge." },
-];
+import type { Product } from "@/lib/products.schema";
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -109,7 +96,7 @@ export default function EducationTechPage() {
         <div className="max-w-3xl mx-auto mt-20 text-center">
             <Card className="bg-accent/10 border-accent">
                 <CardHeader>
-                    <CardTitle className="text-2xl text-accent">Transform Your Institution</CardTitle>
+                    <CardTitle className="text-2xl text-accent">Join Our Early Access Program</CardTitle>
                     <CardDescription className="text-accent-foreground/80">
                        Interested in being a pilot partner for one of our EdTech solutions? Contact us to learn more.
                     </CardDescription>
@@ -126,3 +113,8 @@ export default function EducationTechPage() {
     </div>
   );
 }
+const problems = [
+    { title: "Manual Processes", description: "Administrative overhead from manual paperwork, scheduling, and approvals slows down institutions." },
+    { title: "One-Size-Fits-All Learning", description: "Lack of personalized learning paths leads to disengaged students and teacher burnout." },
+    { title: "Student Success Gaps", description: "Identifying at-risk students and providing timely career guidance is a major challenge." },
+];

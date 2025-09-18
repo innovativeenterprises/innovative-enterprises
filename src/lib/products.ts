@@ -394,5 +394,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/education-tech/scholarships",
+    },
+     {
+        id: 27,
+        name: "Teacher Toolkit",
+        description: "A suite of tools for educators, including a Lesson Gamifier to convert textbooks into interactive content, flashcards, and presentations.",
+        stage: "Live & Operating",
+        category: "Education Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop",
+        aiHint: "teacher classroom",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/education-tech/lesson-gamifier",
     }
 ];
