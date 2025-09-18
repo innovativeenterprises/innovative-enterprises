@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -65,7 +65,7 @@ export default function FireSafetyForm() {
       setResponse(estimationResult);
 
       setLoadingMessage('Generating equipment placement plan...');
-      const equipmentList = estimationResult.equipmentList.map(item => `${item.quantity}x ${item.item}`).join(', ');
+      const equipmentList = estimationResult.equipmentList.map(item => `${'\'\'\'' + item.quantity + '\''\'\''}` + 'x' + ` ${item.item}`).join(', ');
       
       const annotationResult = await transformImage({
         baseImageUri: floorPlanUri,

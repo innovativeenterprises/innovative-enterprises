@@ -6,6 +6,7 @@
  */
 import { ai } from '@/ai/genkit';
 import { FireSafetyEstimatorInputSchema, FireSafetyEstimatorOutputSchema, type FireSafetyEstimatorInput, type FireSafetyEstimatorOutput } from './fire-safety-estimator.schema';
+import { transformImage } from './image-transformer';
 
 export async function estimateFireSafety(input: FireSafetyEstimatorInput): Promise<FireSafetyEstimatorOutput> {
   return fireSafetyEstimatorFlow(input);
