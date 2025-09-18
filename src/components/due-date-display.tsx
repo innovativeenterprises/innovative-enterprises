@@ -66,7 +66,7 @@ export const DueDateDisplay = ({
       {displayState.formattedDate}
       {displayState.daysRemaining !== null &&
         (displayState.daysRemaining >= 0 ? (
-          <span className={cn('font-medium', { 'text-destructive': displayState.daysRemaining < 7 })}>
+          <span className={cn('font-medium', displayState.daysRemaining < 7 && 'text-destructive')}>
             {' '}
             ({displayState.daysRemaining} days left)
           </span>

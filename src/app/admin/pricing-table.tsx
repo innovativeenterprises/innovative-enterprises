@@ -101,18 +101,6 @@ export default function PricingTable({
         setIsDialogOpen(true);
     };
 
-    const pricingByGroup = useMemo(() => {
-        if (!isClient) return {};
-        return pricing.reduce((acc, item) => {
-            if (!acc[item.group]) {
-                acc[item.group] = [];
-            }
-            acc[item.group].push(item);
-            return acc;
-        }, {} as Record<string, Pricing[]>);
-    }, [isClient, pricing]);
-
-
     return (
         <Card>
             <CardHeader>
@@ -147,17 +135,15 @@ export default function PricingTable({
                                 </TableCell>
                             </TableRow>
                         ) : (
-                             Object.entries(pricingByGroup).flatMap(([group, items]) => (
-                                items.map(item => (
-                                    <TableRow key={item.id}>
-                                        <TableCell className="font-medium">{item.type}</TableCell>
-                                        <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                        <TableCell>OMR {item.price.toFixed(2)}</TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                             pricing.map(item => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="font-medium">{item.type}</TableCell>
+                                    <TableCell className="text-muted-foreground">{item.group}</TableCell>
+                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
+                                    </TableCell>
+                                </TableRow>
                             ))
                         )}
                     </TableBody>

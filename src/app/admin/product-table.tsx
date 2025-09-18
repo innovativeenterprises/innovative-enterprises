@@ -46,7 +46,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
         } else {
             const newProduct: Product = {
                 ...values,
-                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
+                id: (products.length > 0 ? Math.max(...products.map(p => p.id || 0)) : 0) + 1,
             };
             setProducts(prev => [newProduct, ...prev]);
             toast({ title: "Product added successfully." });
@@ -60,11 +60,6 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                     <CardTitle>Product Management</CardTitle>
                     <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
                 </div>
-                 <Button onClick={() => openDialog()}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Product
-                </Button>
-            </CardHeader>
-            <CardContent>
                  <AddEditProductDialog
                     isOpen={isDialogOpen}
                     onOpenChange={setIsDialogOpen}
@@ -72,9 +67,12 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                     onSave={handleSave}
                     stages={initialStages}
                 >
-                    {/* This is a controlled dialog, so the trigger is handled programmatically */}
-                    <div />
+                     <Button onClick={() => openDialog()}>
+                        <PlusCircle className="mr-2 h-4 w-4" /> Add Product
+                    </Button>
                 </AddEditProductDialog>
+            </CardHeader>
+            <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -105,7 +103,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                                     <TableCell className="text-center">
                                         <Switch
                                             checked={product.enabled}
-                                            onCheckedChange={() => handleToggle(product.id)}
+                                            onCheckedChange={() => handleToggle(product.id!)}
                                             aria-label={`Enable/disable ${product.name}`}
                                         />
                                     </TableCell>
