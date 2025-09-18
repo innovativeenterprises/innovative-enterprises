@@ -29,9 +29,9 @@ export default function ClientLayout({
     >
         <StoreProvider initialData={initialData}>
         <div className="flex min-h-screen flex-col">
-            {isHomePage ? null : <Header />}
+            {!isHomePage && <Header />}
             <main className="flex-1">{children}</main>
-            <Footer />
+            {!isHomePage && <Footer />}
             <Toaster />
             <ChatWidget />
         </div>
