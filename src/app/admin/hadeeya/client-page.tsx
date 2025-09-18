@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -5,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { GiftCard } from "@/lib/gift-cards";
-import { useGiftCardsData } from "@/hooks/use-global-store-data";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
@@ -20,11 +20,12 @@ const getStatusBadge = (status: GiftCard['status']) => {
 };
 
 export default function HadeeyaAdminPageClient({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
-    const { giftCards, setGiftCards, isClient } = useGiftCardsData();
+    const [giftCards, setGiftCards] = useState<GiftCard[]>(initialGiftCards);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setGiftCards(() => initialGiftCards);
-    }, [initialGiftCards, setGiftCards]);
+        setIsClient(true);
+    }, []);
 
     return (
         <div className="space-y-8">

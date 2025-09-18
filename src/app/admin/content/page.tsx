@@ -5,9 +5,8 @@ import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { getPricing, getProducts, getServices, getClients, getTestimonials, getPosProducts, getStages } from '@/lib/firestore';
+import { getPricing, getProducts, getServices, getClients, getTestimonials, getPosProducts, getStages, getGiftCards } from '@/lib/firestore';
 import HadeeyaAdminPageClient from "../hadeeya/client-page";
-import { getGiftCards } from "@/lib/firestore";
 
 export default async function AdminContentPage() {
     const [services, products, stages, clients, testimonials, pricing, posProducts, giftCards] = await Promise.all([
