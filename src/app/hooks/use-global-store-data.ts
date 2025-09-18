@@ -207,14 +207,10 @@ export const useAgenciesData = () => {
 };
 
 // RAAHA Request Data
-export const setRaahaRequests = (updater: (prev: AppState['raahaRequests']) => AppState['raahaRequests']) => {
-    const store = useContext(StoreContext)!;
-    store.set(state => ({...state, raahaRequests: updater(state.raahaRequests)}));
-};
-
 export const useRequestsData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setRaahaRequests = (updater: (prev: AppState['raahaRequests']) => AppState['raahaRequests']) => store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
     return {
         requests: useStoreData((s) => s.raahaRequests),
         setRaahaRequests,
@@ -372,5 +368,3 @@ export const useAlumniJobsData = () => {
         isClient,
     };
 }
-
-    
