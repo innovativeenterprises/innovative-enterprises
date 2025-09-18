@@ -1,7 +1,6 @@
 
-
 import AgentList from "@/components/agent-list";
-import { initialStaffData } from "@/lib/agents.schema";
+import { getStaffData } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 
 
 export default async function AutomationPage() {
-  const { agentCategories } = initialStaffData;
+  const { agentCategories } = await getStaffData();
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
