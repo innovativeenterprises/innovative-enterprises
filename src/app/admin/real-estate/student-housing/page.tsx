@@ -14,5 +14,3 @@ export default async function StudentHousingPage() {
     const leases = await getLeases();
     return <StudentHousingClientPage initialLeases={leases} />;
 }
-
-
