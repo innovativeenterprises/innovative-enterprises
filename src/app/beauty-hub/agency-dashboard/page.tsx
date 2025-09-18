@@ -10,7 +10,8 @@ export const metadata: Metadata = {
   description: "Manage your salon or spa. View appointments, manage services, and update your settings.",
 };
 
-export default function AgencyDashboardPage() {
+export default async function AgencyDashboardPage() {
+    // In a real app, these would be Firestore fetches.
     const agencies = initialBeautyCenters;
     const services = initialBeautyServices;
     const appointments = initialBeautyAppointments;

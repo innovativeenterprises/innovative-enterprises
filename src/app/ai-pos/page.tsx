@@ -1,6 +1,4 @@
 
-
-
 import { getPosProducts, getDailySales } from '@/lib/firestore';
 import AiPosClientPage from './client-page';
 import type { Metadata } from 'next';

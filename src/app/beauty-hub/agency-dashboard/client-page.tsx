@@ -22,6 +22,7 @@ import { type BeautyService } from '@/lib/beauty-services';
 import { type BeautyAppointment } from '@/lib/beauty-appointments';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
+import { useAgenciesData, useBeautyData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -44,16 +45,18 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
 
 
 export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
-    const [agencies, setAgencies] = useState(initialAgencies);
-    const [services, setServices] = useState(initialServices);
-    const [appointments, setAppointments] = useState(initialAppointments);
-    const [isClient, setIsClient] = useState(false);
+    const { agencies, services, appointments, setAgencies, setServices, setAppointments, isClient } = useBeautyData();
+
+    useEffect(() => {
+        setAgencies(() => initialAgencies);
+        setServices(() => initialServices);
+        setAppointments(() => initialAppointments);
+    }, [initialAgencies, initialServices, initialAppointments, setAgencies, setServices, setAppointments]);
 
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const { toast } = useToast();
 
      useEffect(() => {
-        setIsClient(true);
         if (agencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(agencies[0].id);
         }

@@ -1,134 +1,35 @@
 
-'use client';
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useProductsData } from "@/hooks/use-global-store-data";
-import type { Product } from "@/lib/products";
-import { Skeleton } from "@/components/ui/skeleton";
-import { GraduationCap, GanttChartSquare, Cpu, ShieldCheck, Layers, BookOpen } from 'lucide-react';
+import { getProducts } from "@/lib/firestore";
+import EducationTechClientPage from "./client-page";
 import type { Metadata } from 'next';
 
-const ProductCard = ({ product }: { product: Product }) => {
-    const iconMap: { [key: string]: React.ElementType } = {
-        "EduFlow Suite": GanttChartSquare,
-        "CognitaLearn": Cpu,
-        "Guardian AI": ShieldCheck,
-        "CertiTrust": ShieldCheck,
-        "CampusOS": Layers,
-        "AI Scholarship Finder": GraduationCap,
-        "Teacher Toolkit": BookOpen,
-    };
-    const Icon = iconMap[product.name] || GraduationCap;
+export const metadata: Metadata = {
+  title: "Education Technology Solutions",
+  description: "Explore a suite of AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
+};
 
-    return (
-    <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        <CardHeader className="flex-row items-center gap-4">
-            <div className="bg-primary/10 p-3 rounded-lg">
-                <Icon className="w-6 h-6 text-primary" />
-            </div>
-            <CardTitle>{product.name}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex-grow">
-            <CardDescription>{product.description}</CardDescription>
-        </CardContent>
-        <CardFooter>
-            {product.href ? (
-                 <Button asChild className="w-full">
-                    <Link href={product.href}>Use Tool</Link>
-                </Button>
-            ) : (
-                <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
-            )}
-        </CardFooter>
-    </Card>
-)};
 
-const ProductGridSkeleton = () => (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i} className="flex flex-col h-full">
-                <CardHeader className="flex-row items-center gap-4">
-                    <Skeleton className="h-12 w-12 rounded-lg" />
-                    <Skeleton className="h-6 w-32" />
-                </CardHeader>
-                <CardContent className="flex-grow space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-5/6" />
-                </CardContent>
-                <CardFooter>
-                    <Skeleton className="h-10 w-full" />
-                </CardFooter>
-            </Card>
-        ))}
-    </div>
-);
-
-export default function EducationTechPage() {
-    const { products, isClient } = useProductsData();
-
-    const edutechProducts: Product[] = [
-        ...products.filter(p => p.category === "Education Tech" && p.enabled),
-        {
-            id: 101, // Assign a unique ID
-            name: "Teacher Toolkit",
-            description: "Convert any uploaded school book or lesson into a gamified, interactive experience with flashcards, quizzes, and presentations.",
-            stage: "Live & Operating",
-            category: "Education Tech",
-            price: 0,
-            image: "https://picsum.photos/seed/teachertoolkit/400/400",
-            aiHint: "teacher classroom technology",
-            rating: 5,
-            enabled: true,
-            href: "/education-tech/lesson-gamifier",
-            adminStatus: 'Completed',
-        }
-    ];
+export default async function EducationTechPage() {
+    const allProducts = await getProducts();
+    const edutechProductsRaw = allProducts.filter(p => p.category === "Education Tech" && p.enabled);
     
-    return (
-        <div className="bg-background min-h-[calc(100vh-8rem)]">
-            <div className="container mx-auto px-4 py-16">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                        <GraduationCap className="w-12 h-12 text-primary" />
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-primary">Education Technology Solutions</h1>
-                    <p className="mt-4 text-lg text-muted-foreground">
-                        AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.
-                    </p>
-                </div>
+    // Manually add the "Teacher Toolkit" as it's not in the database
+     const teacherToolkit = {
+        id: 101,
+        name: "Teacher Toolkit",
+        description: "Convert any uploaded school book or lesson into a gamified, interactive experience with flashcards, quizzes, and presentations.",
+        stage: "Live & Operating",
+        category: "Education Tech",
+        price: 0,
+        image: "https://picsum.photos/seed/teachertoolkit/400/400",
+        aiHint: "teacher classroom technology",
+        rating: 5,
+        enabled: true,
+        href: "/education-tech/lesson-gamifier",
+        adminStatus: 'Completed' as const,
+    };
+    
+    const edutechProducts = [teacherToolkit, ...edutechProductsRaw];
 
-                <div className="max-w-6xl mx-auto mt-20">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Ed-Tech Platforms</h2>
-                    </div>
-                    {isClient ? (
-                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {edutechProducts.map(product => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
-                    ) : <ProductGridSkeleton />}
-                </div>
-
-                 <div className="max-w-3xl mx-auto mt-20 text-center">
-                    <Card className="bg-accent/10 border-accent">
-                        <CardHeader>
-                            <CardTitle className="text-2xl text-accent">Partner with Us</CardTitle>
-                            <CardDescription className="text-accent-foreground/80">
-                               Are you an educational institution looking to innovate? Contact us to pilot our solutions.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardFooter className="justify-center">
-                            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                <Link href="/partner">Request a Demo</Link>
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                </div>
-
-            </div>
-        </div>
-    );
+    return <EducationTechClientPage initialProducts={edutechProducts} />;
 }
