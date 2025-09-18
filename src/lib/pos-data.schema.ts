@@ -21,7 +21,7 @@ export const TransactionSchema = z.object({
     id: z.string(),
     items: z.array(CartItemSchema),
     total: z.number(),
-    timestamp: z.string().datetime(),
+    timestamp: z.string(), // ISO string
 });
 
 export const DailySalesSchema = z.array(TransactionSchema);

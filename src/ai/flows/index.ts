@@ -51,6 +51,7 @@ import { transformImage } from './image-transformer';
 import { generateListingDescription } from './listing-description-generator';
 import { generateBookingResponse } from './booking-response-generator';
 import { generateGamifiedLesson } from './lesson-gamifier';
+import { analyzeSalesData } from './pos-agent';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -110,4 +111,5 @@ export {
   generateListingDescription,
   generateBookingResponse,
   generateGamifiedLesson,
+  analyzeSalesData,
 };

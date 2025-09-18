@@ -42,9 +42,18 @@ import type { Car } from './cars.schema';
 import type { DailySales, PosProduct } from './pos-data.schema';
 import type { SaasCategory } from './saas-products.schema';
 import type { StockItem } from './stock-items.schema';
+import type { Pricing } from './pricing.schema';
+import { initialPricing } from './pricing';
+import { initialProducts } from './products';
+import { initialServices } from './services';
+import { initialClients, initialTestimonials } from './clients';
+import { initialPosProducts, initialDailySales } from './pos-data';
+import { initialStages } from './stages';
+import { getCostSettings, getProviders } from './firestore';
+import { initialCostSettings } from './cost-settings';
+import { initialProviders } from './providers';
 
-
-export interface CartItem extends Product {
+export interface CartItem extends PosProduct {
   quantity: number;
 }
 
@@ -88,15 +97,16 @@ export type AppState = {
   dailySales: DailySales;
   saasProducts: SaasCategory[];
   stockItems: StockItem[];
+  pricing: Pricing[];
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  products: [],
-  providers: [],
+  products: initialProducts,
+  providers: initialProviders,
   opportunities: [],
-  services: [],
+  services: initialServices,
   signedLeases: [],
   stairspaceRequests: [],
   stairspaceListings: [],
@@ -109,11 +119,11 @@ export const initialState: AppState = {
   beautyCenters: [],
   beautyServices: [],
   beautyAppointments: [],
-  costSettings: [],
+  costSettings: initialCostSettings,
   assets: [],
   usedItems: [],
-  clients: [],
-  testimonials: [],
+  clients: initialClients,
+  testimonials: initialTestimonials,
   giftCards: [],
   students: [],
   communities: [],
@@ -123,10 +133,11 @@ export const initialState: AppState = {
   alumniJobs: [],
   rentalAgencies: [],
   cars: [],
-  posProducts: [],
-  dailySales: [],
+  posProducts: initialPosProducts,
+  dailySales: initialDailySales,
   saasProducts: [],
   stockItems: [],
+  pricing: initialPricing,
 };
 
 

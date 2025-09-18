@@ -1,3 +1,5 @@
+
+
 // This file is a placeholder for your actual Firestore data fetching logic.
 // In a real application, you would use the Firebase SDK to interact with Firestore.
 // For this prototype, we are using static data from local files.
@@ -37,6 +39,8 @@ import { initialSettings } from './settings';
 import { initialRaahaAgencies } from './raaha-agencies';
 import { initialRaahaWorkers } from './raaha-workers';
 import { initialRaahaRequests } from './raaha-requests';
+import type { KnowledgeDocument } from '@/lib/knowledge.schema';
+import { initialKnowledgeBase } from '@/lib/knowledge';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -83,6 +87,8 @@ export const getBeautyAppointments = async () => { await delay(50); return initi
 export const getUsedItems = async () => { await delay(50); return initialUsedItems; };
 export const getDailySales = async () => { await delay(50); return initialDailySales; };
 export const getSettings = async () => { await delay(50); return initialSettings; };
+export const getKnowledgeBase = async (): Promise<KnowledgeDocument[]> => { await delay(50); return initialKnowledgeBase; };
+
 
 export const getRaahaData = async () => {
     await delay(50);

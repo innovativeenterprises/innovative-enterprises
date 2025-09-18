@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { type PosProduct, type CartItem, type DailySales } from '@/lib/pos-data';
+import { type PosProduct, type CartItem, type DailySales } from '@/lib/pos-data.schema';
 import { PosGrid } from './pos-grid';
 import { CheckoutPanel } from './checkout-panel';
 import { useToast } from '@/hooks/use-toast';

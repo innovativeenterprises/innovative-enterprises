@@ -7,7 +7,7 @@ import { BarChart, BrainCircuit } from 'lucide-react';
 import { analyzeSalesData } from '@/ai/flows/pos-agent';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useSettingsData } from '@/hooks/use-global-store-data';
-import type { DailySales } from '@/lib/pos-data';
+import type { DailySales } from '@/lib/pos-data.schema';
 
 export function SalesAnalyticsChat({ dailySales }: { dailySales: DailySales }) {
     const { settings } = useSettingsData();
