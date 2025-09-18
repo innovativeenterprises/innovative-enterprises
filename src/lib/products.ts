@@ -269,4 +269,18 @@ export const initialProducts: Product[] = [
         adminStatus: "Completed",
         href: "/construction-tech/fire-safety-estimator",
     },
+     {
+        id: 18,
+        name: "SiteGuard Compliance",
+        description: "Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1550977875-a8536b35e848?q=80&w=600&auto=format&fit=crop",
+        aiHint: "safety helmet",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/site-guard",
+    },
 ];
