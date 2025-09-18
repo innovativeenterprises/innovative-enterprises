@@ -49,6 +49,7 @@ import { generateBoqCategory, generateFullBoq } from './boq-generator';
 import { transformImage } from './image-transformer';
 import { generateListingDescription } from './listing-description-generator';
 import { generateBookingResponse } from './booking-response-generator';
+import { generateGamifiedLesson } from './lesson-gamifier';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -106,4 +107,5 @@ export {
   transformImage,
   generateListingDescription,
   generateBookingResponse,
+  generateGamifiedLesson,
 };
