@@ -1,0 +1,58 @@
+
+import type { Provider } from './providers.schema';
+
+export const initialProviders: Provider[] = [
+  {
+    id: 'prov_web_dev_agency',
+    name: 'Pixel Perfect',
+    email: 'contact@pixelperfect.com',
+    services: 'Web Development, UI/UX Design',
+    status: 'Vetted',
+    portfolio: 'https://example.com/pixelperfect',
+    notes: 'Primary partner for all frontend development tasks. Very reliable.',
+    subscriptionTier: 'Yearly',
+    subscriptionExpiry: new Date('2025-06-01'),
+  },
+  {
+    id: 'prov_data_analysis_freelancer',
+    name: 'Anaytics LLC',
+    email: 'ahmed.k@analytics.om',
+    services: 'Data Analysis, Business Intelligence',
+    status: 'Vetted',
+    portfolio: 'https://example.com/ahmed',
+    notes: 'Specializes in financial data modeling. Great for CFO dashboard tasks.',
+    subscriptionTier: 'Monthly',
+    subscriptionExpiry: new Date(new Date().getTime() + 25 * 24 * 60 * 60 * 1000),
+  },
+  {
+    id: 'prov_cybersecurity_consultants',
+    name: 'CyberSec Global',
+    email: 'inquiries@cybersecglobal.net',
+    services: 'Cybersecurity, Penetration Testing',
+    status: 'Pending Review',
+    portfolio: 'https://example.com/cybersec',
+    notes: 'New applicant. Credentials seem strong. Need to complete vetting process.',
+    subscriptionTier: 'None',
+  },
+   {
+    id: 'prov_cloud_solutions_partner',
+    name: 'InfraCloud Solutions',
+    email: 'sales@infracloud.io',
+    services: 'Cloud Migration, DevOps, AWS, Azure',
+    status: 'Vetted',
+    portfolio: 'https://example.com/infracloud',
+    notes: 'Go-to partner for all cloud infrastructure projects.',
+    subscriptionTier: 'Lifetime',
+  },
+  {
+    id: 'prov_legal_advisory_firm',
+    name: 'Oman Legal Associates',
+    email: 'consult@omanlegal.co',
+    services: 'Legal Advisory, Contract Law',
+    status: 'On Hold',
+    portfolio: 'https://example.com/omanlegal',
+    notes: 'Partnership on hold pending renewal of their legal license.',
+    subscriptionTier: 'Yearly',
+    subscriptionExpiry: new Date('2024-02-01'),
+  },
+];

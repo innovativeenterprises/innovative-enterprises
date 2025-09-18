@@ -17,3 +17,5 @@ export const AssetSchema = z.object({
   image: z.string(),
   aiHint: z.string(),
 });
+
+export type Asset = z.infer<typeof AssetSchema>;
