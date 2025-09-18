@@ -4,6 +4,8 @@
 import { Toaster } from '@/components/ui/toaster';
 import ChatWidget from '@/components/chat-widget';
 import { StoreProvider } from '@/components/layout/store-provider';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 export default function ClientLayout({
   children,
@@ -13,7 +15,9 @@ export default function ClientLayout({
   return (
     <StoreProvider>
       <div className="flex min-h-screen flex-col">
-        {children}
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
         <Toaster />
         <ChatWidget />
       </div>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -7,7 +6,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescri
 import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, ImageIcon, MapPin, Gift, VrHeadset, Layers, Home, Heart, BookUser, Recycle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -27,9 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
-import { useCartData } from '@/hooks/use-global-store-data';
-import HomeWorkforceIcon from '@/components/icons/home-workforce-icon';
-import { useSettingsData } from '@/hooks/use-global-store-data';
+import { useCartData, useSettingsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
 import SanadHubIcon from '../icons/sanad-hub-icon';
 import BusinessHubIcon from '../icons/business-hub-icon';
