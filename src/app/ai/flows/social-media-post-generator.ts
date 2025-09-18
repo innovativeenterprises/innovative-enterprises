@@ -12,13 +12,16 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {
-    GenerateSocialMediaPostInput,
-    GenerateSocialMediaPostInputSchema,
-    GenerateSocialMediaPostOutput,
-    GenerateSocialMediaPostOutputSchema
-} from './social-media-post-generator.schema';
 import { generateImage } from './image-generator';
+import {z} from 'zod';
+import { 
+    GenerateSocialMediaPostInputSchema, 
+    type GenerateSocialMediaPostInput, 
+    GenerateSocialMediaPostOutputSchema,
+    type GenerateSocialMediaPostOutput,
+    platformEnum,
+} from './social-media-post-generator.schema';
+
 
 export async function generateSocialMediaPost(input: GenerateSocialMediaPostInput): Promise<GenerateSocialMediaPostOutput> {
   return socialMediaPostGeneratorFlow(input);
@@ -96,3 +99,5 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     };
   }
 );
+
+    
