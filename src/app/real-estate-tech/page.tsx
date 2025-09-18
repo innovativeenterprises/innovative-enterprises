@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, Building2, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Layers, Leaf } from "lucide-react";
+import { Check, Building2, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Layers, Leaf, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products.schema";
@@ -31,7 +31,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "InvestiSight AI": GanttChartSquare,
         "FacilityFlow SaaS": Users,
         "PropToken Platform": Layers,
-        "Tenant Digital Briefcase": ClipboardCheck,
+        "Tenant Digital Briefcase": Briefcase,
         "EcoBuild Certify": Leaf,
     };
     const Icon = iconMap[product.name] || Building2;
