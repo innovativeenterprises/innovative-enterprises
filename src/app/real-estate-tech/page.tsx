@@ -1,10 +1,12 @@
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, Building2, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart } from "lucide-react";
 import Link from "next/link";
-import { getProducts } from "@/lib/firestore";
-import type { Product } from "@/lib/products";
+import { useProductsData } from "@/hooks/use-global-store-data";
+import type { Product } from "@/lib/products.schema";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -58,9 +60,9 @@ const ProductCard = ({ product }: { product: Product }) => {
 )};
 
 
-export default async function RealEstateTechPage() {
-    const allProducts = await getProducts();
-    const realEstateProducts = allProducts.filter(p => p.category === "Real Estate Tech" && p.enabled);
+export default function RealEstateTechPage() {
+    const { products } = useProductsData();
+    const realEstateProducts = products.filter(p => p.category === "Real Estate Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

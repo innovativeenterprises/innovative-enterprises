@@ -297,4 +297,18 @@ export const initialProducts: Product[] = [
         adminStatus: "Completed",
         href: "/construction-tech/workforce-scheduler",
     },
+    {
+        id: 20,
+        name: "FacilityFlow SaaS",
+        description: "A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking.",
+        stage: "Live & Operating",
+        category: "Real Estate Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?q=80&w=600&auto=format&fit=crop",
+        aiHint: "technician working",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/real-estate-tech/facility-flow",
+    },
 ];
