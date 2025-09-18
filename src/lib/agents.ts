@@ -1,5 +1,5 @@
 
-import { Bot, User, Briefcase, BrainCircuit, Handshake, Scale, GanttChartSquare, Phone, MessageSquare, Truck, Warehouse, Cpu, Search, Lightbulb, Users, Building2, GraduationCap, Car, Heart, BookUser, Recycle } from 'lucide-react';
+import { Bot, User, Briefcase, BrainCircuit, Handshake, Scale, GanttChartSquare, Phone, MessageSquare, Truck, Warehouse, Cpu, Search, Lightbulb, Users, Building2, GraduationCap, Car, Heart, BookUser, Recycle, UserRoundCheck, FileText, Trophy, Mic, Languages, ImageIcon, Video, MessageSquareQuote, GitBranch, Gem, Award } from 'lucide-react';
 import type { AgentCategory } from './agents.schema';
 
 export const initialStaffData = {
