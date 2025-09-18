@@ -6,9 +6,10 @@ import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import Image from 'next/image';
 import { Github } from 'lucide-react';
 import type { Service } from '@/lib/services';
+import { useMemo } from 'react';
 
 export default function FooterClient({ services }: { services: Service[] }) {
-  const currentYear = new Date().getFullYear().toString();
+  const currentYear = useMemo(() => new Date().getFullYear().toString(), []);
   
   return (
     <footer className="border-t bg-card">
