@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
@@ -10,7 +11,30 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import type { UsedItem } from '@/lib/used-items';
+import { formatDistanceToNow } from 'date-fns';
+import type { Metadata } from 'next';
+import { initialUsedItems, type UsedItem } from '@/lib/used-items';
+
+export async function generateStaticParams() {
+  return initialUsedItems.map((item) => ({
+    id: item.id,
+  }));
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const item = initialUsedItems.find(i => i.id === params.id);
+
+  if (!item) {
+    return {
+      title: 'Item Not Found',
+    };
+  }
+
+  return {
+    title: `${item.name} | StockClear`,
+    description: item.description,
+  };
+}
 
 export default function ItemDetailPage() {
     const params = useParams();
