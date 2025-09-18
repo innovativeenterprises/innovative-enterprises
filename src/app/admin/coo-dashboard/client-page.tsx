@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import type { Product } from '@/lib/products';
 import type { Provider } from '@/lib/providers';
-import type { KpiData } from '@/lib/cfo-data';
+import type { KpiData } from '@/lib/cfo-data.schema';
 import { analyzeOperations } from '@/ai/flows/agentic-coo';
 import type { CooAnalysisOutput } from '@/ai/flows/agentic-coo.schema';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

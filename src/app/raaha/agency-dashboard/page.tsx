@@ -1,3 +1,7 @@
+
+
+'use client';
+
 import AgencyDashboardClient from './client-page';
 import { initialAgencies } from '@/lib/raaha-agencies';
 import { initialWorkers } from '@/lib/raaha-workers';

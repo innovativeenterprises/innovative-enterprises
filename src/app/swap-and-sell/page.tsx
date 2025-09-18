@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo } from "react";
@@ -10,6 +11,7 @@ import { useUsedItemsData } from '@/hooks/use-global-store-data';
 import type { UsedItem } from '@/lib/used-items';
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 const ItemCard = ({ item }: { item: UsedItem }) => (
      <Link href={`/swap-and-sell/${item.id}`} className="flex">

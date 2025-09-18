@@ -1,9 +1,10 @@
 
+
 import CooDashboardClient from './client-page';
 import type { Metadata } from 'next';
 import { getProducts } from '@/lib/firestore';
 import { getProviders } from '@/lib/firestore';
-import { kpiData } from '@/lib/cfo-data';
+import { getKpiData } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "AI COO Dashboard",
@@ -11,8 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default async function CooDashboardPage() {
-    const products = await getProducts();
-    const providers = await getProviders();
+    const [products, providers, kpiData] = await Promise.all([
+        getProducts(),
+        getProviders(),
+        getKpiData(),
+    ]);
 
     return <CooDashboardClient 
         initialProducts={products}
