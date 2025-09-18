@@ -40,18 +40,20 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
 export default function CooDashboardClient({
     initialProducts,
     initialProviders,
-    initialKpiData
+    initialKpiData,
+    initialAnalysis,
 }: {
     initialProducts: Product[],
     initialProviders: Provider[],
-    initialKpiData: KpiData[]
+    initialKpiData: KpiData[],
+    initialAnalysis: CooAnalysisOutput,
 }) {
     const [products, setProducts] = useState(initialProducts);
     const [providers, setProviders] = useState(initialProviders);
     const [kpiData, setKpiData] = useState(initialKpiData);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(initialAnalysis);
 
     const runAnalysis = async () => {
         setIsLoading(true);
@@ -66,11 +68,6 @@ export default function CooDashboardClient({
             setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        runAnalysis();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products, providers, kpiData]);
 
     return (
         <div className="space-y-8">
