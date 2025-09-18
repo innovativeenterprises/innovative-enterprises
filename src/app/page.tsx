@@ -1,7 +1,3 @@
-
-
-
-
 import AiToolsCta from "@/components/ai-tools-cta";
 import ClientTestimonials from "@/components/client-testimonials";
 import CompanyOverview from "@/components/company-overview";
@@ -22,7 +18,7 @@ export default async function Home() {
 
   return (
     <>
-      <CompanyOverview clients={clients} />
+      <CompanyOverview />
       <ServiceCatalog />
       <ProductShowcase />
       <ClientTestimonials />

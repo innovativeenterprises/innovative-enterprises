@@ -1,15 +1,12 @@
-
-
-
-
-
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
+import { getClients } from '@/lib/firestore';
 
 export default function CompanyOverview() {
+  const clients = []; // This will be populated by the parent server component
   
   return (
     <section className="bg-background">
@@ -38,7 +35,7 @@ export default function CompanyOverview() {
                 </Button>
             </div>
             <div className="flex items-center gap-4 pt-4">
-                <OverviewAvatars />
+                <OverviewAvatars clients={clients} />
                 <div>
                     <div className="flex text-yellow-400">
                         <Star className="w-5 h-5 fill-current" />
