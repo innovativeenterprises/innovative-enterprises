@@ -5,7 +5,7 @@
 import { useContext, useSyncExternalStore } from 'react';
 import type { AppSettings } from '@/lib/settings';
 import type { CartItem } from '@/lib/global-store';
-import { initialState, store, type AppState } from '@/lib/global-store';
+import { initialState, store as legacyStore, type AppState, type StoreType } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
 import type { SignedLease } from '@/lib/leases';
 import type { BookingRequest } from '@/lib/stairspace-requests';
@@ -28,6 +28,9 @@ import type { Asset } from '@/lib/assets';
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext);
+  if (!store) {
+    throw new Error('useStoreData must be used within a StoreProvider.');
+  }
   const state = useSyncExternalStore(
     store.subscribe,
     () => selector(store.get()),
@@ -36,10 +39,24 @@ function useStoreData<T>(selector: (state: AppState) => T): T {
   return state;
 }
 
+const getStore = () => {
+    // This is a bit of a hack to get the store in non-hook contexts
+    // It will not be reactive.
+    if (typeof window === 'undefined') {
+        return legacyStore;
+    }
+    // A better approach in a real app might be to pass the store instance around
+    // or use a different pattern for non-component updates.
+    return legacyStore;
+}
+
 // Settings
-export const setSettings = (updater: (prev: AppSettings) => AppSettings) => store.set((state) => ({ ...state, settings: updater(state.settings) }));
+export const setSettings = (updater: (prev: AppSettings) => AppSettings) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, settings: updater(state.settings) }));
+};
 export const useSettingsData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         settings: useStoreData((s) => s.settings),
         setSettings,
@@ -48,9 +65,12 @@ export const useSettingsData = () => {
 };
 
 // Cart
-export const setCart = (updater: (prev: CartItem[]) => CartItem[]) => store.set((state) => ({ ...state, cart: updater(state.cart) }));
+export const setCart = (updater: (prev: CartItem[]) => CartItem[]) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, cart: updater(state.cart) }));
+};
 export const useCartData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         cart: useStoreData((s) => s.cart),
         setCart,
@@ -59,22 +79,27 @@ export const useCartData = () => {
 };
 
 // Signed Leases
-export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => store.set((state) => ({ ...state, signedLeases: updater(state.signedLeases) }));
+export const setSignedLeases = (updater: (prev: SignedLease[]) => SignedLease[]) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, signedLeases: updater(state.signedLeases) }));
+};
 export const useLeasesData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         leases: useStoreData((s) => s.signedLeases),
         setLeases: setSignedLeases,
         isClient,
     };
 };
-export const useSignedLeasesData = useLeasesData;
 
 
 // StairSpace Requests
-export const setStairspaceRequests = (updater: (prev: BookingRequest[]) => BookingRequest[]) => store.set((state) => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
+export const setStairspaceRequests = (updater: (prev: BookingRequest[]) => BookingRequest[]) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, stairspaceRequests: updater(state.stairspaceRequests) }));
+};
 export const useStairspaceRequestsData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         stairspaceRequests: useStoreData((s) => s.stairspaceRequests),
         setStairspaceRequests,
@@ -84,9 +109,12 @@ export const useStairspaceRequestsData = () => {
 
 
 // Products
-export const setProducts = (updater: (prev: Product[]) => Product[]) => store.set((state) => ({ ...state, products: updater(state.products) }));
+export const setProducts = (updater: (prev: Product[]) => Product[]) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, products: updater(state.products) }));
+};
 export const useProductsData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         products: useStoreData((s) => s.products),
         setProducts,
@@ -95,9 +123,12 @@ export const useProductsData = () => {
 };
 
 // Providers
-export const setProviders = (updater: (prev: Provider[]) => Provider[]) => store.set((state) => ({ ...state, providers: updater(state.providers) }));
+export const setProviders = (updater: (prev: Provider[]) => Provider[]) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, providers: updater(state.providers) }));
+};
 export const useProvidersData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         providers: useStoreData((s) => s.providers),
         setProviders,
@@ -106,9 +137,12 @@ export const useProvidersData = () => {
 };
 
 // Opportunities
-export const setOpportunities = (updater: (prev: Opportunity[]) => Opportunity[]) => store.set((state) => ({ ...state, opportunities: updater(state.opportunities) }));
+export const setOpportunities = (updater: (prev: Opportunity[]) => Opportunity[]) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, opportunities: updater(state.opportunities) }));
+};
 export const useOpportunitiesData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         opportunities: useStoreData((s) => s.opportunities),
         setOpportunities,
@@ -117,9 +151,12 @@ export const useOpportunitiesData = () => {
 };
 
 // Services
-export const setServices = (updater: (prev: Service[]) => Service[]) => store.set((state) => ({ ...state, services: updater(state.services) }));
+export const setServices = (updater: (prev: Service[]) => Service[]) => {
+    const store = getStore();
+    store.set((state) => ({ ...state, services: updater(state.services) }));
+};
 export const useServicesData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         services: useStoreData((s) => s.services),
         setServices,
@@ -128,11 +165,11 @@ export const useServicesData = () => {
 };
 
 // Staff (Leadership, Staff, Agents)
-export const setLeadership = (updater: (prev: AppState['leadership']) => AppState['leadership']) => store.set(state => ({...state, leadership: updater(state.leadership)}));
-export const setStaff = (updater: (prev: AppState['staff']) => AppState['staff']) => store.set(state => ({...state, staff: updater(state.staff)}));
-export const setAgentCategories = (updater: (prev: AppState['agentCategories']) => AppState['agentCategories']) => store.set(state => ({...state, agentCategories: updater(state.agentCategories)}));
+export const setLeadership = (updater: (prev: AppState['leadership']) => AppState['leadership']) => getStore().set(state => ({...state, leadership: updater(state.leadership)}));
+export const setStaff = (updater: (prev: AppState['staff']) => AppState['staff']) => getStore().set(state => ({...state, staff: updater(state.staff)}));
+export const setAgentCategories = (updater: (prev: AppState['agentCategories']) => AppState['agentCategories']) => getStore().set(state => ({...state, agentCategories: updater(state.agentCategories)}));
 export const useStaffData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         leadership: useStoreData(s => s.leadership),
         staff: useStoreData(s => s.staff),
@@ -146,12 +183,12 @@ export const useStaffData = () => {
 
 
 // RAAHA Data
-export const setRaahaAgencies = (updater: (prev: RaahaAgency[]) => RaahaAgency[]) => store.set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
-export const setRaahaWorkers = (updater: (prev: RaahaWorker[]) => RaahaWorker[]) => store.set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
-export const setRaahaRequests = (updater: (prev: HireRequest[]) => HireRequest[]) => store.set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
+export const setRaahaAgencies = (updater: (prev: RaahaAgency[]) => RaahaAgency[]) => getStore().set(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) }));
+export const setRaahaWorkers = (updater: (prev: RaahaWorker[]) => RaahaWorker[]) => getStore().set(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) }));
+export const setRaahaRequests = (updater: (prev: HireRequest[]) => HireRequest[]) => getStore().set(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
 
 export const useRaahaData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         agencies: useStoreData(s => s.raahaAgencies),
         setAgencies: setRaahaAgencies,
@@ -164,9 +201,9 @@ export const useRaahaData = () => {
 };
 
 // StairSpace Data
-export const setStairspaceListings = (updater: (prev: StairspaceListing[]) => StairspaceListing[]) => store.set((state) => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
+export const setStairspaceListings = (updater: (prev: StairspaceListing[]) => StairspaceListing[]) => getStore().set((state) => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
 export const useStairspaceData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         stairspaceListings: useStoreData((s) => s.stairspaceListings),
         setStairspaceListings,
@@ -175,9 +212,9 @@ export const useStairspaceData = () => {
 };
 
 // Cost Settings
-export const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => store.set((state) => ({ ...state, costSettings: updater(state.costSettings) }));
+export const setCostSettings = (updater: (prev: CostRate[]) => CostRate[]) => getStore().set((state) => ({ ...state, costSettings: updater(state.costSettings) }));
 export const useCostSettingsData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         costSettings: useStoreData((s) => s.costSettings),
         setCostSettings,
@@ -186,11 +223,11 @@ export const useCostSettingsData = () => {
 };
 
 // Beauty Hub Data
-export const setBeautyCenters = (updater: (prev: AppState['beautyCenters']) => AppState['beautyCenters']) => store.set(state => ({...state, beautyCenters: updater(state.beautyCenters)}));
-export const setBeautyServices = (updater: (prev: AppState['beautyServices']) => AppState['beautyServices']) => store.set(state => ({...state, beautyServices: updater(state.beautyServices)}));
-export const setBeautyAppointments = (updater: (prev: AppState['beautyAppointments']) => AppState['beautyAppointments']) => store.set(state => ({...state, beautyAppointments: updater(state.beautyAppointments)}));
+export const setBeautyCenters = (updater: (prev: AppState['beautyCenters']) => AppState['beautyCenters']) => getStore().set(state => ({...state, beautyCenters: updater(state.beautyCenters)}));
+export const setBeautyServices = (updater: (prev: AppState['beautyServices']) => AppState['beautyServices']) => getStore().set(state => ({...state, beautyServices: updater(state.beautyServices)}));
+export const setBeautyAppointments = (updater: (prev: AppState['beautyAppointments']) => AppState['beautyAppointments']) => getStore().set(state => ({...state, beautyAppointments: updater(state.beautyAppointments)}));
 export const useBeautyData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         agencies: useStoreData(s => s.beautyCenters),
         services: useStoreData(s => s.beautyServices),
@@ -204,7 +241,7 @@ export const useBeautyData = () => {
 
 // RAAHA Worker Data
 export const useWorkersData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         workers: useStoreData((s) => s.raahaWorkers),
         setWorkers: setRaahaWorkers,
@@ -214,7 +251,7 @@ export const useWorkersData = () => {
 
 // RAAHA Agency Data
 export const useAgenciesData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         agencies: useStoreData((s) => s.raahaAgencies),
         setAgencies: setRaahaAgencies,
@@ -224,7 +261,7 @@ export const useAgenciesData = () => {
 
 // RAAHA Request Data
 export const useRequestsData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         requests: useStoreData((s) => s.raahaRequests),
         setRaahaRequests: setRaahaRequests,
@@ -234,18 +271,18 @@ export const useRequestsData = () => {
 
 // Assets
 export const useAssetsData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         assets: useStoreData((s) => s.assets),
-        setAssets: (updater: (prev: Asset[]) => Asset[]) => store.set(state => ({ ...state, assets: updater(state.assets) })),
+        setAssets: (updater: (prev: Asset[]) => Asset[]) => getStore().set(state => ({ ...state, assets: updater(state.assets) })),
         isClient,
     };
 };
 
 // Used Items
-export const setUsedItems = (updater: (prev: UsedItem[]) => UsedItem[]) => store.set((state) => ({ ...state, usedItems: updater(state.usedItems) }));
+export const setUsedItems = (updater: (prev: UsedItem[]) => UsedItem[]) => getStore().set((state) => ({ ...state, usedItems: updater(state.usedItems) }));
 export const useUsedItemsData = () => {
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const isClient = useSyncExternalStore(useContext(StoreContext)!.subscribe, () => true, () => false);
     return {
         items: useStoreData((s) => s.usedItems),
         setItems: setUsedItems,

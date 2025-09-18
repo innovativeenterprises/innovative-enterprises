@@ -13,13 +13,21 @@
 
 import { initialSettings, type AppSettings } from './settings';
 import type { Product } from './products.schema';
+import { initialProducts } from './products';
 import type { Provider } from './providers.schema';
+import { initialProviders } from './providers';
 import type { Service } from './services.schema';
+import { initialServices } from './services';
 import type { Opportunity } from './opportunities.schema';
-import type { SignedLease } from './leases.schema';
-import type { BookingRequest } from './stairspace-requests.schema';
+import { initialOpportunities } from './opportunities';
+import type { SignedLease } from './leases';
+import { initialLeases } from './leases';
+import type { BookingRequest } from './stairspace-requests';
+import { initialStairspaceRequests } from './stairspace-requests';
 import type { StairspaceListing } from './stairspace.schema';
+import { initialStairspaceListings } from './stairspace-listings';
 import type { Agent, AgentCategory } from './agents.schema';
+import { initialStaffData } from './agents';
 import { initialAgencies as initialRaahaAgencies } from './raaha-agencies';
 import { initialWorkers as initialRaahaWorkers } from './raaha-workers';
 import { initialRequests as initialRaahaRequests } from './raaha-requests';
@@ -29,15 +37,6 @@ import { initialBeautyAppointments } from './beauty-appointments';
 import { initialCostSettings } from './cost-settings';
 import { initialAssets } from './assets';
 import { initialUsedItems } from './used-items';
-import { initialProducts } from './products';
-import { initialProviders } from './providers';
-import { initialOpportunities } from './opportunities';
-import { initialServices } from './services';
-import { initialLeases } from './leases';
-import { initialStairspaceRequests } from './stairspace-requests';
-import { initialStairspaceListings } from './stairspace-listings';
-import { initialStaffData } from './agents';
-
 
 export interface CartItem extends Product {
   quantity: number;
@@ -91,38 +90,25 @@ export const initialState: AppState = {
   usedItems: initialUsedItems,
 };
 
-// The single source of truth for our application's shared state.
-let state: AppState = { ...initialState };
 
-// A list of all component update functions to call when state changes.
-const listeners = new Set<() => void>();
+export const createAppStore = (initState: AppState = initialState) => {
+    let state: AppState = { ...initState };
+    const listeners = new Set<() => void>();
 
-// The core of our state management. It allows getting the current state,
-// setting new state, and subscribing to changes.
-export const store = {
-  /**
-   * Returns a snapshot of the current state.
-   */
-  get: (): AppState => state,
+    return {
+        get: (): AppState => state,
+        set: (updater: (currentState: AppState) => AppState) => {
+            state = updater(state);
+            listeners.forEach((listener) => listener());
+        },
+        subscribe: (listener: () => void) => {
+            listeners.add(listener);
+            return () => listeners.delete(listener);
+        },
+    };
+}
 
-  /**
-   * Updates a part of the state and notifies all listeners.
-   * @param updater A function that receives the current state and returns the new state.
-   */
-  set: (updater: (currentState: AppState) => AppState) => {
-    state = updater(state);
-    // Notify all subscribed components that the state has changed.
-    listeners.forEach((listener) => listener());
-  },
+export type StoreType = ReturnType<typeof createAppStore>;
 
-  /**
-   * Adds a listener function to be called on state changes.
-   * @param listener The function to call when the state updates.
-   * @returns A function to unsubscribe the listener.
-   */
-  subscribe: (listener: () => void) => {
-    listeners.add(listener);
-    // Return an unsubscribe function.
-    return () => listeners.delete(listener);
-  },
-};
+// Legacy export for any components that might still be using it directly.
+export const store = createAppStore();
