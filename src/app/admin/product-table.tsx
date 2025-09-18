@@ -67,7 +67,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                     onSave={handleSave}
                     stages={initialStages}
                 >
-                     <Button onClick={() => openDialog()}>
+                     <Button>
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Product
                     </Button>
                 </AddEditProductDialog>
@@ -108,9 +108,20 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                                         />
                                     </TableCell>
                                      <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
-                                            <Edit />
-                                        </Button>
+                                        <AddEditProductDialog
+                                            product={product}
+                                            onSave={handleSave}
+                                            stages={initialStages}
+                                            isOpen={isDialogOpen && selectedProduct?.id === product.id}
+                                            onOpenChange={(open) => {
+                                                if (!open) setSelectedProduct(undefined);
+                                                setIsDialogOpen(open);
+                                            }}
+                                        >
+                                            <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
+                                                <Edit />
+                                            </Button>
+                                        </AddEditProductDialog>
                                     </TableCell>
                                 </TableRow>
                             ))

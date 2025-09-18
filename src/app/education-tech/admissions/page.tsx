@@ -125,7 +125,7 @@ export default function AdmissionsPage() {
                             Streamline your admissions process. Submit an application below to see how our AI, "Admito," provides instant preliminary analysis for your admissions team.
                         </p>
                     </div>
-
+                    
                     <div className="flex justify-end">
                         <Button asChild variant="outline">
                             <Link href="/admin/education-tech/admissions/dashboard">

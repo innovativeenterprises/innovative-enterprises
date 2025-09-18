@@ -77,7 +77,7 @@ const identityAnalysisFlow = ai.defineFlow(
     const { output } = await prompt(input);
 
     if (output) {
-        // Fallback filename generation, just in case the model doesn't create a good one.
+        // Fallback filename generation, just in case the model fails to do it.
         const fullName = output.personalDetails?.fullName;
         const civilId = output.idCardDetails?.civilNumber;
         const namePart = fullName?.replace(/\s+/g, '_') || (civilId ? `ID_${civilId}` : 'UnknownPerson');
