@@ -24,7 +24,7 @@ export default async function AdminContentPage() {
             <div>
                 <h1 className="text-3xl font-bold">Site Content</h1>
                 <p className="text-muted-foreground">
-                    Manage your public-facing services, products, and client testimonials.
+                    Manage your public-facing services, products, clients, and pricing.
                 </p>
             </div>
             <Tabs defaultValue="services" className="w-full">
