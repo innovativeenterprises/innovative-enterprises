@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -53,7 +54,7 @@ export default function InterviewCoachForm() {
   });
 
   useEffect(() => {
-    // This effect will run when `questions` has been populated.
+    let stream: MediaStream | null = null;
     const getCameraPermission = async () => {
       if (questions.length > 0 && hasCameraPermission === null) {
          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -62,7 +63,7 @@ export default function InterviewCoachForm() {
             return;
         }
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
           setHasCameraPermission(true);
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
@@ -81,14 +82,12 @@ export default function InterviewCoachForm() {
 
     getCameraPermission();
 
-    // Cleanup function to stop video stream when component unmounts or questions are cleared
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
+      if (stream) {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [questions, hasCameraPermission, toast]);
+  }, [questions.length, hasCameraPermission, toast]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
@@ -142,7 +141,7 @@ export default function InterviewCoachForm() {
 
   const handlePrevQuestion = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex(prev => prev - 1);
       setFeedback(null);
       answerForm.reset();
     }
