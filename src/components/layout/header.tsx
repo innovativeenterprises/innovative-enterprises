@@ -3,14 +3,14 @@
 
 import { getServices, getSettings } from "@/lib/firestore";
 import HeaderClient from "./header-client";
-import { Handshake, Store, Recycle, HomeWorkforceIcon as RaahaIcon, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser } from "lucide-react";
+import { Handshake, Store, Recycle, HomeWorkforceIcon as RaahaIcon, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat } from "lucide-react";
 import SanadHubIcon from "../icons/sanad-hub-icon";
 import BusinessHubIcon from "../icons/business-hub-icon";
 import AmeenSmartLockIcon from "../icons/ameen-smart-lock-icon";
 import KhidmaIcon from "../icons/khidma-icon";
 import VmallIcon from "../icons/vmall-icon";
 import AppiIcon from "../icons/appi-icon";
-import { Gift, Warehouse, HardHat } from "lucide-react";
+import { Gift, Warehouse } from "lucide-react";
 
 
 const solutions = [

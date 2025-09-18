@@ -11,5 +11,4 @@ export const metadata: Metadata = {
 export default function GuardianAiPage() {
     return <GuardianAiClientPage initialStudents={initialStudents} />;
 }
-
     

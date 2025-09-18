@@ -1,5 +1,6 @@
-import { initialStudents } from '@/lib/students';
+
 import StudentRecordsClientPage from './client-page';
+import { initialStudents } from '@/lib/students';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
