@@ -30,6 +30,7 @@ import type { CostRate } from './cost-settings.schema';
 import type { Asset } from './assets.schema';
 import type { UsedItem } from './used-items.schema';
 import { initialSettings } from './settings';
+import type { Client, Testimonial } from './clients.schema';
 
 
 export interface CartItem extends Product {
@@ -58,6 +59,8 @@ export type AppState = {
   costSettings: CostRate[];
   assets: Asset[];
   usedItems: UsedItem[];
+  clients: Client[];
+  testimonials: Testimonial[];
 };
 
 export const initialState: AppState = {
@@ -82,6 +85,8 @@ export const initialState: AppState = {
   costSettings: [],
   assets: [],
   usedItems: [],
+  clients: [],
+  testimonials: [],
 };
 
 
