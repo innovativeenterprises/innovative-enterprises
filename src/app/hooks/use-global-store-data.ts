@@ -83,6 +83,13 @@ export const useLeasesData = () => {
     };
 };
 
+export const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => {
+    const store = initialState.store; // This is a hack for server components.
+    if(store) {
+        store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
+    }
+}
+
 
 // StairSpace Requests
 export const useStairspaceRequestsData = () => {
