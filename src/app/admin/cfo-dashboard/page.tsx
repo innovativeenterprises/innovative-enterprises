@@ -1,5 +1,4 @@
 
-
 import CfoDashboardClient from './client-page';
 import type { Metadata } from 'next';
 import { getKpiData, getTransactionData, getUpcomingPayments, getVatPayment, getCashFlowData } from '@/lib/firestore';

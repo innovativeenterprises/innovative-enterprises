@@ -1,11 +1,11 @@
 
+
 'use server';
 
 import {z} from 'zod';
-import { initialStoreProducts } from '@/lib/products';
-import { type Product } from '@/lib/products.schema';
+import type { Product } from '@/lib/products.schema';
 
-const platformEnum = z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp']);
+export const platformEnum = z.enum(['Twitter', 'LinkedIn', 'Facebook', 'Instagram', 'WhatsApp']);
 export type Platform = z.infer<typeof platformEnum>;
 
 export const GenerateSocialMediaPostInputSchema = z.object({
