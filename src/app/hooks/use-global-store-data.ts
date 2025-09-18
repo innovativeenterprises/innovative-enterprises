@@ -28,6 +28,9 @@ import type { Asset } from '@/lib/assets';
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext);
+  if (!store) {
+    throw new Error('useStoreData must be used within a StoreProvider.');
+  }
   const state = useSyncExternalStore(
     store.subscribe,
     () => selector(store.get()),
@@ -35,6 +38,8 @@ function useStoreData<T>(selector: (state: AppState) => T): T {
   );
   return state;
 }
+
+export type StoreType = typeof store;
 
 // Settings
 export const setSettings = (updater: (prev: AppSettings) => AppSettings) => store.set((state) => ({ ...state, settings: updater(state.settings) }));
