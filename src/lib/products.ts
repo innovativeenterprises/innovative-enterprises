@@ -423,5 +423,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/education-tech/alumni-connect",
+    },
+    {
+        id: 29,
+        name: "AI Interior Designer",
+        description: "Upload a photo of your room and get instant interior design ideas powered by AI.",
+        stage: "Live & Operating",
+        category: "AI & Creative Tools",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=600&auto=format&fit=crop",
+        aiHint: "modern living room",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/interior-designer"
     }
 ];

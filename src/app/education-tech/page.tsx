@@ -7,13 +7,6 @@ import { Check, GraduationCap, AlertTriangle, GanttChartSquare, ClipboardCheck, 
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products.schema";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Education Technology Solutions",
-  description: "A suite of AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
-};
-
 
 const problems = [
     { title: "Manual Processes", description: "Administrative overhead from manual paperwork, scheduling, and approvals slows down institutions." },
