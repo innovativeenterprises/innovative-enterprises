@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import HeaderClient from "./header-client";
@@ -135,6 +134,12 @@ const industries: { title: string; href: string; description: string, icon: any 
     href: "/community-hub",
     description: "A digital platform for communities and charities to manage their own affairs, elections, and events.",
     icon: Users,
+  },
+   {
+    title: "We Match Game",
+    href: "/we-match",
+    description: "An immersive AR social game designed to connect people through real-world challenges.",
+    icon: Gamepad2,
   },
 ];
 
