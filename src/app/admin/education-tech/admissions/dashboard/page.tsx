@@ -16,7 +16,7 @@ const initialApplications = [
 ];
 
 
-export default function AdmissionsDashboardPage() {
+export default async function AdmissionsDashboardPage() {
     // Data is fetched on the server and passed to the client component.
     return <AdmissionsDashboardClient initialApplications={initialApplications} />;
 }
