@@ -255,4 +255,18 @@ export const initialProducts: Product[] = [
         adminStatus: "Completed",
         href: "/construction-tech/quantity-calculator",
     },
+     {
+        id: 17,
+        name: "Fire & Safety Estimator",
+        description: "Upload a floor plan and let our AI generate a preliminary list of fire safety equipment and an initial cost estimate.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1617997572343-24156d491a5e?q=80&w=600&auto=format&fit=crop",
+        aiHint: "fire safety",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/fire-safety-estimator",
+    },
 ];

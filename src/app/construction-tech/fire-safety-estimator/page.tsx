@@ -1,3 +1,4 @@
+
 import { Siren } from "lucide-react";
 import FireSafetyForm from "./fire-safety-form";
 import type { Metadata } from 'next';
