@@ -324,5 +324,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/construction-tech/aero-site",
+    },
+    {
+        id: 22,
+        name: "Digital Twin Ops",
+        description: "IoT platform for ongoing monitoring of building performance and predictive maintenance.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1621935579841-381442188a8c?q=80&w=600&auto=format&fit=crop",
+        aiHint: "server room",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/digital-twin",
     }
 ];
