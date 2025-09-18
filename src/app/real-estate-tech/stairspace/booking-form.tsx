@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -14,10 +13,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Send } from "lucide-react";
 import Image from 'next/image';
-import { store } from '@/lib/global-store';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
-import { setStairspaceRequests } from '@/hooks/use-global-store-data';
+import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 
 const BookingSchema = z.object({
@@ -39,6 +37,7 @@ const loggedInUser = {
 export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: { listing: StairspaceListing, isOpen: boolean, onOpenChange: (open: boolean) => void, onClose: () => void }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
+    const { setStairspaceRequests } = useStairspaceRequestsData();
     
     const form = useForm<BookingValues>({
         resolver: zodResolver(BookingSchema),
@@ -68,7 +67,7 @@ export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: {
         console.log("Submitting booking request for:", listing.title, "Data:", data);
         
         const newRequest: BookingRequest = {
-            id: `req_${listing.id}_${Date.now()}`,
+            id: `req_stair_${Date.now()}`,
             listingId: listing.id,
             listingTitle: listing.title,
             clientName: data.fullName,
