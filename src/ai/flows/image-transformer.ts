@@ -7,9 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { ImageTransformerInput, ImageTransformerInputSchema, ImageTransformerOutputSchema } from './image-transformer.schema';
-import { z } from 'zod';
-
+import { ImageTransformerInputSchema, ImageTransformerOutputSchema } from './image-transformer.schema';
 
 export const transformImage = ai.defineFlow(
     {
@@ -18,25 +16,21 @@ export const transformImage = ai.defineFlow(
         outputSchema: ImageTransformerOutputSchema,
     },
     async (input) => {
-        const { output } = await ai.generate({
+        const { media } = await ai.generate({
             model: 'googleai/gemini-2.5-flash-image-preview',
             prompt: [
                 { media: { url: input.baseImageUri } },
                 { text: input.prompt },
             ],
-            output: {
-                format: 'json',
-                schema: ImageTransformerOutputSchema.extend({ reasoning: z.string().optional() }),
-            },
             config: {
-                responseModalities: ['IMAGE', 'TEXT'],
+                responseModalities: ['IMAGE'],
             },
         });
 
-        if (!output?.imageDataUri) {
+        if (!media?.url) {
             throw new Error('Image transformation failed to return a valid image URL.');
         }
         
-        return { imageDataUri: output.imageDataUri };
+        return { imageDataUri: media.url };
     }
 );

@@ -93,7 +93,7 @@ export default function GeneratorForm() {
                     <FormItem><FormLabel>Business Description</FormLabel><FormControl><VoiceEnabledTextarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
                 <FormField control={form.control} name="styleAndImagery" render={({ field }) => (
-                    <FormItem><FormLabel>Desired Style & Imagery</FormLabel><FormControl><VoiceEnabledTextarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Desired Style &amp; Imagery</FormLabel><FormControl><VoiceEnabledTextarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
 
               <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">

@@ -1,8 +1,7 @@
 
-
 'use server';
 
-import { getServices, getSettings } from "@/lib/firestore";
+import { getSettings } from "@/lib/firestore";
 import HeaderClient from "./header-client";
 import { Handshake, Store, Recycle, HomeWorkforceIcon as RaahaIcon, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat } from "lucide-react";
 import SanadHubIcon from "../icons/sanad-hub-icon";
@@ -229,6 +228,12 @@ const aiTools = [
     description: "Upload a PDF form and let the AI fill it out using your profile data.",
     icon: FileText,
   },
+  {
+    title: "Measurement Analyzer",
+    href: "/measurement-analyzer",
+    description: "Use your device's camera to scan an object and get its estimated physical dimensions.",
+    icon: Layers,
+  }
 ];
 
 

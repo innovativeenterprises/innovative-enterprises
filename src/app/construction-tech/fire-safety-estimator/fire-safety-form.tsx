@@ -18,7 +18,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Image from 'next/image';
 import { estimateFireSafety } from '@/ai/flows/fire-safety-estimator';
 import type { FireSafetyEstimatorOutput } from '@/ai/flows/fire-safety-estimator.schema';
-import { annotateImage } from '@/ai/flows/image-annotation';
+import { transformImage } from '@/ai/flows/image-transformer';
 import { fileToDataURI } from '@/lib/utils';
 
 const FormSchema = z.object({
@@ -67,7 +67,7 @@ export default function FireSafetyForm() {
       setLoadingMessage('Generating equipment placement plan...');
       const equipmentList = estimationResult.equipmentList.map(item => `${item.quantity}x ${item.item}`).join(', ');
       
-      const annotationResult = await annotateImage({
+      const annotationResult = await transformImage({
         baseImageUri: floorPlanUri,
         prompt: `Overlay professional, semi-transparent icons on this floor plan to show the placement of the following fire safety equipment: ${equipmentList}. Place detectors and sprinklers evenly. Place extinguishers near exits and high-risk areas. Place call points at exits.`
       });

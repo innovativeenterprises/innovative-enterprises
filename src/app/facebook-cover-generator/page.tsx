@@ -1,6 +1,4 @@
 
-'use client';
-
 import { ImageIcon } from "lucide-react";
 import GeneratorForm from "./generator-form";
 import type { Metadata } from "next";

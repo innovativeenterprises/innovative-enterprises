@@ -1,9 +1,11 @@
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren } from "lucide-react";
 import Link from "next/link";
-import { getProducts } from "@/lib/firestore";
+import { useProductsData } from "@/hooks/use-global-store-data";
 import type { Product } from "@/lib/products";
 import type { Metadata } from 'next';
 
@@ -12,12 +14,6 @@ export const metadata: Metadata = {
   description: "Explore a suite of AI-powered SaaS platforms designed to automate, optimize, and revolutionize the construction industry in Oman and the GCC.",
 };
 
-
-const problems = [
-    { title: "Manual Processes", description: "Administrative overhead from manual paperwork, scheduling, and approvals slows down institutions." },
-    { title: "One-Size-Fits-All Learning", description: "Lack of personalized learning paths leads to disengaged students and teacher burnout." },
-    { title: "Student Success Gaps", description: "Identifying at-risk students and providing timely career guidance is a major challenge." },
-];
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -60,9 +56,9 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-export default async function ConstructionTechPage() {
-    const allProducts = await getProducts();
-    const contechProducts = allProducts.filter(p => p.category === "Construction Tech" && p.enabled);
+export default function ConstructionTechPage() {
+    const { products } = useProductsData();
+    const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
