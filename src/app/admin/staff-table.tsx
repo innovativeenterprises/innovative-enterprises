@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -26,7 +25,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
-import { initialAgentCategories, initialLeadershipTeam, initialStaffTeam } from "@/lib/agents.schema";
+import { useStaffData } from "@/hooks/use-global-store-data";
 
 const SocialsSchema = z.object({
     email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
@@ -243,18 +242,22 @@ export default function StaffTable({
     initialStaff: Agent[], 
     initialAgentCategories: AgentCategory[] 
 }) {
-    const [leadership, setLeadership] = useState(initialLeadership);
-    const [staff, setStaff] = useState(initialStaff);
-    const [agentCategories, setAgentCategories] = useState(initialAgentCategories);
+    const { 
+        leadership, setLeadership,
+        staff, setStaff,
+        agentCategories, setAgentCategories,
+        isClient
+    } = useStaffData();
+    
+    useEffect(() => {
+        setLeadership(() => initialLeadership);
+        setStaff(() => initialStaff);
+        setAgentCategories(() => initialAgentCategories);
+    }, [initialLeadership, initialStaff, initialAgentCategories, setLeadership, setStaff, setAgentCategories]);
 
-    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedStaff, setSelectedStaff] = useState<Agent | undefined>(undefined);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const openDialog = (member?: Agent) => {
         setSelectedStaff(member);
@@ -278,8 +281,8 @@ export default function StaffTable({
     };
 
     const handleSave = (values: StaffValues, originalName?: string) => {
-        const allStaff = [...leadership, ...staff, ...agentCategories.flatMap(c => c.agents)];
-        const staffMemberToUpdate = allStaff.find(m => m.name === originalName);
+        const allStaffMembers = [...leadership, ...staff, ...agentCategories.flatMap(c => c.agents)];
+        const staffMemberToUpdate = allStaffMembers.find(m => m.name === originalName);
 
         const newStaffMember: Agent = { 
             ...values,

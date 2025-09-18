@@ -8,6 +8,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProducts, getProviders, getStaffData } from "@/lib/firestore";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Admin Dashboard | Innovative Enterprises',
+    description: 'An overview of your digital and human workforce, projects, and partner network.'
+}
 
 export default async function AdminDashboardPage() {
   const products = await getProducts();
