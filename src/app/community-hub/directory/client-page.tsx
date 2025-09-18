@@ -6,11 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import type { CommunityMember } from '@/lib/community-members';
-import { initialMembers } from '@/lib/community-members';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function MemberDirectoryClient() {
+export default function MemberDirectoryClient({ initialMembers }: { initialMembers: CommunityMember[] }) {
     const [members, setMembers] = useState<CommunityMember[]>(initialMembers);
     const [searchTerm, setSearchTerm] = useState('');
     const [isClient, setIsClient] = useState(false);
