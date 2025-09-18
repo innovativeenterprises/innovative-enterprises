@@ -158,7 +158,7 @@ const aiTools = [
   },
   {
     title: "Interview Coach (Coach)",
-    href: "/interview-coach",
+    href: "/cv-enhancer?tab=interview",
     description: "Practice for your next job interview with AI-generated, role-specific questions.",
     icon: Mic,
   },
@@ -176,7 +176,7 @@ const aiTools = [
   },
   {
     title: "Project Planner (Navi)",
-    href: "/project-planner",
+    href: "/submit-work",
     description: "Transforms your raw ideas into structured, actionable project plans with a single click.",
     icon: GitBranch,
   },

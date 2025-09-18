@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -173,7 +173,7 @@ export default function InteriorDesignerPage() {
                                             <FormControl>
                                                 <RadioGroupItem value={palette} id={palette} className="sr-only" />
                                             </FormControl>
-                                            <Label htmlFor={palette} className={cn('block p-4 rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === palette && 'border-primary ring-2 ring-primary')}>
+                                             <Label htmlFor={palette} className={cn('block p-4 rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === palette && 'border-primary ring-2 ring-primary')}>
                                                 {palette}
                                             </Label>
                                         </FormItem>
