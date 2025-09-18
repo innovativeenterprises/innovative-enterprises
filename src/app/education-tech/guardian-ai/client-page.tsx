@@ -179,5 +179,3 @@ export default function GuardianAiClientPage({ initialStudents }: { initialStude
         </div>
     )
 }
-
-    

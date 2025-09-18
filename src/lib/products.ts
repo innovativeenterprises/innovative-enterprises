@@ -380,5 +380,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/real-estate-tech/tenant-briefcase",
+    },
+    {
+        id: 26,
+        name: "AI Scholarship Finder",
+        description: "An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level.",
+        stage: "Live & Operating",
+        category: "Education Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop",
+        aiHint: "graduation cap",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/education-tech/scholarships",
     }
 ];

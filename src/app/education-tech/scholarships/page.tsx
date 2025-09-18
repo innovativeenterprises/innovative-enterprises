@@ -1,3 +1,4 @@
+
 import { GraduationCap } from 'lucide-react';
 import ScholarshipFinderForm from './scholarship-form';
 import type { Metadata } from 'next';
