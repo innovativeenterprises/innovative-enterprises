@@ -125,7 +125,7 @@ export default function CfoDashboardClient({ cfoData }: { cfoData: any }) {
                                <TableRow key={index}>
                                    <TableCell>
                                        <div className="font-medium">{payment.source}</div>
-                                       <DueDateDisplay date={payment.dueDate} />
+                                       <DueDateDisplay date={payment.dueDate} prefix="" />
                                    </TableCell>
                                    <TableCell className="text-right font-medium">OMR {payment.amount.toFixed(2)}</TableCell>
                                </TableRow>
