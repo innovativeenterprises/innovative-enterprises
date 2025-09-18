@@ -109,6 +109,3 @@ export const createAppStore = (initState: AppState = initialState) => {
 }
 
 export type StoreType = ReturnType<typeof createAppStore>;
-
-// Legacy export for any components that might still be using it directly.
-export const store = createAppStore();
