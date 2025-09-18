@@ -1,6 +1,6 @@
 
 import AdminOperationsClientPage from "./client-page";
-import { getCostSettings, getKnowledgeBase } from "@/lib/firestore";
+import { getKnowledgeBase, getCostSettings } from "@/lib/firestore";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

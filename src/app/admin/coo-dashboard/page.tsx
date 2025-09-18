@@ -2,9 +2,7 @@
 
 import CooDashboardClient from './client-page';
 import type { Metadata } from 'next';
-import { getProducts } from '@/lib/firestore';
-import { getProviders } from '@/lib/firestore';
-import { getKpiData } from '@/lib/firestore';
+import { getProducts, getProviders, getKpiData } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "AI COO Dashboard",

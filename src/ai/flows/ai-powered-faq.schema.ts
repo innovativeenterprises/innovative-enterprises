@@ -6,31 +6,8 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { User, Bot, Briefcase, BrainCircuit, Handshake, Scale, GanttChartSquare } from 'lucide-react';
-
-
-// Moved AgentSchema here to resolve build error
-const SocialsSchema = z.object({
-  email: z.string().optional(),
-  phone: z.string().optional(),
-  website: z.string().optional(),
-  linkedin: z.string().optional(),
-  twitter: z.string().optional(),
-  github: z.string().optional(),
-});
-export const AgentSchema = z.object({
-  name: z.string(),
-  role: z.string(),
-  description: z.string(),
-  icon: z.any(),
-  type: z.enum(["Leadership", "AI Agent", "Staff"]),
-  socials: SocialsSchema.optional(),
-  href: z.string().optional(),
-  photo: z.string().optional(),
-  aiHint: z.string().optional(),
-  enabled: z.boolean(),
-});
-export type Agent = z.infer<typeof AgentSchema>;
+import { initialStaffData } from '@/lib/agents';
+import type { Agent } from '@/lib/agents.schema';
 
 export const AnswerQuestionInputSchema = z.object({
   question: z.string().describe('The user question about Innovative Enterprises.'),
@@ -49,31 +26,15 @@ export const AnswerQuestionOutputSchema = z.object({
 export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
 
-export const initialStaffData = {
-    leadership: [],
-    staff: [],
-    agentCategories: [
-        {
-            category: "Core Business Operations Agents",
-            agents: [
-                { name: 'Aida', role: 'Admin & Legal Assistant', icon: User, type: 'AI Agent', socials: { email: 'aida@innovative.om'}, enabled: true, description: 'Handles FAQs, books meetings, and drafts legal agreements.', href: '/legal-agent' },
-                { name: 'Lexi', role: 'AI Legal Agent', icon: Scale, type: 'AI Agent', socials: { email: 'lexi@innovative.om'}, enabled: true, description: 'Analyzes legal documents for risks and provides preliminary advice.', href: '/legal-agent' },
-                { name: 'Hira', role: 'Product Manager (GENIUS)', icon: User, type: 'AI Agent', socials: { email: 'hira@innovative.om'}, enabled: true, description: 'Analyzes CVs, enhances resumes, and provides interview coaching for the GENIUS career platform.', href: '/cv-enhancer' },
-                { name: 'Sami', role: 'Sales Agent', icon: User, type: 'AI Agent', socials: { email: 'sami@innovative.om'}, enabled: true, description: 'Generates tailored Letters of Interest for potential investors and follows up on leads.', href: '/invest' },
-                { name: 'Paz', role: 'Partnership Agent', icon: Handshake, type: 'AI Agent', socials: { email: 'paz@innovative.om'}, enabled: true, description: 'Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network.', href: '/partner' },
-            ]
-        }
-    ]
-};
+const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
 
-
-const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership', staff: Agent[]): Agent | null => {
+const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): Agent | null => {
     switch(department) {
-        case 'legal': return staff.find(s => s.name === 'Lexi') || staff.find(s => s.name === 'Legal Counsel Office') || null;
-        case 'marketing': return staff.find(s => s.name === 'Mira') || null;
-        case 'hr': return staff.find(s => s.name === 'Hira') || null;
-        case 'sales': return staff.find(s => s.name === 'Sami') || null;
-        case 'partnership': return staff.find(s => s.name === 'Paz') || null;
+        case 'legal': return allStaff.find(s => s.name === 'Lexi') || allStaff.find(s => s.name === 'Legal Counsel Office') || null;
+        case 'marketing': return allStaff.find(s => s.name === 'Mira') || null;
+        case 'hr': return allStaff.find(s => s.name === 'Hira') || null;
+        case 'sales': return allStaff.find(s => s.name === 'Sami') || null;
+        case 'partnership': return allStaff.find(s => s.name === 'Paz') || null;
         default: return null;
     }
 }
@@ -86,8 +47,6 @@ export const routeToSpecialistTool = ai.defineTool(
         inputSchema: z.object({
             department: z.enum(['legal', 'marketing', 'hr', 'sales', 'partnership']).describe('The department to route the query to.'),
             userQuery: z.string().describe("The original user query."),
-            // The staff list is now part of the tool's context, not a global import.
-            allStaff: z.array(AgentSchema).optional(),
         }),
         outputSchema: z.object({
             isAvailable: z.boolean().describe("Whether the specialist agent is currently available."),
@@ -100,8 +59,8 @@ export const routeToSpecialistTool = ai.defineTool(
             suggestedReplies: z.array(z.string()).optional(),
         })
     },
-    async ({ department, userQuery, allStaff = [] }) => {
-        const specialist = getSpecialist(department, allStaff);
+    async ({ department, userQuery }) => {
+        const specialist = getSpecialist(department);
         if (!specialist) {
             return { isAvailable: false, response: "I'm sorry, I can't find the right person to help with that." };
         }

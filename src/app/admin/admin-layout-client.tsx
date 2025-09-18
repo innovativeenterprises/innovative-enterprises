@@ -53,11 +53,9 @@ export default function AdminLayoutClient({
   const dashboards = [
       { href: '/admin', label: 'Main Dashboard', icon: LayoutDashboard },
       { href: '/admin/coo-dashboard', label: 'AI COO', icon: BrainCircuit },
+      { href: '/admin/cfo-dashboard', label: 'CFO Dashboard', icon: WalletCards },
   ];
 
-  const finance = [
-      { href: '/admin/cfo-dashboard', label: 'Finance & COO', icon: WalletCards },
-  ];
 
   const contentManagement = [
       { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
@@ -117,11 +115,6 @@ export default function AdminLayoutClient({
                 {dashboards.map(renderMenuItem)}
             </SidebarGroup>
             <SidebarSeparator />
-             <SidebarGroup>
-                <SidebarGroupLabel>Finance</SidebarGroupLabel>
-                {finance.map(renderMenuItem)}
-            </SidebarGroup>
-             <SidebarSeparator />
             <SidebarGroup>
                 <SidebarGroupLabel>Content</SidebarGroupLabel>
                 {contentManagement.map(renderMenuItem)}
