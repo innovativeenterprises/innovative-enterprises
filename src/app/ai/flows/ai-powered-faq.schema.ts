@@ -7,6 +7,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { initialStaffData } from '@/lib/agents.schema';
+import type { Agent } from '@/lib/agents.schema';
 
 export const AnswerQuestionInputSchema = z.object({
   question: z.string().describe('The user question about Innovative Enterprises.'),
@@ -27,7 +28,7 @@ export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
 const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
 
-const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): { name: string; socials?: { email?: string; phone?: string } } | null => {
+const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): Agent | null => {
     switch(department) {
         case 'legal': return allStaff.find(s => s.name === 'Lexi') || allStaff.find(s => s.name === 'Legal Counsel Office') || null;
         case 'marketing': return allStaff.find(s => s.name === 'Mira') || null;
