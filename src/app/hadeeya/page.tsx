@@ -1,3 +1,4 @@
+
 import HadeeyaPageClient from './client-page';
 import { initialGiftCards } from '@/lib/gift-cards';
 import type { Metadata } from 'next';
