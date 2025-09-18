@@ -1,3 +1,4 @@
+
 import AdmissionsDashboardClient from './client-page';
 import type { Metadata } from 'next';
 
@@ -16,7 +17,8 @@ const initialApplications = [
 ];
 
 
-export default async function AdmissionsDashboardPage() {
-    // Data is fetched on the server and passed to the client component.
+export default function AdmissionsDashboardPage() {
+    // In a real app, you would fetch this data from your database, e.g.:
+    // const applications = await db.collection('admissions').get();
     return <AdmissionsDashboardClient initialApplications={initialApplications} />;
 }

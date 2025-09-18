@@ -5,10 +5,20 @@ import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/comp
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from 'next/link';
-import { initialProperties } from "@/lib/properties";
-import { initialStairspaceListings } from "@/lib/stairspace-listings";
+import { getProperties, getStairspaceListings } from "@/lib/firestore";
+import type { Metadata } from 'next';
 
-export default function AdminRealEstatePage() {
+export const metadata: Metadata = {
+    title: 'Real Estate Management',
+    description: 'Manage all real estate listings and platforms.'
+};
+
+export default async function AdminRealEstatePage() {
+  const [properties, stairspaceListings] = await Promise.all([
+    getProperties(),
+    getStairspaceListings()
+  ]);
+
   return (
     <div className="space-y-8">
         <div>
@@ -32,8 +42,8 @@ export default function AdminRealEstatePage() {
             </CardFooter>
         </Card>
 
-        <PropertyTable initialProperties={initialProperties} />
-        <StairspaceTable initialListings={initialStairspaceListings} />
+        <PropertyTable initialProperties={properties} />
+        <StairspaceTable initialListings={stairspaceListings} />
     </div>
   );
 }

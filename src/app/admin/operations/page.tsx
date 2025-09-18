@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: 'Operations | Admin Dashboard',
-    description: 'A suite of internal AI tools to enhance business operations.'
+    description: 'A suite of internal AI tools and configurations to enhance business operations.'
 }
 
 export default async function AdminOperationsPage() {
