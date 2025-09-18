@@ -111,7 +111,7 @@ export function ServiceTable({ services, setServices }: { services: BeautyServic
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                    <CardTitle>Services & Pricing</CardTitle>
+                    <CardTitle>Services &amp; Pricing</CardTitle>
                     <CardDescription>Manage the services your center offers.</CardDescription>
                 </div>
                  <AddEditServiceDialog onSave={handleSave}>
@@ -149,4 +149,3 @@ export function ServiceTable({ services, setServices }: { services: BeautyServic
         </Card>
     );
 }
-

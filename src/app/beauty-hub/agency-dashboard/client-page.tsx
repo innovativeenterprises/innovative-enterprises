@@ -125,7 +125,7 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialServ
                             <ServiceTable services={services} setServices={setServices} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
+                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
                         </TabsContent>
                     </Tabs>
                 </div>

@@ -44,7 +44,7 @@ export function ScheduleTable({ appointments, setAppointments }: { appointments:
                             <TableHead>Client</TableHead>
                             <TableHead>Service</TableHead>
                             <TableHead>Specialist</TableHead>
-                            <TableHead>Date & Time</TableHead>
+                            <TableHead>Date &amp; Time</TableHead>
                             <TableHead>Status</TableHead>
                         </TableRow>
                     </TableHeader>
