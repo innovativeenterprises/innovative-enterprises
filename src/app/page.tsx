@@ -1,13 +1,25 @@
+import HomePageClient from "@/app/home-page-client";
+import { getProducts } from "@/lib/firestore";
+import { getServices } from "@/lib/firestore";
+import { getClients } from "@/lib/firestore";
+import { getTestimonials } from "@/lib/firestore";
 
-'use client';
+// This is the main server component for the homepage.
+// It fetches all necessary data and passes it to the client component.
+export default async function Home() {
+  const [products, services, clients, testimonials] = await Promise.all([
+    getProducts(),
+    getServices(),
+    getClients(),
+    getTestimonials(),
+  ]);
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/20 p-4">
-        {/* The user wants a blank page, so we will not render the card here.
-            This component structure ensures Next.js can render a valid page. */}
-    </div>
+    <HomePageClient 
+      products={products}
+      services={services}
+      clients={clients}
+      testimonials={testimonials}
+    />
   );
 }

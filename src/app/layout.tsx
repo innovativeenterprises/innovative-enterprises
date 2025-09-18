@@ -4,7 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
-import { initialState } from '@/lib/global-store'; // Import the initial state
+import { initialState } from '@/lib/global-store'; 
 
 const inter = Inter({
   subsets: ['latin'],

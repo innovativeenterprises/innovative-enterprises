@@ -31,7 +31,7 @@ export default function ClientLayout({
         <div className="flex min-h-screen flex-col">
             {!isHomePage && <Header />}
             <main className="flex-1">{children}</main>
-            {!isHomePage && <Footer />}
+            <Footer />
             <Toaster />
             <ChatWidget />
         </div>
