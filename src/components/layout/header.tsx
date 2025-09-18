@@ -102,6 +102,12 @@ const solutions = [
         description: "A complete SaaS solution for salons, spas, and barbershops.",
         icon: Heart,
     },
+    {
+        title: "Fintech Super-App",
+        href: "/cfo",
+        description: "An integrated financial services application providing AI-driven auditing, financial analysis, and CFO dashboard capabilities.",
+        icon: DollarSign,
+    }
 ];
 
 const industries: { title: string; href: string; description: string, icon: any }[] = [
@@ -242,7 +248,7 @@ const aiTools = [
   },
    {
     title: "Fintech Super-App (Finley CFO)",
-    href: "/cfo",
+    href: "/cfo/audit",
     description: "Upload financial documents for an AI-powered preliminary audit and analysis.",
     icon: DollarSign,
   },
