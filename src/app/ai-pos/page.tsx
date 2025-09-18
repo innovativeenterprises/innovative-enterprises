@@ -16,5 +16,3 @@ export default async function AiPosPage() {
     
     return <AiPosClientPage products={products} initialDailySales={dailySales} />;
 }
-
-    

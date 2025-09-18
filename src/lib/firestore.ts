@@ -3,7 +3,7 @@
 // In a real application, you would use the Firebase SDK to interact with Firestore.
 // For this prototype, we are using static data from local files.
 
-import { initialProducts } from './products';
+import { initialProducts, initialStoreProducts } from './products';
 import { initialServices } from './services';
 import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';
@@ -45,6 +45,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Simulate async data fetching
 export const getProducts = async () => { await delay(50); return initialProducts; };
+export const getStoreProducts = async () => { await delay(50); return initialStoreProducts; };
 export const getServices = async () => { await delay(50); return initialServices; };
 export const getProviders = async () => { await delay(50); return initialProviders; };
 export const getOpportunities = async () => { await delay(50); return initialOpportunities; };

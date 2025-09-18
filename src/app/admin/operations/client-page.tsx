@@ -13,22 +13,14 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import CostSettingsTable from "./cost-settings-table";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { KnowledgeDocument } from "@/lib/knowledge";
-import PosProductTable from "../pos-product-table";
-import PricingTable from "../pricing-table";
-import type { PosProduct } from "@/lib/pos-data.schema";
-import type { Pricing } from "@/lib/pricing.schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AdminOperationsClientPage({ 
     initialCostSettings,
     initialKnowledgeBase,
-    initialPricing,
-    initialPosProducts,
 }: { 
     initialCostSettings: CostRate[],
     initialKnowledgeBase: KnowledgeDocument[],
-    initialPricing: Pricing[],
-    initialPosProducts: PosProduct[],
 }) {
 
   const internalTools = [
@@ -52,7 +44,7 @@ export default function AdminOperationsClientPage({
              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
-                <TabsTrigger value="costing">Costing & Pricing</TabsTrigger>
+                <TabsTrigger value="costing">Market Rates</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />
@@ -80,8 +72,6 @@ export default function AdminOperationsClientPage({
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
                 <CostSettingsTable initialCostSettings={initialCostSettings} />
-                <PricingTable pricing={initialPricing} />
-                <PosProductTable initialProducts={initialPosProducts} />
             </TabsContent>
         </Tabs>
     </div>
