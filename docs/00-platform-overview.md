@@ -11,7 +11,7 @@ This document provides a comprehensive, categorized list of all 84 current proje
 | BidWise Estimator | Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing. | Testing Phase | On Track |
 | SiteGuard Compliance | Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking. | Design Phase | On Track |
 | WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed |
-| ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Idea Phase | Completed |
+| ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Live & Operating | Completed |
 | ConstructFin | Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects. | Live & Operating | Completed |
 | Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual) | Idea Phase | On Track |
 | AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual) | Development Phase | At Risk |
