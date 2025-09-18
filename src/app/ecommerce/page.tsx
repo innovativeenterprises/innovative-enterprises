@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { initialStoreProducts } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import { useToast } from '@/hooks/use-toast';
-import { store } from '@/lib/global-store';
+import { useCartData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -30,20 +30,15 @@ const categories = [
 
 const ProductCard = ({ product }: { product: Product }) => {
     const { toast } = useToast();
+    const { setCart } = useCartData();
 
     const handleAddToCart = () => {
-        store.set(state => {
-            const existingItem = state.cart.find(item => item.id === product.id);
+        setCart(prevCart => {
+            const existingItem = prevCart.find(item => item.id === product.id);
             if (existingItem) {
-                return {
-                    ...state,
-                    cart: state.cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
-                }
+                return prevCart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
             }
-            return {
-                ...state,
-                cart: [...state.cart, { ...product, quantity: 1 }]
-            }
+            return [...prevCart, { ...product, quantity: 1 }]
         });
         toast({
             title: "Added to Cart!",

@@ -21,9 +21,9 @@ import Image from "next/image";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSettingsData, setSettings } from "@/hooks/use-global-store-data";
+import { useSettingsData } from "@/hooks/use-global-store-data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { fileToDataURI } from "@/lib/utils";
+import { fileToDataURI } from '@/lib/utils';
 import CostSettingsTable from "../operations/cost-settings-table";
 import PricingTable from "../pricing-table";
 import { initialCostSettings } from "@/lib/cost-settings";
@@ -333,7 +333,7 @@ const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onS
 }
 
 const GeneralSettings = () => {
-    const { settings, isClient } = useSettingsData();
+    const { settings, setSettings, isClient } = useSettingsData();
     const { toast } = useToast();
 
     const handleModeChange = (value: 'direct' | 'tender' | 'builtin') => {
@@ -536,7 +536,7 @@ const GeneralSettings = () => {
 };
 
 const PricingAndBranding = () => {
-    const { settings, isClient } = useSettingsData();
+    const { settings, setSettings, isClient } = useSettingsData();
     const { toast } = useToast();
 
     const handleSaveBranding = (headerUri?: string, footerUri?: string) => {
@@ -690,7 +690,7 @@ const PricingAndBranding = () => {
 
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
-  const { settings, isClient } = useSettingsData();
+  const { settings, setSettings, isClient } = useSettingsData();
 
   const handleSaveWhatsAppSettings = (values: WhatsAppSettings) => {
       setSettings(prev => ({ ...prev, whatsapp: { ...prev.whatsapp, ...values } }));

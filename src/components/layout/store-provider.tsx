@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, type ReactNode, createContext } from 'react';
-import { type StoreType, createAppStore } from '@/lib/global-store';
+import { createAppStore, type StoreType } from '@/lib/global-store';
 
 export const StoreContext = createContext<StoreType | null>(null);
 

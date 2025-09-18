@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,38 +10,32 @@ import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2, CreditCard } from 'lucide
 import Image from 'next/image';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
-import { store } from '@/lib/global-store';
+import { useCartData } from '@/hooks/use-global-store-data';
 import type { CartItem } from '@/lib/global-store';
 import { useSettingsData } from '@/hooks/use-global-store-data';
 
 export default function CartPage() {
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const { cart, setCart } = useCartData();
     const { toast } = useToast();
     const { settings } = useSettingsData();
 
-    useEffect(() => {
-        const updateCart = () => setCartItems(store.get().cart);
-        updateCart();
-        const unsubscribe = store.subscribe(updateCart);
-        return () => unsubscribe();
-    }, []);
-
     const handleUpdateQuantity = (id: number, quantity: number) => {
-        store.set(state => ({
-            ...state,
-            cart: state.cart.map(item => item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item).filter(item => item.quantity > 0)
-        }));
+        setCart(prevCart => {
+            if (quantity <= 0) {
+                return prevCart.filter(item => item.id !== id);
+            }
+            return prevCart.map(item =>
+                item.id === id ? { ...item, quantity } : item
+            );
+        });
     };
 
     const handleRemoveItem = (id: number) => {
-        store.set(state => ({
-            ...state,
-            cart: state.cart.filter(item => item.id !== id)
-        }));
+        setCart(prevCart => prevCart.filter(item => item.id !== id));
         toast({ title: 'Item removed from cart.' });
     };
 
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shipping = subtotal > 0 ? 5.00 : 0; // Flat shipping rate
     const vatAmount = settings.vat.enabled ? (subtotal + shipping) * settings.vat.rate : 0;
     const total = subtotal + shipping + vatAmount;
@@ -58,7 +53,7 @@ export default function CartPage() {
                             <CardDescription>Review the items in your cart before proceeding to checkout.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {cartItems.length > 0 ? (
+                            {cart.length > 0 ? (
                                 <div className="grid lg:grid-cols-3 gap-8">
                                     <div className="lg:col-span-2">
                                         <Table>
@@ -70,7 +65,7 @@ export default function CartPage() {
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
-                                                {cartItems.map(item => (
+                                                {cart.map(item => (
                                                     <TableRow key={item.id}>
                                                         <TableCell className="flex items-center gap-4">
                                                             <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" />
