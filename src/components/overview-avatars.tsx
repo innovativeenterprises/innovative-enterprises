@@ -10,7 +10,10 @@ import type { Client } from '@/lib/clients';
 
 export default function OverviewAvatars({ clients }: { clients: Client[] }) {
   const [isClient, setIsClient] = useState(false);
-  const { overviewAvatars } = imageData;
+  // Corrected to use testimonialAvatars which is the correct key in the JSON file
+  const { testimonialAvatars } = imageData || {};
+  const overviewAvatars = testimonialAvatars ? Object.values(testimonialAvatars).slice(0, 3) : [];
+
 
   useEffect(() => {
     setIsClient(true);

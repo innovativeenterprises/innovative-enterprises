@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ClientTestimonials({ initialClients, initialTestimonials }: { initialClients: Client[], initialTestimonials: Testimonial[] }) {
   const [isClient, setIsClient] = useState(false);
-  const { testimonialAvatars } = imageData;
+  const { testimonialAvatars } = imageData || {};
 
   useEffect(() => {
     setIsClient(true);
@@ -51,7 +51,7 @@ export default function ClientTestimonials({ initialClients, initialTestimonials
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {!isClient ? Array.from({length: 2}).map((_, i) => <Skeleton key={i} className="h-48 w-full" />) : initialTestimonials.map((testimonial) => {
-                    const avatarData = (testimonialAvatars as Record<string, {src: string, alt: string, aiHint: string}>)[testimonial.avatarId];
+                    const avatarData = testimonialAvatars && (testimonialAvatars as Record<string, {src: string, alt: string, aiHint: string}>)[testimonial.avatarId];
                     return (
                         <Card key={testimonial.id} className="bg-card">
                             <CardContent className="p-6">
