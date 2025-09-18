@@ -1,4 +1,5 @@
 
+
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getFirestore, collection, getDocs, query, orderBy, doc, getDoc } from 'firebase/firestore';
 import type { Product } from './products.schema';
@@ -29,9 +30,9 @@ import type { JobPosting } from './alumni-jobs.schema';
 import type { RentalAgency } from './rental-agencies.schema';
 import type { Car } from './cars.schema';
 import type { CostRate } from './cost-settings.schema';
-import type { BeautyCenter } from './beauty-centers.schema';
-import type { BeautyService } from './beauty-services.schema';
-import type { BeautyAppointment } from './beauty-appointments.schema';
+import type { BeautyCenter } from './beauty-centers';
+import type { BeautyService } from './beauty-services';
+import type { BeautyAppointment } from './beauty-appointments';
 import type { UsedItem } from './used-items.schema';
 import type { AppSettings } from './settings';
 import { app } from './firebase';

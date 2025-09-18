@@ -20,15 +20,23 @@ import type { SignedLease } from './leases.schema';
 import type { BookingRequest } from './stairspace-requests.schema';
 import type { StairspaceListing } from './stairspace.schema';
 import type { Agent, AgentCategory } from './agents.schema';
-import type { Agency as RaahaAgency } from './raaha-agencies';
-import type { Worker as RaahaWorker } from './raaha-workers';
-import type { HireRequest } from './raaha-requests';
-import type { BeautyCenter } from './beauty-centers';
-import type { BeautyService } from './beauty-services';
-import type { BeautyAppointment } from './beauty-appointments';
-import type { CostRate } from './cost-settings.schema';
-import type { Asset } from './assets.schema';
-import type { UsedItem } from './used-items';
+import { initialAgencies as initialRaahaAgencies } from './raaha-agencies';
+import { initialWorkers as initialRaahaWorkers } from './raaha-workers';
+import { initialRequests as initialRaahaRequests } from './raaha-requests';
+import { initialBeautyCenters } from './beauty-centers';
+import { initialBeautyServices } from './beauty-services';
+import { initialBeautyAppointments } from './beauty-appointments';
+import { initialCostSettings } from './cost-settings';
+import { initialAssets } from './assets';
+import { initialUsedItems } from './used-items';
+import { initialProducts } from './products';
+import { initialProviders } from './providers';
+import { initialOpportunities } from './opportunities';
+import { initialServices } from './services';
+import { initialLeases } from './leases';
+import { initialStairspaceRequests } from './stairspace-requests';
+import { initialStairspaceListings } from './stairspace-listings';
+import { initialStaffData } from './agents';
 
 
 export interface CartItem extends Product {
@@ -48,39 +56,39 @@ export type AppState = {
   leadership: Agent[];
   staff: Agent[];
   agentCategories: AgentCategory[];
-  raahaAgencies: RaahaAgency[];
-  raahaWorkers: RaahaWorker[];
-  raahaRequests: HireRequest[];
-  beautyCenters: BeautyCenter[];
-  beautyServices: BeautyService[];
-  beautyAppointments: BeautyAppointment[];
-  costSettings: CostRate[];
-  assets: Asset[];
-  usedItems: UsedItem[];
+  raahaAgencies: typeof initialRaahaAgencies;
+  raahaWorkers: typeof initialRaahaWorkers;
+  raahaRequests: typeof initialRaahaRequests;
+  beautyCenters: typeof initialBeautyCenters;
+  beautyServices: typeof initialBeautyServices;
+  beautyAppointments: typeof initialBeautyAppointments;
+  costSettings: typeof initialCostSettings;
+  assets: typeof initialAssets;
+  usedItems: typeof initialUsedItems;
 };
 
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  products: [],
-  providers: [],
-  opportunities: [],
-  services: [],
-  signedLeases: [],
-  stairspaceRequests: [],
-  stairspaceListings: [],
-  leadership: [],
-  staff: [],
-  agentCategories: [],
-  raahaAgencies: [],
-  raahaWorkers: [],
-  raahaRequests: [],
-  beautyCenters: [],
-  beautyServices: [],
-  beautyAppointments: [],
-  costSettings: [],
-  assets: [],
-  usedItems: [],
+  products: initialProducts,
+  providers: initialProviders,
+  opportunities: initialOpportunities,
+  services: initialServices,
+  signedLeases: initialLeases,
+  stairspaceRequests: initialStairspaceRequests,
+  stairspaceListings: initialStairspaceListings,
+  leadership: initialStaffData.leadership,
+  staff: initialStaffData.staff,
+  agentCategories: initialStaffData.agentCategories,
+  raahaAgencies: initialRaahaAgencies,
+  raahaWorkers: initialRaahaWorkers,
+  raahaRequests: initialRaahaRequests,
+  beautyCenters: initialBeautyCenters,
+  beautyServices: initialBeautyServices,
+  beautyAppointments: initialBeautyAppointments,
+  costSettings: initialCostSettings,
+  assets: initialAssets,
+  usedItems: initialUsedItems,
 };
 
 // The single source of truth for our application's shared state.
