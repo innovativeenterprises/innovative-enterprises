@@ -68,7 +68,6 @@ export const useLeasesData = () => {
         isClient,
     };
 };
-export const useSignedLeasesData = useLeasesData;
 
 
 // StairSpace Requests
