@@ -2,7 +2,7 @@
 'use server';
 
 import HeaderClient from "./header-client";
-import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers } from "lucide-react";
+import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart } from "lucide-react";
 import SanadHubIcon from "../icons/sanad-hub-icon";
 import BusinessHubIcon from "../icons/business-hub-icon";
 import AmeenSmartLockIcon from "../icons/ameen-smart-lock-icon";
@@ -14,6 +14,12 @@ import { getSettings } from "@/lib/firestore";
 
 
 const solutions = [
+    {
+      title: "Nova Commerce",
+      href: "/ecommerce",
+      description: "End-to-end solutions to build, manage, and scale your online business.",
+      icon: ShoppingCart,
+    },
     {
       title: "Sanad Hub",
       href: "/sanad-hub",

@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { setCart } from '@/hooks/use-global-store-data';
+import { useCartData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 import { initialStoreProducts } from '@/lib/products';
@@ -80,6 +80,7 @@ export default function ProductDetailPage() {
     const { toast } = useToast();
     const [product, setProduct] = useState<Product | undefined>(undefined);
     const [isClient, setIsClient] = useState(false);
+    const { setCart } = useCartData();
     
     useEffect(() => {
         setIsClient(true);
