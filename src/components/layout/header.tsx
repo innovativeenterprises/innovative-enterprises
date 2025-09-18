@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { getServices, getSettings } from "@/lib/firestore";
@@ -87,7 +88,7 @@ const solutions = [
     {
         title: "Professional Hub",
         href: "/professional-hub",
-        description: "A platform connecting trainers, educators, and professionals with local markets.",
+        description: "A platform connecting trainers, educators, and professionals with local markets, offering tools for marketing and networking.",
         icon: BookUser,
     },
      {
