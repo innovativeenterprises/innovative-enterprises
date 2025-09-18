@@ -46,6 +46,8 @@ import { analyzeUsedItem } from './used-item-analyzer';
 import { annotateImage } from './image-annotation';
 import { estimateFireSafety } from './fire-safety-estimator';
 import { generateBoqCategory, generateFullBoq } from './boq-generator';
+import { transformImage } from './image-transformer';
+import { generateListingDescription } from './listing-description-generator';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -99,5 +101,7 @@ export {
   annotateImage,
   estimateFireSafety,
   generateBoqCategory,
-  generateFullBoq
+  generateFullBoq,
+  transformImage,
+  generateListingDescription
 };

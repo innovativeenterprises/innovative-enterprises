@@ -2,7 +2,7 @@
 'use server';
 
 import HeaderClient from "./header-client";
-import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2 } from "lucide-react";
+import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers } from "lucide-react";
 import SanadHubIcon from "../icons/sanad-hub-icon";
 import BusinessHubIcon from "../icons/business-hub-icon";
 import AmeenSmartLockIcon from "../icons/ameen-smart-lock-icon";
@@ -233,6 +233,12 @@ const aiTools = [
     href: "/cfo",
     description: "Upload financial documents for an AI-powered preliminary audit and analysis.",
     icon: DollarSign,
+  },
+  {
+    title: "Measurement Analyzer",
+    href: "/measurement-analyzer",
+    description: "Use your camera to scan an object and let our AI estimate its physical dimensions.",
+    icon: Layers,
   },
 ];
 
