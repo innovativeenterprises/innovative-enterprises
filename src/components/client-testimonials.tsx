@@ -8,14 +8,14 @@ import type { Client, Testimonial } from '@/lib/clients.schema';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useClientsData, useTestimonialsData } from '@/hooks/use-global-store-data';
 
-export default function ClientTestimonials() {
-  const { clients, isClient: isClientsClient } = useClientsData();
-  const { testimonials, isClient: isTestimonialsClient } = useTestimonialsData();
-  
-  const isClient = isClientsClient && isTestimonialsClient;
+export default function ClientTestimonials({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[] }) {
+  const [isClient, setIsClient] = useState(false);
   const { testimonialAvatars } = imageData || {};
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const renderQuote = (quote: string) => {
     const parts = quote.split(/\*\*(.*?)\*\*/g);

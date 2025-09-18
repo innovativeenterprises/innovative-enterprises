@@ -3,10 +3,9 @@ import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
-import { getClients } from '@/lib/firestore';
+import type { Client } from '@/lib/clients.schema';
 
-export default function CompanyOverview() {
-  const clients = []; // This will be populated by the parent server component
+export default function CompanyOverview({ clients }: { clients: Client[] }) {
   
   return (
     <section className="bg-background">

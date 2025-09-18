@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Client } from '@/lib/clients';
+import type { Client } from '@/lib/clients.schema';
 
 export default function OverviewAvatars({ clients }: { clients: Client[] }) {
   const [isClient, setIsClient] = useState(false);
@@ -17,7 +17,6 @@ export default function OverviewAvatars({ clients }: { clients: Client[] }) {
     return <Skeleton className="h-10 w-24" />;
   }
   
-  // Use the first 3 clients passed from the server props
   const overviewClients = clients.slice(0, 3);
 
   return (

@@ -18,10 +18,10 @@ export default async function Home() {
 
   return (
     <>
-      <CompanyOverview />
-      <ServiceCatalog />
-      <ProductShowcase />
-      <ClientTestimonials />
+      <CompanyOverview clients={clients} />
+      <ServiceCatalog services={services} />
+      <ProductShowcase products={products} />
+      <ClientTestimonials clients={clients} testimonials={testimonials} />
       <AiToolsCta />
     </>
   );
