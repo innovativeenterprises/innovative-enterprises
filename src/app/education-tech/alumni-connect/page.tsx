@@ -11,13 +11,7 @@ import type { CommunityEvent } from '@/lib/community-events';
 import type { JobPosting } from '@/lib/alumni-jobs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import type { Metadata } from 'next';
 import { Skeleton } from "@/components/ui/skeleton";
-
-export const metadata: Metadata = {
-  title: "AlumniConnect | Innovative Enterprises",
-  description: "A comprehensive digital platform for universities to engage their alumni network, fostering connections, professional opportunities, and lifelong learning.",
-};
 
 const MemberCard = ({ member }: { member: CommunityMember }) => (
     <Card className="p-4">
@@ -154,3 +148,5 @@ export default function AlumniConnectPage() {
     </div>
     );
 }
+
+    

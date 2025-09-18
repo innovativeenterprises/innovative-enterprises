@@ -12,3 +12,5 @@ export const initialAlumniJobs: JobPosting[] = [
     { id: 'job_02', title: 'Marketing Intern', company: 'Ooredoo Oman', location: 'Muscat, Oman', type: 'Internship' },
     { id: 'job_03', title: 'Data Analyst', company: 'Bank Muscat', location: 'Muscat, Oman', type: 'Full-time' },
 ];
+
+    
