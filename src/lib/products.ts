@@ -451,5 +451,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "On Track",
         href: "/pdf-form-filler"
+    },
+    {
+        id: 31,
+        name: "ProcureChain SaaS",
+        description: "An e-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1578575437136-7242e38d7525?q=80&w=600&auto=format&fit=crop",
+        aiHint: "supply chain logistics",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/procurechain",
     }
 ];
