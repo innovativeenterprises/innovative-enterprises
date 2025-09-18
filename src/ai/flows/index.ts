@@ -46,6 +46,7 @@ import { analyzeUsedItem } from './used-item-analyzer';
 import { annotateImage } from './image-annotation';
 import { estimateFireSafety } from './fire-safety-estimator';
 import { generateBoqCategory, generateFullBoq } from './boq-generator';
+import { estimateBoq } from './boq-estimator';
 import { transformImage } from './image-transformer';
 import { generateListingDescription } from './listing-description-generator';
 import { generateBookingResponse } from './booking-response-generator';
@@ -104,6 +105,7 @@ export {
   estimateFireSafety,
   generateBoqCategory,
   generateFullBoq,
+  estimateBoq,
   transformImage,
   generateListingDescription,
   generateBookingResponse,

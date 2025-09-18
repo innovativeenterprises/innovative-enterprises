@@ -240,5 +240,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/education-tech/campus-os",
-    }
+    },
+     {
+        id: 16,
+        name: "BoQ Generator",
+        description: "Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1519756301029-33a5b0452926?q=80&w=600&auto=format&fit=crop",
+        aiHint: "architectural blueprints",
+        rating: 4.8,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/quantity-calculator",
+    },
 ];

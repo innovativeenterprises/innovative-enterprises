@@ -6,14 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren } from "lucide-react";
 import Link from "next/link";
 import { useProductsData } from "@/hooks/use-global-store-data";
-import type { Product } from "@/lib/products";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Construction Technology Solutions",
-  description: "Explore a suite of AI-powered SaaS platforms designed to automate, optimize, and revolutionize the construction industry in Oman and the GCC.",
-};
-
+import type { Product } from "@/lib/products.schema";
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
