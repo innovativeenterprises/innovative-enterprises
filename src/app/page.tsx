@@ -1,14 +1,10 @@
 
-import AiToolsCta from "@/components/ai-tools-cta";
-import ClientTestimonials from "@/components/client-testimonials";
-import CompanyOverview from "@/components/company-overview";
-import ProductShowcase from "@/components/product-showcase";
-import ServiceCatalog from "@/components/service-catalog";
+import HomePageClient from './home-page-client';
 import { getServices, getProducts, getClients, getTestimonials } from '@/lib/firestore';
 
 
 export default async function Home() {
-  // Data is fetched on the server and passed down to the client components.
+  // Data is fetched on the server and passed down to the client component.
   // This avoids client-side data fetching on initial load.
   const [products, services, clients, testimonials] = await Promise.all([
     getProducts(),
@@ -18,12 +14,11 @@ export default async function Home() {
   ]);
 
   return (
-    <>
-      <CompanyOverview clients={clients} />
-      <ServiceCatalog services={services} />
-      <ProductShowcase products={products} />
-      <ClientTestimonials clients={clients} testimonials={testimonials} />
-      <AiToolsCta />
-    </>
+    <HomePageClient 
+        products={products}
+        services={services}
+        clients={clients}
+        testimonials={testimonials}
+    />
   );
 }
