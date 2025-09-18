@@ -1,24 +1,13 @@
-import HomePageClient from "./home-page-client";
-import { getProducts, getServices, getClients, getTestimonials } from "@/lib/firestore";
-import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
-export default async function Home() {
-  const [products, services, clients, testimonials] = await Promise.all([
-    getProducts(),
-    getServices(),
-    getClients(),
-    getTestimonials(),
-  ]);
+import EcosystemExplorerPage from "./ecosystem-explorer/page";
+import type { Metadata } from 'next';
 
-  return (
-    <Suspense fallback={<Skeleton className="h-screen w-full" />}>
-      <HomePageClient 
-        products={products}
-        services={services}
-        clients={clients}
-        testimonials={testimonials}
-      />
-    </Suspense>
-  );
+export const metadata: Metadata = {
+  title: "Innovative Enterprises | AI-Powered Business Ecosystem",
+  description: "Explore a comprehensive ecosystem of AI agents, SaaS platforms, and digital services designed to automate and accelerate business growth in Oman and the GCC.",
+};
+
+// The root page now simply renders the new, exciting ecosystem explorer.
+export default function Home() {
+  return <EcosystemExplorerPage />;
 }
