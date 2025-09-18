@@ -20,15 +20,15 @@ import type { SignedLease } from './leases.schema';
 import type { BookingRequest } from './stairspace-requests.schema';
 import type { StairspaceListing } from './stairspace.schema';
 import type { Agent, AgentCategory } from './agents.schema';
-import type { Agency as RaahaAgency } from './raaha-agencies.schema';
-import type { Worker as RaahaWorker } from './raaha-workers.schema';
-import type { HireRequest } from './raaha-requests.schema';
-import type { BeautyCenter } from './beauty-centers.schema';
-import type { BeautyService } from './beauty-services.schema';
-import type { BeautyAppointment } from './beauty-appointments.schema';
+import type { Agency as RaahaAgency } from './raaha-agencies';
+import type { Worker as RaahaWorker } from './raaha-workers';
+import type { HireRequest } from './raaha-requests';
+import type { BeautyCenter } from './beauty-centers';
+import type { BeautyService } from './beauty-services';
+import type { BeautyAppointment } from './beauty-appointments';
 import type { CostRate } from './cost-settings.schema';
 import type { Asset } from './assets.schema';
-import type { UsedItem } from './used-items.schema';
+import type { UsedItem } from './used-items';
 
 
 export interface CartItem extends Product {

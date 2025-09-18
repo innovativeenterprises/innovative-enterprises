@@ -13,15 +13,17 @@ import type { Product } from '@/lib/products';
 import type { Provider } from '@/lib/providers';
 import type { Opportunity } from '@/lib/opportunities';
 import type { Service } from '@/lib/services';
+import type { Agent, AgentCategory } from '@/lib/agents';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
 import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { HireRequest } from '@/lib/raaha-requests';
-import type { StairspaceListing } from '@/lib/stairspace-listings';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyService } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { UsedItem } from '@/lib/used-items';
+import type { Asset } from '@/lib/assets';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -235,7 +237,7 @@ export const useAssetsData = () => {
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
     return {
         assets: useStoreData((s) => s.assets),
-        setAssets: (updater: (prev: AppState['assets']) => AppState['assets']) => store.set(state => ({ ...state, assets: updater(state.assets) })),
+        setAssets: (updater: (prev: Asset[]) => Asset[]) => store.set(state => ({ ...state, assets: updater(state.assets) })),
         isClient,
     };
 };
