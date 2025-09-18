@@ -1,5 +1,4 @@
 
-
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -41,7 +40,7 @@ import type { JobPosting } from './alumni-jobs';
 import type { RentalAgency } from './rental-agencies';
 import type { Car } from './cars.schema';
 import type { DailySales, PosProduct } from './pos-data.schema';
-import type { SaaSProduct, SaasCategory } from './saas-products.schema';
+import type { SaasCategory } from './saas-products.schema';
 import type { StockItem } from './stock-items.schema';
 
 
@@ -129,8 +128,6 @@ export const initialState: AppState = {
 
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
-    // This was the error. It was merging the server data with stale empty arrays.
-    // The correct approach is to use the server data as the complete initial state.
     let state: AppState = { ...initialState, ...initState };
     const listeners = new Set<() => void>();
 
