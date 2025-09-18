@@ -1,7 +1,7 @@
 
 import CfoDashboardClient from './client-page';
 import type { Metadata } from 'next';
-import { getKpiData, getTransactionData, getUpcomingPayments, getVatPayment, getCashFlowData, getInvestors } from '@/lib/firestore';
+import { getKpiData, getTransactionData, getUpcomingPayments, getVatPayment, getCashFlowData } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "CFO Dashboard",
@@ -10,13 +10,12 @@ export const metadata: Metadata = {
 
 
 export default async function CfoDashboardPage() {
-    const [kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData, investors] = await Promise.all([
+    const [kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData] = await Promise.all([
         getKpiData(),
         getTransactionData(),
         getUpcomingPayments(),
         getVatPayment(),
         getCashFlowData(),
-        getInvestors(),
     ]);
 
     const cfoData = {
@@ -25,7 +24,6 @@ export default async function CfoDashboardPage() {
         upcomingPayments,
         vatPayment,
         cashFlowData,
-        investors,
     };
     return <CfoDashboardClient cfoData={cfoData} />;
 }
