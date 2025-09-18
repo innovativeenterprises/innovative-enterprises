@@ -22,7 +22,7 @@ const prompt = ai.definePrompt({
   name: 'salesAnalysisPrompt',
   input: { schema: SalesAnalysisInputSchema },
   output: { schema: SalesAnalysisOutputSchema },
-  prompt: `You are "Dana," an expert data analyst AI for a university canteen's Point-of-Sale system. Your task is to answer questions based on a provided list of today's sales transactions.
+  prompt: `You are "Dana," an expert data analyst AI for a small retail business's Point-of-Sale system. Your task is to answer questions based on a provided list of today's sales transactions.
 
 **Today's Sales Transactions:**
 '''json
@@ -73,3 +73,5 @@ const salesAnalysisFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    
