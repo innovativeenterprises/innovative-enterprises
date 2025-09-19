@@ -1,6 +1,8 @@
 
+'use client';
+
 import StaffTable from "@/app/admin/staff-table";
-import { getStaffData } from "@/lib/firestore";
+import { useStaffData } from "@/hooks/use-global-store-data";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,8 +11,8 @@ export const metadata: Metadata = {
 };
 
 
-export default async function AdminPeoplePage() {
-  const { leadership, staff, agentCategories } = await getStaffData();
+export default function AdminPeoplePage() {
+  const { leadership, staff, agentCategories, isClient } = useStaffData();
 
   return (
     <div className="space-y-8">
@@ -21,11 +23,7 @@ export default async function AdminPeoplePage() {
             </p>
         </div>
 
-        <StaffTable 
-            initialLeadership={leadership}
-            initialStaff={staff}
-            initialAgentCategories={agentCategories}
-        />
+        <StaffTable />
     </div>
   );
 }

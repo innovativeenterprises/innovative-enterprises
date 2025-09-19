@@ -233,15 +233,7 @@ const AddEditStaffDialog = ({
     )
 }
 
-export default function StaffTable({ 
-    initialLeadership, 
-    initialStaff, 
-    initialAgentCategories 
-}: { 
-    initialLeadership: Agent[], 
-    initialStaff: Agent[], 
-    initialAgentCategories: AgentCategory[] 
-}) {
+export default function StaffTable() {
     const { 
         leadership, setLeadership,
         staff, setStaff,
@@ -249,12 +241,6 @@ export default function StaffTable({
         isClient
     } = useStaffData();
     
-    useEffect(() => {
-        setLeadership(() => initialLeadership);
-        setStaff(() => initialStaff);
-        setAgentCategories(() => initialAgentCategories);
-    }, [initialLeadership, initialStaff, initialAgentCategories, setLeadership, setStaff, setAgentCategories]);
-
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedStaff, setSelectedStaff] = useState<Agent | undefined>(undefined);
