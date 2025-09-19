@@ -1,5 +1,4 @@
 
-
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

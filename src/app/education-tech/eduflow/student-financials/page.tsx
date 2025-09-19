@@ -1,6 +1,6 @@
 
 import StudentFinancialsClientPage from './client-page';
-import { initialStudents } from '@/lib/students';
+import { getStudents } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description: "A centralized dashboard for managing student tuition fees, scholarships, and payment statuses within the EduFlow administrative platform.",
 };
 
-export default function StudentFinancialsPage() {
-    return <StudentFinancialsClientPage initialStudents={initialStudents} />;
+export default async function StudentFinancialsPage() {
+    const students = await getStudents();
+    return <StudentFinancialsClientPage initialStudents={students} />;
 }

@@ -1,6 +1,6 @@
 
 import StudentRecordsClientPage from './client-page';
-import { initialStudents } from '@/lib/students';
+import { getStudents } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function StudentRecordsPage() {
-    const students = initialStudents;
+export default async function StudentRecordsPage() {
+    const students = await getStudents();
     return <StudentRecordsClientPage initialStudents={students} />;
 }
