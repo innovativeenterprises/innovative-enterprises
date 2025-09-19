@@ -187,16 +187,12 @@ const AddEditAssetDialog = ({
     )
 }
 
-export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }) {
+export default function AssetTable() {
     const { assets, setAssets, isClient } = useAssetsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(undefined);
-    
-    useEffect(() => {
-        setAssets(() => initialAssets);
-    }, [initialAssets, setAssets]);
 
     const handleOpenDialog = (asset?: Asset) => {
         setSelectedAsset(asset);
@@ -333,5 +329,3 @@ export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }
         </Card>
     );
 }
-
-    

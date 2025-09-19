@@ -104,13 +104,9 @@ const AddEditPosProductDialog = ({
     );
 };
 
-export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
+export default function PosProductTable() {
     const { posProducts, setPosProducts, isClient } = usePosProductsData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setPosProducts(() => initialProducts);
-    }, [initialProducts, setPosProducts]);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);

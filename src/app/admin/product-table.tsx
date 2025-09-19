@@ -14,16 +14,15 @@ import { Edit, PlusCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { useProductsData } from "@/hooks/use-global-store-data";
+import { initialStages } from "@/lib/stages";
 
-export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
+export default function ProductTable() {
     const { products, setProducts, isClient } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    useEffect(() => {
-        setProducts(() => initialProducts);
-    }, [initialProducts, setProducts]);
+    const stages = initialStages; // This is small and can remain static
 
     const handleToggle = (id: number) => {
         setProducts(prev =>
@@ -65,7 +64,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                     onOpenChange={setIsDialogOpen}
                     product={selectedProduct}
                     onSave={handleSave}
-                    stages={initialStages}
+                    stages={stages}
                 >
                      <Button>
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Product
@@ -111,7 +110,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                                         <AddEditProductDialog
                                             product={product}
                                             onSave={handleSave}
-                                            stages={initialStages}
+                                            stages={stages}
                                             isOpen={isDialogOpen && selectedProduct?.id === product.id}
                                             onOpenChange={(open) => {
                                                 if (!open) setSelectedProduct(undefined);

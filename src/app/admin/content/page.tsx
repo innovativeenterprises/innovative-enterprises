@@ -7,21 +7,8 @@ import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { useServicesData } from "@/hooks/use-global-store-data";
-import { useProductsData } from "@/hooks/use-global-store-data";
-import { useClientsData, useTestimonialsData } from "@/hooks/use-global-store-data";
-import { usePosProductsData } from "@/hooks/use-global-store-data";
-import { initialStages } from "@/lib/stages";
 
 export default function AdminContentPage() {
-    // Data is now fetched via hooks on the client.
-    const { services } = useServicesData();
-    const { products } = useProductsData();
-    const { clients } = useClientsData();
-    const { testimonials } = useTestimonialsData();
-    const { posProducts } = usePosProductsData();
-    const stages = initialStages; // This is small and can remain static
-
     return (
         <div className="space-y-8">
             <div>
@@ -39,19 +26,19 @@ export default function AdminContentPage() {
                     <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
                 </TabsList>
                 <TabsContent value="services" className="mt-6">
-                    <ServiceTable initialServices={services} />
+                    <ServiceTable />
                 </TabsContent>
                 <TabsContent value="products" className="mt-6">
-                    <ProductTable initialProducts={products} initialStages={stages} />
+                    <ProductTable />
                 </TabsContent>
                 <TabsContent value="clients" className="mt-6">
-                    <ClientTable initialClients={clients} initialTestimonials={testimonials} />
+                    <ClientTable />
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-6">
                     <PricingTable />
                 </TabsContent>
                 <TabsContent value="pos" className="mt-6">
-                    <PosProductTable initialProducts={posProducts} />
+                    <PosProductTable />
                 </TabsContent>
             </Tabs>
         </div>

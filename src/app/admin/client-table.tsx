@@ -110,17 +110,11 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     );
 };
 
-export default function ClientTable({ initialClients, initialTestimonials }: { initialClients: Client[], initialTestimonials: Testimonial[]}) {
+export default function ClientTable() {
     const { toast } = useToast();
     const { clients, setClients, isClient: isClientsClient } = useClientsData();
     const { testimonials, setTestimonials, isClient: isTestimonialsClient } = useTestimonialsData();
     const isClient = isClientsClient && isTestimonialsClient;
-
-    useEffect(() => {
-        setClients(() => initialClients);
-        setTestimonials(() => initialTestimonials);
-    }, [initialClients, initialTestimonials, setClients, setTestimonials]);
-
 
     const handleClientSave = (values: ClientValues, id?: string) => {
         if (id) {
