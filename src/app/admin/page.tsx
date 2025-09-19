@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network } from "lucide-react";
 import Link from "next/link";
@@ -7,45 +9,50 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getProducts, getProviders, getStaffData } from "@/lib/firestore";
 import type { Metadata } from 'next';
+import { useProductsData, useProvidersData, useStaffData } from "@/hooks/use-global-store-data";
+import { useMemo } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
     title: 'Admin Dashboard | Innovative Enterprises',
     description: 'An overview of your digital and human workforce, projects, and partner network.'
 }
 
-export default async function AdminDashboardPage() {
-  const products = await getProducts();
-  const providers = await getProviders();
-  const { leadership, staff, agentCategories } = await getStaffData();
+export default function AdminDashboardPage() {
+  const { products, isClient: isProductsClient } = useProductsData();
+  const { providers, isClient: isProvidersClient } = useProvidersData();
+  const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
 
-  const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
-  const totalStaff = leadership.length + staff.length;
+  const isClient = isProductsClient && isProvidersClient && isStaffClient;
+
+  const totalAgents = useMemo(() => agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0), [agentCategories]);
+  const totalStaff = useMemo(() => leadership.length + staff.length, [leadership, staff]);
   
-  const dynamicStats = [
+  const dynamicStats = useMemo(() => [
     { title: "Total Staff (Human + AI)", value: (totalStaff + totalAgents).toString(), icon: Users, href: "/admin/people" },
     { title: "Active Projects", value: products.filter(p => p.stage !== 'Live & Operating').length.toString(), icon: FolderKanban, href: "/admin/projects" },
     { title: "Live Products", value: products.filter(p => p.stage === 'Live & Operating').length.toString(), icon: Zap, href: "/saas-portfolio" },
     { title: "Provider Network", value: providers.length.toString(), icon: Network, href: "/admin/network" },
-  ];
+  ], [totalStaff, totalAgents, products, providers]);
 
-  const projectStatusData = products.reduce((acc, product) => {
-    const stage = product.stage || 'Uncategorized';
-    acc[stage] = (acc[stage] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const projectStatusData = useMemo(() => {
+    const data = products.reduce((acc, product) => {
+        const stage = product.stage || 'Uncategorized';
+        acc[stage] = (acc[stage] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+    return Object.entries(data).map(([stage, count]) => ({ stage, count }));
+  }, [products]);
   
-  const projectStatusChartData = Object.entries(projectStatusData).map(([stage, count]) => ({ stage, count }));
-
-  const networkGrowthData = [
+  const networkGrowthData = useMemo(() => [
       { month: 'Feb', count: 12 },
       { month: 'Mar', count: 15 },
       { month: 'Apr', count: 20 },
       { month: 'May', count: 22 },
       { month: 'Jun', count: 28 },
       { month: 'Jul', count: providers.length },
-  ];
+  ], [providers]);
 
   const chartConfig = {
       count: { label: "Count" },
@@ -71,19 +78,31 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {dynamicStats.map((stat, index) => (
-              <Link href={stat.href || '#'} key={index}>
-                <Card className="hover:bg-muted/50 transition-colors">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                        {stat.icon && <stat.icon className="h-4 w-4 text-muted-foreground" />}
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{stat.value}</div>
-                    </CardContent>
-                </Card>
-              </Link>
-          ))}
+          {!isClient ? (
+              Array.from({length: 4}).map((_, i) => (
+                   <Card key={i}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-4 w-4" />
+                        </CardHeader>
+                        <CardContent><Skeleton className="h-8 w-16" /></CardContent>
+                    </Card>
+              ))
+          ) : (
+            dynamicStats.map((stat, index) => (
+                <Link href={stat.href || '#'} key={index}>
+                    <Card className="hover:bg-muted/50 transition-colors">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                            {stat.icon && <stat.icon className="h-4 w-4 text-muted-foreground" />}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{stat.value}</div>
+                        </CardContent>
+                    </Card>
+                </Link>
+            ))
+          )}
       </div>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -94,7 +113,7 @@ export default async function AdminDashboardPage() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <BarChart data={projectStatusChartData} accessibilityLayer>
+                <BarChart data={projectStatusData} accessibilityLayer>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="stage" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
@@ -139,7 +158,16 @@ export default async function AdminDashboardPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {products.slice(0, 10).map((product) => (
+                        {!isClient ? (
+                            Array.from({length: 5}).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell colSpan={4}>
+                                        <Skeleton className="h-10 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                        products.slice(0, 10).map((product) => (
                             <TableRow key={product.id}>
                                 <TableCell className="font-medium">{product.name}</TableCell>
                                 <TableCell>
@@ -154,7 +182,7 @@ export default async function AdminDashboardPage() {
                                     {getAdminStatusBadge(product.adminStatus)}
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )))}
                     </TableBody>
                 </Table>
             </CardContent>
