@@ -1,18 +1,16 @@
-
-'use client';
-
-import { useParams, notFound } from 'next/navigation';
-import type { Property } from '@/lib/properties';
+import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
 import { ArrowLeft, MapPin, BedDouble, Bath, Home, Square, Building2, Banknote, Mail } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { usePropertiesData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
 import { getProperties } from '@/lib/firestore';
+import type { Property } from '@/lib/properties.schema';
+
+interface PageProps {
+  params: { id: string };
+}
 
 export async function generateStaticParams() {
   const properties = await getProperties();
@@ -21,7 +19,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const properties = await getProperties();
   const property = properties.find(p => p.id === params.id);
 
@@ -35,34 +33,15 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default function PropertyDetailPage() {
-    const params = useParams();
+export default async function PropertyDetailPage({ params }: PageProps) {
     const { id } = params;
-    const { properties, isClient } = usePropertiesData();
-    const [property, setProperty] = useState<Property | undefined>(undefined);
+    const properties = await getProperties();
+    const property = properties.find(p => p.id === id);
 
-    useEffect(() => {
-        if (isClient && id) {
-            const foundProperty = properties.find(p => p.id === id);
-            if (foundProperty) {
-                setProperty(foundProperty);
-            } else {
-                notFound();
-            }
-        }
-    }, [id, properties, isClient]);
-
-     if (!isClient || !property) {
-        return (
-             <div className="container mx-auto px-4 py-16">
-                <div className="max-w-5xl mx-auto">
-                    <Skeleton className="h-10 w-40 mb-8" />
-                    <Skeleton className="h-[600px] w-full" />
-                </div>
-            </div>
-        )
+    if (!property) {
+        notFound();
     }
-
+    
     const details = [
         { icon: Home, label: 'Type', value: property.propertyType },
         { icon: Square, label: 'Area', value: `${property.areaSqM} sq.m.` },

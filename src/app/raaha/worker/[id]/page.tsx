@@ -19,31 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
-import type { Metadata } from 'next';
-import { getRaahaData } from '@/lib/firestore';
 import { useState, useEffect } from 'react';
-
-export async function generateStaticParams() {
-  const { raahaWorkers } = await getRaahaData();
-  return raahaWorkers.map((worker) => ({
-    id: worker.id,
-  }));
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { raahaWorkers } = await getRaahaData();
-  const worker = raahaWorkers.find(w => w.id === params.id);
-
-  if (!worker) {
-    notFound();
-  }
-
-  return {
-    title: `${worker.name} | Candidate Profile`,
-    description: `Professional profile for ${worker.name}, a ${worker.nationality} domestic helper specializing in ${worker.skills.join(', ')}.`,
-  };
-}
-
 
 const HireRequestSchema = z.object({
     clientName: z.string().min(3, "Name is required."),

@@ -1,19 +1,18 @@
 
-'use client';
-
-import { useParams, notFound } from 'next/navigation';
-import { useCarsData } from '@/hooks/use-global-store-data';
+import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
 import { ArrowLeft, MapPin, Calendar, Fuel, Cog, Car } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import type { Metadata } from 'next';
-import type { Car as CarType } from '@/lib/cars.schema';
 import { getCars } from '@/lib/firestore';
+import type { Car as CarType } from '@/lib/cars.schema';
+
+interface PageProps {
+  params: { id: string };
+}
 
 export async function generateStaticParams() {
   const cars = await getCars();
@@ -22,7 +21,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const cars = await getCars();
   const car = cars.find(c => c.id === params.id);
 
@@ -36,32 +35,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default function CarDetailPage() {
-    const params = useParams();
+export default async function CarDetailPage({ params }: PageProps) {
     const { id } = params;
-    const { cars, isClient } = useCarsData();
-    const [car, setCar] = useState<CarType | undefined>(undefined);
+    const cars = await getCars();
+    const car = cars.find(c => c.id === id);
 
-    useEffect(() => {
-        if (isClient && id) {
-            const foundCar = cars.find(p => p.id === id);
-            if (foundCar) {
-                setCar(foundCar);
-            } else {
-                notFound();
-            }
-        }
-    }, [id, cars, isClient]);
-
-     if (!isClient || !car) {
-        return (
-             <div className="container mx-auto px-4 py-16">
-                <div className="max-w-5xl mx-auto">
-                    <Skeleton className="h-10 w-40 mb-8" />
-                    <Skeleton className="h-[600px] w-full" />
-                </div>
-            </div>
-        )
+    if (!car) {
+        notFound();
     }
     
     const details = [

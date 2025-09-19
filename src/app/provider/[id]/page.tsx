@@ -11,48 +11,84 @@ import { Progress } from '@/components/ui/progress';
 import { useState, useEffect, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
-import type { Metadata } from 'next';
-import { initialProviders } from '@/lib/providers';
 import { DueDateDisplay } from '@/components/due-date-display';
+import { useProvidersData } from '@/hooks/use-global-store-data';
 
-export async function generateStaticParams() {
-  return initialProviders.map((provider) => ({
-    id: provider.id,
-  }));
-}
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const provider = initialProviders.find(p => p.id === params.id);
+const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | string }) => {
+    const [clientState, setClientState] = useState<{
+        daysUntilExpiry: number | null;
+        progressValue: number;
+    } | null>(null);
 
-  if (!provider) {
-    notFound();
-  }
+    useEffect(() => {
+        if (!expiry) {
+            setClientState({ daysUntilExpiry: null, progressValue: 0 });
+            return;
+        }
 
-  return {
-    title: `${provider.name} | Partner Profile`,
-    description: `Service provider profile for ${provider.name}, specializing in ${provider.services}.`,
-  };
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const expiryDate = new Date(expiry);
+        expiryDate.setHours(0, 0, 0, 0);
+
+        const timeDiff = expiryDate.getTime() - now.getTime();
+        const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        
+        let totalDuration = 365; // Default for Yearly
+        if (tier === 'Monthly') totalDuration = 30;
+
+        const progress = Math.max(0, (days / totalDuration) * 100);
+
+        setClientState({ daysUntilExpiry: days, progressValue: progress });
+
+    }, [expiry, tier]);
+
+
+    if (tier === 'None') {
+        return <Badge variant="secondary">No Subscription</Badge>;
+    }
+    if (tier === 'Lifetime') {
+        return (
+             <div className="flex items-center gap-2 text-purple-700 font-semibold">
+                <Star className="h-5 w-5 fill-purple-500 text-purple-500" /> Lifetime
+             </div>
+        )
+    }
+    
+    if (!expiry || clientState === null) {
+         return <Skeleton className="h-10 w-full" />;
+    }
+    
+    return (
+        <div className="w-full min-w-[200px] space-y-2">
+            <div className="flex justify-between items-center">
+                <Badge variant="outline">{tier}</Badge>
+                <DueDateDisplay date={new Date(expiry).toISOString()} prefix="" />
+            </div>
+            <Progress value={clientState.progressValue} className="h-2 [&>div]:bg-green-500" />
+        </div>
+    )
 }
 
 export default function ProviderProfilePage() {
     const params = useParams();
     const { id } = params;
+    const { providers, isClient } = useProvidersData();
     const [provider, setProvider] = useState<Provider | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
-        if (id) {
-            const foundProvider = initialProviders.find(p => p.id === id);
+        if (isClient && id) {
+            const foundProvider = providers.find(p => p.id === id);
             if (foundProvider) {
                 setProvider(foundProvider);
             } else {
                 notFound();
             }
         }
-    }, [id]);
+    }, [id, providers, isClient]);
 
-    if (!isClient || !provider) {
+     if (!isClient || !provider) {
         return (
              <div className="bg-background min-h-[calc(100vh-8rem)]">
                 <div className="container mx-auto py-16 px-4">
@@ -71,52 +107,6 @@ export default function ProviderProfilePage() {
             case "On Hold": return <Badge variant="destructive" className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">On Hold</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
         }
-    }
-    
-    const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date }) => {
-        const { daysUntilExpiry, progressValue } = useMemo(() => {
-            if (!expiry) {
-                return { daysUntilExpiry: null, progressValue: 0 };
-            }
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            const expiryDate = new Date(expiry);
-            expiryDate.setHours(0, 0, 0, 0);
-
-            const timeDiff = expiryDate.getTime() - now.getTime();
-            const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            
-            const totalDuration = tier === 'Yearly' ? 365 : 30;
-            const progress = Math.max(0, (days / totalDuration) * 100);
-
-            return { daysUntilExpiry: days, progressValue: progress };
-        }, [expiry, tier]);
-
-
-        if (tier === 'None') {
-            return <Badge variant="secondary">No Subscription</Badge>;
-        }
-        if (tier === 'Lifetime') {
-            return (
-                 <div className="flex items-center gap-2 text-purple-700 font-semibold">
-                    <Star className="h-5 w-5 fill-purple-500 text-purple-500" /> Lifetime
-                 </div>
-            )
-        }
-        
-        if (!expiry) {
-             return <Badge variant="outline">{tier}</Badge>;
-        }
-        
-        return (
-            <div className="w-full min-w-[200px] space-y-2">
-                <div className="flex justify-between items-center">
-                    <Badge variant="outline">{tier}</Badge>
-                    <DueDateDisplay date={new Date(expiry).toISOString()} prefix="" />
-                </div>
-                <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
-            </div>
-        )
     }
     
     return (
