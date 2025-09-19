@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowLeft, CheckCircle, Eye, Layers, Cpu, Thermometer, Droplets, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
 const chartData = [
   { name: 'HVAC', energy: 4000, color: 'hsl(var(--chart-1))' },
@@ -12,6 +13,28 @@ const chartData = [
   { name: 'Plugging', energy: 2000, color: 'hsl(var(--chart-3))' },
   { name: 'Other', energy: 2780, color: 'hsl(var(--chart-4))' },
 ];
+
+const chartConfig = {
+    energy: {
+        label: 'Energy (kWh)',
+    },
+    hvac: {
+        label: 'HVAC',
+        color: 'hsl(var(--chart-1))',
+    },
+    lighting: {
+        label: 'Lighting',
+        color: 'hsl(var(--chart-2))',
+    },
+    plugging: {
+        label: 'Plugging',
+        color: 'hsl(var(--chart-3))',
+    },
+    other: {
+        label: 'Other',
+        color: 'hsl(var(--chart-4))',
+    }
+}
 
 export default function DigitalTwinPage() {
   return (
@@ -79,13 +102,14 @@ export default function DigitalTwinPage() {
                         </CardHeader>
                     </Card>
                     <div className="lg:col-span-4 h-[300px] w-full">
-                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData}>
-                                <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false}/>
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value} kWh`}/>
-                                <Bar dataKey="energy" radius={[4, 4, 0, 0]} />
+                         <ChartContainer config={chartConfig} className="w-full h-full">
+                            <BarChart data={chartData} accessibilityLayer>
+                                <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={12} padding={{ left: 10, right: 10 }} />
+                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value / 1000}k`} />
+                                <ChartTooltipContent />
+                                <Bar dataKey="energy" radius={[4, 4, 0, 0]} fill="var(--color-hvac)" />
                             </BarChart>
-                        </ResponsiveContainer>
+                        </ChartContainer>
                     </div>
                 </CardContent>
             </Card>

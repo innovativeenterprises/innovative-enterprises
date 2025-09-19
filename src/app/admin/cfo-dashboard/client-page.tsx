@@ -95,7 +95,7 @@ export default function CfoDashboardClient({ cfoData }: { cfoData: any }) {
                     <ChartContainer config={chartConfig} className="h-[200px] w-full">
                         <BarChart data={cashFlowData} accessibilityLayer>
                             <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-                            <Tooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                            <ChartTooltipContent />
                             <Bar dataKey="income" fill="var(--color-income)" radius={4} />
                             <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
                         </BarChart>
