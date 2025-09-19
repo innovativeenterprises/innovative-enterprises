@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/lib/products.schema";
 import type { ProjectStage } from "@/lib/stages";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -13,17 +13,17 @@ import { Button } from "@/components/ui/button";
 import { Edit, PlusCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
+import { useProductsData } from "@/hooks/use-global-store-data";
 
 export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
-    const [products, setProducts] = useState(initialProducts);
-    const [isClient, setIsClient] = useState(false);
+    const { products, setProducts, isClient } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setProducts(() => initialProducts);
+    }, [initialProducts, setProducts]);
 
     const handleToggle = (id: number) => {
         setProducts(prev =>

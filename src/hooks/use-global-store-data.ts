@@ -4,7 +4,7 @@
 
 import { useContext, useSyncExternalStore } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import type { CartItem } from '@/lib/pos-data.schema';
+import type { CartItem, PosProduct } from '@/lib/pos-data.schema';
 import { initialState, type AppState, type StoreType } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
 import type { SignedLease } from '@/lib/leases';
@@ -71,6 +71,18 @@ export const useCartData = () => {
     return {
         cart: useStoreData((s) => s.cart),
         setCart,
+        isClient,
+    };
+};
+
+// POS Products
+export const usePosProductsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setPosProducts = (updater: (prev: AppState['posProducts']) => AppState['posProducts']) => store.set(state => ({...state, posProducts: updater(state.posProducts)}));
+    return {
+        posProducts: useStoreData((s) => s.posProducts),
+        setPosProducts,
         isClient,
     };
 };

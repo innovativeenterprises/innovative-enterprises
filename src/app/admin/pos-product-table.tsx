@@ -18,6 +18,7 @@ import type { PosProduct } from "@/lib/pos-data.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from 'next/image';
+import { usePosProductsData } from "@/hooks/use-global-store-data";
 
 const PosProductSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -104,13 +105,12 @@ const AddEditPosProductDialog = ({
 };
 
 export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
-    const [products, setProducts] = useState(initialProducts);
-    const [isClient, setIsClient] = useState(false);
+    const { posProducts, setPosProducts, isClient } = usePosProductsData();
     const { toast } = useToast();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setPosProducts(() => initialProducts);
+    }, [initialProducts, setPosProducts]);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);
@@ -122,17 +122,17 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
-            setProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
+            setPosProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Product updated." });
         } else {
             const newItem: PosProduct = { ...values, id: `pos_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
-            setProducts(prev => [newItem, ...prev]);
+            setPosProducts(prev => [newItem, ...prev]);
             toast({ title: "Product added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setProducts(prev => prev.filter(item => item.id !== id));
+        setPosProducts(prev => prev.filter(item => item.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
 
@@ -173,7 +173,7 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            products.map(item => (
+                            posProducts.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell>
                                         <Image src={item.imageUrl} alt={item.name} width={60} height={60} className="rounded-md object-cover" />

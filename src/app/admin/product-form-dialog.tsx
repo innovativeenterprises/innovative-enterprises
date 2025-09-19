@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/lib/products.schema";
 import { ProductSchema } from "@/lib/products.schema";
 import { Button } from "@/components/ui/button";
 import { Edit, Sparkles, Loader2, PlusCircle } from "lucide-react";
