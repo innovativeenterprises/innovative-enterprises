@@ -4,7 +4,7 @@
 
 import { useContext, useSyncExternalStore } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import type { CartItem } from '@/lib/pos-data.schema';
+import type { CartItem, PosProduct, DailySales } from '@/lib/pos-data.schema';
 import { initialState, type AppState, type StoreType } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
 import type { SignedLease } from '@/lib/leases';
@@ -17,13 +17,12 @@ import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
 import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
-import type { StairspaceListing } from '@/lib/stairspace.schema';
-import type { CostRate } from '@/lib/cost-settings.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyService } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
-import type { UsedItem } from '@/lib/used-items.schema';
+import type { CostRate } from '@/lib/cost-settings.schema';
 import type { Asset } from '@/lib/assets.schema';
+import type { UsedItem } from '@/lib/used-items.schema';
 import type { Client, Testimonial } from '@/lib/clients.schema';
 import type { Car } from '@/lib/cars.schema';
 import type { GiftCard } from '@/lib/gift-cards.schema';
@@ -36,6 +35,9 @@ import type { JobPosting } from '@/lib/alumni-jobs';
 import type { BriefcaseData } from '@/lib/briefcase';
 import type { Pricing } from '@/lib/pricing.schema';
 import type { Investor } from '@/lib/investors.schema';
+import type { KnowledgeDocument } from '@/lib/knowledge.schema';
+import type { StockItem } from '@/lib/stock-items.schema';
+import type { Property } from '@/lib/properties.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -71,6 +73,30 @@ export const useCartData = () => {
     return {
         cart: useStoreData((s) => s.cart),
         setCart,
+        isClient,
+    };
+};
+
+// POS Products
+export const usePosProductsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setPosProducts = (updater: (prev: AppState['posProducts']) => AppState['posProducts']) => store.set(state => ({...state, posProducts: updater(state.posProducts)}));
+    return {
+        posProducts: useStoreData((s) => s.posProducts),
+        setPosProducts,
+        isClient,
+    };
+};
+
+// POS Sales Data
+export const usePosData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setDailySales = (updater: (prev: AppState['dailySales']) => AppState['dailySales']) => store.set(state => ({ ...state, dailySales: updater(state.dailySales) }));
+    return {
+        dailySales: useStoreData(s => s.dailySales),
+        setDailySales,
         isClient,
     };
 };
@@ -360,6 +386,18 @@ export const useEventsData = () => {
     };
 }
 
+// Community Finances
+export const useCommunityFinancesData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setFinances = (updater: (prev: AppState['communityFinances']) => AppState['communityFinances']) => store.set((state) => ({ ...state, communityFinances: updater(state.communityFinances) }));
+    return {
+        finances: useStoreData((s) => s.communityFinances),
+        setFinances,
+        isClient,
+    };
+};
+
 // Alumni Jobs
 export const useAlumniJobsData = () => {
     const store = useContext(StoreContext)!;
@@ -443,3 +481,27 @@ export const useInvestorsData = () => {
         isClient,
     };
 }
+
+// Properties
+export const usePropertiesData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setProperties = (updater: (prev: AppState['properties']) => AppState['properties']) => store.set(state => ({ ...state, properties: updater(state.properties) }));
+    return {
+        properties: useStoreData((s) => s.properties),
+        setProperties,
+        isClient,
+    };
+};
+
+// Knowledge Base
+export const useKnowledgeData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setKnowledgeBase = (updater: (prev: AppState['knowledgeBase']) => AppState['knowledgeBase']) => store.set(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
+    return {
+        knowledgeBase: useStoreData((s) => s.knowledgeBase),
+        setKnowledgeBase,
+        isClient,
+    };
+};

@@ -11,8 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, UserCheck, PlusCircle, Trash2, CheckCircle, ShieldAlert, BadgeInfo, Wand2, FileCheck2 } from 'lucide-react';
-import { AdmissionsAgentInputSchema, type AdmissionsAgentInput, type AdmissionsAgentOutput } from '@/ai/flows/admissions-agent.schema';
+import { Loader2, Sparkles, UserCheck, PlusCircle, Trash2, CheckCircle, ShieldAlert, BadgeInfo, Wand2, FileCheck2, LayoutDashboard } from 'lucide-react';
+import { AdmissionsAgentInputSchema, type AdmissionsAgentInput, type AdmissionsAgentOutput } from '@/ai/flows/admissions-agent';
 import { analyzeApplication } from '@/ai/flows/admissions-agent';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -82,6 +82,9 @@ export default function AdmissionsPage() {
             if (result.personalDetails?.nationality) {
                 form.setValue('nationality', result.personalDetails.nationality);
             }
+            if (result.professionalSummary) {
+                form.setValue('personalStatement', result.professionalSummary);
+            }
 
             toast({ title: "Analysis Complete", description: "Applicant details have been pre-filled from the document." });
         } catch (error) {
@@ -125,6 +128,14 @@ export default function AdmissionsPage() {
                             Streamline your admissions process. Submit an application below to see how our AI, "Admito," provides instant preliminary analysis for your admissions team.
                         </p>
                     </div>
+                    
+                    <div className="flex justify-end">
+                        <Button asChild variant="outline">
+                            <Link href="/admin/education-tech/admissions/dashboard">
+                                <LayoutDashboard className="mr-2 h-4 w-4" /> View Admissions Dashboard
+                            </Link>
+                        </Button>
+                    </div>
 
                     <Card>
                         <CardHeader>
@@ -150,7 +161,7 @@ export default function AdmissionsPage() {
                                                             Analyze & Pre-fill
                                                         </Button>
                                                     </div>
-                                                     <FormDescription className="text-xs">Upload an ID card or Passport. This document is NOT saved.</FormDescription>
+                                                     <FormDescription className="text-xs">Upload an ID card, Passport, or CV. This document is NOT saved.</FormDescription>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}

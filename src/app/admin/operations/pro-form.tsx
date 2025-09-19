@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -96,7 +97,7 @@ export default function ProForm() {
   const handleLocationSelect = (location: { lat: number, lon: number, name: string }) => {
     form.setValue('startLocationCoords', { lat: location.lat, lon: location.lon });
     form.setValue('startLocationName', location.name);
-    toast({ title: 'Location Selected', description: `${location.name} set as the starting point.` });
+    toast({ title: 'Location Selected', description: `${"'" + location.name + "'"} set as the starting point.` });
   };
 
   return (
