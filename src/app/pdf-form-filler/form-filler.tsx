@@ -16,6 +16,7 @@ import { type FilledFormData } from '@/ai/flows/pdf-form-filler.schema';
 import { fileToDataURI } from '@/lib/utils';
 import jsPDF from 'jspdf';
 import { Label } from '@/components/ui/label';
+import { useBriefcaseData } from '@/hooks/use-global-store-data';
 
 
 const FormSchema = z.object({

@@ -15,7 +15,7 @@ import type { Service } from '@/lib/services.schema';
 import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
 import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
-import type { HireRequest } from '@/lib/raaha-requests';
+import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers';
@@ -32,6 +32,7 @@ import type { CommunityEvent } from '@/lib/community-events';
 import type { CommunityFinance } from '@/lib/community-finances';
 import type { CommunityMember } from '@/lib/community-members';
 import type { JobPosting } from '@/lib/alumni-jobs';
+import type { BriefcaseData } from '@/app/briefcase/page';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -82,14 +83,6 @@ export const useLeasesData = () => {
         isClient,
     };
 };
-
-export const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => {
-    const store = initialState.store; // This is a hack for server components.
-    if(store) {
-        store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
-    }
-}
-
 
 // StairSpace Requests
 export const useStairspaceRequestsData = () => {
@@ -375,3 +368,16 @@ export const useAlumniJobsData = () => {
         isClient,
     };
 }
+
+
+// Briefcase
+export const useBriefcaseData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setBriefcase = (updater: (prev: AppState['briefcase']) => AppState['briefcase']) => store.set((state) => ({ ...state, briefcase: updater(state.briefcase) }));
+    return {
+        briefcase: useStoreData((s) => s.briefcase),
+        setBriefcase,
+        isClient,
+    };
+};

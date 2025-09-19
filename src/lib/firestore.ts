@@ -38,6 +38,8 @@ import { initialSettings } from './settings';
 import { initialRaahaAgencies } from './raaha-agencies';
 import { initialRaahaWorkers } from './raaha-workers';
 import { initialRaahaRequests } from './raaha-requests';
+import { initialApplications } from './admissions-applications';
+import { initialBriefcase } from './briefcase';
 import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 import { initialKnowledgeBase } from '@/lib/knowledge';
 
@@ -88,6 +90,8 @@ export const getBeautyAppointments = async () => { await delay(50); return initi
 export const getUsedItems = async () => { await delay(50); return initialUsedItems; };
 export const getSettings = async () => { await delay(50); return initialSettings; };
 export const getKnowledgeBase = async (): Promise<KnowledgeDocument[]> => { await delay(50); return initialKnowledgeBase; };
+export const getApplications = async () => { await delay(50); return initialApplications; };
+export const getBriefcase = async () => { await delay(50); return initialBriefcase; };
 
 
 export const getRaahaData = async () => {
