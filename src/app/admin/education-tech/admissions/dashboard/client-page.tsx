@@ -11,15 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
-
-// Define the Application type locally as it's only used here.
-type Application = {
-    id: string;
-    name: string;
-    program: string;
-    readinessScore: number;
-    status: string;
-};
+import type { Application } from '@/lib/admissions-applications';
 
 type SortKey = keyof Application | '';
 
