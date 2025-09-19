@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useContext, useSyncExternalStore } from 'react';
@@ -375,7 +374,7 @@ export const useAlumniJobsData = () => {
 export const useBriefcaseData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setBriefcase = (updater: (prev: BriefcaseData) => BriefcaseData) => store.set((state) => ({ ...state, briefcase: updater(state.briefcase) }));
+    const setBriefcase = (updater: (prev: AppState['briefcase']) => AppState['briefcase']) => store.set((state) => ({ ...state, briefcase: updater(state.briefcase) }));
     return {
         briefcase: useStoreData((s) => s.briefcase),
         setBriefcase,

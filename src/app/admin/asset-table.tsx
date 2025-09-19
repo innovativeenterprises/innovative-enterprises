@@ -21,6 +21,7 @@ import { PlusCircle, Edit, Trash2, Upload, Image as ImageIcon, Search } from "lu
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from "@/lib/utils";
+import { useAssetsData } from "@/hooks/use-global-store-data";
 
 const AssetSchema = z.object({
   name: z.string().min(3, "Asset name is required"),
@@ -187,16 +188,15 @@ const AddEditAssetDialog = ({
 }
 
 export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }) {
-    const [assets, setAssets] = useState(initialAssets);
-    const [isClient, setIsClient] = useState(false);
+    const { assets, setAssets, isClient } = useAssetsData();
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(undefined);
     
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setAssets(() => initialAssets);
+    }, [initialAssets, setAssets]);
 
     const handleOpenDialog = (asset?: Asset) => {
         setSelectedAsset(asset);
@@ -206,12 +206,13 @@ export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }
     
     const handleSave = (values: AssetValues, id?: string) => {
         if (id) {
-            setAssets(prev => prev.map(asset => asset.id === id ? { ...asset, ...values } : asset));
+            setAssets(prev => prev.map(asset => asset.id === id ? { ...asset, ...values, image: values.image } : asset));
             toast({ title: "Asset updated successfully." });
         } else {
             const newAsset: Asset = {
                 ...values,
                 id: `asset_${values.name.replace(/\s+/g, '_').toLowerCase()}`,
+                image: values.image,
             };
             setAssets(prev => [newAsset, ...prev]);
             toast({ title: "Asset added successfully." });
@@ -332,4 +333,3 @@ export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }
         </Card>
     );
 }
-

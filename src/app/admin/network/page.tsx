@@ -2,8 +2,7 @@
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getProviders } from "@/lib/firestore";
-import { getAssets } from "@/lib/firestore";
+import { getProviders, getAssets } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
