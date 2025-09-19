@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing.schema";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePricingData } from "@/hooks/use-global-store-data";
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -81,15 +82,14 @@ export default function PricingTable({
 } : { 
     pricing: Pricing[], 
 }) {
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+    const { pricing, setPricing, isClient } = usePricingData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setPricing(() => initialPricing);
+    }, [initialPricing, setPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));

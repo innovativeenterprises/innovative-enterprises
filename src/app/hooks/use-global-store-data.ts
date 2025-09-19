@@ -34,6 +34,7 @@ import type { CommunityFinance } from '@/lib/community-finances';
 import type { CommunityMember } from '@/lib/community-members';
 import type { JobPosting } from '@/lib/alumni-jobs';
 import type { BriefcaseData } from '@/lib/briefcase';
+import type { Pricing } from '@/lib/pricing.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -378,6 +379,18 @@ export const useBriefcaseData = () => {
     return {
         briefcase: useStoreData((s) => s.briefcase),
         setBriefcase,
+        isClient,
+    };
+};
+
+// Pricing
+export const usePricingData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setPricing = (updater: (prev: AppState['pricing']) => AppState['pricing']) => store.set((state) => ({ ...state, pricing: updater(state.pricing) }));
+    return {
+        pricing: useStoreData((s) => s.pricing),
+        setPricing,
         isClient,
     };
 };
