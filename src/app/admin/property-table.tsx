@@ -190,14 +190,9 @@ const AddEditPropertyDialog = ({
     )
 }
 
-export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
+export default function PropertyTable() {
     const { properties, setProperties, isClient } = usePropertiesData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setProperties(() => initialProperties);
-    }, [initialProperties, setProperties]);
-
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
         const { ...propertyData } = values; // Exclude scraper URL from save data
@@ -297,4 +292,3 @@ export default function PropertyTable({ initialProperties }: { initialProperties
         </Card>
     );
 }
-

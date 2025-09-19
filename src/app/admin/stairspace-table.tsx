@@ -100,15 +100,11 @@ const AddEditListingDialog = ({
     );
 };
 
-export default function StairspaceTable({ initialListings }: { initialListings: StairspaceListing[] }) {
+export default function StairspaceTable() {
     const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
-
-    useEffect(() => {
-        setStairspaceListings(() => initialListings);
-    }, [initialListings, setStairspaceListings]);
 
     const openDialog = (listing?: StairspaceListing) => {
         setSelectedListing(listing);
