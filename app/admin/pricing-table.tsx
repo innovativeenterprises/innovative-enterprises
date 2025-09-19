@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,9 +12,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import type { Pricing } from "@/lib/pricing";
+import type { Pricing } from "@/lib/pricing.schema";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePricingData } from '@/hooks/use-global-store-data';
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -76,20 +77,11 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable({ 
-    pricing: initialPricing,
-} : { 
-    pricing: Pricing[], 
-}) {
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+export default function PricingTable() { 
+    const { pricing, setPricing, isClient } = usePricingData();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
@@ -100,18 +92,6 @@ export default function PricingTable({
         setSelectedItem(item);
         setIsDialogOpen(true);
     };
-
-    const pricingByGroup = useMemo(() => {
-        if (!isClient) return {};
-        return pricing.reduce((acc, item) => {
-            if (!acc[item.group]) {
-                acc[item.group] = [];
-            }
-            acc[item.group].push(item);
-            return acc;
-        }, {} as Record<string, Pricing[]>);
-    }, [isClient, pricing]);
-
 
     return (
         <Card>
@@ -147,17 +127,15 @@ export default function PricingTable({
                                 </TableCell>
                             </TableRow>
                         ) : (
-                             Object.entries(pricingByGroup).flatMap(([group, items]) => (
-                                items.map(item => (
-                                    <TableRow key={item.id}>
-                                        <TableCell className="font-medium">{item.type}</TableCell>
-                                        <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                        <TableCell>OMR {item.price.toFixed(2)}</TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                             pricing.map(item => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="font-medium">{item.type}</TableCell>
+                                    <TableCell className="text-muted-foreground">{item.group}</TableCell>
+                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
+                                    </TableCell>
+                                </TableRow>
                             ))
                         )}
                     </TableBody>
