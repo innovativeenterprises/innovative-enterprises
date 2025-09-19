@@ -1,9 +1,20 @@
+
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck } from "lucide-react";
 import InvestForm from "./invest-form";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CompanyProfileDownloader from "./company-profile-downloader";
+import { getProducts } from "@/lib/firestore";
+import type { Product } from "@/lib/products.schema";
+import Link from "next/link";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Invest With Us | Innovative Enterprises",
+  description: "Explore investment opportunities in our portfolio of 80+ AI-driven technology products and join our journey of innovation.",
+};
+
 
 const investmentReasons = [
     {
@@ -21,36 +32,13 @@ const investmentReasons = [
         title: "Experienced Leadership",
         description: "Our team consists of seasoned professionals with a proven track record of delivering innovative projects and driving growth."
     }
-]
-
-const combinedProjects = [
-    { name: "PANOSPACE", description: "Immersive platform for virtual tours.", status: "Live", href: "/real-estate-tech/virtual-tour" },
-    { name: "ameen", description: "A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App using AI image recognition.", status: "Live", href: "/ameen" },
-    { name: "APPI – عـبِّـي", description: "An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption (electricity, water, gas). It empowers users with predictive analytics, automated notifications, and convenient service booking options, ultimately leading to significant cost savings and enhanced convenience.", status: "In Development" },
-    { name: "KHIDMA", description: "A revolutionary AI/Deep-tech powered mobile application that transforms the traditional service industry. It acts as a dynamic marketplace connecting service seekers with qualified providers through an innovative auction/tender system.", status: "In Development" },
-    { name: "VMALL", description: "A revolutionary Web & Mobile application that leverages Virtual Reality (VR) and Augmented Reality (AR) technology to create immersive shopping experiences. It empowers businesses across various sectors, including retail, real estate, hospitality, and event management, to showcase their offerings in a captivating and interactive manner.", status: "In Development", href: "/real-estate-tech/virtual-tour" },
-    { name: "Logistics Chain AI", description: "AI model to optimize supply chain and logistics for local and regional distributors.", status: "In Development" },
-];
-
-const standaloneSolutions = [
-    { name: "RAAHA", description: "An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment, management, and client communication.", status: "Live", href: "/raaha" },
-    { name: "Ameen", description: "A standalone digital identity solution offering secure, password-free authentication via WhatsApp OTP and other methods, ready for integration into any application.", status: "Live", href: "/ameen" },
 ];
 
 
-const comingProjects = [
-    { name: "Fintech Super-App", description: "An integrated financial services application for the Omani market.", status: "Research Phase" },
-    { name: "Smart City OS", description: "An operating system for managing urban infrastructure and services.", status: "Concept Phase" },
-    { name: "We Match - MATCH CUP GAME", description: "An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions.", status: "Research Phase" },
-    { name: "AI-POS", description: "A smart, AI-driven Point-of-Sale system for small groceries, featuring inventory management, sales analytics, and customer insights to optimize stock.", status: "Research Phase" },
-    { name: "AlumniConnect", description: "A comprehensive digital platform for universities, colleges, and schools to engage their alumni network, fostering connections and professional opportunities.", status: "Research Phase" },
-    { name: "Hadeeya", description: "A sophisticated prepaid digital gift card platform, enabling seamless and personalized gifting experiences for individuals and corporate clients.", status: "Research Phase" },
-];
-
-const ProjectCard = ({ name, description, status, href }: { name: string, description: string, status: string, href?: string }) => {
+const ProjectCard = ({ product }: { product: Product }) => {
     const getStatusColor = () => {
-        switch (status) {
-            case 'Live': return 'bg-green-500 hover:bg-green-600';
+        switch (product.stage) {
+            case 'Live & Operating': return 'bg-green-500 hover:bg-green-600';
             case 'In Development': return 'bg-blue-500 hover:bg-blue-600';
             case 'Prototyping': return 'bg-yellow-500 hover:bg-yellow-600';
             case 'Research Phase': return 'bg-purple-500 hover:bg-purple-600';
@@ -62,20 +50,26 @@ const ProjectCard = ({ name, description, status, href }: { name: string, descri
         <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <CardHeader>
                 <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{name}</CardTitle>
-                     <Badge variant="default" className={`${"'" + getStatusColor() + "'"} text-white`}>{status}</Badge>
+                    <CardTitle className="text-xl">{product.name}</CardTitle>
+                     <Badge variant="default" className={`${getStatusColor()} text-white`}>{product.stage}</Badge>
                 </div>
             </CardHeader>
             <CardContent className="flex-grow">
-                <p className="text-muted-foreground">{description}</p>
+                <p className="text-muted-foreground">{product.description}</p>
             </CardContent>
         </Card>
     );
 
-    return href ? <Link href={href} className="flex">{content}</Link> : content;
+    return product.href ? <Link href={product.href} className="flex">{content}</Link> : content;
 }
 
-export default function InvestPage() {
+export default async function InvestPage() {
+  const allProducts = await getProducts();
+  const liveProducts = allProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
+  const devProducts = allProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
+  const futureProducts = allProducts.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
+
+
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
@@ -106,32 +100,39 @@ export default function InvestPage() {
                  </div>
             </div>
             
-            <div>
-                <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
-                    <PackageCheck className="w-8 h-8" /> Our Project Portfolio
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {combinedProjects.map(p => <ProjectCard key={p.name} {...p} />)}
+            {liveProducts.length > 0 && (
+                <div>
+                    <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
+                        <PackageCheck className="w-8 h-8" /> Live & Operating Platforms
+                    </h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {liveProducts.map(p => <ProjectCard key={p.id} product={p} />)}
+                    </div>
                 </div>
-            </div>
+            )}
             
-            <div>
-                <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
-                    <PackageCheck className="w-8 h-8" /> Standalone Solutions & Spinoffs
-                </h2>
-                <div className="grid md:grid-cols-2 gap-6">
-                    {standaloneSolutions.map(p => <ProjectCard key={p.name} {...p} />)}
+            {devProducts.length > 0 && (
+                <div>
+                    <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
+                        <PackageCheck className="w-8 h-8" /> Platforms in Development
+                    </h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {devProducts.map(p => <ProjectCard key={p.id} product={p} />)}
+                    </div>
                 </div>
-            </div>
+            )}
+            
+            {futureProducts.length > 0 && (
+                <div>
+                    <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
+                        <Lightbulb className="w-8 h-8" /> Future Concepts
+                    </h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {futureProducts.map(p => <ProjectCard key={p.id} product={p} />)}
+                    </div>
+                </div>
+            )}
 
-            <div>
-                 <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">
-                    <Lightbulb className="w-8 h-8" /> Coming Soon
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {comingProjects.map(p => <ProjectCard key={p.name} {...p} />)}
-                </div>
-            </div>
 
             <div>
                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Pitch Decks & Downloads</h2>
