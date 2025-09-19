@@ -76,14 +76,28 @@ const identityAnalysisFlow = ai.defineFlow(
   async (input) => {
     const { output } = await prompt(input);
 
-    if (output) {
-        // Fallback robust filename generation, in case the model fails to do it.
-        const fullName = output.personalDetails?.fullName;
-        const civilId = output.idCardDetails?.civilNumber;
-        const namePart = fullName?.replace(/\s+/g, '_') || (civilId ? `ID_${civilId}` : 'UnknownPerson');
-        output.suggestedFilename = `ID_${namePart}.pdf`;
+    if (!output) {
+        throw new Error("Failed to get a response from the identity analysis model.");
+    }
+    
+    // Post-processing to ensure full name is combined if the model missed it.
+    if (output.passportDetails && !output.personalDetails?.fullName) {
+        const fullName = `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim();
+        if (fullName) {
+            if (!output.personalDetails) {
+                output.personalDetails = { fullName };
+            } else {
+                output.personalDetails.fullName = fullName;
+            }
+        }
     }
 
-    return output!;
+    // Fallback robust filename generation.
+    const fullName = output.personalDetails?.fullName;
+    const civilId = output.idCardDetails?.civilNumber;
+    const namePart = fullName?.replace(/\s+/g, '_') || (civilId ? `ID_${civilId}` : 'UnknownPerson');
+    output.suggestedFilename = `ID_${namePart}.pdf`;
+
+    return output;
   }
 );
