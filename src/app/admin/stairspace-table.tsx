@@ -18,6 +18,7 @@ import type { StairspaceListing } from "@/lib/stairspace.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from 'next/image';
+import { useStairspaceData } from "@/hooks/use-global-store-data";
 
 const ListingSchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -100,15 +101,14 @@ const AddEditListingDialog = ({
 };
 
 export default function StairspaceTable({ initialListings }: { initialListings: StairspaceListing[] }) {
-    const [listings, setListings] = useState(initialListings);
-    const [isClient, setIsClient] = useState(false);
+    const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setStairspaceListings(() => initialListings);
+    }, [initialListings, setStairspaceListings]);
 
     const openDialog = (listing?: StairspaceListing) => {
         setSelectedListing(listing);
@@ -118,17 +118,17 @@ export default function StairspaceTable({ initialListings }: { initialListings: 
     const handleSave = (values: ListingValues, id?: string) => {
         const listingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
         if (id) {
-            setListings(prev => prev.map(l => l.id === id ? { ...l, ...listingData } : l));
+            setStairspaceListings(prev => prev.map(l => l.id === id ? { ...l, ...listingData } : l));
             toast({ title: "Listing updated." });
         } else {
             const newListing: StairspaceListing = { ...listingData, id: `stair_${Date.now()}` };
-            setListings(prev => [newListing, ...prev]);
+            setStairspaceListings(prev => [newListing, ...prev]);
             toast({ title: "Listing added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setListings(prev => prev.filter(l => l.id !== id));
+        setStairspaceListings(prev => prev.filter(l => l.id !== id));
         toast({ title: "Listing removed.", variant: "destructive" });
     };
 
@@ -156,7 +156,7 @@ export default function StairspaceTable({ initialListings }: { initialListings: 
                          {!isClient ? (
                             <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow>
                         ) : (
-                            listings.map(listing => (
+                            stairspaceListings.map(listing => (
                                 <TableRow key={listing.id}>
                                     <TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell>
                                     <TableCell className="font-medium">{listing.title}</TableCell>
