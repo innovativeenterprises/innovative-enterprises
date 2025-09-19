@@ -1,3 +1,4 @@
+
 import HomePageClient from "./home-page-client";
 import { getProducts, getServices, getClients, getTestimonials } from '@/lib/firestore';
 import type { Metadata } from 'next';

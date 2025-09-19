@@ -6,6 +6,7 @@ import ClientTestimonials from "@/components/client-testimonials";
 import CompanyOverview from "@/components/company-overview";
 import ProductShowcase from "@/components/product-showcase";
 import ServiceCatalog from "@/components/service-catalog";
+import { useProductsData, useServicesData, useClientsData, useTestimonialsData } from '@/hooks/use-global-store-data';
 import type { Product } from '@/lib/products.schema';
 import type { Service } from '@/lib/services.schema';
 import type { Client, Testimonial } from '@/lib/clients.schema';
@@ -17,7 +18,12 @@ interface HomePageClientProps {
     testimonials: Testimonial[];
 }
 
-export default function HomePageClient({ products, services, clients, testimonials }: HomePageClientProps) {
+export default function HomePageClient({ products: initialProducts, services: initialServices, clients: initialClients, testimonials: initialTestimonials }: HomePageClientProps) {
+  const { products } = useProductsData();
+  const { services } = useServicesData();
+  const { clients } = useClientsData();
+  const { testimonials } = useTestimonialsData();
+
   return (
     <>
       <CompanyOverview clients={clients} />

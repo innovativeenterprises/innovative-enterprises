@@ -7,8 +7,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 import type { Client } from '@/lib/clients.schema';
+import { useClientsData } from '@/hooks/use-global-store-data';
 
-export default function CompanyOverview({ clients }: { clients: Client[] }) {
+export default function CompanyOverview({ clients: initialClients }: { clients: Client[] }) {
+  const { clients } = useClientsData();
   
   return (
     <section className="bg-background">

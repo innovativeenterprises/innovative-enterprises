@@ -10,11 +10,35 @@ import Link from 'next/link';
 import { useEffect, useState, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers';
-import { initialProviders } from '@/lib/providers';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { Progress } from '@/components/ui/progress';
+import { useProvidersData } from '@/hooks/use-global-store-data';
+import type { Metadata } from 'next';
+import { initialProviders } from '@/lib/providers';
 
-const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string }) => {
+export async function generateStaticParams() {
+  return initialProviders.map((provider) => ({
+    id: provider.id,
+  }));
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const provider = initialProviders.find(p => p.id === params.id);
+
+  if (!provider) {
+    return {
+      title: 'Provider Not Found',
+    };
+  }
+
+  return {
+    title: `${provider.name} | Partner Profile`,
+    description: `Service provider profile for ${provider.name}, specializing in ${provider.services}.`,
+  };
+}
+
+
+const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | string }) => {
     const [clientState, setClientState] = useState<{
         daysUntilExpiry: number | null;
         progressValue: number;
@@ -70,7 +94,12 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
     )
 }
 
-const ProviderDetailClient = ({ provider }: { provider: Provider | undefined }) => {
+const ProviderDetailClient = ({ provider: initialProvider }: { provider: Provider | undefined }) => {
+    const { providers } = useProvidersData();
+    const params = useParams();
+    const provider = providers.find(p => p.id === params.id) || initialProvider;
+
+
     if (!provider) {
         return (
             <div className="space-y-8">
@@ -120,7 +149,7 @@ const ProviderDetailClient = ({ provider }: { provider: Provider | undefined }) 
                     </div>
                     <div className="w-full md:w-auto">
                         <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
-                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry instanceof Date ? provider.subscriptionExpiry.toISOString() : provider.subscriptionExpiry} />
+                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry} />
                     </div>
                 </CardHeader>
                  <CardContent>
@@ -138,10 +167,6 @@ const ProviderDetailClient = ({ provider }: { provider: Provider | undefined }) 
 export default function ProviderDetailPage({ params }: { params: { id: string } }) {
     const { id } = params;
     const provider = initialProviders.find(p => p.id === id);
-
-    if (!provider) {
-        notFound();
-    }
 
     return <ProviderDetailClient provider={provider} />;
 }

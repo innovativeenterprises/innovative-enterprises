@@ -18,16 +18,16 @@ import { useToast } from "@/hooks/use-toast";
 import type { Provider } from "@/lib/providers";
 import { ProviderSchema } from "@/lib/providers.schema";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon, Upload, Star } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Link as LinkIcon, CalendarIcon } from "lucide-react";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
-import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { DueDateDisplay } from "@/components/due-date-display";
+import { useProvidersData } from "@/hooks/use-global-store-data";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -168,16 +168,15 @@ const AddEditProviderDialog = ({
 }
 
 export default function ProviderTable({ initialProviders }: { initialProviders: Provider[] }) {
-    const [providers, setProviders] = useState(initialProviders);
-    const [isClient, setIsClient] = useState(false);
+    const { providers, setProviders, isClient } = useProvidersData();
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setProviders(() => initialProviders);
+    }, [initialProviders, setProviders]);
     
     const handleOpenDialog = (provider?: Provider) => {
         setSelectedProvider(provider);

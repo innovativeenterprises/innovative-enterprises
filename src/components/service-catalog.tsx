@@ -3,9 +3,10 @@
 
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { GitBranch, Recycle } from "lucide-react";
+import { GitBranch } from "lucide-react";
 import type { Service } from "@/lib/services.schema";
 import { useMemo } from 'react';
+import { useServicesData } from "@/hooks/use-global-store-data";
 
 const ServiceCard = ({ service }: { service: Service }) => (
     <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
@@ -25,7 +26,8 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog({ services }: { services: Service[] }) {
+export default function ServiceCatalog({ services: initialServices }: { services: Service[] }) {
+  const { services } = useServicesData();
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = useMemo(() => enabledServices.reduce((acc, service) => {
