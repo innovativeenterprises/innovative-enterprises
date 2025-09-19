@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -18,6 +17,9 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  
+  // The StoreProvider now initializes with the default initialState.
+  // Pages that need server-side data will fetch it themselves.
   const initialData = initialState;
 
   return (
