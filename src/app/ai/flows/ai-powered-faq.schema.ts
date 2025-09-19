@@ -6,7 +6,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { initialStaffData } from '@/lib/agents.schema';
+import { initialStaffData } from '@/lib/agents';
 import type { Agent } from '@/lib/agents.schema';
 
 export const AnswerQuestionInputSchema = z.object({
