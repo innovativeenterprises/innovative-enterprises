@@ -1,5 +1,4 @@
 
-
 import MemberDirectoryClient from './client-page';
 import type { Metadata } from 'next';
 import { getCommunityMembers } from '@/lib/firestore';

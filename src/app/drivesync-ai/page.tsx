@@ -1,6 +1,5 @@
 
-import { initialCars } from '@/lib/cars';
-import { initialRentalAgencies } from '@/lib/rental-agencies';
+import { getCars, getRentalAgencies } from '@/lib/firestore';
 import DriveSyncClientPage from './client-page';
 import type { Metadata } from 'next';
 
@@ -9,8 +8,10 @@ export const metadata: Metadata = {
   description: "An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS for real-time tracking.",
 };
 
-export default function DriveSyncAiPage() {
-    const cars = initialCars;
-    const agencies = initialRentalAgencies;
+export default async function DriveSyncAiPage() {
+    const [cars, agencies] = await Promise.all([
+        getCars(),
+        getRentalAgencies(),
+    ]);
     return <DriveSyncClientPage initialCars={cars} initialAgencies={agencies} />;
 }

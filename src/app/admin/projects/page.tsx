@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2, GripVertical } from 'lucide-react';
 import { generateProjectPlan } from '@/ai/flows/project-inception';
-import type { Product } from '@/lib/products';
+import type { Product } from '@/lib/products.schema';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCorners, type DragEndEvent, type Active, type Over } from '@dnd-kit/core';
@@ -20,9 +20,9 @@ import { SortableContext, useSortable, verticalListSortingStrategy, horizontalLi
 import { CSS } from '@dnd-kit/utilities';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { initialProducts } from '@/lib/products';
-import { initialStages } from '@/lib/stages';
+import { useProductsData } from '@/hooks/use-global-store-data';
 import type { ProjectStage } from '@/lib/stages';
+import { getStages } from '@/lib/firestore';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
@@ -32,7 +32,7 @@ type FormValues = z.infer<typeof FormSchema>;
 
 const ProductCard = ({ product, onEdit }: { product: Product; onEdit: (product: Product) => void }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ 
-        id: product.id,
+        id: product.id!,
         data: {
             type: 'Product',
             product,
@@ -55,7 +55,7 @@ const ProductCard = ({ product, onEdit }: { product: Product; onEdit: (product: 
                           </Button>
                         </div>
                         <div className="relative h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
-                            <Image src={product.image} alt={product.name} fill className="object-cover"/>
+                            <Image src={product.image!} alt={product.name} fill className="object-cover"/>
                         </div>
                         <div className="flex-grow">
                              <p className="font-semibold text-sm leading-tight group-hover:text-primary">{product.name}</p>
@@ -76,6 +76,8 @@ const StageColumn = ({ stage, products, onEditProduct }: { stage: any, products:
         }
     });
     
+    const productIds = useMemo(() => products.map(p => p.id!), [products]);
+
     return (
         <div ref={setNodeRef} className="flex-shrink-0 w-[300px]">
             <Card className="bg-muted/50 h-full flex flex-col">
@@ -83,7 +85,7 @@ const StageColumn = ({ stage, products, onEditProduct }: { stage: any, products:
                     <CardTitle className="text-base">{stage.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 min-h-[200px] flex-grow overflow-y-auto">
-                     <SortableContext items={products.map(p => p.id)} strategy={verticalListSortingStrategy}>
+                     <SortableContext items={productIds} strategy={verticalListSortingStrategy}>
                         {products.map(product => (
                             <ProductCard key={product.id} product={product} onEdit={onEditProduct} />
                         ))}
@@ -100,9 +102,8 @@ export default function ProjectsPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    const [products, setProducts] = useState<Product[]>(initialProducts);
-    const [stages, setStages] = useState<ProjectStage[]>(initialStages);
-    const [isClient, setIsClient] = useState(false);
+    const { products, setProducts, isClient } = useProductsData();
+    const [stages, setStages] = useState<ProjectStage[]>([]);
     
     const { toast } = useToast();
 
@@ -112,20 +113,23 @@ export default function ProjectsPage() {
     });
     
     useEffect(() => {
-        setIsClient(true);
+        getStages().then(setStages);
     }, []);
 
     const productsByStage = useMemo(() => {
+        if (!stages.length) return {};
         const grouped: Record<string, Product[]> = {};
         stages.forEach(stage => {
             grouped[stage.name] = [];
         });
         products.forEach(product => {
             const stageName = product.stage || 'Idea Phase';
-            if (!grouped[stageName]) {
-                grouped[stageName] = [];
+            if (grouped[stageName]) {
+                grouped[stageName].push(product);
+            } else {
+                 if (!grouped['On Hold']) grouped['On Hold'] = [];
+                 grouped['On Hold'].push(product);
             }
-            grouped[stageName].push(product);
         });
         return grouped;
     }, [products, stages]);
@@ -169,7 +173,7 @@ export default function ProjectsPage() {
 
     const onDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        if (!over) return;
+        if (!over || active.id === over.id) return;
         
         const activeProduct = products.find(p => p.id === active.id);
         const overStageName = getStageForOverId(over);
@@ -194,7 +198,7 @@ export default function ProjectsPage() {
             const plan = await generateProjectPlan({ idea: data.idea });
             
             const newProduct: Product = {
-                id: (products.length > 0 ? Math.max(...products.map(p => p.id)) : 0) + 1,
+                id: (products.length > 0 ? Math.max(...products.map(p => p.id || 0)) : 0) + 1,
                 name: plan.projectName,
                 description: plan.summary,
                 stage: 'Idea Phase',
