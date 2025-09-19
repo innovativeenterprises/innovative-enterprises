@@ -8,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { initialAgentCategories } from '@/lib/agents.schema.ts';
+import { initialStaffData } from '@/lib/agents';
 import {
     ProjectInceptionInput,
     ProjectInceptionInputSchema,
@@ -21,8 +21,8 @@ export async function generateProjectPlan(input: ProjectInceptionInput): Promise
   return projectInceptionFlow(input);
 }
 
-// Flatten the list of all available agents
-const allAgents = initialAgentCategories.flatMap(category => category.agents.map(agent => `'${agent.name}' ('${agent.role}')`));
+const allWorkforce = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
+const allAgentNames = allWorkforce.map(agent => `'${agent.name}' ('${agent.role}')`);
 
 const prompt = ai.definePrompt({
   name: 'projectInceptionPrompt',
@@ -67,7 +67,7 @@ const projectInceptionFlow = ai.defineFlow(
   async (input) => {
     const { output } = await prompt({
         ...input,
-        allAgents,
+        allAgents: allAgentNames,
     });
     return output!;
   }
