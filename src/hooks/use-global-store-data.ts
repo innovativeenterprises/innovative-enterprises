@@ -92,10 +92,10 @@ export const usePosProductsData = () => {
 export const useLeasesData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
+    const setLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
     return {
         leases: useStoreData((s) => s.signedLeases),
-        setSignedLeases,
+        setLeases,
         isClient,
     };
 };
@@ -373,6 +373,18 @@ export const useEventsData = () => {
     };
 }
 
+// Community Finances
+export const useCommunityFinancesData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setFinances = (updater: (prev: AppState['communityFinances']) => AppState['communityFinances']) => store.set((state) => ({ ...state, communityFinances: updater(state.communityFinances) }));
+    return {
+        finances: useStoreData((s) => s.communityFinances),
+        setFinances,
+        isClient,
+    };
+};
+
 // Alumni Jobs
 export const useAlumniJobsData = () => {
     const store = useContext(StoreContext)!;
@@ -480,5 +492,3 @@ export const useStockItemsData = () => {
         isClient
     };
 }
-
-    

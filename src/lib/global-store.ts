@@ -39,5 +39,3 @@ export const createAppStore = (initState: Partial<AppState> = {}) => {
 export type StoreType = ReturnType<typeof createAppStore>;
 
 export const store = createAppStore(initialState);
-
-    

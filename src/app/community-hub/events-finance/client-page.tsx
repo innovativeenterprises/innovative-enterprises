@@ -16,6 +16,7 @@ import { AddEditTransactionDialog, type TransactionValues } from './transaction-
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useEventsData, useCommunityFinancesData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: string) => {
     switch (status) {
@@ -27,20 +28,20 @@ const getStatusBadge = (status: string) => {
 
 export default function EventsFinanceClient({ initialCommunities, initialEvents, initialFinances }: { initialCommunities: Community[], initialEvents: CommunityEvent[], initialFinances: CommunityFinance[] }) {
     const [selectedCommunityId, setSelectedCommunityId] = useState('');
-    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    
+    const { events, setEvents, isClient: isEventsClient } = useEventsData();
+    const { finances, setFinances, isClient: isFinancesClient } = useCommunityFinancesData();
+    const isClient = isEventsClient && isFinancesClient;
 
     useEffect(() => {
-        setIsClient(true);
         if (initialCommunities.length > 0) {
             setSelectedCommunityId(initialCommunities[0].id);
         }
-    }, [initialCommunities]);
+        setEvents(() => initialEvents);
+        setFinances(() => initialFinances);
+    }, [initialCommunities, initialEvents, initialFinances, setEvents, setFinances]);
     
-    // For a real app, these would be managed with a more robust state manager
-    const [finances, setFinances] = useState(initialFinances);
-    const [events, setEvents] = useState(initialEvents);
-
     const filteredEvents = useMemo(() => {
         return events.filter(e => e.communityId === selectedCommunityId);
     }, [events, selectedCommunityId]);

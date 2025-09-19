@@ -20,6 +20,7 @@ import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMembersData } from "@/hooks/use-global-store-data";
 
 const MemberSchema = z.object({
   id: z.string().min(3, "Member ID is required"),
@@ -93,13 +94,12 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
 };
 
 export default function MembershipClientPage({ initialMembers }: { initialMembers: CommunityMember[] }) {
-    const [members, setMembers] = useState(initialMembers);
-    const [isClient, setIsClient] = useState(false);
+    const { members, setMembers, isClient } = useMembersData();
     const { toast } = useToast();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setMembers(() => initialMembers);
+    }, [initialMembers, setMembers]);
 
 
     const handleSave = (values: MemberValues, id?: string) => {

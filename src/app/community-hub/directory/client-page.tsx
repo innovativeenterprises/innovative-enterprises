@@ -8,17 +8,18 @@ import { Search } from 'lucide-react';
 import type { CommunityMember } from '@/lib/community-members';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMembersData } from '@/hooks/use-global-store-data';
 
 export default function MemberDirectoryClient({ initialMembers }: { initialMembers: CommunityMember[] }) {
-    const [members, setMembers] = useState<CommunityMember[]>(initialMembers);
+    const { members, setMembers, isClient } = useMembersData();
     const [searchTerm, setSearchTerm] = useState('');
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setMembers(() => initialMembers);
+    }, [initialMembers, setMembers]);
     
     const filteredMembers = useMemo(() => {
+        if (!isClient) return [];
         if (!searchTerm) {
             return members;
         }
@@ -27,7 +28,7 @@ export default function MemberDirectoryClient({ initialMembers }: { initialMembe
             (member.position && member.position.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (member.employer && member.employer.toLowerCase().includes(searchTerm.toLowerCase()))
         );
-    }, [members, searchTerm]);
+    }, [members, searchTerm, isClient]);
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
