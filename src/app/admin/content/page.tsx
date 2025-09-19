@@ -1,20 +1,22 @@
 
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
+import ClientTable from "@/app/admin/client-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getProducts, getServices, getPricing, getPosProducts, getStages } from "@/lib/firestore";
+import { getProducts, getServices, getPricing, getPosProducts, getStages, getClients, getTestimonials } from "@/lib/firestore";
 import PosProductTable from "../pos-product-table";
 import PricingTable from "../pricing-table";
-import ClientTablePage from "../client-table/page";
 
 
 export default async function AdminContentPage() {
-    const [services, products, stages, pricing, posProducts] = await Promise.all([
+    const [services, products, stages, pricing, posProducts, clients, testimonials] = await Promise.all([
         getServices(),
         getProducts(),
         getStages(),
         getPricing(),
         getPosProducts(),
+        getClients(),
+        getTestimonials(),
     ]);
 
     return (
@@ -40,7 +42,7 @@ export default async function AdminContentPage() {
                     <ProductTable initialProducts={products} initialStages={stages} />
                 </TabsContent>
                 <TabsContent value="clients" className="mt-6">
-                    <ClientTablePage />
+                    <ClientTable initialClients={clients} initialTestimonials={testimonials} />
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-6">
                     <PricingTable pricing={pricing} />
