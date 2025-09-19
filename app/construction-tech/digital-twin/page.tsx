@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowLeft, CheckCircle, Eye, Layers, Cpu, Thermometer, Droplets, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
 const chartData = [
   { name: 'HVAC', energy: 4000, color: 'hsl(var(--chart-1))' },
@@ -12,6 +13,28 @@ const chartData = [
   { name: 'Plugging', energy: 2000, color: 'hsl(var(--chart-3))' },
   { name: 'Other', energy: 2780, color: 'hsl(var(--chart-4))' },
 ];
+
+const chartConfig = {
+    energy: {
+        label: 'Energy (kWh)',
+    },
+    hvac: {
+        label: 'HVAC',
+        color: 'hsl(var(--chart-1))',
+    },
+    lighting: {
+        label: 'Lighting',
+        color: 'hsl(var(--chart-2))',
+    },
+    plugging: {
+        label: 'Plugging',
+        color: 'hsl(var(--chart-3))',
+    },
+    other: {
+        label: 'Other',
+        color: 'hsl(var(--chart-4))',
+    }
+}
 
 export default function DigitalTwinPage() {
   return (
@@ -44,7 +67,7 @@ export default function DigitalTwinPage() {
                 <CardContent className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Thermometer className="w-8 h-8 text-red-500"/>
+                            <Thermometer className="w-8 h-8" style={{ color: 'hsl(var(--chart-2))' }}/>
                             <div>
                                 <p className="text-sm text-muted-foreground">Avg. Temp</p>
                                 <p className="text-2xl font-bold">23.5°C</p>
@@ -53,7 +76,7 @@ export default function DigitalTwinPage() {
                     </Card>
                     <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Droplets className="w-8 h-8 text-blue-500"/>
+                            <Droplets className="w-8 h-8" style={{ color: 'hsl(var(--chart-1))' }}/>
                             <div>
                                 <p className="text-sm text-muted-foreground">Water Flow</p>
                                 <p className="text-2xl font-bold">150 L/min</p>
@@ -62,7 +85,7 @@ export default function DigitalTwinPage() {
                     </Card>
                     <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Zap className="w-8 h-8 text-yellow-500"/>
+                            <Zap className="w-8 h-8" style={{ color: 'hsl(var(--chart-3))' }}/>
                             <div>
                                 <p className="text-sm text-muted-foreground">Energy Use</p>
                                 <p className="text-2xl font-bold">75 kWh</p>
@@ -71,7 +94,7 @@ export default function DigitalTwinPage() {
                     </Card>
                      <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Cpu className="w-8 h-8 text-green-500"/>
+                            <Cpu className="w-8 h-8" style={{ color: 'hsl(var(--chart-4))' }}/>
                             <div>
                                 <p className="text-sm text-muted-foreground">System Status</p>
                                 <p className="text-2xl font-bold">Optimal</p>
@@ -79,13 +102,14 @@ export default function DigitalTwinPage() {
                         </CardHeader>
                     </Card>
                     <div className="lg:col-span-4 h-[300px] w-full">
-                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData}>
-                                <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false}/>
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value} kWh`}/>
-                                <Bar dataKey="energy" radius={[4, 4, 0, 0]} />
+                         <ChartContainer config={chartConfig} className="w-full h-full">
+                            <BarChart data={chartData} accessibilityLayer>
+                                <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={12} padding={{ left: 10, right: 10 }} />
+                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${'\'\'\'' + value / 1000 + '\''\'\''}` + 'k'} />
+                                <ChartTooltipContent />
+                                <Bar dataKey="energy" radius={[4, 4, 0, 0]} fill="var(--color-hvac)" />
                             </BarChart>
-                        </ResponsiveContainer>
+                        </ChartContainer>
                     </div>
                 </CardContent>
             </Card>
