@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
@@ -21,12 +21,8 @@ import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/ge
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { fileToDataURI } from '@/lib/utils';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "My E-Briefcase",
-  description: "Your secure digital vault. Manage your documents, legal agreements, and registered services all in one place as a partner of Innovative Enterprises.",
-};
+import type { BriefcaseData, UserDocument, ServiceRegistration, SavedBoQ } from '@/lib/briefcase';
+import { useBriefcaseData } from '@/hooks/use-global-store-data';
 
 
 const businessCategories = [
@@ -41,43 +37,6 @@ const businessCategories = [
     "Events & Entertainment",
     "Other",
 ];
-
-interface Agreement {
-    ndaContent: string;
-    serviceAgreementContent: string;
-}
-
-interface ServiceRegistration {
-    category: string;
-    priceListUrl?: string;
-    priceListFilename?: string;
-}
-
-interface UserDocument {
-    id: string;
-    name: string;
-    fileType: string;
-    dataUri: string;
-    uploadedAt: string;
-    analysis?: CrAnalysisOutput | IdentityAnalysisOutput | null;
-}
-
-interface SavedBoQ {
-    id: string;
-    name: string;
-    date: string;
-    items: BoQItem[];
-}
-
-interface BriefcaseData {
-    recordNumber: string;
-    applicantName: string;
-    agreements: Agreement;
-    date: string;
-    registrations: ServiceRegistration[];
-    userDocuments: UserDocument[];
-    savedBoqs: SavedBoQ[];
-}
 
 const NewServiceSchema = z.object({
   businessCategory: z.string().min(1, "Please select a business category."),
@@ -316,19 +275,6 @@ const UploadDocumentDialog = ({ onUpload }: { onUpload: (file: File) => void }) 
     )
 }
 
-const createEmptyBriefcase = (): BriefcaseData => ({
-    recordNumber: `USER-GUEST`,
-    applicantName: "Guest User",
-    agreements: {
-        ndaContent: "No Non-Disclosure Agreement found. Please complete the partner application to generate one.",
-        serviceAgreementContent: "No Service Agreement found. Please complete the partner application to generate one.",
-    },
-    date: new Date().toISOString(),
-    registrations: [],
-    userDocuments: [],
-    savedBoqs: [],
-});
-
 const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | IdentityAnalysisOutput }) => {
     if ('companyInfo' in analysis) { // CR Analysis
         const { companyNameEnglish, companyNameArabic, registrationNumber, status } = analysis.companyInfo;
@@ -344,68 +290,28 @@ const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | Iden
 
 
 export default function BriefcasePage() {
-    const [briefcaseData, setBriefcaseData] = useState<BriefcaseData | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const { briefcase, setBriefcase, isClient } = useBriefcaseData();
     const [analyzingDocId, setAnalyzingDocId] = useState<string | null>(null);
     const { toast } = useToast();
 
-    const updateBriefcase = (newData: BriefcaseData) => {
-        setBriefcaseData(newData);
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('user_briefcase', JSON.stringify(newData));
-        }
-    };
-    
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            try {
-                const storedData = localStorage.getItem('user_briefcase');
-                const storedBoqs = JSON.parse(localStorage.getItem('saved_boqs') || '[]');
-                
-                let dataToSet;
-                if (storedData) {
-                    dataToSet = JSON.parse(storedData);
-                } else {
-                    dataToSet = createEmptyBriefcase();
-                }
-
-                // Always sync BoQs
-                dataToSet.savedBoqs = storedBoqs;
-                
-                // Backwards compatibility for old data structures
-                if (!dataToSet.registrations) dataToSet.registrations = [];
-                if (!dataToSet.userDocuments) dataToSet.userDocuments = [];
-                
-                setBriefcaseData(dataToSet);
-                localStorage.setItem('user_briefcase', JSON.stringify(dataToSet));
-
-            } catch (error) {
-                console.error("Failed to load briefcase data from localStorage", error);
-                toast({ title: 'Error Loading Data', description: 'Could not retrieve your saved documents.', variant: 'destructive'});
-            } finally {
-                setIsLoading(false);
-            }
-        }
-    }, [toast]);
-    
     const handleAddService = (category: string, priceListUrl: string, priceListFilename: string) => {
-        if (!briefcaseData) return;
+        if (!briefcase) return;
         const newRegistration: ServiceRegistration = { category, priceListUrl, priceListFilename };
-        const newData = { ...briefcaseData, registrations: [...briefcaseData.registrations, newRegistration]};
-        updateBriefcase(newData);
+        const newData = { ...briefcase, registrations: [...briefcase.registrations, newRegistration]};
+        setBriefcase(() => newData);
     }
     
     const handleUpdatePriceList = (category: string, priceListUrl: string, priceListFilename: string) => {
-         if (!briefcaseData) return;
-         const updatedRegistrations = briefcaseData.registrations.map(reg => 
+         if (!briefcase) return;
+         const updatedRegistrations = briefcase.registrations.map(reg => 
             reg.category === category ? { ...reg, priceListUrl, priceListFilename } : reg
          );
-         const newData = { ...briefcaseData, registrations: updatedRegistrations };
-         updateBriefcase(newData);
+         const newData = { ...briefcase, registrations: updatedRegistrations };
+         setBriefcase(() => newData);
     }
 
     const handleUploadDocument = async (file: File) => {
-        if (!briefcaseData) return;
+        if (!briefcase) return;
         const dataUri = await fileToDataURI(file);
         const newDocument: UserDocument = {
             id: `doc_${file.name.replace(/\s+/g, '_')}_${new Date().getTime()}`,
@@ -414,20 +320,20 @@ export default function BriefcasePage() {
             dataUri: dataUri,
             uploadedAt: new Date().toISOString(),
         };
-        const newData = { ...briefcaseData, userDocuments: [...briefcaseData.userDocuments, newDocument]};
-        updateBriefcase(newData);
+        const newData = { ...briefcase, userDocuments: [...briefcase.userDocuments, newDocument]};
+        setBriefcase(() => newData);
     }
 
     const handleDeleteDocument = (docId: string) => {
-        if (!briefcaseData) return;
-        const updatedDocuments = briefcaseData.userDocuments.filter(doc => doc.id !== docId);
-        const newData = { ...briefcaseData, userDocuments: updatedDocuments };
-        updateBriefcase(newData);
+        if (!briefcase) return;
+        const updatedDocuments = briefcase.userDocuments.filter(doc => doc.id !== docId);
+        const newData = { ...briefcase, userDocuments: updatedDocuments };
+        setBriefcase(() => newData);
         toast({ title: 'Document Deleted', description: 'The document has been removed from your briefcase.', variant: 'destructive'});
     }
 
     const handleAnalyzeDocument = async (doc: UserDocument) => {
-        if (!briefcaseData) return;
+        if (!briefcase) return;
         setAnalyzingDocId(doc.id);
         
         try {
@@ -439,11 +345,11 @@ export default function BriefcasePage() {
                  result = await analyzeIdentity({ idDocumentFrontUri: doc.dataUri });
             }
 
-            const updatedDocuments = briefcaseData.userDocuments.map(d => 
+            const updatedDocuments = briefcase.userDocuments.map(d => 
                 d.id === doc.id ? { ...d, analysis: result, name: result.suggestedFilename || d.name } : d
             );
-            const newData = { ...briefcaseData, userDocuments: updatedDocuments };
-            updateBriefcase(newData);
+            const newData = { ...briefcase, userDocuments: updatedDocuments };
+            setBriefcase(() => newData);
 
             toast({ title: "Analysis Complete", description: `Successfully analyzed ${doc.name}.` });
         } catch (error) {
@@ -454,7 +360,7 @@ export default function BriefcasePage() {
         }
     }
     
-    if (isLoading) {
+    if (!isClient) {
         return (
             <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary"/>
@@ -462,7 +368,7 @@ export default function BriefcasePage() {
         );
     }
 
-    if (!briefcaseData) {
+    if (!briefcase) {
          return (
              <div className="bg-background min-h-[calc(100vh-8rem)] flex items-center justify-center">
                 <div className="container mx-auto px-4 py-16">
@@ -491,7 +397,7 @@ export default function BriefcasePage() {
                             </div>
                             <h1 className="text-4xl md:text-5xl font-bold text-primary text-center">My E-Briefcase</h1>
                             <p className="mt-4 text-lg text-muted-foreground text-center">
-                                Welcome, <span className="font-semibold text-primary">{briefcaseData.applicantName}</span>. Manage your documents, agreements, and services here.
+                                Welcome, <span className="font-semibold text-primary">{briefcase.applicantName}</span>. Manage your documents, agreements, and services here.
                             </p>
                         </div>
                          <Card>
@@ -502,9 +408,9 @@ export default function BriefcasePage() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                {briefcaseData.savedBoqs && briefcaseData.savedBoqs.length > 0 ? (
+                                {briefcase.savedBoqs && briefcase.savedBoqs.length > 0 ? (
                                     <div className="space-y-4">
-                                        {briefcaseData.savedBoqs.map(boq => (
+                                        {briefcase.savedBoqs.map(boq => (
                                             <Card key={boq.id} className="p-4 bg-muted/50">
                                                 <div className="flex justify-between items-center">
                                                     <div>
@@ -529,9 +435,9 @@ export default function BriefcasePage() {
                                 <AddServiceDialog onAddService={handleAddService} />
                             </CardHeader>
                             <CardContent>
-                                {briefcaseData.registrations.length > 0 ? (
+                                {briefcase.registrations.length > 0 ? (
                                     <div className="space-y-4">
-                                        {briefcaseData.registrations.map(reg => (
+                                        {briefcase.registrations.map(reg => (
                                             <Card key={reg.category} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted/50">
                                                 <div>
                                                     <p className="font-semibold">{reg.category}</p>
@@ -559,9 +465,9 @@ export default function BriefcasePage() {
                                 <UploadDocumentDialog onUpload={handleUploadDocument} />
                             </CardHeader>
                             <CardContent>
-                                {briefcaseData.userDocuments.length > 0 ? (
+                                {briefcase.userDocuments.length > 0 ? (
                                     <div className="space-y-4">
-                                        {briefcaseData.userDocuments.map(doc => (
+                                        {briefcase.userDocuments.map(doc => (
                                             <Card key={doc.id} className="p-4 bg-muted/50">
                                                 <div className="flex justify-between items-center">
                                                     <div>
@@ -622,18 +528,18 @@ export default function BriefcasePage() {
                                     </TabsList>
                                     <TabsContent value="nda">
                                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
-                                            {briefcaseData.agreements.ndaContent}
+                                            {briefcase.agreements.ndaContent}
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="service">
                                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-60 overflow-y-auto">
-                                            {briefcaseData.agreements.serviceAgreementContent}
+                                            {briefcase.agreements.serviceAgreementContent}
                                         </div>
                                     </TabsContent>
                                 </Tabs>
                             </CardContent>
                              <CardFooter>
-                                <Button onClick={() => toast({title: "Agreements already signed."})} className="w-full" size="lg" disabled={briefcaseData.applicantName === 'Guest User'}>
+                                <Button onClick={() => toast({title: "Agreements already signed."})} className="w-full" size="lg" disabled={briefcase.applicantName === 'Guest User'}>
                                     <FileSignature className="mr-2 h-5 w-5" /> View E-Signature
                                 </Button>
                             </CardFooter>
@@ -644,3 +550,5 @@ export default function BriefcasePage() {
         </div>
     );
 }
+
+    

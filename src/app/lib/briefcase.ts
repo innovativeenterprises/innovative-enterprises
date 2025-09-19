@@ -3,18 +3,18 @@ import type { CrAnalysisOutput } from "@/ai/flows/cr-analysis.schema";
 import type { IdentityAnalysisOutput } from "@/ai/flows/identity-analysis.schema";
 import type { BoQItem } from "@/ai/flows/boq-generator.schema";
 
-interface Agreement {
+export interface Agreement {
     ndaContent: string;
     serviceAgreementContent: string;
 }
 
-interface ServiceRegistration {
+export interface ServiceRegistration {
     category: string;
     priceListUrl?: string;
     priceListFilename?: string;
 }
 
-interface UserDocument {
+export interface UserDocument {
     id: string;
     name: string;
     fileType: string;
@@ -23,7 +23,7 @@ interface UserDocument {
     analysis?: CrAnalysisOutput | IdentityAnalysisOutput | null;
 }
 
-interface SavedBoQ {
+export interface SavedBoQ {
     id: string;
     name: string;
     date: string;
@@ -53,3 +53,5 @@ export const initialBriefcase: BriefcaseData = {
     userDocuments: [],
     savedBoqs: [],
 };
+
+    
