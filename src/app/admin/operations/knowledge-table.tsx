@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import type { KnowledgeDocument } from "@/lib/knowledge";
+import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
 import { trainAgent } from "@/ai/flows/train-agent";
@@ -26,7 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
-import { getKnowledgeBase } from '@/lib/firestore';
+import { useKnowledgeData } from "@/hooks/use-global-store-data";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -318,16 +318,11 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowledgeBase: KnowledgeDocument[] }) {
-    const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeDocument[]>(initialKnowledgeBase);
-    const [isClient, setIsClient] = useState(false);
+export default function KnowledgeTable() {
+    const { knowledgeBase, setKnowledgeBase, isClient } = useKnowledgeData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | undefined>(undefined);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleOpenDialog = (doc?: KnowledgeDocument) => {
         setSelectedDoc(doc);

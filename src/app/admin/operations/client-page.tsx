@@ -7,23 +7,14 @@ import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Palette, Gift } from "lucide-react";
-import KnowledgeTable from '../operations/knowledge-table';
+import KnowledgeTable from './knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import CostSettingsTable from "./cost-settings-table";
-import type { CostRate } from "@/lib/cost-settings.schema";
-import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PricingTable from "../pricing-table";
-import type { Pricing } from "@/lib/pricing.schema";
 
-export default function AdminOperationsClientPage({ 
-    initialCostSettings,
-    initialKnowledgeBase,
-}: { 
-    initialCostSettings: CostRate[],
-    initialKnowledgeBase: KnowledgeDocument[],
-}) {
+export default function AdminOperationsClientPage() {
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -71,10 +62,10 @@ export default function AdminOperationsClientPage({
                 </div>
             </TabsContent>
             <TabsContent value="knowledge-base" className="mt-6">
-                <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
+                <KnowledgeTable />
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
-                <CostSettingsTable initialCostSettings={initialCostSettings} />
+                <CostSettingsTable />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6 space-y-8">
                 <PricingTable />
