@@ -35,6 +35,7 @@ import type { CommunityMember } from '@/lib/community-members';
 import type { JobPosting } from '@/lib/alumni-jobs';
 import type { BriefcaseData } from '@/lib/briefcase';
 import type { Pricing } from '@/lib/pricing.schema';
+import type { Investor } from '@/lib/investors.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -394,3 +395,51 @@ export const usePricingData = () => {
         isClient,
     };
 };
+
+// Solutions
+export const useSolutionsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setSolutions = (updater: (prev: AppState['solutions']) => AppState['solutions']) => store.set((state) => ({ ...state, solutions: updater(state.solutions) }));
+    return {
+        solutions: useStoreData((s) => s.solutions),
+        setSolutions,
+        isClient,
+    };
+}
+
+// Industries
+export const useIndustriesData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setIndustries = (updater: (prev: AppState['industries']) => AppState['industries']) => store.set((state) => ({ ...state, industries: updater(state.industries) }));
+    return {
+        industries: useStoreData((s) => s.industries),
+        setIndustries,
+        isClient,
+    };
+}
+
+// AI Tools
+export const useAiToolsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setAiTools = (updater: (prev: AppState['aiTools']) => AppState['aiTools']) => store.set((state) => ({ ...state, aiTools: updater(state.aiTools) }));
+    return {
+        aiTools: useStoreData((s) => s.aiTools),
+        setAiTools,
+        isClient,
+    };
+}
+
+// Investors
+export const useInvestorsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setInvestors = (updater: (prev: AppState['investors']) => AppState['investors']) => store.set((state) => ({ ...state, investors: updater(state.investors) }));
+    return {
+        investors: useStoreData((s) => s.investors),
+        setInvestors,
+        isClient,
+    };
+}

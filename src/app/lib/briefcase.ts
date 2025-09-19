@@ -53,5 +53,3 @@ export const initialBriefcase: BriefcaseData = {
     userDocuments: [],
     savedBoqs: [],
 };
-
-    
