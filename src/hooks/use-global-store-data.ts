@@ -4,7 +4,7 @@
 
 import { useContext, useSyncExternalStore } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import type { CartItem } from '@/lib/global-store';
+import type { CartItem } from '@/lib/pos-data.schema';
 import { initialState, type AppState, type StoreType } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
 import type { SignedLease } from '@/lib/leases';
@@ -35,6 +35,7 @@ import type { CommunityMember } from '@/lib/community-members';
 import type { JobPosting } from '@/lib/alumni-jobs';
 import type { BriefcaseData } from '@/lib/briefcase';
 import type { Pricing } from '@/lib/pricing.schema';
+import type { Investor } from '@/lib/investors.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -427,6 +428,18 @@ export const useAiToolsData = () => {
     return {
         aiTools: useStoreData((s) => s.aiTools),
         setAiTools,
+        isClient,
+    };
+}
+
+// Investors
+export const useInvestorsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setInvestors = (updater: (prev: AppState['investors']) => AppState['investors']) => store.set((state) => ({ ...state, investors: updater(state.investors) }));
+    return {
+        investors: useStoreData((s) => s.investors),
+        setInvestors,
         isClient,
     };
 }

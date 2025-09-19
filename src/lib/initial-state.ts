@@ -1,5 +1,4 @@
 
-
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -71,6 +70,8 @@ import { initialSolutions, initialIndustries, initialAiTools } from './nav-links
 import type { ProjectStage } from './stages';
 import type { Investor } from './investors.schema';
 import { initialInvestors } from './investors';
+import { initialKnowledgeBase } from './knowledge';
+import { initialCfoData } from './cfo-data';
 
 export interface AppState {
   settings: AppSettings;
@@ -118,6 +119,8 @@ export interface AppState {
   industries: typeof initialIndustries;
   aiTools: typeof initialAiTools;
   investors: Investor[];
+  knowledgeBase: typeof initialKnowledgeBase;
+  cfoData: typeof initialCfoData;
 };
 
 export const initialState: AppState = {
@@ -166,4 +169,6 @@ export const initialState: AppState = {
   industries: initialIndustries,
   aiTools: initialAiTools,
   investors: initialInvestors,
+  knowledgeBase: initialKnowledgeBase,
+  cfoData: initialCfoData,
 };
