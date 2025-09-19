@@ -10,7 +10,6 @@ import PosProductTable from "@/app/admin/pos-product-table";
 import { useServicesData } from "@/hooks/use-global-store-data";
 import { useProductsData } from "@/hooks/use-global-store-data";
 import { useClientsData, useTestimonialsData } from "@/hooks/use-global-store-data";
-import { usePricingData } from "@/hooks/use-global-store-data";
 import { usePosProductsData } from "@/hooks/use-global-store-data";
 import { initialStages } from "@/lib/stages";
 
@@ -20,7 +19,6 @@ export default function AdminContentPage() {
     const { products } = useProductsData();
     const { clients } = useClientsData();
     const { testimonials } = useTestimonialsData();
-    const { pricing } = usePricingData();
     const { posProducts } = usePosProductsData();
     const stages = initialStages; // This is small and can remain static
 

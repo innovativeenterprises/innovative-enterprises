@@ -1,3 +1,4 @@
+
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -19,11 +20,9 @@ import type { Pricing } from "@/lib/pricing.schema";
 export default function AdminOperationsClientPage({ 
     initialCostSettings,
     initialKnowledgeBase,
-    initialPricing,
 }: { 
     initialCostSettings: CostRate[],
     initialKnowledgeBase: KnowledgeDocument[],
-    initialPricing: Pricing[],
 }) {
 
   const internalTools = [
@@ -78,7 +77,7 @@ export default function AdminOperationsClientPage({
                 <CostSettingsTable initialCostSettings={initialCostSettings} />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6 space-y-8">
-                <PricingTable pricing={initialPricing} />
+                <PricingTable />
             </TabsContent>
         </Tabs>
     </div>
