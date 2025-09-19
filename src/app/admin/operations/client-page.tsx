@@ -1,4 +1,3 @@
-
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -16,7 +15,6 @@ import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PricingTable from "../pricing-table";
 import type { Pricing } from "@/lib/pricing.schema";
-import { PricingAndBranding } from "../settings/pricing-branding";
 
 export default function AdminOperationsClientPage({ 
     initialCostSettings,
@@ -50,7 +48,7 @@ export default function AdminOperationsClientPage({
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
                 <TabsTrigger value="costing">Market Rates</TabsTrigger>
-                <TabsTrigger value="pricing">Pricing & Branding</TabsTrigger>
+                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />

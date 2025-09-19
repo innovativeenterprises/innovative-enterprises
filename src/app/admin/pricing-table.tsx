@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -15,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing.schema";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
+import { usePricingData } from '@/hooks/use-global-store-data';
 
 const PricingSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -100,7 +99,6 @@ export default function PricingTable({
         setSelectedItem(item);
         setIsDialogOpen(true);
     };
-
 
     return (
         <Card>
