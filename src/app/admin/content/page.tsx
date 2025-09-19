@@ -2,21 +2,22 @@
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
+import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getProducts, getServices, getPricing, getPosProducts, getStages, getClients, getTestimonials } from "@/lib/firestore";
-import PosProductTable from "../pos-product-table";
-import PricingTable from "../pricing-table";
-
+import PosProductTable from "@/app/admin/pos-product-table";
+import { getPricing, getProducts, getServices, getClients, getTestimonials, getPosProducts, getStages } from "@/lib/firestore";
 
 export default async function AdminContentPage() {
-    const [services, products, stages, pricing, posProducts, clients, testimonials] = await Promise.all([
+    // Data is fetched on the server and passed down as props.
+    // The client components will handle their own state.
+    const [services, products, stages, clients, testimonials, pricing, posProducts] = await Promise.all([
         getServices(),
         getProducts(),
         getStages(),
-        getPricing(),
-        getPosProducts(),
         getClients(),
         getTestimonials(),
+        getPricing(),
+        getPosProducts(),
     ]);
 
     return (

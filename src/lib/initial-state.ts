@@ -72,6 +72,7 @@ import type { Investor } from './investors.schema';
 import { initialInvestors } from './investors';
 import { initialKnowledgeBase } from './knowledge';
 import { initialCfoData } from './cfo-data';
+import type { KnowledgeDocument } from './knowledge.schema';
 
 export interface AppState {
   settings: AppSettings;
@@ -119,7 +120,7 @@ export interface AppState {
   industries: typeof initialIndustries;
   aiTools: typeof initialAiTools;
   investors: Investor[];
-  knowledgeBase: typeof initialKnowledgeBase;
+  knowledgeBase: KnowledgeDocument[];
   cfoData: typeof initialCfoData;
 };
 
