@@ -12,21 +12,8 @@ import {
     type FilledFormData
 } from './pdf-form-filler.schema';
 import { z } from 'zod';
+import { getBriefcase } from '@/lib/firestore';
 
-// This is a sample user profile. In a real app, this would be fetched
-// from the user's secure E-Briefcase or database.
-const sampleUserProfile = {
-    fullName: "Jumaa Salim Al Hadidi",
-    dateOfBirth: "1985-05-20",
-    nationality: "Omani",
-    civilIdNumber: "9876543210",
-    address: "Al Amerat, Muscat, Oman",
-    phoneNumber: "+968 78492280",
-    email: "jumaa.hadidi@innovative.om",
-    companyName: "Innovative Enterprises",
-    companyCrn: "1435192",
-    jobTitle: "CEO",
-};
 
 const prompt = ai.definePrompt(
   {
@@ -59,9 +46,29 @@ Return only the JSON array of filled form data. Be precise with the coordinates.
 );
 
 export async function fillPdfForm(input: PdfFormFillerInput): Promise<FilledFormData> {
+    const briefcase = await getBriefcase();
+    const userProfile = {
+        fullName: briefcase.applicantName,
+        ...briefcase.userDocuments.reduce((acc, doc) => {
+            if (doc.analysis) {
+                if ('personalDetails' in doc.analysis) {
+                    Object.assign(acc, doc.analysis.personalDetails);
+                }
+                if ('idCardDetails' in doc.analysis) {
+                    Object.assign(acc, doc.analysis.idCardDetails);
+                }
+                 if ('companyInfo' in doc.analysis) {
+                    Object.assign(acc, doc.analysis.companyInfo);
+                }
+            }
+            return acc;
+        }, {} as any)
+    };
+
+
     const { output } = await prompt({
         ...input,
-        userProfile: sampleUserProfile,
+        userProfile,
     });
     
     if (!output) {
