@@ -8,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { GenerateImageInput, GenerateImageInputSchema, GenerateImageOutputSchema } from './image-generator.schema';
+import { GenerateImageInputSchema, GenerateImageOutputSchema, type GenerateImageInput, type GenerateImageOutput } from './image-generator.schema';
 
 export const generateImage = ai.defineFlow(
     {

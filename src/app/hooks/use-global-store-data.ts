@@ -17,12 +17,13 @@ import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
 import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
+import type { StairspaceListing } from '@/lib/stairspace.schema';
+import type { CostRate } from '@/lib/cost-settings.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers';
 import type { BeautyService } from '@/lib/beauty-services';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
-import type { CostRate } from '@/lib/cost-settings.schema';
-import type { Asset } from '@/lib/assets.schema';
 import type { UsedItem } from '@/lib/used-items.schema';
+import type { Asset } from '@/lib/assets.schema';
 import type { Client, Testimonial } from '@/lib/clients.schema';
 import type { Car } from '@/lib/cars.schema';
 import type { GiftCard } from '@/lib/gift-cards.schema';
@@ -490,6 +491,18 @@ export const usePropertiesData = () => {
     return {
         properties: useStoreData((s) => s.properties),
         setProperties,
+        isClient,
+    };
+};
+
+// Stock Items
+export const useStockItemsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setStockItems = (updater: (prev: AppState['stockItems']) => AppState['stockItems']) => store.set(state => ({ ...state, stockItems: updater(state.stockItems) }));
+    return {
+        stockItems: useStoreData((s) => s.stockItems),
+        setStockItems,
         isClient,
     };
 };

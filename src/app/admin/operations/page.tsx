@@ -1,5 +1,5 @@
 
-import AdminOperationsClientPage from "./client-page";
+import AdminOperationsClientPage from "@/app/admin/operations/client-page";
 import { getKnowledgeBase, getCostSettings, getPricing } from "@/lib/firestore";
 import type { Metadata } from "next";
 

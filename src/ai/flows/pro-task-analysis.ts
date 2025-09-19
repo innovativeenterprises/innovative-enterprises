@@ -12,28 +12,7 @@ import { OMAN_MINISTRIES, ministryLocations, OMAN_GOVERNORATES } from '@/lib/oma
 import type { Ministry, Governorate } from '@/lib/oman-locations';
 import { calculateTotalDistance } from '@/lib/oman-locations';
 import { getCostSettings } from '@/lib/firestore';
-
-export const ProTaskAnalysisInputSchema = z.object({
-    serviceName: z.string(),
-    governorate: z.enum(OMAN_GOVERNORATES),
-    startLocationName: z.string().optional(),
-    startLocationCoords: z.object({
-        lat: z.number(),
-        lon: z.number()
-    }).optional(),
-});
-export type ProTaskAnalysisInput = z.infer<typeof ProTaskAnalysisInputSchema>;
-
-export const ProTaskAnalysisOutputSchema = z.object({
-    tripDescription: z.string(),
-    allowances: z.array(z.object({
-        description: z.string(),
-        amount: z.number(),
-    })),
-    grandTotal: z.number(),
-    unmappedLocations: z.array(z.string()).optional(),
-});
-export type ProTaskAnalysisOutput = z.infer<typeof ProTaskAnalysisOutputSchema>;
+import { ProTaskAnalysisInputSchema, ProTaskAnalysisOutputSchema, type ProTaskAnalysisInput, type ProTaskAnalysisOutput } from './pro-task-analysis.schema';
 
 
 // Tool to map a service name to the required ministries.

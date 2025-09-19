@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, UserCheck, PlusCircle, Trash2, CheckCircle, ShieldAlert, BadgeInfo, Wand2, FileCheck2, LayoutDashboard } from 'lucide-react';
-import { AdmissionsAgentInputSchema, type AdmissionsAgentInput, type AdmissionsAgentOutput } from '@/ai/flows/admissions-agent.schema';
+import { AdmissionsAgentInputSchema, type AdmissionsAgentInput, type AdmissionsAgentOutput } from '@/ai/flows/admissions-agent';
 import { analyzeApplication } from '@/ai/flows/admissions-agent';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
