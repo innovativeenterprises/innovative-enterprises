@@ -109,7 +109,7 @@ export default function CfoDashboardClient({ cfoData }: { cfoData: any }) {
                 </CardHeader>
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <DueDateDisplay date={vatPayment.dueDate} warnDays={15} />
+                    <DueDateDisplay date={vatPayment.dueDate} prefix="Due:" warnDays={15} />
                 </CardContent>
             </Card>
 
