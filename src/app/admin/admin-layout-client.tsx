@@ -36,6 +36,9 @@ import {
   Trophy,
   Gift,
   Package,
+  HardHat,
+  GraduationCap,
+  Heart,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -69,10 +72,16 @@ export default function AdminLayoutClient({
       { href: '/admin/people', label: 'People', icon: UserCog },
       { href: '/community-hub/membership', label: 'Communities', icon: Handshake },
   ];
+
+  const industryHubs = [
+      { href: '/admin/projects', label: 'Construction Tech', icon: HardHat },
+      { href: '/admin/real-estate', label: 'Real Estate Tech', icon: Building2 },
+      { href: '/admin/education-tech', label: 'Education Tech', icon: GraduationCap },
+      { href: '/beauty-hub/agency-dashboard', label: 'Beauty & Wellness Hub', icon: Heart },
+  ];
   
   const operations = [
       { href: '/admin/operations', label: 'Operations & AI', icon: GanttChartSquare },
-      { href: '/admin/real-estate', label: 'Real Estate', icon: Building2 },
       { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
       { href: '/admin/hadeeya', label: 'Hadeeya Gift Cards', icon: Gift },
   ];
@@ -123,6 +132,11 @@ export default function AdminLayoutClient({
              <SidebarGroup>
                 <SidebarGroupLabel>Network & People</SidebarGroupLabel>
                 {networkAndPeople.map(renderMenuItem)}
+            </SidebarGroup>
+             <SidebarSeparator />
+              <SidebarGroup>
+                <SidebarGroupLabel>Industry Hubs</SidebarGroupLabel>
+                {industryHubs.map(renderMenuItem)}
             </SidebarGroup>
              <SidebarSeparator />
             <SidebarGroup>
