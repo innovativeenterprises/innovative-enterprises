@@ -136,7 +136,7 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
                                                 <AlertDialogHeader><AlertDialogTitle>Delete Investor?</AlertDialogTitle></AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(investor.id)}>Delete</AlertDialogAction>
+                                                    <AlertDialogAction onClick={() => handleDelete(investor.id!)}>Delete</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
@@ -149,3 +149,5 @@ export default function InvestorTable({ initialInvestors }: { initialInvestors: 
         </Card>
     );
 }
+
+    

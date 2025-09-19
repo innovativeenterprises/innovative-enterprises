@@ -1,16 +1,18 @@
+
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, PlusCircle } from "lucide-react";
 import Image from 'next/image';
-import { type StockItem } from '@/lib/stock-items';
+import { type StockItem } from '@/lib/stock-items.schema';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import Link from 'next/link';
+import { useStockItemsData } from "@/hooks/use-global-store-data";
 
 const getStatusBadge = (status: string) => {
     switch(status) {
@@ -22,12 +24,18 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function StockClearClientPage({ initialItems }: { initialItems: StockItem[] }) {
+    const { stockItems, setStockItems, isClient } = useStockItemsData();
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
     const [saleTypeFilter, setSaleTypeFilter] = useState('All');
+    
+    useEffect(() => {
+        setStockItems(() => initialItems);
+    }, [initialItems, setStockItems]);
 
     const filteredItems = useMemo(() => {
-        return initialItems.filter(item => {
+        if (!isClient) return [];
+        return stockItems.filter(item => {
             const matchesCategory = categoryFilter === 'All' || item.category === categoryFilter;
             const matchesSaleType = saleTypeFilter === 'All' || item.saleType === saleTypeFilter;
             const matchesSearch = searchTerm === '' || 
@@ -36,7 +44,7 @@ export default function StockClearClientPage({ initialItems }: { initialItems: S
             
             return matchesCategory && matchesSaleType && matchesSearch;
         });
-    }, [searchTerm, categoryFilter, saleTypeFilter, initialItems]);
+    }, [searchTerm, categoryFilter, saleTypeFilter, stockItems, isClient]);
 
     return (
         <div className="space-y-8">
@@ -110,3 +118,5 @@ export default function StockClearClientPage({ initialItems }: { initialItems: S
         </div>
     );
 }
+
+    

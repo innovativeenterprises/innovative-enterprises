@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useContext, useSyncExternalStore } from 'react';
@@ -37,6 +36,7 @@ import type { BriefcaseData } from '@/lib/briefcase';
 import type { Pricing } from '@/lib/pricing.schema';
 import type { Investor } from '@/lib/investors.schema';
 import type { KnowledgeDocument } from '@/lib/knowledge.schema';
+import type { StockItem } from '@/lib/stock-items.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -468,3 +468,17 @@ export const useKnowledgeData = () => {
         isClient
     };
 }
+
+// Stock Items
+export const useStockItemsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setStockItems = (updater: (prev: AppState['stockItems']) => AppState['stockItems']) => store.set(state => ({...state, stockItems: updater(state.stockItems)}));
+    return {
+        stockItems: useStoreData(s => s.stockItems),
+        setStockItems,
+        isClient
+    };
+}
+
+    

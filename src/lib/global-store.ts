@@ -11,6 +11,7 @@
  */
 
 import { initialState as initialData, type AppState as FullAppState } from './initial-state';
+import type { PosProduct, CartItem } from './pos-data.schema';
 
 export type AppState = FullAppState;
 export type CartItem = FullAppState['cart'][0];
@@ -38,3 +39,5 @@ export const createAppStore = (initState: Partial<AppState> = {}) => {
 export type StoreType = ReturnType<typeof createAppStore>;
 
 export const store = createAppStore(initialState);
+
+    

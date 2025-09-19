@@ -333,3 +333,5 @@ export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }
         </Card>
     );
 }
+
+    
