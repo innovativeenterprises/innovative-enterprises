@@ -4,12 +4,6 @@
 import ProviderTable from "@/app/admin/provider-table";
 import AssetTable from "@/app/admin/asset-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Network Management",
-  description: "Manage your external network of providers and rental assets.",
-};
 
 export default function AdminNetworkPage() {
   return (
