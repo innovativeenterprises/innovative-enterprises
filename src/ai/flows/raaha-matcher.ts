@@ -12,7 +12,7 @@ import {
     RaahaMatcherOutput,
     RaahaMatcherOutputSchema,
 } from './raaha-matcher.schema';
-import { initialWorkers } from '@/lib/raaha-workers';
+import { getRaahaData } from '@/lib/firestore';
 
 
 export async function findHelpers(input: RaahaMatcherInput): Promise<RaahaMatcherOutput> {
@@ -21,7 +21,7 @@ export async function findHelpers(input: RaahaMatcherInput): Promise<RaahaMatche
 
 const prompt = ai.definePrompt({
   name: 'raahaMatcherPrompt',
-  input: { schema: RaahaMatcherInputSchema },
+  input: { schema: RaahaMatcherInputSchema.extend({ availableWorkersJson: z.string() }) },
   output: { schema: RaahaMatcherOutputSchema },
   prompt: `You are an expert recruitment consultant for a high-end domestic workforce agency called "RAAHA".
 Your task is to analyze a client's requirements and recommend the most suitable candidates from your database.
@@ -59,8 +59,8 @@ const raahaMatcherFlow = ai.defineFlow(
     outputSchema: RaahaMatcherOutputSchema,
   },
   async (input) => {
-    // In a real app, this would query a database. For the prototype, we use a static list.
-    const availableWorkers = initialWorkers.filter(w => w.availability === 'Available');
+    const { raahaWorkers } = await getRaahaData();
+    const availableWorkers = raahaWorkers.filter(w => w.availability === 'Available');
     const availableWorkersJson = JSON.stringify(availableWorkers, null, 2);
 
     const { output } = await prompt({

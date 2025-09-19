@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Server, ArrowRight } from "lucide-react";
 import Image from 'next/image';
-import type { Asset } from "@/lib/assets";
+import type { Asset } from "@/lib/assets.schema";
 import { RentalRequestForm } from './rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
+import { useAssetsData } from '@/hooks/use-global-store-data';
 
 const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => void }) => {
     const getStatusBadge = (status: string) => {
@@ -59,11 +60,7 @@ const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => 
 export default function AssetRentalsClientPage({ initialAssets }: { initialAssets: Asset[]}) {
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { assets, isClient } = useAssetsData();
 
     const handleRentClick = (asset: Asset) => {
         setSelectedAsset(asset);
@@ -75,7 +72,7 @@ export default function AssetRentalsClientPage({ initialAssets }: { initialAsset
         setSelectedAsset(null);
     };
 
-    const availableAssets = initialAssets.filter(asset => asset.status === 'Available');
+    const availableAssets = assets.filter(asset => asset.status === 'Available');
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">

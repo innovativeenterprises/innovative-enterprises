@@ -6,7 +6,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { initialProperties } from '@/lib/properties';
+import { getProperties } from '@/lib/firestore';
 import {
     PropertyValuationInputSchema,
     PropertyValuationInput,
@@ -66,9 +66,8 @@ const propertyValuationFlow = ai.defineFlow(
     outputSchema: PropertyValuationOutputSchema,
   },
   async (input) => {
-    // In a real app, this would query a database for relevant comparables.
-    // For this prototype, we'll just use the static list.
-    const comparableProperties = initialProperties.filter(p => p.status !== 'Available');
+    const allProperties = await getProperties();
+    const comparableProperties = allProperties.filter(p => p.status !== 'Available');
     const comparablePropertiesJson = JSON.stringify(comparableProperties, null, 2);
     
     const { output } = await prompt({

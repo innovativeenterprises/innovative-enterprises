@@ -6,7 +6,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { initialAssets } from '@/lib/assets';
+import { getAssets } from '@/lib/firestore';
 import {
     AssetRentalInquiryInput,
     AssetRentalInquiryInputSchema,
@@ -20,7 +20,7 @@ export async function generateAssetRentalProposal(input: AssetRentalInquiryInput
 
 const prompt = ai.definePrompt({
   name: 'assetRentalProposalPrompt',
-  input: { schema: AssetRentalInquiryInputSchema },
+  input: { schema: AssetRentalInquiryInputSchema.extend({ availableAssetsJson: z.string() }) },
   output: { schema: AssetRentalProposalOutputSchema },
   prompt: `You are an expert Solutions Architect for "InfraRent". Your task is to analyze a client's requirements and create a tailored infrastructure rental proposal.
 
@@ -64,8 +64,9 @@ const assetRentalProposalFlow = ai.defineFlow(
     outputSchema: AssetRentalProposalOutputSchema,
   },
   async (input) => {
+    const allAssets = await getAssets();
     // Filter for available assets to provide to the model
-    const availableAssets = initialAssets.filter(asset => asset.status === 'Available');
+    const availableAssets = allAssets.filter(asset => asset.status === 'Available');
     const availableAssetsJson = JSON.stringify(availableAssets, null, 2);
 
     const { output } = await prompt({

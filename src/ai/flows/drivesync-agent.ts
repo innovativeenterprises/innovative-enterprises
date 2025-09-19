@@ -7,7 +7,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { initialCars } from '@/lib/cars';
+import { getCars } from '@/lib/firestore';
 import { CarSchema, type Car } from '@/lib/cars.schema';
 
 
@@ -32,8 +32,10 @@ export const bookCarTool = ai.defineTool(
     },
     async ({ carId }) => {
         // This is a simulation. In a real app, this would update a database.
-        const car = initialCars.find(c => c.id === carId);
+        const cars = await getCars();
+        const car = cars.find(c => c.id === carId);
         if (car && car.availability === 'Available') {
+            // In a real app, you'd update the DB here. store.set(...)
             car.availability = 'Rented';
             return { success: true, message: `Successfully booked the ${car.make} ${car.model}.`};
         }
@@ -78,7 +80,8 @@ export const findAndBookCar = ai.defineFlow(
     outputSchema: DriveSyncAgentOutputSchema,
   },
   async ({ query }) => {
-    const availableCars = initialCars.filter(c => c.availability === 'Available');
+    const allCars = await getCars();
+    const availableCars = allCars.filter(c => c.availability === 'Available');
     const response = await driveSyncAgentPrompt({
       query,
       availableCarsJson: JSON.stringify(availableCars),
