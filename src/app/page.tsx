@@ -1,6 +1,5 @@
 
 import HomePageClient from "./home-page-client";
-import { getProducts, getServices, getClients, getTestimonials } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,20 +8,8 @@ export const metadata: Metadata = {
 };
 
 
-export default async function HomePage() {
-  const [products, services, clients, testimonials] = await Promise.all([
-    getProducts(),
-    getServices(),
-    getClients(),
-    getTestimonials()
-  ]);
-
-  return (
-    <HomePageClient 
-      products={products}
-      services={services}
-      clients={clients}
-      testimonials={testimonials}
-    />
-  );
+export default function HomePage() {
+  // Data is now fetched on the client-side by the components themselves via global state hooks.
+  // This simplifies the server component significantly.
+  return <HomePageClient />;
 }

@@ -6,10 +6,9 @@ import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
-import type { Client } from '@/lib/clients.schema';
 import { useClientsData } from '@/hooks/use-global-store-data';
 
-export default function CompanyOverview({ clients: initialClients }: { clients: Client[] }) {
+export default function CompanyOverview() {
   const { clients } = useClientsData();
   
   return (
@@ -39,7 +38,7 @@ export default function CompanyOverview({ clients: initialClients }: { clients: 
                 </Button>
             </div>
             <div className="flex items-center gap-4 pt-4">
-                <OverviewAvatars clients={clients} />
+                <OverviewAvatars />
                 <div>
                     <div className="flex text-yellow-400">
                         <Star className="w-5 h-5 fill-current" />

@@ -4,18 +4,17 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import type { Client, Testimonial } from '@/lib/clients.schema';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useClientsData, useTestimonialsData } from '@/hooks/use-global-store-data';
 
-export default function ClientTestimonials({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[] }) {
-  const [isClient, setIsClient] = useState(false);
+export default function ClientTestimonials() {
+  const { clients, isClient: isClientsClient } = useClientsData();
+  const { testimonials, isClient: isTestimonialsClient } = useTestimonialsData();
+  const isClient = isClientsClient && isTestimonialsClient;
+  
   const { testimonialAvatars } = imageData || {};
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const renderQuote = (quote: string) => {
     const parts = quote.split(/\*\*(.*?)\*\*/g);

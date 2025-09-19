@@ -6,25 +6,16 @@ import ClientTestimonials from "@/components/client-testimonials";
 import CompanyOverview from "@/components/company-overview";
 import ProductShowcase from "@/components/product-showcase";
 import ServiceCatalog from "@/components/service-catalog";
-import type { Product } from '@/lib/products.schema';
-import type { Service } from '@/lib/services.schema';
-import type { Client, Testimonial } from '@/lib/clients.schema';
 
-interface HomePageClientProps {
-    products: Product[];
-    services: Service[];
-    clients: Client[];
-    testimonials: Testimonial[];
-}
-
-export default function HomePageClient({ products, services, clients, testimonials }: HomePageClientProps) {
-  
+export default function HomePageClient() {
+  // This component now acts as a simple layout wrapper.
+  // The child components will fetch their own data from the global store.
   return (
     <>
-      <CompanyOverview clients={clients} />
-      <ServiceCatalog services={services} />
-      <ProductShowcase products={products} />
-      <ClientTestimonials clients={clients} testimonials={testimonials} />
+      <CompanyOverview />
+      <ServiceCatalog />
+      <ProductShowcase />
+      <ClientTestimonials />
       <AiToolsCta />
     </>
   );

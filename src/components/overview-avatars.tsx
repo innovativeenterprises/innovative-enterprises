@@ -4,10 +4,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Client } from '@/lib/clients.schema';
 import { useClientsData } from '@/hooks/use-global-store-data';
 
-export default function OverviewAvatars({ clients: initialClients }: { clients: Client[] }) {
+export default function OverviewAvatars() {
   const { clients, isClient } = useClientsData();
   
   if (!isClient) {

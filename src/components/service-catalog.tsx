@@ -26,7 +26,7 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog({ services: initialServices }: { services: Service[] }) {
+export default function ServiceCatalog() {
   const { services } = useServicesData();
   const enabledServices = services.filter(s => s.enabled);
   

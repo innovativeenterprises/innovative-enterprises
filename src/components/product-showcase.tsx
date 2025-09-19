@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { StageBadge } from '@/components/stage-badge';
 import { useProductsData } from '@/hooks/use-global-store-data';
 
-export default function ProductShowcase({ products: initialProducts }: { products: Product[] }) {
+export default function ProductShowcase() {
   const { products } = useProductsData();
   const enabledProducts = products.filter(p => p.enabled);
 
@@ -29,7 +29,7 @@ export default function ProductShowcase({ products: initialProducts }: { product
                     <CardHeader className="p-0">
                     <div className="relative h-48 w-full">
                         <Image
-                        src={product.image}
+                        src={product.image!}
                         alt={product.name}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
