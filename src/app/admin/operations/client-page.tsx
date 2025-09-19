@@ -11,11 +11,18 @@ import KnowledgeTable from './knowledge-table';
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import CostSettingsTable from "./cost-settings-table";
+import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PricingTable from "../pricing-table";
+import type { Pricing } from "@/lib/pricing.schema";
 
-
-export default function AdminOperationsClientPage() {
+export default function AdminOperationsClientPage({ 
+    initialKnowledgeBase,
+    initialPricing,
+}: { 
+    initialKnowledgeBase: KnowledgeDocument[],
+    initialPricing: Pricing[],
+}) {
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -63,7 +70,7 @@ export default function AdminOperationsClientPage() {
                 </div>
             </TabsContent>
             <TabsContent value="knowledge-base" className="mt-6">
-                <KnowledgeTable />
+                <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
                 <CostSettingsTable />
