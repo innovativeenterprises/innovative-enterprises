@@ -1,5 +1,4 @@
 
-
 import { getStockItems } from '@/lib/firestore';
 import StockClearClientPage from './client-page';
 import type { Metadata } from 'next';
