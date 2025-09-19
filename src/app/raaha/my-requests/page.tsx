@@ -1,18 +1,26 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, UserCheck } from 'lucide-react';
+import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
-import { useRequestsData } from '@/hooks/use-global-store-data';
-import type { HireRequest } from '@/lib/raaha-requests';
-import { RequestTable } from '@/components/request-table';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-import { TimeAgoCell } from '@/components/request-table';
+import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
+import { useRouter } from 'next/navigation';
+import type { HireRequest } from '@/lib/raaha-requests';
+import { useRequestsData } from '@/hooks/use-global-store-data';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "My Hire Requests | RAAHA",
+  description: "Track the status of your applications for domestic helpers.",
+};
+
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {

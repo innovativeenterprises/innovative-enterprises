@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useContext, useSyncExternalStore } from 'react';
@@ -15,7 +16,7 @@ import type { Service } from '@/lib/services.schema';
 import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
 import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
-import type { HireRequest } from '@/lib/raaha-requests';
+import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers';
@@ -75,14 +76,13 @@ export const useCartData = () => {
 export const useLeasesData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
+    const setLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
     return {
         leases: useStoreData((s) => s.signedLeases),
-        setSignedLeases,
+        setLeases,
         isClient,
     };
 };
-
 
 // StairSpace Requests
 export const useStairspaceRequestsData = () => {
@@ -368,5 +368,3 @@ export const useAlumniJobsData = () => {
         isClient,
     };
 }
-
-    

@@ -1,7 +1,5 @@
 import AgencyDashboardClient from './client-page';
-import { initialBeautyCenters } from '@/lib/beauty-centers';
-import { initialBeautyServices } from '@/lib/beauty-services';
-import { initialBeautyAppointments } from '@/lib/beauty-appointments';
+import { getBeautyData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,14 +8,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AgencyDashboardPage() {
-    // In a real app, these would be Firestore fetches.
-    const agencies = initialBeautyCenters;
-    const services = initialBeautyServices;
-    const appointments = initialBeautyAppointments;
+    const { beautyCenters, beautyServices, beautyAppointments } = await getBeautyData();
 
     return <AgencyDashboardClient 
-        initialAgencies={agencies}
-        initialServices={services}
-        initialAppointments={appointments}
+        initialAgencies={beautyCenters}
+        initialServices={beautyServices}
+        initialAppointments={beautyAppointments}
     />;
 }

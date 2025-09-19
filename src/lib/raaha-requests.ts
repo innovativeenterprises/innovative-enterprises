@@ -1,16 +1,5 @@
 
-export interface HireRequest {
-  id: string;
-  workerId: string;
-  workerName: string;
-  clientName: string;
-  clientContact: string;
-  requestDate: string; // ISO date string
-  status: 'Pending' | 'Contacted' | 'Interviewing' | 'Hired' | 'Closed';
-  agencyId: 'Happy Homes Agency' | 'Premier Maids';
-  interviewDate?: string; // ISO date string
-  interviewNotes?: string;
-}
+import type { HireRequest } from './raaha-requests.schema';
 
 export const initialRequests: HireRequest[] = [
     {

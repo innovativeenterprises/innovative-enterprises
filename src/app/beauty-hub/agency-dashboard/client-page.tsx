@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -22,30 +23,12 @@ import { type BeautyService } from '@/lib/beauty-services';
 import { type BeautyAppointment } from '@/lib/beauty-appointments';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
-import { useAgenciesData, useBeautyData } from '@/hooks/use-global-store-data';
-
-const getStatusBadge = (status: HireRequest['status']) => {
-    switch (status) {
-        case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
-        case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
-        case 'Interviewing': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700 hover:bg-purple-500/30">Interviewing</Badge>;
-        case 'Hired': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Hired</Badge>;
-        case 'Closed': return <Badge variant="destructive">Closed</Badge>;
-        default: return <Badge variant="outline">{status}</Badge>;
-    }
-};
-
-const getAvailabilityBadge = (availability: Worker['availability']) => {
-    return (
-        <Badge variant={availability === 'Available' ? 'default' : 'outline'} className={availability === 'Available' ? 'bg-green-500/20 text-green-700' : ''}>
-            {availability}
-        </Badge>
-    );
-};
-
+import { useBeautyData } from '@/hooks/use-global-store-data';
 
 export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
     const { agencies, services, appointments, setAgencies, setServices, setAppointments, isClient } = useBeautyData();
+    const [selectedAgencyId, setSelectedAgencyId] = useState('');
+    const { toast } = useToast();
 
     useEffect(() => {
         setAgencies(() => initialAgencies);
@@ -53,8 +36,6 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialServ
         setAppointments(() => initialAppointments);
     }, [initialAgencies, initialServices, initialAppointments, setAgencies, setServices, setAppointments]);
 
-    const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const { toast } = useToast();
 
      useEffect(() => {
         if (agencies.length > 0 && !selectedAgencyId) {

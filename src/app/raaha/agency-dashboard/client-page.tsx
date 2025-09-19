@@ -19,6 +19,7 @@ import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } fr
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
+import { useAgenciesData, useRequestsData, useWorkersData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -39,17 +40,23 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
     );
 };
 
-export default function AgencyDashboardClientPage({ initialAgencies, initialWorkers, initialRequests }: { initialAgencies: Agency[], initialWorkers: Worker[], initialRequests: HireRequest[] }) {
-    const [workers, setWorkers] = useState(initialWorkers);
-    const [requests, setRequests] = useState(initialRequests);
-    const [agencies, setAgencies] = useState(initialAgencies);
-    const { toast } = useToast();
 
+export default function AgencyDashboardClientPage({ initialAgencies, initialWorkers, initialRequests }: { initialAgencies: Agency[], initialWorkers: Worker[], initialRequests: HireRequest[] }) {
+    const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
+    const { requests, setRaahaRequests, isClient: isRequestsClient } = useRequestsData();
+    const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
+
+    const { toast } = useToast();
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const [isClient, setIsClient] = useState(false);
+    const isClient = isWorkersClient && isRequestsClient && isAgenciesClient;
+
+    useEffect(() => {
+        setWorkers(() => initialWorkers);
+        setRaahaRequests(() => initialRequests);
+        setAgencies(() => initialAgencies);
+    }, [initialWorkers, initialRequests, initialAgencies, setWorkers, setRaahaRequests, setAgencies]);
 
      useEffect(() => {
-        setIsClient(true);
         if (agencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(agencies[0].id);
         }
@@ -58,7 +65,7 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
     const onSchedule = (id: string, values: InterviewValues) => {
-        setRequests(prev => prev.map(r => 
+        setRaahaRequests(prev => prev.map(r => 
             r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });
