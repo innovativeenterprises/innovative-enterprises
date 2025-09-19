@@ -70,7 +70,7 @@ export default function AdminLayoutClient({
   const networkAndPeople = [
       { href: '/admin/network', label: 'Partner Network', icon: Network },
       { href: '/admin/people', label: 'People', icon: UserCog },
-      { href: '/community-hub/membership', label: 'Communities', icon: Handshake },
+      { href: '/admin/communities', label: 'Communities', icon: Handshake },
   ];
 
   const industryHubs = [
