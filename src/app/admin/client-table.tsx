@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,12 +18,6 @@ import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useClientsData, useTestimonialsData } from "@/hooks/use-global-store-data";
-
-import ServiceTable from "@/app/admin/service-table";
-import ProductTable from "@/app/admin/product-table";
-import PricingTable from "@/app/admin/pricing-table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PosProductTable from "@/app/admin/pos-product-table";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -45,9 +40,9 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
         resolver: zodResolver(ClientSchema),
     });
 
-    useState(() => {
+    useEffect(() => {
         if(isOpen) form.reset(client);
-    });
+    }, [isOpen, client, form]);
 
     const onSubmit: SubmitHandler<ClientValues> = (data) => {
         onSave(data, client?.id);
@@ -81,9 +76,9 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     const form = useForm<TestimonialValues>({
         resolver: zodResolver(TestimonialSchema),
     });
-     useState(() => {
+     useEffect(() => {
         if(isOpen) form.reset(testimonial);
-    });
+    }, [isOpen, testimonial, form]);
     
     const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
         onSave(data, testimonial?.id);
@@ -115,7 +110,7 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     );
 };
 
-function ClientAndTestimonialManager() {
+export default function ClientTable() {
     const { toast } = useToast();
     const { clients, setClients, isClient: isClientsClient } = useClientsData();
     const { testimonials, setTestimonials, isClient: isTestimonialsClient } = useTestimonialsData();
@@ -218,44 +213,6 @@ function ClientAndTestimonialManager() {
                     </Table>
                 </CardContent>
             </Card>
-        </div>
-    );
-}
-
-
-export default function AdminContentPage() {
-    return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold">Site Content</h1>
-                <p className="text-muted-foreground">
-                    Manage your public-facing services, products, clients, and pricing.
-                </p>
-            </div>
-            <Tabs defaultValue="services" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
-                    <TabsTrigger value="services">Services</TabsTrigger>
-                    <TabsTrigger value="products">Products</TabsTrigger>
-                    <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
-                    <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
-                    <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
-                </TabsList>
-                <TabsContent value="services" className="mt-6">
-                    <ServiceTable />
-                </TabsContent>
-                <TabsContent value="products" className="mt-6">
-                    <ProductTable />
-                </TabsContent>
-                <TabsContent value="clients" className="mt-6">
-                    <ClientAndTestimonialManager />
-                </TabsContent>
-                <TabsContent value="pricing" className="mt-6">
-                    <PricingTable />
-                </TabsContent>
-                <TabsContent value="pos" className="mt-6">
-                    <PosProductTable />
-                </TabsContent>
-            </Tabs>
         </div>
     );
 }

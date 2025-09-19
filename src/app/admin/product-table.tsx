@@ -59,19 +59,21 @@ export default function ProductTable() {
                     <CardTitle>Product Management</CardTitle>
                     <CardDescription>Enable or disable products shown on your homepage showcase.</CardDescription>
                 </div>
-                 <AddEditProductDialog
+                 <Button onClick={() => openDialog()}>
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add Product
+                </Button>
+            </CardHeader>
+            <CardContent>
+                <AddEditProductDialog
                     isOpen={isDialogOpen}
                     onOpenChange={setIsDialogOpen}
                     product={selectedProduct}
                     onSave={handleSave}
                     stages={stages}
                 >
-                     <Button>
-                        <PlusCircle className="mr-2 h-4 w-4" /> Add Product
-                    </Button>
+                    {/* Placeholder, Dialog is controlled externally */}
+                    <div />
                 </AddEditProductDialog>
-            </CardHeader>
-            <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -107,20 +109,9 @@ export default function ProductTable() {
                                         />
                                     </TableCell>
                                      <TableCell className="text-right">
-                                        <AddEditProductDialog
-                                            product={product}
-                                            onSave={handleSave}
-                                            stages={stages}
-                                            isOpen={isDialogOpen && selectedProduct?.id === product.id}
-                                            onOpenChange={(open) => {
-                                                if (!open) setSelectedProduct(undefined);
-                                                setIsDialogOpen(open);
-                                            }}
-                                        >
-                                            <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
-                                                <Edit />
-                                            </Button>
-                                        </AddEditProductDialog>
+                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
+                                            <Edit />
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))
