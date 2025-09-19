@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -15,11 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities";
+import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities.schema";
 import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 
 
 const AddEditOpportunityDialog = ({ 
@@ -107,15 +107,14 @@ const AddEditOpportunityDialog = ({
 }
 
 export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
-    const [opportunities, setOpportunities] = useState(initialOpportunities);
-    const [isClient, setIsClient] = useState(false);
+    const { opportunities, setOpportunities, isClient } = useOpportunitiesData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setOpportunities(() => initialOpportunities);
+    }, [initialOpportunities, setOpportunities]);
 
     const openDialog = (opp?: Opportunity) => {
         setSelectedOpp(opp);

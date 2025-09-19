@@ -36,6 +36,7 @@ import type { JobPosting } from '@/lib/alumni-jobs';
 import type { BriefcaseData } from '@/lib/briefcase';
 import type { Pricing } from '@/lib/pricing.schema';
 import type { Investor } from '@/lib/investors.schema';
+import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -91,10 +92,10 @@ export const usePosProductsData = () => {
 export const useLeasesData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
+    const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => store.set(state => ({...state, signedLeases: updater(state.signedLeases)}));
     return {
         leases: useStoreData((s) => s.signedLeases),
-        setLeases,
+        setSignedLeases,
         isClient,
     };
 };
@@ -453,5 +454,17 @@ export const useInvestorsData = () => {
         investors: useStoreData((s) => s.investors),
         setInvestors,
         isClient,
+    };
+}
+
+// Knowledge Base
+export const useKnowledgeData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setKnowledgeBase = (updater: (prev: AppState['knowledgeBase']) => AppState['knowledgeBase']) => store.set(state => ({...state, knowledgeBase: updater(state.knowledgeBase)}));
+    return {
+        knowledgeBase: useStoreData(s => s.knowledgeBase),
+        setKnowledgeBase,
+        isClient
     };
 }

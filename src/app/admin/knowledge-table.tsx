@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -14,7 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import type { KnowledgeDocument } from "@/lib/knowledge";
+import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
 import { trainAgent } from "@/ai/flows/train-agent";
@@ -26,7 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
-import { getKnowledgeBase } from '@/lib/firestore';
+import { useKnowledgeData } from "@/hooks/use-global-store-data";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -316,4 +315,172 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
             </DialogContent>
         </Dialog>
     )
+}
+
+export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowledgeBase: KnowledgeDocument[] }) {
+    const { knowledgeBase, setKnowledgeBase, isClient } = useKnowledgeData();
+    const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | undefined>(undefined);
+
+    useEffect(() => {
+        setKnowledgeBase(() => initialKnowledgeBase);
+    }, [initialKnowledgeBase, setKnowledgeBase]);
+
+    const handleOpenDialog = (doc?: KnowledgeDocument) => {
+        setSelectedDoc(doc);
+        setIsDialogOpen(true);
+    }
+
+    const handleUpload = async (source: { file?: File; urls?: string[] }, docIdToReplace?: string) => {
+        toast({ title: 'Analyzing Source(s)...', description: 'Please wait while the AI extracts key information.' });
+        try {
+            if (source.urls && source.urls.length > 0) {
+                const urlPromises = source.urls.map(async (url) => {
+                    const scraped = await scrapeAndSummarize({ source: url, isUrl: true });
+                    if (!scraped.summary) throw new Error(`Could not scrape content from ${url}.`);
+                    return await analyzeKnowledgeDocument({ documentContent: scraped.summary, sourceUrl: url });
+                });
+
+                const results = await Promise.all(urlPromises);
+                const newDocs: KnowledgeDocument[] = results.map((analysis, index) => ({
+                    id: `kb_${Date.now()}_${index}`,
+                    documentName: analysis.documentName,
+                    documentNumber: analysis.documentNumber,
+                    institutionName: analysis.institutionName,
+                    version: analysis.version,
+                    issueDate: analysis.issueDate,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    fileName: source.urls![index],
+                    fileType: 'url',
+                    dataUri: '',
+                }));
+
+                setKnowledgeBase(prev => [...newDocs, ...prev]);
+                toast({ title: `${newDocs.length} URLs Added!`, description: `Successfully analyzed and added all sources.` });
+
+            } else if (source.file) {
+                const fileName = source.file.name;
+                const fileType = source.file.type;
+                const dataUri = await fileToDataURI(source.file);
+                const analysis = await analyzeKnowledgeDocument({ documentDataUri: dataUri });
+
+                const newDoc: KnowledgeDocument = {
+                    id: docIdToReplace || `kb_${Date.now()}`,
+                    documentName: analysis.documentName || 'Unnamed Document',
+                    documentNumber: analysis.documentNumber,
+                    institutionName: analysis.institutionName,
+                    version: analysis.version,
+                    issueDate: analysis.issueDate,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    fileName: fileName,
+                    fileType: fileType,
+                    dataUri,
+                };
+
+                if (docIdToReplace) {
+                    setKnowledgeBase(prev => prev.map(doc => doc.id === docIdToReplace ? newDoc : doc));
+                    toast({ title: 'Document Replaced!', description: `"${newDoc.documentName}" has been analyzed and updated.` });
+                } else {
+                    setKnowledgeBase(prev => [newDoc, ...prev]);
+                    toast({ title: 'Document Added!', description: `"${newDoc.documentName}" has been analyzed and added.` });
+                }
+            } else {
+                throw new Error("No source provided.");
+            }
+            
+        } catch (error) {
+            console.error("Failed to analyze or upload document:", error);
+            toast({ title: "Operation Failed", description: String(error) || "Could not analyze or add the source(s).", variant: 'destructive' });
+        }
+    };
+
+    const handleDelete = (id: string) => {
+        setKnowledgeBase(prev => prev.filter(doc => doc.id !== id));
+        toast({ title: "Document removed.", variant: "destructive" });
+    };
+
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>AI Knowledge Base</CardTitle>
+                    <CardDescription>Manage laws, regulations, and documents to train your AI agents.</CardDescription>
+                </div>
+                <div className="flex gap-2">
+                    <TrainAgentDialog knowledgeBase={knowledgeBase} />
+                     <Button onClick={() => handleOpenDialog()}><Upload className="mr-2 h-4 w-4" /> Add Source</Button>
+                </div>
+            </CardHeader>
+            <CardContent>
+                 <UploadDocumentDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    onUpload={handleUpload}
+                    documentToReplace={selectedDoc}
+                >
+                   {/* This is a controlled dialog, trigger is external */}
+                   <div/>
+                </UploadDocumentDialog>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Document Name</TableHead>
+                            <TableHead>Institution</TableHead>
+                            <TableHead>Number / Version</TableHead>
+                            <TableHead>Issue Date</TableHead>
+                            <TableHead>Source</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={6}><Skeleton className="h-10 w-full" /></TableCell>
+                            </TableRow>
+                        ) : (
+                            knowledgeBase.map(doc => (
+                                <TableRow key={doc.id}>
+                                    <TableCell>
+                                        <p className="font-medium">{doc.documentName}</p>
+                                    </TableCell>
+                                    <TableCell>
+                                        <p className="text-sm text-muted-foreground">{doc.institutionName}</p>
+                                    </TableCell>
+                                    <TableCell>
+                                        <p className="font-mono text-xs">{doc.documentNumber}</p>
+                                        {doc.version && <p className="text-xs text-muted-foreground">v{doc.version}</p>}
+                                    </TableCell>
+                                    <TableCell>{doc.issueDate}</TableCell>
+                                    <TableCell>
+                                        <a 
+                                            href={doc.fileType === 'url' ? doc.fileName : doc.dataUri} 
+                                            target="_blank" rel="noopener noreferrer" 
+                                            className="text-primary underline hover:opacity-80 text-sm truncate max-w-xs block"
+                                        >
+                                            {doc.fileName}
+                                        </a>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(doc)}><Edit /></Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{doc.documentName}". This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(doc.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
 }
