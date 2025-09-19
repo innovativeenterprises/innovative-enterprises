@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 
   return {
-    title: `${item.name} | StockClear`,
+    title: `${item.name} | Swap & Sell Hub`,
     description: item.description,
   };
 }

@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
 import { useWorkersData, useAgenciesData, useRequestsData } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
@@ -22,6 +21,7 @@ import { z } from 'zod';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Metadata } from 'next';
 import { getRaahaData } from '@/lib/firestore';
+import { useState, useEffect } from 'react';
 
 export async function generateStaticParams() {
   const { raahaWorkers } = await getRaahaData();
