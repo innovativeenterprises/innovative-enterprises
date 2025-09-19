@@ -7,11 +7,16 @@ import Link from "next/link";
 import { useStaffData } from "@/hooks/use-global-store-data";
 
 export default function AiToolsCta() {
-    const { agentCategories } = useStaffData();
+    const { agentCategories, isClient } = useStaffData();
+    
     // Dynamically select a few key agents to feature
     const allAgents = agentCategories.flatMap(cat => cat.agents);
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];
     const featuredAgents = featuredAgentNames.map(name => allAgents.find(agent => agent.name === name)).filter(Boolean);
+
+    if (!isClient) {
+        return null;
+    }
 
     return (
         <section className="py-16 md:py-24 bg-white">
