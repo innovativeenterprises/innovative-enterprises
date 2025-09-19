@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import type { Pricing } from "@/lib/pricing.schema";
 import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -77,11 +77,15 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() { 
+export default function PricingTable({ pricing: initialPricing }: { pricing: Pricing[] }) { 
     const { pricing, setPricing, isClient } = usePricingData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
+
+    useEffect(() => {
+        setPricing(() => initialPricing);
+    }, [initialPricing, setPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));

@@ -1,7 +1,8 @@
 
 
 import AdminOperationsClientPage from "./client-page";
-import type { Metadata } from 'next';
+import { getPricing } from "@/lib/firestore";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: 'Operations | Admin Dashboard',
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminOperationsPage() {
-    return <AdminOperationsClientPage />;
+    const pricing = await getPricing();
+
+    return <AdminOperationsClientPage 
+        initialPricing={pricing}
+    />;
 }
