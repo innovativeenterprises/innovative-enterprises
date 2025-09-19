@@ -1,24 +1,28 @@
 
+'use client';
+
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { getPricing, getProducts, getServices, getClients, getTestimonials, getPosProducts, getStages } from "@/lib/firestore";
+import { useServicesData } from "@/hooks/use-global-store-data";
+import { useProductsData } from "@/hooks/use-global-store-data";
+import { useClientsData, useTestimonialsData } from "@/hooks/use-global-store-data";
+import { usePricingData } from "@/hooks/use-global-store-data";
+import { usePosProductsData } from "@/hooks/use-global-store-data";
+import { initialStages } from "@/lib/stages";
 
-export default async function AdminContentPage() {
-    // Data is fetched on the server and passed down as props.
-    // The client components will handle their own state.
-    const [services, products, stages, clients, testimonials, pricing, posProducts] = await Promise.all([
-        getServices(),
-        getProducts(),
-        getStages(),
-        getClients(),
-        getTestimonials(),
-        getPricing(),
-        getPosProducts(),
-    ]);
+export default function AdminContentPage() {
+    // Data is now fetched via hooks on the client.
+    const { services } = useServicesData();
+    const { products } = useProductsData();
+    const { clients } = useClientsData();
+    const { testimonials } = useTestimonialsData();
+    const { pricing } = usePricingData();
+    const { posProducts } = usePosProductsData();
+    const stages = initialStages; // This is small and can remain static
 
     return (
         <div className="space-y-8">
@@ -46,7 +50,7 @@ export default async function AdminContentPage() {
                     <ClientTable initialClients={clients} initialTestimonials={testimonials} />
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-6">
-                    <PricingTable pricing={pricing} />
+                    <PricingTable />
                 </TabsContent>
                 <TabsContent value="pos" className="mt-6">
                     <PosProductTable initialProducts={posProducts} />
