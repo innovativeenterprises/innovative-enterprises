@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -10,12 +11,10 @@
  * architectural piece to make the prototype function correctly across pages.
  */
 
-import type { AppSettings } from './settings';
-import type { CartItem } from '@/lib/pos-data.schema';
-import { initialState as initialData } from './initial-state';
-import type { AppState as FullAppState } from './initial-state';
+import { initialState as initialData, type AppState as FullAppState } from './initial-state';
 
 export type AppState = FullAppState;
+export type CartItem = FullAppState['cart'][0];
 
 // Re-export initialState from the new file
 export const initialState: AppState = initialData;

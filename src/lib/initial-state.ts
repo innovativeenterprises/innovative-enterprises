@@ -66,7 +66,7 @@ import { saasProducts } from './saas-products';
 import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
-import { ProjectStage } from './stages';
+import type { ProjectStage } from './stages';
 
 export interface AppState {
   settings: AppSettings;
