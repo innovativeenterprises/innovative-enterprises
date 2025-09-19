@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -13,7 +12,7 @@ import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import CostSettingsTable from "./cost-settings-table";
 import type { CostRate } from "@/lib/cost-settings.schema";
-import type { KnowledgeDocument } from "@/lib/knowledge";
+import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AdminOperationsClientPage({ 
