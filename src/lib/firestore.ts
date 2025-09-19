@@ -1,4 +1,5 @@
 
+
 // This file is a placeholder for your actual Firestore data fetching logic.
 // In a real application, you would use the Firebase SDK to interact with Firestore.
 // For this prototype, we are using a global store to simulate a database.
@@ -38,6 +39,11 @@ export const getStaffData = async () => {
         agentCategories: state.agentCategories,
     };
 };
+export const getStaff = async () => {
+    await delay(50);
+    const { leadership, staff, agentCategories } = store.get();
+    return [...leadership, ...staff, ...agentCategories.flatMap(c => c.agents)];
+}
 export const getProperties = async () => { await delay(50); return store.get().properties; };
 export const getStairspaceListings = async () => { await delay(50); return store.get().stairspaceListings; };
 export const getStairspaceRequests = async () => { await delay(50); return store.get().stairspaceRequests; };

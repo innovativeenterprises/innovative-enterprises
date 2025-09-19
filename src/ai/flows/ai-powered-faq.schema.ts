@@ -6,7 +6,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { initialStaffData } from '@/lib/agents';
+import { getStaff } from '@/lib/firestore';
 import type { Agent } from '@/lib/agents.schema';
 
 export const AnswerQuestionInputSchema = z.object({
@@ -26,9 +26,8 @@ export const AnswerQuestionOutputSchema = z.object({
 export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
 
-const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
-
-const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): Agent | null => {
+const getSpecialist = async (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): Promise<Agent | null> => {
+    const allStaff = await getStaff();
     switch(department) {
         case 'legal': return allStaff.find(s => s.name === 'Lexi') || allStaff.find(s => s.name === 'Legal Counsel Office') || null;
         case 'marketing': return allStaff.find(s => s.name === 'Mira') || null;
@@ -60,7 +59,7 @@ export const routeToSpecialistTool = ai.defineTool(
         })
     },
     async ({ department, userQuery }) => {
-        const specialist = getSpecialist(department);
+        const specialist = await getSpecialist(department);
         if (!specialist) {
             return { isAvailable: false, response: "I'm sorry, I can't find the right person to help with that." };
         }
