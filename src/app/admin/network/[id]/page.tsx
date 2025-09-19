@@ -15,10 +15,17 @@ import { DueDateDisplay } from '@/components/due-date-display';
 import { Progress } from '@/components/ui/progress';
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string }) => {
-    const { daysUntilExpiry, progressValue } = useMemo(() => {
+    const [clientState, setClientState] = useState<{
+        daysUntilExpiry: number | null;
+        progressValue: number;
+    } | null>(null);
+
+    useEffect(() => {
         if (!expiry) {
-            return { daysUntilExpiry: null, progressValue: 0 };
+            setClientState({ daysUntilExpiry: null, progressValue: 0 });
+            return;
         }
+
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         const expiryDate = new Date(expiry);
@@ -32,7 +39,8 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
 
         const progress = Math.max(0, (days / totalDuration) * 100);
 
-        return { daysUntilExpiry: days, progressValue: progress };
+        setClientState({ daysUntilExpiry: days, progressValue: progress });
+
     }, [expiry, tier]);
 
 
@@ -47,8 +55,8 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
         )
     }
     
-    if (!expiry) {
-         return <Badge variant="outline">{tier}</Badge>;
+    if (!expiry || clientState === null) {
+         return <Skeleton className="h-10 w-full" />;
     }
     
     return (
@@ -57,7 +65,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: string })
                 <Badge variant="outline">{tier}</Badge>
                 <DueDateDisplay date={new Date(expiry).toISOString()} prefix="" />
             </div>
-            <Progress value={progressValue} className="h-2 [&>div]:bg-green-500" />
+            <Progress value={clientState.progressValue} className="h-2 [&>div]:bg-green-500" />
         </div>
     )
 }
@@ -100,7 +108,7 @@ const ProviderDetailClient = ({ provider }: { provider: Provider | undefined }) 
                         </div>
                         <CardDescription className="text-base">{provider.services}</CardDescription>
                         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-                             <a href={`mailto:${"'" + provider.email + "'"}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                             <a href={`mailto:${'\'\'\'' + provider.email + '\''\'\''}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
                                 <Mail className="h-4 w-4" /> {provider.email}
                             </a>
                             {provider.portfolio && 
@@ -112,7 +120,7 @@ const ProviderDetailClient = ({ provider }: { provider: Provider | undefined }) 
                     </div>
                     <div className="w-full md:w-auto">
                         <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
-                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry} />
+                        <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry instanceof Date ? provider.subscriptionExpiry.toISOString() : provider.subscriptionExpiry} />
                     </div>
                 </CardHeader>
                  <CardContent>
