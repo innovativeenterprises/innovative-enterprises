@@ -12,19 +12,22 @@ import { useState, useEffect } from 'react';
 import { BookingRequestForm } from '../../booking-form';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Skeleton } from '@/components/ui/skeleton';
-import { initialStairspaceListings } from '@/lib/stairspace-listings';
+import { getStairspaceListings } from '@/lib/firestore';
+import { useStairspaceData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
 
 // Generate static pages for each listing at build time
 export async function generateStaticParams() {
-  return initialStairspaceListings.map((listing) => ({
+  const listings = await getStairspaceListings();
+  return listings.map((listing) => ({
     id: listing.id,
   }));
 }
 
 // Generate metadata for each page
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const listing = initialStairspaceListings.find(l => l.id === params.id);
+  const listings = await getStairspaceListings();
+  const listing = listings.find(l => l.id === params.id);
 
   if (!listing) {
     return {
@@ -54,21 +57,20 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
+    const { stairspaceListings, isClient } = useStairspaceData();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [listing, setListing] = useState<StairspaceListing | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
-        if(id) {
-            const foundListing = initialStairspaceListings.find(l => l.id === id);
+        if(isClient && id) {
+            const foundListing = stairspaceListings.find(l => l.id === id);
             if (foundListing) {
                 setListing(foundListing);
             } else {
                 notFound();
             }
         }
-    }, [id]);
+    }, [id, stairspaceListings, isClient]);
 
     if (!isClient || !listing) {
         return (

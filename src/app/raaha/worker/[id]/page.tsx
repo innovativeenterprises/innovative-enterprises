@@ -3,12 +3,11 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
-import { useWorkersData } from '@/hooks/use-global-store-data';
-import { useAgenciesData } from '@/hooks/use-global-store-data';
+import { useWorkersData, useAgenciesData, useRequestsData } from '@/hooks/use-global-store-data';
 import type { Worker } from '@/lib/raaha-workers';
 import type { Agency } from '@/lib/raaha-agencies';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Phone, Globe, Check, Star, Briefcase, Building2 } from 'lucide-react';
 import Link from 'next/link';
@@ -17,23 +16,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { store } from '@/lib/global-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { setRaahaRequests } from '@/hooks/use-global-store-data';
-import type { HireRequest } from '@/lib/raaha-requests';
+import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Metadata } from 'next';
-import { initialWorkers } from '@/lib/raaha-workers';
+import { getRaahaData } from '@/lib/firestore';
 
 export async function generateStaticParams() {
-  return initialWorkers.map((worker) => ({
+  const { raahaWorkers } = await getRaahaData();
+  return raahaWorkers.map((worker) => ({
     id: worker.id,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const worker = initialWorkers.find(w => w.id === params.id);
+  const { raahaWorkers } = await getRaahaData();
+  const worker = raahaWorkers.find(w => w.id === params.id);
 
   if (!worker) {
     notFound();
@@ -55,6 +54,7 @@ type HireRequestValues = z.infer<typeof HireRequestSchema>;
 const HireRequestDialog = ({ worker, agency }: { worker: Worker, agency?: Agency }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { toast } = useToast();
+    const { setRaahaRequests } = useRequestsData();
     const form = useForm<HireRequestValues>({
         resolver: zodResolver(HireRequestSchema),
     });

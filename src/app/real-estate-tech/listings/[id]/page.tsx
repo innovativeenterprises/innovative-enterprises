@@ -12,17 +12,18 @@ import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePropertiesData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
-import { initialProperties } from '@/lib/properties';
-
+import { getProperties } from '@/lib/firestore';
 
 export async function generateStaticParams() {
-  return initialProperties.map((property) => ({
+  const properties = await getProperties();
+  return properties.map((property) => ({
     id: property.id,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const property = initialProperties.find(p => p.id === params.id);
+  const properties = await getProperties();
+  const property = properties.find(p => p.id === params.id);
 
   if (!property) {
     notFound();

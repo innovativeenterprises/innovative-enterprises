@@ -21,16 +21,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
-import { initialOpportunities } from '@/lib/opportunities';
+import { getOpportunities } from '@/lib/firestore';
 
 export async function generateStaticParams() {
-  return initialOpportunities.map((opportunity) => ({
+  const opportunities = await getOpportunities();
+  return opportunities.map((opportunity) => ({
     id: opportunity.id,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const opportunity = initialOpportunities.find(o => o.id === params.id);
+  const opportunities = await getOpportunities();
+  const opportunity = opportunities.find(o => o.id === params.id);
 
   if (!opportunity) {
     notFound();

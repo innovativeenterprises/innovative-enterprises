@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description: "An overview of all submitted student applications.",
 };
 
+
 export default async function AdmissionsDashboardPage() {
     const applications = await getApplications();
     return <AdmissionsDashboardClient initialApplications={applications} />;

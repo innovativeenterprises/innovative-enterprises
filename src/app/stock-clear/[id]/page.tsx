@@ -2,7 +2,6 @@
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
-import { initialStockItems, type StockItem } from '@/lib/stock-items';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -13,15 +12,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import type { Metadata } from 'next';
+import type { StockItem } from '@/lib/stock-items.schema';
+import { getStockItems } from '@/lib/firestore';
+import { useStockItemsData } from '@/hooks/use-global-store-data';
 
 export async function generateStaticParams() {
-  return initialStockItems.map((item) => ({
+  const items = await getStockItems();
+  return items.map((item) => ({
     id: item.id,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const item = initialStockItems.find(i => i.id === params.id);
+  const items = await getStockItems();
+  const item = items.find(i => i.id === params.id);
 
   if (!item) {
     return {
@@ -67,20 +71,21 @@ const CountdownTimer = ({ endDate }: { endDate: string }) => {
 export default function StockItemDetailPage() {
     const params = useParams();
     const { id } = params;
+    const { stockItems, isClient } = useStockItemsData();
     const [item, setItem] = useState<StockItem | undefined>(undefined);
 
     useEffect(() => {
-        if (id) {
-            const foundItem = initialStockItems.find(p => p.id === id);
+        if (isClient && id) {
+            const foundItem = stockItems.find(p => p.id === id);
             if (foundItem) {
                 setItem(foundItem);
             } else {
                 notFound();
             }
         }
-    }, [id]);
+    }, [id, stockItems, isClient]);
 
-     if (!item) {
+     if (!isClient || !item) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-5xl mx-auto">
