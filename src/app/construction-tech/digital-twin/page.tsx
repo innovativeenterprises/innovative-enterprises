@@ -44,7 +44,7 @@ export default function DigitalTwinPage() {
                 <CardContent className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Thermometer className="w-8 h-8 text-red-500"/>
+                            <Thermometer className="w-8 h-8 text-[hsl(var(--chart-2))]"/>
                             <div>
                                 <p className="text-sm text-muted-foreground">Avg. Temp</p>
                                 <p className="text-2xl font-bold">23.5°C</p>
@@ -53,7 +53,7 @@ export default function DigitalTwinPage() {
                     </Card>
                     <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Droplets className="w-8 h-8 text-blue-500"/>
+                            <Droplets className="w-8 h-8 text-[hsl(var(--chart-1))]"/>
                             <div>
                                 <p className="text-sm text-muted-foreground">Water Flow</p>
                                 <p className="text-2xl font-bold">150 L/min</p>
@@ -62,7 +62,7 @@ export default function DigitalTwinPage() {
                     </Card>
                     <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Zap className="w-8 h-8 text-yellow-500"/>
+                            <Zap className="w-8 h-8 text-[hsl(var(--chart-3))]"/>
                             <div>
                                 <p className="text-sm text-muted-foreground">Energy Use</p>
                                 <p className="text-2xl font-bold">75 kWh</p>
@@ -71,7 +71,7 @@ export default function DigitalTwinPage() {
                     </Card>
                      <Card className="bg-muted/50">
                         <CardHeader className="flex-row items-center gap-4 space-y-0">
-                            <Cpu className="w-8 h-8 text-green-500"/>
+                            <Cpu className="w-8 h-8 text-[hsl(var(--chart-4))]"/>
                             <div>
                                 <p className="text-sm text-muted-foreground">System Status</p>
                                 <p className="text-2xl font-bold">Optimal</p>
