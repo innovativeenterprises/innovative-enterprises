@@ -1,4 +1,3 @@
-
 import type { SaasCategory } from './saas-products.schema';
 
 export const saasProducts: SaasCategory[] = [
@@ -16,3 +15,5 @@ export const saasProducts: SaasCategory[] = [
     ]
   },
 ];
+
+export const initialSaaSProducts = saasProducts;

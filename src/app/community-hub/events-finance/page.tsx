@@ -1,19 +1,12 @@
+'use client';
 
 import EventsFinanceClient from './client-page';
-import type { Metadata } from 'next';
-import { getCommunities, getCommunityEvents, getCommunityFinances } from '@/lib/firestore';
+import { useCommunitiesData, useEventsData, useCommunityFinancesData } from '@/hooks/use-global-store-data';
 
-export const metadata: Metadata = {
-    title: "Events & Financials",
-    description: "Manage your community's events and track its financial health.",
-};
-
-export default async function EventsFinancePage() {
-    const [communities, events, finances] = await Promise.all([
-        getCommunities(),
-        getCommunityEvents(),
-        getCommunityFinances(),
-    ]);
+export default function EventsFinancePage() {
+    const { communities } = useCommunitiesData();
+    const { events } = useEventsData();
+    const { finances } = useCommunityFinancesData();
 
     return <EventsFinanceClient 
         initialCommunities={communities}

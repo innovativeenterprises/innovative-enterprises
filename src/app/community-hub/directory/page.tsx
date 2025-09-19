@@ -1,14 +1,9 @@
+'use client';
 
 import MemberDirectoryClient from './client-page';
-import type { Metadata } from 'next';
-import { getCommunityMembers } from '@/lib/firestore';
+import { useMembersData } from '@/hooks/use-global-store-data';
 
-export const metadata: Metadata = {
-    title: "Community Directory",
-    description: "Connect with fellow members of your community.",
-};
-
-export default async function MemberDirectoryPage() {
-    const members = await getCommunityMembers();
+export default function MemberDirectoryPage() {
+    const { members } = useMembersData();
     return <MemberDirectoryClient initialMembers={members} />;
 }

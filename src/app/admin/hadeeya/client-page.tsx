@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -19,12 +18,8 @@ const getStatusBadge = (status: GiftCard['status']) => {
     }
 };
 
-export default function HadeeyaAdminPageClient({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
-    const { giftCards, setGiftCards, isClient } = useGiftCardsData();
-
-    useEffect(() => {
-        setGiftCards(() => initialGiftCards);
-    }, [initialGiftCards, setGiftCards]);
+export default function HadeeyaAdminPage() {
+    const { giftCards, isClient } = useGiftCardsData();
 
     return (
         <div className="space-y-8">

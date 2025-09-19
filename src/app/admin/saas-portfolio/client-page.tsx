@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo } from "react";
@@ -9,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { type SaasCategory, type SaaSProduct } from '@/lib/saas-products';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSaaSProductsData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: string) => {
     switch (status) {
@@ -29,32 +29,41 @@ const getStageBadge = (stage: string) => {
     return <Badge variant="outline">{stage}</Badge>;
 }
 
-export default function SaasPortfolioClientPage({ saasProducts }: { saasProducts: SaasCategory[] }) {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
+export default function SaasPortfolioPage() {
+  const { saasProducts } = useSaaSProductsData();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-    const filteredProducts = useMemo(() => {
-        let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
+  const filteredProducts = useMemo(() => {
+      let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
 
-        if (selectedCategory !== 'All') {
-            products = products.filter(p => p.category === selectedCategory);
-        }
+      if (selectedCategory !== 'All') {
+          products = products.filter(p => p.category === selectedCategory);
+      }
 
-        if (searchTerm) {
-            products = products.filter(p =>
-                p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                p.description.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
+      if (searchTerm) {
+          products = products.filter(p =>
+              p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              p.description.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+      }
 
-        return products;
-    }, [searchTerm, selectedCategory, saasProducts]);
+      return products;
+  }, [searchTerm, selectedCategory, saasProducts]);
 
-    const allCategories = ['All', ...saasProducts.map(c => c.name)];
+  const allCategories = ['All', ...saasProducts.map(c => c.name)];
 
-    return (
-         <div className="space-y-8">
-            <Card>
+  return (
+    <div className="bg-background min-h-[calc(100vh-8rem)]">
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">SaaS Portfolio</h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Browse the complete portfolio of over 30+ digital products and SaaS platforms developed by Innovative Enterprises, spanning construction, real estate, education, and AI tools.
+          </p>
+        </div>
+        <div className="mt-12">
+           <Card>
                 <CardHeader>
                     <CardTitle>Digital Products & SaaS Platforms</CardTitle>
                     <div className="flex flex-col md:flex-row gap-4 pt-4">
@@ -107,5 +116,7 @@ export default function SaasPortfolioClientPage({ saasProducts }: { saasProducts
                 </CardContent>
             </Card>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

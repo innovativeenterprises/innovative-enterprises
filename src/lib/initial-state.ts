@@ -1,4 +1,3 @@
-
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -62,7 +61,7 @@ import { initialMembers } from './community-members';
 import { initialAlumniJobs } from './alumni-jobs';
 import { initialRentalAgencies } from './rental-agencies';
 import { initialCars } from './cars';
-import { saasProducts } from './saas-products';
+import { saasProducts as initialSaaSProducts } from './saas-products';
 import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
@@ -163,7 +162,7 @@ export const initialState: AppState = {
   cars: initialCars,
   posProducts: initialPosProducts,
   dailySales: initialDailySales,
-  saasProducts: saasProducts,
+  saasProducts: initialSaaSProducts,
   stockItems: initialStockItems,
   pricing: initialPricing,
   stages: initialStages,

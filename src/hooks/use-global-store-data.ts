@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useContext, useSyncExternalStore } from 'react';
@@ -38,6 +37,8 @@ import type { Investor } from '@/lib/investors.schema';
 import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 import type { StockItem } from '@/lib/stock-items.schema';
 import type { Property } from '@/lib/properties.schema';
+import type { SaasCategory } from '@/lib/saas-products.schema';
+import type { RentalAgency } from '@/lib/rental-agencies';
 
 
 // Centralized function to access the store and its setters
@@ -203,10 +204,22 @@ export const useCarsData = () => {
     return { cars, setCars, isClient };
 }
 
+export const useRentalAgenciesData = () => {
+    const [rentalAgencies, setStore, isClient] = useStore((s) => s.rentalAgencies);
+    const setRentalAgencies = (updater: (prev: AppState['rentalAgencies']) => AppState['rentalAgencies']) => setStore((state) => ({ ...state, rentalAgencies: updater(state.rentalAgencies) }));
+    return { rentalAgencies, setRentalAgencies, isClient };
+}
+
 export const useGiftCardsData = () => {
     const [giftCards, setStore, isClient] = useStore((s) => s.giftCards);
     const setGiftCards = (updater: (prev: AppState['giftCards']) => AppState['giftCards']) => setStore((state) => ({ ...state, giftCards: updater(state.giftCards) }));
     return { giftCards, setGiftCards, isClient };
+}
+
+export const useStudentsData = () => {
+    const [students, setStore, isClient] = useStore((s) => s.students);
+    const setStudents = (updater: (prev: AppState['students']) => AppState['students']) => setStore((state) => ({ ...state, students: updater(state.students) }));
+    return { students, setStudents, isClient };
 }
 
 export const useMembersData = () => {
@@ -285,4 +298,16 @@ export const useKnowledgeData = () => {
     const [knowledgeBase, setStore, isClient] = useStore((s) => s.knowledgeBase);
     const setKnowledgeBase = (updater: (prev: AppState['knowledgeBase']) => AppState['knowledgeBase']) => setStore(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
     return { knowledgeBase, setKnowledgeBase, isClient };
+};
+
+export const useCfoData = () => {
+    const [cfoData, setStore, isClient] = useStore((s) => s.cfoData);
+    const setCfoData = (updater: (prev: AppState['cfoData']) => AppState['cfoData']) => setStore(state => ({ ...state, cfoData: updater(state.cfoData) }));
+    return { cfoData, setCfoData, isClient };
+};
+
+export const useSaaSProductsData = () => {
+    const [saasProducts, setStore, isClient] = useStore((s) => s.saasProducts);
+    const setSaaSProducts = (updater: (prev: AppState['saasProducts']) => AppState['saasProducts']) => setStore(state => ({ ...state, saasProducts: updater(state.saasProducts) }));
+    return { saasProducts, setSaaSProducts, isClient };
 };

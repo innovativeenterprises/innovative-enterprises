@@ -1,15 +1,9 @@
+'use client';
 
 import StudentRecordsClientPage from './client-page';
-import { getStudents } from '@/lib/firestore';
-import type { Metadata } from 'next';
+import { useStudentsData } from '@/hooks/use-global-store-data';
 
-export const metadata: Metadata = {
-  title: "Student Record Management | EduFlow Suite",
-  description: "A central database for managing all student profiles and academic records.",
-};
-
-
-export default async function StudentRecordsPage() {
-    const students = await getStudents();
+export default function StudentRecordsPage() {
+    const { students, isClient } = useStudentsData();
     return <StudentRecordsClientPage initialStudents={students} />;
 }

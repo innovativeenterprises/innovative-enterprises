@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -25,17 +23,10 @@ import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
 import { useBeautyData } from '@/hooks/use-global-store-data';
 
-export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
+export default function AgencyDashboardPage() {
     const { agencies, services, appointments, setAgencies, setServices, setAppointments, isClient } = useBeautyData();
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const { toast } = useToast();
-
-    useEffect(() => {
-        setAgencies(() => initialAgencies);
-        setServices(() => initialServices);
-        setAppointments(() => initialAppointments);
-    }, [initialAgencies, initialServices, initialAppointments, setAgencies, setServices, setAppointments]);
-
 
      useEffect(() => {
         if (agencies.length > 0 && !selectedAgencyId) {

@@ -1,9 +1,8 @@
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
 import { Car, Search, ArrowRight } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +12,7 @@ import Link from 'next/link';
 import type { Car as CarType } from '@/lib/cars.schema';
 import type { RentalAgency } from '@/lib/rental-agencies';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useCarsData, useRentalAgenciesData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: string) => {
     switch (status) {
@@ -22,27 +22,36 @@ const getStatusBadge = (status: string) => {
     }
 };
 
-export default function DriveSyncClientPage({ initialCars, initialAgencies }: { initialCars: CarType[], initialAgencies: RentalAgency[] }) {
-    const [cars, setCars] = useState(initialCars);
+export default function DriveSyncAiPage() {
+    const { cars, isClient: isCarsClient } = useCarsData();
+    const { rentalAgencies, isClient: isAgenciesClient } = useRentalAgenciesData();
     const [searchTerm, setSearchTerm] = useState('');
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const isClient = isCarsClient && isAgenciesClient;
     
     // In a real app, you'd have a user session to determine the agency.
     // For this prototype, we'll just assume we're managing 'agency_1'.
-    const agency = initialAgencies[0];
+    const agency = isClient ? rentalAgencies[0] : undefined;
     
     const filteredCars = useMemo(() => {
+        if (!isClient || !agency) return [];
         const agencyCars = cars.filter(c => c.rentalAgencyId === agency.id);
         if (!searchTerm) return agencyCars;
         return agencyCars.filter(car => 
             car.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
             car.model.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [cars, searchTerm, agency]);
+    }, [cars, searchTerm, agency, isClient]);
+
+    if (!isClient || !agency) {
+        return (
+            <div className="bg-background min-h-screen">
+                 <div className="container mx-auto px-4 py-16">
+                     <Skeleton className="h-48 w-full max-w-4xl mx-auto" />
+                     <Skeleton className="h-96 w-full max-w-6xl mx-auto mt-12" />
+                 </div>
+            </div>
+        )
+    }
 
     return (
         <div className="bg-background min-h-screen">
