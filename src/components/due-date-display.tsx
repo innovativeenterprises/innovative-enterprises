@@ -10,25 +10,31 @@ export const DueDateDisplay = ({
   date,
   className,
   prefix = "Due:",
+  warnDays = 7,
+  errorDays = 0,
 }: {
   date?: string;
   className?: string;
   prefix?: string;
+  warnDays?: number;
+  errorDays?: number;
 }) => {
   const [displayState, setDisplayState] = useState<{
     isClient: boolean;
     formattedDate: string | null;
     daysRemaining: number | null;
+    status: 'normal' | 'warn' | 'error';
   }>({
     isClient: false,
     formattedDate: null,
     daysRemaining: null,
+    status: 'normal',
   });
 
   useEffect(() => {
     // This effect runs only on the client, after hydration, preventing mismatch
     if (!date) {
-      setDisplayState({ isClient: true, formattedDate: `${prefix} N/A`, daysRemaining: null });
+      setDisplayState({ isClient: true, formattedDate: `${prefix} N/A`, daysRemaining: null, status: 'normal' });
       return;
     }
     
@@ -44,16 +50,24 @@ export const DueDateDisplay = ({
         const diffDays = differenceInCalendarDays(dueDate, today);
         const formatted = format(dueDate, "PPP");
         
+        let status: 'normal' | 'warn' | 'error' = 'normal';
+        if (diffDays <= errorDays) {
+            status = 'error';
+        } else if (diffDays <= warnDays) {
+            status = 'warn';
+        }
+
         setDisplayState({
             isClient: true,
             formattedDate: `${prefix} ${formatted}`,
             daysRemaining: diffDays,
+            status,
         });
 
     } catch (e) {
-       setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null });
+       setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null, status: 'error' });
     }
-  }, [date, prefix]);
+  }, [date, prefix, warnDays, errorDays]);
 
   // On the server and during initial client render, show a skeleton loader.
   if (!displayState.isClient) {
@@ -66,7 +80,10 @@ export const DueDateDisplay = ({
       {displayState.formattedDate}
       {displayState.daysRemaining !== null &&
         (displayState.daysRemaining >= 0 ? (
-          <span className={cn('font-medium', displayState.daysRemaining < 7 && 'text-destructive')}>
+          <span className={cn('font-medium', {
+              'text-yellow-600 dark:text-yellow-400': displayState.status === 'warn',
+              'text-destructive': displayState.status === 'error',
+          })}>
             {' '}
             ({displayState.daysRemaining} days left)
           </span>
