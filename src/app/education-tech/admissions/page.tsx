@@ -82,6 +82,9 @@ export default function AdmissionsPage() {
             if (result.personalDetails?.nationality) {
                 form.setValue('nationality', result.personalDetails.nationality);
             }
+            if (result.professionalSummary) {
+                form.setValue('personalStatement', result.professionalSummary);
+            }
 
             toast({ title: "Analysis Complete", description: "Applicant details have been pre-filled from the document." });
         } catch (error) {
@@ -158,7 +161,7 @@ export default function AdmissionsPage() {
                                                             Analyze & Pre-fill
                                                         </Button>
                                                     </div>
-                                                     <FormDescription className="text-xs">Upload an ID card or Passport. This document is NOT saved.</FormDescription>
+                                                     <FormDescription className="text-xs">Upload an ID card, Passport, or CV. This document is NOT saved.</FormDescription>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
