@@ -12,42 +12,15 @@ import type { AppSettings, WhatsAppSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Edit, Upload, Copy, Save, MessageSquare } from "lucide-react";
+import { Copy, Save, MessageSquare } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import Image from "next/image";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettingsData } from "@/hooks/use-global-store-data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { fileToDataURI } from '@/lib/utils';
-import CostSettingsTable from "../operations/cost-settings-table";
-import PricingTable from "../pricing-table";
-import { initialCostSettings } from "@/lib/cost-settings";
-import { initialPricing } from "@/lib/pricing";
-
-const SanadPricingSchema = z.object({
-  registrationFee: z.coerce.number().min(0),
-  monthlyFee: z.coerce.number().min(0),
-  yearlyFee: z.coerce.number().min(0),
-  lifetimeFee: z.coerce.number().min(0),
-  firstTimeDiscountPercentage: z.coerce.number().min(0).max(1),
-});
-
-const LegalPricingSchema = z.object({
-  b2cFee: z.coerce.number().min(0),
-  b2bFee: z.coerce.number().min(0),
-  b2gFee: z.coerce.number().min(0),
-});
-
-const BrandingSchema = z.object({
-  headerImageFile: z.any().optional(),
-  footerImageFile: z.any().optional(),
-});
-type BrandingValues = z.infer<typeof BrandingSchema>;
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 
 
 const WhatsAppSettingsSchema = z.object({
@@ -56,206 +29,6 @@ const WhatsAppSettingsSchema = z.object({
     accessToken: z.string().describe("This is for display only and should be securely stored."),
 });
 type WhatsAppSettingsValues = z.infer<typeof WhatsAppSettingsSchema>;
-
-const EditBrandingDialog = ({
-    settings,
-    onSave,
-}: {
-    settings: AppSettings,
-    onSave: (headerUri?: string, footerUri?: string) => void,
-}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [headerPreview, setHeaderPreview] = useState(settings.headerImageUrl);
-    const [footerPreview, setFooterPreview] = useState(settings.footerImageUrl);
-
-    const form = useForm<BrandingValues>({
-        resolver: zodResolver(BrandingSchema),
-        defaultValues: {},
-    });
-
-    useEffect(() => {
-        if(isOpen) {
-            setHeaderPreview(settings.headerImageUrl);
-            setFooterPreview(settings.footerImageUrl);
-            form.reset();
-        }
-    }, [settings, isOpen, form]);
-
-    const onSubmit: SubmitHandler<BrandingValues> = async (data) => {
-        let headerUri = settings.headerImageUrl;
-        if (data.headerImageFile && data.headerImageFile[0]) {
-            headerUri = await fileToDataURI(data.headerImageFile[0]);
-        }
-
-        let footerUri = settings.footerImageUrl;
-        if (data.footerImageFile && data.footerImageFile[0]) {
-            footerUri = await fileToDataURI(data.footerImageFile[0]);
-        }
-
-        onSave(headerUri, footerUri);
-        setIsOpen(false);
-    };
-
-    return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Branding</Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Edit Document Branding</DialogTitle>
-                    <DialogDescription>
-                        Upload a header and footer image for generated PDF documents.
-                    </DialogDescription>
-                </DialogHeader>
-                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField control={form.control} name="headerImageFile" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Header Image</FormLabel>
-                                <FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
-                                {headerPreview && <Image src={headerPreview} alt="Header Preview" width={200} height={50} className="object-contain border rounded-md p-2 mt-2" />}
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                         <FormField control={form.control} name="footerImageFile" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Footer Image</FormLabel>
-                                <FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl>
-                                {footerPreview && <Image src={footerPreview} alt="Footer Preview" width={200} height={50} className="object-contain border rounded-md p-2 mt-2" />}
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Save Branding</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
-    )
-}
-
-
-const EditSanadPricingDialog = ({
-    settings,
-    onSave,
-}: {
-    settings: AppSettings,
-    onSave: (values: z.infer<typeof SanadPricingSchema>) => void,
-}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<z.infer<typeof SanadPricingSchema>>({
-        resolver: zodResolver(SanadPricingSchema),
-        defaultValues: settings.sanadOffice,
-    });
-     useEffect(() => {
-        if(isOpen) form.reset(settings.sanadOffice);
-    }, [settings, form, isOpen]);
-
-    const onSubmit: SubmitHandler<z.infer<typeof SanadPricingSchema>> = (data) => {
-        onSave(data);
-        setIsOpen(false);
-    };
-
-    return (
-         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Pricing</Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Edit Sanad Hub Pricing</DialogTitle>
-                    <DialogDescription>
-                        Update the subscription fees for new Sanad Office registrations.
-                    </DialogDescription>
-                </DialogHeader>
-                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField control={form.control} name="registrationFee" render={({ field }) => (
-                            <FormItem><FormLabel>One-time Registration Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormField control={form.control} name="monthlyFee" render={({ field }) => (
-                                <FormItem><FormLabel>Monthly Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                             <FormField control={form.control} name="yearlyFee" render={({ field }) => (
-                                <FormItem><FormLabel>Yearly Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                        </div>
-                         <FormField control={form.control} name="lifetimeFee" render={({ field }) => (
-                            <FormItem><FormLabel>Lifetime Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <FormField control={form.control} name="firstTimeDiscountPercentage" render={({ field }) => (
-                            <FormItem><FormLabel>First Time Discount (%)</FormLabel><FormControl><Input type="number" step="0.01" min="0" max="1" {...field} /></FormControl><FormMessage /><FormDescription>Enter as a decimal (e.g., 0.6 for 60%).</FormDescription></FormItem>
-                        )} />
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Save Pricing</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
-    )
-}
-
-const EditLegalPricingDialog = ({
-    settings,
-    onSave,
-}: {
-    settings: AppSettings,
-    onSave: (values: z.infer<typeof LegalPricingSchema>) => void,
-}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<z.infer<typeof LegalPricingSchema>>({
-        resolver: zodResolver(LegalPricingSchema),
-        defaultValues: settings.legalAgentPricing,
-    });
-     useEffect(() => {
-        if(isOpen) form.reset(settings.legalAgentPricing);
-    }, [settings, form, isOpen]);
-
-    const onSubmit: SubmitHandler<z.infer<typeof LegalPricingSchema>> = (data) => {
-        onSave(data);
-        setIsOpen(false);
-    };
-
-    return (
-         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Fees</Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Edit Legal Assistant Fees</DialogTitle>
-                    <DialogDescription>
-                        Update the analysis fees for each contract type.
-                    </DialogDescription>
-                </DialogHeader>
-                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField control={form.control} name="b2cFee" render={({ field }) => (
-                            <FormItem><FormLabel>B2C (Business-to-Consumer) Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                         <FormField control={form.control} name="b2bFee" render={({ field }) => (
-                            <FormItem><FormLabel>B2B (Business-to-Business) Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                         <FormField control={form.control} name="b2gFee" render={({ field }) => (
-                            <FormItem><FormLabel>B2G (Business-to-Government) Fee (OMR)</FormLabel><FormControl><Input type="number" step="1" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Save Fees</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
-    )
-}
 
 const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onSave: (values: WhatsAppSettings) => void }) => {
     const { toast } = useToast();
@@ -535,158 +308,6 @@ const GeneralSettings = () => {
     );
 };
 
-const PricingAndBranding = () => {
-    const { settings, setSettings, isClient } = useSettingsData();
-    const { toast } = useToast();
-
-    const handleSaveBranding = (headerUri?: string, footerUri?: string) => {
-        setSettings(prev => ({
-            ...prev,
-            headerImageUrl: headerUri,
-            footerImageUrl: footerUri,
-        }));
-        toast({ title: "Document branding updated successfully." });
-    };
-
-    const handleSaveSanadPricing = (values: z.infer<typeof SanadPricingSchema>) => {
-        setSettings(prev => ({
-            ...prev,
-            sanadOffice: { ...values }
-        }));
-        toast({ title: "Sanad Hub pricing updated successfully." });
-    }
-    
-    const handleSaveLegalPricing = (values: z.infer<typeof LegalPricingSchema>) => {
-        setSettings(prev => ({
-            ...prev,
-            legalAgentPricing: { ...values }
-        }));
-        toast({ title: "Legal Assistant fees updated successfully." });
-    }
-
-    return (
-        <div className="space-y-8">
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>Document Branding</CardTitle>
-                        <CardDescription>Manage the header and footer for generated PDFs.</CardDescription>
-                    </div>
-                    {isClient && <EditBrandingDialog settings={settings} onSave={handleSaveBranding} />}
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <Label>Header Image</Label>
-                            <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
-                                {settings.headerImageUrl ? <Image src={settings.headerImageUrl} alt="Header Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No header image set</p>}
-                            </div>
-                        </div>
-                        <div>
-                            <Label>Footer Image</Label>
-                            <div className="mt-2 p-4 border rounded-md min-h-[100px] flex items-center justify-center bg-muted/50">
-                                {settings.footerImageUrl ? <Image src={settings.footerImageUrl} alt="Footer Preview" width={240} height={80} className="object-contain" /> : <p className="text-sm text-muted-foreground">No footer image set</p>}
-                            </div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>AI Legal Assistant Fees</CardTitle>
-                        <CardDescription>Manage the fees for contract analysis.</CardDescription>
-                    </div>
-                    {isClient && <EditLegalPricingDialog settings={settings} onSave={handleSaveLegalPricing} />}
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Contract Type</TableHead>
-                                <TableHead className="text-right">Analysis Fee (OMR)</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {!isClient ? (
-                                <TableRow>
-                                    <TableCell colSpan={2}><Skeleton className="h-10 w-full" /></TableCell>
-                                </TableRow>
-                            ) : (
-                            <>
-                                <TableRow>
-                                    <TableCell>B2C (Business-to-Consumer)</TableCell>
-                                    <TableCell className="text-right">{settings.legalAgentPricing.b2cFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>B2B (Business-to-Business)</TableCell>
-                                    <TableCell className="text-right">{settings.legalAgentPricing.b2bFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>B2G (Business-to-Government)</TableCell>
-                                    <TableCell className="text-right">{settings.legalAgentPricing.b2gFee.toFixed(2)}</TableCell>
-                                </TableRow>
-                            </>
-                            )}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>Sanad Hub Subscription Pricing</CardTitle>
-                        <CardDescription>Manage the fees for Sanad Office registrations.</CardDescription>
-                    </div>
-                    {isClient && <EditSanadPricingDialog settings={settings} onSave={handleSaveSanadPricing} />}
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Fee Type</TableHead>
-                                <TableHead className="text-right">Amount (OMR)</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {!isClient ? (
-                                 <TableRow>
-                                    <TableCell colSpan={2}><Skeleton className="h-20 w-full" /></TableCell>
-                                </TableRow>
-                            ) : (
-                                <>
-                                    <TableRow>
-                                        <TableCell>One-time Registration Fee</TableCell>
-                                        <TableCell className="text-right">{settings.sanadOffice.registrationFee.toFixed(2)}</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Monthly Subscription Fee</TableCell>
-                                        <TableCell className="text-right">{settings.sanadOffice.monthlyFee.toFixed(2)}</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Yearly Subscription Fee</TableCell>
-                                        <TableCell className="text-right">{settings.sanadOffice.yearlyFee.toFixed(2)}</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Lifetime Subscription Fee</TableCell>
-                                        <TableCell className="text-right">{settings.sanadOffice.lifetimeFee.toFixed(2)}</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>First-time Discount</TableCell>
-                                        <TableCell className="text-right">{(settings.sanadOffice.firstTimeDiscountPercentage * 100).toFixed(0)}%</TableCell>
-                                    </TableRow>
-                                </>
-                            )}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
-    )
-}
-
 
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
@@ -705,23 +326,15 @@ export default function AdminSettingsPage() {
             </p>
         </div>
          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="general">General & Layout</TabsTrigger>
                 <TabsTrigger value="integrations">Integrations</TabsTrigger>
-                <TabsTrigger value="costing">BoQ & Pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="general" className="mt-6">
                 <GeneralSettings />
             </TabsContent>
             <TabsContent value="integrations" className="mt-6">
                 {isClient ? <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} /> : <Skeleton className="h-96 w-full"/>}
-            </TabsContent>
-            <TabsContent value="costing" className="mt-6">
-                <div className="space-y-8">
-                    <CostSettingsTable initialCostSettings={initialCostSettings} />
-                    <PricingTable pricing={initialPricing} />
-                    <PricingAndBranding />
-                </div>
             </TabsContent>
         </Tabs>
     </div>

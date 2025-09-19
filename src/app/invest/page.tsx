@@ -9,6 +9,8 @@ import { getProducts } from "@/lib/firestore";
 import type { Product } from "@/lib/products.schema";
 import Link from "next/link";
 import type { Metadata } from 'next';
+import InvestorTable from "../admin/investor-table";
+import { getInvestors } from "@/lib/firestore";
 
 export const metadata: Metadata = {
   title: "Invest With Us | Innovative Enterprises",
@@ -64,7 +66,10 @@ const ProjectCard = ({ product }: { product: Product }) => {
 }
 
 export default async function InvestPage() {
-  const allProducts = await getProducts();
+  const [allProducts, initialInvestors] = await Promise.all([
+      getProducts(),
+      getInvestors(),
+  ]);
   const liveProducts = allProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
   const devProducts = allProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
   const futureProducts = allProducts.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
@@ -100,6 +105,11 @@ export default async function InvestPage() {
                  </div>
             </div>
             
+             <div>
+                <h2 className="text-3xl font-bold text-center text-primary mb-10">Our Network of Investors & Funders</h2>
+                <InvestorTable initialInvestors={initialInvestors} />
+            </div>
+
             {liveProducts.length > 0 && (
                 <div>
                     <h2 className="text-3xl font-bold text-center text-primary mb-10 flex items-center justify-center gap-3">

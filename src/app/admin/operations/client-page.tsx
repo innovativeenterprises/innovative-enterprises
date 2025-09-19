@@ -14,13 +14,18 @@ import CostSettingsTable from "./cost-settings-table";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PricingTable from "../pricing-table";
+import type { Pricing } from "@/lib/pricing.schema";
+import { PricingAndBranding } from "../settings/pricing-branding";
 
 export default function AdminOperationsClientPage({ 
     initialCostSettings,
     initialKnowledgeBase,
+    initialPricing,
 }: { 
     initialCostSettings: CostRate[],
     initialKnowledgeBase: KnowledgeDocument[],
+    initialPricing: Pricing[],
 }) {
 
   const internalTools = [
@@ -41,10 +46,11 @@ export default function AdminOperationsClientPage({
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-3">
+             <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
                 <TabsTrigger value="costing">Market Rates</TabsTrigger>
+                <TabsTrigger value="pricing">Pricing & Branding</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />
@@ -72,6 +78,10 @@ export default function AdminOperationsClientPage({
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
                 <CostSettingsTable initialCostSettings={initialCostSettings} />
+            </TabsContent>
+            <TabsContent value="pricing" className="mt-6 space-y-8">
+                <PricingAndBranding />
+                <PricingTable pricing={initialPricing} />
             </TabsContent>
         </Tabs>
     </div>

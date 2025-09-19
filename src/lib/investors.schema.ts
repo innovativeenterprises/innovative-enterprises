@@ -2,7 +2,7 @@
 import { z } from 'zod';
 
 export const InvestorSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   name: z.string(),
   type: z.enum(['Investor', 'Funder']),
   subType: z.enum(['Personal/Private', 'Angel', 'Institute/Government', 'VC Fund']),

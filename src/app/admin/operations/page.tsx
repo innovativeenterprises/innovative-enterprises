@@ -1,6 +1,6 @@
 
 import AdminOperationsClientPage from "./client-page";
-import { getKnowledgeBase, getCostSettings } from "@/lib/firestore";
+import { getKnowledgeBase, getCostSettings, getPricing } from "@/lib/firestore";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,13 +9,15 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminOperationsPage() {
-    const [costSettings, knowledgeBase] = await Promise.all([
+    const [costSettings, knowledgeBase, pricing] = await Promise.all([
         getCostSettings(),
         getKnowledgeBase(),
+        getPricing(),
     ]);
 
     return <AdminOperationsClientPage 
         initialCostSettings={costSettings} 
         initialKnowledgeBase={knowledgeBase}
+        initialPricing={pricing}
     />;
 }
