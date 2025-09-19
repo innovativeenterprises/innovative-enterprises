@@ -1,7 +1,9 @@
 'use client';
 
 import HadeeyaAdminPage from "./client-page";
+import { useGiftCardsData } from "@/hooks/use-global-store-data";
 
 export default function HadeeyaPage() {
-    return <HadeeyaAdminPage />;
+    const { giftCards } = useGiftCardsData();
+    return <HadeeyaAdminPage initialGiftCards={giftCards} />;
 }
