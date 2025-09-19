@@ -11,13 +11,11 @@ export const DueDateDisplay = ({
   className,
   prefix = "Due:",
   warnDays = 7,
-  errorDays = 0,
 }: {
   date?: string;
   className?: string;
   prefix?: string;
   warnDays?: number;
-  errorDays?: number;
 }) => {
   const [displayState, setDisplayState] = useState<{
     isClient: boolean;
@@ -51,7 +49,7 @@ export const DueDateDisplay = ({
         const formatted = format(dueDate, "PPP");
         
         let status: 'normal' | 'warn' | 'error' = 'normal';
-        if (diffDays <= errorDays) {
+        if (diffDays <= 0) {
             status = 'error';
         } else if (diffDays <= warnDays) {
             status = 'warn';
@@ -67,7 +65,7 @@ export const DueDateDisplay = ({
     } catch (e) {
        setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null, status: 'error' });
     }
-  }, [date, prefix, warnDays, errorDays]);
+  }, [date, prefix, warnDays]);
 
   // On the server and during initial client render, show a skeleton loader.
   if (!displayState.isClient) {

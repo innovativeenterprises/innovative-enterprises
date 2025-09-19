@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -27,7 +28,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
 import { DueDateDisplay } from "@/components/due-date-display";
-import { useProvidersData } from "@/hooks/use-global-store-data";
+import { useProvidersData } from '@/hooks/use-global-store-data';
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -265,7 +266,7 @@ export default function ProviderTable() {
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell>
-                                    {p.subscriptionExpiry && <DueDateDisplay date={new Date(p.subscriptionExpiry).toISOString()} prefix="Expires:" warnDays={30} />}
+                                    {p.subscriptionExpiry && <DueDateDisplay date={new Date(p.subscriptionExpiry).toISOString()} prefix="Expires:" />}
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
