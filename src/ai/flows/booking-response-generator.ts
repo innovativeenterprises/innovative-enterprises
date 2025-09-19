@@ -5,17 +5,7 @@
  * @fileOverview An AI agent that generates a response to a booking request.
  */
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
-
-const BookingResponseInputSchema = z.object({
-  listingTitle: z.string(),
-  clientName: z.string(),
-  clientMessage: z.string().optional(),
-});
-
-const BookingResponseOutputSchema = z.object({
-  response: z.string().describe("A professional and friendly response to the client."),
-});
+import { BookingResponseInputSchema, BookingResponseOutputSchema } from './booking-response-generator.schema';
 
 const prompt = ai.definePrompt({
   name: 'bookingResponsePrompt',
@@ -39,7 +29,7 @@ Your task is to draft a polite and helpful response to a client's booking inquir
 
 Dear {{{clientName}}},
 
-Thank you for your interest in booking the "{{{listingTitle}}" space! 
+Thank you for your interest in booking the "{{{listingTitle}}}" space! 
 
 We've received your message and are currently confirming its availability for your requested dates. We're excited about the possibility of hosting your pop-up.
 
@@ -55,7 +45,7 @@ Draft a suitable response based on these instructions.
 
 export const generateBookingResponse = ai.defineFlow(
   {
-    name: 'generateBookingDescriptionFlow',
+    name: 'generateListingDescriptionFlow',
     inputSchema: BookingResponseInputSchema,
     outputSchema: BookingResponseOutputSchema,
   },

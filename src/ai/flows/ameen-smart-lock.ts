@@ -9,17 +9,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
-
-const SmartLockInputSchema = z.object({
-  action: z.enum(['lock', 'unlock', 'status']),
-  deviceId: z.string().describe("The unique ID of the smart lock device."),
-});
-
-const SmartLockOutputSchema = z.object({
-  status: z.enum(['locked', 'unlocked', 'jammed', 'unknown']),
-  message: z.string().describe("A confirmation message for the user."),
-});
+import { SmartLockInputSchema, SmartLockOutputSchema } from './ameen-smart-lock.schema';
 
 // A simple in-memory representation of our smart lock's state.
 // In a real app, this would be a database or a direct API call to the device.

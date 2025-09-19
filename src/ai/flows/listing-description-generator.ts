@@ -6,17 +6,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
-
-const ListingDescriptionInputSchema = z.object({
-  title: z.string(),
-  location: z.string(),
-  tags: z.string().describe("A comma-separated string of tags."),
-});
-
-const ListingDescriptionOutputSchema = z.object({
-  description: z.string().describe("The generated marketing description for the listing."),
-});
+import { ListingDescriptionInputSchema, ListingDescriptionOutputSchema } from './listing-description-generator.schema';
 
 const prompt = ai.definePrompt({
   name: 'listingDescriptionPrompt',

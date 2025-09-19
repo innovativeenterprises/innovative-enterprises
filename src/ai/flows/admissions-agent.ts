@@ -6,35 +6,13 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
 import crypto from 'crypto';
-
-const AcademicHistorySchema = z.object({
-  schoolName: z.string(),
-  qualification: z.string(),
-  grade: z.string(),
-});
-
-export const AdmissionsAgentInputSchema = z.object({
-  fullName: z.string(),
-  dateOfBirth: z.string(),
-  nationality: z.string(),
-  programOfInterest: z.string(),
-  academicHistory: z.array(AcademicHistorySchema),
-  personalStatement: z.string(),
-  transcriptUri: z.string().optional(),
-});
-export type AdmissionsAgentInput = z.infer<typeof AdmissionsAgentInputSchema>;
-
-export const AdmissionsAgentOutputSchema = z.object({
-  applicationId: z.string().describe('A unique identifier for the application.'),
-  readinessScore: z.number().int().min(0).max(100).describe('An overall readiness score from 0-100.'),
-  summary: z.string().describe('A concise one-paragraph summary of the applicant and their suitability.'),
-  keyStrengths: z.array(z.string()).describe('A list of key strengths.'),
-  areasForReview: z.array(z.string()).describe('A list of areas that require further review.'),
-  recommendedNextStep: z.enum(['Interview', 'Conditional Offer', 'Further Review', 'Reject']),
-});
-export type AdmissionsAgentOutput = z.infer<typeof AdmissionsAgentOutputSchema>;
+import {
+    AdmissionsAgentInputSchema,
+    type AdmissionsAgentInput,
+    AdmissionsAgentOutputSchema,
+    type AdmissionsAgentOutput,
+} from './admissions-agent.schema';
 
 export async function analyzeApplication(input: AdmissionsAgentInput): Promise<AdmissionsAgentOutput> {
   return admissionsAgentFlow(input);
@@ -42,7 +20,7 @@ export async function analyzeApplication(input: AdmissionsAgentInput): Promise<A
 
 const prompt = ai.definePrompt({
   name: 'admissionsAgentPrompt',
-  input: { schema: AdmissionsAgentInputSchema.extend({ generatedId: z.string() }) },
+  input: { schema: AdmissionsAgentInputSchema.extend({ generatedId: ai.defineSchema('generatedId', z => z.string()) }) },
   output: { schema: AdmissionsAgentOutputSchema },
   prompt: `You are "Admito," an expert AI admissions officer for a prestigious university. Your task is to conduct a preliminary analysis of a student's application to provide a structured summary for the human admissions committee.
 
