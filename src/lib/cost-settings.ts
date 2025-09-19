@@ -3,6 +3,13 @@ import type { CostRate } from './cost-settings.schema';
 
 export const initialCostSettings: CostRate[] = [
   {
+    id: 'cost_fuel_rate',
+    name: 'Fuel Rate',
+    category: 'Travel',
+    unit: 'per km',
+    rate: 0.04,
+  },
+  {
     id: 'cost_concrete_ready_mix_30',
     name: 'Ready-mix Concrete 30N/mm2',
     category: 'Material',

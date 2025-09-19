@@ -20,7 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const CostSettingSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  category: z.enum(['Material', 'Labor', 'Equipment']),
+  category: z.enum(['Material', 'Labor', 'Equipment', 'Travel']),
   unit: z.string().min(1, "Unit is required"),
   rate: z.coerce.number().min(0, "Rate must be a positive number"),
 });
@@ -74,12 +74,13 @@ const AddEditCostDialog = ({
                                         <SelectItem value="Material">Material</SelectItem>
                                         <SelectItem value="Labor">Labor</SelectItem>
                                         <SelectItem value="Equipment">Equipment</SelectItem>
+                                        <SelectItem value="Travel">Travel</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage /></FormItem>
                             )} />
                              <FormField control={form.control} name="unit" render={({ field }) => (
-                                <FormItem><FormLabel>Unit</FormLabel><FormControl><Input placeholder="e.g., m³, per day" {...field} /></FormControl><FormMessage /></FormItem>
+                                <FormItem><FormLabel>Unit</FormLabel><FormControl><Input placeholder="e.g., m³, per day, per km" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                         </div>
                          <FormField control={form.control} name="rate" render={({ field }) => (
@@ -165,7 +166,7 @@ export default function CostSettingsTable({ initialCostSettings }: { initialCost
                                         <TableCell className="font-medium">{item.name}</TableCell>
                                         <TableCell className="text-muted-foreground">{item.category}</TableCell>
                                         <TableCell>{item.unit}</TableCell>
-                                        <TableCell className="text-right font-mono">{item.rate.toFixed(2)}</TableCell>
+                                        <TableCell className="text-right font-mono">{item.rate.toFixed(3)}</TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
                                                 <AddEditCostDialog item={item} onSave={handleSave}>

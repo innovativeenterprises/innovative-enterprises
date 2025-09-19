@@ -11,6 +11,7 @@ import { sanadServiceGroups } from '@/lib/sanad-services';
 import { OMAN_MINISTRIES, ministryLocations, OMAN_GOVERNORATES } from '@/lib/oman-locations';
 import type { Ministry, Governorate } from '@/lib/oman-locations';
 import { calculateTotalDistance } from '@/lib/oman-locations';
+import { getCostSettings } from '@/lib/firestore';
 
 export const ProTaskAnalysisInputSchema = z.object({
     serviceName: z.string(),
@@ -129,7 +130,6 @@ export const getTravelPlanTool = ai.defineTool(
 );
 
 
-const FUEL_RATE_PER_KM = 0.400; // OMR per KM. This can be moved to admin settings later.
 const SNACKS_ALLOWANCE = 2.000;
 
 export async function analyzeProTask(input: ProTaskAnalysisInput): Promise<ProTaskAnalysisOutput> {
@@ -143,6 +143,10 @@ const proTaskAnalysisFlow = ai.defineFlow(
     outputSchema: ProTaskAnalysisOutputSchema,
   },
   async (input) => {
+
+    const costSettings = await getCostSettings();
+    const fuelRatePerKm = costSettings.find(c => c.name === 'Fuel Rate' && c.category === 'Travel')?.rate || 0.04;
+
 
     // 1. Determine which ministries to visit based on the service name
     const requiredInstitutionsResult = await getRequiredInstitutions({ serviceName: input.serviceName });
@@ -160,7 +164,7 @@ const proTaskAnalysisFlow = ai.defineFlow(
     let fuelAllowance = 0;
 
     if (travelPlan.totalDistanceKm > 0) {
-        fuelAllowance = travelPlan.totalDistanceKm * FUEL_RATE_PER_KM;
+        fuelAllowance = travelPlan.totalDistanceKm * fuelRatePerKm;
     }
     
     // 3. Consolidate allowances and calculate total
