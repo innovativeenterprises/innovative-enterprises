@@ -7,23 +7,25 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Provider } from '@/lib/providers';
+import type { Provider } from '@/lib/providers.schema';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { Progress } from '@/components/ui/progress';
 import { useProvidersData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
-import { initialProviders } from '@/lib/providers';
+import { getProviders } from '@/lib/firestore';
 
 export async function generateStaticParams() {
-  return initialProviders.map((provider) => ({
+  const providers = await getProviders();
+  return providers.map((provider) => ({
     id: provider.id,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const provider = initialProviders.find(p => p.id === params.id);
+  const providers = await getProviders();
+  const provider = providers.find(p => p.id === params.id);
 
   if (!provider) {
     return {
@@ -94,7 +96,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | st
     )
 }
 
-const ProviderDetailClient = ({ provider: initialProvider }: { provider: Provider | undefined }) => {
+const ProviderDetailClient = ({ initialProvider }: { initialProvider: Provider | undefined }) => {
     const { providers } = useProvidersData();
     const params = useParams();
     const provider = providers.find(p => p.id === params.id) || initialProvider;
@@ -137,7 +139,7 @@ const ProviderDetailClient = ({ provider: initialProvider }: { provider: Provide
                         </div>
                         <CardDescription className="text-base">{provider.services}</CardDescription>
                         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-                             <a href={`mailto:${'\'\'\'' + provider.email + '\''\'\''}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                             <a href={`mailto:${provider.email}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
                                 <Mail className="h-4 w-4" /> {provider.email}
                             </a>
                             {provider.portfolio && 
@@ -164,9 +166,10 @@ const ProviderDetailClient = ({ provider: initialProvider }: { provider: Provide
 }
 
 
-export default function ProviderDetailPage({ params }: { params: { id: string } }) {
+export default async function ProviderDetailPage({ params }: { params: { id: string } }) {
     const { id } = params;
-    const provider = initialProviders.find(p => p.id === id);
+    const providers = await getProviders();
+    const provider = providers.find(p => p.id === id);
 
-    return <ProviderDetailClient provider={provider} />;
+    return <ProviderDetailClient initialProvider={provider} />;
 }

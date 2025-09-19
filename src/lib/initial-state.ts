@@ -1,4 +1,5 @@
 
+
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -68,6 +69,8 @@ import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import type { ProjectStage } from './stages';
+import type { Investor } from './investors.schema';
+import { initialInvestors } from './investors';
 
 export interface AppState {
   settings: AppSettings;
@@ -114,6 +117,7 @@ export interface AppState {
   solutions: typeof initialSolutions;
   industries: typeof initialIndustries;
   aiTools: typeof initialAiTools;
+  investors: Investor[];
 };
 
 export const initialState: AppState = {
@@ -161,4 +165,5 @@ export const initialState: AppState = {
   solutions: initialSolutions,
   industries: initialIndustries,
   aiTools: initialAiTools,
+  investors: initialInvestors,
 };

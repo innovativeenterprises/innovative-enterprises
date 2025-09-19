@@ -4,11 +4,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useToast } from "@/hooks/use-toast";
-import type { GiftCard } from "@/lib/gift-cards";
+import type { GiftCard } from "@/lib/gift-cards.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { useGiftCardsData } from "@/hooks/use-global-store-data";
 
 const getStatusBadge = (status: GiftCard['status']) => {
     switch (status) {
@@ -20,12 +20,11 @@ const getStatusBadge = (status: GiftCard['status']) => {
 };
 
 export default function HadeeyaAdminPageClient({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
-    const [giftCards, setGiftCards] = useState<GiftCard[]>(initialGiftCards);
-    const [isClient, setIsClient] = useState(false);
+    const { giftCards, setGiftCards, isClient } = useGiftCardsData();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setGiftCards(() => initialGiftCards);
+    }, [initialGiftCards, setGiftCards]);
 
     return (
         <div className="space-y-8">

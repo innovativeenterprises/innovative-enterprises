@@ -4,31 +4,21 @@
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import type { Investor } from "@/lib/investors";
+import type { Investor } from "@/lib/investors.schema";
+import { InvestorSchema } from "@/lib/investors.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useInvestorsData } from '@/hooks/use-global-store-data';
 
-const InvestorSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  type: z.enum(['Investor', 'Funder']),
-  subType: z.enum(['Personal/Private', 'Angel', 'Institute/Government', 'VC Fund']),
-  profile: z.string().optional(),
-  focusArea: z.string().optional(),
-  country: z.string().optional(),
-  investmentValue: z.coerce.number().optional(),
-  sharePercentage: z.coerce.number().optional(),
-});
 type InvestorValues = z.infer<typeof InvestorSchema>;
 
 const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Investor, onSave: (values: InvestorValues, id?: string) => void, children: React.ReactNode }) => {
@@ -84,13 +74,12 @@ const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Inve
 };
 
 export default function InvestorTable({ initialInvestors }: { initialInvestors: Investor[] }) {
-    const [investors, setInvestors] = useState(initialInvestors);
-    const [isClient, setIsClient] = useState(false);
+    const { investors, setInvestors, isClient } = useInvestorsData();
     const { toast } = useToast();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setInvestors(() => initialInvestors);
+    }, [initialInvestors, setInvestors]);
 
     const handleSave = (values: InvestorValues, id?: string) => {
         const newInvestorData = { ...values, documents: {} };
