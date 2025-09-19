@@ -33,6 +33,8 @@ import type { CommunityEvent } from '@/lib/community-events';
 import type { CommunityFinance } from '@/lib/community-finances';
 import type { CommunityMember } from '@/lib/community-members';
 import type { JobPosting } from '@/lib/alumni-jobs';
+import type { BriefcaseData } from '@/lib/briefcase';
+import type { Pricing } from '@/lib/pricing.schema';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -365,6 +367,66 @@ export const useAlumniJobsData = () => {
     return {
         jobs: useStoreData((s) => s.alumniJobs),
         setAlumniJobs,
+        isClient,
+    };
+};
+
+// Briefcase
+export const useBriefcaseData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setBriefcase = (updater: (prev: AppState['briefcase']) => AppState['briefcase']) => store.set((state) => ({ ...state, briefcase: updater(state.briefcase) }));
+    return {
+        briefcase: useStoreData((s) => s.briefcase),
+        setBriefcase,
+        isClient,
+    };
+};
+
+// Pricing
+export const usePricingData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setPricing = (updater: (prev: AppState['pricing']) => AppState['pricing']) => store.set((state) => ({ ...state, pricing: updater(state.pricing) }));
+    return {
+        pricing: useStoreData((s) => s.pricing),
+        setPricing,
+        isClient,
+    };
+};
+
+// Solutions
+export const useSolutionsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setSolutions = (updater: (prev: AppState['solutions']) => AppState['solutions']) => store.set((state) => ({ ...state, solutions: updater(state.solutions) }));
+    return {
+        solutions: useStoreData((s) => s.solutions),
+        setSolutions,
+        isClient,
+    };
+}
+
+// Industries
+export const useIndustriesData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setIndustries = (updater: (prev: AppState['industries']) => AppState['industries']) => store.set((state) => ({ ...state, industries: updater(state.industries) }));
+    return {
+        industries: useStoreData((s) => s.industries),
+        setIndustries,
+        isClient,
+    };
+}
+
+// AI Tools
+export const useAiToolsData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setAiTools = (updater: (prev: AppState['aiTools']) => AppState['aiTools']) => store.set((state) => ({ ...state, aiTools: updater(state.aiTools) }));
+    return {
+        aiTools: useStoreData((s) => s.aiTools),
+        setAiTools,
         isClient,
     };
 }

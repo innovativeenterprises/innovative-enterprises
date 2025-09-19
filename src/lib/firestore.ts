@@ -1,5 +1,4 @@
 
-
 // This file is a placeholder for your actual Firestore data fetching logic.
 // In a real application, you would use the Firebase SDK to interact with Firestore.
 // For this prototype, we are using a global store to simulate a database.
@@ -68,6 +67,9 @@ export const getSettings = async () => { await delay(50); return store.get().set
 export const getKnowledgeBase = async () => { await delay(50); return store.get().knowledgeBase; };
 export const getApplications = async () => { await delay(50); return store.get().applications; };
 export const getBriefcase = async () => { await delay(50); return store.get().briefcase; };
+export const getSolutions = async () => { await delay(50); return store.get().solutions; };
+export const getIndustries = async () => { await delay(50); return store.get().industries; };
+export const getAiTools = async () => { await delay(50); return store.get().aiTools; };
 
 
 export const getRaahaData = async () => {

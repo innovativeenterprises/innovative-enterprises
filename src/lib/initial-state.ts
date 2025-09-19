@@ -66,6 +66,7 @@ import { saasProducts } from './saas-products';
 import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
+import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import type { ProjectStage } from './stages';
 
 export interface AppState {
@@ -110,6 +111,9 @@ export interface AppState {
   stages: ProjectStage[];
   applications: typeof initialApplications;
   briefcase: BriefcaseData;
+  solutions: typeof initialSolutions;
+  industries: typeof initialIndustries;
+  aiTools: typeof initialAiTools;
 };
 
 export const initialState: AppState = {
@@ -154,4 +158,7 @@ export const initialState: AppState = {
   stages: initialStages,
   applications: initialApplications,
   briefcase: initialBriefcase,
+  solutions: initialSolutions,
+  industries: initialIndustries,
+  aiTools: initialAiTools,
 };
