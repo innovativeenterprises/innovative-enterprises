@@ -98,14 +98,9 @@ const AddEditCostDialog = ({
     );
 };
 
-export default function CostSettingsTable({ initialCostSettings }: { initialCostSettings: CostRate[] }) {
+export default function CostSettingsTable() {
     const { costSettings, setCostSettings, isClient } = useCostSettingsData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setCostSettings(() => initialCostSettings);
-    }, [initialCostSettings, setCostSettings]);
-
 
     const handleSave = (values: CostSettingValues, id?: string) => {
         if (id) {
