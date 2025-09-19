@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, BookUser, BarChart3, XCircle, CheckCircle, Handshake, Briefcase, DollarSign } from "lucide-react";
 import Link from "next/link";
+import { useMembersData, useEventsData, useAlumniJobsData } from "@/hooks/use-global-store-data";
+import type { CommunityMember } from '@/lib/community-members';
+import type { CommunityEvent } from '@/lib/community-events';
+import type { JobPosting } from '@/lib/alumni-jobs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { format } from 'date-fns';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const challenges = [
     { icon: XCircle, text: "Limited marketing knowledge and resources." },
@@ -43,6 +50,11 @@ const platformFeatures = [
 ];
 
 export default function ProfessionalHubClientPage() {
+    const { members, isClient: isMembersClient } = useMembersData();
+    const { events, isClient: isEventsClient } = useEventsData();
+    const { jobs, isClient: isJobsClient } = useAlumniJobsData();
+    const isClient = isMembersClient && isEventsClient && isJobsClient;
+  
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
