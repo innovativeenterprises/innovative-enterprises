@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -10,16 +9,16 @@ import { ThemeProvider } from 'next-themes';
 import Header from './header';
 import Footer from './footer';
 import { usePathname } from 'next/navigation';
+import { initialState } from '@/lib/initial-state';
 
 export default function ClientLayout({
   children,
-  initialData,
 }: {
   children: React.ReactNode;
-  initialData: Partial<AppState>;
 }) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  const initialData = initialState;
 
   return (
     <ThemeProvider
