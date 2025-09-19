@@ -80,7 +80,6 @@ export default function AdminOperationsClientPage({
                 <CostSettingsTable initialCostSettings={initialCostSettings} />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6 space-y-8">
-                <PricingAndBranding />
                 <PricingTable pricing={initialPricing} />
             </TabsContent>
         </Tabs>
