@@ -17,6 +17,7 @@ import type { Client, Testimonial } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useClientsData, useTestimonialsData } from "@/hooks/use-global-store-data";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -111,13 +112,15 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 
 export default function ClientTable({ initialClients, initialTestimonials }: { initialClients: Client[], initialTestimonials: Testimonial[]}) {
     const { toast } = useToast();
-    const [clients, setClients] = useState(initialClients);
-    const [testimonials, setTestimonials] = useState(initialTestimonials);
-    const [isClient, setIsClient] = useState(false);
+    const { clients, setClients, isClient: isClientsClient } = useClientsData();
+    const { testimonials, setTestimonials, isClient: isTestimonialsClient } = useTestimonialsData();
+    const isClient = isClientsClient && isTestimonialsClient;
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setClients(() => initialClients);
+        setTestimonials(() => initialTestimonials);
+    }, [initialClients, initialTestimonials, setClients, setTestimonials]);
+
 
     const handleClientSave = (values: ClientValues, id?: string) => {
         if (id) {

@@ -16,10 +16,6 @@ export default async function ClientTablePage() {
 
     return (
         <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold">Clients & Testimonials</h1>
-                <p className="text-muted-foreground">Manage your client list and public-facing testimonials.</p>
-            </div>
             <ClientTable initialClients={clients} initialTestimonials={testimonials} />
         </div>
     );
