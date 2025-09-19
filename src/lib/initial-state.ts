@@ -73,6 +73,8 @@ import { initialInvestors } from './investors';
 import { initialKnowledgeBase } from './knowledge';
 import { initialCfoData } from './cfo-data';
 import type { KnowledgeDocument } from './knowledge.schema';
+import type { Property } from './properties.schema';
+import { initialProperties } from './properties';
 
 export interface AppState {
   settings: AppSettings;
@@ -122,6 +124,7 @@ export interface AppState {
   investors: Investor[];
   knowledgeBase: KnowledgeDocument[];
   cfoData: typeof initialCfoData;
+  properties: Property[];
 };
 
 export const initialState: AppState = {
@@ -172,4 +175,5 @@ export const initialState: AppState = {
   investors: initialInvestors,
   knowledgeBase: initialKnowledgeBase,
   cfoData: initialCfoData,
+  properties: initialProperties,
 };

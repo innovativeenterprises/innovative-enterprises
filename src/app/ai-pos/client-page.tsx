@@ -10,18 +10,18 @@ import { BrainCircuit } from 'lucide-react';
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { usePosData } from '@/hooks/use-global-store-data';
 
 export default function AiPosClientPage({ products, initialDailySales }: { products: PosProduct[], initialDailySales: DailySales }) {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [dailySales, setDailySales] = useState<DailySales>(initialDailySales);
-    const [isClient, setIsClient] = useState(false);
+    const { dailySales, setDailySales, isClient } = usePosData();
     const { toast } = useToast();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        setDailySales(() => initialDailySales);
+    }, [initialDailySales, setDailySales]);
 
     const handleAddToCart = (product: PosProduct) => {
         setCart(prevCart => {

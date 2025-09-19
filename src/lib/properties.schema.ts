@@ -7,6 +7,7 @@ import { z } from 'zod';
  * data shape used across the application.
  */
 export const PropertySchema = z.object({
+  id: z.string().optional(),
   title: z.string().min(5, "Title is required."),
   listingType: z.enum(['For Sale', 'For Rent']),
   propertyType: z.enum(['Villa', 'Apartment', 'Townhouse', 'Commercial', 'Industrial']),
@@ -21,3 +22,4 @@ export const PropertySchema = z.object({
   imageUrl: z.string().url("A valid image URL is required."),
   aiHint: z.string().optional(),
 });
+export type Property = z.infer<typeof PropertySchema>;

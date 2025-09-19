@@ -1,9 +1,10 @@
 
+
 'use client';
 
 import { useContext, useSyncExternalStore } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import type { CartItem, PosProduct } from '@/lib/pos-data.schema';
+import type { CartItem, PosProduct, DailySales } from '@/lib/pos-data.schema';
 import { initialState, type AppState, type StoreType } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
 import type { SignedLease } from '@/lib/leases';
@@ -84,6 +85,18 @@ export const usePosProductsData = () => {
     return {
         posProducts: useStoreData((s) => s.posProducts),
         setPosProducts,
+        isClient,
+    };
+};
+
+// POS Sales Data
+export const usePosData = () => {
+    const store = useContext(StoreContext)!;
+    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
+    const setDailySales = (updater: (prev: AppState['dailySales']) => AppState['dailySales']) => store.set(state => ({ ...state, dailySales: updater(state.dailySales) }));
+    return {
+        dailySales: useStoreData(s => s.dailySales),
+        setDailySales,
         isClient,
     };
 };
@@ -469,26 +482,14 @@ export const useInvestorsData = () => {
     };
 }
 
-// Knowledge Base
-export const useKnowledgeData = () => {
+// Properties
+export const usePropertiesData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setKnowledgeBase = (updater: (prev: AppState['knowledgeBase']) => AppState['knowledgeBase']) => store.set(state => ({...state, knowledgeBase: updater(state.knowledgeBase)}));
+    const setProperties = (updater: (prev: AppState['properties']) => AppState['properties']) => store.set(state => ({ ...state, properties: updater(state.properties) }));
     return {
-        knowledgeBase: useStoreData(s => s.knowledgeBase),
-        setKnowledgeBase,
-        isClient
+        properties: useStoreData((s) => s.properties),
+        setProperties,
+        isClient,
     };
-}
-
-// Stock Items
-export const useStockItemsData = () => {
-    const store = useContext(StoreContext)!;
-    const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setStockItems = (updater: (prev: AppState['stockItems']) => AppState['stockItems']) => store.set(state => ({...state, stockItems: updater(state.stockItems)}));
-    return {
-        stockItems: useStoreData(s => s.stockItems),
-        setStockItems,
-        isClient
-    };
-}
+};
