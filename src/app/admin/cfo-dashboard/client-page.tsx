@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -9,9 +10,11 @@ import { ShieldAlert } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { DueDateDisplay } from '@/components/due-date-display';
+import { useCfoData } from '@/hooks/use-global-store-data';
 
 // Main Dashboard Component
-export default function CfoDashboardClient({ cfoData }: { cfoData: any }) {
+export default function CfoDashboardClient() {
+  const { cfoData } = useCfoData();
   const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = cfoData;
 
   const getStatusBadge = (status: string) => {

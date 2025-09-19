@@ -1,7 +1,7 @@
 
+
 import CfoDashboardClient from './client-page';
 import type { Metadata } from 'next';
-import { getKpiData, getTransactionData, getUpcomingPayments, getVatPayment, getCashFlowData } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "CFO Dashboard",
@@ -10,20 +10,7 @@ export const metadata: Metadata = {
 
 
 export default async function CfoDashboardPage() {
-    const [kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData] = await Promise.all([
-        getKpiData(),
-        getTransactionData(),
-        getUpcomingPayments(),
-        getVatPayment(),
-        getCashFlowData(),
-    ]);
-
-    const cfoData = {
-        kpiData,
-        transactionData,
-        upcomingPayments,
-        vatPayment,
-        cashFlowData,
-    };
-    return <CfoDashboardClient cfoData={cfoData} />;
+    // Data is now managed client-side by the useCfoData hook.
+    // This server component simply renders the client component.
+    return <CfoDashboardClient />;
 }
