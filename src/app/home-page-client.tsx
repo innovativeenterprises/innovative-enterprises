@@ -18,8 +18,6 @@ interface HomePageClientProps {
 }
 
 export default function HomePageClient({ products, services, clients, testimonials }: HomePageClientProps) {
-  // This component is kept for historical purposes but is no longer the active homepage.
-  // The new homepage is the EcosystemExplorerPage.
   return (
     <>
       <CompanyOverview clients={clients} />

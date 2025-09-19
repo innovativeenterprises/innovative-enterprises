@@ -3,7 +3,7 @@
 
 import { useContext, useSyncExternalStore } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import type { CartItem } from '@/lib/global-store';
+import type { CartItem } from '@/lib/pos-data.schema';
 import { initialState, type AppState, type StoreType } from '@/lib/global-store';
 import { StoreContext } from '@/components/layout/store-provider';
 import type { SignedLease } from '@/lib/leases';
@@ -32,7 +32,7 @@ import type { CommunityEvent } from '@/lib/community-events';
 import type { CommunityFinance } from '@/lib/community-finances';
 import type { CommunityMember } from '@/lib/community-members';
 import type { JobPosting } from '@/lib/alumni-jobs';
-import type { BriefcaseData } from '@/app/briefcase/page';
+import type { BriefcaseData } from '@/lib/briefcase';
 
 
 function useStoreData<T>(selector: (state: AppState) => T): T {
@@ -369,12 +369,11 @@ export const useAlumniJobsData = () => {
     };
 }
 
-
 // Briefcase
 export const useBriefcaseData = () => {
     const store = useContext(StoreContext)!;
     const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
-    const setBriefcase = (updater: (prev: AppState['briefcase']) => AppState['briefcase']) => store.set((state) => ({ ...state, briefcase: updater(state.briefcase) }));
+    const setBriefcase = (updater: (prev: BriefcaseData) => BriefcaseData) => store.set((state) => ({ ...state, briefcase: updater(state.briefcase) }));
     return {
         briefcase: useStoreData((s) => s.briefcase),
         setBriefcase,
