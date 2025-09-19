@@ -1,5 +1,4 @@
 
-
 'use server';
 
 /**
@@ -8,7 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { initialAgentCategories } from '@/lib/agents.schema';
+import { getStaffData } from '@/lib/firestore';
 import {
     ProjectInceptionInput,
     ProjectInceptionInputSchema,
@@ -21,8 +20,6 @@ export async function generateProjectPlan(input: ProjectInceptionInput): Promise
   return projectInceptionFlow(input);
 }
 
-// Flatten the list of all available agents
-const allAgents = initialAgentCategories.flatMap(category => category.agents.map(agent => `'${agent.name}' ('${agent.role}')`));
 
 const prompt = ai.definePrompt({
   name: 'projectInceptionPrompt',
@@ -65,9 +62,14 @@ const projectInceptionFlow = ai.defineFlow(
     outputSchema: ProjectInceptionOutputSchema,
   },
   async (input) => {
+    // Fetch all staff and agent data dynamically
+    const { leadership, staff, agentCategories } = await getStaffData();
+    const allWorkforce = [...leadership, ...staff, ...agentCategories.flatMap(c => c.agents)];
+    const allAgentNames = allWorkforce.map(agent => `'${agent.name}' ('${agent.role}')`);
+
     const { output } = await prompt({
         ...input,
-        allAgents,
+        allAgents: allAgentNames,
     });
     return output!;
   }
