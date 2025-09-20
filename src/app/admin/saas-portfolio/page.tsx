@@ -55,12 +55,11 @@ export default function SaasPortfolioPage() {
   const allCategories = ['All', ...saasProducts.map(c => c.name)];
 
   return (
-    <div className="bg-background min-h-[calc(100vh-8rem)]">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center">
+    <div className="space-y-8">
+      <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-primary">SaaS Portfolio</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Browse the complete portfolio of over 30+ digital products and SaaS platforms developed by Innovative Enterprises, spanning construction, real estate, education, and AI tools.
+            Browse the complete portfolio of all digital products and SaaS platforms.
           </p>
         </div>
         <div className="mt-12">
@@ -117,7 +116,6 @@ export default function SaasPortfolioPage() {
                 </CardContent>
             </Card>
         </div>
-      </div>
     </div>
   );
 }
