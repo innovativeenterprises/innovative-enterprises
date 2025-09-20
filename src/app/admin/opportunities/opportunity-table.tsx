@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities.schema";
 import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
@@ -71,8 +71,10 @@ export default function OpportunityTable({ initialOpportunities }: { initialOppo
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         setOpportunities(initialOpportunities);
     }, [initialOpportunities]);
     
@@ -98,7 +100,7 @@ export default function OpportunityTable({ initialOpportunities }: { initialOppo
                 <Table>
                     <TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Type</TableHead><TableHead>Prize/Budget</TableHead><TableHead>Deadline</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {opportunities.map(opp => (
+                        {!isClient ? <TableRow><TableCell colSpan={6}><Skeleton className="h-10 w-full" /></TableCell></TableRow> : opportunities.map(opp => (
                             <TableRow key={opp.id}>
                                 <TableCell className="font-medium">{opp.title}</TableCell><TableCell>{opp.type}</TableCell><TableCell>{opp.prize}</TableCell><TableCell>{opp.deadline}</TableCell><TableCell>{opp.status}</TableCell>
                                 <TableCell className="text-right">

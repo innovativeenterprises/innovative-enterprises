@@ -52,6 +52,7 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
+let isSeeding: Promise<void> | null = null;
 
 async function seedCollection<T>(collectionName: string, data: T[]) {
     const collectionRef = db.collection(collectionName);
@@ -79,6 +80,10 @@ async function seedSingleDoc<T>(docPath: string, data: T) {
 }
 
 async function seedDatabase() {
+  if (isSeeding) {
+    return isSeeding;
+  }
+  isSeeding = (async () => {
     try {
         await seedCollection('products', initialProducts);
         await seedCollection('storeProducts', initialStoreProducts);
@@ -141,16 +146,18 @@ async function seedDatabase() {
     } catch (error) {
         console.error("Error seeding database:", error);
     }
+  })();
+  return isSeeding;
 }
 
-seedDatabase();
-
 async function getCollection<T>(collectionName: string): Promise<T[]> {
+  await seedDatabase();
   const snapshot = await db.collection(collectionName).get();
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
 }
 
 async function getDoc<T>(docPath: string): Promise<T> {
+    await seedDatabase();
     const snapshot = await db.doc(docPath).get();
     return snapshot.data() as T;
 }
@@ -200,6 +207,8 @@ export const getSolutions = async () => getCollection<any>('solutions');
 export const getIndustries = async () => getCollection<any>('industries');
 export const getAiTools = async () => getCollection<any>('aiTools');
 
+export const getCfoData = async () => getDoc<any>('cfo/dashboard');
+
 export const getStaff = async () => getCollection<any>('staff');
 export const getStaffData = async () => {
     const allStaff = await getStaff();
@@ -224,6 +233,7 @@ export const getStaffData = async () => {
 };
 
 export const getRaahaData = async () => {
+  await seedDatabase();
   return {
     raahaAgencies: await getCollection<any>('raahaAgencies'),
     raahaWorkers: await getCollection<any>('raahaWorkers'),
@@ -231,6 +241,7 @@ export const getRaahaData = async () => {
   }
 }
 export const getBeautyData = async () => {
+    await seedDatabase();
     return {
         beautyCenters: await getCollection<any>('beautyCenters'),
         beautyServices: await getCollection<any>('beautyServices'),
@@ -240,6 +251,7 @@ export const getBeautyData = async () => {
 
 // Server actions to update data
 export async function setFirestoreCollection(collectionName: string, data: any[]) {
+    await seedDatabase();
     const collectionRef = db.collection(collectionName);
     const snapshot = await collectionRef.get();
     const batch = db.batch();

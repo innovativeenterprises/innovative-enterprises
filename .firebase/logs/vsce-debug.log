@@ -345,3 +345,13 @@ I0920 23:16:48.879657   30328 load.go:74] Finished reloading
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0920 23:16:48.949505   30328 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
 [debug] [2025-09-20T23:16:49.510Z] I0920 23:16:49.510028   30328 engine.go:169] [/emulator/studio cb6a] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0920 23:16:49.510028   30328 engine.go:169] [/emulator/studio cb6a] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
+[debug] [2025-09-20T23:17:11.020Z] Running auto auth
+[debug] [2025-09-20T23:17:11.087Z] No OAuth tokens found
+[debug] [2025-09-20T23:17:11.089Z] [Firebase Plugin] User found:  innovativeenterprisesoman@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-09-20T23:17:11.095Z] No OAuth tokens found
+[debug] [2025-09-20T23:17:11.101Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-09-20T23:17:11.702Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-09-20T23:17:11.703Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] [Firebase Plugin] Stopping Data Connect toolkit
+[warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 

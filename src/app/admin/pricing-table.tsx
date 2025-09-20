@@ -13,9 +13,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
-import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
+import { Edit } from "lucide-react";
+
 
 const PricingFormSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -78,19 +78,20 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
+    const [pricing, setPricing] = useState<Pricing[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setPricing(initialPricing);
         setIsClient(true);
-    }, []);
+    }, [initialPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
-        // In a real app, this would be a server action to update the database.
-        // For this prototype, we show a toast.
-        toast({ title: "Action not implemented in prototype." });
+        setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
+        toast({ title: "Price updated successfully." });
     };
     
     const handleOpenDialog = (item: Pricing) => {
@@ -132,7 +133,7 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                                 </TableCell>
                             </TableRow>
                         ) : (
-                             initialPricing.map(item => (
+                             pricing.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.type}</TableCell>
                                     <TableCell className="text-muted-foreground">{item.group}</TableCell>
@@ -149,4 +150,3 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
         </Card>
     );
 }
-

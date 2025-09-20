@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Client } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -61,10 +62,12 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
     const [clients, setClients] = useState<Client[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     
     useEffect(() => {
         setClients(initialClients);
+        setIsClient(true);
     }, [initialClients]);
 
 
@@ -96,21 +99,29 @@ export default function ClientTable({ initialClients }: { initialClients: Client
                     <Table>
                         <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                         <TableBody>
-                            {clients.map(client => (
-                                <TableRow key={client.id}>
-                                    <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
-                                    <TableCell>{client.name}</TableCell>
-                                    <TableCell className="text-right">
-                                        <AddEditClientDialog client={client} onSave={handleClientSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditClientDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
-                                            <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove "{client.name}" from your client list.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleClientDelete(client.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
-                                        </AlertDialog>
+                            {!isClient ? (
+                                <TableRow>
+                                    <TableCell colSpan={3} className="text-center h-24">
+                                        <Skeleton className="h-10 w-full" />
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            ) : (
+                                clients.map(client => (
+                                    <TableRow key={client.id}>
+                                        <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
+                                        <TableCell>{client.name}</TableCell>
+                                        <TableCell className="text-right">
+                                            <AddEditClientDialog client={client} onSave={handleClientSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </AddEditClientDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
+                                                <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove "{client.name}" from your client list.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleClientDelete(client.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                                            </AlertDialog>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>
