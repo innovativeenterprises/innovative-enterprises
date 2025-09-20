@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ShieldCheck, Heart, PenSquare, MessageSquare } from 'lucide-react';
@@ -18,7 +18,7 @@ import {
 import { ChatComponent } from '@/components/chat/chat-component';
 import { wellbeingCheckin } from '@/ai/flows/guardian-ai/wellbeing-checkin';
 import { useSettingsData, useStudentsData } from '@/hooks/use-global-store-data';
-import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
+import { ScholarshipEssayAssistant } from '@/app/education-tech/scholarships/scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -181,4 +181,3 @@ export default function GuardianAiPage() {
     )
 }
 
-    
