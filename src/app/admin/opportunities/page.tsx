@@ -18,10 +18,10 @@ import { useToast } from "@/hooks/use-toast";
 import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities.schema";
 import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Trophy } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOpportunitiesData } from "@/hooks/use-global-store-data";
-
+import WorkOrderForm from "@/app/admin/opportunities/work-order-form";
 
 const AddEditOpportunityDialog = ({ 
     opportunity, 
@@ -142,6 +142,7 @@ export default function AdminOpportunitiesPage() {
                 Manage all open projects, tasks, and competitions available to your partner network.
             </p>
         </div>
+        <WorkOrderForm />
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>

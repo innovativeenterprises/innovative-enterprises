@@ -17,10 +17,10 @@ import { useToast } from "@/hooks/use-toast";
 import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities.schema";
 import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Trophy } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOpportunitiesData } from "@/hooks/use-global-store-data";
-
+import WorkOrderForm from "@/app/admin/opportunities/work-order-form";
 
 const AddEditOpportunityDialog = ({ 
     opportunity, 
@@ -106,15 +106,11 @@ const AddEditOpportunityDialog = ({
     )
 }
 
-export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
+export default function AdminOpportunitiesPage() {
     const { opportunities, setOpportunities, isClient } = useOpportunitiesData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
-
-    useEffect(() => {
-        setOpportunities(() => initialOpportunities);
-    }, [initialOpportunities, setOpportunities]);
 
     const openDialog = (opp?: Opportunity) => {
         setSelectedOpp(opp);
@@ -138,6 +134,14 @@ export default function OpportunityTable({ initialOpportunities }: { initialOppo
     };
     
     return (
+    <div className="space-y-8">
+        <div>
+            <h1 className="text-3xl font-bold">Opportunities</h1>
+            <p className="text-muted-foreground">
+                Manage all open projects, tasks, and competitions available to your partner network.
+            </p>
+        </div>
+        <WorkOrderForm />
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
@@ -201,5 +205,6 @@ export default function OpportunityTable({ initialOpportunities }: { initialOppo
                 </Table>
             </CardContent>
         </Card>
+    </div>
     );
 }

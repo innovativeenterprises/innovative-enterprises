@@ -1,123 +1,54 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
-import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { LucideIcon } from "lucide-react";
-import { User, Bot, PlusCircle, Trash2, Edit, Mail, Phone, Globe, Linkedin, Twitter, Github } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import { Textarea } from "@/components/ui/textarea";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import Image from "next/image";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import type { Opportunity, OpportunityBadgeVariant } from "@/lib/opportunities.schema";
+import { opportunityIconMap } from "@/lib/opportunities";
+import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
+import { PlusCircle, Edit, Trash2, Trophy } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fileToDataURI } from '@/lib/utils';
-import { useStaffData } from "@/hooks/use-global-store-data";
+import { useOpportunitiesData } from "@/hooks/use-global-store-data";
+import WorkOrderForm from "@/app/admin/opportunities/work-order-form";
 
-const SocialsSchema = z.object({
-    email: z.string().email({ message: "Invalid email address." }).optional().or(z.literal('')),
-    phone: z.string().optional(),
-    website: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
-    linkedin: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
-    twitter: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
-    github: z.string().url({ message: "Invalid URL." }).optional().or(z.literal('')),
-});
-
-const StaffSchema = z.object({
-  name: z.string().min(3, "Name is required"),
-  role: z.string().min(3, "Role is required"),
-  type: z.enum(["Leadership", "AI Agent", "Staff"]),
-  description: z.string().min(10, "A description is required.").default(''),
-  aiHint: z.string().min(2, "AI hint is required").default(''),
-  photoUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
-  photoFile: z.any().optional(),
-  socials: SocialsSchema.optional(),
-}).refine(data => data.photoUrl || (data.photoFile && data.photoFile.length > 0), {
-    message: "Either a Photo URL or a Photo File is required.",
-    path: ["photoUrl"],
-});
-
-type StaffValues = z.infer<typeof StaffSchema> & { photo: string };
-
-
-const AddEditStaffDialog = ({ 
-    staffMember,
+const AddEditOpportunityDialog = ({ 
+    opportunity, 
     onSave,
     children,
     isOpen,
     onOpenChange,
 }: { 
-    staffMember?: Agent,
-    onSave: (values: StaffValues, name?: string) => void,
+    opportunity?: Opportunity, 
+    onSave: (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => void,
     children: React.ReactNode,
     isOpen: boolean,
     onOpenChange: (open: boolean) => void,
 }) => {
-    const [imagePreview, setImagePreview] = useState<string | null>(staffMember?.photo || null);
-    
-    const form = useForm<z.infer<typeof StaffSchema>>({
-        resolver: zodResolver(StaffSchema),
+    const form = useForm<OpportunityValues>({
+        resolver: zodResolver(OpportunitySchema),
     });
 
-    const watchPhotoUrl = form.watch('photoUrl');
-    const watchPhotoFile = form.watch('photoFile');
-
     useEffect(() => {
-        if (isOpen) {
-            form.reset({
-                name: staffMember?.name || "",
-                role: staffMember?.role || "",
-                type: staffMember?.type || "Staff",
-                description: staffMember?.description || "",
-                aiHint: staffMember?.aiHint || "",
-                photoUrl: staffMember?.photo || "",
-                photoFile: undefined,
-                socials: {
-                    email: staffMember?.socials?.email || '',
-                    phone: staffMember?.socials?.phone || '',
-                    website: staffMember?.socials?.website || '',
-                    linkedin: staffMember?.socials?.linkedin || '',
-                    twitter: staffMember?.socials?.twitter || '',
-                    github: staffMember?.socials?.github || '',
-                }
-            });
-            setImagePreview(staffMember?.photo || null);
+        if(isOpen) {
+            form.reset(opportunity || { title: "", type: "", prize: "", deadline: "", description: "", status: "Open" });
         }
-    }, [isOpen, staffMember, form]);
+    }, [opportunity, form, isOpen]);
 
-    useEffect(() => {
-        if (watchPhotoFile && watchPhotoFile.length > 0) {
-            fileToDataURI(watchPhotoFile[0]).then(setImagePreview);
-        } else {
-            setImagePreview(watchPhotoUrl || staffMember?.photo || null);
-        }
-    }, [watchPhotoUrl, watchPhotoFile, staffMember?.photo]);
-
-    const onSubmit: SubmitHandler<z.infer<typeof StaffSchema>> = async (data) => {
-        let photoValue = "";
-
-        if (data.photoFile && data.photoFile.length > 0) {
-            photoValue = await fileToDataURI(data.photoFile[0]);
-        } else if (data.photoUrl) {
-            photoValue = data.photoUrl;
-        }
-        
-        onSave({ ...data, photo: photoValue }, staffMember?.name);
-        form.reset();
-        setImagePreview(null);
+    const onSubmit: SubmitHandler<OpportunityValues> = (data) => {
+        const iconName = Object.keys(opportunityIconMap).find(key => key.toLowerCase().includes(data.type.split(" ")[0].toLowerCase())) as keyof typeof opportunityIconMap || 'Trophy';
+        const badgeVariant: OpportunityBadgeVariant = data.type.toLowerCase().includes('competition') ? 'default' : data.type.toLowerCase().includes('project') ? 'destructive' : 'secondary';
+        onSave({ ...data, iconName, badgeVariant }, opportunity?.id);
         onOpenChange(false);
     };
 
@@ -126,105 +57,47 @@ const AddEditStaffDialog = ({
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
-                    <DialogTitle>{staffMember ? "Edit" : "Add New"} Staff Member</DialogTitle>
+                    <DialogTitle>{opportunity ? "Edit" : "Add"} Opportunity</DialogTitle>
                     <DialogDescription>
-                        {staffMember ? "Update the details for this staff member." : "Enter the details for the new staff member."}
+                        {opportunity ? "Update the details for this opportunity." : "Enter the details for the new opportunity."}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField control={form.control} name="name" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Name</FormLabel>
-                                <FormControl><Input placeholder="e.g., Ada Lovelace" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
+                        <FormField control={form.control} name="title" render={({ field }) => (
+                            <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <FormField control={form.control} name="role" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Role</FormLabel>
-                                <FormControl><Input placeholder="e.g., Chief Innovation Officer" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                         <FormField control={form.control} name="description" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Description</FormLabel>
-                                <FormControl><Textarea placeholder="Describe their role and responsibilities." {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        <FormField control={form.control} name="type" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Type</FormLabel>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="type" render={({ field }) => (
+                                <FormItem><FormLabel>Type</FormLabel><FormControl><Input placeholder="e.g., Design Competition" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField control={form.control} name="status" render={({ field }) => (
+                                <FormItem><FormLabel>Status</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                     <SelectContent>
-                                        <SelectItem value="Leadership">Leadership</SelectItem>
-                                        <SelectItem value="Staff">Staff</SelectItem>
-                                        <SelectItem value="AI Agent">AI Agent</SelectItem>
+                                        <SelectItem value="Open">Open</SelectItem>
+                                        <SelectItem value="In Progress">In Progress</SelectItem>
+                                        <SelectItem value="Closed">Closed</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <FormMessage />
-                            </FormItem>
+                                <FormMessage /></FormItem>
+                            )} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="prize" render={({ field }) => (
+                                <FormItem><FormLabel>Prize / Budget</FormLabel><FormControl><Input placeholder="e.g., 5,000 OMR" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="deadline" render={({ field }) => (
+                                <FormItem><FormLabel>Deadline</FormLabel><FormControl><Input placeholder="e.g., 2024-09-01" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
+                        <FormField control={form.control} name="description" render={({ field }) => (
+                            <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea rows={5} {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-
-                        <Card>
-                            <CardContent className="p-4 space-y-4">
-                                <h4 className="text-sm font-medium">Photo</h4>
-                                {imagePreview && (
-                                    <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-primary/20">
-                                        <Image src={imagePreview} alt="Image Preview" fill className="object-cover"/>
-                                    </div>
-                                )}
-                                <FormField control={form.control} name="photoUrl" render={({ field }) => (
-                                    <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
-                                )} />
-                                <div className="relative">
-                                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                                    <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
-                                </div>
-                                <FormField control={form.control} name="photoFile" render={({ field }) => (
-                                    <FormItem><FormLabel>Upload Photo</FormLabel><FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
-                                )} />
-                            </CardContent>
-                        </Card>
-                        
-
-                        <FormField control={form.control} name="aiHint" render={({ field }) => (
-                            <FormItem><FormLabel>AI Image Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-
-                        <Accordion type="single" collapsible>
-                            <AccordionItem value="socials">
-                                <AccordionTrigger>Contact & Social Links (Optional)</AccordionTrigger>
-                                <AccordionContent className="space-y-4 pt-2">
-                                     <FormField control={form.control} name="socials.email" render={({ field }) => (
-                                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="contact@example.com" {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                     <FormField control={form.control} name="socials.phone" render={({ field }) => (
-                                        <FormItem><FormLabel>Phone</FormLabel><FormControl><Input type="tel" placeholder="+968 1234 5678" {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                     <FormField control={form.control} name="socials.website" render={({ field }) => (
-                                        <FormItem><FormLabel>Website URL</FormLabel><FormControl><Input placeholder="https://example.com" {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                     <FormField control={form.control} name="socials.linkedin" render={({ field }) => (
-                                        <FormItem><FormLabel>LinkedIn URL</FormLabel><FormControl><Input placeholder="https://linkedin.com/in/..." {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                     <FormField control={form.control} name="socials.twitter" render={({ field }) => (
-                                        <FormItem><FormLabel>Twitter URL</FormLabel><FormControl><Input placeholder="https://twitter.com/..." {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                     <FormField control={form.control} name="socials.github" render={({ field }) => (
-                                        <FormItem><FormLabel>GitHub URL</FormLabel><FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                </AccordionContent>
-                            </AccordionItem>
-                        </Accordion>
-                        
-
                         <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Save Staff</Button>
+                            <Button type="submit">Save Opportunity</Button>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -233,202 +106,105 @@ const AddEditStaffDialog = ({
     )
 }
 
-export default function StaffTable() {
-    const { 
-        leadership, setLeadership,
-        staff, setStaff,
-        agentCategories, setAgentCategories,
-        isClient
-    } = useStaffData();
-    
+export default function AdminOpportunitiesPage() {
+    const { opportunities, setOpportunities, isClient } = useOpportunitiesData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedStaff, setSelectedStaff] = useState<Agent | undefined>(undefined);
+    const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
 
-    const openDialog = (member?: Agent) => {
-        setSelectedStaff(member);
+    const openDialog = (opp?: Opportunity) => {
+        setSelectedOpp(opp);
         setIsDialogOpen(true);
-    };
+    }
 
-    const handleToggle = (name: string, type: 'leadership' | 'staff' | 'agent') => {
-        if (type === 'leadership') {
-            setLeadership(prev => prev.map(member => member.name === name ? { ...member, enabled: !member.enabled } : member));
-        } else if (type === 'staff') {
-            setStaff(prev => prev.map(member => member.name === name ? { ...member, enabled: !member.enabled } : member));
+    const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
+        if (id) {
+            setOpportunities(prev => prev.map(opp => opp.id === id ? { ...opp, ...values } : opp));
+            toast({ title: "Opportunity updated successfully." });
         } else {
-            setAgentCategories(prev => 
-                prev.map(category => ({
-                    ...category,
-                    agents: category.agents.map(agent => agent.name === name ? { ...agent, enabled: !agent.enabled } : agent)
-                }))
-            );
+            const newOpp: Opportunity = { ...values, id: `opp_${values.title.toLowerCase().replace(/\s+/g, '_')}` };
+            setOpportunities(prev => [newOpp, ...prev]);
+            toast({ title: "Opportunity added successfully." });
         }
-        toast({ title: "Staff status updated." });
     };
 
-    const handleSave = (values: StaffValues, originalName?: string) => {
-        const allStaffMembers = [...leadership, ...staff, ...agentCategories.flatMap(c => c.agents)];
-        const staffMemberToUpdate = allStaffMembers.find(m => m.name === originalName);
-
-        const newStaffMember: Agent = { 
-            ...values,
-            socials: values.socials,
-            icon: values.type === 'AI Agent' ? Bot : User, 
-            enabled: staffMemberToUpdate?.enabled ?? true, 
-            photo: values.photo,
-        };
-
-        const updateList = (list: Agent[], name?: string) => 
-            name 
-                ? list.map(member => member.name === name ? { ...member, ...newStaffMember } : member)
-                : [...list, newStaffMember];
-        
-        const addNewToCategory = (categories: AgentCategory[]) => {
-             const newCats = JSON.parse(JSON.stringify(categories));
-             let targetCat = newCats.find((c: AgentCategory) => c.category === "Core Business Operations Agents");
-             if (targetCat) {
-                 targetCat.agents.push(newStaffMember);
-             } else {
-                 newCats.push({ category: 'General Agents', agents: [newStaffMember] });
-             }
-             return newCats;
-        }
-
-        if (originalName) {
-            if (staffMemberToUpdate?.type !== values.type) {
-                // If type changes, remove from old list
-                if (staffMemberToUpdate?.type === 'Leadership') setLeadership(prev => prev.filter(m => m.name !== originalName));
-                if (staffMemberToUpdate?.type === 'Staff') setStaff(prev => prev.filter(m => m.name !== originalName));
-                if (staffMemberToUpdate?.type === 'AI Agent') setAgentCategories(prev => prev.map(c => ({...c, agents: c.agents.filter(a => a.name !== originalName)})));
-                
-                // Add to new list
-                if (values.type === 'Leadership') setLeadership(prev => [...prev, newStaffMember]);
-                if (values.type === 'Staff') setStaff(prev => [...prev, newStaffMember]);
-                if (values.type === 'AI Agent') setAgentCategories(addNewToCategory);
-
-            } else {
-                 // Just update in the correct list
-                if (values.type === 'Leadership') setLeadership(prev => updateList(prev, originalName));
-                if (values.type === 'Staff') setStaff(prev => updateList(prev, originalName));
-                if (values.type === 'AI Agent') setAgentCategories(prev => prev.map(c => ({...c, agents: updateList(c.agents, originalName)})));
-            }
-        } else {
-             // Add new member
-            if (values.type === 'Leadership') setLeadership(prev => updateList(prev));
-            if (values.type === 'Staff') setStaff(prev => updateList(prev));
-            if (values.type === 'AI Agent') setAgentCategories(addNewToCategory);
-        }
-
-        toast({ title: originalName ? "Staff member updated." : "Staff member added." });
+    const handleDelete = (id: string) => {
+        setOpportunities(prev => prev.filter(opp => opp.id !== id));
+        toast({ title: "Opportunity removed.", variant: "destructive" });
     };
-
-    const handleDelete = (name: string, type: 'leadership' | 'staff' | 'agent') => {
-        if (type === 'leadership') {
-            setLeadership(prev => prev.filter(member => member.name !== name));
-        } else if (type === 'staff') {
-            setStaff(prev => prev.filter(member => member.name !== name));
-        } else {
-            setAgentCategories(prev => 
-                prev.map(category => ({
-                    ...category,
-                    agents: category.agents.filter(agent => agent.name !== name)
-                })).filter(category => category.agents.length > 0)
-            );
-        }
-        toast({ title: "Staff member removed.", variant: "destructive" });
-    };
-
-
-    const renderStaffRow = (member: Agent, type: 'leadership' | 'staff' | 'agent') => (
-        <TableRow key={member.name}>
-            <TableCell className="font-medium flex items-center gap-3">
-                 <Avatar className="cursor-pointer" onClick={() => openDialog(member)}>
-                    <AvatarImage src={member.photo} alt={member.name} />
-                    <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                {member.name}
-            </TableCell>
-            <TableCell>{member.role}</TableCell>
-            <TableCell>
-                <Badge variant={type === 'AI Agent' ? 'default' : 'secondary'} className={type === 'AI Agent' ? 'bg-primary/20 text-primary hover:bg-primary/30' : ''}>
-                    {type === 'leadership' ? 'Leadership' : type === 'staff' ? 'Staff' : 'AI Agent'}
-                </Badge>
-            </TableCell>
-            <TableCell className="text-center">
-                <Switch
-                    checked={member.enabled}
-                    onCheckedChange={() => handleToggle(member.name, type)}
-                    aria-label={`Enable/disable '${member.name}'`}
-                />
-            </TableCell>
-            <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => openDialog(member)}>
-                        <Edit />
-                    </Button>
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete {member.name}.</AlertDialogDescription></AlertDialogHeader>
-                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(member.name, type)}>Delete</AlertDialogAction></AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                </div>
-            </TableCell>
-        </TableRow>
-    );
-
+    
     return (
+    <div className="space-y-8">
+        <div>
+            <h1 className="text-3xl font-bold">Opportunities</h1>
+            <p className="text-muted-foreground">
+                Manage all open projects, tasks, and competitions available to your partner network.
+            </p>
+        </div>
+        <WorkOrderForm />
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                    <CardTitle>Workforce Management</CardTitle>
-                    <CardDescription>Manage all human and AI staff members.</CardDescription>
+                    <CardTitle>Opportunities & Competitions</CardTitle>
+                    <CardDescription>Manage the open tasks and projects available to your partner network.</CardDescription>
                 </div>
-                <Button onClick={() => openDialog()}>
-                    <PlusCircle /> Add New Staff
-                </Button>
+                 <Button onClick={() => openDialog()}><PlusCircle /> Add Opportunity</Button>
             </CardHeader>
             <CardContent>
-                <AddEditStaffDialog
+                <AddEditOpportunityDialog
                     isOpen={isDialogOpen}
                     onOpenChange={setIsDialogOpen}
-                    staffMember={selectedStaff}
+                    opportunity={selectedOpp}
                     onSave={handleSave}
                 >
                     <div />
-                </AddEditStaffDialog>
+                </AddEditOpportunityDialog>
+
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[300px]">Name</TableHead>
-                            <TableHead>Role</TableHead>
+                            <TableHead>Title</TableHead>
                             <TableHead>Type</TableHead>
-                            <TableHead className="text-center">Status</TableHead>
+                            <TableHead>Prize/Budget</TableHead>
+                            <TableHead>Deadline</TableHead>
+                            <TableHead>Status</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {!isClient ? (
                             <TableRow>
-                                <TableCell colSpan={5} className="h-24 text-center">
+                                <TableCell colSpan={6}>
                                     <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            <>
-                                {leadership.map(member => renderStaffRow(member, 'leadership'))}
-                                {staff.map(member => renderStaffRow(member, 'staff'))}
-                                {agentCategories.flatMap(category => 
-                                    category.agents.map(agent => renderStaffRow(agent, 'agent'))
-                                )}
-                            </>
+                            opportunities.map(opp => (
+                                <TableRow key={opp.id}>
+                                    <TableCell className="font-medium">{opp.title}</TableCell>
+                                    <TableCell>{opp.type}</TableCell>
+                                    <TableCell>{opp.prize}</TableCell>
+                                    <TableCell>{opp.deadline}</TableCell>
+                                    <TableCell>{opp.status}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <Button variant="ghost" size="icon" onClick={() => openDialog(opp)}><Edit /></Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader><AlertDialogTitle>Delete Opportunity?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{opp.title}".</AlertDialogDescription></AlertDialogHeader>
+                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(opp.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
                         )}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
+    </div>
     );
 }
