@@ -1,16 +1,19 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import CompanyOverview from "@/components/company-overview";
+import ServiceCatalog from "@/components/service-catalog";
+import ProductShowcase from "@/components/product-showcase";
+import AiToolsCta from "@/components/ai-tools-cta";
+import { useClientsData, useTestimonialsData } from '@/hooks/use-global-store-data';
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import type { Client, Testimonial } from '@/lib/clients.schema';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useClientsData, useTestimonialsData } from '@/hooks/use-global-store-data';
 
-export default function ClientTestimonials() {
+
+const ClientTestimonials = () => {
   const { clients, isClient: isClientsClient } = useClientsData();
   const { testimonials, isClient: isTestimonialsClient } = useTestimonialsData();
   const isClient = isClientsClient && isTestimonialsClient;
@@ -77,4 +80,15 @@ export default function ClientTestimonials() {
   );
 }
 
-      
+
+export default function HomePage() {
+  return (
+    <>
+      <CompanyOverview />
+      <ServiceCatalog />
+      <ProductShowcase />
+      <ClientTestimonials />
+      <AiToolsCta />
+    </>
+  );
+}
