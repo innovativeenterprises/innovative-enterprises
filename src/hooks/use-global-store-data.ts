@@ -103,26 +103,35 @@ export const usePosData = () => {
 
 export const useLeasesData = () => {
     const [leases, setStore, isClient] = useStore((s) => s.signedLeases);
-    const setLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => setStore(state => ({...state, signedLeases: updater(state.signedLeases)}));
-    return { leases, setLeases, isClient };
+    const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => setStore(state => ({...state, signedLeases: updater(state.signedLeases)}));
+    return { leases, setLeases: setSignedLeases, isClient };
 };
 
-export const useStairspaceRequestsData = () => {
-    const [stairspaceRequests, setStore, isClient] = useStore((s) => s.stairspaceRequests);
-    const setStairspaceRequests = (updater: (prev: AppState['stairspaceRequests']) => AppState['stairspaceRequests']) => setStore(state => ({...state, stairspaceRequests: updater(state.stairspaceRequests)}));
-    return { stairspaceRequests, setStairspaceRequests, isClient };
+export const useProductsData = () => {
+    const [products, setStore, isClient] = useStore((s) => s.products);
+    const setProducts = (updater: (prev: AppState['products']) => AppState['products']) => setStore(state => ({...state, products: updater(state.products)}));
+    const [storeProducts] = useStore((s) => s.storeProducts);
+    return { products, setProducts, storeProducts, isClient };
 };
 
-export const useOpportunitiesData = () => {
-    const [opportunities, setStore, isClient] = useStore((s) => s.opportunities);
-    const setOpportunities = (updater: (prev: AppState['opportunities']) => AppState['opportunities']) => setStore(state => ({...state, opportunities: updater(state.opportunities)}));
-    return { opportunities, setOpportunities, isClient };
+export const useProvidersData = () => {
+    const [providers, setStore, isClient] = useStore((s) => s.providers);
+    const setProviders = (updater: (prev: AppState['providers']) => AppState['providers']) => setStore(state => ({...state, providers: updater(state.providers)}));
+    return { providers, setProviders, isClient };
 };
 
 export const useServicesData = () => {
     const [services, setStore, isClient] = useStore((s) => s.services);
     const setServices = (updater: (prev: AppState['services']) => AppState['services']) => setStore(state => ({...state, services: updater(state.services)}));
     return { services, setServices, isClient };
+};
+
+export const useStaffData = () => {
+    const [data, setStore, isClient] = useStore((s) => ({ leadership: s.leadership, staff: s.staff, agentCategories: s.agentCategories }));
+    const setLeadership = (updater: (prev: AppState['leadership']) => AppState['leadership']) => setStore(state => ({...state, leadership: updater(state.leadership)}));
+    const setStaff = (updater: (prev: AppState['staff']) => AppState['staff']) => setStore(state => ({...state, staff: updater(state.staff)}));
+    const setAgentCategories = (updater: (prev: AppState['agentCategories']) => AppState['agentCategories']) => setStore(state => ({...state, agentCategories: updater(state.agentCategories)}));
+    return { ...data, setLeadership, setStaff, setAgentCategories, isClient };
 };
 
 export const useRaahaData = () => {
@@ -149,12 +158,6 @@ export const useRequestsData = () => {
     const [requests, setStore, isClient] = useStore((s) => s.raahaRequests);
     const setRaahaRequests = (updater: (prev: AppState['raahaRequests']) => AppState['raahaRequests']) => setStore(state => ({ ...state, raahaRequests: updater(state.raahaRequests) }));
     return { requests, setRaahaRequests, isClient };
-};
-
-export const useStairspaceData = () => {
-    const [stairspaceListings, setStore, isClient] = useStore((s) => s.stairspaceListings);
-    const setStairspaceListings = (updater: (prev: AppState['stairspaceListings']) => AppState['stairspaceListings']) => setStore((state) => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
-    return { stairspaceListings, setStairspaceListings, isClient };
 };
 
 export const useCostSettingsData = () => {
@@ -242,6 +245,12 @@ export const useCommunityFinancesData = () => {
     const [finances, setStore, isClient] = useStore((s) => s.communityFinances);
     const setFinances = (updater: (prev: AppState['communityFinances']) => AppState['communityFinances']) => setStore((state) => ({ ...state, communityFinances: updater(state.communityFinances) }));
     return { finances, setFinances, isClient };
+};
+
+export const useCommunitiesData = () => {
+    const [communities, setStore, isClient] = useStore((s) => s.communities);
+    const setCommunities = (updater: (prev: AppState['communities']) => AppState['communities']) => setStore((state) => ({ ...state, communities: updater(state.communities) }));
+    return { communities, setCommunities, isClient };
 };
 
 export const useAlumniJobsData = () => {
