@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -12,11 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Gift, CheckCircle, Send } from 'lucide-react';
-import type { GiftCard } from '@/lib/gift-cards';
+import type { GiftCard } from '@/lib/gift-cards.schema';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { useGiftCardsData } from "@/hooks/use-global-store-data";
 
 const GiftCardSchema = z.object({
   design: z.enum(['Generic', 'Birthday', 'Thank You', 'Holiday']),
@@ -35,17 +35,12 @@ const designImages = {
     'Holiday': 'https://images.unsplash.com/photo-1513297884279-d17b29b6e510?q=80&w=600&auto=format&fit=crop',
 };
 
-export default function HadeeyaPageClient({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
+export default function HadeeyaPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [submittedCard, setSubmittedCard] = useState<GiftCard | null>(null);
+    const { setGiftCards } = useGiftCardsData();
     const { toast } = useToast();
     
-    // In a real app, this would likely be part of a larger state management solution
-    // or context if these cards needed to be accessible elsewhere. For this page,
-    // local state is sufficient.
-    const [giftCards, setGiftCards] = useState(initialGiftCards);
-
-
     const form = useForm<GiftCardValues>({
         resolver: zodResolver(GiftCardSchema),
         defaultValues: {
@@ -153,7 +148,7 @@ export default function HadeeyaPageClient({ initialGiftCards }: { initialGiftCar
                                          <FormField control={form.control} name="senderName" render={({ field }) => (
                                             <FormItem><FormLabel>6. Your Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                                         )}/>
-                                         <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                                         <Button type="submit" className="w-full !mt-10" size="lg" disabled={isLoading}>
                                             {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Processing...</> : <><Send className="mr-2 h-4 w-4"/> Purchase & Send Gift Card</>}
                                          </Button>
                                     </div>
