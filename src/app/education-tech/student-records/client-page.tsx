@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -20,6 +19,7 @@ import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStudentsData } from "@/hooks/use-global-store-data";
 
 const StudentSchema = z.object({
   id: z.string().min(3, "Student ID is required"),
@@ -93,15 +93,9 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
     );
 };
 
-export default function StudentRecordsClientPage({ initialStudents }: { initialStudents: Student[] }) {
-    const [students, setStudents] = useState(initialStudents);
-    const [isClient, setIsClient] = useState(false);
+export default function StudentRecordsPage() {
+    const { students, setStudents, isClient } = useStudentsData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
 
     const handleSave = (values: StudentValues, id?: string) => {
         if (id) {

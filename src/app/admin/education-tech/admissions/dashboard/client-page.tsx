@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -12,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Application } from '@/lib/admissions-applications';
+import { useApplicationsData } from '@/hooks/use-global-store-data';
 
 type SortKey = keyof Application | '';
 
@@ -34,15 +34,10 @@ const SortableHeader = ({
   </TableHead>
 );
 
-export default function AdmissionsDashboardClient({ initialApplications }: { initialApplications: Application[]}) {
-    const [applications, setApplications] = useState(initialApplications);
+export default function AdmissionsDashboardPage() {
+    const { applications, isClient } = useApplicationsData();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' }>({ key: 'readinessScore', direction: 'descending' });
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const filteredAndSortedApplications = useMemo(() => {
         let sortableItems = [...applications];
@@ -55,10 +50,12 @@ export default function AdmissionsDashboardClient({ initialApplications }: { ini
 
         if (sortConfig.key) {
             sortableItems.sort((a, b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]) {
+                const aValue = a[sortConfig.key as keyof Application];
+                const bValue = b[sortConfig.key as keyof Application];
+                if (aValue < bValue) {
                     return sortConfig.direction === 'ascending' ? -1 : 1;
                 }
-                if (a[sortConfig.key] > b[sortConfig.key]) {
+                if (aValue > bValue) {
                     return sortConfig.direction === 'ascending' ? 1 : -1;
                 }
                 return 0;
