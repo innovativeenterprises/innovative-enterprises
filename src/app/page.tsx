@@ -9,11 +9,36 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useAiToolsData, useClientsData, useProductsData, useServicesData, useStaffData, useTestimonialsData } from "@/hooks/use-global-store-data";
 import { StageBadge } from '@/components/stage-badge';
-import OverviewAvatars from "@/components/overview-avatars";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import type { Service } from "@/lib/services.schema";
+
+const OverviewAvatars = () => {
+  const { clients, isClient } = useClientsData();
+  
+  if (!isClient) {
+    return <Skeleton className="h-10 w-24" />;
+  }
+  
+  const overviewClients = clients.slice(0, 3);
+
+  return (
+    <div className="flex -space-x-2">
+      {overviewClients.map((client) => (
+        <Image
+          key={client.id}
+          src={client.logo}
+          alt={client.name}
+          width={40}
+          height={40}
+          className="rounded-full border-2 border-background object-contain bg-white"
+          data-ai-hint={client.aiHint}
+        />
+      ))}
+    </div>
+  );
+}
 
 const CompanyOverview = () => {
   return (
@@ -115,7 +140,6 @@ const ServiceCatalog = () => {
     "Essential Business Services"
   ];
   
-
   return (
     <section id="services" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
