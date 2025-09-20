@@ -6,7 +6,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getStaff } from '@/lib/firestore';
+import { initialStaffData } from '@/lib/agents';
 import type { Agent } from '@/lib/agents.schema';
 
 export const AnswerQuestionInputSchema = z.object({
@@ -25,9 +25,10 @@ export const AnswerQuestionOutputSchema = z.object({
 });
 export type AnswerQuestionOutput = z.infer<typeof AnswerQuestionOutputSchema>;
 
+const allStaff = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
 
-const getSpecialist = async (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): Promise<Agent | null> => {
-    const allStaff = await getStaff();
+const getSpecialist = (department: 'legal' | 'marketing' | 'hr' | 'sales' | 'partnership'): Agent | null => {
+    // This function now uses the static initialStaffData for consistency and speed.
     switch(department) {
         case 'legal': return allStaff.find(s => s.name === 'Lexi') || allStaff.find(s => s.name === 'Legal Counsel Office') || null;
         case 'marketing': return allStaff.find(s => s.name === 'Mira') || null;
@@ -59,7 +60,7 @@ export const routeToSpecialistTool = ai.defineTool(
         })
     },
     async ({ department, userQuery }) => {
-        const specialist = await getSpecialist(department);
+        const specialist = getSpecialist(department);
         if (!specialist) {
             return { isAvailable: false, response: "I'm sorry, I can't find the right person to help with that." };
         }

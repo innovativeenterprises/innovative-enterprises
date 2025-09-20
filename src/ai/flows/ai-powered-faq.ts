@@ -15,14 +15,13 @@ import {
     AnswerQuestionInputSchema,
     AnswerQuestionOutput,
     AnswerQuestionOutputSchema,
-    routeToSpecialistTool,
+    routeToSpecialistTool
 } from './ai-powered-faq.schema';
 
 
 export async function answerQuestion(input: AnswerQuestionInput): Promise<AnswerQuestionOutput> {
   return answerQuestionFlow(input);
 }
-
 
 const prompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
