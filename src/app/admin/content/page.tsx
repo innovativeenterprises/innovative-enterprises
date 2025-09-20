@@ -1,4 +1,3 @@
-'use client';
 
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
@@ -6,11 +5,10 @@ import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { useServicesData, useProductsData, useStagesData, useClientsData, useTestimonialsData, usePricingData, usePosProductsData } from "@/hooks/use-global-store-data";
 
 export default function AdminContentPage() {
-    // Data is now self-managed by the client components below.
-    // This component acts as a layout container.
+    // Data is now fetched on the server and passed down as props.
+    // The client components will handle their own state.
     return (
         <div className="space-y-8">
             <div>

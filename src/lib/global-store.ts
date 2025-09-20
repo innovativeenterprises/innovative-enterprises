@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -10,7 +11,6 @@
  */
 
 import { initialState as initialData, type AppState as FullAppState } from './initial-state';
-import type { PosProduct, CartItem, DailySales } from './pos-data.schema';
 
 export type AppState = FullAppState;
 export type CartItem = FullAppState['cart'][0];

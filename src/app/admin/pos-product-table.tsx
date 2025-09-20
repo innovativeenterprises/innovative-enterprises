@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -12,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { PosProduct } from "@/lib/pos-data.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
@@ -30,16 +31,13 @@ type PosProductValues = z.infer<typeof PosProductSchema>;
 const AddEditPosProductDialog = ({ 
     product, 
     onSave,
-    isOpen,
-    onOpenChange,
     children 
 }: { 
     product?: PosProduct, 
     onSave: (values: PosProductValues, id?: string) => void,
-    isOpen: boolean,
-    onOpenChange: (open: boolean) => void,
     children: React.ReactNode 
 }) => {
+    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<PosProductValues>({
         resolver: zodResolver(PosProductSchema),
     });
@@ -52,11 +50,11 @@ const AddEditPosProductDialog = ({
 
     const onSubmit: SubmitHandler<PosProductValues> = (data) => {
         onSave(data, product?.id);
-        onOpenChange(false);
+        setIsOpen(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -107,14 +105,6 @@ export default function PosProductTable() {
     const { posProducts, setPosProducts, isClient } = usePosProductsData();
     const { toast } = useToast();
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);
-
-    const openDialog = (product?: PosProduct) => {
-        setSelectedProduct(product);
-        setIsDialogOpen(true);
-    };
-
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
             setPosProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
@@ -138,17 +128,11 @@ export default function PosProductTable() {
                     <CardTitle>AI-POS Product Management</CardTitle>
                     <CardDescription>Manage the products available in the canteen's point-of-sale system.</CardDescription>
                 </div>
-                 <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Product</Button>
+                 <AddEditPosProductDialog onSave={handleSave}>
+                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Product</Button>
+                </AddEditPosProductDialog>
             </CardHeader>
             <CardContent>
-                <AddEditPosProductDialog
-                    isOpen={isDialogOpen}
-                    onOpenChange={setIsDialogOpen}
-                    product={selectedProduct}
-                    onSave={handleSave}
-                >
-                    <div />
-                </AddEditPosProductDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -177,7 +161,9 @@ export default function PosProductTable() {
                                     <TableCell className="text-right font-mono">{item.price.toFixed(2)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" onClick={() => openDialog(item)}><Edit /></Button>
+                                            <AddEditPosProductDialog product={item} onSave={handleSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </AddEditPosProductDialog>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>

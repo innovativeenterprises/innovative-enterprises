@@ -80,7 +80,7 @@ export const DueDateDisplay = ({
         (displayState.daysRemaining >= 0 ? (
           <span className={cn('font-medium', {
               'text-yellow-600 dark:text-yellow-400': displayState.status === 'warn',
-              'text-destructive': displayState.status === 'error' && displayState.daysRemaining < 0,
+              'text-destructive': displayState.status === 'error' && displayState.daysRemaining < 0, // This is technically not possible with daysRemaining >= 0 but kept for safety
           })}>
             {' '}
             ({displayState.daysRemaining} days left)

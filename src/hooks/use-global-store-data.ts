@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useContext, useSyncExternalStore } from 'react';
@@ -17,8 +18,8 @@ import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
-import type { BeautyCenter } from '@/lib/beauty-centers';
-import type { BeautyService } from '@/lib/beauty-services';
+import type { BeautyCenter } from '@/lib/beauty-centers.schema';
+import type { BeautyService } from '@/lib/beauty-services.schema';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { UsedItem } from '@/lib/used-items.schema';
 import type { Asset } from '@/lib/assets.schema';
@@ -310,4 +311,10 @@ export const useSaaSProductsData = () => {
     const [saasProducts, setStore, isClient] = useStore((s) => s.saasProducts);
     const setSaaSProducts = (updater: (prev: AppState['saasProducts']) => AppState['saasProducts']) => setStore(state => ({ ...state, saasProducts: updater(state.saasProducts) }));
     return { saasProducts, setSaaSProducts, isClient };
+};
+
+export const useApplicationsData = () => {
+    const [applications, setStore, isClient] = useStore((s) => s.applications);
+    const setApplications = (updater: (prev: AppState['applications']) => AppState['applications']) => setStore((state) => ({ ...state, applications: updater(state.applications) }));
+    return { applications, setApplications, isClient };
 };
