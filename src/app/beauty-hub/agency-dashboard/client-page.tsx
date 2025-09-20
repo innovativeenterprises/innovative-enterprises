@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -104,7 +103,7 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialServ
                             <ServiceTable services={filteredServices} setServices={setServices} />
                         </TabsContent>
                          <TabsContent value="staff" className="mt-6">
-                            <SpecialistTable />
+                            <SpecialistTable agencyId={selectedAgency.id} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} />}

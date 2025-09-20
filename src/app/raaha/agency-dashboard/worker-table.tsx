@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -149,7 +150,7 @@ export const AddEditWorkerDialog = ({
     )
 }
 
-export function WorkerTable({ workers, columns, agencyId, isClient }: { workers: Worker[], columns: any[], agencyId: string, isClient: boolean }) {
+export function CandidateTable({ workers, columns, agencyId, isClient }: { workers: Worker[], columns: any[], agencyId: string, isClient: boolean }) {
     const { setWorkers } = useWorkersData();
     const { toast } = useToast();
 
