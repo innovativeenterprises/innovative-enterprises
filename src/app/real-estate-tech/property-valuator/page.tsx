@@ -1,4 +1,4 @@
-import ValuationClientPage from "@/app/real-estate-tech/property-valuator/client-page";
+import ValuationClientPage from "./client-page";
 import { BarChart } from "lucide-react";
 import type { Metadata } from 'next';
 
