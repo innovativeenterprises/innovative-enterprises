@@ -93,9 +93,15 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
     );
 };
 
-export default function StudentRecordsPage() {
+export default function StudentRecordsClientPage({ initialStudents }: { initialStudents: Student[] }) {
     const { students, setStudents, isClient } = useStudentsData();
     const { toast } = useToast();
+
+     useEffect(() => {
+        if (initialStudents) {
+            setStudents(() => initialStudents);
+        }
+    }, [initialStudents, setStudents]);
 
     const handleSave = (values: StudentValues, id?: string) => {
         if (id) {
