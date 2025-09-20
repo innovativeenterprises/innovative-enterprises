@@ -1,4 +1,5 @@
 
+
 import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart } from "lucide-react";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
@@ -125,9 +126,9 @@ export const initialIndustries: { title: string; href: string; description: stri
     icon: GraduationCap,
   },
    {
-    title: "DriveSync AI",
-    href: "/drivesync-ai",
-    description: "An AI-powered SaaS platform for car rental agencies with an intelligent booking agent and fleet management.",
+    title: "Automotive Tech",
+    href: "/automotive-tech",
+    description: "AI-powered SaaS platforms for car rental agencies, fleet management, and vehicle tracking.",
     icon: Car,
   },
   {
