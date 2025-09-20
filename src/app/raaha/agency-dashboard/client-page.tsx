@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -12,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { WorkerTable } from './worker-table';
 import { Badge } from '@/components/ui/badge';
-import type { HireRequest } from '@/lib/raaha-requests';
+import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Worker } from '@/lib/raaha-workers';
 import type { Agency } from '@/lib/raaha-agencies';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
@@ -20,6 +18,12 @@ import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import { useAgenciesData, useRequestsData, useWorkersData } from '@/hooks/use-global-store-data';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Agency Dashboard | RAAHA",
+  description: "Manage your domestic workforce agency. View client requests, manage your candidates, and update your agency settings.",
+};
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -41,7 +45,7 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
 };
 
 
-export default function AgencyDashboardClientPage({ initialAgencies, initialWorkers, initialRequests }: { initialAgencies: Agency[], initialWorkers: Worker[], initialRequests: HireRequest[] }) {
+export default function AgencyDashboardPage() {
     const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
     const { requests, setRaahaRequests, isClient: isRequestsClient } = useRequestsData();
     const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
@@ -49,12 +53,6 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
     const { toast } = useToast();
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const isClient = isWorkersClient && isRequestsClient && isAgenciesClient;
-
-    useEffect(() => {
-        setWorkers(() => initialWorkers);
-        setRaahaRequests(() => initialRequests);
-        setAgencies(() => initialAgencies);
-    }, [initialWorkers, initialRequests, initialAgencies, setWorkers, setRaahaRequests, setAgencies]);
 
      useEffect(() => {
         if (agencies.length > 0 && !selectedAgencyId) {
