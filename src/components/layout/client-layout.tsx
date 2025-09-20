@@ -7,7 +7,6 @@ import { StoreProvider } from '@/components/layout/store-provider';
 import type { AppState } from '@/lib/global-store';
 import { initialState } from '@/lib/global-store';
 import { ThemeProvider } from 'next-themes';
-import Header from './header';
 import Footer from './footer';
 
 export default function ClientLayout({
@@ -27,7 +26,6 @@ export default function ClientLayout({
     >
         <StoreProvider initialData={initialState}>
         <div className="flex min-h-screen flex-col">
-            <Header />
             <main className="flex-1">{children}</main>
             <Footer />
             <Toaster />

@@ -25,7 +25,7 @@ export default function ClientTestimonials({ clients, testimonials }: { clients:
   };
 
   return (
-    <section id="testimonials" className="py-16 md:py-24 bg-white">
+    <section id="testimonials" className="py-16 md:py-24 bg-white dark:bg-card">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-primary">Trusted by Leading Organizations</h2>
@@ -35,7 +35,7 @@ export default function ClientTestimonials({ clients, testimonials }: { clients:
         </div>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
           {!isClient ? Array.from({length: 6}).map((_, i) => <Skeleton key={i} className="h-[60px] w-[150px]" />) : clients.map((client) => (
-              <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300" title={client.name}>
+              <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300 dark:invert dark:hover:invert-0" title={client.name}>
                 <Image
                   src={client.logo}
                   alt={client.name}
@@ -52,7 +52,7 @@ export default function ClientTestimonials({ clients, testimonials }: { clients:
             {!isClient ? Array.from({length: 2}).map((_, i) => <Skeleton key={i} className="h-48 w-full" />) : testimonials.map((testimonial) => {
                     const avatarData = testimonialAvatars && (testimonialAvatars as Record<string, {src: string, alt: string, aiHint: string}>)[testimonial.avatarId];
                     return (
-                        <Card key={testimonial.id} className="bg-card">
+                        <Card key={testimonial.id} className="bg-muted/50 dark:bg-background">
                             <CardContent className="p-6">
                                 <blockquote className="border-l-4 border-accent pl-4 italic text-foreground/80">
                                 {renderQuote(testimonial.quote)}

@@ -4,8 +4,9 @@
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
-import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
+import type { Solution, Industry, AiTool } from '@/lib/nav-links';
+
 
 const inter = Inter({
   subsets: ['latin'],

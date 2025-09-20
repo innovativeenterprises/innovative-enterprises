@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
-import { useCartData, useSettingsData, useSolutionsData, useIndustriesData, useAiToolsData } from '@/hooks/use-global-store-data';
+import { useCartData, useSettingsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
 import SanadHubIcon from '../icons/sanad-hub-icon';
 import BusinessHubIcon from '../icons/business-hub-icon';
@@ -37,6 +37,8 @@ import KhidmaIcon from '../icons/khidma-icon';
 import VmallIcon from '../icons/vmall-icon';
 import AppiIcon from '../icons/appi-icon';
 import type { AppSettings } from '@/lib/settings';
+import type { Solution, Industry, AiTool } from '@/lib/nav-links';
+
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -69,9 +71,9 @@ ListItem.displayName = "ListItem"
 
 
 export default function HeaderClient({ initialSolutions, initialIndustries, initialAiTools }: { 
-    initialSolutions: any[], 
-    initialIndustries: any[], 
-    initialAiTools: any[] 
+    initialSolutions: Solution[], 
+    initialIndustries: Industry[], 
+    initialAiTools: AiTool[] 
 }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -186,7 +188,7 @@ export default function HeaderClient({ initialSolutions, initialIndustries, init
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+          <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" />
         </Link>
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>

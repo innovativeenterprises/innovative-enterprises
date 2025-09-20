@@ -7,6 +7,7 @@ import ProductShowcase from "@/components/product-showcase";
 import AiToolsCta from "@/components/ai-tools-cta";
 import ClientTestimonials from "@/components/client-testimonials";
 import { getClients, getTestimonials, getServices, getProducts, getStaffData } from "@/lib/firestore";
+import Header from "@/components/layout/header";
 
 // This is now a Server Component
 export default async function HomePage() {
@@ -22,6 +23,7 @@ export default async function HomePage() {
   
   return (
     <>
+      <Header />
       <CompanyOverview clients={clients} />
       <ServiceCatalog services={services} />
       <ProductShowcase products={products} />

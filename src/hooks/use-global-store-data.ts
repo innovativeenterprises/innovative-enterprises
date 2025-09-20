@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useContext, useSyncExternalStore, useCallback } from 'react';
@@ -40,7 +39,6 @@ import type { Investor } from '@/lib/investors.schema';
 import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 import type { StockItem } from '@/lib/stock-items.schema';
 import type { Property } from '@/lib/properties.schema';
-import type { SaasCategory } from '@/lib/saas-products.schema';
 import type { RentalAgency } from '@/lib/rental-agencies';
 
 
@@ -107,6 +105,12 @@ export const useLeasesData = () => {
     return { leases, setLeases: setSignedLeases, isClient };
 };
 
+export const useStairspaceRequestsData = () => {
+    const [stairspaceRequests, setStore, isClient] = useStore((s) => s.stairspaceRequests);
+    const setStairspaceRequests = (updater: (prev: AppState['stairspaceRequests']) => AppState['stairspaceRequests']) => setStore(state => ({...state, stairspaceRequests: updater(state.stairspaceRequests)}));
+    return { stairspaceRequests, setStairspaceRequests, isClient };
+};
+
 export const useProductsData = () => {
     const [products, setStore, isClient] = useStore((s) => s.products);
     const setProducts = (updater: (prev: AppState['products']) => AppState['products']) => setStore(state => ({...state, products: updater(state.products)}));
@@ -118,6 +122,12 @@ export const useProvidersData = () => {
     const [providers, setStore, isClient] = useStore((s) => s.providers);
     const setProviders = (updater: (prev: AppState['providers']) => AppState['providers']) => setStore(state => ({...state, providers: updater(state.providers)}));
     return { providers, setProviders, isClient };
+};
+
+export const useOpportunitiesData = () => {
+    const [opportunities, setStore, isClient] = useStore((s) => s.opportunities);
+    const setOpportunities = (updater: (prev: AppState['opportunities']) => AppState['opportunities']) => setStore(state => ({...state, opportunities: updater(state.opportunities)}));
+    return { opportunities, setOpportunities, isClient };
 };
 
 export const useServicesData = () => {
@@ -266,17 +276,9 @@ export const useBriefcaseData = () => {
 };
 
 export const usePricingData = () => {
-    const [data, setStore, isClient] = useStore(state => ({
-        pricing: state.pricing,
-    }));
-    const setPricing = useCallback(
-        (updater: (prev: AppState['pricing']) => AppState['pricing']) => {
-            setStore(state => ({ ...state, pricing: updater(state.pricing) }));
-        },
-        [setStore]
-    );
-
-    return { ...data, setPricing, isClient };
+    const [pricing, setStore, isClient] = useStore((s) => s.pricing);
+    const setPricing = (updater: (prev: AppState['pricing']) => AppState['pricing']) => setStore((state) => ({ ...state, pricing: updater(state.pricing) }));
+    return { pricing, setPricing, isClient };
 };
 
 export const useSolutionsData = () => {
@@ -303,6 +305,18 @@ export const useInvestorsData = () => {
     return { investors, setInvestors, isClient };
 }
 
+export const usePropertiesData = () => {
+    const [properties, setStore, isClient] = useStore((s) => s.properties);
+    const setProperties = (updater: (prev: AppState['properties']) => AppState['properties']) => setStore(state => ({ ...state, properties: updater(state.properties) }));
+    return { properties, setProperties, isClient };
+};
+
+export const useStairspaceData = () => {
+    const [stairspaceListings, setStore, isClient] = useStore((s) => s.stairspaceListings);
+    const setStairspaceListings = (updater: (prev: AppState['stairspaceListings']) => AppState['stairspaceListings']) => setStore(state => ({ ...state, stairspaceListings: updater(state.stairspaceListings) }));
+    return { stairspaceListings, setStairspaceListings, isClient };
+};
+
 export const useStockItemsData = () => {
     const [stockItems, setStore, isClient] = useStore((s) => s.stockItems);
     const setStockItems = (updater: (prev: AppState['stockItems']) => AppState['stockItems']) => setStore(state => ({ ...state, stockItems: updater(state.stockItems) }));
@@ -313,6 +327,12 @@ export const useKnowledgeData = () => {
     const [knowledgeBase, setStore, isClient] = useStore((s) => s.knowledgeBase);
     const setKnowledgeBase = (updater: (prev: AppState['knowledgeBase']) => AppState['knowledgeBase']) => setStore(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
     return { knowledgeBase, setKnowledgeBase, isClient };
+};
+
+export const useCfoData = () => {
+    const [cfoData, setStore, isClient] = useStore((s) => s.cfoData);
+    const setCfoData = (updater: (prev: AppState['cfoData']) => AppState['cfoData']) => setStore(state => ({ ...state, cfoData: updater(state.cfoData) }));
+    return { cfoData, setCfoData, isClient };
 };
 
 export const useApplicationsData = () => {
