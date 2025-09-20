@@ -105,7 +105,7 @@ export default function DigitalTwinPage() {
                          <ChartContainer config={chartConfig} className="w-full h-full">
                             <BarChart data={chartData} accessibilityLayer>
                                 <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={12} padding={{ left: 10, right: 10 }} />
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${'\'\'\'' + value / 1000 + '\''\'\''}` + 'k'} />
+                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value / 1000}k`} />
                                 <ChartTooltipContent />
                                 <Bar dataKey="energy" radius={[4, 4, 0, 0]}>
                                     {chartData.map((entry, index) => (
