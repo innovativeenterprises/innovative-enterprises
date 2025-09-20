@@ -33,7 +33,7 @@ import {generateTimetable} from './timetable-generator';
 import {generateElectionMaterials} from './community-elections-agent';
 import {fillPdfForm} from './pdf-form-filler';
 import { findScholarships } from './scholarship-agent';
-import { generateScholarshipEssay } from './scholarship-essay-assistant';
+import { generateScholarshipEssay } from './guardian-ai/scholarship-essay-assistant';
 import { wellbeingCheckin } from './guardian-ai/wellbeing-checkin';
 import { analyzeSeo } from './seo-analyzer';
 import {generateFeasibilityStudy} from './feasibility-study';

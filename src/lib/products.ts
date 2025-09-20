@@ -449,7 +449,7 @@ export const initialProducts: Product[] = [
         aiHint: "form document",
         rating: 0,
         enabled: true,
-        adminStatus: "On Track",
+        adminStatus: "Completed",
         href: "/pdf-form-filler"
     },
     {
@@ -465,33 +465,5 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/construction-tech/procurechain",
-    },
-    {
-        id: 32,
-        name: "DriveSync AI",
-        description: "An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS for real-time tracking.",
-        stage: "Live & Operating",
-        category: "Automotive Tech",
-        price: 0,
-        image: "https://images.unsplash.com/photo-1553556424-e40ce333b28d?q=80&w=600&auto=format&fit=crop",
-        aiHint: "car rental",
-        rating: 0,
-        enabled: true,
-        adminStatus: "Completed",
-        href: "/drivesync-ai"
-    },
-    {
-        id: 33,
-        name: "Beauty & Wellness Hub",
-        description: "A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships.",
-        stage: "Live & Operating",
-        category: "General Platforms & SaaS",
-        price: 0,
-        image: "https://images.unsplash.com/photo-1616394584738-FC6e6fb3e196?q=80&w=600&auto=format&fit=crop",
-        aiHint: "beauty salon",
-        rating: 0,
-        enabled: true,
-        adminStatus: "Completed",
-        href: "/beauty-hub",
     }
 ];
