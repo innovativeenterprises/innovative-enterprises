@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -13,7 +12,13 @@ import { useCfoData } from '@/hooks/use-global-store-data';
 
 // Main Dashboard Component
 export default function CfoDashboardPage() {
-  const { cfoData } = useCfoData();
+  const { cfoData, isClient } = useCfoData();
+  
+  if (!isClient) {
+      // You can return a loading skeleton here if needed
+      return <div>Loading...</div>;
+  }
+    
   const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = cfoData;
 
   const getStatusBadge = (status: string) => {
@@ -111,7 +116,7 @@ export default function CfoDashboardPage() {
                 </CardHeader>
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-destructive">OMR {vatPayment.amount.toFixed(2)}</p>
-                    <DueDateDisplay date={vatPayment.dueDate} prefix="Due:" warnDays={15} />
+                    <DueDateDisplay date={vatPayment.dueDate} prefix="Due:" />
                 </CardContent>
             </Card>
 
