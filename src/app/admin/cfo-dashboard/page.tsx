@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -5,9 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ShieldAlert } from "lucide-react";
-import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
+import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import { DueDateDisplay } from '@/components/due-date-display';
+import { DueDateDisplay } from "@/components/due-date-display";
 import { useCfoData } from '@/hooks/use-global-store-data';
 
 // Main Dashboard Component

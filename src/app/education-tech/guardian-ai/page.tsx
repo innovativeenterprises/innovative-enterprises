@@ -121,7 +121,7 @@ const StudentDashboard = ({ students }: { students: Student[] }) => {
 };
 
 export default function GuardianAiPage() {
-    const { students, isClient } = useStudentsData();
+    const { students } = useStudentsData();
     
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">

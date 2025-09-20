@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -17,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { ChatComponent } from '@/components/chat/chat-component';
 import { wellbeingCheckin } from '@/ai/flows/guardian-ai/wellbeing-checkin';
-import { useSettingsData } from '@/hooks/use-global-store-data';
+import { useSettingsData, useStudentsData } from '@/hooks/use-global-store-data';
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from '@/components/ui/skeleton';
@@ -120,7 +119,8 @@ const StudentDashboard = ({ students }: { students: Student[] }) => {
     );
 };
 
-export default function GuardianAiClientPage({ initialStudents }: { initialStudents: Student[] }) {
+export default function GuardianAiPage() {
+    const { students } = useStudentsData();
     
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -151,7 +151,7 @@ export default function GuardianAiClientPage({ initialStudents }: { initialStude
                             <TabsTrigger value="interview">AI Interview Coach</TabsTrigger>
                         </TabsList>
                         <TabsContent value="dashboard" className="mt-6">
-                            <StudentDashboard students={initialStudents} />
+                            <StudentDashboard students={students} />
                         </TabsContent>
                          <TabsContent value="scholarships" className="mt-6">
                              <Link href="/education-tech/scholarships">
