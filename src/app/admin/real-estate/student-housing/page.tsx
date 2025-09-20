@@ -1,15 +1,14 @@
 
-'use client';
 
-import StudentHousingClientPage from '@/app/real-estate-tech/student-housing/client-page';
-import { useLeasesData } from '@/hooks/use-global-store-data';
+import StudentHousingPage from '@/app/real-estate-tech/student-housing/page';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Admin - Student Housing | Innovative Enterprises",
+  description: "A centralized dashboard for managing student housing agreements and payments.",
+};
+
 
 export default function AdminStudentHousingPage() {
-    const { leases, isClient } = useLeasesData();
-
-    if (!isClient) {
-        return <div>Loading...</div>; // Or a skeleton loader
-    }
-
-    return <StudentHousingClientPage initialLeases={leases} />;
+    return <StudentHousingPage />;
 }

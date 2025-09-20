@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,16 +13,31 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { useLeasesData } from '@/hooks/use-global-store-data';
+import { getLeases } from "@/lib/firestore";
+import type { Metadata } from 'next';
 
-export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
+export const metadata: Metadata = {
+  title: "Student Housing Management | EduFlow Suite",
+  description: "A centralized dashboard for managing student housing agreements and payments.",
+};
+
+
+export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
-    
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
-        if (isClient) {
-            setLeases(() => initialLeases);
+        async function fetchData() {
+            if (isClient) {
+                const data = await getLeases();
+                setLeases(() => data);
+                setIsLoading(false);
+            }
         }
-    }, [initialLeases, setLeases, isClient]);
+        fetchData();
+    }, [isClient, setLeases]);
+
 
     const expiringLeasesCount = useMemo(() => {
         if (!isClient) return null;
@@ -74,15 +88,15 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
                          <Card>
                              <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
-                             <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : leases.filter(l => l.status === 'Active').length}</CardContent>
+                             <CardContent className="text-3xl font-bold text-primary">{isLoading ? <Skeleton className="h-8 w-1/2" /> : leases.filter(l => l.status === 'Active').length}</CardContent>
                         </Card>
                          <Card>
                             <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-3/4" /> : `OMR ${totalMonthlyRent.toLocaleString()}`}</CardContent>
+                            <CardContent className="text-3xl font-bold text-primary">{isLoading ? <Skeleton className="h-8 w-3/4" /> : `OMR ${totalMonthlyRent.toLocaleString()}`}</CardContent>
                         </Card>
                          <Card>
                             <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
+                            <CardContent className="text-3xl font-bold text-primary">{isLoading ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
                         </Card>
                     </div>
 
@@ -104,7 +118,7 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {!isClient ? (
+                                    {isLoading ? (
                                         <TableRow>
                                             <TableCell colSpan={4} className="text-center h-24">
                                                 <Skeleton className="h-10 w-full" />

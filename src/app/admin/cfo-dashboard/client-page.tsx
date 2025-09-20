@@ -1,27 +1,47 @@
-
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ShieldAlert } from "lucide-react";
+import { ShieldAlert, Loader2 } from "lucide-react";
 import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { DueDateDisplay } from "@/components/due-date-display";
 import { useCfoData } from '@/hooks/use-global-store-data';
+import { getCfoData } from '@/lib/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Main Dashboard Component
-export default function CfoDashboardClientPage({ initialCfoData }: { initialCfoData: any }) {
+export default function CfoDashboardPage() {
   const { cfoData, setCfoData, isClient } = useCfoData();
-  
-  useState(() => {
-    setCfoData(() => initialCfoData);
-  });
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!isClient) {
-      // You can return a loading skeleton here if needed
-      return <div>Loading...</div>;
+  useEffect(() => {
+    async function fetchData() {
+        if (isClient) {
+            const data = await getCfoData();
+            setCfoData(() => data);
+            setIsLoading(false);
+        }
+    }
+    fetchData();
+  }, [isClient, setCfoData]);
+
+  if (isLoading || !isClient) {
+      return (
+        <div className="space-y-8">
+            <Skeleton className="h-12 w-1/2" />
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                {Array.from({length: 6}).map((_, i) => <Skeleton key={i} className="h-28 w-full"/>)}
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div className="lg:col-span-3"><Skeleton className="h-96 w-full"/></div>
+                <div className="lg:col-span-2 space-y-8"><Skeleton className="h-48 w-full"/><Skeleton className="h-48 w-full"/></div>
+            </div>
+        </div>
+      );
   }
     
   const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = cfoData;
