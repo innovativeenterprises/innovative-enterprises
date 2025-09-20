@@ -3,7 +3,7 @@
 
 import { useParams, notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -64,7 +64,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | st
         <div className="w-full min-w-[200px] space-y-2">
             <div className="flex justify-between items-center">
                 <Badge variant="outline">{tier}</Badge>
-                <DueDateDisplay date={new Date(expiry).toISOString()} prefix="" />
+                <DueDateDisplay date={new Date(expiry).toISOString()} prefix="Expires:" warnDays={30} />
             </div>
             <Progress value={clientState.progressValue} className="h-2 [&>div]:bg-green-500" />
         </div>
