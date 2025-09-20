@@ -13,15 +13,17 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { useLeasesData } from '@/hooks/use-global-store-data';
+import type { Metadata } from 'next';
 
-export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
+export const metadata: Metadata = {
+  title: "Student Housing Management | EduFlow Suite",
+  description: "A centralized dashboard for managing student housing agreements and payments.",
+};
+
+
+export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setLeases(() => initialLeases);
-    }, [initialLeases, setLeases]);
-
 
     const expiringLeasesCount = useMemo(() => {
         if (!isClient) return null;
