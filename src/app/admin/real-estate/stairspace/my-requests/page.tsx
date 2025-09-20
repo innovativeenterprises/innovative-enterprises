@@ -1,15 +1,9 @@
 
-import StairspaceRequestsClientPage from './client-page';
-import type { Metadata } from 'next';
-import { initialStairspaceRequests } from '@/lib/stairspace-requests';
 
-export const metadata: Metadata = {
-    title: "My Booking Requests | StairSpace",
-    description: "Track the status of your StairSpace booking requests.",
-};
+import MyStairspaceRequestsPage from '@/app/real-estate-tech/stairspace/my-requests/page';
 
-export default function MyStairspaceRequestsPage() {
-    // Data is fetched on the server and passed to the client component.
-    const requests = initialStairspaceRequests;
-    return <StairspaceRequestsClientPage initialRequests={requests} />;
+export default function AdminMyStairspaceRequestsPage() {
+    // This page reuses the public-facing component for managing user requests.
+    // In a real app, it might have additional admin-specific functionalities or filters.
+    return <MyStairspaceRequestsPage />;
 }
