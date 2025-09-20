@@ -9,7 +9,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
-import { WorkerTable } from './worker-table';
+import { CandidateTable } from './candidate-table';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Worker } from '@/lib/raaha-workers';
@@ -18,7 +18,7 @@ import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } fr
 import { useToast } from '@/hooks/use-toast';
 import { CalendarIcon, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
-import { useAgenciesData, useRequestsData, useWorkersData } from '@/hooks/use-global-store-data';
+import { useAgenciesData, useRequestsData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -47,13 +47,12 @@ const getAvailabilityBadge = (availability: Worker['availability']) => {
 
 
 export default function AgencyDashboardPage() {
-    const { workers, setWorkers, isClient: isWorkersClient } = useWorkersData();
     const { requests, setRaahaRequests, isClient: isRequestsClient } = useRequestsData();
     const { agencies, setAgencies, isClient: isAgenciesClient } = useAgenciesData();
 
     const { toast } = useToast();
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const isClient = isWorkersClient && isRequestsClient && isAgenciesClient;
+    const isClient = isRequestsClient && isAgenciesClient;
 
      useEffect(() => {
         if (agencies.length > 0 && !selectedAgencyId) {
@@ -124,7 +123,6 @@ export default function AgencyDashboardPage() {
          );
     }
     
-    const filteredWorkers = workers.filter(w => w.agencyId === selectedAgency?.name);
     const filteredRequests = requests.filter(r => r.agencyId === selectedAgency?.name);
 
     return (
@@ -165,7 +163,7 @@ export default function AgencyDashboardPage() {
                      <Tabs defaultValue="requests" className="w-full">
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="requests">Client Requests ({filteredRequests.length})</TabsTrigger>
-                            <TabsTrigger value="workers">My Candidates ({filteredWorkers.length})</TabsTrigger>
+                            <TabsTrigger value="workers">My Candidates</TabsTrigger>
                             <TabsTrigger value="settings">Agency Settings</TabsTrigger>
                         </TabsList>
                         <TabsContent value="requests" className="mt-6">
@@ -177,10 +175,10 @@ export default function AgencyDashboardPage() {
                             />
                         </TabsContent>
                         <TabsContent value="workers" className="mt-6">
-                            <CandidateTable workers={filteredWorkers} setWorkers={setWorkers} columns={workersColumns} agencyId={selectedAgency.name} isClient={isClient} />
+                            <CandidateTable columns={workersColumns} agencyId={selectedAgency.name} />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
+                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
                         </TabsContent>
                     </Tabs>
                 </div>

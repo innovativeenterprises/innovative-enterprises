@@ -11,11 +11,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import type { Agency } from "@/lib/raaha-agencies";
+import type { Agency as RaahaAgency } from "@/lib/raaha-agencies";
 import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
 import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
 import { fileToDataURI } from '@/lib/utils';
+import { useAgenciesData } from "@/hooks/use-global-store-data";
 
 const AgencySchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -28,7 +29,8 @@ const AgencySchema = z.object({
 });
 type AgencyValues = z.infer<typeof AgencySchema>;
 
-export function AgencySettings({ agency, setAgencies }: { agency: Agency; setAgencies: (updater: (agencies: Agency[]) => void) => void }) {
+export function AgencySettings({ agency }: { agency: RaahaAgency }) {
+    const { setAgencies } = useAgenciesData();
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);

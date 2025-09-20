@@ -39,6 +39,7 @@ import {
   HardHat,
   GraduationCap,
   Heart,
+  UserRound,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -78,6 +79,7 @@ export default function AdminLayout({
       { href: '/admin/real-estate', label: 'Real Estate Tech', icon: Building2 },
       { href: '/admin/education-tech', label: 'Education Tech', icon: GraduationCap },
       { href: '/admin/beauty-hub', label: 'Beauty & Wellness Hub', icon: Heart },
+      { href: '/admin/raaha', label: 'RAAHA Workforce', icon: UserRound },
   ];
   
   const operations = [

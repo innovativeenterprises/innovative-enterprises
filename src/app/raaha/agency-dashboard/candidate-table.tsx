@@ -150,8 +150,11 @@ export const AddEditWorkerDialog = ({
     )
 }
 
-export function CandidateTable({ workers, setWorkers, columns, agencyId, isClient }: { workers: Worker[], setWorkers: any, columns: any[], agencyId: string, isClient: boolean }) {
+export function CandidateTable({ columns, agencyId }: { columns: any[], agencyId: string }) {
+    const { workers, setWorkers, isClient } = useWorkersData();
     const { toast } = useToast();
+
+    const filteredWorkers = workers.filter(w => w.agencyId === agencyId);
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const newWorker = { ...values };
@@ -187,10 +190,10 @@ export function CandidateTable({ workers, setWorkers, columns, agencyId, isClien
                              <TableRow>
                                 <TableCell colSpan={columns.length}><Skeleton className="h-12 w-full" /></TableCell>
                             </TableRow>
-                        ) : workers.length === 0 ? (
+                        ) : filteredWorkers.length === 0 ? (
                             <TableRow><TableCell colSpan={columns.length} className="text-center text-muted-foreground h-24">No candidates found for this agency.</TableCell></TableRow>
                         ) : (
-                            workers.map(worker => (
+                            filteredWorkers.map(worker => (
                                 <TableRow key={worker.id}>
                                     {columns.map(col => (
                                         <TableCell key={col.accessor}>
