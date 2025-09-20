@@ -22,13 +22,13 @@ export default function CfoDashboardPage() {
   useEffect(() => {
     async function fetchData() {
         if (isClient) {
-            const data = await getCfoData();
-            setCfoData(() => data);
+            // In a real-world scenario with a database, you might fetch data here.
+            // For this prototype, the data is loaded from the global store's initial state.
             setIsLoading(false);
         }
     }
     fetchData();
-  }, [isClient, setCfoData]);
+  }, [isClient]);
 
   if (isLoading || !isClient) {
       return (
