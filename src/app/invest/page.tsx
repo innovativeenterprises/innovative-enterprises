@@ -1,4 +1,5 @@
 
+
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck } from "lucide-react";
 import InvestForm from "./invest-form";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -66,9 +67,8 @@ const ProjectCard = ({ product }: { product: Product }) => {
 }
 
 export default async function InvestPage() {
-  const [allProducts, initialInvestors] = await Promise.all([
+  const [allProducts] = await Promise.all([
       getProducts(),
-      getInvestors(),
   ]);
   const liveProducts = allProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
   const devProducts = allProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
@@ -107,7 +107,7 @@ export default async function InvestPage() {
             
              <div>
                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Our Network of Investors & Funders</h2>
-                <InvestorTable initialInvestors={initialInvestors} />
+                <InvestorTable />
             </div>
 
             {liveProducts.length > 0 && (

@@ -73,13 +73,9 @@ const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Inve
     );
 };
 
-export default function InvestorTable({ initialInvestors }: { initialInvestors: Investor[] }) {
+export default function InvestorTable() {
     const { investors, setInvestors, isClient } = useInvestorsData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setInvestors(() => initialInvestors);
-    }, [initialInvestors, setInvestors]);
 
     const handleSave = (values: InvestorValues, id?: string) => {
         const newInvestorData = { ...values, documents: {} };
