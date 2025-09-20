@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,9 +15,15 @@ import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { useLeasesData } from '@/hooks/use-global-store-data';
 
-export default function StudentHousingPage() {
+export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
     const { leases, setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
+    
+    useEffect(() => {
+        if (isClient) {
+            setLeases(() => initialLeases);
+        }
+    }, [initialLeases, setLeases, isClient]);
 
     const expiringLeasesCount = useMemo(() => {
         if (!isClient) return null;
@@ -25,7 +32,7 @@ export default function StudentHousingPage() {
             if (!l.endDate) return false;
             const endDate = new Date(l.endDate);
             // Check if expiry is in the future but within the next month.
-            return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() === now.getMonth() + 1;
+            return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() <= now.getMonth() + 1;
         }).length;
     }, [leases, isClient]);
 
@@ -67,15 +74,15 @@ export default function StudentHousingPage() {
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
                          <Card>
                              <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
-                             <CardContent className="text-3xl font-bold text-primary">{isClient ? leases.filter(l => l.status === 'Active').length : <Skeleton className="h-8 w-1/2" />}</CardContent>
+                             <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : leases.filter(l => l.status === 'Active').length}</CardContent>
                         </Card>
                          <Card>
                             <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{isClient ? `OMR ${totalMonthlyRent.toLocaleString()}`: <Skeleton className="h-8 w-3/4" />}</CardContent>
+                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-3/4" /> : `OMR ${totalMonthlyRent.toLocaleString()}`}</CardContent>
                         </Card>
                          <Card>
                             <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{expiringLeasesCount === null ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
+                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
                         </Card>
                     </div>
 
