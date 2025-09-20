@@ -9,20 +9,18 @@ import { useToast } from '@/hooks/use-toast';
 import type { Product } from "@/lib/products.schema";
 import { PlusCircle, Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProductsData } from "@/hooks/use-global-store-data";
+import { useProductsData, useStagesData } from "@/hooks/use-global-store-data";
 import { Badge } from "@/components/ui/badge";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
-import { initialStages } from "@/lib/stages";
 import type { ProjectStage } from "@/lib/stages";
 
 export default function ProductTable() {
     const { products, setProducts, isClient } = useProductsData();
+    const { stages } = useStagesData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    const stages: ProjectStage[] = initialStages; // This is small and can remain static
-
     const handleToggle = (id: number) => {
         setProducts(prev =>
             prev.map(product =>
