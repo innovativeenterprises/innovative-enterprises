@@ -19,12 +19,6 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { fileToDataURI } from '@/lib/utils';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "AI Property Valuator | Innovative Enterprises",
-  description: "Get an instant, data-driven market valuation for your property. Provide the details below and let our AI analyze the market to give you an estimated value.",
-};
 
 const FormSchema = PropertyValuationInputSchema.extend({
     propertyImageFile: z.any().optional(),
