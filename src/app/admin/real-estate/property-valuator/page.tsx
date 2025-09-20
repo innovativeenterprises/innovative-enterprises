@@ -1,4 +1,4 @@
-import ValuationForm from "./client-page";
+import ValuationClientPage from "./client-page";
 import { BarChart } from "lucide-react";
 import type { Metadata } from 'next';
 
@@ -21,7 +21,7 @@ export default function PropertyValuatorPage() {
           </p>
         </div>
         <div className="max-w-4xl mx-auto mt-12">
-            <ValuationForm />
+            <ValuationClientPage />
         </div>
       </div>
     </div>

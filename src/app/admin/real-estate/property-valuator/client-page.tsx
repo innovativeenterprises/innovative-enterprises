@@ -24,7 +24,7 @@ const FormSchema = PropertyValuationInputSchema.extend({
 });
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function ValuationForm() {
+export default function ValuationClientPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<PropertyValuationOutput | null>(null);
   const { toast } = useToast();
