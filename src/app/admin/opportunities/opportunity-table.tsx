@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -19,7 +20,6 @@ import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useOpportunitiesData } from "@/hooks/use-global-store-data";
 
 const AddEditOpportunityDialog = ({ 
     opportunity, onSave, children, isOpen, onOpenChange,
@@ -66,8 +66,7 @@ const AddEditOpportunityDialog = ({
     );
 }
 
-export default function OpportunityTable() {
-    const { opportunities, setOpportunities, isClient } = useOpportunitiesData();
+export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
@@ -75,17 +74,13 @@ export default function OpportunityTable() {
     const openDialog = (opp?: Opportunity) => { setSelectedOpp(opp); setIsDialogOpen(true); }
 
     const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
-        if (id) {
-            setOpportunities(prev => prev.map(opp => opp.id === id ? { ...opp, ...values } : opp));
-            toast({ title: "Opportunity updated successfully." });
-        } else {
-            const newOpp: Opportunity = { ...values, id: `opp_${values.title.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}` };
-            setOpportunities(prev => [newOpp, ...prev]);
-            toast({ title: "Opportunity added successfully." });
-        }
+        // This would be a server action in a real app.
+        toast({ title: 'Action not implemented in prototype.' });
     };
     
-    const handleDelete = (id: string) => { setOpportunities(prev => prev.filter(opp => opp.id !== id)); toast({ title: "Opportunity removed.", variant: "destructive" }); };
+    const handleDelete = (id: string) => { 
+        toast({ title: 'Action not implemented in prototype.', variant: 'destructive' });
+    };
     
     return (
         <Card>
@@ -98,7 +93,7 @@ export default function OpportunityTable() {
                 <Table>
                     <TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Type</TableHead><TableHead>Prize/Budget</TableHead><TableHead>Deadline</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {!isClient ? <TableRow><TableCell colSpan={6}><Skeleton className="h-10 w-full" /></TableCell></TableRow> : opportunities.map(opp => (
+                        {initialOpportunities.map(opp => (
                             <TableRow key={opp.id}>
                                 <TableCell className="font-medium">{opp.title}</TableCell><TableCell>{opp.type}</TableCell><TableCell>{opp.prize}</TableCell><TableCell>{opp.deadline}</TableCell><TableCell>{opp.status}</TableCell>
                                 <TableCell className="text-right">
