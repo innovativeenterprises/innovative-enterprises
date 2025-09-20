@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -19,6 +18,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { fileToDataURI } from '@/lib/utils';
+import type { Metadata } from 'next';
 
 const FormSchema = PropertyValuationInputSchema.extend({
     propertyImageFile: z.any().optional(),
