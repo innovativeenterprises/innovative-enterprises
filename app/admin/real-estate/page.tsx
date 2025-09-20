@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
