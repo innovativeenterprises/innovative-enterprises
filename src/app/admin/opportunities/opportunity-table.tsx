@@ -71,11 +71,11 @@ const AddEditOpportunityDialog = ({
     );
 }
 
-export default function OpportunityTable() {
-    const { opportunities, setOpportunities, isClient } = useOpportunitiesData();
+export default function OpportunityTable({ opportunities, setOpportunities }: { opportunities: Opportunity[], setOpportunities: (updater: (prev: Opportunity[]) => Opportunity[]) => void }) {
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
+    const { isClient } = useOpportunitiesData(); // Use the hook to determine client-side rendering
 
     const openDialog = (opp?: Opportunity) => { setSelectedOpp(opp); setIsDialogOpen(true); }
 

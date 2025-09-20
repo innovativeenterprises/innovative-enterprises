@@ -6,8 +6,11 @@ import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
+import { useServicesData, useProductsData, useStagesData, useClientsData, useTestimonialsData, usePricingData, usePosProductsData } from "@/hooks/use-global-store-data";
 
 export default function AdminContentPage() {
+    // Data is now self-managed by the client components below.
+    // This component acts as a layout container.
     return (
         <div className="space-y-8">
             <div>

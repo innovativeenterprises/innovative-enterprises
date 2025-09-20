@@ -437,5 +437,33 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/interior-designer"
+    },
+    {
+        id: 30,
+        name: "AI PDF Form Filler",
+        description: "Upload any PDF form and let our AI intelligently fill it out based on your profile data.",
+        stage: "Live & Operating",
+        category: "AI & Creative Tools",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?q=80&w=600&auto=format&fit=crop",
+        aiHint: "form document",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/pdf-form-filler"
+    },
+    {
+        id: 31,
+        name: "ProcureChain SaaS",
+        description: "An e-procurement platform with automated vendor approvals, asset rentals, and predictive ordering.",
+        stage: "Live & Operating",
+        category: "Construction Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1578575437136-7242e38d7525?q=80&w=600&auto=format&fit=crop",
+        aiHint: "supply chain logistics",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/construction-tech/procurechain",
     }
 ];
