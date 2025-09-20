@@ -60,7 +60,7 @@ export default function VirtualTourPage() {
       const imagePromises = roomPrompts.map(p => 
         transformImage({ 
             baseImageUri, 
-            prompt: `${p.prompt} The overall style should be: ${data.stylePrompt}`
+            prompt: `${'\'\'\'' + p.prompt + '\''\'\''} The overall style should be: ${data.stylePrompt}`
         }).then(result => ({ room: p.room, imageUrl: result.imageDataUri }))
       );
 

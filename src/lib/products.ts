@@ -128,7 +128,7 @@ export const initialProducts: Product[] = [
         rating: 4.7,
         enabled: true,
         adminStatus: 'Completed',
-        href: "/real-estate-tech/property-valuator",
+        href: "/admin/real-estate/property-valuator",
     },
      {
         id: 8,
@@ -449,7 +449,7 @@ export const initialProducts: Product[] = [
         aiHint: "form document",
         rating: 0,
         enabled: true,
-        adminStatus: "On Track",
+        adminStatus: "Completed",
         href: "/pdf-form-filler"
     },
     {
