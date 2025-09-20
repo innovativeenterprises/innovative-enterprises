@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Bot, Building2, Cpu, GraduationCap, Handshake, HardHat, Package, Users } from "lucide-react";
 import Link from "next/link";
