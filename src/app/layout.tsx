@@ -4,7 +4,8 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
-import { getServices, getProducts, getStoreProducts, getStaffData, getClients, getTestimonials, getSettings, getSolutions, getIndustries, getAiTools, getOpportunities, getProviders, getLeases, getStairspaceRequests, getStairspaceListings, getRaahaAgencies, getRaahaWorkers, getRaahaRequests, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getCostSettings, getAssets, getUsedItems, getCars, getRentalAgencies, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getBriefcase, getPricing, getInvestors, getKnowledgeBase, getCfoData, getProperties, getStockItems, getApplications, getStages } from '@/lib/firestore';
+import { getServices, getProducts, getStoreProducts, getStaffData, getClients, getTestimonials, getSettings, getSolutions, getIndustries, getAiTools, getOpportunities, getProviders, getLeases, getStairspaceRequests, getStairspaceListings, getRaahaAgencies, getRaahaWorkers, getRaahaRequests, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getCostSettings, getAssets, getUsedItems, getCars, getRentalAgencies, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getBriefcase, getPricing, getInvestors, getKnowledgeBase, getCfoData, getProperties, getStockItems, getApplications, getStages, getDoc } from '@/lib/firestore';
+import * as admin from 'firebase-admin';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -112,11 +113,6 @@ export default async function RootLayout({
   );
 }
 
-async function getDoc<T>(docPath: string): Promise<T> {
-    const snapshot = await admin.firestore().doc(docPath).get();
-    return snapshot.data() as T;
-}
-import * as admin from 'firebase-admin';
 if (!admin.apps.length) {
     admin.initializeApp();
 }

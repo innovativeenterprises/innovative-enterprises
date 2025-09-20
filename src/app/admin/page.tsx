@@ -9,16 +9,31 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useProductsData, useProvidersData, useStaffData } from "@/hooks/use-global-store-data";
-import { useMemo } from "react";
+import { useProductsData, useProvidersData, useStaffData } from '@/hooks/use-global-store-data';
+import { useMemo, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Product } from "@/lib/products.schema";
+import type { Provider } from "@/lib/providers.schema";
+import type { Agent, AgentCategory } from "@/lib/agents.schema";
 
-export default function AdminDashboardPage() {
-  const { products, isClient: isProductsClient } = useProductsData();
-  const { providers, isClient: isProvidersClient } = useProvidersData();
-  const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
+const AdminDashboardPageClient = ({ 
+    products, 
+    providers, 
+    leadership,
+    staff,
+    agentCategories
+}: { 
+    products: Product[], 
+    providers: Provider[],
+    leadership: Agent[],
+    staff: Agent[],
+    agentCategories: AgentCategory[]
+}) => {
+  const [isClient, setIsClient] = useState(false);
 
-  const isClient = isProductsClient && isProvidersClient && isStaffClient;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const totalAgents = useMemo(() => agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0), [agentCategories]);
   const totalStaff = useMemo(() => leadership.length + staff.length, [leadership, staff]);
@@ -191,3 +206,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
+export default AdminDashboardPageClient;

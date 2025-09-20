@@ -3,7 +3,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import type { Client, Testimonial } from "@/lib/clients.schema";
+import type { Client, Testimonial } from '@/lib/clients.schema';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 

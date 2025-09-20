@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useContext, useSyncExternalStore, useCallback } from 'react';
@@ -113,18 +112,6 @@ export const useStairspaceRequestsData = () => {
     return { stairspaceRequests, setStairspaceRequests, isClient };
 };
 
-export const useProductsData = () => {
-    const [data, setStore, isClient] = useStore((s) => ({ products: s.products, storeProducts: s.storeProducts }));
-    const setProducts = (updater: (prev: AppState['products']) => AppState['products']) => setStore(state => ({...state, products: updater(state.products)}));
-    return { ...data, setProducts, isClient };
-};
-
-export const useProvidersData = () => {
-    const [providers, setStore, isClient] = useStore((s) => s.providers);
-    const setProviders = (updater: (prev: AppState['providers']) => AppState['providers']) => setStore(state => ({...state, providers: updater(state.providers)}));
-    return { providers, setProviders, isClient };
-};
-
 export const useOpportunitiesData = () => {
     const [opportunities, setStore, isClient] = useStore((s) => s.opportunities);
     const setOpportunities = (updater: (prev: AppState['opportunities']) => AppState['opportunities']) => setStore(state => ({...state, opportunities: updater(state.opportunities)}));
@@ -135,14 +122,6 @@ export const useServicesData = () => {
     const [services, setStore, isClient] = useStore((s) => s.services);
     const setServices = (updater: (prev: AppState['services']) => AppState['services']) => setStore(state => ({...state, services: updater(state.services)}));
     return { services, setServices, isClient };
-};
-
-export const useStaffData = () => {
-    const [data, setStore, isClient] = useStore((s) => ({ leadership: s.leadership, staff: s.staff, agentCategories: s.agentCategories }));
-    const setLeadership = (updater: (prev: AppState['leadership']) => AppState['leadership']) => setStore(state => ({...state, leadership: updater(state.leadership)}));
-    const setStaff = (updater: (prev: AppState['staff']) => AppState['staff']) => setStore(state => ({...state, staff: updater(state.staff)}));
-    const setAgentCategories = (updater: (prev: AppState['agentCategories']) => AppState['agentCategories']) => setStore(state => ({...state, agentCategories: updater(state.agentCategories)}));
-    return { ...data, setLeadership, setStaff, setAgentCategories, isClient };
 };
 
 export const useRaahaData = () => {
@@ -330,12 +309,6 @@ export const useKnowledgeData = () => {
     const [knowledgeBase, setStore, isClient] = useStore((s) => s.knowledgeBase);
     const setKnowledgeBase = (updater: (prev: AppState['knowledgeBase']) => AppState['knowledgeBase']) => setStore(state => ({ ...state, knowledgeBase: updater(state.knowledgeBase) }));
     return { knowledgeBase, setKnowledgeBase, isClient };
-};
-
-export const useCfoData = () => {
-    const [cfoData, setStore, isClient] = useStore((s) => s.cfoData);
-    const setCfoData = (updater: (prev: AppState['cfoData']) => AppState['cfoData']) => setStore(state => ({ ...state, cfoData: updater(state.cfoData) }));
-    return { cfoData, setCfoData, isClient };
 };
 
 export const useApplicationsData = () => {

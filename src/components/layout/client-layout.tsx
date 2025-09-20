@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -13,7 +14,7 @@ export default function ClientLayout({
   initialData,
 }: {
   children: React.ReactNode;
-  initialData: AppState;
+  initialData: Partial<AppState>;
 }) {
 
   return (

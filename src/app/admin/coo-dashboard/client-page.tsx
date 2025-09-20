@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from '@/components/ui/skeleton';
 import { BrainCircuit, Loader2, RefreshCw, AlertTriangle, Lightbulb, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { useProductsData, useProvidersData, useCfoData } from '@/hooks/use-global-store-data';
 
 const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) => {
     const severityMap = {
@@ -37,11 +37,11 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
     )
 }
 
-export default function CooDashboardPage() {
-    const { products } = useProductsData();
-    const { providers } = useProvidersData();
-    const { cfoData } = useCfoData();
-
+export default function CooDashboardClientPage({ products, providers, kpiData }: {
+    products: Product[],
+    providers: Provider[],
+    kpiData: KpiData[],
+}) {
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
 
@@ -49,7 +49,7 @@ export default function CooDashboardPage() {
         setIsLoading(true);
         setAnalysis(null);
         try {
-            const result = await analyzeOperations({ products, providers, kpiData: cfoData.kpiData });
+            const result = await analyzeOperations({ products, providers, kpiData });
             setAnalysis(result);
         } catch (error) {
             console.error("COO Analysis failed:", error);
@@ -63,7 +63,7 @@ export default function CooDashboardPage() {
     useEffect(() => {
         runAnalysis();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products, providers, cfoData]);
+    }, [products, providers, kpiData]);
 
     return (
         <div className="space-y-8">

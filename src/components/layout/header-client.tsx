@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -67,14 +68,14 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient() {
+export default function HeaderClient({ initialSolutions, initialIndustries, initialAiTools }: { 
+    initialSolutions: any[], 
+    initialIndustries: any[], 
+    initialAiTools: any[] 
+}) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, isClient } = useCartData();
-  const { settings } = useSettingsData();
-  const { solutions } = useSolutionsData();
-  const { industries } = useIndustriesData();
-  const { aiTools } = useAiToolsData();
   const { theme, setTheme } = useTheme();
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -88,12 +89,12 @@ export default function HeaderClient() {
     ];
     
     const solutionsByCategory = {
-        "SaaS Platforms": solutions,
-        "AI Tools": aiTools,
+        "SaaS Platforms": initialSolutions,
+        "AI Tools": initialAiTools,
     }
 
     const industriesByCategory = {
-        "Industries": industries,
+        "Industries": initialIndustries,
     }
 
     const opportunitiesLinks: { title: string; href: string; description: string, icon: React.ElementType }[] = [
