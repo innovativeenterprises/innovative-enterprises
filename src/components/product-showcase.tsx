@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { StageBadge } from '@/components/stage-badge';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useProductsData } from "@/hooks/use-global-store-data";
+import { useProductsData } from '@/hooks/use-global-store-data';
 
 export default function ProductShowcase() {
   const { products } = useProductsData();
@@ -52,3 +53,5 @@ export default function ProductShowcase() {
     </section>
   );
 }
+
+  

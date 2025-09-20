@@ -38,8 +38,5 @@ export const createAppStore = (initState: Partial<AppState> = {}) => {
 
 export type StoreType = ReturnType<typeof createAppStore>;
 
-// We export a function to get the store, so it can be initialized with server data.
-export const getStore = (initialData: Partial<AppState>) => createAppStore(initialData);
-
 // A default store for use in client-only scenarios if needed
 export const store = createAppStore(initialState);

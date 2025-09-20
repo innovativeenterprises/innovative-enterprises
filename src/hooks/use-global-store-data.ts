@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useContext, useSyncExternalStore, useCallback } from 'react';
@@ -40,6 +41,8 @@ import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 import type { StockItem } from '@/lib/stock-items.schema';
 import type { Property } from '@/lib/properties.schema';
 import type { RentalAgency } from '@/lib/rental-agencies';
+import { useProductsData as useProductsDataInternal } from './use-products-data-internal';
+import { useSaaSProductsData as useSaaSProductsDataInternal } from './use-saas-products-data-internal';
 
 
 // Centralized function to access the store and its setters
@@ -64,9 +67,9 @@ function useStore<T>(selector: (state: AppState) => T): [T, (updater: (state: Ap
 function createStoreHook<K extends keyof AppState>(key: K) {
     type StateSlice = AppState[K];
     type SetState = (updater: (prev: StateSlice) => StateSlice) => void;
-    type HookReturnType = { [P in K]: StateSlice } & { [setterName in `set${Capitalize<K>}`]: SetState } & { isClient: boolean };
-
-    return (): HookReturnType => {
+    
+    // The hook name must start with "use"
+    const useHook = () => {
         const [state, setStore, isClient] = useStore((s) => s[key]);
         const set = useCallback((updater: (prev: StateSlice) => StateSlice) => {
             setStore((prevState) => ({
@@ -75,12 +78,13 @@ function createStoreHook<K extends keyof AppState>(key: K) {
             }));
         }, [setStore]);
 
-        return {
-            [key]: state,
-            [`set${key.charAt(0).toUpperCase() + key.slice(1)}`]: set,
-            isClient
-        } as HookReturnType;
+        return { [key]: state, [`set${key.charAt(0).toUpperCase() + key.slice(1)}`]: set, isClient };
     };
+    
+    // Assign a display name for better debugging
+    useHook.displayName = `use${key.charAt(0).toUpperCase() + key.slice(1)}Data`;
+
+    return useHook;
 }
 
 // Specific hooks using the corrected factory
@@ -90,11 +94,7 @@ export const usePosProductsData = createStoreHook('posProducts');
 export const usePosData = createStoreHook('dailySales');
 export const useLeasesData = createStoreHook('signedLeases');
 export const useStairspaceRequestsData = createStoreHook('stairspaceRequests');
-export const useProductsData = () => {
-    const { products, setProducts, isClient } = createStoreHook('products')();
-    const [storeProducts] = useStore((s) => s.storeProducts);
-    return { products, setProducts, storeProducts, isClient };
-};
+export const useProductsData = useProductsDataInternal;
 export const useProvidersData = createStoreHook('providers');
 export const useOpportunitiesData = createStoreHook('opportunities');
 export const useServicesData = createStoreHook('services');
@@ -149,5 +149,8 @@ export const useStairspaceData = createStoreHook('stairspaceListings');
 export const useStockItemsData = createStoreHook('stockItems');
 export const useKnowledgeData = createStoreHook('knowledgeBase');
 export const useCfoData = createStoreHook('cfoData');
+export const useSaaSProductsData = useSaaSProductsDataInternal;
 export const useApplicationsData = createStoreHook('applications');
 export const useStagesData = createStoreHook('stages');
+
+  

@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
-import { useCartData, useSolutionsData, useIndustriesData, useAiToolsData } from '@/hooks/use-global-store-data';
+import { useCartData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 
@@ -63,11 +63,15 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient() { 
-  const { solutions } = useSolutionsData();
-  const { industries } = useIndustriesData();
-  const { aiTools } = useAiToolsData();
-
+export default function HeaderClient({
+    solutions,
+    industries,
+    aiTools
+}: {
+    solutions: Solution[],
+    industries: Industry[],
+    aiTools: AiTool[]
+}) { 
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, isClient } = useCartData();
@@ -84,6 +88,18 @@ export default function HeaderClient() {
         { href: "/invest", label: "Invest" },
         { href: "/partner", label: "Partners" },
     ];
+
+    if (!isClient) {
+        return (
+            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                 <div className="container flex h-20 items-center justify-between">
+                    <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
+                    <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+                    </Link>
+                 </div>
+            </header>
+        );
+    }
     
     const solutionsByCategory = {
         "SaaS Platforms": solutions,
@@ -94,18 +110,6 @@ export default function HeaderClient() {
         "Industries": industries,
     }
   
-  if (!isClient) {
-    return (
-        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-             <div className="container flex h-20 items-center justify-between">
-                <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-                <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
-                </Link>
-             </div>
-        </header>
-    );
-  }
-
   const renderNavLinks = () => (
     navLinks.map((link) => (
         <NavigationMenuItem key={link.href}>

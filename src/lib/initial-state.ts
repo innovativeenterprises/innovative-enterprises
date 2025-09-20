@@ -64,11 +64,10 @@ import { initialMembers } from './community-members';
 import { initialAlumniJobs } from './alumni-jobs';
 import { initialRentalAgencies } from './rental-agencies';
 import { initialCars } from './cars';
+import { saasProducts as initialSaasProducts } from './saas-products';
 import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
-import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
-import { getDoc, getCollection, getStaffData as fetchStaffData, getBeautyData as fetchBeautyData } from './firestore';
 import type { ProjectStage } from './stages';
 import type { Investor } from './investors.schema';
 import { initialInvestors } from './investors';
@@ -77,6 +76,9 @@ import { initialCfoData } from './cfo-data';
 import type { KnowledgeDocument } from './knowledge.schema';
 import type { Property } from './properties.schema';
 import { initialProperties } from './properties';
+import type { SaasCategory } from './saas-products.schema';
+import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
+import type { Solution, Industry, AiTool } from './nav-links';
 
 export interface AppState {
   settings: AppSettings;
@@ -120,13 +122,14 @@ export interface AppState {
   stages: ProjectStage[];
   applications: typeof initialApplications;
   briefcase: BriefcaseData;
-  solutions: typeof initialSolutions;
-  industries: typeof initialIndustries;
-  aiTools: typeof initialAiTools;
   investors: Investor[];
   knowledgeBase: KnowledgeDocument[];
   cfoData: typeof initialCfoData;
   properties: Property[];
+  saasProducts: SaasCategory[];
+  solutions: Solution[];
+  industries: Industry[];
+  aiTools: AiTool[];
 };
 
 export const initialState: AppState = {
@@ -171,73 +174,14 @@ export const initialState: AppState = {
   stages: initialStages,
   applications: initialApplications,
   briefcase: initialBriefcase,
-  solutions: initialSolutions,
-  industries: initialIndustries,
-  aiTools: initialAiTools,
   investors: initialInvestors,
   knowledgeBase: initialKnowledgeBase,
   cfoData: initialCfoData,
   properties: initialProperties,
+  saasProducts: initialSaasProducts,
+  solutions: initialSolutions,
+  industries: initialIndustries,
+  aiTools: initialAiTools,
 };
 
-export async function getInitialState(): Promise<AppState> {
-    const [
-        products,
-        storeProducts,
-        services,
-        providers,
-        opportunities,
-        clients,
-        testimonials,
-        settings,
-        staffData,
-        solutions,
-        industries,
-        aiTools,
-        cfoData,
-        properties,
-        stairspaceListings,
-        beautyData,
-    ] = await Promise.all([
-        getCollection<Product>('products'),
-        getCollection<Product>('storeProducts'),
-        getCollection<Service>('services'),
-        getCollection<Provider>('providers'),
-        getCollection<Opportunity>('opportunities'),
-        getCollection<Client>('clients'),
-        getCollection<Testimonial>('testimonials'),
-        getDoc<AppSettings>('site/settings'),
-        fetchStaffData(),
-        getCollection<any>('solutions'),
-        getCollection<any>('industries'),
-        getCollection<any>('aiTools'),
-        getDoc<any>('cfo/dashboard'),
-        getCollection<Property>('properties'),
-        getCollection<StairspaceListing>('stairspaceListings'),
-        fetchBeautyData(),
-    ]);
-
-    return {
-        ...initialState,
-        products,
-        storeProducts,
-        services,
-        providers,
-        opportunities,
-        clients,
-        testimonials,
-        settings,
-        leadership: staffData.leadership,
-        staff: staffData.staff,
-        agentCategories: staffData.agentCategories,
-        solutions,
-        industries,
-        aiTools,
-        cfoData,
-        properties,
-        stairspaceListings,
-        beautyCenters: beautyData.beautyCenters,
-        beautyServices: beautyData.beautyServices,
-        beautyAppointments: beautyData.beautyAppointments,
-    };
-}
+  

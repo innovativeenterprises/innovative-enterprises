@@ -1,17 +1,18 @@
 
+
 'use client';
 
 import { Toaster } from '@/components/ui/toaster';
 import ChatWidget from '@/components/chat-widget';
 import { StoreProvider } from '@/components/layout/store-provider';
-import type { AppState } from '@/lib/global-store';
 import { ThemeProvider } from 'next-themes';
 import Footer from './footer';
 import Header from './header';
+import { type AppState } from '@/lib/global-store';
 
 export default function ClientLayout({
   children,
-  initialData
+  initialData,
 }: {
   children: React.ReactNode;
   initialData: AppState;
@@ -36,3 +37,5 @@ export default function ClientLayout({
     </ThemeProvider>
   );
 }
+
+  

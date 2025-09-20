@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { Inter } from 'next/font/google';
@@ -6,7 +7,10 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import ClientLayout from '@/components/layout/client-layout';
 import type { Metadata } from 'next';
-import { getInitialState } from '@/lib/initial-state';
+import { getServices, getProducts, getClients, getTestimonials, getSettings, getStaffData, getRaahaData, getBeautyData, getCostSettings, getAssets, getUsedItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getPosProducts, getDailySales, getStockItems, getPricing, getStages, getApplications, getBriefcase, getInvestors, getKnowledgeBase, getCfoData, getProperties, getStairspaceListings, getStairspaceRequests, getLeases, getOpportunities, getSolutions, getIndustries, getAiTools } from '@/lib/firestore';
+import type { AppState } from '@/lib/global-store';
+import { saasProducts } from '@/lib/saas-products';
+
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,19 +54,160 @@ export const metadata: Metadata = {
   },
 }
 
+async function getInitialState(): Promise<AppState> {
+    const [
+        settings,
+        products,
+        storeProducts,
+        providers,
+        opportunities,
+        services,
+        signedLeases,
+        stairspaceRequests,
+        stairspaceListings,
+        staffData,
+        raahaData,
+        beautyData,
+        costSettings,
+        assets,
+        usedItems,
+        clients,
+        testimonials,
+        giftCards,
+        students,
+        communities,
+        communityEvents,
+        communityFinances,
+        communityMembers,
+        alumniJobs,
+        rentalAgencies,
+        cars,
+        posProducts,
+        dailySales,
+        stockItems,
+        pricing,
+        stages,
+        applications,
+        briefcase,
+        investors,
+        knowledgeBase,
+        cfoData,
+        properties,
+        solutions,
+        industries,
+        aiTools
+    ] = await Promise.all([
+        getSettings(),
+        getProducts(),
+        getProducts(), // Re-using for store products for simplicity
+        getProviders(),
+        getOpportunities(),
+        getServices(),
+        getLeases(),
+        getStairspaceRequests(),
+        getStairspaceListings(),
+        getStaffData(),
+        getRaahaData(),
+        getBeautyData(),
+        getCostSettings(),
+        getAssets(),
+        getUsedItems(),
+        getClients(),
+        getTestimonials(),
+        getGiftCards(),
+        getStudents(),
+        getCommunities(),
+        getCommunityEvents(),
+        getCommunityFinances(),
+        getCommunityMembers(),
+        getAlumniJobs(),
+        getRentalAgencies(),
+        getCars(),
+        getPosProducts(),
+        getDailySales(),
+        getStockItems(),
+        getPricing(),
+        getStages(),
+        getApplications(),
+        getBriefcase(),
+        getInvestors(),
+        getKnowledgeBase(),
+        getCfoData(),
+        getProperties(),
+        getSolutions(),
+        getIndustries(),
+        getAiTools(),
+    ]);
+
+    return {
+        settings,
+        products,
+        storeProducts,
+        providers,
+        opportunities,
+        services,
+        signedLeases,
+        stairspaceRequests,
+        stairspaceListings,
+        leadership: staffData.leadership,
+        staff: staffData.staff,
+        agentCategories: staffData.agentCategories,
+        raahaAgencies: raahaData.raahaAgencies,
+        raahaWorkers: raahaData.raahaWorkers,
+        raahaRequests: raahaData.raahaRequests,
+        beautyCenters: beautyData.beautyCenters,
+        beautyServices: beautyData.beautyServices,
+        beautySpecialists: [],
+        beautyAppointments: beautyData.beautyAppointments,
+        costSettings,
+        assets,
+        usedItems,
+        clients,
+        testimonials,
+        giftCards,
+        students,
+        communities,
+        communityEvents,
+        communityFinances,
+        communityMembers,
+        alumniJobs,
+        rentalAgencies,
+        cars,
+        posProducts,
+        dailySales,
+        saasProducts,
+        stockItems,
+        pricing,
+        stages,
+        applications,
+        briefcase,
+        investors,
+        knowledgeBase,
+        cfoData,
+        properties,
+        solutions,
+        industries,
+        aiTools,
+        cart: [],
+    };
+}
+
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialState = await getInitialState();
+  const initialData = await getInitialState();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <ClientLayout initialData={initialState}>{children}</ClientLayout>
+        <ClientLayout initialData={initialData}>{children}</ClientLayout>
       </body>
     </html>
   );
 }
+
+  

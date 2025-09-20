@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,7 @@ import { GitBranch } from "lucide-react";
 import Link from 'next/link';
 import { useMemo } from 'react';
 import type { Service } from "@/lib/services.schema";
-import { useServicesData } from "@/hooks/use-global-store-data";
+import { useServicesData } from '@/hooks/use-global-store-data';
 
 const ServiceCard = ({ service }: { service: Service }) => (
     <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
@@ -83,3 +84,5 @@ export default function ServiceCatalog() {
     </section>
   );
 }
+
+  

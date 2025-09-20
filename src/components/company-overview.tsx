@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -8,9 +9,10 @@ import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 import { useClientsData } from '@/hooks/use-global-store-data';
 
+
 export default function CompanyOverview() {
   const { clients } = useClientsData();
-  
+
   return (
     <section className="bg-background">
       <div className="container mx-auto px-4 py-24 md:py-32">
@@ -70,3 +72,5 @@ export default function CompanyOverview() {
     </section>
   );
 }
+
+  

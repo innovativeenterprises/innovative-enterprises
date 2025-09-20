@@ -4,15 +4,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import { useStaffData } from "@/hooks/use-global-store-data";
+import { useAiToolsData } from '@/hooks/use-global-store-data';
 
 export default function AiToolsCta() {
-    const { agentCategories } = useStaffData();
+    const { aiTools } = useAiToolsData();
     
     // Dynamically select a few key agents to feature
-    const allAgents = agentCategories.flatMap(cat => cat.agents);
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];
-    const featuredAgents = featuredAgentNames.map(name => allAgents.find(agent => agent.name === name)).filter(Boolean);
+    const featuredAgents = featuredAgentNames.map(name => aiTools.find(agent => agent.title.includes(name))).filter(Boolean);
 
     return (
         <section className="py-16 md:py-24 bg-background">
@@ -25,21 +24,21 @@ export default function AiToolsCta() {
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                     {featuredAgents.map((agent) => (
-                         <Card key={agent!.name} className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                         <Card key={agent!.title} className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                             <CardHeader>
                                 <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
                                     <agent!.icon className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <CardTitle>{agent!.name}</CardTitle>
+                                <CardTitle>{agent!.title}</CardTitle>
                                 <CardDescription className="mt-2">
-                                    {agent!.role}
+                                    {agent!.description}
                                 </CardDescription>
                             </CardContent>
                             <CardFooter className="justify-center">
                                 <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                    <Link href={agent!.href || '#'}>Use {agent!.name}</Link>
+                                    <Link href={agent!.href || '#'}>Use {agent!.title.split('(')[0].trim()}</Link>
                                 </Button>
                             </CardFooter>
                         </Card>
