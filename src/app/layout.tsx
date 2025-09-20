@@ -3,6 +3,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
+import { getServices, getProducts, getStaffData, getClients, getTestimonials, getSettings, getSolutions, getIndustries, getAiTools, getOpportunities, getProviders } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -47,16 +48,59 @@ export const metadata: Metadata = {
 }
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch all initial data here in the root layout
+  const [
+    services, 
+    products, 
+    staffData, 
+    clients, 
+    testimonials, 
+    settings, 
+    solutions, 
+    industries, 
+    aiTools,
+    opportunities,
+    providers,
+  ] = await Promise.all([
+    getServices(),
+    getProducts(),
+    getStaffData(),
+    getClients(),
+    getTestimonials(),
+    getSettings(),
+    getSolutions(),
+    getIndustries(),
+    getAiTools(),
+    getOpportunities(),
+    getProviders(),
+  ]);
+
+  const initialData = {
+    services,
+    products,
+    leadership: staffData.leadership,
+    staff: staffData.staff,
+    agentCategories: staffData.agentCategories,
+    clients,
+    testimonials,
+    settings,
+    solutions,
+    industries,
+    aiTools,
+    opportunities,
+    providers,
+  };
+
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout initialData={initialData as any}>{children}</ClientLayout>
       </body>
     </html>
   );

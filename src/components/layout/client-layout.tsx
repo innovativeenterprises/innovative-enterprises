@@ -7,20 +7,14 @@ import type { AppState } from '@/lib/global-store';
 import { ThemeProvider } from 'next-themes';
 import Header from './header';
 import Footer from './footer';
-import { usePathname } from 'next/navigation';
-import { initialState } from '@/lib/initial-state';
 
 export default function ClientLayout({
   children,
+  initialData,
 }: {
   children: React.ReactNode;
+  initialData: AppState;
 }) {
-  const pathname = usePathname();
-  const isHomePage = pathname === '/';
-  
-  // The StoreProvider now initializes with the default initialState.
-  // Pages that need server-side data will fetch it themselves.
-  const initialData = initialState;
 
   return (
     <ThemeProvider

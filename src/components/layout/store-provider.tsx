@@ -14,6 +14,7 @@ export const StoreProvider = ({
 }) => {
   const storeRef = useRef<StoreType>();
   if (!storeRef.current) {
+    // Use the initialData from the server to hydrate the store
     storeRef.current = createAppStore(initialData);
   }
   

@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -7,7 +6,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescri
 import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, ImageIcon, MapPin, Gift, VrHeadset, Layers, Home, Heart, BookUser, Recycle, Moon, Sun } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, forwardRef } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -28,7 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
-import { useCartData, useSettingsData } from '@/hooks/use-global-store-data';
+import { useCartData, useSettingsData, useSolutionsData, useIndustriesData, useAiToolsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
 import SanadHubIcon from '../icons/sanad-hub-icon';
 import BusinessHubIcon from '../icons/business-hub-icon';
@@ -68,23 +67,36 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient({ navLinks, settings, solutionsByCategory, industriesByCategory }: {
-    navLinks: { href: string; label: string }[],
-    settings: AppSettings,
-    solutionsByCategory: Record<string, any[]>,
-    industriesByCategory: Record<string, any[]>
-}) {
+export default function HeaderClient() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, isClient } = useCartData();
+  const { settings } = useSettingsData();
+  const { solutions } = useSolutionsData();
+  const { industries } = useIndustriesData();
+  const { aiTools } = useAiToolsData();
   const { theme, setTheme } = useTheme();
+
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
   };
+  
+    const navLinks = [
+        { href: "/about", label: "About" },
+    ];
+    
+    const solutionsByCategory = {
+        "SaaS Platforms": solutions,
+        "AI Tools": aiTools,
+    }
 
-  const opportunitiesLinks: { title: string; href: string; description: string, icon: React.ElementType }[] = [
+    const industriesByCategory = {
+        "Industries": industries,
+    }
+
+    const opportunitiesLinks: { title: string; href: string; description: string, icon: React.ElementType }[] = [
     {
         title: "Competitions & Opportunities",
         href: "/opportunities",
