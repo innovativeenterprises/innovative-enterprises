@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { StageBadge } from '@/components/stage-badge';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Product } from '@/lib/products.schema';
+import { useProductsData } from "@/hooks/use-global-store-data";
 
-export default function ProductShowcase({ products }: { products: Product[] }) {
+export default function ProductShowcase() {
+  const { products } = useProductsData();
   const enabledProducts = products.filter(p => p.enabled);
 
   return (
-    <section id="products" className="py-16 md:py-24 bg-white">
+    <section id="products" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Products</h2>

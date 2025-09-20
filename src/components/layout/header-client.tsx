@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, Sparkles, User, Briefcase, ShoppingCart, Handshake, Building, Shield, Server, Video, ServerCog, Lightbulb, UserRoundCheck, Mic, FileText, Languages, Scale, Trophy, Cpu, Search, BrainCircuit, HardHat, Building2, GraduationCap, Users, Store, BarChart3, GitBranch, Gem, MessageSquareQuote, Bot, MessageSquare, Car, Award, Warehouse, Truck, ImageIcon, MapPin, Gift, VrHeadset, Layers, Home, Heart, BookUser, Recycle, Moon, Sun } from 'lucide-react';
+import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect, useMemo, forwardRef } from 'react';
@@ -28,15 +28,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
-import { useCartData, useSettingsData } from '@/hooks/use-global-store-data';
+import { useCartData, useSolutionsData, useIndustriesData, useAiToolsData } from '@/hooks/use-global-store-data';
 import { ScrollArea } from '../ui/scroll-area';
-import SanadHubIcon from '../icons/sanad-hub-icon';
-import BusinessHubIcon from '../icons/business-hub-icon';
-import AmeenSmartLockIcon from '../icons/ameen-smart-lock-icon';
-import KhidmaIcon from '../icons/khidma-icon';
-import VmallIcon from '../icons/vmall-icon';
-import AppiIcon from '../icons/appi-icon';
-import type { AppSettings } from '@/lib/settings';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 
 
@@ -70,11 +63,11 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient({ initialSolutions, initialIndustries, initialAiTools }: { 
-    initialSolutions: Solution[], 
-    initialIndustries: Industry[], 
-    initialAiTools: AiTool[] 
-}) {
+export default function HeaderClient() { 
+  const { solutions } = useSolutionsData();
+  const { industries } = useIndustriesData();
+  const { aiTools } = useAiToolsData();
+
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, isClient } = useCartData();
@@ -88,57 +81,18 @@ export default function HeaderClient({ initialSolutions, initialIndustries, init
   
     const navLinks = [
         { href: "/about", label: "About" },
+        { href: "/invest", label: "Invest" },
+        { href: "/partner", label: "Partners" },
     ];
     
     const solutionsByCategory = {
-        "SaaS Platforms": initialSolutions,
-        "AI Tools": initialAiTools,
+        "SaaS Platforms": solutions,
+        "AI Tools": aiTools,
     }
 
     const industriesByCategory = {
-        "Industries": initialIndustries,
+        "Industries": industries,
     }
-
-    const opportunitiesLinks: { title: string; href: string; description: string, icon: React.ElementType }[] = [
-    {
-        title: "Competitions & Opportunities",
-        href: "/opportunities",
-        description:
-            "View open competitions and tasks for our network of freelancers and partners.",
-        icon: Trophy,
-    },
-    {
-        title: "Submit an Idea",
-        href: "/submit-work",
-        description:
-        "Have a project or startup idea? Submit it to our e-incubator for analysis and potential sponsorship.",
-        icon: Lightbulb,
-    },
-    ];
-
-    const networkLinks: { title: string; href: string; description: string, icon: React.ElementType }[] = [
-        {
-        title: "Become a Partner",
-        href: "/partner",
-        description:
-        "Join our network of freelancers, subcontractors, and service providers.",
-        icon: Handshake,
-    },
-    {
-        title: "Invest With Us",
-        href: "/invest",
-        description:
-        "Explore investment opportunities and be part of our innovation journey.",
-        icon: FileText,
-    },
-    {
-        title: "Partner Rewards",
-        href: "/partner/rewards",
-        description:
-        "View the welcome kits, digital certificates, and badges available to our valued partners.",
-        icon: Award,
-    },
-    ];
   
   if (!isClient) {
     return (
@@ -194,42 +148,6 @@ export default function HeaderClient({ initialSolutions, initialIndustries, init
            <NavigationMenu>
             <NavigationMenuList>
               {renderNavLinks()}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base font-medium">Opportunities</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[600px] grid-cols-2 gap-3 p-4">
-                    {opportunitiesLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                        icon={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base font-medium">Network</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[600px] grid-cols-2 gap-3 p-4">
-                    {networkLinks.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        onClick={handleLinkClick}
-                        icon={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
@@ -289,65 +207,24 @@ export default function HeaderClient({ initialSolutions, initialIndustries, init
                     <div className="flex flex-col gap-4 py-4">
                         <nav className="flex flex-col gap-2 px-2">
                         {mobileNavLinks}
-
-                        {Object.entries(solutionsByCategory).map(([category, items]) => (
-                            <div key={category} className="mt-4">
-                                <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">{category}</p>
-                                {(items as any[]).map((link) => (
-                                    <Button
-                                    key={link.href}
-                                    asChild
-                                    variant="ghost"
-                                    className={cn("justify-start text-base", pathname === link.href && 'bg-primary/10 text-primary')}
-                                    onClick={handleLinkClick}
-                                    >
-                                    <Link href={link.href}><link.icon className="mr-2 h-4 w-4"/>{link.title}</Link>
-                                    </Button>
-                                ))}
-                            </div>
-                        ))}
                         
-                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Opportunities</p>
-                        {opportunitiesLinks.map((link) => (
-                            <Button
-                            key={link.href}
-                            asChild
-                            variant="ghost"
-                            className="justify-start text-base"
-                            onClick={handleLinkClick}
-                            >
-                            <Link href={link.href}><link.icon className="mr-2 h-4 w-4"/>{link.title}</Link>
-                            </Button>
-                        ))}
-                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Network</p>
-                        {networkLinks.map((link) => (
-                            <Button
-                            key={link.href}
-                            asChild
-                            variant="ghost"
-                            className="justify-start text-base"
-                            onClick={handleLinkClick}
-                            >
-                            <Link href={link.href}><link.icon className="mr-2 h-4 w-4"/>{link.title}</Link>
-                            </Button>
-                        ))}
-                            <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">My Account</p>
-                            <Button
-                            asChild
-                            variant="ghost"
-                            className="justify-start text-base"
-                            onClick={handleLinkClick}
-                            >
-                            <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4"/> E-Briefcase</Link>
-                            </Button>
-                            <Button
-                            asChild
-                            variant="ghost"
-                            className="justify-start text-base"
-                            onClick={handleLinkClick}
-                            >
-                            <Link href="/admin">Admin Dashboard</Link>
-                            </Button>
+                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">My Account</p>
+                        <Button
+                        asChild
+                        variant="ghost"
+                        className="justify-start text-base"
+                        onClick={handleLinkClick}
+                        >
+                        <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4"/> E-Briefcase</Link>
+                        </Button>
+                        <Button
+                        asChild
+                        variant="ghost"
+                        className="justify-start text-base"
+                        onClick={handleLinkClick}
+                        >
+                        <Link href="/admin">Admin Dashboard</Link>
+                        </Button>
                         </nav>
                         <Button className="mt-4 mx-4">Log Out</Button>
                     </div>

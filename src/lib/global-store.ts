@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
@@ -12,12 +13,11 @@
 
 import { initialState as initialData, type AppState as FullAppState } from './initial-state';
 
-export type AppState = Omit<FullAppState, 'saasProducts'>;
+export type AppState = FullAppState;
 export type CartItem = FullAppState['cart'][0];
 
 // Re-export initialState from the new file
-export const initialState: AppState = { ...initialData };
-
+export const initialState: AppState = initialData;
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
     let state: AppState = { ...initialState, ...initState };
@@ -38,4 +38,8 @@ export const createAppStore = (initState: Partial<AppState> = {}) => {
 
 export type StoreType = ReturnType<typeof createAppStore>;
 
+// We export a function to get the store, so it can be initialized with server data.
+export const getStore = (initialData: Partial<AppState>) => createAppStore(initialData);
+
+// A default store for use in client-only scenarios if needed
 export const store = createAppStore(initialState);

@@ -6,9 +6,10 @@ import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
-import type { Client } from '@/lib/clients.schema';
+import { useClientsData } from '@/hooks/use-global-store-data';
 
-export default function CompanyOverview({ clients }: { clients: Client[] }) {
+export default function CompanyOverview() {
+  const { clients } = useClientsData();
   
   return (
     <section className="bg-background">
@@ -26,9 +27,9 @@ export default function CompanyOverview({ clients }: { clients: Client[] }) {
             </p>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg w-full sm:w-auto">
-                  <Link href="#services">
+                  <a href="#services">
                     Explore Our Services <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+                  </a>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full shadow-lg w-full sm:w-auto">
                     <Link href="/client-testimonials">

@@ -4,9 +4,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import type { AgentCategory } from "@/lib/agents.schema";
+import { useStaffData } from "@/hooks/use-global-store-data";
 
-export default function AiToolsCta({ agentCategories }: { agentCategories: AgentCategory[] }) {
+export default function AiToolsCta() {
+    const { agentCategories } = useStaffData();
     
     // Dynamically select a few key agents to feature
     const allAgents = agentCategories.flatMap(cat => cat.agents);
@@ -14,7 +15,7 @@ export default function AiToolsCta({ agentCategories }: { agentCategories: Agent
     const featuredAgents = featuredAgentNames.map(name => allAgents.find(agent => agent.name === name)).filter(Boolean);
 
     return (
-        <section className="py-16 md:py-24 bg-white">
+        <section className="py-16 md:py-24 bg-background">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-primary">Accelerate with AI</h2>

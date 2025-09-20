@@ -68,6 +68,7 @@ import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
+import { getDoc, getCollection, getStaffData as fetchStaffData, getBeautyData as fetchBeautyData } from './firestore';
 import type { ProjectStage } from './stages';
 import type { Investor } from './investors.schema';
 import { initialInvestors } from './investors';
@@ -178,3 +179,65 @@ export const initialState: AppState = {
   cfoData: initialCfoData,
   properties: initialProperties,
 };
+
+export async function getInitialState(): Promise<AppState> {
+    const [
+        products,
+        storeProducts,
+        services,
+        providers,
+        opportunities,
+        clients,
+        testimonials,
+        settings,
+        staffData,
+        solutions,
+        industries,
+        aiTools,
+        cfoData,
+        properties,
+        stairspaceListings,
+        beautyData,
+    ] = await Promise.all([
+        getCollection<Product>('products'),
+        getCollection<Product>('storeProducts'),
+        getCollection<Service>('services'),
+        getCollection<Provider>('providers'),
+        getCollection<Opportunity>('opportunities'),
+        getCollection<Client>('clients'),
+        getCollection<Testimonial>('testimonials'),
+        getDoc<AppSettings>('site/settings'),
+        fetchStaffData(),
+        getCollection<any>('solutions'),
+        getCollection<any>('industries'),
+        getCollection<any>('aiTools'),
+        getDoc<any>('cfo/dashboard'),
+        getCollection<Property>('properties'),
+        getCollection<StairspaceListing>('stairspaceListings'),
+        fetchBeautyData(),
+    ]);
+
+    return {
+        ...initialState,
+        products,
+        storeProducts,
+        services,
+        providers,
+        opportunities,
+        clients,
+        testimonials,
+        settings,
+        leadership: staffData.leadership,
+        staff: staffData.staff,
+        agentCategories: staffData.agentCategories,
+        solutions,
+        industries,
+        aiTools,
+        cfoData,
+        properties,
+        stairspaceListings,
+        beautyCenters: beautyData.beautyCenters,
+        beautyServices: beautyData.beautyServices,
+        beautyAppointments: beautyData.beautyAppointments,
+    };
+}

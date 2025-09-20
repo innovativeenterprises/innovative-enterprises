@@ -6,6 +6,7 @@ import { GitBranch } from "lucide-react";
 import Link from 'next/link';
 import { useMemo } from 'react';
 import type { Service } from "@/lib/services.schema";
+import { useServicesData } from "@/hooks/use-global-store-data";
 
 const ServiceCard = ({ service }: { service: Service }) => (
     <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
@@ -25,7 +26,8 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog({ services }: { services: Service[] }) {
+export default function ServiceCatalog() {
+  const { services } = useServicesData();
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = useMemo(() => enabledServices.reduce((acc, service) => {
@@ -46,7 +48,7 @@ export default function ServiceCatalog({ services }: { services: Service[] }) {
   ];
   
   return (
-    <section id="services" className="py-16 md:py-24 bg-white">
+    <section id="services" className="py-16 md:py-24 bg-white dark:bg-card">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Core Services</h2>
