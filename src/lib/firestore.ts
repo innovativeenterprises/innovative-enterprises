@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import * as admin from 'firebase-admin';
@@ -18,7 +19,6 @@ import { initialProperties } from './properties';
 import { initialStairspaceListings } from './stairspace-listings';
 import { initialStairspaceRequests } from './stairspace-requests';
 import { initialLeases } from './leases';
-import { saasProducts } from './saas-products';
 import { initialStockItems } from './stock-items';
 import { initialGiftCards } from './gift-cards';
 import { initialStudents } from './students';
@@ -60,7 +60,7 @@ async function seedCollection<T>(collectionName: string, data: T[]) {
         console.log(`Seeding '${collectionName}'...`);
         const batch = db.batch();
         data.forEach((item: any) => {
-            const docRef = item.id ? collectionRef.doc(item.id) : collectionRef.doc();
+            const docRef = item.id ? collectionRef.doc(String(item.id)) : collectionRef.doc();
             batch.set(docRef, item);
         });
         await batch.commit();
@@ -97,7 +97,6 @@ async function seedDatabase() {
         await seedCollection('stairspaceListings', initialStairspaceListings);
         await seedCollection('stairspaceRequests', initialStairspaceRequests);
         await seedCollection('signedLeases', initialLeases);
-        await seedCollection('saasProducts', saasProducts);
         await seedCollection('stockItems', initialStockItems);
         await seedCollection('giftCards', initialGiftCards);
         await seedCollection('students', initialStudents);
@@ -178,7 +177,6 @@ export const getProperties = async () => getCollection<any>('properties');
 export const getStairspaceListings = async () => getCollection<any>('stairspaceListings');
 export const getStairspaceRequests = async () => getCollection<any>('stairspaceRequests');
 export const getLeases = async () => getCollection<any>('signedLeases');
-export const getSaasProducts = async () => getCollection<any>('saasProducts');
 export const getStockItems = async () => getCollection<any>('stockItems');
 export const getGiftCards = async () => getCollection<any>('giftCards');
 export const getStudents = async () => getCollection<any>('students');
@@ -253,7 +251,7 @@ export async function setFirestoreCollection(collectionName: string, data: any[]
     
     // Add new documents
     data.forEach(item => {
-        const docRef = item.id ? collectionRef.doc(item.id) : collectionRef.doc();
+        const docRef = item.id ? collectionRef.doc(String(item.id)) : collectionRef.doc();
         batch.set(docRef, item);
     });
 

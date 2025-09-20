@@ -12,11 +12,12 @@
 
 import { initialState as initialData, type AppState as FullAppState } from './initial-state';
 
-export type AppState = FullAppState;
+export type AppState = Omit<FullAppState, 'saasProducts'>;
 export type CartItem = FullAppState['cart'][0];
 
 // Re-export initialState from the new file
-export const initialState: AppState = initialData;
+export const initialState: AppState = { ...initialData };
+
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
     let state: AppState = { ...initialState, ...initState };

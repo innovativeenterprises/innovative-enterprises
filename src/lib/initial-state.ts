@@ -31,7 +31,6 @@ import type { JobPosting } from './alumni-jobs';
 import type { RentalAgency } from './rental-agencies';
 import type { Car } from './cars.schema';
 import type { DailySales, PosProduct, CartItem } from './pos-data.schema';
-import type { SaasCategory } from './saas-products.schema';
 import type { StockItem } from './stock-items.schema';
 import type { Pricing } from './pricing.schema';
 import { initialPricing } from './pricing';
@@ -65,7 +64,6 @@ import { initialMembers } from './community-members';
 import { initialAlumniJobs } from './alumni-jobs';
 import { initialRentalAgencies } from './rental-agencies';
 import { initialCars } from './cars';
-import { saasProducts as initialSaaSProducts } from './saas-products';
 import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
@@ -116,7 +114,6 @@ export interface AppState {
   cars: Car[];
   posProducts: PosProduct[];
   dailySales: DailySales;
-  saasProducts: SaasCategory[];
   stockItems: StockItem[];
   pricing: Pricing[];
   stages: ProjectStage[];
@@ -168,7 +165,6 @@ export const initialState: AppState = {
   cars: initialCars,
   posProducts: initialPosProducts,
   dailySales: initialDailySales,
-  saasProducts: initialSaaSProducts,
   stockItems: initialStockItems,
   pricing: initialPricing,
   stages: initialStages,

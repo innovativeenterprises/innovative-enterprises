@@ -38,7 +38,6 @@ import type { Investor } from '@/lib/investors.schema';
 import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 import type { StockItem } from '@/lib/stock-items.schema';
 import type { Property } from '@/lib/properties.schema';
-import type { SaasCategory } from '@/lib/saas-products.schema';
 import type { RentalAgency } from '@/lib/rental-agencies';
 
 
@@ -312,12 +311,6 @@ export const useCfoData = () => {
     const [cfoData, setStore, isClient] = useStore((s) => s.cfoData);
     const setCfoData = (updater: (prev: AppState['cfoData']) => AppState['cfoData']) => setStore(state => ({ ...state, cfoData: updater(state.cfoData) }));
     return { cfoData, setCfoData, isClient };
-};
-
-export const useSaaSProductsData = () => {
-    const [saasProducts, setStore, isClient] = useStore((s) => s.saasProducts);
-    const setSaaSProducts = (updater: (prev: AppState['saasProducts']) => AppState['saasProducts']) => setStore(state => ({ ...state, saasProducts: updater(state.saasProducts) }));
-    return { saasProducts, setSaaSProducts, isClient };
 };
 
 export const useApplicationsData = () => {

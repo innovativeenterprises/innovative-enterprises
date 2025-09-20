@@ -2,23 +2,16 @@
 'use client';
 
 import { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import type { SaasCategory, SaaSProduct } from '@/lib/saas-products.schema';
+import type { Product } from '@/lib/products.schema';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useSaaSProductsData } from '@/hooks/use-global-store-data';
-import type { Metadata } from 'next';
+import { useProductsData } from '@/hooks/use-global-store-data';
 
-export const metadata: Metadata = {
-  title: "SaaS Portfolio",
-  description: "Browse the complete portfolio of over 30+ digital products and SaaS platforms developed by Innovative Enterprises, spanning construction, real estate, education, and AI tools.",
-};
-
-
-const getStatusBadge = (status: string) => {
+const getStatusBadge = (status?: string) => {
     switch (status) {
         case "Completed":
             return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Completed</Badge>;
@@ -29,7 +22,7 @@ const getStatusBadge = (status: string) => {
         case "On Hold":
             return <Badge variant="outline" className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">On Hold</Badge>;
         default:
-            return <Badge variant="outline">{status}</Badge>;
+            return <Badge variant="outline">N/A</Badge>;
     }
 };
 
@@ -38,28 +31,29 @@ const getStageBadge = (stage: string) => {
 }
 
 export default function SaasPortfolioPage() {
-  const { saasProducts } = useSaaSProductsData();
+  const { products } = useProductsData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const filteredProducts = useMemo(() => {
-      let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
+      let productList: Product[] = products;
 
       if (selectedCategory !== 'All') {
-          products = products.filter(p => p.category === selectedCategory);
+          productList = productList.filter(p => p.category === selectedCategory);
       }
 
       if (searchTerm) {
-          products = products.filter(p =>
+          productList = productList.filter(p =>
               p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
               p.description.toLowerCase().includes(searchTerm.toLowerCase())
           );
       }
 
-      return products;
-  }, [searchTerm, selectedCategory, saasProducts]);
+      return productList;
+  }, [searchTerm, selectedCategory, products]);
+  
+  const allCategories = useMemo(() => ['All', ...Array.from(new Set(products.map(p => p.category)))], [products]);
 
-  const allCategories = ['All', ...saasProducts.map(c => c.name)];
 
   return (
     <div className="space-y-8">
@@ -104,18 +98,16 @@ export default function SaasPortfolioPage() {
                                 <TableHead>Description</TableHead>
                                 <TableHead>Stage</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Ready</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredProducts.map(product => (
+                            {filteredProducts.map((product: Product) => (
                                 <TableRow key={product.name}>
                                     <TableCell className="font-medium">{product.name}</TableCell>
                                     <TableCell><Badge variant="secondary">{product.category}</Badge></TableCell>
                                     <TableCell className="text-muted-foreground text-sm max-w-sm">{product.description}</TableCell>
                                     <TableCell>{getStageBadge(product.stage)}</TableCell>
-                                    <TableCell>{getStatusBadge(product.status)}</TableCell>
-                                    <TableCell>{product.ready ? 'Yes' : 'No'}</TableCell>
+                                    <TableCell>{getStatusBadge(product.adminStatus)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
