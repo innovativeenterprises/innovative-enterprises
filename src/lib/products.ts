@@ -84,7 +84,7 @@ export const initialProducts: Product[] = allSaaSProducts.map((p, index) => ({
     image: "https://placehold.co/600x400/293462/F0F4F8?text=Product",
     aiHint: "product image",
     rating: 0,
-    enabled: p.ready,
+    enabled: p.status === 'Live & Operating',
     adminStatus: p.status === 'Completed' ? 'Completed' : 'On Track',
     href: hrefMap[p.name] || '#',
 }));
