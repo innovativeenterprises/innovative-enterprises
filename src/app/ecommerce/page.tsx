@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -7,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowRight, Search, Star, Filter, Bot, ShoppingCart } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
-import { initialStoreProducts } from '@/lib/products';
-import type { Product } from '@/lib/products';
+import { useProductsData } from '@/hooks/use-global-store-data';
+import type { Product } from '@/lib/products.schema';
 import { useToast } from '@/hooks/use-toast';
 import { useCartData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
@@ -52,7 +51,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             <CardHeader className="p-0">
                 <div className="relative h-64 w-full">
                     <Image 
-                        src={product.image} 
+                        src={product.image!} 
                         alt={product.name} 
                         fill 
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -83,11 +82,11 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 export default function EcommercePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const products = initialStoreProducts;
+  const { storeProducts } = useProductsData();
 
   const filteredProducts = selectedCategory === 'All'
-    ? products.filter(p => p.enabled)
-    : products.filter(product => product.enabled && product.category === selectedCategory);
+    ? storeProducts.filter(p => p.enabled)
+    : storeProducts.filter(product => product.enabled && product.category === selectedCategory);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -162,3 +161,5 @@ export default function EcommercePage() {
     </div>
   );
 }
+
+      

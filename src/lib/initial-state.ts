@@ -1,4 +1,3 @@
-
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -177,3 +176,5 @@ export const initialState: AppState = {
   cfoData: initialCfoData,
   properties: initialProperties,
 };
+
+      

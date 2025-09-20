@@ -1,4 +1,5 @@
 
+
 import type { Product } from './products.schema';
 
 export const initialStoreProducts: Product[] = [
@@ -37,7 +38,7 @@ export const initialProducts: Product[] = [
         description: "Immersive platform for virtual tours.",
         stage: "Live & Operating",
         category: "Real Estate Tech",
-        price: 189.900,
+        price: 0,
         image: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=600&auto=format&fit=crop",
         aiHint: "vr headset",
         rating: 4.9,
@@ -466,3 +467,5 @@ export const initialProducts: Product[] = [
         href: "/construction-tech/procurechain",
     }
 ];
+
+      

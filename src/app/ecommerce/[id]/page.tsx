@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useCartData, useProductsData } from '@/hooks/use-global-store-data';
-import type { Product } from '@/lib/products';
+import type { Product } from '@/lib/products.schema';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const RelatedProductCard = ({ product }: { product: Product }) => (
@@ -161,3 +161,5 @@ export default function ProductDetailPage() {
         </div>
     );
 }
+
+      
