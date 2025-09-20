@@ -14,6 +14,13 @@ import { sendOtpViaWhatsApp, verifyOtp } from '@/ai/flows/whatsapp-agent';
 import { controlSmartLock } from '@/ai/flows/ameen-smart-lock';
 import { cn } from '@/lib/utils';
 import AmeenSmartLockIcon from '@/components/icons/ameen-smart-lock-icon';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Ameen: Smart Identity & Home | Innovative Enterprises",
+  description: "Securely log in with your WhatsApp-based digital ID to manage your smart home devices.",
+};
+
 
 const PhoneSchema = z.object({
   phone: z.string().min(8, 'Please enter a valid phone number with country code.'),
@@ -74,7 +81,7 @@ const AmeenDashboard = ({ onLogout }: { onLogout: () => void }) => {
     )
 }
 
-export default function AmeenClientPage() {
+export default function AmeenPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
