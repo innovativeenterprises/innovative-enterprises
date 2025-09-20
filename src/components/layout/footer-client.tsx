@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -6,10 +7,8 @@ import Image from 'next/image';
 import { Github } from 'lucide-react';
 import type { Service } from "@/lib/services.schema";
 import { useMemo } from 'react';
-import { useServicesData } from '@/hooks/use-global-store-data';
 
 export default function FooterClient() {
-  const { services } = useServicesData();
   const currentYear = useMemo(() => new Date().getFullYear().toString(), []);
   
   return (

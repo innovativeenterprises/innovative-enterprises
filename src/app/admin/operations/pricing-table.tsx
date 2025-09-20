@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
 import { Edit } from "lucide-react";
 
 

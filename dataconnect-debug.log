@@ -1,14 +1,14 @@
-I0920 22:11:08.133822   18787 load.go:31] Reloading schema and connectors...
-W0920 22:11:08.471823   18787 control.go:68] [/emulator/studio bab8] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
+I0920 22:30:17.490834   20423 load.go:31] Reloading schema and connectors...
+W0920 22:30:17.837087   20423 control.go:68] [/emulator/studio 0fbf] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
 
 sources: example/queries.gql [530B] 
-I0920 22:11:08.471925   18787 control.go:94] [/emulator/studio bab8] UpdateResources(): done
+I0920 22:30:17.837161   20423 control.go:94] [/emulator/studio 0fbf] UpdateResources(): done
 Schema: sources: schema/schema.gql [1207B] 
 Connector "example": sources: example/queries.gql [530B] 
-E0920 22:11:08.481228   18787 load.go:73] Could not load sources: 
+E0920 22:30:17.842078   20423 load.go:73] Could not load sources: 
 Errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
-I0920 22:11:08.483144   18787 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] 
-I0920 22:11:08.483196   18787 load.go:74] Finished reloading
-I0920 22:11:08.620891   18787 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
-I0920 22:11:09.481071   18787 engine.go:169] [/emulator/studio bab8] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+I0920 22:30:17.846247   20423 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73251B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] 
+I0920 22:30:17.848226   20423 load.go:74] Finished reloading
+I0920 22:30:17.911486   20423 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+I0920 22:30:19.165697   20423 engine.go:169] [/emulator/studio 0fbf] ExecuteGraphqlRead IntrospectionQuery: succeeded. 

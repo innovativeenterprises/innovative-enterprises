@@ -12,5 +12,5 @@ export const metadata: Metadata = {
 
 export default async function CfoDashboardPage() {
     const cfoData = await getCfoData();
-    return <CfoDashboardPageClient initialCfoData={cfoData} />;
+    return <CfoDashboardPageClient initialData={cfoData} />;
 }
