@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,13 +13,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { useLeasesData } from '@/hooks/use-global-store-data';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Student Housing Management | EduFlow Suite",
-  description: "A centralized dashboard for managing student housing agreements and payments.",
-};
-
 
 export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();

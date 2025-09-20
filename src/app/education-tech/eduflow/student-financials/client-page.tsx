@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -13,14 +12,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useStudentsData } from "@/hooks/use-global-store-data";
 
-export default function StudentFinancialsClientPage({ initialStudents }: { initialStudents: Student[] }) {
-    const [students, setStudents] = useState(initialStudents);
-    const [isClient, setIsClient] = useState(false);
-
-     useEffect(() => {
-        setIsClient(true);
-    }, []);
+export default function StudentFinancialsPage() {
+    const { students, isClient } = useStudentsData();
 
     const totalTuitionBilled = useMemo(() => isClient ? students.reduce((sum, s) => sum + (s.tuitionBilled || 0), 0) : 0, [students, isClient]);
     const totalScholarships = useMemo(() => isClient ? students.reduce((sum, s) => sum + (s.scholarshipAmount || 0), 0) : 0, [students, isClient]);
