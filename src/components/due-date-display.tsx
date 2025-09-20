@@ -18,21 +18,15 @@ export const DueDateDisplay = ({
   warnDays?: number;
 }) => {
   const [displayState, setDisplayState] = useState<{
-    isClient: boolean;
     formattedDate: string | null;
     daysRemaining: number | null;
     status: 'normal' | 'warn' | 'error';
-  }>({
-    isClient: false,
-    formattedDate: null,
-    daysRemaining: null,
-    status: 'normal',
-  });
+  } | null>(null);
 
   useEffect(() => {
     // This effect runs only on the client, after hydration, preventing mismatch
     if (!date) {
-      setDisplayState({ isClient: true, formattedDate: `${prefix} N/A`, daysRemaining: null, status: 'normal' });
+      setDisplayState({ formattedDate: `${prefix} N/A`, daysRemaining: null, status: 'normal' });
       return;
     }
     
@@ -56,21 +50,19 @@ export const DueDateDisplay = ({
         }
 
         setDisplayState({
-            isClient: true,
             formattedDate: `${prefix} ${formatted}`,
             daysRemaining: diffDays,
             status,
         });
 
     } catch (e) {
-       setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null, status: 'error' });
+       setDisplayState({ formattedDate: `${prefix} Invalid Date`, daysRemaining: null, status: 'error' });
     }
   }, [date, prefix, warnDays]);
 
-  // On the server render null, then render the content on the client.
-  // This avoids hydration mismatch completely.
-  if (!displayState.isClient) {
-    return null;
+  // On the server and during initial client render, show a placeholder.
+  if (!displayState) {
+    return <div className={cn("text-sm text-muted-foreground", className)}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   
   // After hydration on the client, render the actual formatted date.
@@ -81,7 +73,7 @@ export const DueDateDisplay = ({
         (displayState.daysRemaining >= 0 ? (
           <span className={cn('font-medium', {
               'text-yellow-600 dark:text-yellow-400': displayState.status === 'warn',
-              'text-destructive': displayState.status === 'error' && displayState.daysRemaining < 0, // This is technically not possible with daysRemaining >= 0 but kept for safety
+              'text-destructive': displayState.status === 'error' && displayState.daysRemaining < 0,
           })}>
             {' '}
             ({displayState.daysRemaining} days left)
