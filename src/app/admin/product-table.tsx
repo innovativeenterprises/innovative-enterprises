@@ -14,10 +14,15 @@ import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-fo
 import type { ProjectStage } from "@/lib/stages";
 
 export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
+    const [products, setProducts] = useState<Product[]>([]);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
+    useEffect(() => {
+        setProducts(initialProducts);
+    }, [initialProducts]);
+
     const handleToggle = (id: number) => {
         // In a real app, this would be a server action.
         toast({ title: "Action not implemented in prototype." });
@@ -65,7 +70,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {initialProducts.map((product) => (
+                        {products.map((product) => (
                             <TableRow key={product.id}>
                                 <TableCell className="font-medium">{product.name}</TableCell>
                                 <TableCell>

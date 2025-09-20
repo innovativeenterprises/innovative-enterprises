@@ -57,7 +57,12 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 };
 
 export default function TestimonialTable({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setTestimonials(initialTestimonials);
+    }, [initialTestimonials]);
 
     const handleTestimonialSave = (values: TestimonialValues, id?: string) => {
         // In a real app, this would be a server action.
@@ -81,7 +86,7 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
                  <Table>
                     <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {initialTestimonials.map(t => (
+                        {testimonials.map(t => (
                             <TableRow key={t.id}>
                                 <TableCell>
                                     <p className="font-medium">{t.author}</p>

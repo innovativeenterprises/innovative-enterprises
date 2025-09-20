@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -66,10 +67,15 @@ const AddEditOpportunityDialog = ({
 }
 
 export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
+    const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
 
+    useEffect(() => {
+        setOpportunities(initialOpportunities);
+    }, [initialOpportunities]);
+    
     const openDialog = (opp?: Opportunity) => { setSelectedOpp(opp); setIsDialogOpen(true); }
 
     const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
@@ -92,7 +98,7 @@ export default function OpportunityTable({ initialOpportunities }: { initialOppo
                 <Table>
                     <TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Type</TableHead><TableHead>Prize/Budget</TableHead><TableHead>Deadline</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {initialOpportunities.map(opp => (
+                        {opportunities.map(opp => (
                             <TableRow key={opp.id}>
                                 <TableCell className="font-medium">{opp.title}</TableCell><TableCell>{opp.type}</TableCell><TableCell>{opp.prize}</TableCell><TableCell>{opp.deadline}</TableCell><TableCell>{opp.status}</TableCell>
                                 <TableCell className="text-right">

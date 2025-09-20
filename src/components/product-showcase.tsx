@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StageBadge } from '@/components/stage-badge';
@@ -11,7 +13,7 @@ export default function ProductShowcase({ products }: { products: Product[] }) {
   const enabledProducts = products.filter(p => p.enabled);
 
   return (
-    <section id="products" className="py-16 md:py-24 bg-background">
+    <section id="products" className="py-16 md:py-24 bg-muted/20 dark:bg-card">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Products</h2>

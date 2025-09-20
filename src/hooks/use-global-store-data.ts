@@ -44,6 +44,7 @@ import type { RentalAgency } from '@/lib/rental-agencies';
 import type { ProjectStage } from '@/lib/stages';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import type { SaasCategory } from '@/lib/saas-products.schema';
+import type { Application } from '@/lib/admissions-applications';
 
 
 // Centralized function to access the store and its setters
@@ -52,11 +53,13 @@ function useStore<T>(selector: (state: AppState) => T): [T, (updater: (state: Ap
   if (!store) {
     throw new Error('useStore must be used within a StoreProvider.');
   }
+  
+  const getServerSnapshot = useCallback(() => selector(initialState), [selector]);
 
   const state = useSyncExternalStore(
     store.subscribe,
     () => selector(store.get()),
-    () => selector(initialState)
+    getServerSnapshot
   );
 
   const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
@@ -70,7 +73,8 @@ function createStoreHook<K extends keyof AppState>(key: K) {
     type SetStateUpdater = (updater: (prev: StateSlice) => StateSlice) => void;
 
     return (): { [key in K]: StateSlice } & { [key in `set${Capitalize<K>}`]: SetStateUpdater } & { isClient: boolean } => {
-        const [state, setStore, isClient] = useStore((s) => s[key]);
+        const selector = useCallback((s: AppState) => s[key], []);
+        const [state, setStore, isClient] = useStore(selector);
         const setterName = `set${key.charAt(0).toUpperCase() + key.slice(1)}` as `set${Capitalize<K>}`;
         
         const set = useCallback((updater: (prev: StateSlice) => StateSlice) => {
@@ -130,24 +134,29 @@ export const useKnowledgeData = createStoreHook('knowledgeBase');
 export const useCfoData = createStoreHook('cfoData');
 export const useApplicationsData = createStoreHook('applications');
 export const useStagesData = createStoreHook('stages');
+export const useProductsData = createStoreHook('products');
+export const useStoreProductsData = createStoreHook('storeProducts');
 
 // Composite Hooks
 export const useStaffData = () => {
-    const [data, setStore, isClient] = useStore((s) => ({ leadership: s.leadership, staff: s.staff, agentCategories: s.agentCategories }));
+    const selector = useCallback((s: AppState) => ({ leadership: s.leadership, staff: s.staff, agentCategories: s.agentCategories }), []);
+    const [data, setStore, isClient] = useStore(selector);
     const setLeadership = useCallback((updater: (prev: AppState['leadership']) => AppState['leadership']) => setStore(state => ({...state, leadership: updater(state.leadership)})), [setStore]);
     const setStaff = useCallback((updater: (prev: AppState['staff']) => AppState['staff']) => setStore(state => ({...state, staff: updater(state.staff)})), [setStore]);
     const setAgentCategories = useCallback((updater: (prev: AppState['agentCategories']) => AppState['agentCategories']) => setStore(state => ({...state, agentCategories: updater(state.agentCategories)})), [setStore]);
     return { ...data, setLeadership, setStaff, setAgentCategories, isClient };
 };
 export const useRaahaData = () => {
-    const [data, setStore, isClient] = useStore(s => ({ agencies: s.raahaAgencies, workers: s.raahaWorkers, requests: s.raahaRequests }));
+    const selector = useCallback((s: AppState) => ({ agencies: s.raahaAgencies, workers: s.raahaWorkers, requests: s.raahaRequests }), []);
+    const [data, setStore, isClient] = useStore(selector);
     const setAgencies = useCallback((updater: (prev: AppState['raahaAgencies']) => AppState['raahaAgencies']) => setStore(state => ({ ...state, raahaAgencies: updater(state.raahaAgencies) })), [setStore]);
     const setWorkers = useCallback((updater: (prev: AppState['raahaWorkers']) => AppState['raahaWorkers']) => setStore(state => ({ ...state, raahaWorkers: updater(state.raahaWorkers) })), [setStore]);
     const setRequests = useCallback((updater: (prev: AppState['raahaRequests']) => AppState['raahaRequests']) => setStore(state => ({ ...state, raahaRequests: updater(state.raahaRequests) })), [setStore]);
     return { ...data, setAgencies, setWorkers, setRequests, isClient };
 };
 export const useBeautyData = () => {
-    const [data, setStore, isClient] = useStore(s => ({ agencies: s.beautyCenters, services: s.beautyServices, specialists: s.beautySpecialists, appointments: s.beautyAppointments }));
+    const selector = useCallback((s: AppState) => ({ agencies: s.beautyCenters, services: s.beautyServices, specialists: s.beautySpecialists, appointments: s.beautyAppointments }), []);
+    const [data, setStore, isClient] = useStore(selector);
     const setAgencies = useCallback((updater: (prev: AppState['beautyCenters']) => AppState['beautyCenters']) => setStore(state => ({...state, beautyCenters: updater(state.beautyCenters)})), [setStore]);
     const setServices = useCallback((updater: (prev: AppState['beautyServices']) => AppState['beautyServices']) => setStore(state => ({...state, beautyServices: updater(state.beautyServices)})), [setStore]);
     const setSpecialists = useCallback((updater: (prev: AppState['beautySpecialists']) => AppState['beautySpecialists']) => setStore(state => ({...state, beautySpecialists: updater(state.beautySpecialists)})), [setStore]);
@@ -155,5 +164,4 @@ export const useBeautyData = () => {
     return { ...data, setAgencies, setServices, setSpecialists, setAppointments, isClient };
 };
 
-export const useProductsData = createStoreHook('products');
 export const useSaaSProductsData = createStoreHook('saasProducts');

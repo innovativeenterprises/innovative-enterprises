@@ -49,7 +49,7 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
 };
 
 export default function ServiceTable({ initialServices }: { initialServices: Service[] }) {
-    const [services, setServices] = useState(initialServices);
+    const [services, setServices] = useState<Service[]>([]);
     const { toast } = useToast();
 
     useEffect(() => {

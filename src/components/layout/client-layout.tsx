@@ -7,7 +7,6 @@ import { StoreProvider } from '@/components/layout/store-provider';
 import { ThemeProvider } from 'next-themes';
 import Footer from './footer';
 import Header from './header';
-import { type AppState } from '@/lib/global-store';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 
 export default function ClientLayout({
