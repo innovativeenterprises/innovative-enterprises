@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,7 +24,7 @@ import { analyzeWorkOrder, type WorkOrderAnalysisOutput, WorkOrderInputSchema } 
 import { fileToDataURI } from '@/lib/utils';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
-// WorkOrderForm Logic
+// --- WorkOrderForm Logic ---
 const WorkOrderFormSchema = WorkOrderInputSchema.extend({
   documentFile: z.any().optional(),
 });

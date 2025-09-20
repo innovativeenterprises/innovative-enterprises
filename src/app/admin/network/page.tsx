@@ -1,11 +1,10 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -134,7 +133,7 @@ const AddEditProviderDialog = ({
                                         className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                         >
                                         {field.value ? (
-                                            format(field.value, "PPP")
+                                            format(new Date(field.value), "PPP")
                                         ) : (
                                             <span>Pick a date</span>
                                         )}
@@ -145,7 +144,7 @@ const AddEditProviderDialog = ({
                                     <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
                                         mode="single"
-                                        selected={field.value}
+                                        selected={new Date(field.value as any)}
                                         onSelect={field.onChange}
                                         disabled={(date) => date < new Date("1900-01-01")}
                                         initialFocus
@@ -191,7 +190,7 @@ function ProviderTable() {
     const handleSave = (values: ProviderValues, id?: string) => {
         const providerData = {
             ...values,
-            subscriptionExpiry: values.subscriptionExpiry,
+            subscriptionExpiry: values.subscriptionExpiry ? values.subscriptionExpiry.toISOString() : undefined,
         };
 
         if (id) {
