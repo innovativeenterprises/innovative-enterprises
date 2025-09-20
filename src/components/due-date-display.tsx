@@ -49,7 +49,7 @@ export const DueDateDisplay = ({
         const formatted = format(dueDate, "PPP");
         
         let status: 'normal' | 'warn' | 'error' = 'normal';
-        if (diffDays <= 0) {
+        if (diffDays < 0) { // Changed from <= 0 to < 0 to only be error on overdue
             status = 'error';
         } else if (diffDays <= warnDays) {
             status = 'warn';
