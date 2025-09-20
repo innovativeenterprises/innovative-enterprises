@@ -14,14 +14,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { useLeasesData } from '@/hooks/use-global-store-data';
-import { getLeases } from "@/lib/firestore";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Student Housing Management | EduFlow Suite",
-  description: "A centralized dashboard for managing student housing agreements and payments.",
-};
-
 
 export default function StudentHousingPage() {
     const { leases, setLeases, isClient } = useLeasesData();
@@ -29,15 +21,10 @@ export default function StudentHousingPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchData() {
-            if (isClient) {
-                // This check is now redundant because we're using a client component, 
-                // but good practice if it were to fetch from an API.
-                setIsLoading(false);
-            }
+        if(isClient) {
+            setIsLoading(false);
         }
-        fetchData();
-    }, [isClient, setLeases]);
+    }, [isClient]);
 
 
     const expiringLeasesCount = useMemo(() => {
