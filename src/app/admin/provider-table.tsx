@@ -265,7 +265,7 @@ export default function ProviderTable() {
                                 <TableCell>{p.services}</TableCell>
                                 <TableCell>{getStatusBadge(p.status)}</TableCell>
                                 <TableCell>
-                                    {p.subscriptionExpiry && <DueDateDisplay date={new Date(p.subscriptionExpiry).toISOString()} prefix="Expires:" />}
+                                    {p.subscriptionExpiry && <DueDateDisplay date={new Date(p.subscriptionExpiry).toISOString()} prefix="Expires:" warnDays={30} />}
                                 </TableCell>
                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                     <div className="flex justify-end gap-1">
