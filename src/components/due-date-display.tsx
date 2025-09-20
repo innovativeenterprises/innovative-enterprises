@@ -18,15 +18,21 @@ export const DueDateDisplay = ({
   warnDays?: number;
 }) => {
   const [displayState, setDisplayState] = useState<{
+    isClient: boolean;
     formattedDate: string | null;
     daysRemaining: number | null;
     status: 'normal' | 'warn' | 'error';
-  } | null>(null);
+  }>({
+    isClient: false,
+    formattedDate: null,
+    daysRemaining: null,
+    status: 'normal',
+  });
 
   useEffect(() => {
     // This effect runs only on the client, after hydration, preventing mismatch
     if (!date) {
-      setDisplayState({ formattedDate: `${prefix} N/A`, daysRemaining: null, status: 'normal' });
+      setDisplayState({ isClient: true, formattedDate: `${prefix} N/A`, daysRemaining: null, status: 'normal' });
       return;
     }
     
@@ -50,18 +56,19 @@ export const DueDateDisplay = ({
         }
 
         setDisplayState({
+            isClient: true,
             formattedDate: `${prefix} ${formatted}`,
             daysRemaining: diffDays,
             status,
         });
 
     } catch (e) {
-       setDisplayState({ formattedDate: `${prefix} Invalid Date`, daysRemaining: null, status: 'error' });
+       setDisplayState({ isClient: true, formattedDate: `${prefix} Invalid Date`, daysRemaining: null, status: 'error' });
     }
   }, [date, prefix, warnDays]);
 
   // On the server and during initial client render, show a placeholder.
-  if (!displayState) {
+  if (!displayState.isClient) {
     return <div className={cn("text-sm text-muted-foreground", className)}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   
