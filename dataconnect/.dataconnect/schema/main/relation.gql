@@ -1,0 +1,950 @@
+extend type AgentSolution {
+  """
+  ✨ List `Metric` objects in a one-to-many relationship (where `Metric`.`agentSolution` is this object).
+  """
+  metrics_on_agentSolution(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Metric_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Metric_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Metric_Having
+  ): [Metric!]! @fdc_generated(from: "Metric.agentSolution", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Task` objects in a one-to-many relationship (where `Task`.`agentSolution` is this object).
+  """
+  tasks_on_agentSolution(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Task_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Task_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Task_Having
+  ): [Task!]! @fdc_generated(from: "Task.agentSolution", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "AgentSolution", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table.
+  """
+  _count: Int! @fdc_generated(from: "AgentSolution.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `deploymentDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  deploymentDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.deploymentDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `description` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  description_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.description", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `expectedOutput` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  expectedOutput_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.expectedOutput", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `projectId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  projectId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.projectId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.status", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `targetKPIs` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  targetKPIs_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.targetKPIs", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AgentSolution` table where the `type` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  type_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AgentSolution.type", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `createdAt` field in the `AgentSolution` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "AgentSolution.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `deploymentDate` field in the `AgentSolution` table.
+  """
+  deploymentDate_min: Date @fdc_generated(from: "AgentSolution.deploymentDate", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `AgentSolution` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "AgentSolution.createdAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `deploymentDate` field in the `AgentSolution` table.
+  """
+  deploymentDate_max: Date @fdc_generated(from: "AgentSolution.deploymentDate", purpose: QUERY_MAX)
+}
+extend type Metric {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Metric", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Metric` table.
+  """
+  _count: Int! @fdc_generated(from: "Metric.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `agentSolutionId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  agentSolutionId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.agentSolutionId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `description` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  description_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.description", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `projectId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  projectId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.projectId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `timestamp` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  timestamp_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.timestamp", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `type` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  type_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.type", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `unit` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  unit_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.unit", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Metric` table where the `value` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  value_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Metric.value", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `value` field in the `Metric` table.
+  """
+  value_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Metric.value", purpose: QUERY_SUM)
+  """
+  ✨ Average the `value` field in the `Metric` table.
+  """
+  value_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Metric.value", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `timestamp` field in the `Metric` table.
+  """
+  timestamp_min: Timestamp @fdc_generated(from: "Metric.timestamp", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `value` field in the `Metric` table.
+  """
+  value_min: Float @fdc_generated(from: "Metric.value", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `timestamp` field in the `Metric` table.
+  """
+  timestamp_max: Timestamp @fdc_generated(from: "Metric.timestamp", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `value` field in the `Metric` table.
+  """
+  value_max: Float @fdc_generated(from: "Metric.value", purpose: QUERY_MAX)
+}
+extend type Organization {
+  """
+  ✨ List `Project` objects in a one-to-many relationship (where `Project`.`organization` is this object).
+  """
+  projects_on_organization(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Project_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Project_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Project_Having
+  ): [Project!]! @fdc_generated(from: "Project.organization", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `User` objects in a one-to-many relationship (where `User`.`organization` is this object).
+  """
+  users_on_organization(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: User_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [User_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: User_Having
+  ): [User!]! @fdc_generated(from: "User.organization", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Organization", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Organization` table.
+  """
+  _count: Int! @fdc_generated(from: "Organization.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Organization` table where the `contactEmail` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  contactEmail_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Organization.contactEmail", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Organization` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Organization.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Organization` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Organization.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Organization` table where the `industry` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  industry_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Organization.industry", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Organization` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Organization.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Organization` table where the `website` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  website_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Organization.website", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `createdAt` field in the `Organization` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "Organization.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `Organization` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "Organization.createdAt", purpose: QUERY_MAX)
+}
+extend type Project {
+  """
+  ✨ List `AgentSolution` objects in a one-to-many relationship (where `AgentSolution`.`project` is this object).
+  """
+  agentSolutions_on_project(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: AgentSolution_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [AgentSolution_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: AgentSolution_Having
+  ): [AgentSolution!]! @fdc_generated(from: "AgentSolution.project", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Metric` objects in a one-to-many relationship (where `Metric`.`project` is this object).
+  """
+  metrics_on_project(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Metric_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Metric_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Metric_Having
+  ): [Metric!]! @fdc_generated(from: "Metric.project", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Task` objects in a one-to-many relationship (where `Task`.`project` is this object).
+  """
+  tasks_on_project(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Task_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Task_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Task_Having
+  ): [Task!]! @fdc_generated(from: "Task.project", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Project", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Project` table.
+  """
+  _count: Int! @fdc_generated(from: "Project.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `budget` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  budget_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.budget", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `description` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  description_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.description", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `endDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  endDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.endDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `organizationId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  organizationId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.organizationId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `startDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  startDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.startDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Project` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Project.status", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `budget` field in the `Project` table.
+  """
+  budget_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Project.budget", purpose: QUERY_SUM)
+  """
+  ✨ Average the `budget` field in the `Project` table.
+  """
+  budget_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Project.budget", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `budget` field in the `Project` table.
+  """
+  budget_min: Float @fdc_generated(from: "Project.budget", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `createdAt` field in the `Project` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "Project.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `endDate` field in the `Project` table.
+  """
+  endDate_min: Date @fdc_generated(from: "Project.endDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `startDate` field in the `Project` table.
+  """
+  startDate_min: Date @fdc_generated(from: "Project.startDate", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `budget` field in the `Project` table.
+  """
+  budget_max: Float @fdc_generated(from: "Project.budget", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `createdAt` field in the `Project` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "Project.createdAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `endDate` field in the `Project` table.
+  """
+  endDate_max: Date @fdc_generated(from: "Project.endDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `startDate` field in the `Project` table.
+  """
+  startDate_max: Date @fdc_generated(from: "Project.startDate", purpose: QUERY_MAX)
+}
+extend type Task {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Task", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Task` table.
+  """
+  _count: Int! @fdc_generated(from: "Task.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `agentSolutionId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  agentSolutionId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.agentSolutionId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `assignedToTeam` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  assignedToTeam_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.assignedToTeam", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `assignedToUserId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  assignedToUserId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.assignedToUserId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `description` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  description_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.description", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `dueDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  dueDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.dueDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `estimatedEffort` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  estimatedEffort_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.estimatedEffort", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `priority` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  priority_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.priority", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `projectId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  projectId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.projectId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Task` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Task.status", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `createdAt` field in the `Task` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "Task.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `dueDate` field in the `Task` table.
+  """
+  dueDate_min: Date @fdc_generated(from: "Task.dueDate", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `Task` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "Task.createdAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `dueDate` field in the `Task` table.
+  """
+  dueDate_max: Date @fdc_generated(from: "Task.dueDate", purpose: QUERY_MAX)
+}
+extend type User {
+  """
+  ✨ List `Task` objects in a one-to-many relationship (where `Task`.`assignedToUser` is this object).
+  """
+  tasks_on_assignedToUser(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Task_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Task_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Task_Having
+  ): [Task!]! @fdc_generated(from: "Task.assignedToUser", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "User", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `User` table.
+  """
+  _count: Int! @fdc_generated(from: "User.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `department` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  department_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.department", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `displayName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  displayName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.displayName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `email` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  email_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.email", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `organizationId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  organizationId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.organizationId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `phoneNumber` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  phoneNumber_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.phoneNumber", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `role` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  role_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.role", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `createdAt` field in the `User` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "User.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `User` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "User.createdAt", purpose: QUERY_MAX)
+}

@@ -1,4 +1,5 @@
-import StudentRecordsPage from '@/app/education-tech/eduflow/student-records/page';
+import StudentRecordsClientPage from './client-page';
+import { getStudents } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function AdminStudentRecordsPage() {
-    return <StudentRecordsPage />;
+export default async function AdminStudentRecordsPage() {
+    const students = await getStudents();
+    return <StudentRecordsClientPage initialStudents={students} />;
 }

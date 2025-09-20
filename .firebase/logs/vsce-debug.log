@@ -38,3 +38,149 @@
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:17:56.514033   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
 [debug] [2025-09-20T21:18:06.513Z] E0920 21:18:06.512028   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:18:06.512028   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:18:16.504Z] E0920 21:18:16.503269   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:18:16.503269   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:18:26.514Z] E0920 21:18:26.512160   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:18:26.512160   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:18:36.511Z] E0920 21:18:36.511058   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:18:36.511058   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:18:46.503Z] E0920 21:18:46.503430   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:18:46.503430   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:18:56.510Z] E0920 21:18:56.507802   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:18:56.507802   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:18:58.645Z] [Firebase Plugin] Value of process.env.MONOSPACE_ENV: true
+[debug] [2025-09-20T21:18:58.646Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-09-20T21:18:58.647Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-20T21:18:58.648Z] > authorizing via signed-in user (innovativeenterprisesoman@gmail.com)
+[debug] [2025-09-20T21:18:58.650Z] [Firebase Plugin] Value of process.env.MONOSPACE_ENV: true
+[debug] [2025-09-20T21:18:58.651Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-09-20T21:18:58.652Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-20T21:18:58.652Z] > authorizing via signed-in user (innovativeenterprisesoman@gmail.com)
+[debug] [2025-09-20T21:18:58.653Z] Emulator locator file path: /tmp/hub-innovative-enterprises.json
+[debug] [2025-09-20T21:18:58.656Z] No OAuth tokens found
+[debug] [2025-09-20T21:18:58.656Z] No OAuth tokens found
+[debug] [2025-09-20T21:18:58.656Z] [Firebase Plugin] User found:  innovativeenterprisesoman@gmail.com
+[debug] [2025-09-20T21:18:58.657Z] [Firebase Plugin] User found:  innovativeenterprisesoman@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-09-20T21:18:58.658Z] No OAuth tokens found
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-09-20T21:18:58.659Z] No OAuth tokens found
+[debug] [2025-09-20T21:18:58.660Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-09-20T21:18:58.663Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-09-20T21:18:59.154Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-09-20T21:18:59.158Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-09-20T21:18:59.164Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-09-20T21:18:59.167Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-09-20T21:19:06.511Z] E0920 21:19:06.511182   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:19:06.511182   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:19:16.506Z] E0920 21:19:16.503250   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+E0920 21:19:16.503315   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:19:16.503250   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\nE0920 21:19:16.503315   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory\n"}}
+[debug] [2025-09-20T21:19:26.503Z] E0920 21:19:26.503200   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:19:26.503200   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:19:36.512Z] E0920 21:19:36.512135   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:19:36.512135   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:19:46.504Z] E0920 21:19:46.503556   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:19:46.503556   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:19:56.513Z] E0920 21:19:56.513050   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:19:56.513050   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:20:06.508Z] E0920 21:20:06.508157   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:20:06.508157   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:20:16.503Z] E0920 21:20:16.503504   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:20:16.503504   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:20:26.507Z] E0920 21:20:26.507149   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:20:26.507149   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:20:36.502Z] E0920 21:20:36.502647   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:20:36.502647   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:20:46.503Z] E0920 21:20:46.503366   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:20:46.503366   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:20:56.502Z] E0920 21:20:56.502648   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:20:56.502648   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:21:06.503Z] E0920 21:21:06.502662   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:21:06.502662   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:21:16.503Z] E0920 21:21:16.503043   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:21:16.503043   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:21:16.504Z] E0920 21:21:16.503096   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:21:16.503096   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory\n"}}
+[debug] [2025-09-20T21:21:26.508Z] E0920 21:21:26.508419   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:21:26.508419   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:21:36.503Z] E0920 21:21:36.503047   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:21:36.503047   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:21:46.503Z] E0920 21:21:46.503087   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:21:46.503087   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:21:56.507Z] E0920 21:21:56.507156   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:21:56.507156   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:22:06.508Z] E0920 21:22:06.508116   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:22:06.508116   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:22:16.502Z] E0920 21:22:16.502504   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:22:16.502504   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:22:26.503Z] E0920 21:22:26.502678   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:22:26.502678   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:22:36.513Z] E0920 21:22:36.513014   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:22:36.513014   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:22:46.503Z] E0920 21:22:46.503337   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:22:46.503337   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:22:56.511Z] E0920 21:22:56.511097   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:22:56.511097   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:23:06.512Z] E0920 21:23:06.512040   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:23:06.512040   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:23:16.504Z] E0920 21:23:16.504017   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+E0920 21:23:16.504072   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:23:16.504017   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\nE0920 21:23:16.504072   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory\n"}}
+[debug] [2025-09-20T21:23:26.512Z] E0920 21:23:26.512134   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:23:26.512134   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:23:36.512Z] E0920 21:23:36.512054   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:23:36.512054   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:23:46.503Z] E0920 21:23:46.502873   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:23:46.502873   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:23:56.503Z] E0920 21:23:56.502758   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:23:56.502758   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:24:06.512Z] E0920 21:24:06.512286   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:24:06.512286   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:24:16.503Z] E0920 21:24:16.503403   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:24:16.503403   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:24:26.503Z] E0920 21:24:26.503253   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:24:26.503253   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:24:36.514Z] E0920 21:24:36.512637   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:24:36.512637   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:24:46.503Z] E0920 21:24:46.503288   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:24:46.503288   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:24:56.512Z] E0920 21:24:56.512075   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:24:56.512075   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:25:06.513Z] E0920 21:25:06.513273   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:25:06.513273   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:25:16.502Z] E0920 21:25:16.502465   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+E0920 21:25:16.502522   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:25:16.502465   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\nE0920 21:25:16.502522   14992 watch.go:102] watchAllDir unable to walk dir `/home/user/studio/dataconnect`: lstat /home/user/studio/dataconnect: no such file or directory\n"}}
+[debug] [2025-09-20T21:25:26.513Z] E0920 21:25:26.511034   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:25:26.511034   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:25:36.513Z] E0920 21:25:36.512583   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:25:36.512583   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:25:46.503Z] E0920 21:25:46.503079   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:25:46.503079   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:25:56.502Z] E0920 21:25:56.502672   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:25:56.502672   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:26:06.514Z] E0920 21:26:06.514052   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:26:06.514052   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:26:16.503Z] E0920 21:26:16.502970   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:26:16.502970   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:26:26.512Z] E0920 21:26:26.512002   14992 watch.go:31] Failed to load config from "/home/user/studio/dataconnect": could not find dataconnect.yaml in `/home/user/studio/dataconnect`
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:26:26.512002   14992 watch.go:31] Failed to load config from \"/home/user/studio/dataconnect\": could not find dataconnect.yaml in `/home/user/studio/dataconnect`\n"}}
+[debug] [2025-09-20T21:26:36.516Z] I0920 21:26:36.513741   14992 load.go:31] Reloading schema and connectors...
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0920 21:26:36.513741   14992 load.go:31] Reloading schema and connectors...\n"}}
+[debug] [2025-09-20T21:26:37.010Z] W0920 21:26:37.004397   14992 control.go:68] [/emulator/studio 373f] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
+
+sources: example/queries.gql [530B] 
+I0920 21:26:37.008082   14992 control.go:94] [/emulator/studio 373f] UpdateResources(): done
+Schema: sources: schema/schema.gql [1207B] 
+Connector "example": sources: example/queries.gql [530B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W0920 21:26:37.004397   14992 control.go:68] [/emulator/studio 373f] connector \"example\" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data\n\nsources: example/queries.gql [530B] \nI0920 21:26:37.008082   14992 control.go:94] [/emulator/studio 373f] UpdateResources(): done\nSchema: sources: schema/schema.gql [1207B] \nConnector \"example\": sources: example/queries.gql [530B] \n"}}
+[debug] [2025-09-20T21:26:37.017Z] E0920 21:26:37.017095   14992 load.go:73] Could not load sources: 
+Errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0920 21:26:37.017095   14992 load.go:73] Could not load sources: \nErrors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data\n"}}
+[debug] [2025-09-20T21:26:37.026Z] I0920 21:26:37.019880   14992 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/input.gql [68752B] main/relation.gql [33941B] prelude.gql [73251B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] 
+I0920 21:26:37.024056   14992 load.go:74] Finished reloading
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0920 21:26:37.019880   14992 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: main/input.gql [68752B] main/relation.gql [33941B] prelude.gql [73251B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] \nI0920 21:26:37.024056   14992 load.go:74] Finished reloading\n"}}
+[info] [Firebase Plugin] Stopping Data Connect toolkit
+[warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 

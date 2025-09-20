@@ -1,0 +1,68 @@
+extend type AgentSolution {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "AgentSolution", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `AgentSolution`.`project`. It must match the value of `Project`.`id`. See `@ref` for how to customize it.
+  """
+  projectId: UUID @fdc_generated(from: "AgentSolution.project", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Metric {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Metric", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Metric`.`agentSolution`. It must match the value of `AgentSolution`.`id`. See `@ref` for how to customize it.
+  """
+  agentSolutionId: UUID @fdc_generated(from: "Metric.agentSolution", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Metric`.`project`. It must match the value of `Project`.`id`. See `@ref` for how to customize it.
+  """
+  projectId: UUID @fdc_generated(from: "Metric.project", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Organization {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Organization", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Project {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Project", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Project`.`organization`. It must match the value of `Organization`.`id`. See `@ref` for how to customize it.
+  """
+  organizationId: UUID @fdc_generated(from: "Project.organization", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Task {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Task", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`agentSolution`. It must match the value of `AgentSolution`.`id`. See `@ref` for how to customize it.
+  """
+  agentSolutionId: UUID @fdc_generated(from: "Task.agentSolution", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`assignedToUser`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  assignedToUserId: UUID @fdc_generated(from: "Task.assignedToUser", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`project`. It must match the value of `Project`.`id`. See `@ref` for how to customize it.
+  """
+  projectId: UUID @fdc_generated(from: "Task.project", purpose: IMPLICIT_REF_FIELD)
+}
+extend type User {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "User", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `User`.`organization`. It must match the value of `Organization`.`id`. See `@ref` for how to customize it.
+  """
+  organizationId: UUID @fdc_generated(from: "User.organization", purpose: IMPLICIT_REF_FIELD)
+}

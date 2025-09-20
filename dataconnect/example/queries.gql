@@ -1,0 +1,23 @@
+mutation InsertOrganization @auth(level: USER) {
+  organization_insert(data: { name: "Example Corp", industry: "Technology" })
+}
+
+query ListProjects @auth(level: USER) {
+  projects {
+    id
+    name
+    description
+  }
+}
+
+mutation UpdateTask($id: UUID!, $status: String!) @auth(level: USER) {
+  task_update(key: { id: $id }, data: { status: $status })
+}
+
+query ListUsersByOrganization($organizationId: UUID!) @auth(level: USER) {
+  users(where: { organizationId: { eq: $organizationId } }) {
+    id
+    displayName
+    email
+  }
+}

@@ -1,6 +1,5 @@
-
-
-import StudentHousingPage from '@/app/real-estate-tech/student-housing/page';
+import StudentHousingClientPage from './client-page';
+import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,6 +8,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function AdminStudentHousingPage() {
-    return <StudentHousingPage />;
+export default async function AdminStudentHousingPage() {
+    const leases = await getLeases();
+    return <StudentHousingClientPage initialLeases={leases} />;
 }

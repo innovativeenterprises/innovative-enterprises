@@ -1,0 +1,65 @@
+type Organization @table {
+  name: String!
+  createdAt: Timestamp!
+  industry: String
+  contactEmail: String
+  website: String
+}
+
+type Project @table {
+  name: String!
+  description: String!
+  startDate: Date!
+  status: String!
+  createdAt: Timestamp!
+  endDate: Date
+  budget: Float
+  organization: Organization
+}
+
+type AgentSolution @table {
+  name: String!
+  description: String!
+  type: String!
+  status: String!
+  createdAt: Timestamp!
+  expectedOutput: String
+  targetKPIs: String
+  deploymentDate: Date
+  project: Project
+}
+
+type User @table {
+  displayName: String!
+  email: String!
+  role: String!
+  createdAt: Timestamp!
+  phoneNumber: String
+  department: String
+  organization: Organization
+}
+
+type Task @table {
+  name: String!
+  description: String!
+  assignedToUser: User
+  assignedToTeam: String # Assuming Team is represented by a string name for now
+  dueDate: Date!
+  status: String!
+  createdAt: Timestamp!
+  priority: String
+  estimatedEffort: String
+  project: Project
+  agentSolution: AgentSolution
+}
+
+type Metric @table {
+  name: String!
+  value: Float!
+  unit: String!
+  timestamp: Timestamp!
+  type: String!
+  description: String
+  agentSolution: AgentSolution
+  project: Project
+}

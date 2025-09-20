@@ -1,0 +1,16 @@
+mutation SeedDatabase @auth(level: USER) {
+  organization_insertMany(data: [
+    {
+      name: "Innovative Enterprises",
+      industry: "Technology",
+      contactEmail: "contact@innovative.com",
+      website: "https://innovative.com"
+    },
+    {
+      name: "Global Solutions",
+      industry: "Consulting",
+      contactEmail: "info@globalsolutions.com",
+      website: "https://globalsolutions.com"
+    }
+  ])
+}
