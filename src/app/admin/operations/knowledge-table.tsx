@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -14,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
-import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
 import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
 import { trainAgent } from "@/ai/flows/train-agent";
 import { scrapeAndSummarize } from "@/ai/flows/web-scraper-agent";
@@ -22,8 +23,9 @@ import { initialAgentCategories } from '@/lib/agents';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-import { fileToDataURI } from '@/lib/utils';
+import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
 import { useKnowledgeData } from "@/hooks/use-global-store-data";
 
 const UploadDocumentSchema = z.object({
@@ -479,3 +481,5 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
+
+    

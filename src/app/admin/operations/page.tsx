@@ -6,12 +6,12 @@ import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
-import ThemeGenerator from "./theme-generator";
+import ThemeGenerator from "@/app/admin/operations/theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import KnowledgeTable from "./knowledge-table";
-import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "./pricing-table";
+import KnowledgeTable from "@/app/admin/operations/knowledge-table";
+import CostSettingsTable from "@/app/admin/operations/cost-settings-table";
+import PricingTable from "@/app/admin/operations/pricing-table";
 
 
 export default function AdminOperationsPage() {
