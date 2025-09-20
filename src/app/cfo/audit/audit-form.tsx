@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { analyzeFinancialDocuments } from '@/ai/flows/financial-document-analysis';
 import { type FinancialAnalysisOutput } from '@/ai/flows/financial-document-analysis.schema';
@@ -39,7 +39,7 @@ export default function AuditForm() {
     defaultValues: {
       analysisType: 'Internal Review',
       companyName: 'Innovative Enterprises',
-      fiscalYear: '',
+      fiscalYear: undefined, // Initialize as undefined
       assignedOffice: '',
     },
   });

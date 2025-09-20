@@ -60,17 +60,27 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
 
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
+    const [clients, setClients] = useState<Client[]>(initialClients);
     const { toast } = useToast();
+    
+    useEffect(() => {
+        setClients(initialClients);
+    }, [initialClients]);
+
 
     const handleClientSave = (values: ClientValues, id?: string) => {
-        // In a real app, this would be a server action to update the database.
-        // For this prototype, we'll just show a toast.
-        toast({ title: `Action not implemented in prototype.` });
+        if (id) {
+            setClients(prev => prev.map(c => c.id === id ? { ...c, ...values} : c));
+        } else {
+            const newClient: Client = { ...values, id: String(Date.now()) };
+            setClients(prev => [...prev, newClient]);
+        }
+        toast({ title: `Client ${id ? 'updated' : 'added'} successfully.` });
     };
 
     const handleClientDelete = (id: string) => {
-        // In a real app, this would be a server action.
-        toast({ title: `Action not implemented in prototype.`, variant: 'destructive' });
+        setClients(prev => prev.filter(c => c.id !== id));
+        toast({ title: `Client removed.`, variant: 'destructive' });
     };
     
     return (
@@ -86,7 +96,7 @@ export default function ClientTable({ initialClients }: { initialClients: Client
                     <Table>
                         <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                         <TableBody>
-                            {initialClients.map(client => (
+                            {clients.map(client => (
                                 <TableRow key={client.id}>
                                     <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
                                     <TableCell>{client.name}</TableCell>

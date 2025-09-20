@@ -11,8 +11,9 @@ import type { Agent, AgentCategory } from './agents.schema';
 import type { Agency as RaahaAgency } from './raaha-agencies';
 import type { Worker as RaahaWorker } from './raaha-workers';
 import type { HireRequest } from './raaha-requests.schema';
-import type { BeautyCenter } from './beauty-centers';
-import type { BeautyService } from './beauty-services';
+import type { BeautyCenter } from './beauty-centers.schema';
+import type { BeautySpecialist } from './beauty-specialists.schema';
+import type { BeautyService } from './beauty-services.schema';
 import type { BeautyAppointment } from './beauty-appointments';
 import type { CostRate } from './cost-settings.schema';
 import type { Asset } from './assets.schema';
@@ -50,6 +51,7 @@ import { initialStairspaceRequests } from './stairspace-requests';
 import { initialStairspaceListings } from './stairspace-listings';
 import { initialBeautyCenters } from './beauty-centers';
 import { initialBeautyServices } from './beauty-services';
+import { initialBeautySpecialists } from './beauty-specialists';
 import { initialBeautyAppointments } from './beauty-appointments';
 import { initialAssets } from './assets';
 import { initialUsedItems } from './used-items';
@@ -62,11 +64,21 @@ import { initialMembers } from './community-members';
 import { initialAlumniJobs } from './alumni-jobs';
 import { initialRentalAgencies } from './rental-agencies';
 import { initialCars } from './cars';
-import { saasProducts } from './saas-products';
+import { saasProducts as initialSaasProducts } from './saas-products';
 import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
 import { initialApplications } from './admissions-applications';
 import type { ProjectStage } from './stages';
+import type { Investor } from './investors.schema';
+import { initialInvestors } from './investors';
+import { initialKnowledgeBase } from './knowledge';
+import { initialCfoData } from './cfo-data';
+import type { KnowledgeDocument } from './knowledge.schema';
+import type { Property } from './properties.schema';
+import { initialProperties } from './properties';
+import type { SaasCategory } from './saas-products.schema';
+import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
+import type { Solution, Industry, AiTool } from './nav-links';
 
 export interface AppState {
   settings: AppSettings;
@@ -87,6 +99,7 @@ export interface AppState {
   raahaRequests: HireRequest[];
   beautyCenters: BeautyCenter[];
   beautyServices: BeautyService[];
+  beautySpecialists: BeautySpecialist[];
   beautyAppointments: BeautyAppointment[];
   costSettings: CostRate[];
   assets: Asset[];
@@ -110,8 +123,17 @@ export interface AppState {
   stages: ProjectStage[];
   applications: typeof initialApplications;
   briefcase: BriefcaseData;
+  investors: Investor[];
+  knowledgeBase: KnowledgeDocument[];
+  cfoData: typeof initialCfoData;
+  properties: Property[];
+  solutions: Solution[];
+  industries: Industry[];
+  aiTools: AiTool[];
 };
 
+// This provides the default, empty state for the application.
+// Actual data will be fetched by server components and passed as props.
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
@@ -131,6 +153,7 @@ export const initialState: AppState = {
   raahaRequests: initialRaahaRequests,
   beautyCenters: initialBeautyCenters,
   beautyServices: initialBeautyServices,
+  beautySpecialists: initialBeautySpecialists,
   beautyAppointments: initialBeautyAppointments,
   costSettings: initialCostSettings,
   assets: initialAssets,
@@ -148,10 +171,17 @@ export const initialState: AppState = {
   cars: initialCars,
   posProducts: initialPosProducts,
   dailySales: initialDailySales,
-  saasProducts: saasProducts,
+  saasProducts: initialSaasProducts,
   stockItems: initialStockItems,
   pricing: initialPricing,
   stages: initialStages,
   applications: initialApplications,
   briefcase: initialBriefcase,
+  investors: initialInvestors,
+  knowledgeBase: initialKnowledgeBase,
+  cfoData: initialCfoData,
+  properties: initialProperties,
+  solutions: initialSolutions,
+  industries: initialIndustries,
+  aiTools: initialAiTools,
 };

@@ -1,4 +1,6 @@
 
+'use client';
+
 import { DollarSign } from "lucide-react";
 import AuditForm from "./audit-form";
 import type { Metadata } from 'next';

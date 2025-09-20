@@ -1,20 +1,21 @@
 
-'use client';
+'use server';
 
 import CompanyOverview from "@/components/company-overview";
 import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import AiToolsCta from "@/components/ai-tools-cta";
 import ClientTestimonials from "@/components/client-testimonials";
-import { useServicesData, useProductsData, useClientsData, useTestimonialsData, useAiToolsData } from "@/hooks/use-global-store-data";
+import { getServices, getProducts, getClients, getTestimonials, getAiTools } from "@/lib/firestore";
 
-
-export default function HomePage() {
-  const { services } = useServicesData();
-  const { products } = useProductsData();
-  const { clients } = useClientsData();
-  const { testimonials } = useTestimonialsData();
-  const { aiTools } = useAiToolsData();
+export default async function HomePage() {
+  const [services, products, clients, testimonials, aiTools] = await Promise.all([
+    getServices(),
+    getProducts(),
+    getClients(),
+    getTestimonials(),
+    getAiTools(),
+  ]);
 
   return (
     <>
