@@ -10,13 +10,6 @@ import { type SaasCategory, type SaaSProduct } from '@/lib/saas-products.schema'
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSaaSProductsData } from '@/hooks/use-global-store-data';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "SaaS Portfolio",
-  description: "Browse the complete portfolio of over 30+ digital products and SaaS platforms developed by Innovative Enterprises, spanning construction, real estate, education, and AI tools.",
-};
-
 
 const getStatusBadge = (status: string) => {
     switch (status) {

@@ -9,15 +9,9 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { Metadata } from 'next';
 import { useProductsData, useProvidersData, useStaffData } from "@/hooks/use-global-store-data";
 import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-
-export const metadata: Metadata = {
-    title: 'Admin Dashboard | Innovative Enterprises',
-    description: 'An overview of your digital and human workforce, projects, and partner network.'
-}
 
 export default function AdminDashboardPage() {
   const { products, isClient: isProductsClient } = useProductsData();
