@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -57,11 +56,6 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
     const [clients, setClients] = useState<Client[]>(initialClients);
     const { toast } = useToast();
-
-    useEffect(() => {
-        setClients(initialClients);
-    }, [initialClients]);
-
 
     const handleClientSave = (values: ClientValues, id?: string) => {
         if (id) {

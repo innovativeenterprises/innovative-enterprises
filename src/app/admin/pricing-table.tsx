@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Edit } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PricingFormSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -80,13 +81,17 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
-    
+    const [isClient, setIsClient] = useState(false);
+
     useEffect(() => {
+        setIsClient(true);
+        // Sync state if initial props change
         setPricing(initialPricing);
     }, [initialPricing]);
 
+
     const handleSave = (values: PricingValues, id: string) => {
-        setPricing((prev: Pricing[]) => prev.map(p => p.id === id ? { ...p, ...values } : p));
+        setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
         toast({ title: "Price updated successfully." });
     };
     
@@ -122,16 +127,24 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                         {pricing.map(item => (
-                            <TableRow key={item.id}>
-                                <TableCell className="font-medium">{item.type}</TableCell>
-                                <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                <TableCell>OMR {item.price.toFixed(2)}</TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
+                        {!isClient ? (
+                             <TableRow>
+                                <TableCell colSpan={4}>
+                                    <Skeleton className="h-10 w-full" />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                             pricing.map(item => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="font-medium">{item.type}</TableCell>
+                                    <TableCell className="text-muted-foreground">{item.group}</TableCell>
+                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
