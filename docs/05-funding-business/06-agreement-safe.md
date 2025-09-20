@@ -15,8 +15,8 @@ The Investor will invest **OMR [Investment Amount]** in the Company upon executi
 ### 2. Events Triggering Conversion
 
 **(a) Equity Financing:** If the Company sells equity shares to investors ("Equity Financing") before this agreement terminates, the Investor's investment will automatically convert into shares of the same class issued in the financing. The conversion price will be the lower of:
-    i. The price per share in the Equity Financing, discounted by **[Discount Rate, e.g., 20]%**.
-    ii. The price per share determined by a **Valuation Cap of OMR [Valuation Cap Amount]**.
+    i. The price per share in the Equity Financing, discounted by **20%**.
+    ii. The price per share determined by a **Valuation Cap of OMR 2,000,000**.
 
 **(b) Liquidity Event:** If there is a change of control (e.g., merger, acquisition) before this agreement terminates, the Investor can choose to either:
     i. Receive a cash payout equal to the Investment Amount.
