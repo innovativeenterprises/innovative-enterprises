@@ -1,5 +1,4 @@
 
-
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -117,6 +116,7 @@ export interface AppState {
   cars: Car[];
   posProducts: PosProduct[];
   dailySales: DailySales;
+  saasProducts: SaasCategory[];
   stockItems: StockItem[];
   pricing: Pricing[];
   stages: ProjectStage[];
@@ -126,62 +126,61 @@ export interface AppState {
   knowledgeBase: KnowledgeDocument[];
   cfoData: typeof initialCfoData;
   properties: Property[];
-  saasProducts: SaasCategory[];
   solutions: Solution[];
   industries: Industry[];
   aiTools: AiTool[];
 };
 
+// This provides the default, empty state for the application.
+// Actual data will be fetched by server components and passed as props.
 export const initialState: AppState = {
   settings: initialSettings,
   cart: [],
-  products: initialProducts,
-  storeProducts: initialStoreProducts,
-  providers: initialProviders,
-  opportunities: initialOpportunities,
-  services: initialServices,
-  signedLeases: initialLeases,
-  stairspaceRequests: initialStairspaceRequests,
-  stairspaceListings: initialStairspaceListings,
-  leadership: initialStaffData.leadership,
-  staff: initialStaffData.staff,
-  agentCategories: initialStaffData.agentCategories,
-  raahaAgencies: initialRaahaAgencies,
-  raahaWorkers: initialRaahaWorkers,
-  raahaRequests: initialRaahaRequests,
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautySpecialists: initialBeautySpecialists,
-  beautyAppointments: initialBeautyAppointments,
-  costSettings: initialCostSettings,
-  assets: initialAssets,
-  usedItems: initialUsedItems,
-  clients: initialClients,
-  testimonials: initialTestimonials,
-  giftCards: initialGiftCards,
-  students: initialStudents,
-  communities: initialCommunities,
-  communityEvents: initialEvents,
-  communityFinances: initialFinances,
-  communityMembers: initialMembers,
-  alumniJobs: initialAlumniJobs,
-  rentalAgencies: initialRentalAgencies,
-  cars: initialCars,
-  posProducts: initialPosProducts,
-  dailySales: initialDailySales,
-  stockItems: initialStockItems,
-  pricing: initialPricing,
-  stages: initialStages,
-  applications: initialApplications,
+  products: [],
+  storeProducts: [],
+  providers: [],
+  opportunities: [],
+  services: [],
+  signedLeases: [],
+  stairspaceRequests: [],
+  stairspaceListings: [],
+  leadership: [],
+  staff: [],
+  agentCategories: [],
+  raahaAgencies: [],
+  raahaWorkers: [],
+  raahaRequests: [],
+  beautyCenters: [],
+  beautyServices: [],
+  beautySpecialists: [],
+  beautyAppointments: [],
+  costSettings: [],
+  assets: [],
+  usedItems: [],
+  clients: [],
+  testimonials: [],
+  giftCards: [],
+  students: [],
+  communities: [],
+  communityEvents: [],
+  communityFinances: [],
+  communityMembers: [],
+  alumniJobs: [],
+  rentalAgencies: [],
+  cars: [],
+  posProducts: [],
+  dailySales: [],
+  saasProducts: [],
+  stockItems: [],
+  pricing: [],
+  stages: [],
+  applications: [],
   briefcase: initialBriefcase,
-  investors: initialInvestors,
-  knowledgeBase: initialKnowledgeBase,
+  investors: [],
+  knowledgeBase: [],
   cfoData: initialCfoData,
-  properties: initialProperties,
-  saasProducts: initialSaasProducts,
-  solutions: initialSolutions,
-  industries: initialIndustries,
-  aiTools: initialAiTools,
+  properties: [],
+  solutions: [],
+  industries: [],
+  aiTools: [],
 };
-
-  

@@ -4,10 +4,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import { useAiToolsData } from '@/hooks/use-global-store-data';
+import type { AiTool } from "@/lib/nav-links";
 
-export default function AiToolsCta() {
-    const { aiTools } = useAiToolsData();
+export default function AiToolsCta({ aiTools }: { aiTools: AiTool[] }) {
     
     // Dynamically select a few key agents to feature
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];

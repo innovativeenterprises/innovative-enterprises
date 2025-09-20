@@ -1,28 +1,22 @@
 
-
 'use client';
 
 import { useRef, type ReactNode, createContext } from 'react';
-import { createAppStore, type StoreType, type AppState } from '@/lib/global-store';
+import { createAppStore, type StoreType } from '@/lib/global-store';
 
 export const StoreContext = createContext<StoreType | null>(null);
 
 export const StoreProvider = ({
   children,
-  initialData,
 }: {
   children: ReactNode;
-  initialData: AppState;
 }) => {
   const storeRef = useRef<StoreType>();
   if (!storeRef.current) {
-    // Initialize the store with the server-fetched data.
-    storeRef.current = createAppStore(initialData);
+    storeRef.current = createAppStore();
   }
   
   return (
     <StoreContext.Provider value={storeRef.current}>{children}</StoreContext.Provider>
   );
 }
-
-  

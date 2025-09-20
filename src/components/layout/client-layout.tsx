@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -9,13 +8,18 @@ import { ThemeProvider } from 'next-themes';
 import Footer from './footer';
 import Header from './header';
 import { type AppState } from '@/lib/global-store';
+import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 
 export default function ClientLayout({
   children,
-  initialData,
+  solutions,
+  industries,
+  aiTools
 }: {
   children: React.ReactNode;
-  initialData: AppState;
+  solutions: Solution[];
+  industries: Industry[];
+  aiTools: AiTool[];
 }) {
 
   return (
@@ -25,9 +29,13 @@ export default function ClientLayout({
         enableSystem
         disableTransitionOnChange
     >
-        <StoreProvider initialData={initialData}>
+        <StoreProvider>
         <div className="flex min-h-screen flex-col">
-            <Header />
+            <Header 
+              solutions={solutions}
+              industries={industries}
+              aiTools={aiTools}
+            />
             <main className="flex-1">{children}</main>
             <Footer />
             <Toaster />
@@ -37,5 +45,3 @@ export default function ClientLayout({
     </ThemeProvider>
   );
 }
-
-  

@@ -1,4 +1,6 @@
 
+'use server';
+
 import CooDashboardClientPage from './client-page';
 import type { Metadata } from 'next';
 import { getProducts, getProviders, getKpiData } from '@/lib/firestore';

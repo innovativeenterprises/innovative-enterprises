@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -7,11 +6,10 @@ import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
-import { useClientsData } from '@/hooks/use-global-store-data';
+import type { Client } from '@/lib/clients.schema';
 
 
-export default function CompanyOverview() {
-  const { clients } = useClientsData();
+export default function CompanyOverview({ clients }: { clients: Client[]}) {
 
   return (
     <section className="bg-background">
@@ -72,5 +70,3 @@ export default function CompanyOverview() {
     </section>
   );
 }
-
-  
