@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -7,26 +9,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { RequestTable, TimeAgoCell } from '@/components/request-table';
-import { WorkerTable } from './worker-table';
+import { SpecialistTable } from './specialist-table';
 import { Badge } from '@/components/ui/badge';
-import type { HireRequest } from '@/lib/raaha-requests';
-import type { Worker } from '@/lib/raaha-workers';
-import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
+import type { BeautyAppointment } from '@/lib/beauty-appointments';
+import type { BeautyService } from '@/lib/beauty-services';
+import type { BeautyCenter } from '@/lib/beauty-centers';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarIcon, MessageSquare } from 'lucide-react';
-import { format } from 'date-fns';
-import { type BeautyCenter } from '@/lib/beauty-centers';
-import { type BeautyService } from '@/lib/beauty-services';
-import { type BeautyAppointment } from '@/lib/beauty-appointments';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
 import { useBeautyData } from '@/hooks/use-global-store-data';
 
-export default function AgencyDashboardPage() {
-    const { agencies, services, appointments, setAgencies, setServices, setAppointments, isClient } = useBeautyData();
+export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
+    const { agencies, setAgencies, services, setServices, appointments, setAppointments, isClient } = useBeautyData();
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const { toast } = useToast();
+
+     useEffect(() => {
+        setAgencies(() => initialAgencies);
+        setServices(() => initialServices);
+        setAppointments(() => initialAppointments);
+    }, [initialAgencies, initialServices, initialAppointments, setAgencies, setServices, setAppointments]);
 
      useEffect(() => {
         if (agencies.length > 0 && !selectedAgencyId) {
@@ -35,6 +37,10 @@ export default function AgencyDashboardPage() {
     }, [agencies, selectedAgencyId]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
+    
+    const filteredServices = services.filter(s => s.agencyId === selectedAgency?.id);
+    const filteredAppointments = appointments.filter(a => a.agencyId === selectedAgency?.id);
+
 
     if (!isClient || !selectedAgency) {
          return (
@@ -85,16 +91,20 @@ export default function AgencyDashboardPage() {
                     </Card>
 
                      <Tabs defaultValue="schedule" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="schedule">Appointment Schedule</TabsTrigger>
-                            <TabsTrigger value="services">Services & Pricing</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-4">
+                            <TabsTrigger value="schedule">Appointments</TabsTrigger>
+                            <TabsTrigger value="services">Services</TabsTrigger>
+                            <TabsTrigger value="staff">Staff</TabsTrigger>
                             <TabsTrigger value="settings">Center Settings</TabsTrigger>
                         </TabsList>
                         <TabsContent value="schedule" className="mt-6">
-                            <ScheduleTable appointments={appointments} setAppointments={setAppointments} />
+                            <ScheduleTable appointments={filteredAppointments} setAppointments={setAppointments} />
                         </TabsContent>
                         <TabsContent value="services" className="mt-6">
-                            <ServiceTable services={services} setServices={setServices} />
+                            <ServiceTable services={filteredServices} setServices={setServices} />
+                        </TabsContent>
+                         <TabsContent value="staff" className="mt-6">
+                            <SpecialistTable />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} />}
