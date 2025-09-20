@@ -1,4 +1,3 @@
-
 'use client';
 
 import AiToolsCta from "@/components/ai-tools-cta";
