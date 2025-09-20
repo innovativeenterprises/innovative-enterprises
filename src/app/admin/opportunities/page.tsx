@@ -1,11 +1,10 @@
 'use client';
 
 import WorkOrderForm from './work-order-form';
-import OpportunityTable from './opportunity-table';
+import OpportunityTable from '../opportunity-table';
 import { useOpportunitiesData } from '@/hooks/use-global-store-data';
 
 export default function AdminOpportunitiesPage() {
-    const { opportunities, setOpportunities } = useOpportunitiesData();
     
     return (
         <div className="space-y-8">
@@ -13,8 +12,8 @@ export default function AdminOpportunitiesPage() {
                 <h1 className="text-3xl font-bold">Opportunities</h1>
                 <p className="text-muted-foreground">Analyze new ideas and manage all open projects, tasks, and competitions available to your partner network.</p>
             </div>
-            <WorkOrderForm setOpportunities={setOpportunities} />
-            <OpportunityTable opportunities={opportunities} setOpportunities={setOpportunities} />
+            <WorkOrderForm />
+            <OpportunityTable />
         </div>
     );
 }
