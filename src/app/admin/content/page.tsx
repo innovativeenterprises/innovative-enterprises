@@ -4,6 +4,7 @@
 import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
+import TestimonialTable from "@/app/admin/testimonial-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
@@ -33,10 +34,11 @@ export default function AdminContentPage() {
                 </p>
             </div>
             <Tabs defaultValue="services" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
+                <TabsList className="grid w-full grid-cols-6">
                     <TabsTrigger value="services">Services</TabsTrigger>
                     <TabsTrigger value="products">Products</TabsTrigger>
-                    <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
+                    <TabsTrigger value="clients">Clients</TabsTrigger>
+                    <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
                     <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
                     <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
                 </TabsList>
@@ -47,12 +49,10 @@ export default function AdminContentPage() {
                     <ProductTable products={products} setProducts={setProducts} stages={stages} />
                 </TabsContent>
                 <TabsContent value="clients" className="mt-6">
-                    <ClientTable 
-                        clients={clients} 
-                        setClients={setClients}
-                        testimonials={testimonials}
-                        setTestimonials={setTestimonials}
-                    />
+                    <ClientTable clients={clients} setClients={setClients} />
+                </TabsContent>
+                 <TabsContent value="testimonials" className="mt-6">
+                    <TestimonialTable testimonials={testimonials} setTestimonials={setTestimonials} />
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-6">
                     <PricingTable pricing={pricing} setPricing={setPricing} />
