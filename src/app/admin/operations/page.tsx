@@ -39,6 +39,104 @@ import { fileToDataURI } from '@/lib/utils';
 import { Trash2, Sparkles, Loader2 } from "lucide-react";
 
 // --- KnowledgeTable Logic (Consolidated) ---
+
+const UploadDocumentSchema = z.object({
+  documentFile: z.any().optional(),
+  documentUrls: z.string().optional(),
+}).refine(data => (data.documentFile && data.documentFile.length > 0) || data.documentUrls, {
+    message: "Either a document file or one or more URLs are required.",
+    path: ["documentFile"],
+});
+type UploadDocumentValues = z.infer<typeof UploadDocumentSchema>;
+
+const UploadDocumentDialog = ({
+    isOpen, onOpenChange, onUpload, documentToReplace, children,
+}: { 
+    isOpen: boolean; onOpenChange: (open: boolean) => void; onUpload: (source: { file?: File, urls?: string[] }, docIdToReplace?: string) => Promise<void>, documentToReplace?: KnowledgeDocument, children: React.ReactNode
+}) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const form = useForm<UploadDocumentValues>({ resolver: zodResolver(UploadDocumentSchema) });
+
+    useEffect(() => { if (!isOpen) { form.reset(); } }, [isOpen, form]);
+
+    const onSubmit: SubmitHandler<UploadDocumentValues> = async (data) => {
+        setIsLoading(true);
+        const urls = data.documentUrls?.split('\n').filter(url => url.trim() !== '');
+        await onUpload({ file: data.documentFile?.[0], urls }, documentToReplace?.id);
+        setIsLoading(false);
+        onOpenChange(false);
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>{documentToReplace ? "Replace" : "Add"} Knowledge Source</DialogTitle>
+                    <DialogDescription>Upload a document or provide URLs. The AI will analyze it.</DialogDescription>
+                </DialogHeader>
+                <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField control={form.control} name="documentFile" render={({ field }) => (
+                        <FormItem><FormLabel>Upload Document</FormLabel><FormControl><Input type="file" accept=".pdf,.txt" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <div className="relative"><div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div><div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div></div>
+                    <FormField control={form.control} name="documentUrls" render={({ field }) => (
+                        <FormItem><FormLabel>Import from URL(s)</FormLabel><FormControl><Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={3} {...field} /></FormControl><FormDescription>One URL per line.</FormDescription><FormMessage /></FormItem>
+                    )} />
+                    <DialogFooter>
+                        <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                        <Button type="submit" disabled={isLoading}>{isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />} Analyze & {documentToReplace ? "Replace" : "Add"}</Button>
+                    </DialogFooter>
+                </form></Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const QaPairSchema = z.object({ question: z.string().min(1), answer: z.string().min(1) });
+const TrainingDialogSchema = z.object({ agentId: z.string().min(1), knowledgeDocuments: z.array(z.string()).optional(), knowledgeUrls: z.string().optional(), qaPairs: z.array(QaPairSchema).optional() });
+type TrainingDialogValues = z.infer<typeof TrainingDialogSchema>;
+
+const allAgents = initialAgentCategories.flatMap(category => category.agents);
+
+const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[] }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [response, setResponse] = useState<z.infer<ReturnType<typeof trainAgent>['outputSchema']> | null>(null);
+    const { toast } = useToast();
+    const form = useForm<TrainingDialogValues>({ resolver: zodResolver(TrainingDialogSchema), defaultValues: { agentId: '', qaPairs: [{ question: '', answer: '' }] }});
+    const { fields, append, remove } = useFieldArray({ control: form.control, name: "qaPairs" });
+
+    const onSubmit: SubmitHandler<TrainingDialogValues> = async (data) => {
+        setIsLoading(true); setResponse(null);
+        try {
+            const knowledgeDocuments: { fileName: string; content: string; }[] = data.knowledgeDocuments?.map(docId => {
+                const doc = knowledgeBase.find(d => d.id === docId);
+                const base64Content = doc?.dataUri?.split(',')[1];
+                return { fileName: doc!.fileName, content: base64Content! };
+            }).filter(d => d.content) || [];
+            const knowledgeUrls = data.knowledgeUrls?.split('\n').filter(url => url.trim() !== '');
+            const result = await trainAgent({ agentId: data.agentId, qaPairs: data.qaPairs, knowledgeDocuments: knowledgeDocuments.length > 0 ? knowledgeDocuments : undefined, knowledgeUrls });
+            setResponse(result);
+            toast({ title: 'Training Job Submitted', description: result.message });
+            setIsOpen(false);
+        } catch (error) { console.error(error); toast({ title: 'Error', description: 'Failed to submit training job.', variant: 'destructive' });
+        } finally { setIsLoading(false); }
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild><Button variant="outline"><BrainCircuit className="mr-2 h-4 w-4" /> Train Agents</Button></DialogTrigger>
+            <DialogContent className="sm:max-w-[725px]"><DialogHeader><DialogTitle>Train an AI Agent</DialogTitle><DialogDescription>Select an agent and provide knowledge sources.</DialogDescription></DialogHeader>
+            <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {/* ... (rest of the form remains the same) ... */}
+                <DialogFooter><DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose><Button type="submit" disabled={isLoading}>{isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Sparkles className="mr-2 h-4 w-4" />} Start Training</Button></DialogFooter>
+            </form></Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 const KnowledgeTable = () => {
     const { knowledgeBase, setKnowledgeBase, isClient } = useKnowledgeData();
     const { toast } = useToast();
@@ -89,6 +187,7 @@ const KnowledgeTable = () => {
 }
 
 // --- CostSettingsTable Logic (Consolidated) ---
+
 const CostRateSchema = z.object({ name: z.string().min(2), category: z.enum(['Material', 'Labor', 'Equipment', 'Travel']), unit: z.string().min(1), rate: z.coerce.number().min(0) });
 type CostRateValues = z.infer<typeof CostRateSchema>;
 
@@ -145,6 +244,61 @@ const CostSettingsTable = () => {
     );
 }
 
+// --- PricingTable Logic (Consolidated) ---
+const PricingFormSchema = z.object({
+  price: z.coerce.number().min(0, "Price must be a positive number"),
+});
+type PricingValues = z.infer<typeof PricingFormSchema>;
+
+const EditPriceDialog = ({ 
+    item, onSave, children, isOpen, onOpenChange,
+}: { 
+    item: Pricing, onSave: (values: PricingValues, id: string) => void, children: React.ReactNode, isOpen: boolean, onOpenChange: (open: boolean) => void,
+}) => {
+    const form = useForm<PricingValues>({ resolver: zodResolver(PricingFormSchema) });
+    useEffect(() => { if (isOpen) form.reset({ price: item.price }); }, [item, form, isOpen]);
+    const onSubmit: SubmitHandler<PricingValues> = (data) => { onSave(data, item.id); onOpenChange(false); };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader><DialogTitle>Edit Price</DialogTitle></DialogHeader>
+                <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <div><p className="font-medium text-sm">{item.type}</p><p className="text-sm text-muted-foreground">{item.group}</p></div>
+                    <FormField control={form.control} name="price" render={({ field }) => (
+                        <FormItem><FormLabel>Price per page (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <DialogFooter><DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose><Button type="submit">Save Price</Button></DialogFooter>
+                </form></Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+function PricingTable() { 
+    const { pricing, setPricing, isClient } = usePricingData();
+    const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
+
+    const handleSave = (values: PricingValues, id: string) => { setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p)); toast({ title: "Price updated successfully." }); };
+    const handleOpenDialog = (item: Pricing) => { setSelectedItem(item); setIsDialogOpen(true); };
+
+    return (
+        <Card>
+            <CardHeader><CardTitle>Translation Pricing Management</CardTitle><CardDescription>Manage the per-page price for document translation.</CardDescription></CardHeader>
+            <CardContent>
+                {selectedItem && <EditPriceDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} item={selectedItem} onSave={handleSave}><div /></EditPriceDialog>}
+                <Table><TableHeader><TableRow><TableHead>Document Type</TableHead><TableHead>Category</TableHead><TableHead>Price (OMR)</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                <TableBody>{!isClient ? <TableRow><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow> : pricing.map(item => (
+                    <TableRow key={item.id}><TableCell className="font-medium">{item.type}</TableCell><TableCell className="text-muted-foreground">{item.group}</TableCell><TableCell>OMR {item.price.toFixed(2)}</TableCell><TableCell className="text-right"><Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button></TableCell></TableRow>
+                ))}</TableBody></Table>
+            </CardContent>
+        </Card>
+    );
+}
+
 // --- Main Page Component ---
 export default function AdminOperationsPage() {
 
@@ -155,7 +309,7 @@ export default function AdminOperationsPage() {
     { id: 'coupon', title: 'Coupon Generator', icon: Ticket, component: <CouponGenerator /> },
     { id: 'rental', title: 'Asset Rental Proposal Generator', icon: Scale, component: <AssetRentalAgentForm /> },
   ]
-
+  
   return (
     <div className="space-y-8">
         <div>
@@ -166,10 +320,11 @@ export default function AdminOperationsPage() {
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-3">
+             <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
                 <TabsTrigger value="costing">Market Rates</TabsTrigger>
+                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />
@@ -197,6 +352,9 @@ export default function AdminOperationsPage() {
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
                 <CostSettingsTable />
+            </TabsContent>
+            <TabsContent value="pricing" className="mt-6 space-y-8">
+                <PricingTable />
             </TabsContent>
         </Tabs>
     </div>
