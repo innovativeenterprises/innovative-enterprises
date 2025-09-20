@@ -31,8 +31,8 @@ export default function StudentHousingPage() {
     useEffect(() => {
         async function fetchData() {
             if (isClient) {
-                const data = await getLeases();
-                setLeases(() => data);
+                // This check is now redundant because we're using a client component, 
+                // but good practice if it were to fetch from an API.
                 setIsLoading(false);
             }
         }
