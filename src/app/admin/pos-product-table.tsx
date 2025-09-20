@@ -17,8 +17,6 @@ import { useToast } from '@/hooks/use-toast';
 import type { PosProduct } from "@/lib/pos-data.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
-import { Skeleton } from "@/components/ui/skeleton";
-import { usePosProductsData } from "@/hooks/use-global-store-data";
 
 const PosProductSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -40,13 +38,15 @@ const AddEditPosProductDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<PosProductValues>({
         resolver: zodResolver(PosProductSchema),
+        defaultValues: product || { name: "", category: "Snacks", price: 0, imageUrl: "https://images.unsplash.com/photo-1599405452230-74f00454a83a?q=80&w=600&auto=format&fit=crop" },
     });
-
+    
     useEffect(() => {
-        if(isOpen) {
+        if (isOpen) {
             form.reset(product || { name: "", category: "Snacks", price: 0, imageUrl: "https://images.unsplash.com/photo-1599405452230-74f00454a83a?q=80&w=600&auto=format&fit=crop" });
         }
     }, [product, form, isOpen]);
+
 
     const onSubmit: SubmitHandler<PosProductValues> = (data) => {
         onSave(data, product?.id);
@@ -101,23 +101,22 @@ const AddEditPosProductDialog = ({
     );
 };
 
-export default function PosProductTable() {
-    const { posProducts, setPosProducts, isClient } = usePosProductsData();
+export default function PosProductTable({ products, setProducts }: { products: PosProduct[], setProducts: Function }) {
     const { toast } = useToast();
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
-            setPosProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
+            setProducts((prev: PosProduct[]) => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Product updated." });
         } else {
             const newItem: PosProduct = { ...values, id: `pos_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
-            setPosProducts(prev => [newItem, ...prev]);
+            setProducts((prev: PosProduct[]) => [newItem, ...prev]);
             toast({ title: "Product added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setPosProducts(prev => prev.filter(item => item.id !== id));
+        setProducts((prev: PosProduct[]) => prev.filter(item => item.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
 
@@ -144,40 +143,32 @@ export default function PosProductTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                            <TableRow>
-                                <TableCell colSpan={5}>
-                                    <Skeleton className="h-20 w-full" />
+                        {products.map(item => (
+                            <TableRow key={item.id}>
+                                <TableCell>
+                                    <Image src={item.imageUrl} alt={item.name} width={60} height={60} className="rounded-md object-cover" />
+                                </TableCell>
+                                <TableCell className="font-medium">{item.name}</TableCell>
+                                <TableCell className="text-muted-foreground">{item.category}</TableCell>
+                                <TableCell className="text-right font-mono">{item.price.toFixed(2)}</TableCell>
+                                <TableCell className="text-right">
+                                    <div className="flex justify-end gap-2">
+                                        <AddEditPosProductDialog product={item} onSave={handleSave}>
+                                            <Button variant="ghost" size="icon"><Edit /></Button>
+                                        </AddEditPosProductDialog>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{item.name}".</AlertDialogDescription></AlertDialogHeader>
+                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(item.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </div>
                                 </TableCell>
                             </TableRow>
-                        ) : (
-                            posProducts.map(item => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        <Image src={item.imageUrl} alt={item.name} width={60} height={60} className="rounded-md object-cover" />
-                                    </TableCell>
-                                    <TableCell className="font-medium">{item.name}</TableCell>
-                                    <TableCell className="text-muted-foreground">{item.category}</TableCell>
-                                    <TableCell className="text-right font-mono">{item.price.toFixed(2)}</TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <AddEditPosProductDialog product={item} onSave={handleSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditPosProductDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{item.name}".</AlertDialogDescription></AlertDialogHeader>
-                                                    <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(item.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
+                        ))}
                     </TableBody>
                 </Table>
             </CardContent>

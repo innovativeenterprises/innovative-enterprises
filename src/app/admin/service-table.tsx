@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -11,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 import type { Service } from "@/lib/services.schema";
 import { GripVertical } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useServicesData } from "@/hooks/use-global-store-data";
 import { Badge } from "@/components/ui/badge";
 
 const SortableServiceRow = ({ service, handleToggle }: { service: Service, handleToggle: (title: string) => void }) => {
@@ -47,8 +47,7 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     );
 };
 
-export default function ServiceTable() {
-    const { services, setServices, isClient } = useServicesData();
+export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (updater: (prev: Service[]) => Service[]) => void }) {
     const { toast } = useToast();
 
     const sensors = useSensors(
@@ -98,23 +97,15 @@ export default function ServiceTable() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {!isClient ? (
-                                <TableRow>
-                                    <TableCell colSpan={4}>
-                                        <Skeleton className="h-20 w-full" />
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
-                                    {services.map(service => (
-                                        <SortableServiceRow
-                                            key={service.title}
-                                            service={service}
-                                            handleToggle={handleToggle}
-                                        />
-                                    ))}
-                                </SortableContext>
-                            )}
+                            <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
+                                {services.map(service => (
+                                    <SortableServiceRow
+                                        key={service.title}
+                                        service={service}
+                                        handleToggle={handleToggle}
+                                    />
+                                ))}
+                            </SortableContext>
                         </TableBody>
                     </Table>
                 </DndContext>

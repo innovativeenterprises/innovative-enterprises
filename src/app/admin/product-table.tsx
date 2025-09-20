@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -8,15 +9,11 @@ import { Button } from "@/components/ui/button";
 import { useToast } from '@/hooks/use-toast';
 import type { Product } from "@/lib/products.schema";
 import { PlusCircle, Edit } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useProductsData, useStagesData } from "@/hooks/use-global-store-data";
 import { Badge } from "@/components/ui/badge";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import type { ProjectStage } from "@/lib/stages";
 
-export default function ProductTable() {
-    const { products, setProducts, isClient } = useProductsData();
-    const { stages } = useStagesData();
+export default function ProductTable({ products, setProducts, stages }: { products: Product[], setProducts: (updater: (prev: Product[]) => Product[]) => void, stages: ProjectStage[] }) {
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
@@ -81,37 +78,27 @@ export default function ProductTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                            Array.from({ length: 5 }).map((_, i) => (
-                                <TableRow key={i}>
-                                    <TableCell colSpan={5}>
-                                        <Skeleton className="h-10 w-full" />
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            products.map((product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell className="font-medium">{product.name}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{product.category}</Badge>
-                                    </TableCell>
-                                    <TableCell>{product.price > 0 ? `OMR ${product.price.toFixed(2)}` : 'N/A'}</TableCell>
-                                    <TableCell className="text-center">
-                                        <Switch
-                                            checked={product.enabled}
-                                            onCheckedChange={() => handleToggle(product.id!)}
-                                            aria-label={`Enable/disable ${product.name}`}
-                                        />
-                                    </TableCell>
-                                     <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
-                                            <Edit />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
+                        {products.map((product) => (
+                            <TableRow key={product.id}>
+                                <TableCell className="font-medium">{product.name}</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">{product.category}</Badge>
+                                </TableCell>
+                                <TableCell>{product.price > 0 ? `OMR ${product.price.toFixed(2)}` : 'N/A'}</TableCell>
+                                <TableCell className="text-center">
+                                    <Switch
+                                        checked={product.enabled}
+                                        onCheckedChange={() => handleToggle(product.id!)}
+                                        aria-label={`Enable/disable ${product.name}`}
+                                    />
+                                </TableCell>
+                                 <TableCell className="text-right">
+                                    <Button variant="ghost" size="icon" onClick={() => openDialog(product)}>
+                                        <Edit />
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </CardContent>

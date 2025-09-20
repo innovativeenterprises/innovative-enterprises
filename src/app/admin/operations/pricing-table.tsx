@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -13,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
 import { Edit } from "lucide-react";
 
 
@@ -77,14 +77,13 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() { 
-    const { pricing, setPricing, isClient } = usePricingData();
+export default function PricingTable({ pricing, setPricing }: { pricing: Pricing[], setPricing: Function }) { 
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     const handleSave = (values: PricingValues, id: string) => {
-        setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
+        setPricing((prev: Pricing[]) => prev.map(p => p.id === id ? { ...p, ...values } : p));
         toast({ title: "Price updated successfully." });
     };
     
@@ -120,24 +119,16 @@ export default function PricingTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                             <TableRow>
-                                <TableCell colSpan={4}>
-                                    <Skeleton className="h-10 w-full" />
+                         {pricing.map(item => (
+                            <TableRow key={item.id}>
+                                <TableCell className="font-medium">{item.type}</TableCell>
+                                <TableCell className="text-muted-foreground">{item.group}</TableCell>
+                                <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                <TableCell className="text-right">
+                                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
                                 </TableCell>
                             </TableRow>
-                        ) : (
-                             pricing.map(item => (
-                                <TableRow key={item.id}>
-                                    <TableCell className="font-medium">{item.type}</TableCell>
-                                    <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
-                                    <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
+                        ))}
                     </TableBody>
                 </Table>
             </CardContent>

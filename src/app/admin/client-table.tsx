@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,7 +17,6 @@ import type { Client, Testimonial } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useClientsData, useTestimonialsData } from "@/hooks/use-global-store-data";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -37,23 +37,15 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<ClientValues>({
         resolver: zodResolver(ClientSchema),
+        defaultValues: client
     });
-
-    useEffect(() => {
-        if(isOpen) form.reset(client);
-    }, [isOpen, client, form]);
-
-    const onSubmit: SubmitHandler<ClientValues> = (data) => {
-        onSave(data, client?.id);
-        setIsOpen(false);
-    };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{client ? "Edit" : "Add"} Client</DialogTitle></DialogHeader>
-                <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <Form {...form}><form onSubmit={form.handleSubmit(data => { onSave(data, client?.id); setIsOpen(false); })} className="space-y-4">
                     <FormField control={form.control} name="name" render={({ field }) => (
                         <FormItem><FormLabel>Client Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
@@ -74,22 +66,15 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<TestimonialValues>({
         resolver: zodResolver(TestimonialSchema),
+        defaultValues: testimonial
     });
-     useEffect(() => {
-        if(isOpen) form.reset(testimonial);
-    }, [isOpen, testimonial, form]);
     
-    const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
-        onSave(data, testimonial?.id);
-        setIsOpen(false);
-    };
-
-     return (
+    return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{testimonial ? "Edit" : "Add"} Testimonial</DialogTitle></DialogHeader>
-                <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <Form {...form}><form onSubmit={form.handleSubmit(data => { onSave(data, testimonial?.id); setIsOpen(false); })} className="space-y-4">
                      <FormField control={form.control} name="quote" render={({ field }) => (
                         <FormItem><FormLabel>Quote</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
@@ -109,37 +94,34 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     );
 };
 
-export default function ClientTable() {
+export default function ClientTable({ clients, setClients, testimonials, setTestimonials }: { clients: Client[], setClients: Function, testimonials: Testimonial[], setTestimonials: Function }) {
     const { toast } = useToast();
-    const { clients, setClients, isClient: isClientsClient } = useClientsData();
-    const { testimonials, setTestimonials, isClient: isTestimonialsClient } = useTestimonialsData();
-    const isClient = isClientsClient && isTestimonialsClient;
 
     const handleClientSave = (values: ClientValues, id?: string) => {
         if (id) {
-            setClients(prev => prev.map(c => c.id === id ? { ...c, ...values } : c));
+            setClients((prev: Client[]) => prev.map(c => c.id === id ? { ...c, ...values } : c));
         } else {
-            setClients(prev => [{ ...values, id: `client_${Date.now()}` }, ...prev]);
+            setClients((prev: Client[]) => [{ ...values, id: `client_${Date.now()}` }, ...prev]);
         }
         toast({ title: `Client ${id ? 'updated' : 'added'}.` });
     };
 
     const handleClientDelete = (id: string) => {
-        setClients(prev => prev.filter(c => c.id !== id));
+        setClients((prev: Client[]) => prev.filter(c => c.id !== id));
         toast({ title: 'Client removed.', variant: 'destructive' });
     };
 
     const handleTestimonialSave = (values: TestimonialValues, id?: string) => {
         if (id) {
-            setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...values } : t));
+            setTestimonials((prev: Testimonial[]) => prev.map(t => t.id === id ? { ...t, ...values } : t));
         } else {
-            setTestimonials(prev => [{ ...values, id: `test_${Date.now()}` }, ...prev]);
+            setTestimonials((prev: Testimonial[]) => [{ ...values, id: `test_${Date.now()}` }, ...prev]);
         }
         toast({ title: `Testimonial ${id ? 'updated' : 'added'}.` });
     };
     
     const handleTestimonialDelete = (id: string) => {
-        setTestimonials(prev => prev.filter(t => t.id !== id));
+        setTestimonials((prev: Testimonial[]) => prev.filter(t => t.id !== id));
         toast({ title: 'Testimonial removed.', variant: 'destructive' });
     }
 
@@ -156,23 +138,21 @@ export default function ClientTable() {
                     <Table>
                         <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                         <TableBody>
-                            {!isClient ? <TableRow><TableCell colSpan={3}><Skeleton className="w-full h-12" /></TableCell></TableRow> : (
-                                clients.map(client => (
-                                    <TableRow key={client.id}>
-                                        <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
-                                        <TableCell>{client.name}</TableCell>
-                                        <TableCell className="text-right">
-                                            <AddEditClientDialog client={client} onSave={handleClientSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditClientDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
-                                                <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove "{client.name}" from your client list.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleClientDelete(client.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
-                                            </AlertDialog>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
+                            {clients.map(client => (
+                                <TableRow key={client.id}>
+                                    <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
+                                    <TableCell>{client.name}</TableCell>
+                                    <TableCell className="text-right">
+                                        <AddEditClientDialog client={client} onSave={handleClientSave}>
+                                            <Button variant="ghost" size="icon"><Edit /></Button>
+                                        </AddEditClientDialog>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
+                                            <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove "{client.name}" from your client list.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleClientDelete(client.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                                        </AlertDialog>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </CardContent>
@@ -188,26 +168,24 @@ export default function ClientTable() {
                      <Table>
                         <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                         <TableBody>
-                             {!isClient ? <TableRow><TableCell colSpan={3}><Skeleton className="w-full h-12" /></TableCell></TableRow> : (
-                                testimonials.map(t => (
-                                    <TableRow key={t.id}>
-                                        <TableCell>
-                                            <p className="font-medium">{t.author}</p>
-                                            <p className="text-sm text-muted-foreground">{t.company}</p>
-                                        </TableCell>
-                                        <TableCell className="text-sm text-muted-foreground italic">"{t.quote}"</TableCell>
-                                        <TableCell className="text-right">
-                                            <AddEditTestimonialDialog testimonial={t} onSave={handleTestimonialSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditTestimonialDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
-                                                <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Testimonial?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleTestimonialDelete(t.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
-                                            </AlertDialog>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
+                            {testimonials.map(t => (
+                                <TableRow key={t.id}>
+                                    <TableCell>
+                                        <p className="font-medium">{t.author}</p>
+                                        <p className="text-sm text-muted-foreground">{t.company}</p>
+                                    </TableCell>
+                                    <TableCell className="text-sm text-muted-foreground italic">"{t.quote}"</TableCell>
+                                    <TableCell className="text-right">
+                                        <AddEditTestimonialDialog testimonial={t} onSave={handleTestimonialSave}>
+                                            <Button variant="ghost" size="icon"><Edit /></Button>
+                                        </AddEditTestimonialDialog>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
+                                            <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Testimonial?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleTestimonialDelete(t.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                                        </AlertDialog>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </CardContent>
