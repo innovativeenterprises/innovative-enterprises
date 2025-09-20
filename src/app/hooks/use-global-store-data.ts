@@ -39,6 +39,8 @@ import type { Investor } from '@/lib/investors.schema';
 import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 import type { StockItem } from '@/lib/stock-items.schema';
 import type { Property } from '@/lib/properties.schema';
+import type { SaasCategory } from '@/lib/saas-products.schema';
+import type { RentalAgency } from '@/lib/rental-agencies';
 
 
 // Centralized function to access the store and its setters
@@ -57,6 +59,20 @@ function useStore<T>(selector: (state: AppState) => T): [T, (updater: (state: Ap
   const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
 
   return [state, store.set, isClient];
+}
+
+// Generic hook factory
+function createStoreHook<K extends keyof AppState>(key: K) {
+  return () => {
+    const [state, setStore, isClient] = useStore((s) => s[key]);
+    const set = (updater: (prev: AppState[K]) => AppState[K]) => {
+      setStore((prevState) => ({
+        ...prevState,
+        [key]: updater(prevState[key]),
+      }));
+    };
+    return { [key]: state, [`set${key.charAt(0).toUpperCase() + key.slice(1)}`]: set, isClient };
+  };
 }
 
 // Specific hooks using the central useStore function
@@ -86,8 +102,8 @@ export const usePosData = () => {
 
 export const useLeasesData = () => {
     const [leases, setStore, isClient] = useStore((s) => s.signedLeases);
-    const setLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => setStore(state => ({...state, signedLeases: updater(state.signedLeases)}));
-    return { leases, setLeases, isClient };
+    const setSignedLeases = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => setStore(state => ({...state, signedLeases: updater(state.signedLeases)}));
+    return { leases, setSignedLeases, isClient };
 };
 
 export const useStairspaceRequestsData = () => {
@@ -204,10 +220,22 @@ export const useCarsData = () => {
     return { cars, setCars, isClient };
 }
 
+export const useRentalAgenciesData = () => {
+    const [rentalAgencies, setStore, isClient] = useStore((s) => s.rentalAgencies);
+    const setRentalAgencies = (updater: (prev: AppState['rentalAgencies']) => AppState['rentalAgencies']) => setStore((state) => ({ ...state, rentalAgencies: updater(state.rentalAgencies) }));
+    return { rentalAgencies, setRentalAgencies, isClient };
+}
+
 export const useGiftCardsData = () => {
     const [giftCards, setStore, isClient] = useStore((s) => s.giftCards);
     const setGiftCards = (updater: (prev: AppState['giftCards']) => AppState['giftCards']) => setStore((state) => ({ ...state, giftCards: updater(state.giftCards) }));
     return { giftCards, setGiftCards, isClient };
+}
+
+export const useStudentsData = () => {
+    const [students, setStore, isClient] = useStore((s) => s.students);
+    const setStudents = (updater: (prev: AppState['students']) => AppState['students']) => setStore((state) => ({ ...state, students: updater(state.students) }));
+    return { students, setStudents, isClient };
 }
 
 export const useMembersData = () => {
@@ -292,4 +320,16 @@ export const useCfoData = () => {
     const [cfoData, setStore, isClient] = useStore((s) => s.cfoData);
     const setCfoData = (updater: (prev: AppState['cfoData']) => AppState['cfoData']) => setStore(state => ({ ...state, cfoData: updater(state.cfoData) }));
     return { cfoData, setCfoData, isClient };
+};
+
+export const useSaaSProductsData = () => {
+    const [saasProducts, setStore, isClient] = useStore((s) => s.saasProducts);
+    const setSaaSProducts = (updater: (prev: AppState['saasProducts']) => AppState['saasProducts']) => setStore(state => ({ ...state, saasProducts: updater(state.saasProducts) }));
+    return { saasProducts, setSaaSProducts, isClient };
+};
+
+export const useApplicationsData = () => {
+    const [applications, setStore, isClient] = useStore((s) => s.applications);
+    const setApplications = (updater: (prev: AppState['applications']) => AppState['applications']) => setStore((state) => ({ ...state, applications: updater(state.applications) }));
+    return { applications, setApplications, isClient };
 };
