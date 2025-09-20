@@ -143,12 +143,6 @@ export const initialIndustries: { title: string; href: string; description: stri
     icon: Users,
   },
    {
-    title: "Beauty & Wellness Hub",
-    href: "/beauty-hub",
-    description: "A complete SaaS solution for salons, spas, and barbershops.",
-    icon: Heart,
-  },
-   {
     title: "We Match Game",
     href: "/we-match",
     description: "An immersive AR social game designed to connect people through real-world challenges.",

@@ -77,9 +77,3 @@ export async function fillPdfForm(input: PdfFormFillerInput): Promise<FilledForm
     
     return output;
 }
-
-ai.defineFlow({
-    name: 'pdfFormFillerFlow',
-    inputSchema: PdfFormFillerInputSchema,
-    outputSchema: PdfFormFillerOutputSchema,
-}, fillPdfForm);
