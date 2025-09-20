@@ -19,7 +19,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <CompanyOverview />
+      <CompanyOverview clients={clients} />
       <ServiceCatalog services={services} />
       <ProductShowcase products={products} />
       <ClientTestimonials clients={clients} testimonials={testimonials} />
