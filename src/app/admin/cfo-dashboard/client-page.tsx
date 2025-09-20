@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import Link from 'next/link';
@@ -13,7 +11,7 @@ import { DueDateDisplay } from '@/components/due-date-display';
 import { useCfoData } from '@/hooks/use-global-store-data';
 
 // Main Dashboard Component
-export default function CfoDashboardClient() {
+export default function CfoDashboardPage() {
   const { cfoData } = useCfoData();
   const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = cfoData;
 
