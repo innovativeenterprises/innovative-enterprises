@@ -1,17 +1,30 @@
 
+'use client';
 
-import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck } from "lucide-react";
+import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck, PlusCircle, Edit, Trash2 } from "lucide-react";
 import InvestForm from "./invest-form";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CompanyProfileDownloader from "./company-profile-downloader";
-import { getProducts } from "@/lib/firestore";
-import type { Product } from "@/lib/products.schema";
 import Link from "next/link";
 import type { Metadata } from 'next';
-import InvestorTable from "../admin/investor-table";
-import { getInvestors } from "@/lib/firestore";
+import { useProductsData, useInvestorsData } from "@/hooks/use-global-store-data";
+import { useState, useEffect, useMemo } from "react";
+import type { Product } from "@/lib/products.schema";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import type { Investor } from "@/lib/investors.schema";
+import { InvestorSchema } from "@/lib/investors.schema";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 
 export const metadata: Metadata = {
   title: "Invest With Us | Innovative Enterprises",
@@ -66,14 +79,140 @@ const ProjectCard = ({ product }: { product: Product }) => {
     return product.href ? <Link href={product.href} className="flex">{content}</Link> : content;
 }
 
-export default async function InvestPage() {
-  const [allProducts] = await Promise.all([
-      getProducts(),
-  ]);
-  const liveProducts = allProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
-  const devProducts = allProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
-  const futureProducts = allProducts.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
+type InvestorValues = z.infer<typeof InvestorSchema>;
 
+const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Investor, onSave: (values: InvestorValues, id?: string) => void, children: React.ReactNode }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const form = useForm<InvestorValues>({
+        resolver: zodResolver(InvestorSchema),
+        defaultValues: investor || {
+            name: "",
+            type: "Investor",
+            subType: "Angel",
+        }
+    });
+
+    useEffect(() => {
+        if(isOpen) form.reset(investor);
+    }, [investor, form, isOpen]);
+
+    const onSubmit: SubmitHandler<InvestorValues> = (data) => {
+        onSave(data, investor?.id);
+        setIsOpen(false);
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader><DialogTitle>{investor ? "Edit" : "Add"} Investor/Funder</DialogTitle></DialogHeader>
+                <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField control={form.control} name="name" render={({ field }) => (
+                        <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                     <div className="grid grid-cols-2 gap-4">
+                        <FormField control={form.control} name="type" render={({ field }) => (
+                            <FormItem><FormLabel>Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl><SelectContent>
+                                <SelectItem value="Investor">Investor</SelectItem><SelectItem value="Funder">Funder</SelectItem>
+                            </SelectContent></Select><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="subType" render={({ field }) => (
+                            <FormItem><FormLabel>Sub-Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                <SelectItem value="Personal/Private">Personal/Private</SelectItem>
+                                <SelectItem value="Angel">Angel</SelectItem>
+                                <SelectItem value="Institute/Government">Institute/Government</SelectItem>
+                                <SelectItem value="VC Fund">VC Fund</SelectItem>
+                            </SelectContent></Select><FormMessage /></FormItem>
+                        )} />
+                    </div>
+                    <FormField control={form.control} name="focusArea" render={({ field }) => (
+                        <FormItem><FormLabel>Focus Area</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <DialogFooter><DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose><Button type="submit">Save</Button></DialogFooter>
+                </form></Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+function InvestorTable() {
+    const { investors, setInvestors, isClient } = useInvestorsData();
+    const { toast } = useToast();
+
+    const handleSave = (values: InvestorValues, id?: string) => {
+        const newInvestorData = { ...values, documents: {} };
+        if (id) {
+            setInvestors(prev => prev.map(inv => inv.id === id ? { ...inv, ...newInvestorData } : inv));
+            toast({ title: 'Investor updated.' });
+        } else {
+            const newInvestor: Investor = { ...newInvestorData, id: `inv_${Date.now()}` };
+            setInvestors(prev => [newInvestor, ...prev]);
+            toast({ title: 'Investor added.' });
+        }
+    };
+
+    const handleDelete = (id: string) => {
+        setInvestors(prev => prev.filter(inv => inv.id !== id));
+        toast({ title: 'Investor removed.', variant: 'destructive' });
+    };
+
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Investors & Funders</CardTitle>
+                    <CardDescription>Manage your list of potential and current investors.</CardDescription>
+                </div>
+                <AddEditInvestorDialog onSave={handleSave}>
+                    <Button><PlusCircle className="mr-2 h-4 w-4" /> Add Investor</Button>
+                </AddEditInvestorDialog>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Focus Area</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {!isClient ? <TableRow><TableCell colSpan={4}><Skeleton className="w-full h-12" /></TableCell></TableRow> :
+                            investors.map(investor => (
+                                <TableRow key={investor.id}>
+                                    <TableCell className="font-medium">{investor.name}</TableCell>
+                                    <TableCell>{investor.subType}</TableCell>
+                                    <TableCell>{investor.focusArea}</TableCell>
+                                    <TableCell className="text-right">
+                                        <AddEditInvestorDialog investor={investor} onSave={handleSave}>
+                                            <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
+                                        </AddEditInvestorDialog>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader><AlertDialogTitle>Delete Investor?</AlertDialogTitle></AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(investor.id!)}>Delete</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+export default function InvestPage() {
+    const { products } = useProductsData();
+    const liveProducts = products.filter(p => p.stage === 'Live & Operating').slice(0, 5);
+    const devProducts = products.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
+    const futureProducts = products.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -190,3 +329,5 @@ export default async function InvestPage() {
     </div>
   );
 }
+
+    
