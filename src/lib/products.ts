@@ -1,4 +1,5 @@
 
+
 import type { Product } from './products.schema';
 
 export const initialStoreProducts: Product[] = [
@@ -478,5 +479,20 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/drivesync-ai",
-    }
+    },
+     {
+        id: 33,
+        name: "Beauty & Wellness Hub",
+        description: "A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships.",
+        stage: "Live & Operating",
+        category: "Beauty & Wellness",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=600&auto=format&fit=crop",
+        aiHint: "salon interior",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/beauty-hub",
+    },
 ];
+
