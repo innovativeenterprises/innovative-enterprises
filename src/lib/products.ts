@@ -1,7 +1,7 @@
 
 
 import type { Product } from './products.schema';
-import { initialSaaSProducts } from './saas-products';
+import { saasProducts } from './saas-products';
 
 
 export const initialStoreProducts: Product[] = [
@@ -33,7 +33,7 @@ export const initialStoreProducts: Product[] = [
     }
 ];
 
-const allSaaSProducts = initialSaaSProducts.flatMap(category => category.products);
+const allSaaSProducts = saasProducts.flatMap(category => category.products);
 
 const hrefMap: Record<string, string> = {
     "PANOSPACE": "/real-estate-tech/virtual-tour",
