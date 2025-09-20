@@ -9,7 +9,7 @@ export interface Agency {
     primaryColor?: string; // e.g., hsl(var(--primary))
 }
 
-export const initialAgencies: Agency[] = [
+export const initialRaahaAgencies: Agency[] = [
     {
         id: 'agency_01',
         name: 'Happy Homes Agency',

@@ -1,7 +1,7 @@
 
 import type { HireRequest } from './raaha-requests.schema';
 
-export const initialRequests: HireRequest[] = [
+export const initialRaahaRequests: HireRequest[] = [
     {
         id: 'req_01',
         workerId: 'worker_001',

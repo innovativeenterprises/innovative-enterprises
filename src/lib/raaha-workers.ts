@@ -12,7 +12,7 @@ export interface Worker {
     agencyId: 'Happy Homes Agency' | 'Premier Maids';
 }
 
-export const initialWorkers: Worker[] = [
+export const initialRaahaWorkers: Worker[] = [
     {
         id: 'worker_001',
         name: 'Maria Dela Cruz',
@@ -187,7 +187,7 @@ export const initialWorkers: Worker[] = [
         nationality: 'Indonesian',
         age: 29,
         skills: ['General Cleaning', 'Cooking (Indonesian)', 'Laundry & Ironing'],
-        experience: '3 years of experience in a large villa in Al Khuwair. Works well independently.',
+        experience: '3 years with a family in Al Khuwair. Works well independently.',
         availability: 'Available',
         rating: 4.5,
         photo: 'https://picsum.photos/seed/worker15/600/600',
@@ -246,7 +246,7 @@ export const initialWorkers: Worker[] = [
         name: 'Sunita Rai',
         nationality: 'Nepalese',
         age: 29,
-        skills: ['Childcare', 'General Cleaning', 'Hardworking'],
+        skills: ['Childcare', 'General Cleaning', 'Cooking (Nepalese)'],
         experience: '3 years of experience as a nanny for a family with school-aged children.',
         availability: 'Available',
         rating: 4.6,
