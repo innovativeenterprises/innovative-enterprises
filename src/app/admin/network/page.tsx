@@ -29,7 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DueDateDisplay } from "@/components/due-date-display";
 import { useProvidersData, useAssetsData } from '@/hooks/use-global-store-data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Asset } from "@/lib/assets";
+import type { Asset } from "@/lib/assets.schema";
 import Image from 'next/image';
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
@@ -632,5 +632,3 @@ export default function AdminNetworkPage() {
     </div>
   );
 }
-
-    
