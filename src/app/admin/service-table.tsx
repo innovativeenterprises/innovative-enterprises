@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DndContext, closestCenter, type DragEndEvent, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import type { Service } from "@/lib/services.schema";
 import { GripVertical } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { CSS } from '@dnd-kit/utilities';
 
 const SortableServiceRow = ({ service, handleToggle }: { service: Service, handleToggle: (title: string) => void }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: service.title });
@@ -47,8 +48,13 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     );
 };
 
-export default function ServiceTable({ services, setServices }: { services: Service[], setServices: (updater: (prev: Service[]) => Service[]) => void }) {
+export default function ServiceTable({ initialServices }: { initialServices: Service[] }) {
+    const [services, setServices] = useState(initialServices);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setServices(initialServices);
+    }, [initialServices]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {

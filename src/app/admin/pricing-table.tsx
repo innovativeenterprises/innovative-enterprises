@@ -14,8 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Edit } from "lucide-react";
-import { usePricingData } from "@/hooks/use-global-store-data";
-
 
 const PricingFormSchema = z.object({
   price: z.coerce.number().min(0, "Price must be a positive number"),
@@ -78,14 +76,14 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
-    const { pricing, setPricing } = usePricingData();
+    const [pricing, setPricing] = useState(initialPricing);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
     
     useEffect(() => {
-        setPricing(() => initialPricing);
-    }, [initialPricing, setPricing]);
+        setPricing(initialPricing);
+    }, [initialPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing((prev: Pricing[]) => prev.map(p => p.id === id ? { ...p, ...values } : p));

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -56,8 +56,13 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     );
 };
 
-export default function TestimonialTable({ testimonials, setTestimonials }: { testimonials: Testimonial[], setTestimonials: Function }) {
+export default function TestimonialTable({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
+    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setTestimonials(initialTestimonials);
+    }, [initialTestimonials]);
 
     const handleTestimonialSave = (values: TestimonialValues, id?: string) => {
         if (id) {
@@ -109,4 +114,3 @@ export default function TestimonialTable({ testimonials, setTestimonials }: { te
         </Card>
     );
 }
-

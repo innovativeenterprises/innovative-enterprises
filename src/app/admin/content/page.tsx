@@ -5,24 +5,20 @@ import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
-import { initialPricing } from "@/lib/pricing";
-import { initialProducts } from "@/lib/products";
-import { initialServices } from "@/lib/services";
-import { initialClients, initialTestimonials } from "@/lib/clients";
-import { initialPosProducts } from "@/lib/pos-data";
-import { initialStages } from "@/lib/stages";
 import TestimonialTable from "@/app/admin/testimonial-table";
+import { getPricing, getProducts, getServices, getClients, getTestimonials, getPosProducts, getStages } from "@/lib/firestore";
 
-export default function AdminContentPage() {
-    // Data is now fetched on the server and passed down as props.
-    // The client components will handle their own state.
-    const services = initialServices;
-    const products = initialProducts;
-    const stages = initialStages;
-    const clients = initialClients;
-    const testimonials = initialTestimonials;
-    const pricing = initialPricing;
-    const posProducts = initialPosProducts;
+
+export default async function AdminContentPage() {
+    const [services, products, stages, clients, testimonials, pricing, posProducts] = await Promise.all([
+        getServices(),
+        getProducts(),
+        getStages(),
+        getClients(),
+        getTestimonials(),
+        getPricing(),
+        getPosProducts(),
+    ]);
 
     return (
         <div className="space-y-8">

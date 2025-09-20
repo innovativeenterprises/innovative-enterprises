@@ -38,7 +38,6 @@ const AddEditPosProductDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<PosProductValues>({
         resolver: zodResolver(PosProductSchema),
-        defaultValues: product || { name: "", category: "Snacks", price: 0, imageUrl: "https://images.unsplash.com/photo-1599405452230-74f00454a83a?q=80&w=600&auto=format&fit=crop" },
     });
     
     useEffect(() => {
@@ -101,8 +100,13 @@ const AddEditPosProductDialog = ({
     );
 };
 
-export default function PosProductTable({ products, setProducts }: { products: PosProduct[], setProducts: Function }) {
+export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
+    const [products, setProducts] = useState<PosProduct[]>(initialProducts);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setProducts(initialProducts);
+    }, [initialProducts]);
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {

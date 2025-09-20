@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
@@ -13,11 +13,16 @@ import { Badge } from "@/components/ui/badge";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import type { ProjectStage } from "@/lib/stages";
 
-export default function ProductTable({ products, setProducts, stages }: { products: Product[], setProducts: (updater: (prev: Product[]) => Product[]) => void, stages: ProjectStage[] }) {
+export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
+    const [products, setProducts] = useState(initialProducts);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
+    useEffect(() => {
+        setProducts(initialProducts);
+    }, [initialProducts]);
+
     const handleToggle = (id: number) => {
         setProducts(prev =>
             prev.map(product =>
@@ -63,7 +68,7 @@ export default function ProductTable({ products, setProducts, stages }: { produc
                     onOpenChange={setIsDialogOpen}
                     product={selectedProduct}
                     onSave={handleSave}
-                    stages={stages}
+                    stages={initialStages}
                 >
                     <div />
                 </AddEditProductDialog>

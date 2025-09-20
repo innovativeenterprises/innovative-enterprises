@@ -16,7 +16,6 @@ import { useToast } from '@/hooks/use-toast';
 import type { Client } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
-import { useClientsData } from "@/hooks/use-global-store-data";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -56,12 +55,12 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
 
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
-    const { clients, setClients } = useClientsData();
+    const [clients, setClients] = useState<Client[]>(initialClients);
     const { toast } = useToast();
 
     useEffect(() => {
-        setClients(() => initialClients);
-    }, [initialClients, setClients]);
+        setClients(initialClients);
+    }, [initialClients]);
 
 
     const handleClientSave = (values: ClientValues, id?: string) => {
