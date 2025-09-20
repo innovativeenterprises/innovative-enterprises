@@ -1,3 +1,6 @@
+
+'use server';
+
 import OpportunityClientPage from './opportunity-client-page';
 import type { Metadata } from 'next';
 import { getOpportunities } from '@/lib/firestore';

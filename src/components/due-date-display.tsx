@@ -30,6 +30,7 @@ export const DueDateDisplay = ({
   });
 
   useEffect(() => {
+    // This effect runs only on the client, after hydration, preventing mismatch
     if (!date) {
       setDisplayState({ isClient: true, formattedDate: `${prefix} N/A`, daysRemaining: null, status: 'normal' });
       return;
@@ -66,10 +67,12 @@ export const DueDateDisplay = ({
     }
   }, [date, prefix, warnDays]);
 
+  // On the server and during initial client render, show a skeleton loader.
   if (!displayState.isClient) {
     return <div className={cn("text-sm text-muted-foreground", className)}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   
+  // After hydration on the client, render the actual formatted date.
   return (
     <div className={cn("text-sm text-muted-foreground", className)}>
       {displayState.formattedDate}

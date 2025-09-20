@@ -1,5 +1,5 @@
 
-'use client';
+'use server';
 
 import ProForm from "@/app/admin/operations/pro-form";
 import TenderForm from "@/app/admin/operations/tender-form";
@@ -13,9 +13,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
 import PricingTable from "./pricing-table";
+import { getPricing } from '@/lib/firestore';
 
 
-export default function AdminOperationsPage() {
+export default async function AdminOperationsPage() {
+  const pricing = await getPricing();
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -69,7 +71,7 @@ export default function AdminOperationsPage() {
                 <CostSettingsTable />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6 space-y-8">
-                <PricingTable initialPricing={[]} />
+                <PricingTable initialPricing={pricing} />
             </TabsContent>
         </Tabs>
     </div>

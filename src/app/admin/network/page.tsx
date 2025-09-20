@@ -1,3 +1,6 @@
+
+'use server';
+
 import { getProviders, getAssets } from '@/lib/firestore';
 import NetworkPageClient from './client-page';
 import type { Metadata } from 'next';

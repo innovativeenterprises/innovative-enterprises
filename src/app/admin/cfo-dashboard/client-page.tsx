@@ -11,20 +11,21 @@ import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { DueDateDisplay } from "@/components/due-date-display";
 import { Skeleton } from '@/components/ui/skeleton';
-import { useCfoData } from '@/hooks/use-global-store-data';
+import { useCfoData as useCfoDataStore } from '@/hooks/use-global-store-data'; // Renamed to avoid conflict
+import type { initialCfoData } from '@/lib/cfo-data';
 
-type CfoData = ReturnType<typeof useCfoData>['cfoData'];
+type CfoData = typeof initialCfoData;
 
 // Main Dashboard Component
 export default function CfoDashboardPageClient({ initialCfoData }: { initialCfoData: CfoData }) {
-  const { cfoData, setCfoData, isClient } = useCfoData();
-
+  const [cfoData, setCfoData] = useState<CfoData>(initialCfoData);
+  const [isClient, setIsClient] = useState(false);
+  
+  // This ensures that we only render the full component on the client,
+  // preventing hydration mismatches. The state is initialized from props.
   useEffect(() => {
-    // Hydrate the client-side store with server-fetched data
-    if (initialCfoData) {
-        setCfoData(() => initialCfoData);
-    }
-  }, [initialCfoData, setCfoData]);
+    setIsClient(true);
+  }, []);
   
   if (!isClient) {
       return (

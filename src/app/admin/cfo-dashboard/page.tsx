@@ -11,9 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function CfoDashboardPage() {
-    // Fetch data on the server
     const cfoData = await getCfoData();
-
-    // Pass data as props to the client component
     return <CfoDashboardPageClient initialCfoData={cfoData} />;
 }
