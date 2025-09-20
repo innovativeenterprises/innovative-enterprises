@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -57,7 +56,7 @@ const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => 
     );
 };
 
-export default function AssetRentalsClientPage({ initialAssets }: { initialAssets: Asset[]}) {
+export default function AssetRentalsPage() {
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const { assets, isClient } = useAssetsData();
@@ -91,10 +90,12 @@ export default function AssetRentalsClientPage({ initialAssets }: { initialAsset
                      <AssetRentalAgentForm />
                 </div>
 
+
                 <div className="max-w-6xl mx-auto mt-16">
                     <h2 className="text-3xl font-bold text-center mb-8">Available Assets</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {!isClient ? (
+                        // Render skeletons on the server and initial client render
                         Array.from({length: 8}).map((_,index) => (
                            <Card key={index}>
                                 <CardHeader className="p-0">

@@ -6,8 +6,6 @@ import { ArrowRight, Bot, Building2, Cpu, GraduationCap, Handshake, HardHat, Pac
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Image from 'next/image';
-import type { Product } from "@/lib/products.schema";
-import type { Service } from "@/lib/services.schema";
 
 const Node = ({ icon: Icon, label, className, size = 'md' }: { icon: React.ElementType, label: string, className?: string, size?: 'sm' | 'md' | 'lg' }) => (
     <div className={cn(

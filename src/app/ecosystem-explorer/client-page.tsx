@@ -1,112 +1,135 @@
 'use client';
 
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Bot, Building2, Cpu, GraduationCap, Handshake, HardHat, Package, Users } from "lucide-react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Server, ArrowRight } from "lucide-react";
 import Image from 'next/image';
-import type { Product } from "@/lib/products.schema";
-import type { Service } from "@/lib/services.schema";
+import type { Asset } from "@/lib/assets.schema";
+import { RentalRequestForm } from './rental-form';
+import { Skeleton } from '@/components/ui/skeleton';
+import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
+import { useAssetsData } from '@/hooks/use-global-store-data';
 
-const Node = ({ icon: Icon, label, className, size = 'md' }: { icon: React.ElementType, label: string, className?: string, size?: 'sm' | 'md' | 'lg' }) => (
-    <div className={cn(
-        "absolute flex flex-col items-center gap-2 group animate-float",
-        size === 'lg' && 'w-32 h-32',
-        size === 'md' && 'w-24 h-24',
-        size === 'sm' && 'w-20 h-20',
-        className
-    )}>
-        <div className={cn(
-            "flex items-center justify-center rounded-full bg-primary/10 border-2 border-primary/20 backdrop-blur-sm transition-all duration-300 group-hover:bg-primary group-hover:scale-110",
-            size === 'lg' && 'w-32 h-32',
-            size === 'md' && 'w-24 h-24',
-            size === 'sm' && 'w-20 h-20'
-        )}>
-            <Icon className={cn(
-                "text-primary transition-all duration-300 group-hover:text-primary-foreground group-hover:scale-125",
-                size === 'lg' && 'w-16 h-16',
-                size === 'md' && 'w-12 h-12',
-                size === 'sm' && 'w-10 h-10'
-            )} />
-        </div>
-        <p className="text-sm font-semibold text-center text-white drop-shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-y-2">{label}</p>
-    </div>
-);
+const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => void }) => {
+    const getStatusBadge = (status: string) => {
+        switch (status) {
+            case "Available": return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Available</Badge>;
+            case "Rented": return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Rented</Badge>;
+            case "Maintenance": return <Badge variant="destructive" className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">Maintenance</Badge>;
+            default: return <Badge variant="outline">{status}</Badge>;
+        }
+    }
+    
+    return (
+        <Card className="flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <CardHeader className="p-0">
+                <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
+                    <Image
+                        src={asset.image}
+                        alt={asset.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        data-ai-hint={asset.aiHint}
+                    />
+                </div>
+            </CardHeader>
+            <CardContent className="p-4 flex-grow">
+                <div className="flex justify-between items-start">
+                    <Badge variant="outline">{asset.type}</Badge>
+                    {getStatusBadge(asset.status)}
+                </div>
+                <CardTitle className="mt-2">{asset.name}</CardTitle>
+                <CardDescription className="text-sm mt-1">{asset.specs}</CardDescription>
+            </CardContent>
+            <CardFooter className="flex justify-between items-center p-4 pt-0">
+                <div>
+                    <p className="text-xl font-bold text-primary">OMR {asset.monthlyPrice.toFixed(2)}</p>
+                    <p className="text-xs text-muted-foreground">/ month</p>
+                </div>
+                <Button onClick={() => onRent(asset)} disabled={asset.status !== 'Available'}>
+                    Rent Now <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+            </CardFooter>
+        </Card>
+    );
+};
 
-export default function EcosystemExplorerClient({ products, services }: { products: Product[], services: Service[] }) {
+export default function AssetRentalsPage() {
+    const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const { assets, isClient } = useAssetsData();
+
+    const handleRentClick = (asset: Asset) => {
+        setSelectedAsset(asset);
+        setIsFormOpen(true);
+    };
+
+    const handleFormClose = () => {
+        setIsFormOpen(false);
+        setSelectedAsset(null);
+    };
+
+    const availableAssets = assets.filter(asset => asset.status === 'Available');
 
     return (
-        <div className="min-h-screen w-full bg-gray-900 text-white overflow-hidden relative">
-            {/* Background elements */}
-            <div className="absolute inset-0 z-0 opacity-30">
-                <Image src="https://images.unsplash.com/photo-1534723328310-e82dad3ee43f?q=80&w=2070&auto=format&fit=crop" alt="Network background" fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900/80 to-primary/50"></div>
-            </div>
-
-            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center p-4">
-                <div className="max-w-4xl">
-                     <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={320} height={80} className="w-80 h-auto object-contain mx-auto mb-8" priority />
-                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-                        The Operating System for Business
+        <div className="bg-background min-h-[calc(100vh-8rem)]">
+            <div className="container mx-auto px-4 py-16">
+                <div className="max-w-3xl mx-auto text-center">
+                    <h1 className="text-4xl md:text-5xl font-bold text-primary flex items-center justify-center gap-3">
+                        <Server className="w-10 h-10" />
+                        Asset & Equipment Rentals
                     </h1>
-                    <p className="mt-6 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
-                        An integrated ecosystem of AI agents, SaaS platforms, and digital services designed to automate and accelerate your success.
+                    <p className="mt-4 text-lg text-muted-foreground">
+                        Browse our catalog of high-quality construction equipment, vehicles, and IT hardware available for rent, or let our AI build a custom package for you.
                     </p>
-                    <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
-                        <Button size="lg" asChild className="bg-white text-primary hover:bg-gray-200">
-                            <a href="#explore">Explore The Ecosystem</a>
-                        </Button>
-                         <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-primary">
-                            <Link href="/partner">Become a Partner</Link>
-                        </Button>
+                </div>
+
+                <div className="max-w-4xl mx-auto mt-12">
+                     <AssetRentalAgentForm />
+                </div>
+
+
+                <div className="max-w-6xl mx-auto mt-16">
+                    <h2 className="text-3xl font-bold text-center mb-8">Available Assets</h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    {!isClient ? (
+                        // Render skeletons on the server and initial client render
+                        Array.from({length: 8}).map((_,index) => (
+                           <Card key={index}>
+                                <CardHeader className="p-0">
+                                    <Skeleton className="h-48 w-full rounded-t-lg" />
+                                </CardHeader>
+                                <CardContent className="p-4 space-y-2">
+                                    <Skeleton className="h-4 w-20" />
+                                    <Skeleton className="h-6 w-3/4" />
+                                    <Skeleton className="h-4 w-full" />
+                                </CardContent>
+                                <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                                    <Skeleton className="h-8 w-1/3" />
+                                    <Skeleton className="h-10 w-1/2" />
+                                </CardFooter>
+                           </Card>
+                        ))
+                    ) : (
+                        // Render the actual content only on the client
+                        availableAssets.map((asset) => (
+                            <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
+                        ))
+                    )}
                     </div>
                 </div>
+
+                {selectedAsset && (
+                    <RentalRequestForm
+                        asset={selectedAsset}
+                        isOpen={isFormOpen}
+                        onOpenChange={setIsFormOpen}
+                        onClose={handleFormClose}
+                    />
+                )}
             </div>
-
-            <section id="explore" className="relative w-full min-h-screen py-32 flex items-center justify-center">
-                 {/* Decorative Lines */}
-                <div className="absolute inset-0 z-0">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5"/>
-                            </pattern>
-                            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                                <rect width="100" height="100" fill="url(#smallGrid)"/>
-                                <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)" />
-                    </svg>
-                </div>
-
-                <div className="relative w-full max-w-6xl h-[600px]">
-                    {/* Central Node */}
-                     <Link href="/about" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                        <Node icon={Cpu} label="AI Core" size="lg" />
-                    </Link>
-
-                    {/* Surrounding Nodes */}
-                    <Link href="/construction-tech">
-                        <Node icon={HardHat} label="Construction Tech" className="top-[10%] left-[45%]" />
-                    </Link>
-                    <Link href="/real-estate-tech">
-                        <Node icon={Building2} label="Real Estate Tech" className="top-[30%] left-[80%]" />
-                    </Link>
-                     <Link href="/education-tech">
-                        <Node icon={GraduationCap} label="Education Tech" className="top-[70%] left-[75%]" />
-                    </Link>
-                    <Link href="/partner">
-                         <Node icon={Handshake} label="Partner Network" className="top-[80%] left-[20%]" />
-                    </Link>
-                    <Link href="/automation">
-                        <Node icon={Bot} label="AI Agents" className="top-[40%] left-[10%]" />
-                    </Link>
-                    <Link href="/saas-portfolio">
-                        <Node icon={Package} label="SaaS Portfolio" className="top-[5%] left-[15%]" />
-                    </Link>
-                </div>
-            </section>
         </div>
-    )
+    );
 }
