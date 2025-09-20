@@ -12,13 +12,6 @@ import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Application } from '@/lib/admissions-applications';
 import { useApplicationsData } from '@/hooks/use-global-store-data';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Admissions Dashboard",
-  description: "An overview of all submitted student applications.",
-};
-
 
 type SortKey = keyof Application | '';
 
@@ -42,7 +35,7 @@ const SortableHeader = ({
 );
 
 export default function AdmissionsDashboardPage() {
-    const { applications, setApplications, isClient } = useApplicationsData();
+    const { applications, isClient } = useApplicationsData();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' }>({ key: 'readinessScore', direction: 'descending' });
 

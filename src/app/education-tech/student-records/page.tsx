@@ -1,8 +1,5 @@
 'use client';
 
-import StudentRecordsClientPage from './client-page';
-import { useStudentsData } from '@/hooks/use-global-store-data';
-import type { Metadata } from 'next';
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,12 +19,7 @@ import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-
-export const metadata: Metadata = {
-    title: "Student Record Management | EduFlow Suite",
-    description: "A central database for managing all student profiles and academic records.",
-};
-
+import { useStudentsData } from "@/hooks/use-global-store-data";
 
 const StudentSchema = z.object({
   id: z.string().min(3, "Student ID is required"),
@@ -48,7 +40,7 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 
     useEffect(() => {
         if (isOpen) {
-            form.reset(student || { id: '', name: '', major: '', year: 1, status: 'On Track', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format=fit=crop' });
+            form.reset(student || { id: '', name: '', major: '', year: 1, status: 'On Track', photo: `https://i.pravatar.cc/100?img=${Math.floor(Math.random() * 70)}` });
         }
     }, [student, form, isOpen]);
 
