@@ -168,12 +168,19 @@ export const useCostSettingsData = () => {
 };
 
 export const useBeautyData = () => {
-    const [data, setStore, isClient] = useStore(s => ({ agencies: s.beautyCenters, services: s.beautyServices, appointments: s.beautyAppointments }));
+    const [data, setStore, isClient] = useStore(s => ({ agencies: s.beautyCenters, services: s.beautyServices, specialists: s.beautySpecialists, appointments: s.beautyAppointments }));
     const setAgencies = (updater: (prev: AppState['beautyCenters']) => AppState['beautyCenters']) => setStore(state => ({...state, beautyCenters: updater(state.beautyCenters)}));
     const setServices = (updater: (prev: AppState['beautyServices']) => AppState['beautyServices']) => setStore(state => ({...state, beautyServices: updater(state.beautyServices)}));
+    const setSpecialists = (updater: (prev: AppState['beautySpecialists']) => AppState['beautySpecialists']) => setStore(state => ({...state, beautySpecialists: updater(state.beautySpecialists)}));
     const setAppointments = (updater: (prev: AppState['beautyAppointments']) => AppState['beautyAppointments']) => setStore(state => ({...state, beautyAppointments: updater(state.beautyAppointments)}));
-    return { ...data, setAgencies, setServices, setAppointments, isClient };
+    return { ...data, setAgencies, setServices, setSpecialists, setAppointments, isClient };
 };
+
+export const useBeautySpecialistsData = () => {
+    const [specialists, setStore, isClient] = useStore((s) => s.beautySpecialists);
+    const setSpecialists = (updater: (prev: AppState['beautySpecialists']) => AppState['beautySpecialists']) => setStore(state => ({...state, beautySpecialists: updater(state.beautySpecialists)}));
+    return { specialists, setSpecialists, isClient };
+}
 
 export const useAssetsData = () => {
     const [assets, setStore, isClient] = useStore((s) => s.assets);

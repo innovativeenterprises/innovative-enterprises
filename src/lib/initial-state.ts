@@ -50,6 +50,7 @@ import { initialStairspaceRequests } from './stairspace-requests';
 import { initialStairspaceListings } from './stairspace-listings';
 import { initialBeautyCenters } from './beauty-centers';
 import { initialBeautyServices } from './beauty-services';
+import { initialBeautySpecialists } from './beauty-specialists';
 import { initialBeautyAppointments } from './beauty-appointments';
 import { initialAssets } from './assets';
 import { initialUsedItems } from './used-items';
@@ -75,8 +76,6 @@ import { initialCfoData } from './cfo-data';
 import type { KnowledgeDocument } from './knowledge.schema';
 import type { Property } from './properties.schema';
 import { initialProperties } from './properties';
-import type { BeautySpecialist } from './beauty-specialists.schema';
-import { initialBeautySpecialists } from './beauty-specialists';
 
 export interface AppState {
   settings: AppSettings;

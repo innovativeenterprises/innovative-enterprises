@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 
 export const initialStoreProducts: Product[] = [
@@ -494,5 +493,18 @@ export const initialProducts: Product[] = [
         adminStatus: "Completed",
         href: "/beauty-hub",
     },
+    {
+        id: 34,
+        name: "AI-POS",
+        description: "A smart, AI-driven Point-of-Sale system for small shops and groceries, providing inventory management and sales analytics without needing expensive hardware.",
+        stage: "Live & Operating",
+        category: "AI & Creative Tools",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?q=80&w=600&auto=format&fit=crop",
+        aiHint: "point of sale",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/ai-pos",
+    }
 ];
-
