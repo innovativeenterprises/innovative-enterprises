@@ -3,16 +3,19 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { ShieldAlert, ArrowRight, DollarSign, Bot } from "lucide-react";
-import { Bar, BarChart, XAxis, YAxis, Tooltip } from 'recharts';
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import { DueDateDisplay } from '@/components/due-date-display';
 import { Button } from '@/components/ui/button';
+import { useCfoData } from '@/hooks/use-global-store-data';
 
-export default function CfoDashboardClient({ cfoData }: { cfoData: any }) {
-  const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = cfoData;
+export default function CfoDashboardClient({ cfoData: initialCfoData }: { cfoData: any }) {
+  const { cfoData, setCfoData, isClient } = useCfoData();
+  
+  // Set initial data from server component
+  useState(() => {
+    if (initialCfoData) {
+      setCfoData(() => initialCfoData);
+    }
+  });
 
   const features = [
     { title: "AI-Powered Auditing", description: "Let Finley, our AI auditor, perform preliminary checks on your financial documents for compliance and red flags." },
@@ -21,6 +24,10 @@ export default function CfoDashboardClient({ cfoData }: { cfoData: any }) {
     { title: "Predictive Forecasting", description: "Leverage AI to forecast future revenue and expenses, helping you make smarter business decisions." },
   ];
   
+  if (!isClient) {
+    // Can show a skeleton loader here
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
