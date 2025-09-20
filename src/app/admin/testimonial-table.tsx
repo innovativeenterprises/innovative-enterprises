@@ -57,25 +57,16 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 };
 
 export default function TestimonialTable({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
-    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
     const { toast } = useToast();
 
-    useEffect(() => {
-        setTestimonials(initialTestimonials);
-    }, [initialTestimonials]);
-
     const handleTestimonialSave = (values: TestimonialValues, id?: string) => {
-        if (id) {
-            setTestimonials((prev: Testimonial[]) => prev.map(t => t.id === id ? { ...t, ...values } : t));
-        } else {
-            setTestimonials((prev: Testimonial[]) => [{ ...values, id: `test_${Date.now()}` }, ...prev]);
-        }
-        toast({ title: `Testimonial ${id ? 'updated' : 'added'}.` });
+        // In a real app, this would be a server action.
+        toast({ title: `Action not implemented in prototype.` });
     };
     
     const handleTestimonialDelete = (id: string) => {
-        setTestimonials((prev: Testimonial[]) => prev.filter(t => t.id !== id));
-        toast({ title: 'Testimonial removed.', variant: 'destructive' });
+        // In a real app, this would be a server action.
+        toast({ title: 'Action not implemented in prototype.', variant: 'destructive' });
     }
 
     return (
@@ -90,7 +81,7 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
                  <Table>
                     <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {testimonials.map(t => (
+                        {initialTestimonials.map(t => (
                             <TableRow key={t.id}>
                                 <TableCell>
                                     <p className="font-medium">{t.author}</p>

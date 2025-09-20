@@ -4,7 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/layout/client-layout';
-import { getServices, getProducts, getStoreProducts, getStaffData, getClients, getTestimonials, getSettings, getSolutions, getIndustries, getAiTools, getOpportunities, getProviders, getLeases, getStairspaceRequests, getStairspaceListings, getRaahaAgencies, getRaahaWorkers, getRaahaRequests, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getCostSettings, getAssets, getUsedItems, getCars, getRentalAgencies, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getBriefcase, getPricing, getInvestors, getKnowledgeBase, getCfoData, getProperties, getStockItems, getApplications } from '@/lib/firestore';
+import { getServices, getProducts, getStoreProducts, getStaffData, getClients, getTestimonials, getSettings, getSolutions, getIndustries, getAiTools, getOpportunities, getProviders, getLeases, getStairspaceRequests, getStairspaceListings, getRaahaAgencies, getRaahaWorkers, getRaahaRequests, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getCostSettings, getAssets, getUsedItems, getCars, getRentalAgencies, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getBriefcase, getPricing, getInvestors, getKnowledgeBase, getCfoData, getProperties, getStockItems, getApplications, getStages } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,54 +54,52 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Although this is a server component, we pass initial data to a client layout
-  // which then provides it to a client-side store. This is a common pattern for
-  // hydrating client state with server-fetched data.
+  // Data is fetched in specific server components that need it, 
+  // or provided to the global store for client-side state.
   const initialData = {
-    services: [],
-    products: [],
-    storeProducts: [],
-    leadership: [],
-    staff: [],
-    agentCategories: [],
-    clients: [],
-    testimonials: [],
-    settings: {},
-    solutions: [],
-    industries: [],
-    aiTools: [],
-    opportunities: [],
-    providers: [],
-    signedLeases: [],
-    stairspaceRequests: [],
-    stairspaceListings: [],
-    raahaAgencies: [],
-    raahaWorkers: [],
-    raahaRequests: [],
-    beautyCenters: [],
-    beautyServices: [],
+    services: await getServices(),
+    products: await getProducts(),
+    storeProducts: await getStoreProducts(),
+    ...await getStaffData(),
+    clients: await getClients(),
+    testimonials: await getTestimonials(),
+    settings: await getSettings(),
+    solutions: await getSolutions(),
+    industries: await getIndustries(),
+    aiTools: await getAiTools(),
+    opportunities: await getOpportunities(),
+    providers: await getProviders(),
+    signedLeases: await getLeases(),
+    stairspaceRequests: await getStairspaceRequests(),
+    stairspaceListings: await getStairspaceListings(),
+    raahaAgencies: (await getRaahaData()).raahaAgencies,
+    raahaWorkers: (await getRaahaData()).raahaWorkers,
+    raahaRequests: (await getRaahaData()).raahaRequests,
+    beautyCenters: (await getBeautyData()).beautyCenters,
+    beautyServices: (await getBeautyData()).beautyServices,
     beautySpecialists: [],
-    beautyAppointments: [],
-    costSettings: [],
-    assets: [],
-    usedItems: [],
-    cars: [],
-    rentalAgencies: [],
-    giftCards: [],
-    students: [],
-    communities: [],
-    communityEvents: [],
-    communityFinances: [],
-    communityMembers: [],
-    alumniJobs: [],
-    briefcase: {},
-    pricing: [],
-    investors: [],
-    knowledgeBase: [],
-    cfoData: {},
-    properties: [],
-    stockItems: [],
-    applications: [],
+    beautyAppointments: (await getBeautyData()).beautyAppointments,
+    costSettings: await getCostSettings(),
+    assets: await getAssets(),
+    usedItems: await getUsedItems(),
+    cars: await getCars(),
+    rentalAgencies: await getRentalAgencies(),
+    giftCards: await getGiftCards(),
+    students: await getStudents(),
+    communities: await getCommunities(),
+    communityEvents: await getCommunityEvents(),
+    communityFinances: await getCommunityFinances(),
+    communityMembers: await getCommunityMembers(),
+    alumniJobs: await getAlumniJobs(),
+    briefcase: await getBriefcase(),
+    pricing: await getPricing(),
+    investors: await getInvestors(),
+    knowledgeBase: await getKnowledgeBase(),
+    cfoData: await getDoc('cfo/dashboard'),
+    properties: await getProperties(),
+    stockItems: await getStockItems(),
+    applications: await getApplications(),
+    stages: await getStages(),
   };
 
   return (
@@ -112,4 +110,13 @@ export default async function RootLayout({
       </body>
     </html>
   );
+}
+
+async function getDoc<T>(docPath: string): Promise<T> {
+    const snapshot = await admin.firestore().doc(docPath).get();
+    return snapshot.data() as T;
+}
+import * as admin from 'firebase-admin';
+if (!admin.apps.length) {
+    admin.initializeApp();
 }

@@ -14,22 +14,13 @@ import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-fo
 import type { ProjectStage } from "@/lib/stages";
 
 export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
-    const [products, setProducts] = useState(initialProducts);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    useEffect(() => {
-        setProducts(initialProducts);
-    }, [initialProducts]);
-
     const handleToggle = (id: number) => {
-        setProducts(prev =>
-            prev.map(product =>
-                product.id === id ? { ...product, enabled: !product.enabled } : product
-            )
-        );
-        toast({ title: "Product status updated." });
+        // In a real app, this would be a server action.
+        toast({ title: "Action not implemented in prototype." });
     };
 
     const openDialog = (product?: Product) => {
@@ -38,17 +29,8 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
     }
 
     const handleSave = (values: ProductValues, id?: number) => {
-        if (id !== undefined) {
-            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values, id } : p));
-            toast({ title: "Product updated successfully." });
-        } else {
-            const newProduct: Product = {
-                ...values,
-                id: (products.length > 0 ? Math.max(...products.map(p => p.id || 0)) : 0) + 1,
-            };
-            setProducts(prev => [newProduct, ...prev]);
-            toast({ title: "Product added successfully." });
-        }
+        // In a real app, this would be a server action.
+        toast({ title: "Action not implemented in prototype." });
     };
 
     return (
@@ -83,7 +65,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {products.map((product) => (
+                        {initialProducts.map((product) => (
                             <TableRow key={product.id}>
                                 <TableCell className="font-medium">{product.name}</TableCell>
                                 <TableCell>

@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
 import { Edit } from "lucide-react";
 
 
@@ -79,7 +78,6 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
-    const [pricing, setPricing] = useState(initialPricing);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
@@ -90,8 +88,9 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
     }, []);
 
     const handleSave = (values: PricingValues, id: string) => {
-        setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
-        toast({ title: "Price updated successfully." });
+        // In a real app, this would be a server action to update the database.
+        // For this prototype, we show a toast to indicate the action isn't implemented.
+        toast({ title: "Action not implemented in prototype." });
     };
     
     const handleOpenDialog = (item: Pricing) => {
@@ -133,7 +132,7 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                                 </TableCell>
                             </TableRow>
                         ) : (
-                             pricing.map(item => (
+                             initialPricing.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.type}</TableCell>
                                     <TableCell className="text-muted-foreground">{item.group}</TableCell>

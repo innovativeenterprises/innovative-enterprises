@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -30,12 +31,17 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
         defaultValues: client
     });
 
+    const handleSubmit: SubmitHandler<ClientValues> = (data) => {
+        onSave(data, client?.id);
+        setIsOpen(false);
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{client ? "Edit" : "Add"} Client</DialogTitle></DialogHeader>
-                <Form {...form}><form onSubmit={form.handleSubmit(data => { onSave(data, client?.id); setIsOpen(false); })} className="space-y-4">
+                <Form {...form}><form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
                     <FormField control={form.control} name="name" render={({ field }) => (
                         <FormItem><FormLabel>Client Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
@@ -54,21 +60,17 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
 
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
-    const [clients, setClients] = useState<Client[]>(initialClients);
     const { toast } = useToast();
 
     const handleClientSave = (values: ClientValues, id?: string) => {
-        if (id) {
-            setClients((prev: Client[]) => prev.map(c => c.id === id ? { ...c, ...values } : c));
-        } else {
-            setClients((prev: Client[]) => [{ ...values, id: `client_${Date.now()}` }, ...prev]);
-        }
-        toast({ title: `Client ${id ? 'updated' : 'added'}.` });
+        // In a real app, this would be a server action to update the database.
+        // For this prototype, we'll just show a toast.
+        toast({ title: `Action not implemented in prototype.` });
     };
 
     const handleClientDelete = (id: string) => {
-        setClients((prev: Client[]) => prev.filter(c => c.id !== id));
-        toast({ title: 'Client removed.', variant: 'destructive' });
+        // In a real app, this would be a server action.
+        toast({ title: `Action not implemented in prototype.`, variant: 'destructive' });
     };
     
     return (
@@ -84,7 +86,7 @@ export default function ClientTable({ initialClients }: { initialClients: Client
                     <Table>
                         <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                         <TableBody>
-                            {clients.map(client => (
+                            {initialClients.map(client => (
                                 <TableRow key={client.id}>
                                     <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
                                     <TableCell>{client.name}</TableCell>

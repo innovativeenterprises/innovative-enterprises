@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import { useContext, useSyncExternalStore } from 'react';
+import { useContext, useSyncExternalStore, useCallback } from 'react';
 import type { AppSettings } from '@/lib/settings';
 import type { CartItem, PosProduct, DailySales } from '@/lib/pos-data.schema';
 import { initialState, type AppState, type StoreType } from '@/lib/global-store';
@@ -19,6 +20,7 @@ import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { CostRate } from '@/lib/cost-settings.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers.schema';
+import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
 import type { BeautyService } from '@/lib/beauty-services.schema';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { UsedItem } from '@/lib/used-items.schema';
@@ -38,6 +40,7 @@ import type { Investor } from '@/lib/investors.schema';
 import type { KnowledgeDocument } from '@/lib/knowledge.schema';
 import type { StockItem } from '@/lib/stock-items.schema';
 import type { Property } from '@/lib/properties.schema';
+import type { SaasCategory } from '@/lib/saas-products.schema';
 import type { RentalAgency } from '@/lib/rental-agencies';
 
 
@@ -57,6 +60,20 @@ function useStore<T>(selector: (state: AppState) => T): [T, (updater: (state: Ap
   const isClient = useSyncExternalStore(store.subscribe, () => true, () => false);
 
   return [state, store.set, isClient];
+}
+
+// Generic hook factory
+function createStoreHook<K extends keyof AppState>(key: K) {
+  return () => {
+    const [state, setStore, isClient] = useStore((s) => s[key]);
+    const set = (updater: (prev: AppState[K]) => AppState[K]) => {
+      setStore((prevState) => ({
+        ...prevState,
+        [key]: updater(prevState[key]),
+      }));
+    };
+    return { [key]: state, [`set${key.charAt(0).toUpperCase() + key.slice(1)}`]: set, isClient };
+  };
 }
 
 // Specific hooks using the central useStore function
@@ -260,9 +277,17 @@ export const useBriefcaseData = () => {
 };
 
 export const usePricingData = () => {
-    const [pricing, setStore, isClient] = useStore((s) => s.pricing);
-    const setPricing = (updater: (prev: AppState['pricing']) => AppState['pricing']) => setStore((state) => ({ ...state, pricing: updater(state.pricing) }));
-    return { pricing, setPricing, isClient };
+    const [data, setStore, isClient] = useStore(state => ({
+        pricing: state.pricing,
+    }));
+    const setPricing = useCallback(
+        (updater: (prev: AppState['pricing']) => AppState['pricing']) => {
+            setStore(state => ({ ...state, pricing: updater(state.pricing) }));
+        },
+        [setStore]
+    );
+
+    return { ...data, setPricing, isClient };
 };
 
 export const useSolutionsData = () => {
@@ -318,3 +343,9 @@ export const useApplicationsData = () => {
     const setApplications = (updater: (prev: AppState['applications']) => AppState['applications']) => setStore((state) => ({ ...state, applications: updater(state.applications) }));
     return { applications, setApplications, isClient };
 };
+
+export const useStagesData = () => {
+    const [stages, setStore, isClient] = useStore((s) => s.stages);
+    const setStages = (updater: (prev: AppState['stages']) => AppState['stages']) => setStore((state) => ({ ...state, stages: updater(state.stages) }));
+    return { stages, setStages, isClient };
+}
