@@ -21,7 +21,6 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2, ArrowRight, BarChart } from "
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePropertiesData, useStairspaceData } from "@/hooks/use-global-store-data";
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -107,9 +106,7 @@ const AddEditPropertyDialog = ({
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[725px]">
-                <DialogHeader>
-                    <DialogTitle>{property ? "Edit" : "Add"} Property Listing</DialogTitle>
-                </DialogHeader>
+                <DialogHeader><DialogTitle>{property ? "Edit" : "Add"} Property Listing</DialogTitle></DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <Card className="bg-muted/50">
@@ -181,11 +178,16 @@ const AddEditPropertyDialog = ({
     )
 }
 
-function PropertyTable() {
-    const { properties, setProperties, isClient } = usePropertiesData();
+function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedProp, setSelectedProp] = useState<Property | undefined>(undefined);
+    const [properties, setProperties] = useState(initialProperties);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleOpenDialog = (prop?: Property) => {
       setSelectedProp(prop);
@@ -193,24 +195,11 @@ function PropertyTable() {
     }
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
-        const { ...propertyData } = values; 
-        if (id) {
-            setProperties(prev => prev.map(p => p.id === id ? { ...p, ...propertyData, aiHint: p.aiHint || 'modern house exterior' } : p));
-            toast({ title: "Property updated." });
-        } else {
-            const newProperty: Property = {
-                ...propertyData,
-                id: `prop_${Date.now()}`,
-                aiHint: 'modern house exterior', // Default AI hint
-            };
-            setProperties(prev => [newProperty, ...prev]);
-            toast({ title: "Property added." });
-        }
+        toast({ title: 'Action not implemented in prototype.' });
     };
 
     const handleDelete = (id: string) => {
-        setProperties(prev => prev.filter(p => p.id !== id));
-        toast({ title: "Property removed.", variant: "destructive" });
+        toast({ title: 'Action not implemented in prototype.', variant: 'destructive' });
     };
 
     const getStatusBadge = (status: string) => {
@@ -358,11 +347,15 @@ const AddEditListingDialog = ({
     );
 };
 
-function StairspaceTable() {
-    const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData();
+function StairspaceTable({initialStairspaceListings}: {initialStairspaceListings: StairspaceListing[]}) {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const openDialog = (listing?: StairspaceListing) => {
         setSelectedListing(listing);
@@ -370,20 +363,11 @@ function StairspaceTable() {
     };
 
     const handleSave = (values: ListingValues, id?: string) => {
-        const listingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
-        if (id) {
-            setStairspaceListings(prev => prev.map(l => l.id === id ? { ...l, ...listingData } : l));
-            toast({ title: "Listing updated." });
-        } else {
-            const newListing: StairspaceListing = { ...listingData, id: `stair_${Date.now()}` };
-            setStairspaceListings(prev => [newListing, ...prev]);
-            toast({ title: "Listing added." });
-        }
+        toast({ title: "Action not implemented in prototype." });
     };
 
     const handleDelete = (id: string) => {
-        setStairspaceListings(prev => prev.filter(l => l.id !== id));
-        toast({ title: "Listing removed.", variant: "destructive" });
+        toast({ title: "Action not implemented in prototype.", variant: "destructive" });
     };
 
     return (
@@ -396,7 +380,7 @@ function StairspaceTable() {
                 <AddEditListingDialog isOpen={isOpen} onOpenChange={setIsOpen} listing={selectedListing} onSave={handleSave}><div/></AddEditListingDialog>
                 <Table><TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>{!isClient ? <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow> : (
-                        stairspaceListings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
+                        initialStairspaceListings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
                     )}</TableBody>
                 </Table>
             </CardContent>
@@ -405,7 +389,7 @@ function StairspaceTable() {
 }
 
 // --- Main Page Component ---
-export default function AdminRealEstatePage() {
+export default function AdminRealEstatePage({ initialProperties, initialStairspaceListings }: { initialProperties: Property[], initialStairspaceListings: StairspaceListing[] }) {
 
   return (
     <div className="space-y-8">
@@ -451,13 +435,12 @@ export default function AdminRealEstatePage() {
                 <TabsTrigger value="stairspace">StairSpace Listings</TabsTrigger>
             </TabsList>
             <TabsContent value="properties" className="mt-6">
-                <PropertyTable />
+                <PropertyTable initialProperties={initialProperties} />
             </TabsContent>
             <TabsContent value="stairspace" className="mt-6">
-                <StairspaceTable />
+                <StairspaceTable initialStairspaceListings={initialStairspaceListings} />
             </TabsContent>
         </Tabs>
     </div>
   );
 }
-

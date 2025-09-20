@@ -10,27 +10,21 @@ import { ShieldAlert, Loader2 } from "lucide-react";
 import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { DueDateDisplay } from "@/components/due-date-display";
-import { useCfoData } from '@/hooks/use-global-store-data';
-import { getCfoData } from '@/lib/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { AppState } from '@/lib/global-store';
+
+type CfoData = AppState['cfoData'];
 
 // Main Dashboard Component
-export default function CfoDashboardPage() {
-  const { cfoData, setCfoData, isClient } = useCfoData();
-  const [isLoading, setIsLoading] = useState(true);
+export default function CfoDashboardPage({ initialCfoData }: { initialCfoData: CfoData }) {
+  const [cfoData, setCfoData] = useState(initialCfoData);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
-        if (isClient) {
-            // In a real-world scenario with a database, you might fetch data here.
-            // For this prototype, the data is loaded from the global store's initial state.
-            setIsLoading(false);
-        }
-    }
-    fetchData();
-  }, [isClient]);
-
-  if (isLoading || !isClient) {
+    setIsClient(true);
+  }, []);
+  
+  if (!isClient) {
       return (
         <div className="space-y-8">
             <Skeleton className="h-12 w-1/2" />

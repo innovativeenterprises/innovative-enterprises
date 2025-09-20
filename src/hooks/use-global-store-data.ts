@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useContext, useSyncExternalStore, useCallback } from 'react';
@@ -292,12 +293,6 @@ export const useInvestorsData = () => {
     const setInvestors = (updater: (prev: AppState['investors']) => AppState['investors']) => setStore((state) => ({ ...state, investors: updater(state.investors) }));
     return { investors, setInvestors, isClient };
 }
-
-export const usePropertiesData = () => {
-    const [properties, setStore, isClient] = useStore((s) => s.properties);
-    const setProperties = (updater: (prev: AppState['properties']) => AppState['properties']) => setStore(state => ({ ...state, properties: updater(state.properties) }));
-    return { properties, setProperties, isClient };
-};
 
 export const useStockItemsData = () => {
     const [stockItems, setStore, isClient] = useStore((s) => s.stockItems);

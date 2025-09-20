@@ -1,8 +1,9 @@
+
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -11,7 +12,6 @@ import { useRouter } from 'next/navigation';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -24,26 +24,31 @@ const getStatusBadge = (status: BookingRequest['status']) => {
     }
 };
 
-export default function StairspaceRequestsPage() {
-    const {stairspaceRequests, setStairspaceRequests, isClient} = useStairspaceRequestsData();
+export default function StairspaceRequestsPage({ initialRequests }: { initialRequests: BookingRequest[] }) {
+    const [requests, setRequests] = useState(initialRequests);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
 
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const onSchedule = (id: string, values: InterviewValues) => {
-        setStairspaceRequests(prev => prev.map(r => 
+        setRequests(prev => prev.map(r => 
             r.id === id ? { ...r, status: 'Contacted', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Contact Scheduled!", description: `A meeting with ${values.interviewNotes} has been scheduled.` });
     };
 
     const handleConfirmBooking = (requestId: string) => {
-        setStairspaceRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Booked' } : r));
+        setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Booked' } : r));
         toast({ title: 'Booking Confirmed!', description: 'The client has been notified to proceed with payment.' });
     };
 
     const handlePayment = (requestId: string) => {
         toast({ title: 'Redirecting to payment...', description: 'Please wait.' });
-        setStairspaceRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
+        setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
         setTimeout(() => {
             router.push(`/admin/real-estate/stairspace/checkout/${requestId}`);
         }, 1000);
@@ -99,7 +104,7 @@ export default function StairspaceRequestsPage() {
                         </CardHeader>
                         <CardContent>
                            <RequestTable 
-                                data={stairspaceRequests} 
+                                data={requests} 
                                 columns={columns}
                                 isClient={isClient}
                                 renderActions={(request) => renderActions(request as BookingRequest)}
