@@ -4,19 +4,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import { useStaffData } from "@/hooks/use-global-store-data";
+import type { AgentCategory } from "@/lib/agents.schema";
 
-export default function AiToolsCta() {
-    const { agentCategories, isClient } = useStaffData();
+export default function AiToolsCta({ agentCategories }: { agentCategories: AgentCategory[] }) {
     
     // Dynamically select a few key agents to feature
     const allAgents = agentCategories.flatMap(cat => cat.agents);
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];
     const featuredAgents = featuredAgentNames.map(name => allAgents.find(agent => agent.name === name)).filter(Boolean);
-
-    if (!isClient) {
-        return null;
-    }
 
     return (
         <section className="py-16 md:py-24 bg-white">

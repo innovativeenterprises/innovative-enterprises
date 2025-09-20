@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { GitBranch } from "lucide-react";
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { useServicesData } from "@/hooks/use-global-store-data";
 import type { Service } from "@/lib/services.schema";
 
 const ServiceCard = ({ service }: { service: Service }) => (
@@ -26,8 +25,7 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog() {
-  const { services } = useServicesData();
+export default function ServiceCatalog({ services }: { services: Service[] }) {
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = useMemo(() => enabledServices.reduce((acc, service) => {
