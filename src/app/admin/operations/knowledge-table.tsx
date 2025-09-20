@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -23,9 +23,8 @@ import { initialAgentCategories } from '@/lib/agents';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-import { fileToDataURI, fileToBase64ContentOnly } from '@/lib/utils';
+import { fileToDataURI } from '@/lib/utils';
 import { useKnowledgeData } from "@/hooks/use-global-store-data";
 
 const UploadDocumentSchema = z.object({
@@ -132,7 +131,6 @@ const allAgents = initialAgentCategories.flatMap(category => category.agents);
 const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [response, setResponse] = useState<z.infer<ReturnType<typeof trainAgent>['outputSchema']> | null>(null);
     const { toast } = useToast();
 
     const form = useForm<TrainingDialogValues>({
@@ -160,7 +158,6 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
 
     const onSubmit: SubmitHandler<TrainingDialogValues> = async (data) => {
         setIsLoading(true);
-        setResponse(null);
         try {
             const knowledgeDocuments: { fileName: string; content: string; }[] = [];
             data.knowledgeDocuments?.forEach(docId => {
@@ -182,7 +179,6 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                 knowledgeUrls: knowledgeUrls,
             });
 
-            setResponse(result);
             toast({ title: 'Training Job Submitted', description: result.message });
             setIsOpen(false);
 
@@ -481,5 +477,3 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
-
-    
