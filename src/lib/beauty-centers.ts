@@ -1,12 +1,5 @@
-export interface BeautyCenter {
-    id: string;
-    name: string;
-    description: string;
-    logo: string;
-    contactEmail: string;
-    contactPhone: string;
-    primaryColor?: string;
-}
+
+import type { BeautyCenter } from './beauty-centers.schema';
 
 export const initialBeautyCenters: BeautyCenter[] = [
     {

@@ -1,19 +1,15 @@
-
 'use client';
 
 import CvForm from "./cv-form";
 import InterviewCoachForm from "../interview-coach/coach-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FileText, Mic } from "lucide-react";
-import type { Metadata } from "next";
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from "react";
-
-export const metadata: Metadata = {
-  title: "GENIUS Career Platform",
-  description: "Your end-to-end AI partner for career development. Enhance your CV to beat applicant tracking systems, then practice for your interview with our AI coach.",
-};
-
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default function GeniusPlatformPage() {
   const searchParams = useSearchParams();
@@ -46,7 +42,19 @@ export default function GeniusPlatformPage() {
                 <CvForm />
               </TabsContent>
               <TabsContent value="interview" className="mt-6">
-                 <InterviewCoachForm />
+                 <Card className="text-center">
+                    <CardHeader>
+                        <CardTitle>Feature Moved</CardTitle>
+                        <CardDescription>
+                            The AI Interview Coach has been moved to our Guardian AI platform for a more integrated student experience.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                         <Button asChild>
+                            <Link href="/education-tech/guardian-ai?tab=interview">Go to AI Interview Coach <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                        </Button>
+                    </CardContent>
+                 </Card>
               </TabsContent>
             </Tabs>
         </div>

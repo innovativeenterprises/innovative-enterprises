@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -73,10 +74,10 @@ export default function AdminLayout({
   ];
 
   const industryHubs = [
-      { href: '/admin/projects', label: 'Construction Tech', icon: HardHat },
+      { href: '/admin/construction-tech', label: 'Construction Tech', icon: HardHat },
       { href: '/admin/real-estate', label: 'Real Estate Tech', icon: Building2 },
       { href: '/admin/education-tech', label: 'Education Tech', icon: GraduationCap },
-      { href: '/beauty-hub/agency-dashboard', label: 'Beauty & Wellness Hub', icon: Heart },
+      { href: '/admin/beauty-hub', label: 'Beauty & Wellness Hub', icon: Heart },
   ];
   
   const operations = [

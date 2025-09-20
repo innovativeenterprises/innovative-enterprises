@@ -1,11 +1,5 @@
-export interface BeautyService {
-    id: string;
-    agencyId: string;
-    name: string;
-    category: 'Hair' | 'Nails' | 'Skincare' | 'Massage' | 'Makeup';
-    price: number;
-    duration: number; // in minutes
-}
+
+import type { BeautyService } from './beauty-services.schema';
 
 export const initialBeautyServices: BeautyService[] = [
     { id: 'service_01', agencyId: 'center_01', name: 'Classic Manicure', category: 'Nails', price: 10.0, duration: 45 },

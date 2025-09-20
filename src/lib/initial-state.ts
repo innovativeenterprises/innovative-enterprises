@@ -1,3 +1,4 @@
+
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -10,8 +11,8 @@ import type { Agent, AgentCategory } from './agents.schema';
 import type { Agency as RaahaAgency } from './raaha-agencies';
 import type { Worker as RaahaWorker } from './raaha-workers';
 import type { HireRequest } from './raaha-requests.schema';
-import type { BeautyCenter } from './beauty-centers';
-import type { BeautyService } from './beauty-services';
+import type { BeautyCenter } from './beauty-centers.schema';
+import type { BeautyService } from './beauty-services.schema';
 import type { BeautyAppointment } from './beauty-appointments';
 import type { CostRate } from './cost-settings.schema';
 import type { Asset } from './assets.schema';

@@ -1,12 +1,16 @@
-export interface BeautyAppointment {
-    id: string;
-    agencyId: string;
-    clientName: string;
-    service: string;
-    specialist: string;
-    dateTime: string; // ISO string
-    status: 'Confirmed' | 'Pending' | 'Cancelled';
-}
+
+import { z } from 'zod';
+
+export const BeautyAppointmentSchema = z.object({
+  id: z.string(),
+  agencyId: z.string(),
+  clientName: z.string(),
+  service: z.string(),
+  specialist: z.string(),
+  dateTime: z.string(), // ISO string
+  status: z.enum(['Confirmed', 'Pending', 'Cancelled']),
+});
+export type BeautyAppointment = z.infer<typeof BeautyAppointmentSchema>;
 
 export const initialBeautyAppointments: BeautyAppointment[] = [
     {

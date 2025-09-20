@@ -150,17 +150,16 @@ export const AddEditWorkerDialog = ({
     )
 }
 
-export function CandidateTable({ workers, columns, agencyId, isClient }: { workers: Worker[], columns: any[], agencyId: string, isClient: boolean }) {
-    const { setWorkers } = useWorkersData();
+export function CandidateTable({ workers, setWorkers, columns, agencyId, isClient }: { workers: Worker[], setWorkers: any, columns: any[], agencyId: string, isClient: boolean }) {
     const { toast } = useToast();
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const newWorker = { ...values };
         if (id) {
-            setWorkers(prev => prev.map(w => w.id === id ? { ...w, ...newWorker } : w));
+            setWorkers((prev: Worker[]) => prev.map(w => w.id === id ? { ...w, ...newWorker } : w));
             toast({ title: "Candidate updated." });
         } else {
-            setWorkers(prev => [...prev, { ...newWorker, id: `worker_${Date.now()}` }]);
+            setWorkers((prev: Worker[]) => [...prev, { ...newWorker, id: `worker_${Date.now()}` }]);
             toast({ title: "Candidate added." });
         }
     };

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -14,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { BeautySpecialist } from "@/lib/beauty-specialists";
 import { useBeautySpecialistsData } from "@/hooks/use-global-store-data";
 

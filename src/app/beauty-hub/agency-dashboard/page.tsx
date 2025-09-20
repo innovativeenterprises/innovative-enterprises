@@ -6,8 +6,8 @@ import { getBeautyData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Agency Dashboard | RAAHA",
-  description: "Manage your domestic workforce agency. View client requests, manage your candidates, and update your agency settings.",
+  title: "Agency Dashboard | Beauty & Wellness Hub",
+  description: "Manage your salon or spa. View client appointments, manage your staff, and update your service offerings.",
 };
 
 export default async function AgencyDashboardPage() {
