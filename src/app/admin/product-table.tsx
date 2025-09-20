@@ -1,8 +1,7 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import type { Product } from "@/lib/products.schema";
 import type { ProjectStage } from "@/lib/stages";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
