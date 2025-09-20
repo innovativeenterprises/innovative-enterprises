@@ -45,7 +45,7 @@ export default function CooDashboardPage() {
     const { providers } = useProvidersData();
     const { cfoData } = useCfoData();
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
 
     const runAnalysis = async () => {
