@@ -99,7 +99,7 @@ export const initialSolutions = [
     },
     {
         title: "Fintech Super-App",
-        href: "/cfo-dashboard",
+        href: "/cfo",
         description: "An integrated financial services application providing AI-driven auditing, financial analysis, and CFO dashboard capabilities.",
         icon: DollarSign,
     }
@@ -249,7 +249,7 @@ export const initialAiTools = [
   },
    {
     title: "Fintech Super-App (Finley CFO)",
-    href: "/cfo/audit",
+    href: "/cfo",
     description: "Upload financial documents for an AI-powered preliminary audit and analysis.",
     icon: DollarSign,
   },
