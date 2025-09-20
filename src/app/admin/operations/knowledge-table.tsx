@@ -335,7 +335,7 @@ export default function KnowledgeTable() {
             if (source.urls && source.urls.length > 0) {
                 const urlPromises = source.urls.map(async (url) => {
                     const scraped = await scrapeAndSummarize({ source: url, isUrl: true });
-                    if (!scraped.summary) throw new Error(`Could not scrape content from ${url}.`);
+                    if (!scraped.summary) throw new Error(`Could not scrape content from ${"'" + url + "'"}.`);
                     return await analyzeKnowledgeDocument({ documentContent: scraped.summary, sourceUrl: url });
                 });
 
@@ -481,3 +481,4 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
+

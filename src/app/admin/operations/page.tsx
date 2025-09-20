@@ -12,3 +12,4 @@ export const metadata: Metadata = {
 export default function AdminOperationsPage() {
     return <AdminOperationsClientPage />;
 }
+
