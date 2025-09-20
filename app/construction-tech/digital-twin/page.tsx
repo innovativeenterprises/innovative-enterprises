@@ -107,7 +107,7 @@ export default function DigitalTwinPage() {
                                 <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={12} padding={{ left: 10, right: 10 }} />
                                 <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value / 1000}k`} />
                                 <ChartTooltipContent />
-                                <Bar dataKey="energy" radius={[4, 4, 0, 0]} fill="hsl(var(--chart-1))" />
+                                <Bar dataKey="energy" radius={[4, 4, 0, 0]} fill="var(--color-energy)" />
                             </BarChart>
                         </ChartContainer>
                     </div>

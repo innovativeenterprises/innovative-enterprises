@@ -49,7 +49,7 @@ const prompt = ai.definePrompt({
     -   If the primary document is an ID/Resident Card/Driving License, extract its details into the \`idCardDetails\` object.
 
     **Personal Details:**
-    -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID. If the name is split into Surname and Given Names, combine them into a single Full Name string.
+    -   **Full Name:** Extract the full legal name. Prioritize the name from the Passport if available, otherwise use the ID. **Crucially, if the name is split into 'Surname' and 'Given Names' fields in the source document, you MUST combine them into a single 'fullName' string in the \`personalDetails.fullName\` output field.**
     -   **Email & Phone:** Find the primary contact email and phone number. These are almost always found only in the CV.
     -   **Nationality, Date of Birth, Place of Birth, Sex:** Extract these from the Passport or ID document, prioritizing the Passport if both are available.
 
@@ -76,23 +76,26 @@ const identityAnalysisFlow = ai.defineFlow(
   async (input) => {
     const { output } = await prompt(input);
 
-    if (output) {
-        // More robust filename generation.
-        const fullName = output.personalDetails?.fullName || (output.passportDetails ? `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim() : null);
-        
-        if (fullName && !output.personalDetails?.fullName) {
-             if (!output.personalDetails) {
-                 output.personalDetails = { fullName };
-             } else {
-                 output.personalDetails.fullName = fullName;
-             }
+    if (!output) {
+        throw new Error("Failed to get a response from the identity analysis model.");
+    }
+    
+    // Post-processing to ensure full name is combined if the model missed it.
+    const passportName = output.passportDetails ? `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim() : null;
+    if (passportName && !output.personalDetails?.fullName) {
+        if (!output.personalDetails) {
+            output.personalDetails = { fullName: passportName };
+        } else {
+            output.personalDetails.fullName = passportName;
         }
-
-        const civilId = output.idCardDetails?.civilNumber;
-        const namePart = fullName?.replace(/\s+/g, '_') || (civilId ? `ID_${civilId}` : 'UnknownPerson');
-        output.suggestedFilename = `ID_${namePart}.pdf`;
     }
 
-    return output!;
+    // Fallback robust filename generation.
+    const fullName = output.personalDetails?.fullName;
+    const civilId = output.idCardDetails?.civilNumber;
+    const namePart = fullName?.replace(/\s+/g, '_') || (civilId ? `ID_${civilId}` : 'UnknownPerson');
+    output.suggestedFilename = `ID_${namePart}.pdf`;
+
+    return output;
   }
 );
