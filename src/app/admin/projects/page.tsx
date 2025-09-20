@@ -20,9 +20,8 @@ import { SortableContext, useSortable, verticalListSortingStrategy, horizontalLi
 import { CSS } from '@dnd-kit/utilities';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useProductsData } from '@/hooks/use-global-store-data';
+import { useProductsData, useStagesData } from '@/hooks/use-global-store-data';
 import type { ProjectStage } from '@/lib/stages';
-import { getStages } from '@/lib/firestore';
 
 const FormSchema = z.object({
   idea: z.string().min(10, 'Please describe your idea in at least 10 characters.'),
@@ -102,8 +101,9 @@ export default function ProjectsPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    const { products, setProducts, isClient } = useProductsData();
-    const [stages, setStages] = useState<ProjectStage[]>([]);
+    const { products, setProducts, isClient: isProductsClient } = useProductsData();
+    const { stages, isClient: isStagesClient } = useStagesData();
+    const isClient = isProductsClient && isStagesClient;
     
     const { toast } = useToast();
 
@@ -111,10 +111,6 @@ export default function ProjectsPage() {
         resolver: zodResolver(FormSchema),
         defaultValues: { idea: '' },
     });
-    
-    useEffect(() => {
-        getStages().then(setStages);
-    }, []);
 
     const productsByStage = useMemo(() => {
         if (!stages.length) return {};
@@ -208,6 +204,7 @@ export default function ProjectsPage() {
                 enabled: false, // Start as disabled
                 image: "https://placehold.co/400/400.png",
                 aiHint: plan.imagePrompt,
+                adminStatus: "On Track",
             };
 
             setProducts(prev => [newProduct, ...prev]);

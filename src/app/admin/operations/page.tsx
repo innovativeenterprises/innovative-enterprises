@@ -1,5 +1,4 @@
-
-import { getCostSettings, getKnowledgeBase, getPricing } from '@/lib/firestore';
+import { getPricing } from '@/lib/firestore';
 import AdminOperationsClientPage from './client-page';
 import type { Metadata } from 'next';
 
@@ -9,14 +8,13 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminOperationsPage() {
-    const initialCostSettings = await getCostSettings();
-    const initialKnowledgeBase = await getKnowledgeBase();
+    // Data fetching for knowledge base and cost settings is now handled
+    // client-side via hooks within their respective components.
+    // We only need to pass data that is still managed via server props.
     const initialPricing = await getPricing();
 
     return (
         <AdminOperationsClientPage 
-            initialCostSettings={initialCostSettings} 
-            initialKnowledgeBase={initialKnowledgeBase}
             initialPricing={initialPricing}
         />
     );
