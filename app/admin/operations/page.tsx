@@ -5,11 +5,10 @@ import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, BrainCircuit, NotebookText, Ticket, Scale, Palette, Gift, Edit } from "lucide-react";
+import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Edit } from "lucide-react";
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useCostSettingsData, useKnowledgeData, usePricingData } from "@/hooks/use-global-store-data";
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +25,7 @@ import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { Pricing } from "@/lib/pricing.schema";
+import { useKnowledgeData, useCostSettingsData, usePricingData } from "@/hooks/use-global-store-data";
 
 
 // --- KnowledgeTable Logic ---
