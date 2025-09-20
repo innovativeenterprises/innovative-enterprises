@@ -98,9 +98,9 @@ export const useStairspaceRequestsData = () => {
 };
 
 export const useProductsData = () => {
-    const [products, setStore, isClient] = useStore((s) => s.products);
+    const [data, setStore, isClient] = useStore((s) => ({ products: s.products, storeProducts: s.storeProducts }));
     const setProducts = (updater: (prev: AppState['products']) => AppState['products']) => setStore(state => ({...state, products: updater(state.products)}));
-    return { products, setProducts, isClient };
+    return { ...data, setProducts, isClient };
 };
 
 export const useProvidersData = () => {

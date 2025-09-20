@@ -1,3 +1,4 @@
+
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -74,6 +75,8 @@ import { initialCfoData } from './cfo-data';
 import type { KnowledgeDocument } from './knowledge.schema';
 import type { Property } from './properties.schema';
 import { initialProperties } from './properties';
+import type { BeautySpecialist } from './beauty-specialists.schema';
+import { initialBeautySpecialists } from './beauty-specialists';
 
 export interface AppState {
   settings: AppSettings;
@@ -94,6 +97,7 @@ export interface AppState {
   raahaRequests: HireRequest[];
   beautyCenters: BeautyCenter[];
   beautyServices: BeautyService[];
+  beautySpecialists: BeautySpecialist[];
   beautyAppointments: BeautyAppointment[];
   costSettings: CostRate[];
   assets: Asset[];
@@ -145,6 +149,7 @@ export const initialState: AppState = {
   raahaRequests: initialRaahaRequests,
   beautyCenters: initialBeautyCenters,
   beautyServices: initialBeautyServices,
+  beautySpecialists: initialBeautySpecialists,
   beautyAppointments: initialBeautyAppointments,
   costSettings: initialCostSettings,
   assets: initialAssets,
@@ -176,5 +181,3 @@ export const initialState: AppState = {
   cfoData: initialCfoData,
   properties: initialProperties,
 };
-
-      

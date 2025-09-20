@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 
 export const initialStoreProducts: Product[] = [
@@ -465,7 +464,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/construction-tech/procurechain",
+    },
+     {
+        id: 32,
+        name: "DriveSync AI",
+        description: "An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking.",
+        stage: "Live & Operating",
+        category: "Automotive Tech",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=600&auto=format&fit=crop",
+        aiHint: "sports car",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/drivesync-ai",
     }
 ];
-
-      
