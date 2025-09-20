@@ -1,103 +1,26 @@
-'use client';
 
-import { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card } from '@/components/ui/card';
-import Image from 'next/image';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AgencySettings } from '@/app/beauty-hub/agency-dashboard/agency-settings';
-import { SpecialistTable } from '@/app/beauty-hub/agency-dashboard/specialist-table';
-import { ServiceTable } from '@/app/beauty-hub/agency-dashboard/service-table';
-import { ScheduleTable } from '@/app/beauty-hub/agency-dashboard/schedule-table';
-import { useBeautyData } from '@/hooks/use-global-store-data';
+'use server';
 
-export default function AdminBeautyHubPage() {
-    const { agencies, setAgencies, services, setServices, appointments, setAppointments, isClient } = useBeautyData();
-    const [selectedAgencyId, setSelectedAgencyId] = useState('');
+import AgencyDashboardClientPage from '@/app/beauty-hub/agency-dashboard/client-page';
+import { getBeautyCenters, getBeautyServices, getBeautyAppointments } from '@/lib/firestore';
+import type { Metadata } from 'next';
 
-     useEffect(() => {
-        if (isClient && agencies.length > 0 && !selectedAgencyId) {
-            setSelectedAgencyId(agencies[0].id);
-        }
-    }, [agencies, selectedAgencyId, isClient]);
-
-    const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
-    
-    const filteredServices = services.filter(s => s.agencyId === selectedAgency?.id);
-    const filteredAppointments = appointments.filter(a => a.agencyId === selectedAgency?.id);
+export const metadata: Metadata = {
+  title: "Admin - Beauty & Wellness Hub",
+  description: "Manage your salon, staff, and client appointments.",
+};
 
 
-    if (!isClient || !selectedAgency) {
-         return (
-            <div className="bg-background min-h-[calc(100vh-8rem)]">
-                <div className="container mx-auto px-4 py-16">
-                     <div className="max-w-7xl mx-auto space-y-8 text-center">
-                         <h1 className="text-2xl font-bold">Loading Agency Data...</h1>
-                         <Skeleton className="h-96 w-full" />
-                     </div>
-                </div>
-            </div>
-         );
-    }
-    
-    return (
-         <div className="bg-background min-h-[calc(100vh-8rem)]">
-            <div className="container mx-auto px-4 py-16">
-                <div className="max-w-7xl mx-auto space-y-8">
-                     <div>
-                        <h1 className="text-3xl font-bold">Beauty & Wellness Dashboard</h1>
-                        <p className="text-muted-foreground">Manage your salon, staff, and client appointments.</p>
-                    </div>
+export default async function AdminBeautyHubPage() {
+    const [agencies, services, appointments] = await Promise.all([
+        getBeautyCenters(),
+        getBeautyServices(),
+        getBeautyAppointments()
+    ]);
 
-                    <Card className="p-4 bg-muted/50">
-                        <div className="flex items-center gap-4">
-                            <label htmlFor="agency-select" className="font-medium text-sm">Viewing Dashboard For:</label>
-                             <Select value={selectedAgencyId} onValueChange={setSelectedAgencyId}>
-                                <SelectTrigger className="w-[280px]" id="agency-select">
-                                     <SelectValue>
-                                        <div className="flex items-center gap-2">
-                                            {selectedAgency?.logo && <Image src={selectedAgency.logo} alt={selectedAgency.name} width={20} height={20} className="rounded-sm object-contain" />}
-                                            <span>{selectedAgency?.name}</span>
-                                        </div>
-                                     </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {agencies.map(agency => (
-                                        <SelectItem key={agency.id} value={agency.id}>
-                                             <div className="flex items-center gap-2">
-                                                {agency.logo && <Image src={agency.logo} alt={agency.name} width={20} height={20} className="rounded-sm object-contain" />}
-                                                <span>{agency.name}</span>
-                                            </div>
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </Card>
-
-                     <Tabs defaultValue="schedule" className="w-full">
-                        <TabsList className="grid w-full grid-cols-4">
-                            <TabsTrigger value="schedule">Appointments</TabsTrigger>
-                            <TabsTrigger value="services">Services</TabsTrigger>
-                            <TabsTrigger value="staff">Staff</TabsTrigger>
-                            <TabsTrigger value="settings">Center Settings</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="schedule" className="mt-6">
-                            <ScheduleTable appointments={filteredAppointments} setAppointments={setAppointments} />
-                        </TabsContent>
-                        <TabsContent value="services" className="mt-6">
-                            <ServiceTable services={filteredServices} setServices={setServices} />
-                        </TabsContent>
-                         <TabsContent value="staff" className="mt-6">
-                            <SpecialistTable agencyId={selectedAgency.id} />
-                        </TabsContent>
-                        <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
-                        </TabsContent>
-                    </Tabs>
-                </div>
-            </div>
-        </div>
-    )
+    return <AgencyDashboardClientPage 
+        initialAgencies={agencies} 
+        initialServices={services} 
+        initialAppointments={appointments} 
+    />;
 }

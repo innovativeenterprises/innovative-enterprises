@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -12,15 +13,15 @@ import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { DueDateDisplay } from '@/components/due-date-display';
-import { useLeasesData } from '@/hooks/use-global-store-data';
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const { leases, setLeases, isClient } = useLeasesData();
+    const [leases, setLeases] = useState(initialLeases);
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
-        setLeases(() => initialLeases);
-    }, [initialLeases, setLeases]);
+        setIsClient(true);
+    }, []);
 
     const expiringLeasesCount = useMemo(() => {
         if (!isClient) return null;

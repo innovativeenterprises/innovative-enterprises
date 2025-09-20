@@ -1,3 +1,6 @@
+
+'use server';
+
 import StudentRecordsClientPage from './client-page';
 import { getStudents } from '@/lib/firestore';
 import type { Metadata } from 'next';

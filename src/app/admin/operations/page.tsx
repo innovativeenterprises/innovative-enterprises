@@ -1,6 +1,4 @@
 
-'use client';
-
 import ProForm from "@/app/admin/operations/pro-form";
 import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
@@ -13,11 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
 import PricingTable from "./pricing-table";
-import { usePricingData } from "@/hooks/use-global-store-data";
+import { getPricing } from "@/lib/firestore";
 
 
-export default function AdminOperationsPage() {
-  const { pricing } = usePricingData();
+export default async function AdminOperationsPage() {
+  const pricing = await getPricing();
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
