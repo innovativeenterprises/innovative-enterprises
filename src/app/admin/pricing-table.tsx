@@ -77,11 +77,15 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() { 
+export default function PricingTable({ pricing: initialPricingData }: { pricing: Pricing[] }) { 
     const { pricing, setPricing, isClient } = usePricingData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
+    
+    useEffect(() => {
+        setPricing(() => initialPricingData);
+    }, [initialPricingData, setPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
