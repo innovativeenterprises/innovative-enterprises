@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import type { Metadata } from 'next';
-import { initialUsedItems, type UsedItem } from '@/lib/used-items';
+import { initialUsedItems, type UsedItem } from '@/lib/used-items.schema';
 
 export async function generateStaticParams() {
   return initialUsedItems.map((item) => ({

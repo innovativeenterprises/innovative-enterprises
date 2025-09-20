@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowRight, Search, Handshake, Gift, Recycle } from "lucide-react";
 import Link from "next/link";
 import { useUsedItemsData } from '@/hooks/use-global-store-data';
-import type { UsedItem } from '@/lib/used-items';
+import type { UsedItem } from '@/lib/used-items.schema';
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
