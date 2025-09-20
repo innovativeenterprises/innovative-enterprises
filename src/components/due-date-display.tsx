@@ -49,7 +49,7 @@ export const DueDateDisplay = ({
         const formatted = format(dueDate, "PPP");
         
         let status: 'normal' | 'warn' | 'error' = 'normal';
-        if (diffDays < 0) { // Changed from <= 0 to < 0 to only be error on overdue
+        if (diffDays < 0) {
             status = 'error';
         } else if (diffDays <= warnDays) {
             status = 'warn';
@@ -80,7 +80,7 @@ export const DueDateDisplay = ({
         (displayState.daysRemaining >= 0 ? (
           <span className={cn('font-medium', {
               'text-yellow-600 dark:text-yellow-400': displayState.status === 'warn',
-              'text-destructive': displayState.status === 'error',
+              'text-destructive': displayState.status === 'error' && displayState.daysRemaining < 0,
           })}>
             {' '}
             ({displayState.daysRemaining} days left)
