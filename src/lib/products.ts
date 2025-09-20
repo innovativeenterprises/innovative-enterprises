@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 
 export const initialStoreProducts: Product[] = [
@@ -128,7 +127,7 @@ export const initialProducts: Product[] = [
         rating: 4.7,
         enabled: true,
         adminStatus: 'Completed',
-        href: "/admin/real-estate/property-valuator",
+        href: "/real-estate-tech/property-valuator",
     },
      {
         id: 8,
