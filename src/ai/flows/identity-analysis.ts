@@ -81,12 +81,12 @@ const identityAnalysisFlow = ai.defineFlow(
     }
     
     // Post-processing to ensure full name is combined if the model missed it.
-    const passportName = output.passportDetails ? `${output.passportDetails.givenNames || ''} ${output.passportDetails.surname || ''}`.trim() : null;
-    if (passportName && !output.personalDetails?.fullName) {
+    if (output.passportDetails?.givenNames && !output.personalDetails?.fullName) {
+        const fullName = `${output.passportDetails.givenNames} ${output.passportDetails.surname || ''}`.trim();
         if (!output.personalDetails) {
-            output.personalDetails = { fullName: passportName };
+            output.personalDetails = { fullName };
         } else {
-            output.personalDetails.fullName = passportName;
+            output.personalDetails.fullName = fullName;
         }
     }
 

@@ -7,7 +7,6 @@ import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
 
-// --- Main Page Component ---
 export default function AdminContentPage() {
     return (
         <div className="space-y-8">

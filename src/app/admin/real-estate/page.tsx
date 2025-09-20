@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,7 +20,6 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, ArrowRight, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
-import { generateListingDescription } from '@/ai/flows/listing-description-generator';
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePropertiesData, useStairspaceData } from "@/hooks/use-global-store-data";
 import Link from 'next/link';
