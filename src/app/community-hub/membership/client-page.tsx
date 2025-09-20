@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -93,14 +92,9 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
     );
 };
 
-export default function MembershipClientPage({ initialMembers }: { initialMembers: CommunityMember[] }) {
+export default function MembershipPage() {
     const { members, setMembers, isClient } = useMembersData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setMembers(() => initialMembers);
-    }, [initialMembers, setMembers]);
-
 
     const handleSave = (values: MemberValues, id?: string) => {
         if (id) {
