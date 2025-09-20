@@ -1,6 +1,15 @@
 
-import { getSaasProducts } from '@/lib/firestore';
-import SaasPortfolioClientPage from './client-page';
+'use client';
+
+import { useState, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { type SaasCategory, type SaaSProduct } from '@/lib/saas-products.schema';
+import { Search } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSaaSProductsData } from '@/hooks/use-global-store-data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,8 +17,50 @@ export const metadata: Metadata = {
   description: "Browse the complete portfolio of over 30+ digital products and SaaS platforms developed by Innovative Enterprises, spanning construction, real estate, education, and AI tools.",
 };
 
-export default async function SaasPortfolioPage() {
-  const saasProducts = await getSaasProducts();
+
+const getStatusBadge = (status: string) => {
+    switch (status) {
+        case "Completed":
+            return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Completed</Badge>;
+        case "On Track":
+            return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">On Track</Badge>;
+        case "At Risk":
+            return <Badge variant="destructive" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">At Risk</Badge>;
+        case "On Hold":
+            return <Badge variant="outline" className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">On Hold</Badge>;
+        default:
+            return <Badge variant="outline">{status}</Badge>;
+    }
+};
+
+const getStageBadge = (stage: string) => {
+    return <Badge variant="outline">{stage}</Badge>;
+}
+
+export default function SaasPortfolioPage() {
+  const { saasProducts } = useSaaSProductsData();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const filteredProducts = useMemo(() => {
+      let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
+
+      if (selectedCategory !== 'All') {
+          products = products.filter(p => p.category === selectedCategory);
+      }
+
+      if (searchTerm) {
+          products = products.filter(p =>
+              p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              p.description.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+      }
+
+      return products;
+  }, [searchTerm, selectedCategory, saasProducts]);
+
+  const allCategories = ['All', ...saasProducts.map(c => c.name)];
+
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
@@ -20,7 +71,58 @@ export default async function SaasPortfolioPage() {
           </p>
         </div>
         <div className="mt-12">
-          <SaasPortfolioClientPage saasProducts={saasProducts} />
+           <Card>
+                <CardHeader>
+                    <CardTitle>Digital Products & SaaS Platforms</CardTitle>
+                    <div className="flex flex-col md:flex-row gap-4 pt-4">
+                        <div className="relative flex-grow">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Search by name or description..."
+                                className="pl-8"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                            <SelectTrigger className="w-full md:w-[280px]">
+                                <SelectValue placeholder="Filter by category..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {allCategories.map(cat => (
+                                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Category</TableHead>
+                                <TableHead>Description</TableHead>
+                                <TableHead>Stage</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Ready</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredProducts.map(product => (
+                                <TableRow key={product.name}>
+                                    <TableCell className="font-medium">{product.name}</TableCell>
+                                    <TableCell><Badge variant="secondary">{product.category}</Badge></TableCell>
+                                    <TableCell className="text-muted-foreground text-sm max-w-sm">{product.description}</TableCell>
+                                    <TableCell>{getStageBadge(product.stage)}</TableCell>
+                                    <TableCell>{getStatusBadge(product.status)}</TableCell>
+                                    <TableCell>{product.ready ? 'Yes' : 'No'}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
         </div>
       </div>
     </div>
