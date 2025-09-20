@@ -11,7 +11,6 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { formatDistanceToNow } from 'date-fns';
 import type { Metadata } from 'next';
 import { initialUsedItems, type UsedItem } from '@/lib/used-items';
 
