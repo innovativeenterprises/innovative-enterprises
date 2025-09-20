@@ -11,7 +11,7 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "../pricing-table";
+import PricingTable from "./pricing-table";
 
 
 export default function AdminOperationsPage() {
