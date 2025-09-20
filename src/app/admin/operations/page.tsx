@@ -12,13 +12,11 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "./pricing-table";
-import { usePricingData } from "@/hooks/use-global-store-data";
+import PricingTable from "../pricing-table";
+import { initialPricing } from "@/lib/pricing";
 
 
 export default function AdminOperationsPage() {
-  const { pricing, setPricing } = usePricingData();
-
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
     { id: 'tender', title: 'Tender Response Assistant', icon: FileText, component: <TenderForm /> },
@@ -71,7 +69,7 @@ export default function AdminOperationsPage() {
                 <CostSettingsTable />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6 space-y-8">
-                <PricingTable pricing={pricing} setPricing={setPricing}/>
+                <PricingTable initialPricing={initialPricing} />
             </TabsContent>
         </Tabs>
     </div>

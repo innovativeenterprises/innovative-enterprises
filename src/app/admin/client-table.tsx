@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Client } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
+import { useClientsData } from "@/hooks/use-global-store-data";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -54,8 +55,14 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 };
 
 
-export default function ClientTable({ clients, setClients }: { clients: Client[], setClients: Function }) {
+export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
+    const { clients, setClients } = useClientsData();
     const { toast } = useToast();
+
+    useEffect(() => {
+        setClients(() => initialClients);
+    }, [initialClients, setClients]);
+
 
     const handleClientSave = (values: ClientValues, id?: string) => {
         if (id) {
