@@ -67,9 +67,10 @@ export const DueDateDisplay = ({
     }
   }, [date, prefix, warnDays]);
 
-  // On the server and during initial client render, show a skeleton loader.
+  // On the server render null, then render the content on the client.
+  // This avoids hydration mismatch completely.
   if (!displayState.isClient) {
-    return <div className={cn("text-sm text-muted-foreground", className)}><Skeleton className="h-4 w-32 mt-1" /></div>;
+    return null;
   }
   
   // After hydration on the client, render the actual formatted date.
