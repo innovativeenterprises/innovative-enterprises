@@ -479,5 +479,19 @@ export const initialProducts: Product[] = [
         enabled: true,
         adminStatus: "Completed",
         href: "/drivesync-ai"
+    },
+    {
+        id: 33,
+        name: "Beauty & Wellness Hub",
+        description: "A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships.",
+        stage: "Live & Operating",
+        category: "General Platforms & SaaS",
+        price: 0,
+        image: "https://images.unsplash.com/photo-1616394584738-FC6e6fb3e196?q=80&w=600&auto=format&fit=crop",
+        aiHint: "beauty salon",
+        rating: 0,
+        enabled: true,
+        adminStatus: "Completed",
+        href: "/beauty-hub",
     }
 ];

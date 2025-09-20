@@ -92,10 +92,10 @@ export const initialSolutions = [
         description: "A digital platform connecting trainers, educators, and professionals with local markets, offering tools for marketing and networking.",
         icon: BookUser,
     },
-     {
+    {
         title: "Beauty & Wellness Hub",
         href: "/beauty-hub",
-        description: "A complete SaaS solution for salons, spas, and barbershops.",
+        description: "A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships.",
         icon: Heart,
     },
     {
@@ -142,6 +142,12 @@ export const initialIndustries: { title: string; href: string; description: stri
     href: "/community-hub",
     description: "A digital platform for communities and charities to manage their own affairs, elections, and events.",
     icon: Users,
+  },
+   {
+    title: "Beauty & Wellness Hub",
+    href: "/beauty-hub",
+    description: "A complete SaaS solution for salons, spas, and barbershops.",
+    icon: Heart,
   },
    {
     title: "We Match Game",

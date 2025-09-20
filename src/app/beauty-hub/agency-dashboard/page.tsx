@@ -1,14 +1,21 @@
-'use client';
+
+'use server';
 
 import AgencyDashboardClientPage from './client-page';
-import { useBeautyData } from '@/hooks/use-global-store-data';
+import { getBeautyData } from '@/lib/firestore';
+import type { Metadata } from 'next';
 
-export default function AgencyDashboardPage() {
-    const { agencies, services, appointments } = useBeautyData();
+export const metadata: Metadata = {
+  title: "Agency Dashboard | RAAHA",
+  description: "Manage your domestic workforce agency. View client requests, manage your candidates, and update your agency settings.",
+};
+
+export default async function AgencyDashboardPage() {
+    const { beautyCenters, beautyServices, beautyAppointments } = await getBeautyData();
     
     return <AgencyDashboardClientPage 
-        initialAgencies={agencies}
-        initialServices={services}
-        initialAppointments={appointments}
+        initialAgencies={beautyCenters}
+        initialServices={beautyServices}
+        initialAppointments={beautyAppointments}
     />;
 }
