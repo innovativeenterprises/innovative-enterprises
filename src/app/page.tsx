@@ -5,19 +5,23 @@ import CompanyOverview from "@/components/company-overview";
 import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import AiToolsCta from "@/components/ai-tools-cta";
-import ClientTestimonials from "@/app/client-testimonials/page";
-import { getProducts, getServices } from "@/lib/firestore";
+import ClientTestimonials from "@/components/client-testimonials";
+import { getProducts, getServices, getClients, getTestimonials } from "@/lib/firestore";
 
 export default async function HomePage() {
-  const products = await getProducts();
-  const services = await getServices();
+  const [products, services, clients, testimonials] = await Promise.all([
+      getProducts(),
+      getServices(),
+      getClients(),
+      getTestimonials(),
+  ]);
 
   return (
     <>
-      <CompanyOverview />
+      <CompanyOverview clients={clients} />
       <ServiceCatalog services={services} />
       <ProductShowcase products={products} />
-      <ClientTestimonials />
+      <ClientTestimonials clients={clients} testimonials={testimonials} />
       <AiToolsCta />
     </>
   );

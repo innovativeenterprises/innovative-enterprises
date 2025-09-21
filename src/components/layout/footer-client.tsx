@@ -2,14 +2,13 @@
 'use client';
 
 import Link from 'next/link';
-import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
+import CompanyProfileDownloader from "@/app/invest/company-profile-downloader";
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { useMemo } from 'react';
 import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import type { Service } from '@/lib/services.schema';
-import type { Product } from '@/lib/products.schema';
 import type { AppSettings } from '@/lib/settings';
+import type { Product } from '@/lib/products.schema';
 
 interface FooterClientProps {
     staffData: {
@@ -23,7 +22,7 @@ interface FooterClientProps {
 }
 
 export default function FooterClient({ staffData, services, settings, products }: FooterClientProps) {
-  const currentYear = useMemo(() => new Date().getFullYear().toString(), []);
+  const currentYear = new Date().getFullYear().toString();
   
   return (
     <footer className="border-t bg-card">
