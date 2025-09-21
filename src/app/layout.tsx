@@ -1,3 +1,4 @@
+
 'use server';
 
 import { Inter } from 'next/font/google';
@@ -62,7 +63,7 @@ export default async function RootLayout({
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <Providers initialSettings={settings}>
-            {children}
+          {children}
         </Providers>
         <Toaster />
       </body>

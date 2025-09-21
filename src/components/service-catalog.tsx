@@ -1,7 +1,9 @@
+'use server';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GitBranch } from "lucide-react";
 import Link from 'next/link';
+import { getServices } from "@/lib/firestore";
 import type { Service } from "@/lib/services.schema";
 
 const ServiceCard = ({ service }: { service: Service }) => (
@@ -22,7 +24,8 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog({ services }: { services: Service[]}) {
+export default async function ServiceCatalog() {
+  const services = await getServices();
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = enabledServices.reduce((acc, service) => {

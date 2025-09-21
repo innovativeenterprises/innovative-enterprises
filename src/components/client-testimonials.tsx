@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function ClientTestimonials({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[] }) {
+export default function ClientTestimonialsClient({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[] }) {
   const [isClient, setIsClient] = useState(false);
   const { testimonialAvatars } = imageData || {};
 

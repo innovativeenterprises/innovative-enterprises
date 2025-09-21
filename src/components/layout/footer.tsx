@@ -11,13 +11,13 @@ export default async function Footer() {
         getSettings(),
         getProducts()
     ]);
-
-    return (
-        <FooterClient
-            staffData={staffData}
-            services={services}
-            settings={settings}
-            products={products}
-        />
-    );
+  
+  return (
+    <FooterClient 
+        staffData={staffData}
+        services={services}
+        settings={settings}
+        products={products}
+    />
+  );
 }
