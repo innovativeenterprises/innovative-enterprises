@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import RealEstateTechClientPage from "./client-page";

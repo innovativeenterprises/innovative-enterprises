@@ -10,7 +10,6 @@ import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { useSettings } from "./layout/settings-provider";
 
 export default function ChatWidget() {
-    const { settings } = useSettings();
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 

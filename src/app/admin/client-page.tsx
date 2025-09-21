@@ -9,30 +9,30 @@ import type { Service } from "@/lib/services.schema";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
 
 export default function AdminDashboardPage({ 
-    products, 
-    providers, 
-    leadership, 
-    staff, 
-    agentCategories, 
-    opportunities, 
-    services 
+    initialProducts, 
+    initialProviders, 
+    initialLeadership, 
+    initialStaff, 
+    initialAgentCategories, 
+    initialOpportunities, 
+    initialServices 
 }: {
-    products: Product[],
-    providers: Provider[],
-    leadership: Agent[],
-    staff: Agent[],
-    agentCategories: AgentCategory[],
-    opportunities: Opportunity[],
-    services: Service[]
+    initialProducts: Product[],
+    initialProviders: Provider[],
+    initialLeadership: Agent[],
+    initialStaff: Agent[],
+    initialAgentCategories: AgentCategory[],
+    initialOpportunities: Opportunity[],
+    initialServices: Service[]
 }) {
 
     return <AdminDashboardPageClient 
-        products={products}
-        providers={providers}
-        leadership={leadership}
-        staff={staff}
-        agentCategories={agentCategories}
-        opportunities={opportunities}
-        services={services}
+        products={initialProducts}
+        providers={initialProviders}
+        leadership={initialLeadership}
+        staff={initialStaff}
+        agentCategories={initialAgentCategories}
+        opportunities={initialOpportunities}
+        services={initialServices}
     />
 }

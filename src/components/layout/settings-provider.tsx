@@ -9,7 +9,7 @@ interface SettingsContextType {
   setSettings: React.Dispatch<React.SetStateAction<AppSettings>>;
 }
 
-export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const useSettings = () => {
   const context = useContext(SettingsContext);
@@ -19,6 +19,18 @@ export const useSettings = () => {
   return context;
 };
 
-// The Provider component itself is no longer needed here, 
-// as the logic will be moved to ClientLayout to ensure correct initialization.
-// We will just export the context.
+export const SettingsProvider = ({ 
+    children, 
+    initialSettings 
+}: { 
+    children: ReactNode;
+    initialSettings: AppSettings;
+}) => {
+    const [settings, setSettings] = useState<AppSettings>(initialSettings);
+
+    return (
+        <SettingsContext.Provider value={{ settings, setSettings }}>
+            {children}
+        </SettingsContext.Provider>
+    );
+};

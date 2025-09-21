@@ -56,11 +56,6 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 
 export default function RealEstateTechClientPage({ initialProducts }: { initialProducts: Product[] }) {
-    const [products, setProducts] = useState<Product[]>([]);
-    
-    useEffect(() => {
-        setProducts(initialProducts);
-    }, [initialProducts]);
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -101,7 +96,7 @@ export default function RealEstateTechClientPage({ initialProducts }: { initialP
                 <p className="mt-4 text-lg text-muted-foreground">A preview of our dedicated solutions for the real estate industry.</p>
             </div>
              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map(product => (
+                {initialProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                 ))}
             </div>

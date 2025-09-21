@@ -1,10 +1,7 @@
 
-'use client';
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GitBranch } from "lucide-react";
 import Link from 'next/link';
-import { useMemo } from 'react';
 import type { Service } from "@/lib/services.schema";
 
 const ServiceCard = ({ service }: { service: Service }) => (
@@ -26,15 +23,16 @@ const ServiceCard = ({ service }: { service: Service }) => (
 );
 
 export default function ServiceCatalog({ services }: { services: Service[]}) {
+  const enabledServices = services.filter(s => s.enabled);
   
-  const servicesByCategory = useMemo(() => services.reduce((acc, service) => {
+  const servicesByCategory = enabledServices.reduce((acc, service) => {
     const category = service.category || 'Other Services';
     if (!acc[category]) {
       acc[category] = [];
     }
     acc[category].push(service);
     return acc;
-  }, {} as Record<string, Service[]>), [services]);
+  }, {} as Record<string, Service[]>);
 
   const categoryOrder = [
     "Digital Transformations",

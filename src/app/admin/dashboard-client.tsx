@@ -22,6 +22,7 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
                 <BarChart data={data}>
                     <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false}/>
                     <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`}/>
+                    <Tooltip />
                     <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]}/>
                 </BarChart>
             </ResponsiveContainer>
