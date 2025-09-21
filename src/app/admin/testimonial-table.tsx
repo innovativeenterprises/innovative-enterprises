@@ -29,8 +29,13 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<TestimonialValues>({
         resolver: zodResolver(TestimonialSchema),
-        defaultValues: testimonial
     });
+
+    useEffect(() => {
+        if (isOpen) {
+            form.reset(testimonial || { quote: '', author: '', company: '', avatarId: '' });
+        }
+    }, [testimonial, form, isOpen]);
     
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>

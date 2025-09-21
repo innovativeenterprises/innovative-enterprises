@@ -32,15 +32,12 @@ const AddEditCostRateDialog = ({
     rate, 
     onSave,
     children,
-    isOpen,
-    onOpenChange,
 }: { 
     rate?: CostRate, 
     onSave: (values: CostRateValues, id?: string) => void,
     children: React.ReactNode,
-    isOpen: boolean,
-    onOpenChange: (open: boolean) => void,
 }) => {
+    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<CostRateValues>({
         resolver: zodResolver(CostRateSchema),
         defaultValues: rate || { name: "", category: 'Material', unit: "", rate: 0 },
@@ -54,11 +51,11 @@ const AddEditCostRateDialog = ({
 
     const onSubmit: SubmitHandler<CostRateValues> = (data) => {
         onSave(data, rate?.id);
-        onOpenChange(false);
+        setIsOpen(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{rate ? "Edit" : "Add"} Market Rate</DialogTitle></DialogHeader>
@@ -98,18 +95,11 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
     const [costSettings, setCostSettings] = useState<CostRate[]>([]);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedRate, setSelectedRate] = useState<CostRate | undefined>(undefined);
 
     useEffect(() => {
         setCostSettings(initialRates);
         setIsClient(true);
     }, [initialRates]);
-
-    const openDialog = (rate?: CostRate) => {
-        setSelectedRate(rate);
-        setIsDialogOpen(true);
-    };
 
     const handleSave = (values: CostRateValues, id?: string) => {
         if (id) {
@@ -134,17 +124,11 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
                     <CardTitle>Market Rates for Cost Estimation</CardTitle>
                     <CardDescription>These rates are used by the AI to estimate project costs.</CardDescription>
                 </div>
-                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4" /> Add Rate</Button>
+                <AddEditCostRateDialog onSave={handleSave}>
+                    <Button><PlusCircle className="mr-2 h-4 w-4" /> Add Rate</Button>
+                </AddEditCostRateDialog>
             </CardHeader>
             <CardContent>
-                <AddEditCostRateDialog
-                    isOpen={isDialogOpen}
-                    onOpenChange={setIsDialogOpen}
-                    rate={selectedRate}
-                    onSave={handleSave}
-                >
-                    <div />
-                </AddEditCostRateDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -167,7 +151,9 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
                                     <TableCell className="text-right font-mono">{rate.rate.toFixed(3)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" onClick={() => openDialog(rate)}><Edit /></Button>
+                                            <AddEditCostRateDialog rate={rate} onSave={handleSave}>
+                                                <Button variant="ghost" size="icon"><Edit /></Button>
+                                            </AddEditCostRateDialog>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                 <AlertDialogContent>

@@ -93,13 +93,14 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
 };
 
 export default function CommunitiesAdminPage({ initialMembers }: { initialMembers: CommunityMember[] }) {
-    const [members, setMembers] = useState<CommunityMember[]>(initialMembers);
+    const [members, setMembers] = useState<CommunityMember[]>([]);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     
     useEffect(() => {
+        setMembers(initialMembers);
         setIsClient(true);
-    }, []);
+    }, [initialMembers]);
 
     const handleSave = (values: MemberValues, id?: string) => {
         if (id) {
@@ -186,6 +187,5 @@ export default function CommunitiesAdminPage({ initialMembers }: { initialMember
         </div>
     );
 }
-    
 
-  
+    
