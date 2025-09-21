@@ -1,6 +1,4 @@
 
-'use client';
-
 import { Recycle } from "lucide-react";
 import ListAnItemForm from "./list-item-form";
 import type { Metadata } from 'next';

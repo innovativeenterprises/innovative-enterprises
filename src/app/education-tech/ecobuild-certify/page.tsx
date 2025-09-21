@@ -6,13 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Leaf, Droplets, Wind, Upload, Download, CheckCircle } from "lucide-react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "EcoBuild Certify | Innovative Enterprises",
-  description: "Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance and green building certification.",
-};
-
 
 const energyData = [
   { month: 'Jan', consumption: 45000 },
