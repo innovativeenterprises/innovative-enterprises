@@ -180,8 +180,12 @@ async function getCollection<T>(collectionName: string): Promise<T[]> {
 async function getDoc<T>(docPath: string): Promise<T | null> {
     try {
         await seedDatabase();
-        const snapshot = await db.doc(docPath).get();
-        return snapshot.exists ? (snapshot.data() as T) : null;
+        const docRef = db.doc(docPath);
+        const snapshot = await docRef.get();
+        if (snapshot.exists) {
+            return snapshot.data() as T;
+        }
+        return null;
     } catch (error) {
         console.warn(`Warning: Could not fetch document '${docPath}'. Returning null. Error:`, (error as Error).message);
         return null;
@@ -309,3 +313,6 @@ export async function setFirestoreCollection(collectionName: string, data: any[]
 
 // Dummy 'initialState' for fallback, not to be confused with the one in global-store
 const initialState = {};
+
+
+  
