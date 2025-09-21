@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import * as admin from 'firebase-admin';
@@ -44,7 +43,6 @@ import type { Service } from './services.schema';
 import type { Provider } from './providers.schema';
 import type { Opportunity } from './opportunities.schema';
 import type { Client, Testimonial } from './clients.schema';
-import type { AppState } from './global-store';
 
 
 if (!admin.apps.length) {

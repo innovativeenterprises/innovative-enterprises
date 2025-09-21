@@ -4,7 +4,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GitBranch } from "lucide-react";
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import type { Service } from "@/lib/services.schema";
 
 const ServiceCard = ({ service }: { service: Service }) => (
@@ -25,7 +25,12 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog({ services }: { services: Service[]}) {
+export default function ServiceCatalog({ services: initialServices }: { services: Service[]}) {
+  const [services, setServices] = useState<Service[]>([]);
+  useEffect(() => {
+    setServices(initialServices);
+  }, [initialServices]);
+
   const enabledServices = services.filter(s => s.enabled);
   
   const servicesByCategory = useMemo(() => enabledServices.reduce((acc, service) => {

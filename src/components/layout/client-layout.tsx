@@ -3,11 +3,18 @@
 
 import { Toaster } from '@/components/ui/toaster';
 import ChatWidget from '@/components/chat-widget';
-import { StoreProvider } from '@/components/layout/store-provider';
 import { ThemeProvider } from 'next-themes';
 import Footer from './footer';
 import Header from './header';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
+import React, { createContext, useState, type ReactNode } from 'react';
+import type { CartItem } from '@/lib/pos-data.schema';
+
+export const CartContext = createContext<{
+  cart: CartItem[];
+  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+} | null>(null);
+
 
 export default function ClientLayout({
   children,
@@ -20,6 +27,7 @@ export default function ClientLayout({
   industries: Industry[];
   aiTools: AiTool[];
 }) {
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   return (
     <ThemeProvider
@@ -28,7 +36,7 @@ export default function ClientLayout({
         enableSystem
         disableTransitionOnChange
     >
-        <StoreProvider>
+      <CartContext.Provider value={{ cart, setCart }}>
         <div className="flex min-h-screen flex-col">
             <Header 
               solutions={solutions}
@@ -40,7 +48,7 @@ export default function ClientLayout({
             <Toaster />
             <ChatWidget />
         </div>
-        </StoreProvider>
+      </CartContext.Provider>
     </ThemeProvider>
   );
 }

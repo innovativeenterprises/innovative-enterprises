@@ -5,8 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
 import type { AiTool } from "@/lib/nav-links";
+import { useState, useEffect } from 'react';
 
-export default function AiToolsCta({ aiTools }: { aiTools: AiTool[] }) {
+export default function AiToolsCta({ aiTools: initialAiTools }: { aiTools: AiTool[] }) {
+    const [aiTools, setAiTools] = useState<AiTool[]>([]);
+
+    useEffect(() => {
+        setAiTools(initialAiTools);
+    }, [initialAiTools]);
     
     // Dynamically select a few key agents to feature
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];

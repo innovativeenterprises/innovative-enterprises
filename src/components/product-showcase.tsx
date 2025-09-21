@@ -7,9 +7,15 @@ import { StageBadge } from '@/components/stage-badge';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/products.schema';
+import { useEffect, useState } from 'react';
 
 
-export default function ProductShowcase({ products }: { products: Product[] }) {
+export default function ProductShowcase({ products: initialProducts }: { products: Product[] }) {
+  const [products, setProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
+
   const enabledProducts = products.filter(p => p.enabled);
 
   return (
