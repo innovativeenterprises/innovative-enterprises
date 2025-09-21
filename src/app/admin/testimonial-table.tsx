@@ -16,7 +16,6 @@ import { useToast } from '@/hooks/use-toast';
 import type { Testimonial } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTestimonialsData } from "@/hooks/use-data-hooks";
 
 const TestimonialSchema = z.object({
   quote: z.string().min(10, "Quote is required"),
@@ -69,8 +68,13 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
 };
 
 export default function TestimonialTable({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
-    const { data: testimonials, setData: setTestimonials, isClient } = useTestimonialsData(initialTestimonials);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleTestimonialSave = (values: TestimonialValues, id?: string) => {
         if (id) {

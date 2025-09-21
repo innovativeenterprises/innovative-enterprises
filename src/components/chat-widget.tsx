@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -47,6 +48,7 @@ export default function ChatWidget() {
                             welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
                             placeholder="Ask about our services or book a meeting..."
                             aiFlow={answerQuestion}
+                            settings={settings}
                        />
                     </div>
                 </PopoverContent>

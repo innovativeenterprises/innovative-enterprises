@@ -1,3 +1,4 @@
+
 'use server';
 
 import CooDashboardClientPage from './client-page';
@@ -9,5 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CooDashboardPage() {
+    // This page is now a Server Component. It doesn't fetch data itself,
+    // but it sets up the structure for its client component which will.
     return <CooDashboardClientPage />;
 }
