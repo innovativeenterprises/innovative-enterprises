@@ -1,13 +1,5 @@
 
-export interface Agency {
-    id: string;
-    name: string;
-    description: string;
-    logo: string;
-    contactEmail: string;
-    contactPhone: string;
-    primaryColor?: string; // e.g., hsl(var(--primary))
-}
+import type { Agency } from './raaha-agencies.schema';
 
 export const initialRaahaAgencies: Agency[] = [
     {

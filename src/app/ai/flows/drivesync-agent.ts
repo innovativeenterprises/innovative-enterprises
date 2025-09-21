@@ -1,5 +1,4 @@
 
-
 'use server';
 
 /**
@@ -31,11 +30,36 @@ export const bookCarTool = ai.defineTool(
     }
 );
 
+const getVehicleHealthTool = ai.defineTool({
+    name: 'getVehicleHealth',
+    description: 'Retrieves the maintenance status and service history for a specific vehicle.',
+    inputSchema: z.object({ carId: z.string() }),
+    outputSchema: z.object({ status: z.string(), lastService: z.string(), notes: z.string() }),
+}, async ({ carId }) => {
+    // Dummy data for simulation
+    const statuses = ['Excellent', 'Good', 'Service Due'];
+    return {
+        status: statuses[carId.length % 3],
+        lastService: new Date(Date.now() - (carId.length * 1000000000)).toLocaleDateString(),
+        notes: carId.length % 2 === 0 ? 'All systems nominal.' : 'Brake pads may need inspection soon.',
+    }
+});
+
+const getBookingTrendsTool = ai.defineTool({
+    name: 'getBookingTrends',
+    description: 'Provides data on booking trends, such as the most popular car types or busiest rental periods.',
+    inputSchema: z.object({}),
+    outputSchema: z.string(),
+}, async () => {
+    // Dummy data
+    return "SUVs are the most popular rental type, especially on weekends. Bookings peak in December and July."
+});
+
 const driveSyncAgentPrompt = ai.definePrompt({
     name: 'driveSyncAgentPrompt',
     input: { schema: z.object({ query: z.string(), availableCarsJson: z.string() }) },
     output: { schema: DriveSyncAgentOutputSchema },
-    tools: [bookCarTool],
+    tools: [bookCarTool, getVehicleHealthTool, getBookingTrendsTool],
     prompt: `You are an intelligent car rental assistant for "DriveSync AI". Your goal is to help users find the perfect car for their needs from the available inventory.
 
 **User's Request:**
@@ -48,14 +72,17 @@ You MUST only recommend cars from this JSON list of available vehicles.
 '''
 
 **Your Task:**
-1.  **Understand the User's Need:** Analyze the user's query to identify key criteria like car type (SUV, sedan), purpose (family trip, business), features (4x4, GPS), or price range.
-2.  **Match the Best Car:** Search the inventory and identify the single best car that matches the user's needs. This is your primary recommendation.
-3.  **Find Other Suggestions:** Identify 1-2 other suitable alternatives from the inventory.
-4.  **Formulate a Response:**
-    *   Start with a friendly, conversational response.
-    *   Clearly present your top recommendation (\`recommendedCar\`) and explain *why* it's a great fit for their request.
-    *   Briefly mention the other suggestions (\`otherSuggestions\`) as alternatives.
-5.  **Use Tools When Necessary:** If the user explicitly asks to book, reserve, or rent a specific car, use the \`bookCar\` tool.
+1.  **Analyze Query Intent:** First, determine what the user is asking for.
+    *   **Finding a Car:** If they describe needs (e.g., "SUV for a family"), proceed to Step 2.
+    *   **Booking a Car:** If they explicitly say "book", "reserve", or "rent" a specific car, use the \`bookCar\` tool.
+    *   **Vehicle Health:** If they ask about the status, maintenance, or condition of a specific vehicle, use the \`getVehicleHealth\` tool.
+    *   **Booking Trends:** If they ask about popular cars, busy times, or general trends, use the \`getBookingTrends\` tool.
+
+2.  **Find and Recommend (if applicable):**
+    *   Understand the user's need: car type, purpose, features, or price.
+    *   Match the best car: Identify the single best car from inventory.
+    *   Find other suggestions: Identify 1-2 other suitable alternatives.
+    *   Formulate a response: Present your top recommendation and why it fits.
 
 Return the response in the specified JSON format.
 `,
@@ -74,13 +101,27 @@ export const findAndBookCar = ai.defineFlow(
       availableCarsJson: JSON.stringify(availableCars),
     });
 
-    // Check if the model wants to use the booking tool
+    // Check for tool calls
     if (response.toolRequest?.name === 'bookCar') {
       const toolResponse = await response.toolRequest.run();
       return {
         response: toolResponse.output?.message || "An error occurred during booking.",
       };
     }
+    if (response.toolRequest?.name === 'getVehicleHealth') {
+        const toolResponse = await response.toolRequest.run();
+        const health = toolResponse.output as {status: string, lastService: string, notes: string};
+        return {
+            response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
+        }
+    }
+     if (response.toolRequest?.name === 'getBookingTrends') {
+        const toolResponse = await response.toolRequest.run();
+        return {
+            response: `Booking Trends Report: ${toolResponse.output}`
+        }
+    }
+
 
     return response.output!;
   }
