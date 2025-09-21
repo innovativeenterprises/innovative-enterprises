@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -31,7 +30,7 @@ import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
-import { useCartData } from '@/hooks/use-global-store-data';
+import { useCartData } from '@/hooks/use-data-hooks';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,

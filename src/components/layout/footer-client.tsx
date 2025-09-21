@@ -5,10 +5,10 @@ import Link from 'next/link';
 import CompanyProfileDownloader from "@/app/invest/company-profile-downloader";
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import type { Agent, AgentCategory } from '@/lib/agents.schema';
-import type { Service } from '@/lib/services.schema';
-import type { AppSettings } from '@/lib/settings';
-import type { Product } from '@/lib/products.schema';
+import type { Agent, AgentCategory } from "@/lib/agents.schema";
+import type { Service } from "@/lib/services.schema";
+import type { AppSettings } from "@/lib/settings";
+import type { Product } from "@/lib/products.schema";
 
 interface FooterClientProps {
     staffData: {

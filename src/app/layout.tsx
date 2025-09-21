@@ -55,14 +55,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let settings = initialSettings;
-  try {
-    // Attempt to fetch settings, but have a fallback.
-    settings = await getSettings() || initialSettings;
-  } catch (error) {
-    console.error("Failed to fetch settings, using initial settings:", error);
-    // Fallback to initial settings is already handled by the line above
-  }
+  // Using initialSettings directly as a fallback.
+  // The getSettings function now has internal error handling.
+  const settings = await getSettings() || initialSettings;
 
   return (
     <html lang="en" suppressHydrationWarning>
