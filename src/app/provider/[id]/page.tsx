@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
 import { useState, useEffect, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Provider } from '@/lib/providers';
+import type { Provider } from '@/lib/providers.schema';
 import { DueDateDisplay } from '@/components/due-date-display';
 import { useProvidersData } from '@/hooks/use-global-store-data';
 
@@ -131,7 +131,7 @@ export default function ProviderProfilePage() {
                                     </div>
                                     <CardDescription className="text-base">{provider.services}</CardDescription>
                                     <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-                                        <a href={`mailto:${provider.email}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                                        <a href={`mailto:${"'" + provider.email + "'"}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
                                             <Mail className="h-4 w-4" /> {provider.email}
                                         </a>
                                         {provider.portfolio && 

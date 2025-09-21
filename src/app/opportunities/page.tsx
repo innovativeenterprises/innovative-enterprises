@@ -1,8 +1,10 @@
 
+'use server';
+
 import { Trophy } from "lucide-react";
-import { initialOpportunities } from "@/lib/opportunities";
 import OpportunityGrid from "./opportunity-grid";
 import type { Metadata } from 'next';
+import { getOpportunities } from "@/lib/firestore";
 
 export const metadata: Metadata = {
   title: "Opportunities & Competitions",
@@ -10,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 
-export default function OpportunitiesPage() {
+export default async function OpportunitiesPage() {
+    const opportunities = await getOpportunities();
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
         <div className="container mx-auto px-4 py-16">
@@ -25,7 +28,7 @@ export default function OpportunitiesPage() {
             </div>
 
             <div className="max-w-5xl mx-auto mt-16">
-                <OpportunityGrid initialOpportunities={initialOpportunities} />
+                <OpportunityGrid initialOpportunities={opportunities} />
             </div>
         </div>
         </div>

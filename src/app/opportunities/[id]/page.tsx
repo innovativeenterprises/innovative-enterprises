@@ -20,30 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Metadata } from 'next';
-import { getOpportunities } from '@/lib/firestore';
-
-export async function generateStaticParams() {
-  const opportunities = await getOpportunities();
-  return opportunities.map((opportunity) => ({
-    id: opportunity.id,
-  }));
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const opportunities = await getOpportunities();
-  const opportunity = opportunities.find(o => o.id === params.id);
-
-  if (!opportunity) {
-    notFound();
-  }
-
-  return {
-    title: `${opportunity.title} | Opportunities`,
-    description: opportunity.description,
-  };
-}
-
 
 const NegotiationSchema = z.object({
   proposedPrice: z.coerce.number().positive("Proposed price must be a positive number."),
