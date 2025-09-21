@@ -12,20 +12,23 @@ import { PlusCircle, Edit } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import type { ProjectStage } from "@/lib/stages";
+import { useProductsData } from "@/hooks/use-global-store-data";
 
 export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
-    const [products, setProducts] = useState<Product[]>([]);
+    const { products, setProducts } = useProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
     useEffect(() => {
         setProducts(initialProducts);
-    }, [initialProducts]);
+    }, [initialProducts, setProducts]);
 
     const handleToggle = (id: number) => {
-        // In a real app, this would be a server action.
-        toast({ title: "Action not implemented in prototype." });
+        setProducts(prev => 
+            prev.map(p => p.id === id ? { ...p, enabled: !p.enabled } : p)
+        );
+        toast({ title: "Product status updated." });
     };
 
     const openDialog = (product?: Product) => {
@@ -34,8 +37,13 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
     }
 
     const handleSave = (values: ProductValues, id?: number) => {
-        // In a real app, this would be a server action.
-        toast({ title: "Action not implemented in prototype." });
+        if (id) {
+            setProducts(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
+        } else {
+            const newProduct = { ...values, id: Date.now() };
+            setProducts(prev => [newProduct, ...prev]);
+        }
+        toast({ title: `Product ${id ? 'updated' : 'added'} successfully.` });
     };
 
     return (
@@ -97,4 +105,3 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
         </Card>
     );
 }
-

@@ -15,7 +15,7 @@ export const DueDateDisplay = ({
   className?: string;
   prefix?: string;
 }) => {
-  const [displayState, setDisplayState] = useState<{
+  const [displayState, setDisplayState = useState<{
     isClient: boolean;
     formattedDate: string | null;
     daysRemaining: number | null;

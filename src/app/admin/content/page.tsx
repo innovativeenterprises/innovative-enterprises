@@ -31,11 +31,10 @@ export default async function AdminContentPage() {
                 </p>
             </div>
             <Tabs defaultValue="services" className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
+                <TabsList className="grid w-full grid-cols-5">
                     <TabsTrigger value="services">Services</TabsTrigger>
                     <TabsTrigger value="products">Products</TabsTrigger>
-                    <TabsTrigger value="clients">Clients</TabsTrigger>
-                    <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
+                    <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
                     <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
                     <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
                 </TabsList>
@@ -46,10 +45,10 @@ export default async function AdminContentPage() {
                     <ProductTable initialProducts={products} initialStages={stages} />
                 </TabsContent>
                 <TabsContent value="clients" className="mt-6">
-                    <ClientTable initialClients={clients} />
-                </TabsContent>
-                 <TabsContent value="testimonials" className="mt-6">
-                    <TestimonialTable initialTestimonials={testimonials} />
+                    <div className="space-y-8">
+                        <ClientTable initialClients={clients} />
+                        <TestimonialTable initialTestimonials={testimonials} />
+                    </div>
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-6">
                     <PricingTable initialPricing={pricing} />
