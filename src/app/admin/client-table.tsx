@@ -66,14 +66,13 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
 
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
-    const [clients, setClients] = useState<Client[]>([]);
+    const [clients, setClients] = useState<Client[]>(initialClients);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     
     useEffect(() => {
-        setClients(initialClients);
         setIsClient(true);
-    }, [initialClients]);
+    }, []);
 
 
     const handleClientSave = (values: ClientValues, id?: string) => {

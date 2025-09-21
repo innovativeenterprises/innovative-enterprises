@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -16,13 +15,13 @@ import { estimateBoq } from '@/ai/flows/boq-estimator';
 import { BoQEstimatorInputSchema, type BoQEstimatorOutput, type CostedBoQItem } from '@/ai/flows/boq-estimator.schema';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useCostSettingsData } from '@/hooks/use-global-store-data';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { fileToDataURI, fileToText } from '@/lib/utils';
+import type { CostRate } from '@/lib/cost-settings.schema';
 
 
 const FormSchema = z.object({
@@ -37,7 +36,7 @@ function EstimatorForm() {
   const [isGeneratingTender, setIsGeneratingTender] = useState(false);
   const [response, setResponse] = useState<BoQEstimatorOutput | null>(null);
   const [tenderResponse, setTenderResponse] = useState<string | null>(null);
-  const [costSettings, setCostSettings] = useState<any[]>([]); // Assuming a structure for cost settings
+  const [costSettings, setCostSettings] = useState<CostRate[]>([]);
   const [isClient, setIsClient] = useState(false);
   
   useEffect(() => {

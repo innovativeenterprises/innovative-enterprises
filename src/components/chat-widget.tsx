@@ -12,6 +12,7 @@ import { useSettings } from "./layout/settings-provider";
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const { settings } = useSettings(); 
 
     useEffect(() => {
         setIsMounted(true);

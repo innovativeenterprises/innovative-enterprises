@@ -91,14 +91,13 @@ const AddEditCostRateDialog = ({
 };
 
 export default function CostSettingsTable({ initialRates }: { initialRates: CostRate[] }) {
-    const [costSettings, setCostSettings] = useState<CostRate[]>([]);
+    const [costSettings, setCostSettings] = useState<CostRate[]>(initialRates);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
-        setCostSettings(initialRates);
         setIsClient(true);
-    }, [initialRates]);
+    }, []);
 
     const handleSave = (values: CostRateValues, id?: string) => {
         if (id) {

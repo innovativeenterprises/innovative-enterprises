@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import ClientLayout from '@/components/layout/client-layout';
 import type { Metadata } from 'next';
 import { getSolutions, getIndustries, getAiTools, getSettings } from '@/lib/firestore';
-import { SettingsProvider } from '@/components/layout/settings-provider';
+import { Providers } from './providers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -67,7 +67,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <SettingsProvider initialSettings={settings}>
+          <Providers initialSettings={settings}>
             <ClientLayout 
                 solutions={solutions}
                 industries={industries}
@@ -75,7 +75,7 @@ export default async function RootLayout({
             >
                 {children}
             </ClientLayout>
-          </SettingsProvider>
+          </Providers>
       </body>
     </html>
   );

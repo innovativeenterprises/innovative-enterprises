@@ -1,22 +1,66 @@
 
+'use client';
+
 /**
  * @fileOverview A simple global state management store for the prototype.
  *
  * This avoids the need for a full state management library like Redux or Zustand
  * for this prototype application. It uses a simple listener pattern to update
  * components when the state changes.
- *
- * This file is NOT part of the user's visible code but is a necessary
- * architectural piece to make the prototype function correctly across pages.
  */
+import type { BriefcaseData } from './briefcase';
+import type { CartItem, DailySales, PosProduct } from './pos-data.schema';
+import type { Product } from './products.schema';
+import type { Provider } from './providers.schema';
+import type { Opportunity } from './opportunities.schema';
+import type { Service } from './services.schema';
+import type { Agent, AgentCategory } from './agents.schema';
+import type { Pricing } from './pricing.schema';
+import type { AppSettings } from './settings';
+import type { SaasCategory } from './saas-products.schema';
+import type { GiftCard } from './gift-cards.schema';
+import type { Community } from './communities';
 
-import { initialState as initialData, type AppState as FullAppState } from './initial-state';
+export interface AppState {
+  cart: CartItem[];
+  briefcase: BriefcaseData | null;
+  products: Product[];
+  storeProducts: Product[];
+  providers: Provider[];
+  opportunities: Opportunity[];
+  services: Service[];
+  leadership: Agent[];
+  staff: Agent[];
+  agentCategories: AgentCategory[];
+  pricing: Pricing[];
+  settings: AppSettings | null;
+  posProducts: PosProduct[];
+  dailySales: DailySales;
+  saasProducts: SaasCategory[];
+  giftCards: GiftCard[];
+  communities: Community[];
+};
 
-export type AppState = FullAppState;
-export type CartItem = FullAppState['cart'][0];
-
-// Re-export initialState from the new file
-export const initialState: AppState = initialData;
+// This provides the default, empty state for the application.
+export const initialState: AppState = {
+  cart: [],
+  briefcase: null,
+  products: [],
+  storeProducts: [],
+  providers: [],
+  opportunities: [],
+  services: [],
+  leadership: [],
+  staff: [],
+  agentCategories: [],
+  pricing: [],
+  settings: null,
+  posProducts: [],
+  dailySales: [],
+  saasProducts: [],
+  giftCards: [],
+  communities: [],
+};
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
     let state: AppState = { ...initialState, ...initState };

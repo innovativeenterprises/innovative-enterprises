@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import type { AppSettings } from '@/lib/settings';
 
 interface SettingsContextType {
@@ -27,6 +27,10 @@ export const SettingsProvider = ({
     initialSettings: AppSettings;
 }) => {
     const [settings, setSettings] = useState<AppSettings>(initialSettings);
+
+    useEffect(() => {
+        setSettings(initialSettings);
+    }, [initialSettings]);
 
     return (
         <SettingsContext.Provider value={{ settings, setSettings }}>
