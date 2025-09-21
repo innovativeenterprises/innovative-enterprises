@@ -17,7 +17,6 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSettingsData } from "@/hooks/use-global-store-data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 
@@ -104,9 +103,16 @@ const WhatsAppSettingsForm = ({ settings, onSave }: { settings: AppSettings, onS
     );
 }
 
-const GeneralSettings = () => {
-    const { settings, setSettings, isClient } = useSettingsData();
+const GeneralSettings = ({ initialSettings }: { initialSettings: AppSettings }) => {
+    const [settings, setSettings] = useState(initialSettings);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+        setSettings(initialSettings);
+    }, [initialSettings]);
+
 
     const handleModeChange = (value: 'direct' | 'tender' | 'builtin') => {
         let description = '';
@@ -308,9 +314,14 @@ const GeneralSettings = () => {
 };
 
 
-export default function AdminSettingsPage() {
+export default function AdminSettingsPage({ initialSettings }: { initialSettings: AppSettings }) {
   const [activeTab, setActiveTab] = useState('general');
-  const { settings, setSettings, isClient } = useSettingsData();
+  const [settings, setSettings] = useState(initialSettings);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleSaveWhatsAppSettings = (values: WhatsAppSettings) => {
       setSettings(prev => ({ ...prev, whatsapp: { ...prev.whatsapp, ...values } }));
@@ -330,7 +341,7 @@ export default function AdminSettingsPage() {
                 <TabsTrigger value="integrations">Integrations</TabsTrigger>
             </TabsList>
             <TabsContent value="general" className="mt-6">
-                <GeneralSettings />
+                <GeneralSettings initialSettings={settings} />
             </TabsContent>
             <TabsContent value="integrations" className="mt-6">
                 {isClient ? <WhatsAppSettingsForm settings={settings} onSave={handleSaveWhatsAppSettings} /> : <Skeleton className="h-96 w-full"/>}

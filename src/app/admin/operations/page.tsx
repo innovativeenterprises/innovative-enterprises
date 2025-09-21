@@ -1,4 +1,3 @@
-
 'use server';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -13,13 +12,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
 import PricingTable from "./pricing-table";
-import { getPricing, getCostSettings } from '@/lib/firestore';
+import { getPricing, getCostSettings, getKnowledgeBase } from '@/lib/firestore';
 
 
 export default async function AdminOperationsPage() {
-  const [pricing, costSettings] = await Promise.all([
+  const [pricing, costSettings, knowledgeBase] = await Promise.all([
     getPricing(),
     getCostSettings(),
+    getKnowledgeBase(),
   ]);
 
   const internalTools = [
@@ -68,7 +68,7 @@ export default async function AdminOperationsPage() {
                 </div>
             </TabsContent>
             <TabsContent value="knowledge-base" className="mt-6">
-                <KnowledgeTable />
+                <KnowledgeTable initialKnowledgeBase={knowledgeBase} />
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
                 <CostSettingsTable initialRates={costSettings} />
@@ -80,3 +80,5 @@ export default async function AdminOperationsPage() {
     </div>
   );
 }
+
+    

@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Briefcase, Calendar, GraduationCap, HandCoins, Building2, User, MapPin } from "lucide-react";
 import Link from "next/link";
-import { useMembersData, useEventsData, useAlumniJobsData } from "@/hooks/use-global-store-data";
 import type { CommunityMember } from '@/lib/community-members';
 import type { CommunityEvent } from '@/lib/community-events';
 import type { JobPosting } from '@/lib/alumni-jobs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
+import { getAlumniJobs, getCommunityEvents, getMembers } from "@/lib/firestore";
 
 const MemberCard = ({ member }: { member: CommunityMember }) => (
     <Card className="p-4">
@@ -49,12 +50,18 @@ const JobCard = ({ job }: { job: JobPosting }) => (
 );
 
 export default function AlumniConnectPage() {
-    const { members, isClient: isMembersClient } = useMembersData();
-    const { events, isClient: isEventsClient } = useEventsData();
-    const { jobs, isClient: isJobsClient } = useAlumniJobsData();
-    
-    const isClient = isMembersClient && isEventsClient && isJobsClient;
+    const [members, setMembers] = useState<CommunityMember[]>([]);
+    const [events, setEvents] = useState<CommunityEvent[]>([]);
+    const [jobs, setJobs] = useState<JobPosting[]>([]);
+    const [isClient, setIsClient] = useState(false);
 
+    useEffect(() => {
+        setIsClient(true);
+        getMembers().then(setMembers);
+        getCommunityEvents().then(setEvents);
+        getAlumniJobs().then(setJobs);
+    }, []);
+    
     const alumni = isClient ? members.filter(m => m.status === 'Active').slice(0,4) : [];
     const upcomingEvents = isClient ? events.slice(0, 3) : [];
     const jobPostings = isClient ? jobs.slice(0, 3) : [];

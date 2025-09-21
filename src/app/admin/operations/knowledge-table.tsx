@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -25,7 +24,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
-import { useKnowledgeData } from "@/hooks/use-global-store-data";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -314,11 +312,17 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable() {
-    const { knowledgeBase, setKnowledgeBase, isClient } = useKnowledgeData();
+export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowledgeBase: KnowledgeDocument[] }) {
+    const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeDocument[]>([]);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        setKnowledgeBase(initialKnowledgeBase);
+    }, [initialKnowledgeBase]);
 
     const handleOpenDialog = (doc?: KnowledgeDocument) => {
         setSelectedDoc(doc);
@@ -477,3 +481,5 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
+
+    

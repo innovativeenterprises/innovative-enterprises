@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -9,12 +10,12 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Car, ArrowRight, TrendingUp, DollarSign, CheckCircle } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import Link from 'next/link';
-import { useRentalAgenciesData, useCarsData } from '@/hooks/use-global-store-data';
 import type { Car as CarType, RentalAgency } from '@/lib/cars.schema';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart, LineChart, Bar, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import { getRentalAgencies, getCars } from '@/lib/firestore';
 
 const getStatusBadge = (status: 'Available' | 'Rented' | 'Maintenance') => {
     switch (status) {
@@ -49,8 +50,16 @@ const bookingData = [
 const bookingChartConfig = { bookings: { label: "Bookings", color: "hsl(var(--chart-2))" } };
 
 export default function DriveSyncAiPage() {
-    const { rentalAgencies } = useRentalAgenciesData();
-    const { cars } = useCarsData();
+    const [rentalAgencies, setRentalAgencies] = useState<RentalAgency[]>([]);
+    const [cars, setCars] = useState<CarType[]>([]);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        getRentalAgencies().then(setRentalAgencies);
+        getCars().then(setCars);
+    }, []);
+
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
