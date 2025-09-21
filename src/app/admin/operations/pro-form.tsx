@@ -77,7 +77,7 @@ export default function ProForm({ costSettings }: { costSettings: CostRate[] }) 
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await analyzeProTask(data, costSettings);
+      const result = await analyzeProTask(data);
       setResponse(result);
       toast({
         title: 'Analysis Complete!',

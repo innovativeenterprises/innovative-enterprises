@@ -1,10 +1,10 @@
 
-'use server';
+'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GitBranch } from "lucide-react";
 import Link from 'next/link';
-import { getServices } from "@/lib/firestore";
+import { useMemo } from 'react';
 import type { Service } from "@/lib/services.schema";
 
 const ServiceCard = ({ service }: { service: Service }) => (
@@ -25,18 +25,17 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default async function ServiceCatalog() {
-  const services = await getServices();
+export default function ServiceCatalog({ services }: { services: Service[]}) {
   const enabledServices = services.filter(s => s.enabled);
   
-  const servicesByCategory = enabledServices.reduce((acc, service) => {
+  const servicesByCategory = useMemo(() => enabledServices.reduce((acc, service) => {
     const category = service.category || 'Other Services';
     if (!acc[category]) {
       acc[category] = [];
     }
     acc[category].push(service);
     return acc;
-  }, {} as Record<string, Service[]>);
+  }, {} as Record<string, Service[]>), [enabledServices]);
 
   const categoryOrder = [
     "Digital Transformations",

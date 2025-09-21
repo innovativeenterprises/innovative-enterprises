@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { getSettings } from '@/lib/firestore';
 import { Providers } from './providers';
-import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -65,7 +64,6 @@ export default async function RootLayout({
         <Providers initialSettings={settings}>
             {children}
         </Providers>
-        <Toaster />
       </body>
     </html>
   );

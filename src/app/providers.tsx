@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -21,9 +22,7 @@ export function Providers({
       disableTransitionOnChange
     >
       <SettingsProvider initialSettings={initialSettings}>
-        <ClientLayout>
-            {children}
-        </ClientLayout>
+        <ClientLayout>{children}</ClientLayout>
       </SettingsProvider>
     </ThemeProvider>
   );

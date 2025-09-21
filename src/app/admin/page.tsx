@@ -22,12 +22,12 @@ export default async function AdminDashboardPage() {
     const { leadership, staff, agentCategories } = staffData;
 
     return <AdminDashboardPageClient 
-        initialProducts={products}
-        initialProviders={providers}
-        initialLeadership={leadership}
-        initialStaff={staff}
-        initialAgentCategories={agentCategories}
-        initialOpportunities={opportunities}
-        initialServices={services}
+        products={products}
+        providers={providers}
+        leadership={leadership}
+        staff={staff}
+        agentCategories={agentCategories}
+        opportunities={opportunities}
+        services={services}
     />
 }
