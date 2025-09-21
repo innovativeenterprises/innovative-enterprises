@@ -15,5 +15,3 @@ export default async function HadeeyaAdminPage() {
     const giftCards = await getGiftCards();
     return <HadeeyaAdminClientPage initialGiftCards={giftCards} />;
 }
-
-    

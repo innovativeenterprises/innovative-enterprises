@@ -1,7 +1,6 @@
 
 'use server';
 
-import { DollarSign } from "lucide-react";
 import EventsFinanceClientPage from "./client-page";
 import { getCommunities, getCommunityEvents, getCommunityFinances } from "@/lib/firestore";
 import type { Metadata } from 'next';

@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import HadeeyaClientPage from './client-page';

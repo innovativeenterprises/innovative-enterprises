@@ -14,5 +14,3 @@ export default async function AdminStockClearPage() {
     const stockItems = await getStockItems();
     return <StockClearClientPage initialItems={stockItems} />;
 }
-
-    

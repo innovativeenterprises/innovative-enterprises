@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import MyRequestsClientPage from './client-page';
@@ -14,4 +13,3 @@ export const metadata: Metadata = {
 export default async function MyRequestsPage() {
     return <MyRequestsClientPage />
 }
-

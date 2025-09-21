@@ -1,7 +1,7 @@
 
 'use server';
 
-import AgencyDashboardClientPage from '@/app/beauty-hub/agency-dashboard/client-page';
+import AgencyDashboardClientPage from './client-page';
 import { getBeautyCenters, getBeautyServices, getBeautyAppointments } from '@/lib/firestore';
 import type { Metadata } from 'next';
 

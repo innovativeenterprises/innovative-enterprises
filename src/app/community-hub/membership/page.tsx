@@ -1,7 +1,6 @@
 
 'use server';
 
-import { Users } from "lucide-react";
 import MembershipClientPage from './client-page';
 import { getMembers } from '@/lib/firestore';
 import type { Metadata } from 'next';
@@ -13,6 +12,5 @@ export const metadata: Metadata = {
 
 export default async function MembershipPage() {
     const members = await getMembers();
-
     return <MembershipClientPage initialMembers={members} />;
 }

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -16,6 +17,7 @@ export default function OverviewAvatars({ clients }: { clients: Client[] }) {
         return <div className="flex -space-x-2 w-24 h-10 bg-gray-200 rounded-full animate-pulse" />;
     }
   
+  // Use the first 3 clients from the passed-in prop
   const overviewClients = clients.slice(0, 3);
 
   return (
