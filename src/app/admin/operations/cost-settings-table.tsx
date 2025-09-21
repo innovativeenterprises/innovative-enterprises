@@ -172,3 +172,4 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
         </Card>
     );
 }
+

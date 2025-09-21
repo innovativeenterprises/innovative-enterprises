@@ -97,7 +97,7 @@ export default function StudentRecordsClientPage({ initialStudents }: { initialS
     const [students, setStudents] = useState<Student[]>([]);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
-
+    
     useEffect(() => {
         setStudents(initialStudents);
         setIsClient(true);
@@ -205,4 +205,3 @@ export default function StudentRecordsClientPage({ initialStudents }: { initialS
     );
 }
 
-    

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,7 +27,7 @@ const ServiceCard = ({ service }: { service: Service }) => (
 );
 
 export default function ServiceCatalog({ services: initialServices }: { services: Service[]}) {
-  const [services, setServices] = useState<Service[]>(initialServices);
+  const [services, setServices] = useState<Service[]>([]);
   useEffect(() => {
     setServices(initialServices);
   }, [initialServices]);

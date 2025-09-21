@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck, PlusCircle, Edit, Trash2 } from "lucide-react";
@@ -21,7 +22,11 @@ import type { Investor } from "@/lib/investors.schema";
 import { InvestorSchema } from "@/lib/investors.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import InvestForm from "./invest-form";
+import { Textarea } from '@/components/ui/textarea';
+import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
+import type { GenerateLetterOfInterestOutput } from '@/ai/flows/letter-of-interest.schema';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const investmentReasons = [
     {
@@ -315,10 +320,6 @@ export default function InvestClientPage({ initialProducts, initialInvestors }: 
                 </div>
             </div>
 
-            <div>
-                <h2 className="text-3xl font-bold text-center text-primary mb-10">Get in Touch</h2>
-                <InvestForm />
-            </div>
         </div>
       </div>
     </div>

@@ -127,3 +127,4 @@ export default function ClientTable({ initialClients }: { initialClients: Client
         </Card>
     );
 }
+

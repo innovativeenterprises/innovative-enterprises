@@ -18,4 +18,3 @@ export default function OpportunityClientPage({ initialOpportunities }: { initia
         </div>
     );
 }
-

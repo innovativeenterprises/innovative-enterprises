@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -11,9 +12,11 @@ import { useState, useEffect } from 'react';
 
 
 export default function CompanyOverview({ clients: initialClients }: { clients: Client[]}) {
-  const [clients, setClients] = useState<Client[]>(initialClients);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     setClients(initialClients);
   }, [initialClients]);
 

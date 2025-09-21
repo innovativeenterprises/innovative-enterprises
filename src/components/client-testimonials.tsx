@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,13 +10,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function ClientTestimonials({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[] }) {
+export default function ClientTestimonials({ clients: initialClients, testimonials: initialTestimonials }: { clients: Client[], testimonials: Testimonial[] }) {
   const [isClient, setIsClient] = useState(false);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const { testimonialAvatars } = imageData || {};
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    setClients(initialClients);
+    setTestimonials(initialTestimonials);
+  }, [initialClients, initialTestimonials]);
 
   const renderQuote = (quote: string) => {
     const parts = quote.split(/\*\*(.*?)\*\*/g);

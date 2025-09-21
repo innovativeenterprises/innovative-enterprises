@@ -83,7 +83,7 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
-
+    
     useEffect(() => {
         setPricing(initialPricing);
         setIsClient(true);

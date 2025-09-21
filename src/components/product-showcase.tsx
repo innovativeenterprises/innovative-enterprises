@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,8 @@ import { useEffect, useState } from 'react';
 
 
 export default function ProductShowcase({ products: initialProducts }: { products: Product[] }) {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+
   useEffect(() => {
     setProducts(initialProducts);
   }, [initialProducts]);
