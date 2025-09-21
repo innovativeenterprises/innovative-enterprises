@@ -1,4 +1,5 @@
 
+
 import type { AppSettings } from './settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';
@@ -78,8 +79,58 @@ import { initialProperties } from './properties';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import type { Solution, Industry, AiTool } from './nav-links';
 import { initialSettings } from './settings';
-import type { AppState } from './global-store';
 
+export interface AppState {
+  settings: AppSettings;
+  cart: CartItem[];
+  products: Product[];
+  storeProducts: Product[];
+  providers: Provider[];
+  opportunities: Opportunity[];
+  services: Service[];
+  signedLeases: SignedLease[];
+  stairspaceRequests: BookingRequest[];
+  stairspaceListings: StairspaceListing[];
+  leadership: Agent[];
+  staff: Agent[];
+  agentCategories: AgentCategory[];
+  raahaAgencies: RaahaAgency[];
+  raahaWorkers: RaahaWorker[];
+  raahaRequests: HireRequest[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautySpecialists: BeautySpecialist[];
+  beautyAppointments: BeautyAppointment[];
+  costSettings: CostRate[];
+  assets: Asset[];
+  usedItems: UsedItem[];
+  clients: Client[];
+  testimonials: Testimonial[];
+  giftCards: GiftCard[];
+  students: Student[];
+  communities: Community[];
+  communityEvents: CommunityEvent[];
+  communityFinances: CommunityFinance[];
+  communityMembers: CommunityMember[];
+  alumniJobs: JobPosting[];
+  rentalAgencies: RentalAgency[];
+  cars: Car[];
+  posProducts: PosProduct[];
+  dailySales: DailySales;
+  saasProducts: SaasCategory[];
+  stockItems: StockItem[];
+  pricing: Pricing[];
+  stages: ProjectStage[];
+  applications: typeof initialApplications;
+  briefcase: BriefcaseData;
+  investors: Investor[];
+  knowledgeBase: KnowledgeDocument[];
+  cfoData: typeof initialCfoData;
+  properties: Property[];
+  solutions: Solution[];
+  industries: Industry[];
+  aiTools: AiTool[];
+};
 
 // This provides the default, empty state for the application.
 // Actual data will be fetched by server components and passed as props.

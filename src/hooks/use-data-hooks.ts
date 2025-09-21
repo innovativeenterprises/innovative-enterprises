@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -24,21 +25,22 @@ import type { Product } from '@/lib/products.schema';
 import type { Property } from '@/lib/properties.schema';
 
 const createDataContext = <T, K extends keyof AppState>(
-  dataKey: K
+  dataKey: K,
+  initialDataProp: T[] = []
 ) => {
-  const useData = (initialData: T[] = []) => {
+  const useData = (initialData: T[] = initialDataProp) => {
     const { state, store } = useGlobalStore();
     const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
         setIsClient(true);
-    }, []);
-
-    useEffect(() => {
+        // This effect ensures that the store is hydrated with server-provided data
+        // only once on the client, preventing mismatches during re-renders.
         if(initialData && initialData.length > 0) {
             store.set(s => ({ ...s, [dataKey]: initialData }));
         }
-    }, [initialData, store]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
     const setData = (updater: (currentData: T[]) => T[]) => {
@@ -46,7 +48,9 @@ const createDataContext = <T, K extends keyof AppState>(
       store.set((s) => ({ ...s, [dataKey]: updater(currentData) }));
     };
 
-    return { data: state[dataKey] as T[], setData, isClient };
+    const data = isClient ? state[dataKey] as T[] : initialData;
+
+    return { data, setData, isClient };
   };
 
   return { useData };
@@ -65,11 +69,12 @@ export const { useData: useMembersData } = createDataContext<CommunityMember, 'c
 export const { useData: useAgenciesData } = createDataContext<RaahaAgency, 'raahaAgencies'>('raahaAgencies');
 export const { useData: useWorkersData } = createDataContext<RaahaWorker, 'raahaWorkers'>('raahaWorkers');
 export const { useData: useRequestsData } = createDataContext<HireRequest, 'raahaRequests'>('raahaRequests');
-export const { useData: useBeautyData } = createDataContext<BeautyCenter, 'beautyCenters'>('beautyCenters');
+export const { useData: useBeautyCentersData } = createDataContext<BeautyCenter, 'beautyCenters'>('beautyCenters');
 export const { useData: useBeautyServicesData } = createDataContext<BeautyService, 'beautyServices'>('beautyServices');
 export const { useData: useBeautySpecialistsData } = createDataContext<BeautySpecialist, 'beautySpecialists'>('beautySpecialists');
 export const { useData: useBeautyAppointmentsData } = createDataContext<BeautyAppointment, 'beautyAppointments'>('beautyAppointments');
-export const { useData: useStairspaceData } = createDataContext<StairspaceListing, 'stairspaceListings'>('stairspaceListings');
+export const { useData: useStairspaceListingsData } = createDataContext<StairspaceListing, 'stairspaceListings'>('stairspaceListings');
 export const { useData: useStairspaceRequestsData } = createDataContext<BookingRequest, 'stairspaceRequests'>('stairspaceRequests');
 export const { useData: useUsedItemsData } = createDataContext<UsedItem, 'usedItems'>('usedItems');
 export const { useData: usePropertiesData } = createDataContext<Property, 'properties'>('properties');
+

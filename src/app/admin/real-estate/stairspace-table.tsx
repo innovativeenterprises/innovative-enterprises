@@ -19,7 +19,6 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
-import { useStairspaceData } from "@/hooks/use-global-store-data";
 
 const ListingSchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -103,23 +102,30 @@ const AddEditListingDialog = ({
 };
 
 export default function StairspaceTable({initialStairspaceListings}: {initialStairspaceListings: StairspaceListing[]}) {
-    const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData(initialStairspaceListings);
+    const [listings, setListings] = useState<StairspaceListing[]>(initialStairspaceListings);
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setListings(initialStairspaceListings);
+        setIsClient(true);
+    }, [initialStairspaceListings]);
+
 
     const handleSave = (values: ListingValues, id?: string) => {
         const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
         if (id) {
-            setStairspaceListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } : l)));
+            setListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } : l)));
             toast({ title: 'Listing updated.' });
         } else {
             const newListing = { ...newListingData, id: `stair_${Date.now()}` };
-            setStairspaceListings(prev => [newListing, ...prev]);
+            setListings(prev => [newListing, ...prev]);
             toast({ title: 'Listing added.' });
         }
     };
 
     const handleDelete = (id: string) => {
-        setStairspaceListings(prev => prev.filter(l => l.id !== id));
+        setListings(prev => prev.filter(l => l.id !== id));
         toast({ title: 'Listing removed.', variant: 'destructive' });
     };
 
@@ -132,7 +138,7 @@ export default function StairspaceTable({initialStairspaceListings}: {initialSta
             <CardContent>
                 <Table><TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>{!isClient ? <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow> : (
-                        stairspaceListings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><AddEditListingDialog listing={listing} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditListingDialog><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
+                        listings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><AddEditListingDialog listing={listing} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditListingDialog><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
                     )}</TableBody>
                 </Table>
             </CardContent>

@@ -2,8 +2,8 @@
 'use client';
 
 import ValuationForm from "./valuation-form";
-import type { Metadata } from 'next';
 import { BarChart } from "lucide-react";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "AI Property Valuator | Innovative Enterprises",

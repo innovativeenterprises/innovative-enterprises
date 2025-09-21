@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -73,15 +74,10 @@ export default function HeaderClient({
 }) { 
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { cart } = useCartData();
-  const [isClient, setIsClient] = useState(false);
+  const { cart, isClient } = useCartData();
   const { theme, setTheme } = useTheme();
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const cartCount = cart ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
+  const cartCount = isClient ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);

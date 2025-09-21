@@ -37,7 +37,7 @@ export const useCartData = () => {
 };
 
 export const useProductsData = () => {
-    const { state, isClient } = useGlobalStore();
+    const { state, store, isClient } = useGlobalStore();
     const products = isClient ? state.products : [];
     const storeProducts = isClient ? state.storeProducts : [];
     const setProducts = (updater: (currentProducts: AppState['products']) => AppState['products']) => {
@@ -46,10 +46,16 @@ export const useProductsData = () => {
     }
     return { products, storeProducts, setProducts, isClient };
 };
+
 export const useProvidersData = () => {
-    const { state, isClient } = useGlobalStore();
-    return { providers: isClient ? state.providers : [], isClient };
+    const { state, store, isClient } = useGlobalStore();
+    const setProviders = (updater: (currentProviders: AppState['providers']) => AppState['providers']) => {
+        const currentProviders = store.get().providers;
+        store.set(s => ({ ...s, providers: updater(currentProviders) }));
+    };
+    return { providers: isClient ? state.providers : [], setProviders, isClient };
 };
+
 export const useOpportunitiesData = () => {
     const { state, store, isClient } = useGlobalStore();
     const setOpportunities = (updater: (currentData: AppState['opportunities']) => AppState['opportunities']) => {
@@ -58,6 +64,7 @@ export const useOpportunitiesData = () => {
     };
     return { opportunities: isClient ? state.opportunities : [], setOpportunities, isClient };
 };
+
 export const useServicesData = () => {
     const { state, isClient } = useGlobalStore();
     return { services: isClient ? state.services : [], isClient };
@@ -86,12 +93,16 @@ export const useBriefcaseData = () => {
         const currentBriefcase = store.get().briefcase;
         store.set(s => ({ ...s, briefcase: updater(currentBriefcase) }));
     };
-    return { data: state.briefcase, setData: setBriefcase, isClient };
+    return { data: isClient ? state.briefcase : store.get().briefcase, setData: setBriefcase, isClient };
 };
 
 export const useCostSettingsData = () => {
-    const { state, isClient } = useGlobalStore();
-    return { costSettings: isClient ? state.costSettings : [], isClient };
+    const { state, store, isClient } = useGlobalStore();
+    const setCostSettings = (updater: (costSettings: AppState['costSettings']) => AppState['costSettings']) => {
+        const currentSettings = store.get().costSettings;
+        store.set(s => ({...s, costSettings: updater(currentSettings)}));
+    };
+    return { costSettings: isClient ? state.costSettings : [], setCostSettings, isClient };
 }
 
 export const useClientsData = () => {
@@ -104,17 +115,35 @@ export const useTestimonialsData = () => {
 }
 
 export const useInvestorsData = () => {
-     const { state, isClient } = useGlobalStore();
-    return { investors: isClient ? state.investors : [], isClient };
+     const { state, store, isClient } = useGlobalStore();
+     const setInvestors = (updater: (investors: AppState['investors']) => AppState['investors']) => {
+        const currentInvestors = store.get().investors;
+        store.set(s => ({...s, investors: updater(currentInvestors)}));
+     };
+    return { investors: isClient ? state.investors : [], setInvestors, isClient };
 }
 
 export const useRaahaData = () => {
      const { state, store, isClient } = useGlobalStore();
+     const setRaahaAgencies = (updater: (agencies: AppState['raahaAgencies']) => AppState['raahaAgencies']) => {
+        store.set(s => ({...s, raahaAgencies: updater(s.raahaAgencies)}));
+     }
+     const setRaahaWorkers = (updater: (workers: AppState['raahaWorkers']) => AppState['raahaWorkers']) => {
+        store.set(s => ({...s, raahaWorkers: updater(s.raahaWorkers)}));
+     }
      const setRaahaRequests = (updater: (reqs: AppState['raahaRequests']) => AppState['raahaRequests']) => {
         const currentData = store.get().raahaRequests;
         store.set(s => ({...s, raahaRequests: updater(currentData)}));
      }
-    return { agencies: isClient ? state.raahaAgencies : [], workers: isClient ? state.raahaWorkers : [], requests: isClient ? state.raahaRequests : [], setRaahaRequests, isClient };
+    return { 
+        agencies: isClient ? state.raahaAgencies : [], 
+        workers: isClient ? state.raahaWorkers : [], 
+        requests: isClient ? state.raahaRequests : [], 
+        setRaahaAgencies,
+        setRaahaWorkers,
+        setRaahaRequests, 
+        isClient 
+    };
 }
 
 export const useBeautyData = () => {
@@ -153,8 +182,12 @@ export const usePosData = () => {
     return { dailySales: isClient ? state.dailySales : [], setDailySales, isClient };
 }
 export const usePosProductsData = () => {
-     const { state, isClient } = useGlobalStore();
-    return { posProducts: isClient ? state.posProducts : [], isClient };
+     const { state, store, isClient } = useGlobalStore();
+     const setPosProducts = (updater: (currentProducts: AppState['posProducts']) => AppState['posProducts']) => {
+        const currentProducts = store.get().posProducts;
+        store.set(s => ({...s, posProducts: updater(currentProducts)}));
+    };
+    return { posProducts: isClient ? state.posProducts : [], setPosProducts, isClient };
 }
 
 export const useStairspaceData = () => {
@@ -163,73 +196,15 @@ export const useStairspaceData = () => {
         const currentListings = store.get().stairspaceListings;
         store.set(s => ({...s, stairspaceListings: updater(currentListings)}));
     };
-    return { stairspaceListings: isClient ? state.stairspaceListings : [], setStairspaceListings, isClient };
-}
-
-export const useStairspaceRequestsData = () => {
-    const { state, store, isClient } = useGlobalStore();
     const setStairspaceRequests = (updater: (currentRequests: AppState['stairspaceRequests']) => AppState['stairspaceRequests']) => {
         const currentRequests = store.get().stairspaceRequests;
         store.set(s => ({...s, stairspaceRequests: updater(currentRequests)}));
     };
-    return { data: isClient ? state.stairspaceRequests : [], setData: setStairspaceRequests, isClient };
-}
-
-export const useLeasesData = () => {
-    const { state, store, isClient } = useGlobalStore();
-     const setLeases = (updater: (currentLeases: AppState['signedLeases']) => AppState['signedLeases']) => {
-        const currentLeases = store.get().signedLeases;
-        store.set(s => ({...s, signedLeases: updater(currentLeases)}));
+    return { 
+        stairspaceListings: isClient ? state.stairspaceListings : [], 
+        stairspaceRequests: isClient ? state.stairspaceRequests : [],
+        setStairspaceListings, 
+        setStairspaceRequests, 
+        isClient 
     };
-    return { leases: isClient ? state.signedLeases : [], setLeases, isClient };
-}
-
-export const useStudentsData = () => {
-    const { state, store, isClient } = useGlobalStore();
-     const setStudents = (updater: (currentStudents: AppState['students']) => AppState['students']) => {
-        const currentStudents = store.get().students;
-        store.set(s => ({...s, students: updater(currentStudents)}));
-    };
-    return { students: isClient ? state.students : [], setStudents, isClient };
-}
-
-export const useMembersData = () => {
-    const { state, store, isClient } = useGlobalStore();
-     const setMembers = (updater: (currentMembers: AppState['communityMembers']) => AppState['communityMembers']) => {
-        const currentMembers = store.get().communityMembers;
-        store.set(s => ({...s, communityMembers: updater(currentMembers)}));
-    };
-    return { members: isClient ? state.communityMembers : [], setMembers, isClient };
-}
-
-export const useEventsData = () => {
-    const { state, isClient } = useGlobalStore();
-    return { events: isClient ? state.communityEvents : [], isClient };
-}
-export const useAlumniJobsData = () => {
-    const { state, isClient } = useGlobalStore();
-    return { jobs: isClient ? state.alumniJobs : [], isClient };
-}
-
-export const useCommunitiesData = () => {
-    const { state, isClient } = useGlobalStore();
-    return { communities: isClient ? state.communities : [], isClient };
-}
-
-export const useUsedItemsData = () => {
-    const { state, store, isClient } = useGlobalStore();
-    const setItems = (updater: (items: AppState['usedItems']) => AppState['usedItems']) => {
-        const currentItems = store.get().usedItems;
-        store.set(s => ({...s, usedItems: updater(currentItems)}));
-    }
-    return { items: isClient ? state.usedItems : [], setItems, isClient };
-}
-
-export const useFinancesData = () => {
-    const { state, store, isClient } = useGlobalStore();
-    const setFinances = (updater: (finances: AppState['communityFinances']) => AppState['communityFinances']) => {
-        const currentFinances = store.get().communityFinances;
-        store.set(s => ({...s, communityFinances: updater(currentFinances)}));
-    }
-    return { finances: isClient ? state.communityFinances : [], setFinances, isClient };
 }
