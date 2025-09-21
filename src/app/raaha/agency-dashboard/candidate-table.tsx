@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -14,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import type { Worker } from "@/lib/raaha-workers";
 import { PlusCircle, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useWorkersData } from "@/hooks/use-global-store-data";
+import { useWorkersData } from "@/hooks/use-data-hooks";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -150,8 +149,8 @@ export const AddEditWorkerDialog = ({
     )
 }
 
-export function CandidateTable({ columns, agencyId }: { columns: any[], agencyId: string }) {
-    const { workers, setWorkers, isClient } = useWorkersData();
+export function CandidateTable({ columns, agencyId, initialWorkers }: { columns: any[], agencyId: string, initialWorkers: Worker[] }) {
+    const { workers, setWorkers, isClient } = useWorkersData(initialWorkers);
     const { toast } = useToast();
 
     const filteredWorkers = workers.filter(w => w.agencyId === agencyId);

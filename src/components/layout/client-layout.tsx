@@ -17,7 +17,6 @@ export const CartContext = createContext<{
     setCart: (updater: (currentCart: CartItem[]) => CartItem[]) => void;
 } | null>(null);
 
-
 export default function ClientLayout({
   children,
   solutions,

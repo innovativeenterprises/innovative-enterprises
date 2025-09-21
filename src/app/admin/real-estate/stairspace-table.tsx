@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -19,6 +18,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
+import { useStairspaceData } from "@/hooks/use-global-store-data";
 
 const ListingSchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -102,16 +102,10 @@ const AddEditListingDialog = ({
 };
 
 export default function StairspaceTable({initialStairspaceListings}: {initialStairspaceListings: StairspaceListing[]}) {
-    const [listings, setListings] = useState<StairspaceListing[]>([]);
+    const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData(initialStairspaceListings);
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setListings(initialStairspaceListings);
-        setIsClient(true);
-    }, [initialStairspaceListings]);
 
     const openDialog = (listing?: StairspaceListing) => {
         setSelectedListing(listing);
@@ -121,17 +115,17 @@ export default function StairspaceTable({initialStairspaceListings}: {initialSta
     const handleSave = (values: ListingValues, id?: string) => {
         const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
         if (id) {
-            setListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } : l)));
+            setStairspaceListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } : l)));
             toast({ title: 'Listing updated.' });
         } else {
             const newListing = { ...newListingData, id: `stair_${Date.now()}` };
-            setListings(prev => [newListing, ...prev]);
+            setStairspaceListings(prev => [newListing, ...prev]);
             toast({ title: 'Listing added.' });
         }
     };
 
     const handleDelete = (id: string) => {
-        setListings(prev => prev.filter(l => l.id !== id));
+        setStairspaceListings(prev => prev.filter(l => l.id !== id));
         toast({ title: 'Listing removed.', variant: 'destructive' });
     };
 
@@ -145,7 +139,7 @@ export default function StairspaceTable({initialStairspaceListings}: {initialSta
                 <AddEditListingDialog isOpen={isOpen} onOpenChange={setIsOpen} listing={selectedListing} onSave={handleSave}><div/></AddEditListingDialog>
                 <Table><TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>{!isClient ? <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow> : (
-                        listings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
+                        stairspaceListings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
                     )}</TableBody>
                 </Table>
             </CardContent>

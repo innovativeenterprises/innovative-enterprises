@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -21,6 +20,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePropertiesData } from "@/hooks/use-data-hooks";
 
 const PropertySchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -175,15 +175,8 @@ const AddEditPropertyDialog = ({
 }
 
 export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
-    const [properties, setProperties] = useState<Property[]>([]);
+    const { properties, setProperties, isClient } = usePropertiesData(initialProperties);
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-    
-    useEffect(() => {
-        setProperties(initialProperties);
-        setIsClient(true);
-    }, [initialProperties]);
-
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
         if (id) {
