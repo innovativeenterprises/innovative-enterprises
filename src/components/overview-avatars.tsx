@@ -4,15 +4,14 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import type { Client } from '@/lib/clients.schema';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default function OverviewAvatars({ clients: initialClients }: { clients: Client[] }) {
-    const [clients, setClients] = useState<Client[]>([]);
+export default function OverviewAvatars({ clients }: { clients: Client[] }) {
     const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
         setIsClient(true);
-        setClients(initialClients);
-    }, [initialClients]);
+    }, []);
 
     if (!isClient) {
         return <div className="flex -space-x-2 w-24 h-10 bg-gray-200 rounded-full animate-pulse" />;

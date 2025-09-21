@@ -4,7 +4,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GitBranch } from "lucide-react";
 import Link from 'next/link';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import type { Service } from "@/lib/services.schema";
 
 const ServiceCard = ({ service }: { service: Service }) => (
@@ -25,22 +25,16 @@ const ServiceCard = ({ service }: { service: Service }) => (
     </Card>
 );
 
-export default function ServiceCatalog({ services: initialServices }: { services: Service[]}) {
-  const [services, setServices] = useState<Service[]>([]);
-  useEffect(() => {
-    setServices(initialServices);
-  }, [initialServices]);
-
-  const enabledServices = services.filter(s => s.enabled);
+export default function ServiceCatalog({ services }: { services: Service[]}) {
   
-  const servicesByCategory = useMemo(() => enabledServices.reduce((acc, service) => {
+  const servicesByCategory = useMemo(() => services.reduce((acc, service) => {
     const category = service.category || 'Other Services';
     if (!acc[category]) {
       acc[category] = [];
     }
     acc[category].push(service);
     return acc;
-  }, {} as Record<string, Service[]>), [enabledServices]);
+  }, {} as Record<string, Service[]>), [services]);
 
   const categoryOrder = [
     "Digital Transformations",

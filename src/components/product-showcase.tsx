@@ -7,17 +7,8 @@ import { StageBadge } from '@/components/stage-badge';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/products.schema';
-import { useEffect, useState } from 'react';
 
-
-export default function ProductShowcase({ products: initialProducts }: { products: Product[] }) {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    setProducts(initialProducts);
-  }, [initialProducts]);
-
-  const enabledProducts = products.filter(p => p.enabled);
+export default function ProductShowcase({ products }: { products: Product[] }) {
 
   return (
     <section id="products" className="py-16 md:py-24 bg-muted/20 dark:bg-card">
@@ -29,7 +20,7 @@ export default function ProductShowcase({ products: initialProducts }: { product
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {enabledProducts.map((product) => (
+          {products.map((product) => (
             <Card key={product.id} className="overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                 <Link href={product.href || `/ecommerce/${product.id}`} className="flex flex-col h-full">
                     <CardHeader className="p-0">

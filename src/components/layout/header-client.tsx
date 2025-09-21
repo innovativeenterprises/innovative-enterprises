@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescri
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useState, useEffect, useMemo, forwardRef, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -31,7 +31,6 @@ import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import { useCartData } from '@/hooks/use-global-store-data';
-
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -82,7 +81,7 @@ export default function HeaderClient({
     setIsClient(true);
   }, []);
 
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = cart ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);

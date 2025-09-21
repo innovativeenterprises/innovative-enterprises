@@ -12,15 +12,13 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import { getCostSettings, getKnowledgeBase, getPricing } from '@/lib/firestore';
-import PricingTable from "./pricing-table";
+import { getCostSettings, getKnowledgeBase } from '@/lib/firestore';
 
 
 export default async function AdminOperationsPage() {
-  const [costSettings, knowledgeBase, pricing] = await Promise.all([
+  const [costSettings, knowledgeBase] = await Promise.all([
     getCostSettings(),
     getKnowledgeBase(),
-    getPricing(),
   ]);
 
   const internalTools = [
@@ -41,11 +39,10 @@ export default async function AdminOperationsPage() {
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-4">
+             <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
                 <TabsTrigger value="costing">Market Rates</TabsTrigger>
-                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />
@@ -73,9 +70,6 @@ export default async function AdminOperationsPage() {
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
                 <CostSettingsTable initialRates={costSettings} />
-            </TabsContent>
-            <TabsContent value="pricing" className="mt-6 space-y-8">
-                <PricingTable initialPricing={pricing} />
             </TabsContent>
         </Tabs>
     </div>

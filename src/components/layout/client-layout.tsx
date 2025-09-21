@@ -7,7 +7,7 @@ import { ThemeProvider } from 'next-themes';
 import Footer from './footer';
 import Header from './header';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
-import React, { useState, type ReactNode, useEffect, createContext } from 'react';
+import React from 'react';
 import type { AppSettings } from '@/lib/settings';
 
 export default function ClientLayout({

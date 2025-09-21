@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect } from 'react';
+import useGlobalStore from './use-global-store-data';
 import type { BriefcaseData } from '@/lib/briefcase';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
@@ -22,34 +23,53 @@ import type { CommunityMember } from '@/lib/community-members';
 import type { Product } from '@/lib/products.schema';
 import type { Property } from '@/lib/properties.schema';
 
-const createDataContext = <T,>() => {
-    const useData = (initialData: T[] = []) => {
-        const [data, setData] = useState(initialData);
-        const [isClient, setIsClient] = useState(false);
-        useEffect(() => {
-            setIsClient(true);
-            setData(initialData);
-        }, [initialData]);
-        
-        return { data, setData, isClient };
+const createDataContext = <T, K extends keyof AppState>(
+  dataKey: K
+) => {
+  const useData = (initialData: T[] = []) => {
+    const { state, store } = useGlobalStore();
+    const [isClient, setIsClient] = useState(false);
+    
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    useEffect(() => {
+        if(initialData && initialData.length > 0) {
+            store.set(s => ({ ...s, [dataKey]: initialData }));
+        }
+    }, [initialData, store]);
+
+
+    const setData = (updater: (currentData: T[]) => T[]) => {
+      const currentData = store.get()[dataKey] as T[];
+      store.set((s) => ({ ...s, [dataKey]: updater(currentData) }));
     };
 
-    return { useData };
+    return { data: state[dataKey] as T[], setData, isClient };
+  };
+
+  return { useData };
 };
 
-export const { useData: useLeasesData } = createDataContext<SignedLease>();
-export const { useData: useStudentsData } = createDataContext<Student>();
-export const { useData: useEventsData } = createDataContext<CommunityEvent>();
-export const { useData: useAlumniJobsData } = createDataContext<JobPosting>();
-export const { useData: useMembersData } = createDataContext<CommunityMember>();
-export const { useData: useAgenciesData } = createDataContext<RaahaAgency>();
-export const { useData: useWorkersData } = createDataContext<RaahaWorker>();
-export const { useData: useRequestsData } = createDataContext<HireRequest>();
-export const { useData: useBeautyData } = createDataContext<BeautyCenter>();
-export const { useData: useBeautyServicesData } = createDataContext<BeautyService>();
-export const { useData: useBeautySpecialistsData } = createDataContext<BeautySpecialist>();
-export const { useData: useBeautyAppointmentsData } = createDataContext<BeautyAppointment>();
-export const { useData: useStairspaceData } = createDataContext<StairspaceListing>();
-export const { useData: useStairspaceRequestsData } = createDataContext<BookingRequest>();
-export const { useData: useUsedItemsData } = createDataContext<UsedItem>();
-export const { useData: usePropertiesData } = createDataContext<Property>();
+
+// Assuming AppState is imported or defined in useGlobalStore
+import type { AppState } from '@/lib/global-store';
+
+
+export const { useData: useLeasesData } = createDataContext<SignedLease, 'signedLeases'>('signedLeases');
+export const { useData: useStudentsData } = createDataContext<Student, 'students'>('students');
+export const { useData: useEventsData } = createDataContext<CommunityEvent, 'communityEvents'>('communityEvents');
+export const { useData: useAlumniJobsData } = createDataContext<JobPosting, 'alumniJobs'>('alumniJobs');
+export const { useData: useMembersData } = createDataContext<CommunityMember, 'communityMembers'>('communityMembers');
+export const { useData: useAgenciesData } = createDataContext<RaahaAgency, 'raahaAgencies'>('raahaAgencies');
+export const { useData: useWorkersData } = createDataContext<RaahaWorker, 'raahaWorkers'>('raahaWorkers');
+export const { useData: useRequestsData } = createDataContext<HireRequest, 'raahaRequests'>('raahaRequests');
+export const { useData: useBeautyData } = createDataContext<BeautyCenter, 'beautyCenters'>('beautyCenters');
+export const { useData: useBeautyServicesData } = createDataContext<BeautyService, 'beautyServices'>('beautyServices');
+export const { useData: useBeautySpecialistsData } = createDataContext<BeautySpecialist, 'beautySpecialists'>('beautySpecialists');
+export const { useData: useBeautyAppointmentsData } = createDataContext<BeautyAppointment, 'beautyAppointments'>('beautyAppointments');
+export const { useData: useStairspaceData } = createDataContext<StairspaceListing, 'stairspaceListings'>('stairspaceListings');
+export const { useData: useStairspaceRequestsData } = createDataContext<BookingRequest, 'stairspaceRequests'>('stairspaceRequests');
+export const { useData: useUsedItemsData } = createDataContext<UsedItem, 'usedItems'>('usedItems');
+export const { useData: usePropertiesData } = createDataContext<Property, 'properties'>('properties');

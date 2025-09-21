@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -104,13 +105,6 @@ const AddEditListingDialog = ({
 export default function StairspaceTable({initialStairspaceListings}: {initialStairspaceListings: StairspaceListing[]}) {
     const { stairspaceListings, setStairspaceListings, isClient } = useStairspaceData(initialStairspaceListings);
     const { toast } = useToast();
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
-
-    const openDialog = (listing?: StairspaceListing) => {
-        setSelectedListing(listing);
-        setIsOpen(true);
-    };
 
     const handleSave = (values: ListingValues, id?: string) => {
         const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
@@ -136,10 +130,9 @@ export default function StairspaceTable({initialStairspaceListings}: {initialSta
                 <AddEditListingDialog onSave={handleSave}><Button><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button></AddEditListingDialog>
             </CardHeader>
             <CardContent>
-                <AddEditListingDialog isOpen={isOpen} onOpenChange={setIsOpen} listing={selectedListing} onSave={handleSave}><div/></AddEditListingDialog>
                 <Table><TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>{!isClient ? <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow> : (
-                        stairspaceListings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
+                        stairspaceListings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><AddEditListingDialog listing={listing} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditListingDialog><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
                     )}</TableBody>
                 </Table>
             </CardContent>

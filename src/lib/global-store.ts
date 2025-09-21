@@ -1,23 +1,9 @@
 
-/**
- * @fileOverview A simple global state management store for the prototype.
- *
- * This avoids the need for a full state management library like Redux or Zustand
- * for this prototype application. It uses a simple listener pattern to update
- * components when the state changes.
- *
- * This file is NOT part of the user's visible code but is a necessary
- * architectural piece to make the prototype function correctly across pages.
- */
+'use client';
+import { initialState, type AppState as FullAppState } from './initial-state';
 
-import { initialState, type AppState } from './initial-state';
-import type { CartItem as PosCartItem } from './pos-data.schema';
-
-
-// Re-export AppState and CartItem for convenience
-export type { AppState };
-export type CartItem = PosCartItem;
-
+export type AppState = FullAppState;
+export type CartItem = FullAppState['cart'][0];
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
     let state: AppState = { ...initialState, ...initState };

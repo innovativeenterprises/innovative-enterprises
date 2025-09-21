@@ -30,11 +30,13 @@ export default async function HomePage() {
   ]);
 
   const allProducts = [...initialProducts, ...initialStoreProducts].filter(p => p.enabled);
+  const allEnabledServices = initialServices.filter(s => s.enabled);
+
 
   return (
     <>
       <CompanyOverview clients={initialClients} />
-      <ServiceCatalog services={initialServices} />
+      <ServiceCatalog services={allEnabledServices} />
       <ProductShowcase products={allProducts} />
       <ClientTestimonials clients={initialClients} testimonials={initialTestimonials} />
       <AiToolsCta aiTools={initialAiTools} />

@@ -7,18 +7,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 import type { Client } from '@/lib/clients.schema';
-import { useState, useEffect } from 'react';
 
 
-export default function CompanyOverview({ clients: initialClients }: { clients: Client[]}) {
-  const [clients, setClients] = useState<Client[]>([]);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-    setClients(initialClients);
-  }, [initialClients]);
-
+export default function CompanyOverview({ clients }: { clients: Client[]}) {
 
   return (
     <section className="bg-background">

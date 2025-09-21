@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import InvestClientPage from "./client-page";
@@ -16,5 +15,6 @@ export default async function InvestPage() {
         getProducts(),
         getInvestors()
     ]);
-    return <InvestClientPage initialProducts={products} initialInvestors={investors} />;
+    const allProducts = products.filter(p => p.enabled);
+    return <InvestClientPage initialProducts={allProducts} initialInvestors={investors} />;
 }
