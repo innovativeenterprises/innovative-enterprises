@@ -1,14 +1,13 @@
 
 'use client';
 
-import React from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
-import { SettingsProvider } from '@/components/layout/settings-provider';
+import { SettingsProvider, useSettings } from '@/components/layout/settings-provider';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat-widget';
 import { Toaster } from '@/components/ui/toaster';
-import { useSettings } from '@/components/layout/settings-provider';
 import type { AppSettings } from '@/lib/settings';
 
 // Inner component that can safely use the settings context
