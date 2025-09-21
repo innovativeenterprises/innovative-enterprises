@@ -68,13 +68,19 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
     }, [initialTestimonials]);
 
     const handleTestimonialSave = (values: TestimonialValues, id?: string) => {
-        // In a real app, this would be a server action.
-        toast({ title: `Action not implemented in prototype.` });
+        if (id) {
+            setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...values } : t));
+            toast({ title: 'Testimonial updated.' });
+        } else {
+            const newTestimonial = { ...values, id: `test_${Date.now()}` };
+            setTestimonials(prev => [newTestimonial, ...prev]);
+            toast({ title: 'Testimonial added.' });
+        }
     };
     
     const handleTestimonialDelete = (id: string) => {
-        // In a real app, this would be a server action.
-        toast({ title: 'Action not implemented in prototype.', variant: 'destructive' });
+        setTestimonials(prev => prev.filter(t => t.id !== id));
+        toast({ title: 'Testimonial removed.', variant: 'destructive' });
     }
 
     return (

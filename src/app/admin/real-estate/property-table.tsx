@@ -1,11 +1,10 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -177,8 +176,6 @@ const AddEditPropertyDialog = ({
 export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
     const [properties, setProperties] = useState<Property[]>([]);
     const { toast } = useToast();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedProp, setSelectedProp] = useState<Property | undefined>(undefined);
     const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
@@ -186,18 +183,21 @@ export default function PropertyTable({ initialProperties }: { initialProperties
         setIsClient(true);
     }, [initialProperties]);
 
-    const handleOpenDialog = (prop?: Property) => {
-      setSelectedProp(prop);
-      setIsDialogOpen(true);
-    }
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
-        // This would be a server action in a real app.
-        toast({ title: 'Action not implemented in prototype.' });
+        if (id) {
+            setProperties(prev => prev.map(p => (p.id === id ? { ...p, ...values } : p)));
+            toast({ title: 'Listing updated.' });
+        } else {
+            const newProperty = { ...values, id: `prop_${Date.now()}` };
+            setProperties(prev => [newProperty, ...prev]);
+            toast({ title: 'Listing added.' });
+        }
     };
 
     const handleDelete = (id: string) => {
-        toast({ title: 'Action not implemented in prototype.', variant: 'destructive' });
+        setProperties(prev => prev.filter(p => p.id !== id));
+        toast({ title: 'Listing removed.', variant: 'destructive' });
     };
 
     const getStatusBadge = (status: string) => {
@@ -216,10 +216,9 @@ export default function PropertyTable({ initialProperties }: { initialProperties
                     <CardTitle>Property Listings Management</CardTitle>
                     <CardDescription>Manage all property listings for the Smart Listing platform.</CardDescription>
                 </div>
-                <Button onClick={() => handleOpenDialog()}><PlusCircle /> Add Property</Button>
+                <AddEditPropertyDialog onSave={handleSave}><Button><PlusCircle className="mr-2 h-4 w-4"/> Add Property</Button></AddEditPropertyDialog>
             </CardHeader>
             <CardContent>
-                <AddEditPropertyDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} property={selectedProp} onSave={handleSave}><div/></AddEditPropertyDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -246,8 +245,11 @@ export default function PropertyTable({ initialProperties }: { initialProperties
                                     <TableCell>{getStatusBadge(prop.status)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(prop)}><Edit /></Button>
-                                            <AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id!)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+                                            <AddEditPropertyDialog property={prop} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditPropertyDialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                                                <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id!)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                                            </AlertDialog>
                                         </div>
                                     </TableCell>
                                 </TableRow>

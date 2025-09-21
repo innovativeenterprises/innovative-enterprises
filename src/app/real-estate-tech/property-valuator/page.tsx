@@ -1,4 +1,5 @@
 
+'use client';
 
 import ValuationForm from "./valuation-form";
 import type { Metadata } from 'next';

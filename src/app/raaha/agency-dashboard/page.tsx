@@ -2,7 +2,7 @@
 'use server';
 
 import AgencyDashboardClientPage from './client-page';
-import { getRaahaData } from '@/lib/firestore';
+import { getRaahaAgencies, getRaahaWorkers, getRaahaRequests } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,10 +11,14 @@ export const metadata: Metadata = {
 };
 
 export default async function AgencyDashboardPage() {
-    const { raahaAgencies, raahaWorkers, raahaRequests } = await getRaahaData();
+    const [agencies, workers, requests] = await Promise.all([
+      getRaahaAgencies(),
+      getRaahaWorkers(),
+      getRaahaRequests(),
+    ]);
     return <AgencyDashboardClientPage 
-        initialAgencies={raahaAgencies} 
-        initialRequests={raahaRequests} 
-        initialWorkers={raahaWorkers} 
+        initialAgencies={agencies} 
+        initialRequests={requests} 
+        initialWorkers={workers} 
     />;
 }

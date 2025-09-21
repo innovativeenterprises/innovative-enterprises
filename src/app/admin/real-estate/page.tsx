@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import type { Metadata } from 'next';
@@ -25,4 +24,3 @@ export default async function AdminRealEstatePage() {
     )
 }
 
-    

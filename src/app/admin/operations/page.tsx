@@ -12,15 +12,15 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "./pricing-table";
-import { getPricing, getCostSettings, getKnowledgeBase } from '@/lib/firestore';
+import { getCostSettings, getKnowledgeBase, getPricing } from '@/lib/firestore';
+import PricingTable from '../pricing-table';
 
 
 export default async function AdminOperationsPage() {
-  const [pricing, costSettings, knowledgeBase] = await Promise.all([
-    getPricing(),
+  const [costSettings, knowledgeBase, pricing] = await Promise.all([
     getCostSettings(),
     getKnowledgeBase(),
+    getPricing(),
   ]);
 
   const internalTools = [
@@ -81,3 +81,4 @@ export default async function AdminOperationsPage() {
     </div>
   );
 }
+

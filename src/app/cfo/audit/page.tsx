@@ -1,10 +1,8 @@
 
-
 'use client';
 
 import AuditForm from "./audit-form";
 import { DollarSign } from "lucide-react";
-import type { Metadata } from 'next';
 
 export default function CfoPage() {
   return (

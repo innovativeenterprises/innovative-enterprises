@@ -87,45 +87,43 @@ export default function ClientTable({ initialClients }: { initialClients: Client
     };
     
     return (
-        <div className="space-y-8">
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Clients</CardTitle>
-                    <AddEditClientDialog onSave={handleClientSave}>
-                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4"/> Add Client</Button>
-                    </AddEditClientDialog>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
-                        <TableBody>
-                            {!isClient ? (
-                                <TableRow>
-                                    <TableCell colSpan={3} className="text-center h-24">
-                                        <Skeleton className="h-10 w-full" />
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Clients</CardTitle>
+                <AddEditClientDialog onSave={handleClientSave}>
+                    <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4"/> Add Client</Button>
+                </AddEditClientDialog>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        {!isClient ? (
+                            <TableRow>
+                                <TableCell colSpan={3} className="text-center h-24">
+                                    <Skeleton className="h-10 w-full" />
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            clients.map(client => (
+                                <TableRow key={client.id}>
+                                    <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
+                                    <TableCell>{client.name}</TableCell>
+                                    <TableCell className="text-right">
+                                        <AddEditClientDialog client={client} onSave={handleClientSave}>
+                                            <Button variant="ghost" size="icon"><Edit /></Button>
+                                        </AddEditClientDialog>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
+                                            <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove "{client.name}" from your client list.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleClientDelete(client.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                                        </AlertDialog>
                                     </TableCell>
                                 </TableRow>
-                            ) : (
-                                clients.map(client => (
-                                    <TableRow key={client.id}>
-                                        <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
-                                        <TableCell>{client.name}</TableCell>
-                                        <TableCell className="text-right">
-                                            <AddEditClientDialog client={client} onSave={handleClientSave}>
-                                                <Button variant="ghost" size="icon"><Edit /></Button>
-                                            </AddEditClientDialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
-                                                <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove "{client.name}" from your client list.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleClientDelete(client.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
-                                            </AlertDialog>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
     );
 }

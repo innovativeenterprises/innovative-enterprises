@@ -85,8 +85,8 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     useEffect(() => {
-        setIsClient(true);
         setPricing(initialPricing);
+        setIsClient(true);
     }, [initialPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {

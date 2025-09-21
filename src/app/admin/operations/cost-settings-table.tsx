@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { CostRate } from "@/lib/cost-settings.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
@@ -102,8 +102,8 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
     const [selectedRate, setSelectedRate] = useState<CostRate | undefined>(undefined);
 
     useEffect(() => {
-        setIsClient(true);
         setCostSettings(initialRates);
+        setIsClient(true);
     }, [initialRates]);
 
     const openDialog = (rate?: CostRate) => {

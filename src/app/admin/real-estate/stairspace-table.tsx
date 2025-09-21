@@ -92,7 +92,7 @@ const AddEditListingDialog = ({
                         <FormField control={form.control} name="tags" render={({ field }) => <FormItem><FormLabel>Tags (comma-separated)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
                         <FormField control={form.control} name="description" render={({ field }) => <FormItem><FormLabel>Description</FormLabel><div className="relative"><FormControl><Textarea rows={4} {...field} /></FormControl><Button type="button" size="sm" variant="outline" className="absolute bottom-2 right-2" onClick={handleGenerateDescription} disabled={isGenerating}>{isGenerating ? <Loader2 className="h-4 w-4 animate-spin"/> : <Wand2 className="h-4 w-4"/>}</Button></div><FormMessage /></FormItem>} />
                         <FormField control={form.control} name="imageUrl" render={({ field }) => <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                        <FormField control={form.control} name="aiHint" render={({ field }) => <FormItem><FormLabel>AI Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>} />
+                        <FormField control={form.control} name="aiHint" render={({ field }) => <FormItem><FormLabel>AI Hint</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
                         <DialogFooter><DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose><Button type="submit">Save Listing</Button></DialogFooter>
                     </form>
                 </Form>
@@ -102,13 +102,15 @@ const AddEditListingDialog = ({
 };
 
 export default function StairspaceTable({initialStairspaceListings}: {initialStairspaceListings: StairspaceListing[]}) {
-    const [listings, setListings] = useState(initialStairspaceListings);
+    const [listings, setListings] = useState<StairspaceListing[]>([]);
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setListings(initialStairspaceListings);
+        setIsClient(true);
     }, [initialStairspaceListings]);
 
     const openDialog = (listing?: StairspaceListing) => {
@@ -117,11 +119,20 @@ export default function StairspaceTable({initialStairspaceListings}: {initialSta
     };
 
     const handleSave = (values: ListingValues, id?: string) => {
-        toast({ title: "Action not implemented in prototype." });
+        const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
+        if (id) {
+            setListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } : l)));
+            toast({ title: 'Listing updated.' });
+        } else {
+            const newListing = { ...newListingData, id: `stair_${Date.now()}` };
+            setListings(prev => [newListing, ...prev]);
+            toast({ title: 'Listing added.' });
+        }
     };
 
     const handleDelete = (id: string) => {
-        toast({ title: "Action not implemented in prototype.", variant: "destructive" });
+        setListings(prev => prev.filter(l => l.id !== id));
+        toast({ title: 'Listing removed.', variant: 'destructive' });
     };
 
     return (
@@ -133,12 +144,11 @@ export default function StairspaceTable({initialStairspaceListings}: {initialSta
             <CardContent>
                 <AddEditListingDialog isOpen={isOpen} onOpenChange={setIsOpen} listing={selectedListing} onSave={handleSave}><div/></AddEditListingDialog>
                 <Table><TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
-                    <TableBody>{
+                    <TableBody>{!isClient ? <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow> : (
                         listings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
-                    }</TableBody>
+                    )}</TableBody>
                 </Table>
             </CardContent>
         </Card>
     );
 }
-

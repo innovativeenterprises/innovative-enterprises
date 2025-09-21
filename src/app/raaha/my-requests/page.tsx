@@ -1,4 +1,8 @@
+
+'use server';
+
 import MyRequestsClientPage from './client-page';
+import { getRaahaRequests } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function MyRequestsPage() {
-    return <MyRequestsClientPage />
+export default async function MyRequestsPage() {
+    const requests = await getRaahaRequests();
+    return <MyRequestsClientPage initialRequests={requests} />
 }
