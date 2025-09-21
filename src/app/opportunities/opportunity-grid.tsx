@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { OpportunityCard } from "./opportunity-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Opportunity } from "@/lib/opportunities";
@@ -17,9 +17,9 @@ const OpportunityGridSkeleton = () => (
 export default function OpportunityGrid({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
     const [isClient, setIsClient] = useState(false);
     
-    useState(() => {
+    useEffect(() => {
         setIsClient(true);
-    });
+    }, []);
 
     const publicOpportunities = initialOpportunities
             .filter(opp => opp.status !== 'Closed')

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck, PlusCircle, Edit, Trash2 } from "lucide-react";
@@ -8,7 +9,6 @@ import CompanyProfileDownloader from "./company-profile-downloader";
 import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
 import type { Product } from "@/lib/products.schema";
-import { useProductsData, useInvestorsData } from "@/hooks/use-global-store-data";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -125,9 +125,15 @@ const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Inve
     );
 };
 
-function InvestorTable() {
-    const { investors, setInvestors, isClient } = useInvestorsData();
+function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
+    const [investors, setInvestors] = useState<Investor[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    
+    useEffect(() => {
+        setIsClient(true);
+        setInvestors(initialInvestors);
+    }, [initialInvestors]);
 
     const handleSave = (values: InvestorValues, id?: string) => {
         const newInvestorData = { ...values, documents: {} };
@@ -198,11 +204,10 @@ function InvestorTable() {
     );
 }
 
-export default function InvestClientPage() {
-    const { products } = useProductsData();
-    const liveProducts = products.filter(p => p.stage === 'Live & Operating').slice(0, 5);
-    const devProducts = products.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
-    const futureProducts = products.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
+export default function InvestClientPage({ initialProducts, initialInvestors }: { initialProducts: Product[], initialInvestors: Investor[] }) {
+    const liveProducts = initialProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
+    const devProducts = initialProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
+    const futureProducts = initialProducts.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -236,7 +241,7 @@ export default function InvestClientPage() {
             
              <div>
                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Our Network of Investors & Funders</h2>
-                <InvestorTable />
+                <InvestorTable initialInvestors={initialInvestors} />
             </div>
 
             {liveProducts.length > 0 && (

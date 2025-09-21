@@ -100,5 +100,3 @@ export function RequestTable({ initialRequests, agency }: { initialRequests: Hir
         </Card>
     )
 }
-
-    

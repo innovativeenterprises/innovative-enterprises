@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { format } from 'date-fns';
 import { useLeasesData } from "@/hooks/use-data-hooks";
+import { DueDateDisplay } from "@/components/due-date-display";
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
     const { leases, setLeases, isClient } = useLeasesData(initialLeases);
@@ -118,7 +118,7 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    {lease.endDate && <p className="text-sm text-muted-foreground">Ends: {format(new Date(lease.endDate), 'PPP')}</p>}
+                                                    {lease.endDate && <DueDateDisplay date={lease.endDate} prefix="Ends:" />}
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
