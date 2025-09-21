@@ -13,14 +13,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
 import { getCostSettings, getKnowledgeBase, getPricing } from '@/lib/firestore';
-import PricingTable from "./pricing-table";
 
 
 export default async function AdminOperationsPage() {
-  const [costSettings, knowledgeBase, pricing] = await Promise.all([
+  const [costSettings, knowledgeBase] = await Promise.all([
     getCostSettings(),
     getKnowledgeBase(),
-    getPricing(),
   ]);
 
   const internalTools = [

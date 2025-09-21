@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -10,8 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { CandidateTable } from './candidate-table';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
-import type { Worker } from '@/lib/raaha-workers';
-import type { Agency as RaahaAgency } from '@/lib/raaha-agencies';
+import type { Worker } from '@/lib/raaha-workers.schema';
+import type { Agency as RaahaAgency } from '@/lib/raaha-agencies.schema';
 import { useToast } from '@/hooks/use-toast';
 import { RequestTable } from './request-table';
 import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-data-hooks';

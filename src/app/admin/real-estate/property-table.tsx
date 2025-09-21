@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -21,6 +22,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePropertiesData } from "@/hooks/use-data-hooks";
 
 const PropertySchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -175,13 +177,8 @@ const AddEditPropertyDialog = ({
 }
 
 export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
-    const [properties, setProperties] = useState(initialProperties);
-    const [isClient, setIsClient] = useState(false);
+    const { data: properties, setData: setProperties, isClient } = usePropertiesData(initialProperties);
     const { toast } = useToast();
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
         if (id) {
@@ -248,7 +245,7 @@ export default function PropertyTable({ initialProperties }: { initialProperties
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                 <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id!)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
-                                            </div
+                                            </div >
                                     </TableCell>
                                 </TableRow>
                             ))

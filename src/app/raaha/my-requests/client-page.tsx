@@ -12,7 +12,7 @@ import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useRouter } from 'next/navigation';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
-import { useRequestsData } from '@/hooks/use-global-store-data';
+import { useRequestsData } from '@/hooks/use-data-hooks';
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -26,9 +26,11 @@ const getStatusBadge = (status: HireRequest['status']) => {
 };
 
 export default function MyRequestsClientPage() {
-    const { requests, setRaahaRequests, isClient } = useRequestsData();
+    const { data: requests, setData: setRaahaRequests, isClient } = useRequestsData();
     const { toast } = useToast();
     
+    // In a real app, you would filter requests by the logged-in user.
+    // For this prototype, we'll assume we're viewing requests for one client.
     const myRequests = isClient ? requests.filter(r => r.clientName === 'Ahmed Al-Farsi') : [];
     
     const onSchedule = (id: string, values: InterviewValues) => {
@@ -62,6 +64,14 @@ export default function MyRequestsClientPage() {
         },
     ];
 
+    const renderActions = (request: HireRequest) => {
+        // Example action: Only allow scheduling if the agency has contacted them.
+        if (request.status === 'Contacted') {
+             return <ScheduleInterviewDialog request={request as GenericRequest} onSchedule={onSchedule} />;
+        }
+        return <p className="text-xs text-muted-foreground italic text-right">Awaiting agency response</p>;
+    };
+
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -94,7 +104,7 @@ export default function MyRequestsClientPage() {
                                 data={myRequests} 
                                 columns={columns}
                                 isClient={isClient}
-                                renderActions={(request) => <ScheduleInterviewDialog request={request as GenericRequest} onSchedule={onSchedule} />}
+                                renderActions={(request) => renderActions(request as HireRequest)}
                             />
                         </CardContent>
                     </Card>
