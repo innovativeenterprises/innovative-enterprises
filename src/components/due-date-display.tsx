@@ -56,7 +56,7 @@ export const DueDateDisplay = ({
   }, [date, prefix]);
 
   // On the server and during initial client render, show a skeleton loader.
-  if (!displayState.isClient) {
+  if (!isClient) {
     return <div className={cn("text-sm text-muted-foreground", className)}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   
