@@ -1,5 +1,5 @@
 
-'use client';
+'use server';
 
 import CompanyOverview from "@/components/company-overview";
 import ServiceCatalog from "@/components/service-catalog";
@@ -10,29 +10,26 @@ import type { Product } from '@/lib/products.schema';
 import type { Service } from '@/lib/services.schema';
 import type { Client, Testimonial } from '@/lib/clients.schema';
 import type { AiTool } from '@/lib/nav-links';
-import { useState, useEffect } from "react";
+import { getProducts, getStoreProducts, getServices, getClients, getTestimonials, getAiTools } from "@/lib/firestore";
 
-export default function HomePage({
-  initialProducts,
-  initialStoreProducts,
-  initialServices,
-  initialClients,
-  initialTestimonials,
-  initialAiTools,
-}: {
-  initialProducts: Product[];
-  initialStoreProducts: Product[];
-  initialServices: Service[];
-  initialClients: Client[];
-  initialTestimonials: Testimonial[];
-  initialAiTools: AiTool[];
-}) {
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+export default async function HomePage() {
+  const [
+    initialProducts,
+    initialStoreProducts,
+    initialServices,
+    initialClients,
+    initialTestimonials,
+    initialAiTools,
+  ] = await Promise.all([
+    getProducts(),
+    getStoreProducts(),
+    getServices(),
+    getClients(),
+    getTestimonials(),
+    getAiTools(),
+  ]);
 
-  useEffect(() => {
-    const combinedProducts = [...initialProducts, ...initialStoreProducts].filter(p => p.enabled);
-    setAllProducts(combinedProducts);
-  }, [initialProducts, initialStoreProducts]);
+  const allProducts = [...initialProducts, ...initialStoreProducts].filter(p => p.enabled);
 
   return (
     <>

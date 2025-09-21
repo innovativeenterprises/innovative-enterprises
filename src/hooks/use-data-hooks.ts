@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useContext, createContext } from 'react';
@@ -21,33 +20,21 @@ import type { CommunityEvent } from '@/lib/community-events';
 import type { JobPosting } from '@/lib/alumni-jobs';
 import type { CommunityMember } from '@/lib/community-members';
 import type { Product } from '@/lib/products.schema';
+import type { Property } from '@/lib/properties.schema';
 
 const createDataContext = <T,>() => {
-    const DataContext = createContext<{
-        data: T[];
-        setData: React.Dispatch<React.SetStateAction<T[]>>;
-        isClient: boolean;
-    } | null>(null);
-
     const useData = (initialData: T[] = []) => {
-        const context = useContext(DataContext);
-        if (context) {
-            return context;
-        }
-        
-        // This part is for components that are not wrapped in a provider
         const [data, setData] = useState(initialData);
         const [isClient, setIsClient] = useState(false);
-        useEffect(() => setIsClient(true), []);
-        
         useEffect(() => {
+            setIsClient(true);
             setData(initialData);
         }, [initialData]);
-
+        
         return { data, setData, isClient };
     };
 
-    return { DataContext, useData };
+    return { useData };
 };
 
 export const { useData: useLeasesData } = createDataContext<SignedLease>();
@@ -55,9 +42,6 @@ export const { useData: useStudentsData } = createDataContext<Student>();
 export const { useData: useEventsData } = createDataContext<CommunityEvent>();
 export const { useData: useAlumniJobsData } = createDataContext<JobPosting>();
 export const { useData: useMembersData } = createDataContext<CommunityMember>();
-export const { useData: useProductsData } = createDataContext<Product>();
-export const { useData: useCartData } = createDataContext<CartItem>();
-export const { useData: useBriefcaseData } = createDataContext<BriefcaseData>();
 export const { useData: useAgenciesData } = createDataContext<RaahaAgency>();
 export const { useData: useWorkersData } = createDataContext<RaahaWorker>();
 export const { useData: useRequestsData } = createDataContext<HireRequest>();
@@ -68,3 +52,4 @@ export const { useData: useBeautyAppointmentsData } = createDataContext<BeautyAp
 export const { useData: useStairspaceData } = createDataContext<StairspaceListing>();
 export const { useData: useStairspaceRequestsData } = createDataContext<BookingRequest>();
 export const { useData: useUsedItemsData } = createDataContext<UsedItem>();
+export const { useData: usePropertiesData } = createDataContext<Property>();

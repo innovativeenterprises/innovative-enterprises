@@ -10,6 +10,10 @@
  * architectural piece to make the prototype function correctly across pages.
  */
 
+// Note: This file is being kept for now but its contents are being deprecated.
+// New development should use server-side data fetching and pass props to client components,
+// or use React Context for localized client state.
+
 import { initialState as initialData, type AppState as FullAppState } from './initial-state';
 
 export type AppState = FullAppState;

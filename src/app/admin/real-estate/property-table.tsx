@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -175,7 +176,7 @@ const AddEditPropertyDialog = ({
 }
 
 export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
-    const { properties, setProperties, isClient } = usePropertiesData(initialProperties);
+    const { data: properties, setData: setProperties, isClient } = usePropertiesData(initialProperties);
     const { toast } = useToast();
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
