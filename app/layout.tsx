@@ -1,6 +1,4 @@
 
-'use server';
-
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
