@@ -30,10 +30,9 @@ export default function ClientLayout({
   aiTools: AiTool[];
   settings: AppSettings;
 }) {
-  const [cart, setCartState] = useState<CartItem[]>(store.get().cart || []);
+  const [cart, setCartState] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    // Initialize cart from store on client mount
     setCartState(store.get().cart || []);
 
     const unsubscribe = store.subscribe(() => {

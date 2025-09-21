@@ -82,7 +82,7 @@ export default function HeaderClient({
     setIsClient(true);
   }, []);
 
-  const cartCount = useMemo(() => cartContext?.cart.reduce((sum, item) => sum + item.quantity, 0) || 0, [cartContext?.cart]);
+  const cartCount = cartContext?.cart ? cartContext.cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);

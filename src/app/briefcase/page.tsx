@@ -290,7 +290,7 @@ const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | Iden
 
 
 export default function BriefcasePage() {
-    const { briefcase, setBriefcase, isClient } = useBriefcaseData();
+    const { data: briefcase, setData: setBriefcase, isClient } = useBriefcaseData();
     const [analyzingDocId, setAnalyzingDocId] = useState<string | null>(null);
     const { toast } = useToast();
 
