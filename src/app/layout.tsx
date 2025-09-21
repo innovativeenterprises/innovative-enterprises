@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { getSettings } from '@/lib/firestore';
 import { Providers } from '@/app/providers';
+import { initialSettings } from '@/lib/settings';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,7 +55,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSettings();
+  let settings = initialSettings;
+  try {
+    // Attempt to fetch settings, but have a fallback.
+    settings = await getSettings() || initialSettings;
+  } catch (error) {
+    console.error("Failed to fetch settings, using initial settings:", error);
+    // Fallback to initial settings is already handled by the line above
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>

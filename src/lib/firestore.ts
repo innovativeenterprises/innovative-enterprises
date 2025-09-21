@@ -48,34 +48,49 @@ import type { Pricing } from './pricing.schema';
 
 
 if (!admin.apps.length) {
-    admin.initializeApp();
+    try {
+        admin.initializeApp();
+    } catch (error: any) {
+        console.error('Firebase Admin Initialization Error:', error.message);
+        // If initializeApp() fails, it's likely due to missing credentials.
+        // The app can proceed with local data, but Firestore will be unavailable.
+    }
 }
+
 
 const db = admin.firestore();
 let isSeeding: Promise<void> | null = null;
 
 async function seedCollection<T>(collectionName: string, data: T[]) {
-    const collectionRef = db.collection(collectionName);
-    const snapshot = await collectionRef.limit(1).get();
-    if (snapshot.empty) {
-        console.log(`Seeding '${collectionName}'...`);
-        const batch = db.batch();
-        data.forEach((item: any) => {
-            const docRef = item.id ? collectionRef.doc(String(item.id)) : collectionRef.doc();
-            batch.set(docRef, item);
-        });
-        await batch.commit();
-        console.log(`Seeding for '${collectionName}' complete.`);
+    try {
+        const collectionRef = db.collection(collectionName);
+        const snapshot = await collectionRef.limit(1).get();
+        if (snapshot.empty) {
+            console.log(`Seeding '${collectionName}'...`);
+            const batch = db.batch();
+            data.forEach((item: any) => {
+                const docRef = item.id ? collectionRef.doc(String(item.id)) : collectionRef.doc();
+                batch.set(docRef, item);
+            });
+            await batch.commit();
+            console.log(`Seeding for '${collectionName}' complete.`);
+        }
+    } catch (error) {
+        console.warn(`Warning: Could not seed collection '${collectionName}'. Firestore may be unavailable. Error:`, (error as Error).message);
     }
 }
 
 async function seedSingleDoc<T>(docPath: string, data: T) {
-    const docRef = db.doc(docPath);
-    const snapshot = await docRef.get();
-    if (!snapshot.exists) {
-        console.log(`Seeding single document '${docPath}'...`);
-        await docRef.set(data as any);
-        console.log(`Seeding for '${docPath}' complete.`);
+    try {
+        const docRef = db.doc(docPath);
+        const snapshot = await docRef.get();
+        if (!snapshot.exists) {
+            console.log(`Seeding single document '${docPath}'...`);
+            await docRef.set(data as any);
+            console.log(`Seeding for '${docPath}' complete.`);
+        }
+    } catch (error) {
+        console.warn(`Warning: Could not seed document '${docPath}'. Firestore may be unavailable. Error:`, (error as Error).message);
     }
 }
 
@@ -151,15 +166,26 @@ async function seedDatabase() {
 }
 
 async function getCollection<T>(collectionName: string): Promise<T[]> {
-  await seedDatabase();
-  const snapshot = await db.collection(collectionName).get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
+  try {
+    await seedDatabase();
+    const snapshot = await db.collection(collectionName).get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
+  } catch (error) {
+      console.warn(`Warning: Could not fetch collection '${collectionName}'. Returning initial data. Error:`, (error as Error).message);
+      // Fallback to initial data if Firestore fails
+      return (initialState as any)[collectionName] || [];
+  }
 }
 
 async function getDoc<T>(docPath: string): Promise<T | null> {
-    await seedDatabase();
-    const snapshot = await db.doc(docPath).get();
-    return snapshot.exists ? (snapshot.data() as T) : null;
+    try {
+        await seedDatabase();
+        const snapshot = await db.doc(docPath).get();
+        return snapshot.exists ? (snapshot.data() as T) : null;
+    } catch (error) {
+        console.warn(`Warning: Could not fetch document '${docPath}'. Returning null. Error:`, (error as Error).message);
+        return null;
+    }
 }
 
 export const getProducts = async () => getCollection<Product>('products');
@@ -258,21 +284,28 @@ export const getBeautyData = async () => {
 
 // Server actions to update data
 export async function setFirestoreCollection(collectionName: string, data: any[]) {
-    await seedDatabase();
-    const collectionRef = db.collection(collectionName);
-    const snapshot = await collectionRef.get();
-    const batch = db.batch();
+    try {
+        await seedDatabase();
+        const collectionRef = db.collection(collectionName);
+        const snapshot = await collectionRef.get();
+        const batch = db.batch();
 
-    // Delete existing documents
-    snapshot.docs.forEach(doc => {
-        batch.delete(doc.ref);
-    });
-    
-    // Add new documents
-    data.forEach(item => {
-        const docRef = item.id ? collectionRef.doc(String(item.id)) : collectionRef.doc();
-        batch.set(docRef, item);
-    });
+        // Delete existing documents
+        snapshot.docs.forEach(doc => {
+            batch.delete(doc.ref);
+        });
+        
+        // Add new documents
+        data.forEach(item => {
+            const docRef = item.id ? collectionRef.doc(String(item.id)) : collectionRef.doc();
+            batch.set(docRef, item);
+        });
 
-    await batch.commit();
+        await batch.commit();
+    } catch(e) {
+        console.error("Firestore update failed:", (e as Error).message);
+    }
 }
+
+// Dummy 'initialState' for fallback, not to be confused with the one in global-store
+const initialState = {};
