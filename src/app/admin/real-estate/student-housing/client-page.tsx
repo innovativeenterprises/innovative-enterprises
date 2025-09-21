@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -11,12 +12,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
-import { format } from 'date-fns';
 import { useLeasesData } from "@/hooks/use-data-hooks";
 import { DueDateDisplay } from "@/components/due-date-display";
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const { leases, setLeases, isClient } = useLeasesData(initialLeases);
+    const { data: leases, setData: setLeases, isClient } = useLeasesData(initialLeases);
     const { toast } = useToast();
     
     const expiringLeasesCount = useMemo(() => {
@@ -118,7 +118,7 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    {lease.endDate && <DueDateDisplay date={lease.endDate} prefix="Ends:" />}
+                                                    <DueDateDisplay date={lease.endDate} prefix="Ends:" />
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
