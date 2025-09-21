@@ -43,6 +43,7 @@ import type { Service } from './services.schema';
 import type { Provider } from './providers.schema';
 import type { Opportunity } from './opportunities.schema';
 import type { Client, Testimonial } from './clients.schema';
+import type { Pricing } from './pricing.schema';
 
 
 if (!admin.apps.length) {
@@ -167,7 +168,7 @@ export const getProviders = async () => getCollection<Provider>('providers');
 export const getOpportunities = async () => getCollection<Opportunity>('opportunities');
 export const getClients = async () => getCollection<any>('clients');
 export const getTestimonials = async () => getCollection<any>('testimonials');
-export const getPricing = async () => getCollection<any>('pricing');
+export const getPricing = async (): Promise<Pricing[]> => getCollection<Pricing>('pricing');
 export const getPosProducts = async () => getCollection<any>('posProducts');
 export const getDailySales = async () => getCollection<any>('dailySales');
 export const getStages = async () => getCollection<any>('stages');

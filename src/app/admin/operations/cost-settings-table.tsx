@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,10 +17,10 @@ import { useToast } from "@/hooks/use-toast";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { useCostSettingsData } from "@/hooks/use-global-store-data";
 
 
 const CostRateSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(2, "Item name is required"),
   category: z.enum(['Material', 'Labor', 'Equipment', 'Travel']),
   unit: z.string().min(1, "Unit is required"),
@@ -93,11 +94,17 @@ const AddEditCostRateDialog = ({
     );
 };
 
-export default function CostSettingsTable() {
-    const { costSettings, setCostSettings, isClient } = useCostSettingsData();
+export default function CostSettingsTable({ initialRates }: { initialRates: CostRate[] }) {
+    const [costSettings, setCostSettings] = useState<CostRate[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedRate, setSelectedRate] = useState<CostRate | undefined>(undefined);
+
+    useEffect(() => {
+        setIsClient(true);
+        setCostSettings(initialRates);
+    }, [initialRates]);
 
     const openDialog = (rate?: CostRate) => {
         setSelectedRate(rate);
@@ -106,7 +113,7 @@ export default function CostSettingsTable() {
 
     const handleSave = (values: CostRateValues, id?: string) => {
         if (id) {
-            setCostSettings(prev => prev.map(r => (r.id === id ? { ...r, ...values } : r)));
+            setCostSettings(prev => prev.map(r => (r.id === id ? { ...r, ...values } as CostRate : r)));
             toast({ title: "Rate updated." });
         } else {
             const newRate: CostRate = { ...values, id: `cost_${Date.now()}` };

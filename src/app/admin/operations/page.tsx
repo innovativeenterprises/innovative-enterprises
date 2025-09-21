@@ -13,11 +13,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
 import PricingTable from "./pricing-table";
-import { getPricing } from '@/lib/firestore';
+import { getPricing, getCostSettings } from '@/lib/firestore';
 
 
 export default async function AdminOperationsPage() {
-  const pricing = await getPricing();
+  const [pricing, costSettings] = await Promise.all([
+    getPricing(),
+    getCostSettings(),
+  ]);
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -68,7 +71,7 @@ export default async function AdminOperationsPage() {
                 <KnowledgeTable />
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
-                <CostSettingsTable />
+                <CostSettingsTable initialRates={costSettings} />
             </TabsContent>
             <TabsContent value="pricing" className="mt-6 space-y-8">
                 <PricingTable initialPricing={pricing} />

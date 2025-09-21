@@ -18,7 +18,7 @@ export default async function HomePage() {
     getStoreProducts(),
   ]);
 
-  const allProducts = [...products, ...storeProducts];
+  const allProducts = [...products, ...storeProducts].filter(p => p.enabled);
 
   return (
     <>
@@ -30,3 +30,5 @@ export default async function HomePage() {
     </>
   );
 }
+
+    

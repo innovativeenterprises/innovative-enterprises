@@ -20,7 +20,6 @@ import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMembersData } from "@/hooks/use-global-store-data";
 
 const MemberSchema = z.object({
   id: z.string().min(3, "Member ID is required"),
@@ -94,12 +93,19 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
 };
 
 export default function CommunitiesAdminPage() {
-    const { members, setMembers, isClient } = useMembersData();
+    const [members, setMembers] = useState<CommunityMember[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    
+    useEffect(() => {
+        setIsClient(true);
+        // In a real app with a database, you would fetch initial data here
+        // For this prototype, we'll assume it's passed or available in a store
+    }, []);
 
     const handleSave = (values: MemberValues, id?: string) => {
         if (id) {
-            setMembers(prev => prev.map(s => s.id === id ? { ...s, ...values } : s));
+            setMembers(prev => prev.map(s => s.id === id ? { ...s, ...values } as CommunityMember : s));
             toast({ title: "Member record updated." });
         } else {
             const newMember: CommunityMember = { ...values, communityId: 'comm_01' }; // Assume one community for now
@@ -182,3 +188,5 @@ export default function CommunitiesAdminPage() {
         </div>
     );
 }
+
+    
