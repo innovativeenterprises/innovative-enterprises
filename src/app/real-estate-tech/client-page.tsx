@@ -27,6 +27,8 @@ const ProductCard = ({ product }: { product: Product }) => {
         "PropToken Platform": Layers,
         "Tenant Digital Briefcase": Briefcase,
         "EcoBuild Certify": Leaf,
+        "PANOSPACE": Cpu,
+        "StairSpace": Building2,
     };
     const Icon = iconMap[product.name] || Building2;
 

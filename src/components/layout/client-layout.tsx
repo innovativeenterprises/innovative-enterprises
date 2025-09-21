@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -9,6 +10,13 @@ import Header from './header';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import React, { createContext, useState, type ReactNode } from 'react';
 import type { CartItem } from '@/lib/pos-data.schema';
+import type { AppSettings } from '@/lib/settings';
+import { SaasCategory } from '@/lib/saas-products.schema';
+import { BriefcaseData } from '@/lib/briefcase';
+import { Community } from '@/lib/communities';
+import { CommunityEvent } from '@/lib/community-events';
+import { CommunityFinance } from '@/lib/community-finances';
+import { CommunityMember } from '@/lib/community-members';
 
 export const CartContext = createContext<{
   cart: CartItem[];
@@ -20,12 +28,14 @@ export default function ClientLayout({
   children,
   solutions,
   industries,
-  aiTools
+  aiTools,
+  settings,
 }: {
   children: React.ReactNode;
   solutions: Solution[];
   industries: Industry[];
   aiTools: AiTool[];
+  settings: AppSettings;
 }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -46,7 +56,7 @@ export default function ClientLayout({
             <main className="flex-1">{children}</main>
             <Footer />
             <Toaster />
-            <ChatWidget />
+            <ChatWidget settings={settings} />
         </div>
       </CartContext.Provider>
     </ThemeProvider>

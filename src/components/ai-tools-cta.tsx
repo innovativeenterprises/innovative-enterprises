@@ -1,21 +1,14 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
 import type { AiTool } from "@/lib/nav-links";
-import { useState, useEffect } from 'react';
 
-export default function AiToolsCta() {
-    const [aiTools, setAiTools] = useState<AiTool[]>([]);
-
-    useEffect(() => {
-        // In a real app, you might fetch this data, but for now we get it from props in the parent
-    }, []);
+export default function AiToolsCta({ aiTools }: { aiTools: AiTool[] }) {
     
-    // This component is now client-side, but receives server-fetched data via props
-    // This is a placeholder for how it would be used if the parent refactor is complete.
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];
     const featuredAgents = featuredAgentNames.map(name => aiTools.find(agent => agent.title.includes(name))).filter(Boolean);
 

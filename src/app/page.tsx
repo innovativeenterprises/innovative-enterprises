@@ -18,7 +18,7 @@ export default async function HomePage() {
     getStoreProducts(),
   ]);
 
-  const allSaaSProducts = products.filter(p => p.hasOwnProperty('ready'));
+  const allSaaSProducts = products;
   const allProducts = [...allSaaSProducts, ...storeProducts].filter(p => p.enabled);
 
   return (

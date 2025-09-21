@@ -40,6 +40,7 @@ import {
   GraduationCap,
   Heart,
   UserRound,
+  Store,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -65,7 +66,7 @@ export default function AdminLayout({
       { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
       { href: '/admin/saas-portfolio', label: 'SaaS Portfolio', icon: Package },
       { href: '/admin/opportunities', label: 'Opportunities', icon: Trophy },
-      { href: '/admin/content', label: 'Site Content', icon: Users },
+      { href: '/admin/content', label: 'Site Content', icon: FileText },
   ];
   
   const networkAndPeople = [
@@ -83,7 +84,8 @@ export default function AdminLayout({
   ];
   
   const operations = [
-      { href: '/admin/operations', label: 'Operations & AI', icon: GanttChartSquare },
+      { href: '/admin/operations', label: 'Internal AI Tools', icon: GanttChartSquare },
+      { href: '/admin/pos-management', label: 'AI-POS Management', icon: Store },
       { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
       { href: '/admin/hadeeya', label: 'Hadeeya Gift Cards', icon: Gift },
   ];

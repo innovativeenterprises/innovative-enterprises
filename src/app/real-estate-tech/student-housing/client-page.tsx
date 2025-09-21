@@ -1,75 +1,97 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, FileText, Calendar, Trash2, Home, PlusCircle, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, PlusCircle, DollarSign, FileText, Calendar, Trash2, Home, TrendingUp, TrendingDown, Percent } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { useLeasesData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
+import { useLeasesData } from "@/hooks/use-data-hooks";
+import { format } from 'date-fns';
 
-const DateDisplay = ({ dateString }: { dateString: string }) => {
-    const [formattedDate, setFormattedDate] = useState('');
-
-    useEffect(() => {
-        if (dateString) {
-            setFormattedDate(format(new Date(dateString), "PPP"));
-        }
-    }, [dateString]);
-
-    return <>{formattedDate || 'N/A'}</>;
-};
-
-export default function SmartLeaseManagerPage() {
-    const { leases, setSignedLeases, isClient } = useLeasesData();
+export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
+    const { leases, setLeases, isClient } = useLeasesData(initialLeases);
     const { toast } = useToast();
+    
+    const expiringLeasesCount = useMemo(() => {
+        if (!isClient) return null;
+        const now = new Date();
+        return leases.filter(l => {
+            if (!l.endDate) return false;
+            const endDate = new Date(l.endDate);
+            return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() <= now.getMonth() + 1;
+        }).length;
+    }, [leases, isClient]);
+
 
     const handleDelete = (id: string) => {
-        setSignedLeases(prev => prev.filter(lease => lease.id !== id));
-        toast({ title: "Agreement Deleted", description: "The lease agreement has been removed from your dashboard.", variant: "destructive" });
+        setLeases(prev => prev.filter(lease => lease.id !== id));
+        toast({ title: "Housing Agreement Deleted", description: "The student housing agreement has been removed from your dashboard.", variant: "destructive" });
     };
+
+    const totalMonthlyRent = useMemo(() => isClient ? leases.reduce((sum, lease) => {
+        if (lease.status === 'Active' && lease.contractType === 'Tenancy Agreement' && lease.pricePeriod === 'per month') {
+            return sum + lease.price;
+        }
+        return sum;
+    }, 0) : 0, [leases, isClient]);
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
-                <div className="max-w-5xl mx-auto">
-                    <Button asChild variant="outline" className="mb-4">
-                        <Link href="/real-estate-tech">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to Real Estate Tech
-                        </Link>
-                    </Button>
-                    <div className="text-center mb-12">
-                        <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                            <FileText className="w-10 h-10 text-primary" />
+                <div className="max-w-5xl mx-auto space-y-8">
+                    <div>
+                        <Button asChild variant="outline" className="mb-4">
+                            <Link href="/education-tech/eduflow">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to EduFlow Suite
+                            </Link>
+                        </Button>
+                        <div className="text-center mb-12">
+                            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                                <Home className="w-10 h-10 text-primary" />
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-bold text-primary">Student Housing Management</h1>
+                            <p className="mt-4 text-lg text-muted-foreground">
+                                A centralized dashboard to view, manage, and track all student housing and accommodation agreements.
+                            </p>
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-bold text-primary">SmartLease Manager</h1>
-                        <p className="mt-4 text-lg text-muted-foreground">
-                            A centralized dashboard to view, manage, and track all your digitally signed lease and sale agreements.
-                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6 mb-8">
+                         <Card>
+                             <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
+                             <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : leases.filter(l => l.status === 'Active').length}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-3/4" /> : `OMR ${totalMonthlyRent.toLocaleString()}`}</CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
+                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
+                        </Card>
                     </div>
 
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Your Agreements</CardTitle>
+                            <CardTitle>Housing Agreements</CardTitle>
                             <Button asChild>
-                                <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Contract</Link>
+                                <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Agreement</Link>
                             </Button>
                         </CardHeader>
                         <CardContent>
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Property</TableHead>
-                                        <TableHead>Type</TableHead>
-                                        <TableHead>Parties</TableHead>
+                                        <TableHead>Property/Room</TableHead>
+                                        <TableHead>Student Name (Lessee)</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="text-right">Actions</TableHead>
                                     </TableRow>
@@ -77,14 +99,14 @@ export default function SmartLeaseManagerPage() {
                                 <TableBody>
                                     {!isClient ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="text-center h-24">
+                                            <TableCell colSpan={4} className="text-center h-24">
                                                 <Skeleton className="h-10 w-full" />
                                             </TableCell>
                                         </TableRow>
                                     ) : leases.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
-                                                You have no signed agreements yet. Generate a new contract to get started.
+                                            <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                                                You have no student housing agreements yet.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
@@ -95,11 +117,8 @@ export default function SmartLeaseManagerPage() {
                                                     <p className="text-sm text-muted-foreground">{lease.propertyType}</p>
                                                 </TableCell>
                                                  <TableCell>
-                                                    <Badge variant="outline">{lease.contractType}</Badge>
-                                                 </TableCell>
-                                                 <TableCell>
-                                                    <p className="text-sm"><strong>Lessor:</strong> {lease.lessorName}</p>
-                                                    <p className="text-sm"><strong>Lessee:</strong> {lease.lesseeName}</p>
+                                                    <p className="font-medium">{lease.lesseeName}</p>
+                                                    {lease.endDate && <p className="text-sm text-muted-foreground">Ends: {format(new Date(lease.endDate), 'PPP')}</p>}
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>

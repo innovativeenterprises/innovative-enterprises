@@ -11,8 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { useState, useEffect, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers.schema';
-import { DueDateDisplay } from '@/components/due-date-display';
-import { useProvidersData } from '@/hooks/use-global-store-data';
+import { useProvidersData } from '@/hooks/use-data-hooks';
 
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | string }) => {
@@ -64,7 +63,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | st
         <div className="w-full min-w-[200px] space-y-2">
             <div className="flex justify-between items-center">
                 <Badge variant="outline">{tier}</Badge>
-                <DueDateDisplay date={new Date(expiry).toISOString()} prefix="Expires:" warnDays={30} />
+                <p className="text-sm text-muted-foreground">Expires: {new Date(expiry).toLocaleDateString()}</p>
             </div>
             <Progress value={clientState.progressValue} className="h-2 [&>div]:bg-green-500" />
         </div>

@@ -98,7 +98,3 @@ export default function ConstructionTechClientPage({ initialProducts }: { initia
     </div>
   );
 }
-
-    
-
-    

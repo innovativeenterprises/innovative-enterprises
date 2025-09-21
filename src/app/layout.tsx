@@ -6,7 +6,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import ClientLayout from '@/components/layout/client-layout';
 import type { Metadata } from 'next';
-import { getSolutions, getIndustries, getAiTools } from '@/lib/firestore';
+import { getSolutions, getIndustries, getAiTools, getSettings } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -56,10 +56,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Fetch navigation data here in the root server component
-  const [solutions, industries, aiTools] = await Promise.all([
+  const [solutions, industries, aiTools, settings] = await Promise.all([
     getSolutions(),
     getIndustries(),
-    getAiTools()
+    getAiTools(),
+    getSettings(),
   ]);
 
   return (
@@ -70,6 +71,7 @@ export default async function RootLayout({
             solutions={solutions}
             industries={industries}
             aiTools={aiTools}
+            settings={settings}
         >
             {children}
         </ClientLayout>

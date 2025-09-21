@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 
 
 export default function ProductShowcase({ products: initialProducts }: { products: Product[] }) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   useEffect(() => {
     setProducts(initialProducts);
   }, [initialProducts]);

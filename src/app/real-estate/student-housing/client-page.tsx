@@ -12,25 +12,19 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
-import { DueDateDisplay } from '@/components/due-date-display';
+import { useLeasesData } from '@/hooks/use-data-hooks';
+import { format } from 'date-fns';
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const [leases, setLeases] = useState<SignedLease[]>([]);
-    const [isClient, setIsClient] = useState(false);
+    const { leases, setLeases, isClient } = useLeasesData(initialLeases);
     const { toast } = useToast();
     
-    useEffect(() => {
-        setLeases(initialLeases);
-        setIsClient(true);
-    }, [initialLeases]);
-
     const expiringLeasesCount = useMemo(() => {
         if (!isClient) return null;
         const now = new Date();
         return leases.filter(l => {
             if (!l.endDate) return false;
             const endDate = new Date(l.endDate);
-            // Check if expiry is in the future but within the next month.
             return endDate > now && endDate.getFullYear() === now.getFullYear() && endDate.getMonth() <= now.getMonth() + 1;
         }).length;
     }, [leases, isClient]);
@@ -73,15 +67,15 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
                          <Card>
                              <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
-                             <CardContent className="text-3xl font-bold text-primary">{isClient ? leases.filter(l => l.status === 'Active').length : <Skeleton className="h-8 w-1/2" />}</CardContent>
+                             <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : leases.filter(l => l.status === 'Active').length}</CardContent>
                         </Card>
                          <Card>
                             <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{isClient ? `OMR ${totalMonthlyRent.toLocaleString()}`: <Skeleton className="h-8 w-3/4" />}</CardContent>
+                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-3/4" /> : `OMR ${totalMonthlyRent.toLocaleString()}`}</CardContent>
                         </Card>
                          <Card>
                             <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{expiringLeasesCount === null ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
+                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
                         </Card>
                     </div>
 
@@ -124,7 +118,7 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    <DueDateDisplay date={lease.endDate} prefix="Ends:" />
+                                                    {lease.endDate && <p className="text-sm text-muted-foreground">Ends: {format(new Date(lease.endDate), 'PPP')}</p>}
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
@@ -160,5 +154,3 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
         </div>
     );
 }
-
-    

@@ -6,20 +6,18 @@ import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import PricingTable from "@/app/admin/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PosProductTable from "@/app/admin/pos-product-table";
 import TestimonialTable from "@/app/admin/testimonial-table";
-import { getPricing, getProducts, getServices, getClients, getTestimonials, getPosProducts, getStages } from "@/lib/firestore";
+import { getPricing, getProducts, getServices, getClients, getTestimonials, getStages } from "@/lib/firestore";
 
 
 export default async function AdminContentPage() {
-    const [services, products, stages, clients, testimonials, pricing, posProducts] = await Promise.all([
+    const [services, products, stages, clients, testimonials, pricing] = await Promise.all([
         getServices(),
         getProducts(),
         getStages(),
         getClients(),
         getTestimonials(),
         getPricing(),
-        getPosProducts(),
     ]);
 
     return (
@@ -31,13 +29,12 @@ export default async function AdminContentPage() {
                 </p>
             </div>
             <Tabs defaultValue="services" className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
+                <TabsList className="grid w-full grid-cols-5">
                     <TabsTrigger value="services">Services</TabsTrigger>
                     <TabsTrigger value="products">Products</TabsTrigger>
                     <TabsTrigger value="clients">Clients</TabsTrigger>
                     <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
                     <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
-                    <TabsTrigger value="pos">AI-POS Products</TabsTrigger>
                 </TabsList>
                 <TabsContent value="services" className="mt-6">
                     <ServiceTable initialServices={services} />
@@ -54,11 +51,7 @@ export default async function AdminContentPage() {
                 <TabsContent value="pricing" className="mt-6">
                     <PricingTable initialPricing={pricing} />
                 </TabsContent>
-                <TabsContent value="pos" className="mt-6">
-                    <PosProductTable initialProducts={posProducts} />
-                </TabsContent>
             </Tabs>
         </div>
     );
 }
-

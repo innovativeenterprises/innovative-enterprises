@@ -7,11 +7,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 import type { Client } from '@/lib/clients.schema';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 export default function CompanyOverview({ clients: initialClients }: { clients: Client[]}) {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Client[]>(initialClients);
 
   useEffect(() => {
     setClients(initialClients);

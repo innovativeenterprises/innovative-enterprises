@@ -26,7 +26,7 @@ const ServiceCard = ({ service }: { service: Service }) => (
 );
 
 export default function ServiceCatalog({ services: initialServices }: { services: Service[]}) {
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<Service[]>(initialServices);
   useEffect(() => {
     setServices(initialServices);
   }, [initialServices]);

@@ -12,17 +12,13 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
-import { DueDateDisplay } from '@/components/due-date-display';
+import { format } from 'date-fns';
+import { useLeasesData } from "@/hooks/use-data-hooks";
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const [leases, setLeases] = useState(initialLeases);
+    const { leases, setLeases, isClient } = useLeasesData(initialLeases);
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
     
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
     const expiringLeasesCount = useMemo(() => {
         if (!isClient) return null;
         const now = new Date();
@@ -122,7 +118,7 @@ export default function StudentHousingClientPage({ initialLeases }: { initialLea
                                                 </TableCell>
                                                  <TableCell>
                                                     <p className="font-medium">{lease.lesseeName}</p>
-                                                    <DueDateDisplay date={lease.endDate} prefix="Ends:" />
+                                                    {lease.endDate && <p className="text-sm text-muted-foreground">Ends: {format(new Date(lease.endDate), 'PPP')}</p>}
                                                  </TableCell>
                                                  <TableCell>
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
