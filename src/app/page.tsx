@@ -6,14 +6,15 @@ import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import AiToolsCta from "@/components/ai-tools-cta";
 import ClientTestimonials from "@/components/client-testimonials";
-import { getProducts, getServices, getClients, getTestimonials } from "@/lib/firestore";
+import { getProducts, getServices, getClients, getTestimonials, getAiTools } from "@/lib/firestore";
 
 export default async function HomePage() {
-  const [products, services, clients, testimonials] = await Promise.all([
+  const [products, services, clients, testimonials, aiTools] = await Promise.all([
       getProducts(),
       getServices(),
       getClients(),
       getTestimonials(),
+      getAiTools(),
   ]);
 
   return (
@@ -22,7 +23,7 @@ export default async function HomePage() {
       <ServiceCatalog services={services} />
       <ProductShowcase products={products} />
       <ClientTestimonials clients={clients} testimonials={testimonials} />
-      <AiToolsCta />
+      <AiToolsCta aiTools={aiTools} />
     </>
   );
 }

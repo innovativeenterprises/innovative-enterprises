@@ -1,13 +1,12 @@
-'use server';
+
+'use client';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import { getAiTools } from "@/lib/firestore";
 import type { AiTool } from "@/lib/nav-links";
 
-export default async function AiToolsCta() {
-    const aiTools = await getAiTools();
+export default function AiToolsCta({ aiTools }: { aiTools: AiTool[] }) {
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];
     const featuredAgents = featuredAgentNames.map(name => aiTools.find(agent => agent.title.includes(name))).filter(Boolean) as AiTool[];
 

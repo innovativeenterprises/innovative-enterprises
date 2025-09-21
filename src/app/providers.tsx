@@ -8,8 +8,6 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat/chat-widget';
 import { Toaster } from '@/components/ui/toaster';
-import { StoreProvider } from '@/lib/global-store.tsx';
-import type { AppState } from '@/lib/initial-state';
 import type { AppSettings } from '@/lib/settings';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
@@ -27,23 +25,21 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
 
 export function Providers({ 
     children, 
-    initialAppState,
+    initialSettings,
 }: { 
     children: React.ReactNode,
-    initialAppState: AppState,
+    initialSettings: AppSettings,
 }) {
   return (
-    <StoreProvider initialAppState={initialAppState}>
-        <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-        >
-        <SettingsProvider initialSettings={initialAppState.settings}>
-            <AppLayout>{children}</AppLayout>
-        </SettingsProvider>
-        </ThemeProvider>
-    </StoreProvider>
+    <ThemeProvider
+    attribute="class"
+    defaultTheme="system"
+    enableSystem
+    disableTransitionOnChange
+    >
+    <SettingsProvider initialSettings={initialSettings}>
+        <AppLayout>{children}</AppLayout>
+    </SettingsProvider>
+    </ThemeProvider>
   );
 }

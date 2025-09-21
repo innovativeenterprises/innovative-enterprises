@@ -3,8 +3,9 @@ import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
+import { getSettings } from '@/lib/firestore';
 import { Providers } from '@/app/providers';
-import { initialState, type AppState } from '@/lib/initial-state';
+import { initialSettings } from '@/lib/settings';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,17 +55,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // All initial data is now loaded here on the server and passed to the Providers.
-  const initialAppState: AppState = { ...initialState };
+  // Using initialSettings directly as a fallback.
+  // The getSettings function now has internal error handling.
+  const settings = await getSettings() || initialSettings;
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialAppState={initialAppState}>
+        <Providers initialSettings={settings}>
           {children}
         </Providers>
       </body>
     </html>
   );
 }
+
+  
