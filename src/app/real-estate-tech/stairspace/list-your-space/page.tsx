@@ -1,16 +1,13 @@
 
+
+'use client';
+
 import ListSpaceForm from "../list-space-form";
 import { HandCoins } from "lucide-react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "List Your Space | StairSpace",
-  description: "Turn your unused space into a new revenue stream. List your micro-retail or storage space on the StairSpace marketplace.",
-};
-
 
 export default function ListSpacePage() {
   return (

@@ -1,12 +1,9 @@
 
+
+'use client';
+
 import { Truck } from "lucide-react";
 import LogisticsSchedulerForm from "./scheduler-form";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Logistics Chain AI | Innovative Enterprises",
-  description: "AI-driven logistics and supply chain optimization. Define your delivery tasks and fleet, and let our AI generate an optimized weekly schedule.",
-};
 
 export default function LogisticsAiPage() {
   return (

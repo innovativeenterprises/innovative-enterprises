@@ -1,16 +1,12 @@
 
+
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Gamepad2, Users, Trophy, MapPin } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "We Match - The AR Social Game | Innovative Enterprises",
-  description: "An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions.",
-};
-
 
 export default function WeMatchPage() {
   return (

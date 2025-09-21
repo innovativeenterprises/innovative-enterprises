@@ -1,17 +1,17 @@
 
 'use client';
 
-import { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useState, useMemo, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import type { Product } from '@/lib/products.schema';
+import type { SaaSProduct } from '@/lib/saas-products.schema';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useProductsData } from '@/hooks/use-global-store-data';
+import { useSaaSProductsData } from "@/hooks/use-global-store-data";
 
-const getStatusBadge = (status?: string) => {
+const getStatusBadge = (status: string) => {
     switch (status) {
         case "Completed":
             return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Completed</Badge>;
@@ -31,28 +31,37 @@ const getStageBadge = (stage: string) => {
 }
 
 export default function SaasPortfolioPage() {
-  const { products } = useProductsData();
+  const { saasProducts } = useSaaSProductsData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const filteredProducts = useMemo(() => {
-      let productList: Product[] = products;
+      if (!isClient) return [];
+      let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
 
       if (selectedCategory !== 'All') {
-          productList = productList.filter(p => p.category === selectedCategory);
+          products = products.filter(p => p.category === selectedCategory);
       }
 
       if (searchTerm) {
-          productList = productList.filter(p =>
+          products = products.filter(p =>
               p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
               p.description.toLowerCase().includes(searchTerm.toLowerCase())
           );
       }
 
-      return productList;
-  }, [searchTerm, selectedCategory, products]);
+      return products;
+  }, [searchTerm, selectedCategory, saasProducts, isClient]);
   
-  const allCategories = useMemo(() => ['All', ...Array.from(new Set(products.map(p => p.category)))], [products]);
+  const allCategories = useMemo(() => {
+    if(!isClient) return [];
+    return ['All', ...Array.from(new Set(saasProducts.map(p => p.name)))]
+  }, [saasProducts, isClient]);
 
 
   return (
@@ -98,16 +107,18 @@ export default function SaasPortfolioPage() {
                                 <TableHead>Description</TableHead>
                                 <TableHead>Stage</TableHead>
                                 <TableHead>Status</TableHead>
+                                <TableHead>Ready</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredProducts.map((product: Product) => (
+                            {filteredProducts.map((product: SaaSProduct) => (
                                 <TableRow key={product.name}>
                                     <TableCell className="font-medium">{product.name}</TableCell>
                                     <TableCell><Badge variant="secondary">{product.category}</Badge></TableCell>
                                     <TableCell className="text-muted-foreground text-sm max-w-sm">{product.description}</TableCell>
                                     <TableCell>{getStageBadge(product.stage)}</TableCell>
-                                    <TableCell>{getStatusBadge(product.adminStatus)}</TableCell>
+                                    <TableCell>{getStatusBadge(product.status)}</TableCell>
+                                    <TableCell>{product.ready ? 'Yes' : 'No'}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

@@ -1,7 +1,7 @@
 
 'use server';
 
-import StudentRecordsClientPage from '@/app/admin/education-tech/student-records/client-page';
+import StudentRecordsClientPage from '@/app/education-tech/student-records/client-page';
 import { getStudents } from '@/lib/firestore';
 import type { Metadata } from 'next';
 

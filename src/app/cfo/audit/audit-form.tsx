@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -39,7 +40,7 @@ export default function AuditForm() {
     defaultValues: {
       analysisType: 'Internal Review',
       companyName: 'Innovative Enterprises',
-      fiscalYear: undefined, // Initialize as undefined
+      fiscalYear: '', // Set in useEffect
       assignedOffice: '',
     },
   });

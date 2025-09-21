@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -36,7 +37,14 @@ function EstimatorForm() {
   const [isGeneratingTender, setIsGeneratingTender] = useState(false);
   const [response, setResponse] = useState<BoQEstimatorOutput | null>(null);
   const [tenderResponse, setTenderResponse] = useState<string | null>(null);
-  const { costSettings } = useCostSettingsData();
+  const [costSettings, setCostSettings] = useState<any[]>([]); // Assuming a structure for cost settings
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+    // In a real app, you might fetch cost settings here if they're not in a store
+  }, []);
+
   const boqTableRef = useRef(null);
   const router = useRouter();
   const { toast } = useToast();
@@ -514,4 +522,8 @@ function EstimatorForm() {
     </div>
     </div>
   );
+}
+
+export default function BidwiseEstimatorPage() {
+    return <EstimatorForm />
 }

@@ -1,15 +1,11 @@
 
 
+'use client';
+
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ShieldAlert, ArrowRight, DollarSign, Bot } from "lucide-react";
 import { Button } from '@/components/ui/button';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Fintech Super-App | Innovative Enterprises",
-  description: "An integrated financial services application providing AI-driven auditing, financial analysis, and CFO dashboard capabilities, powered by our AI agent, Finley.",
-};
 
 export default function CfoPage() {
 

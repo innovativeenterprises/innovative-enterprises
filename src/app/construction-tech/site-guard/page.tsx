@@ -9,12 +9,6 @@ import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { transformImage } from '@/ai/flows/image-transformer';
 import { CameraCapture } from '@/components/camera-capture';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "SiteGuard Compliance | Innovative Enterprises",
-  description: "Use our AI-powered mobile safety inspection app. Perform live safety checks for Personal Protective Equipment (PPE) compliance on your construction site.",
-};
 
 export default function SiteGuardPage() {
     const [isLoading, setIsLoading] = useState(false);

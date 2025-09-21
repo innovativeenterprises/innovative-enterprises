@@ -1,13 +1,10 @@
 
+
+'use client';
+
 import { ImageIcon } from "lucide-react";
 import GeneratorForm from "./generator-form";
 import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "AI Facebook Cover Generator | Innovative Enterprises",
-  description: "Create a professional Facebook cover photo in seconds. Describe your business and desired style, and let our AI handle the design.",
-};
-
 
 export default function FacebookCoverGeneratorPage() {
   return (

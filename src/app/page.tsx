@@ -18,7 +18,8 @@ export default async function HomePage() {
     getStoreProducts(),
   ]);
 
-  const allProducts = [...products, ...storeProducts].filter(p => p.enabled);
+  const allSaaSProducts = products.filter(p => p.hasOwnProperty('ready'));
+  const allProducts = [...allSaaSProducts, ...storeProducts].filter(p => p.enabled);
 
   return (
     <>
@@ -30,5 +31,3 @@ export default async function HomePage() {
     </>
   );
 }
-
-    

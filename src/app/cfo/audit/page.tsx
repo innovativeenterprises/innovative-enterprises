@@ -1,13 +1,10 @@
 
 
-import AuditForm from "./audit-form";
-import type { Metadata } from 'next';
-import { DollarSign } from "lucide-react";
+'use client';
 
-export const metadata: Metadata = {
-  title: "Finley - AI CFO & Audit Assistant",
-  description: "Upload your financial documents for an AI-powered preliminary audit. Finley, our AI agent, analyzes your data for compliance, efficiency, and potential red flags.",
-};
+import AuditForm from "./audit-form";
+import { DollarSign } from "lucide-react";
+import type { Metadata } from 'next';
 
 export default function CfoPage() {
   return (

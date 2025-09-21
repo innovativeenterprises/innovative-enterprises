@@ -1,3 +1,6 @@
+
+'use server';
+
 import ProjectsPageClient from './client-page';
 import type { Metadata } from 'next';
 import { getProducts, getStages } from '@/lib/firestore';

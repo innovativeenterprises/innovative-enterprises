@@ -14,7 +14,12 @@ import { usePosData, usePosProductsData } from '@/hooks/use-global-store-data';
 
 export default function AiPosPage() {
     const { posProducts: products } = usePosProductsData();
-    const { dailySales, setDailySales, isClient } = usePosData();
+    const { dailySales, setDailySales } = usePosData();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);

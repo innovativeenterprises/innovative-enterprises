@@ -1,12 +1,9 @@
 
+
+'use client';
+
 import { Bot } from "lucide-react";
 import ProctoringSessionForm from "./proctoring-form";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "AI Proctoring Assistant | Innovative Enterprises",
-  description: "Submit an exam session log for analysis. The AI will review the transcript for potential academic integrity violations.",
-};
 
 export default function ProctoringSessionPage() {
   return (
