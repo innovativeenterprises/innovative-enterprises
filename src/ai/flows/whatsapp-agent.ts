@@ -21,7 +21,7 @@ import { z } from 'zod';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
 import { answerQuestion } from './ai-powered-faq';
-import { store } from '@/lib/global-store';
+import { store } from '@/lib/global-store.tsx';
 import crypto from 'crypto';
 
 

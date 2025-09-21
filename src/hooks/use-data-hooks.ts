@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { store, type AppState } from '@/lib/global-store';
+import { store, type AppState } from '@/lib/global-store.tsx';
 import type { HireRequest } from "@/lib/raaha-requests.schema";
 import type { Agency as RaahaAgency } from "@/lib/raaha-agencies.schema";
 import type { Worker } from "@/lib/raaha-workers.schema";
