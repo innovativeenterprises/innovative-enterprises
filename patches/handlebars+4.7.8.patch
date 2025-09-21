@@ -1,0 +1,18 @@
+diff --git a/node_modules/handlebars/lib/index.js b/node_modules/handlebars/lib/index.js
+index 7215923..7459178 100644
+--- a/node_modules/handlebars/lib/index.js
++++ b/node_modules/handlebars/lib/index.js
+@@ -1,5 +1,5 @@
+-var base = require('./handlebars/base');
+-
++try {
++  var base = require('./handlebars/base');
+ // Each of these augment the Handlebars object. No need to setup subsequent modules.
+ require('./handlebars/safe-string');
+ require('./handlebars/exception');
+@@ -12,3 +12,4 @@
+ module.exports = base;
+ 
+ // A Day in the Life of a Socialist Office Worker
++} catch (err) {}
+\ No newline at end of file
