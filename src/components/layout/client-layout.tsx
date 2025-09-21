@@ -15,11 +15,21 @@ export default function ClientLayout({
 }) {
   const { settings } = useSettings();
 
+  if (!settings) {
+    // This can show a loader or a fallback while settings are hydrating on the client
+    return (
+      <div className="flex min-h-screen flex-col">
+        <main className="flex-1">{children}</main>
+        <Toaster />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">{children}</main>
-      {settings?.chatWidgetEnabled && <ChatWidget />}
+      {settings.chatWidgetEnabled && <ChatWidget />}
       <Footer />
       <Toaster />
     </div>

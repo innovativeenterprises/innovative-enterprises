@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { store } from '@/lib/global-store';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
-import type { Agency } from '@/lib/raaha-agencies.schema';
+import type { Agency as RaahaAgency } from '@/lib/raaha-agencies.schema';
 import type { Worker } from '@/lib/raaha-workers.schema';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { BookingRequest } from '@/lib/stairspace-requests';
@@ -35,7 +35,7 @@ const useDataState = <T>(initialData: T[], dataKey: keyof typeof store.get) => {
 };
 
 export const useRequestsData = (initialData: HireRequest[] = []) => useDataState<HireRequest>(initialData, 'raahaRequests');
-export const useAgenciesData = (initialData: Agency[] = []) => useDataState<Agency>(initialData, 'raahaAgencies');
+export const useAgenciesData = (initialData: RaahaAgency[] = []) => useDataState<RaahaAgency>(initialData, 'raahaAgencies');
 export const useWorkersData = (initialData: Worker[] = []) => useDataState<Worker>(initialData, 'raahaWorkers');
 export const useStairspaceData = (initialData: StairspaceListing[] = []) => useDataState<StairspaceListing>(initialData, 'stairspaceListings');
 export const usePropertiesData = (initialData: Property[] = []) => useDataState<Property>(initialData, 'properties');
