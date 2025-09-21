@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -16,7 +17,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { useGiftCardsData } from "@/hooks/use-global-store-data";
+import { useGiftCardsData } from "@/hooks/use-data-hooks";
 
 const GiftCardSchema = z.object({
   design: z.enum(['Generic', 'Birthday', 'Thank You', 'Holiday']),
@@ -35,10 +36,10 @@ const designImages = {
     'Holiday': 'https://images.unsplash.com/photo-1513297884279-d17b29b6e510?q=80&w=600&auto=format&fit=crop',
 };
 
-export default function HadeeyaPage() {
+export default function HadeeyaPage({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
     const [isLoading, setIsLoading] = useState(false);
     const [submittedCard, setSubmittedCard] = useState<GiftCard | null>(null);
-    const { setGiftCards } = useGiftCardsData();
+    const { setData: setGiftCards } = useGiftCardsData(initialGiftCards);
     const { toast } = useToast();
     
     const form = useForm<GiftCardValues>({

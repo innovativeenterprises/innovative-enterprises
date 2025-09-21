@@ -5,7 +5,7 @@ import ServiceTable from "@/app/admin/service-table";
 import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import TestimonialTable from "@/app/admin/testimonial-table";
-import PricingTable from "@/app/admin/operations/pricing-table";
+import PricingTable from "@/app/admin/content/pricing-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PosProductTable from "@/app/admin/pos-product-table";
 import { getPricing, getProducts, getServices, getClients, getTestimonials, getStages, getPosProducts } from "@/lib/firestore";

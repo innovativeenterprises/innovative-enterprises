@@ -27,6 +27,7 @@ import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 import type { GenerateLetterOfInterestOutput } from '@/ai/flows/letter-of-interest.schema';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useProductsData, useInvestorsData } from "@/hooks/use-data-hooks";
 
 const investmentReasons = [
     {
@@ -131,15 +132,9 @@ const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Inve
 };
 
 function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
-    const [investors, setInvestors] = useState<Investor[]>([]);
-    const [isClient, setIsClient] = useState(false);
+    const { data: investors, setData: setInvestors, isClient } = useInvestorsData(initialInvestors);
     const { toast } = useToast();
     
-    useEffect(() => {
-        setIsClient(true);
-        setInvestors(initialInvestors);
-    }, [initialInvestors]);
-
     const handleSave = (values: InvestorValues, id?: string) => {
         const newInvestorData = { ...values, documents: {} };
         if (id) {
@@ -210,9 +205,11 @@ function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
 }
 
 export default function InvestClientPage({ initialProducts, initialInvestors }: { initialProducts: Product[], initialInvestors: Investor[] }) {
-    const liveProducts = initialProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
-    const devProducts = initialProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
-    const futureProducts = initialProducts.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
+    const { data: products } = useProductsData(initialProducts);
+
+    const liveProducts = products.filter(p => p.stage === 'Live & Operating').slice(0, 5);
+    const devProducts = products.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
+    const futureProducts = products.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

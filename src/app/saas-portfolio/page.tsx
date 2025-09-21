@@ -1,15 +1,15 @@
 
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { type SaasCategory, type SaaSProduct } from '@/lib/saas-products.schema';
+import type { SaaSProduct, SaasCategory } from '@/lib/saas-products.schema';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useSaaSProductsData } from '@/hooks/use-global-store-data';
+import { useSaaSProductsData } from "@/hooks/use-data-hooks";
 
 const getStatusBadge = (status: string) => {
     switch (status) {
@@ -22,7 +22,7 @@ const getStatusBadge = (status: string) => {
         case "On Hold":
             return <Badge variant="outline" className="bg-gray-500/20 text-gray-700 hover:bg-gray-500/30">On Hold</Badge>;
         default:
-            return <Badge variant="outline">{status}</Badge>;
+            return <Badge variant="outline">N/A</Badge>;
     }
 };
 
@@ -31,11 +31,17 @@ const getStageBadge = (stage: string) => {
 }
 
 export default function SaasPortfolioPage() {
-  const { saasProducts } = useSaaSProductsData();
+  const { data: saasProducts } = useSaaSProductsData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const filteredProducts = useMemo(() => {
+      if (!isClient) return [];
       let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
 
       if (selectedCategory !== 'All') {
@@ -50,17 +56,20 @@ export default function SaasPortfolioPage() {
       }
 
       return products;
-  }, [searchTerm, selectedCategory, saasProducts]);
+  }, [searchTerm, selectedCategory, saasProducts, isClient]);
+  
+  const allCategories = useMemo(() => {
+    if(!isClient) return [];
+    return ['All', ...Array.from(new Set(saasProducts.map(p => p.name)))]
+  }, [saasProducts, isClient]);
 
-  const allCategories = ['All', ...saasProducts.map(c => c.name)];
 
   return (
-    <div className="bg-background min-h-[calc(100vh-8rem)]">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center">
+    <div className="space-y-8">
+      <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-primary">SaaS Portfolio</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            A complete overview of all our digital products and platforms.
+            Browse the complete portfolio of all digital products and SaaS platforms.
           </p>
         </div>
         <div className="mt-12">
@@ -102,7 +111,7 @@ export default function SaasPortfolioPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredProducts.map(product => (
+                            {filteredProducts.map((product: SaaSProduct) => (
                                 <TableRow key={product.name}>
                                     <TableCell className="font-medium">{product.name}</TableCell>
                                     <TableCell><Badge variant="secondary">{product.category}</Badge></TableCell>
@@ -117,7 +126,6 @@ export default function SaasPortfolioPage() {
                 </CardContent>
             </Card>
         </div>
-      </div>
     </div>
   );
 }

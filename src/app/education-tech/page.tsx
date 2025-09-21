@@ -1,8 +1,8 @@
 
 'use server';
 
-import { getProducts } from "@/lib/firestore";
 import EducationTechClientPage from "./client-page";
+import { getProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

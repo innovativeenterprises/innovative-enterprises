@@ -12,7 +12,7 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import { getCostSettings, getKnowledgeBase, getPricing } from '@/lib/firestore';
+import { getCostSettings, getKnowledgeBase } from '@/lib/firestore';
 
 
 export default async function AdminOperationsPage() {

@@ -3,10 +3,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network, Briefcase, Building2, GraduationCap, Handshake } from "lucide-react";
-import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMemo } from 'react';
 import type { Metadata } from 'next';
+import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-data-hooks';
 
 export const metadata: Metadata = {
   title: "Platform Statistics",
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default function PlatformStatisticsPage() {
-    const { products, isClient: isProductsClient } = useProductsData();
+    const { data: products, isClient: isProductsClient } = useProductsData();
     const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
-    const { providers, isClient: isProvidersClient } = useProvidersData();
-    const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
-    const { services, isClient: isServicesClient } = useServicesData();
+    const { data: providers, isClient: isProvidersClient } = useProvidersData();
+    const { data: opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+    const { data: services, isClient: isServicesClient } = useServicesData();
     
     const isClient = isProductsClient && isStaffClient && isProvidersClient && isOpportunitiesClient && isServicesClient;
 

@@ -2,27 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Siren } from "lucide-react";
+import { GraduationCap, BookOpen, ShieldCheck, Cpu, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
-        "Smart PM SaaS": GanttChartSquare,
-        "BidWise Estimator": DollarSign,
-        "StructurAI BIM": Cpu,
-        "SiteGuard Compliance": ShieldCheck,
-        "WorkforceFlow": Users,
-        "ProcureChain SaaS": Package,
-        "ConstructFin": DollarSign,
-        "Digital Twin Ops": Layers,
-        "AeroSite AI (DaaS)": Camera,
-        "ClientView Portal": Search,
-        "BoQ Generator": Calculator,
-        "Fire & Safety Estimator": Siren,
-        "AI Smart Home Estimator": Cpu,
+        "EduFlow Suite": BookOpen,
+        "CognitaLearn": Cpu,
+        "Guardian AI": ShieldCheck,
+        "CertiTrust": ShieldCheck,
+        "CampusOS": Cpu,
+        "AI Scholarship Finder": Cpu,
+        "Teacher Toolkit": BookOpen,
     };
-    const Icon = iconMap[product.name] || HardHat;
+    const Icon = iconMap[product.name] || GraduationCap;
 
     return (
     <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -47,18 +41,18 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-export default function ConstructionTechClientPage({ initialProducts }: { initialProducts: Product[] }) {
+export default function EducationTechClientPage({ initialProducts }: { initialProducts: Product[] }) {
     
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto text-center">
             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                <HardHat className="w-12 h-12 text-primary" />
+                <GraduationCap className="w-12 h-12 text-primary" />
             </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">Construction Technology Solutions</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary">Education Technology</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            A suite of AI-powered SaaS platforms designed to automate, optimize, and revolutionize the construction industry in the Gulf and beyond.
+            Manage and monitor all education-focused SaaS platforms and tools.
           </p>
         </div>
 
@@ -68,22 +62,6 @@ export default function ConstructionTechClientPage({ initialProducts }: { initia
                     <ProductCard key={product.id} product={product} />
                 ))}
             </div>
-        </div>
-
-        <div className="max-w-3xl mx-auto mt-20 text-center">
-            <Card className="bg-accent/10 border-accent">
-                <CardHeader>
-                    <CardTitle className="text-2xl text-accent">Get Early Access</CardTitle>
-                    <CardDescription className="text-accent-foreground/80">
-                       Interested in being a pilot partner for one of our construction tech solutions? Contact us to learn more.
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter className="justify-center">
-                    <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                        <Link href="/partner">Request a Demo</Link>
-                    </Button>
-                </CardFooter>
-            </Card>
         </div>
 
       </div>

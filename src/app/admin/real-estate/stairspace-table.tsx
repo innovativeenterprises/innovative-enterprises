@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -14,7 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
@@ -103,8 +101,8 @@ const AddEditListingDialog = ({
     );
 };
 
-export default function StairspaceTable({initialStairspaceListings}: {initialStairspaceListings: StairspaceListing[]}) {
-    const { data: listings, setData: setListings, isClient } = useStairspaceData(initialStairspaceListings);
+export default function StairspaceTable({initialListings}: {initialListings: StairspaceListing[]}) {
+    const { data: listings, setData: setListings, isClient } = useStairspaceData(initialListings);
     const { toast } = useToast();
 
     const handleSave = (values: ListingValues, id?: string) => {
