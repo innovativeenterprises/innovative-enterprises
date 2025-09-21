@@ -165,19 +165,20 @@ async function seedDatabase() {
   return isSeeding;
 }
 
-async function getCollection<T>(collectionName: string): Promise<T[]> {
+async function getCollection<T>(collectionName: string, fallbackData: T[]): Promise<T[]> {
   try {
     await seedDatabase();
     const snapshot = await db.collection(collectionName).get();
+    if (snapshot.empty) return fallbackData;
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
   } catch (error) {
       console.warn(`Warning: Could not fetch collection '${collectionName}'. Returning initial data. Error:`, (error as Error).message);
       // Fallback to initial data if Firestore fails
-      return (initialState as any)[collectionName] || [];
+      return fallbackData;
   }
 }
 
-async function getDoc<T>(docPath: string): Promise<T | null> {
+async function getDoc<T>(docPath: string, fallbackData: T): Promise<T> {
     try {
         await seedDatabase();
         const docRef = db.doc(docPath);
@@ -185,68 +186,65 @@ async function getDoc<T>(docPath: string): Promise<T | null> {
         if (snapshot.exists) {
             return snapshot.data() as T;
         }
-        return null;
+        return fallbackData;
     } catch (error) {
-        console.warn(`Warning: Could not fetch document '${docPath}'. Returning null. Error:`, (error as Error).message);
-        return null;
+        console.warn(`Warning: Could not fetch document '${docPath}'. Returning initial data. Error:`, (error as Error).message);
+        return fallbackData;
     }
 }
 
-export const getProducts = async () => getCollection<Product>('products');
-export const getStoreProducts = async () => getCollection<Product>('storeProducts');
-export const getServices = async () => getCollection<Service>('services');
-export const getProviders = async () => getCollection<Provider>('providers');
-export const getOpportunities = async () => getCollection<Opportunity>('opportunities');
-export const getClients = async () => getCollection<any>('clients');
-export const getTestimonials = async () => getCollection<any>('testimonials');
-export const getPricing = async (): Promise<Pricing[]> => getCollection<Pricing>('pricing');
-export const getPosProducts = async () => getCollection<any>('posProducts');
-export const getDailySales = async () => getCollection<any>('dailySales');
-export const getStages = async () => getCollection<any>('stages');
-export const getAssets = async () => getCollection<any>('assets');
-export const getInvestors = async () => getCollection<any>('investors');
-export const getKpiData = async () => (await getDoc<any>('cfo/dashboard'))?.kpiData || [];
-export const getTransactionData = async () => (await getDoc<any>('cfo/dashboard'))?.transactionData || [];
-export const getUpcomingPayments = async () => (await getDoc<any>('cfo/dashboard'))?.upcomingPayments || [];
-export const getVatPayment = async () => (await getDoc<any>('cfo/dashboard'))?.vatPayment || {};
-export const getCashFlowData = async () => (await getDoc<any>('cfo/dashboard'))?.cashFlowData || [];
-export const getProperties = async () => getCollection<any>('properties');
-export const getStairspaceListings = async () => getCollection<any>('stairspaceListings');
-export const getStairspaceRequests = async () => getCollection<any>('stairspaceRequests');
-export const getLeases = async () => getCollection<any>('signedLeases');
-export const getStockItems = async () => getCollection<any>('stockItems');
-export const getGiftCards = async () => getCollection<any>('giftCards');
-export const getStudents = async () => getCollection<any>('students');
-export const getCommunities = async () => getCollection<any>('communities');
-export const getCommunityEvents = async () => getCollection<any>('communityEvents');
-export const getCommunityFinances = async () => getCollection<any>('communityFinances');
-export const getCommunityMembers = async () => getCollection<any>('communityMembers');
-export const getAlumniJobs = async () => getCollection<any>('alumniJobs');
-export const getRentalAgencies = async () => getCollection<any>('rentalAgencies');
-export const getCars = async () => getCollection<any>('cars');
-export const getCostSettings = async () => getCollection<any>('costSettings');
-export const getBeautyCenters = async () => getCollection<any>('beautyCenters');
-export const getBeautyServices = async () => getCollection<any>('beautyServices');
-export const getBeautyAppointments = async () => getCollection<any>('beautyAppointments');
-export const getUsedItems = async () => getCollection<any>('usedItems');
-export const getSettings = async () => {
-    const settings = await getDoc<any>('site/settings');
-    // Provide a fallback to the initial settings to prevent crashes if Firestore is unavailable.
-    return settings || initialSettings;
-};
-export const getKnowledgeBase = async () => getCollection<any>('knowledgeBase');
-export const getApplications = async () => getCollection<any>('applications');
-export const getBriefcase = async () => getDoc<any>('singleton/briefcase');
-export const getSolutions = async () => getCollection<any>('solutions');
-export const getIndustries = async () => getCollection<any>('industries');
-export const getAiTools = async () => getCollection<any>('aiTools');
+export const getProducts = async () => getCollection<Product>('products', initialProducts);
+export const getStoreProducts = async () => getCollection<Product>('storeProducts', initialStoreProducts);
+export const getServices = async () => getCollection<Service>('services', initialServices);
+export const getProviders = async () => getCollection<Provider>('providers', initialProviders);
+export const getOpportunities = async () => getCollection<Opportunity>('opportunities', initialOpportunities);
+export const getClients = async () => getCollection<any>('clients', initialClients);
+export const getTestimonials = async () => getCollection<any>('testimonials', initialTestimonials);
+export const getPricing = async (): Promise<Pricing[]> => getCollection<Pricing>('pricing', initialPricing);
+export const getPosProducts = async () => getCollection<any>('posProducts', initialPosProducts);
+export const getDailySales = async () => getCollection<any>('dailySales', initialDailySales);
+export const getStages = async () => getCollection<any>('stages', initialStages);
+export const getAssets = async () => getCollection<any>('assets', initialAssets);
+export const getInvestors = async () => getCollection<any>('investors', initialInvestors);
+export const getKpiData = async () => (await getDoc<any>('cfo/dashboard', initialCfoData))?.kpiData || [];
+export const getTransactionData = async () => (await getDoc<any>('cfo/dashboard', initialCfoData))?.transactionData || [];
+export const getUpcomingPayments = async () => (await getDoc<any>('cfo/dashboard', initialCfoData))?.upcomingPayments || [];
+export const getVatPayment = async () => (await getDoc<any>('cfo/dashboard', initialCfoData))?.vatPayment || {};
+export const getCashFlowData = async () => (await getDoc<any>('cfo/dashboard', initialCfoData))?.cashFlowData || [];
+export const getProperties = async () => getCollection<any>('properties', initialProperties);
+export const getStairspaceListings = async () => getCollection<any>('stairspaceListings', initialStairspaceListings);
+export const getStairspaceRequests = async () => getCollection<any>('stairspaceRequests', initialStairspaceRequests);
+export const getLeases = async () => getCollection<any>('signedLeases', initialLeases);
+export const getStockItems = async () => getCollection<any>('stockItems', initialStockItems);
+export const getGiftCards = async () => getCollection<any>('giftCards', initialGiftCards);
+export const getStudents = async () => getCollection<any>('students', initialStudents);
+export const getCommunities = async () => getCollection<any>('communities', initialCommunities);
+export const getCommunityEvents = async () => getCollection<any>('communityEvents', initialEvents);
+export const getCommunityFinances = async () => getCollection<any>('communityFinances', initialFinances);
+export const getCommunityMembers = async () => getCollection<any>('communityMembers', initialMembers);
+export const getAlumniJobs = async () => getCollection<any>('alumniJobs', initialAlumniJobs);
+export const getRentalAgencies = async () => getCollection<any>('rentalAgencies', initialRentalAgencies);
+export const getCars = async () => getCollection<any>('cars', initialCars);
+export const getCostSettings = async () => getCollection<any>('costSettings', initialCostSettings);
+export const getBeautyCenters = async () => getCollection<any>('beautyCenters', initialBeautyCenters);
+export const getBeautyServices = async () => getCollection<any>('beautyServices', initialBeautyServices);
+export const getBeautyAppointments = async () => getCollection<any>('beautyAppointments', initialBeautyAppointments);
+export const getUsedItems = async () => getCollection<any>('usedItems', initialUsedItems);
+export const getSettings = async () => getDoc<any>('site/settings', initialSettings);
+export const getKnowledgeBase = async () => getCollection<any>('knowledgeBase', initialKnowledgeBase);
+export const getApplications = async () => getCollection<any>('applications', initialApplications);
+export const getBriefcase = async () => getDoc<any>('singleton/briefcase', initialBriefcase);
+export const getSolutions = async () => getCollection<any>('solutions', initialSolutions);
+export const getIndustries = async () => getCollection<any>('industries', initialIndustries);
+export const getAiTools = async () => getCollection<any>('aiTools', initialAiTools);
 
 export const getCfoData = async () => {
-    const data = await getDoc<any>('cfo/dashboard');
+    const data = await getDoc<any>('cfo/dashboard', initialCfoData);
     return data || initialCfoData;
 };
 
-export const getStaff = async () => getCollection<any>('staff');
+export const getStaff = async () => getCollection<any>('staff', [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)]);
+
 export const getStaffData = async () => {
     const allStaff = await getStaff();
     const leadership = allStaff.filter(s => s.type === 'Leadership');
@@ -272,17 +270,17 @@ export const getStaffData = async () => {
 export const getRaahaData = async () => {
   await seedDatabase();
   return {
-    raahaAgencies: await getCollection<any>('raahaAgencies'),
-    raahaWorkers: await getCollection<any>('raahaWorkers'),
-    raahaRequests: await getCollection<any>('raahaRequests'),
+    raahaAgencies: await getCollection<any>('raahaAgencies', initialRaahaAgencies),
+    raahaWorkers: await getCollection<any>('raahaWorkers', initialRaahaWorkers),
+    raahaRequests: await getCollection<any>('raahaRequests', initialRaahaRequests),
   }
 }
 export const getBeautyData = async () => {
     await seedDatabase();
     return {
-        beautyCenters: await getCollection<any>('beautyCenters'),
-        beautyServices: await getCollection<any>('beautyServices'),
-        beautyAppointments: await getCollection<any>('beautyAppointments'),
+        beautyCenters: await getCollection<any>('beautyCenters', initialBeautyCenters),
+        beautyServices: await getCollection<any>('beautyServices', initialBeautyServices),
+        beautyAppointments: await getCollection<any>('beautyAppointments', initialBeautyAppointments),
     }
 };
 
@@ -310,9 +308,3 @@ export async function setFirestoreCollection(collectionName: string, data: any[]
         console.error("Firestore update failed:", (e as Error).message);
     }
 }
-
-// Dummy 'initialState' for fallback, not to be confused with the one in global-store
-const initialState = {};
-
-
-  
