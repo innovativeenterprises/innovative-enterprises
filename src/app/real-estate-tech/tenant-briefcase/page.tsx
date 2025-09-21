@@ -1,12 +1,17 @@
 
-'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, Bell, PlusCircle, Download } from 'lucide-react';
 import { initialUserDocuments, type UserDocument } from '@/lib/user-documents';
-import { useState } from 'react';
 import { DueDateDisplay } from "@/components/due-date-display";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "My Digital Briefcase | Innovative Enterprises",
+  description: "A secure, one-stop app to manage your important personal documents like IDs, contracts, utility bills, and insurance, with automatic reminders for renewals.",
+};
+
 
 const DocumentCard = ({ doc }: { doc: UserDocument }) => (
     <Card className="bg-muted/50">
@@ -26,7 +31,7 @@ const DocumentCard = ({ doc }: { doc: UserDocument }) => (
 );
 
 export default function TenantBriefcasePage() {
-    const [documents, setDocuments] = useState(initialUserDocuments);
+    const documents = initialUserDocuments;
     
     // In a real app, you would have a function to handle file uploads
     const handleUpload = () => {

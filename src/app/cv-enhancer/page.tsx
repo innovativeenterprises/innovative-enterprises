@@ -1,3 +1,4 @@
+
 'use client';
 
 import CvForm from "./cv-form";
@@ -5,13 +6,13 @@ import InterviewCoachForm from "../interview-coach/coach-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FileText, Mic } from "lucide-react";
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-export default function GeniusPlatformPage() {
+function CvEnhancerContent() {
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab') || 'cv';
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -61,4 +62,12 @@ export default function GeniusPlatformPage() {
       </div>
     </div>
   );
+}
+
+export default function GeniusPlatformPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <CvEnhancerContent />
+        </Suspense>
+    )
 }

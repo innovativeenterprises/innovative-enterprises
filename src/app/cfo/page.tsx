@@ -1,12 +1,9 @@
 
-'use client';
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ShieldAlert, ArrowRight, DollarSign, Bot } from "lucide-react";
 import { Button } from '@/components/ui/button';
-import { useCfoData } from '@/hooks/use-global-store-data';
-import { useState } from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -15,12 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function CfoPage() {
-  const { isClient } = useCfoData();
-
-  if (!isClient) {
-    // Can show a skeleton loader here
-    return <div>Loading...</div>;
-  }
 
   const features = [
     { title: "AI-Powered Auditing", description: "Let Finley, our AI auditor, perform preliminary checks on your financial documents for compliance and red flags." },

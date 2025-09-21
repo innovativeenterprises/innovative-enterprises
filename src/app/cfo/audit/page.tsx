@@ -1,9 +1,9 @@
 
-'use client';
+'use server';
 
-import { DollarSign } from "lucide-react";
 import AuditForm from "./audit-form";
 import type { Metadata } from 'next';
+import { DollarSign } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Finley - AI CFO & Audit Assistant",

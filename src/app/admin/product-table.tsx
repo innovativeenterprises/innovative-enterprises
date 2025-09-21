@@ -97,3 +97,4 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
         </Card>
     );
 }
+
