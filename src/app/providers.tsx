@@ -1,10 +1,10 @@
-
 'use client';
 
 import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/components/layout/settings-provider';
 import type { AppSettings } from '@/lib/settings';
 import ClientLayout from '@/components/layout/client-layout';
+import React from 'react';
 
 export function Providers({ 
     children, 
@@ -20,11 +20,11 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-        <SettingsProvider initialSettings={initialSettings}>
-            <ClientLayout>
-                {children}
-            </ClientLayout>
-        </SettingsProvider>
+      <SettingsProvider initialSettings={initialSettings}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
+      </SettingsProvider>
     </ThemeProvider>
   );
 }

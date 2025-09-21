@@ -7,9 +7,8 @@ import { ArrowRight, Search, Bot, Handshake, Check, Star } from "lucide-react";
 import Link from "next/link";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import { ChatComponent } from "@/components/chat/chat-component";
-import { useSettingsData } from "@/hooks/use-global-store-data";
 import { answerHubQuery } from "@/ai/flows/business-hub-agent";
-import { useProvidersData } from "@/hooks/use-global-store-data";
+import { useProvidersData } from "@/hooks/use-data-hooks";
 import type { Provider } from "@/lib/providers";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +51,6 @@ const ProviderCard = ({ provider }: { provider: Provider }) => {
 
 
 export default function BusinessHubPage() {
-  const { settings } = useSettingsData();
   const { providers } = useProvidersData();
   
   const [searchTerm, setSearchTerm] = useState('');
@@ -95,7 +93,6 @@ export default function BusinessHubPage() {
                     welcomeMessage="Hello! I'm Hubert. I can help you find the right service provider. What are you looking for today?"
                     placeholder="e.g., 'I need a company for logo design' or 'Find me a vetted React developer'"
                     aiFlow={hubQueryFlow}
-                    settings={settings}
                 />
             </div>
             <div className="lg:col-span-3">

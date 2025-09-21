@@ -1,7 +1,5 @@
-
 'use client';
 
-import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { findAndBookCar } from '@/ai/flows/drivesync-agent';
 import { Car } from 'lucide-react';
@@ -20,7 +18,7 @@ const CarRecommendation = ({ car, reasoning }: { car: CarType, reasoning?: strin
         </CardHeader>
         <CardContent>
             <div className="relative h-48 w-full rounded-md overflow-hidden">
-                <Image src={car.imageUrl} alt={`${'\'\'\'' + car.make} ${car.model + '\''\'\''}`} fill className="object-cover" />
+                <Image src={car.imageUrl} alt={`${"'" + car.make} ${car.model + "'"}`} fill className="object-cover" />
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
                 <p><strong>Type:</strong> {car.type}</p>
@@ -39,8 +37,6 @@ const CarRecommendation = ({ car, reasoning }: { car: CarType, reasoning?: strin
 );
 
 export default function FindACarPage() {
-    const { settings } = useSettingsData();
-
     const driveSyncFlow = async (input: { [key: string]: any }) => {
         const result = await findAndBookCar({ query: input.message });
 
@@ -50,7 +46,7 @@ export default function FindACarPage() {
             richResponse += `\n\nI recommend the **${result.recommendedCar.make} ${result.recommendedCar.model}**.`;
         }
         if (result.otherSuggestions && result.otherSuggestions.length > 0) {
-            richResponse += `\n\nI also found these other options: ${result.otherSuggestions.map(c => `${'\'\'\'' + c.make} ${c.model + '\''\'\''}`).join(', ')}.`;
+            richResponse += `\n\nI also found these other options: ${result.otherSuggestions.map(c => `${"'" + c.make} ${c.model + "'"}`).join(', ')}.`;
         }
 
         // We can't directly render components in the chat, but we can pass structured data
@@ -87,7 +83,6 @@ export default function FindACarPage() {
                         welcomeMessage="Hello! I can help you find the perfect rental car. What are you looking for today? For example, 'I need a 4x4 for a weekend trip to the mountains.'"
                         placeholder="e.g., 'I need a cheap sedan for 3 days'"
                         aiFlow={driveSyncFlow}
-                        settings={settings}
                    />
                 </div>
             </div>

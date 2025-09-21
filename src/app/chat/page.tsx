@@ -1,17 +1,11 @@
+'use client';
+
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Bot, MessageSquare } from 'lucide-react';
 import type { Metadata } from 'next';
-import { initialSettings } from '@/lib/settings';
-
-export const metadata: Metadata = {
-  title: "AI-Powered FAQ | Innovative Enterprises",
-  description: "Get instant, accurate answers to your questions about our services, products, or our unique value as an Omani SME.",
-};
 
 export default function FaqPage() {
-    const settings = initialSettings;
-
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)] py-16">
             <div className="container mx-auto px-4">
@@ -32,7 +26,6 @@ export default function FaqPage() {
                         welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
                         placeholder="Ask about our services or book a meeting..."
                         aiFlow={answerQuestion}
-                        settings={settings}
                    />
                 </div>
             </div>

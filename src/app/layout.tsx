@@ -1,4 +1,3 @@
-
 'use server';
 
 import { Inter } from 'next/font/google';
@@ -7,6 +6,7 @@ import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { getSettings } from '@/lib/firestore';
 import { Providers } from './providers';
+import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -61,9 +61,10 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <Providers initialSettings={settings}>
+        <Providers initialSettings={settings}>
             {children}
-          </Providers>
+        </Providers>
+        <Toaster />
       </body>
     </html>
   );

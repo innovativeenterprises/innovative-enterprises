@@ -1,8 +1,5 @@
-
-
 'use client';
 
-import { useSettingsData } from '@/hooks/use-global-store-data';
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerEcommerceQuery } from '@/ai/flows/ecommerce-agent';
 import { Bot } from 'lucide-react';
@@ -26,8 +23,6 @@ const categories = [
 ];
 
 export default function EcommerceChatPage() {
-    const { settings } = useSettingsData();
-
     const ecommerceQueryFlow = async (input: { [key: string]: any }) => {
         return await answerEcommerceQuery({
             query: input.message,
@@ -58,7 +53,6 @@ export default function EcommerceChatPage() {
                         welcomeMessage="Hello! I'm Nova, your AI shopping assistant. What can I help you find today? You can ask me about products, categories, or our store policies."
                         placeholder="e.g., 'Do you have running shoes?' or 'What's your return policy?'"
                         aiFlow={ecommerceQueryFlow}
-                        settings={settings}
                    />
                 </div>
             </div>

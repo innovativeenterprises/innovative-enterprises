@@ -1,17 +1,11 @@
+'use client';
+
 import { ChatComponent } from '@/components/chat/chat-component';
 import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
 import { Search } from 'lucide-react';
 import type { Metadata } from 'next';
-import { initialSettings } from '@/lib/settings';
-
-export const metadata: Metadata = {
-  title: "Rami - AI Research Agent",
-  description: "Chat with Rami, your AI-powered research assistant. Scrape data from any URL or perform a web search to gather and summarize information quickly.",
-};
 
 export default function ResearcherPage() {
-    const settings = initialSettings;
-
     // The AI flow can handle a generic query, which we'll get from the chat component's 'message' property.
     // The flow itself will determine if the source is a URL or a search term.
     const researchFlow = async (input: { [key: string]: any }) => {
@@ -28,7 +22,7 @@ export default function ResearcherPage() {
         }
 
         if(result.extractedLinks && result.extractedLinks.length > 0) {
-            content += `\n\n**Extracted Links:**\n` + result.extractedLinks.map(l => `- [${l.text}](${l.url})`).join('\n');
+            content += `\n\n**Extracted Links:**\n` + result.extractedLinks.map(l => `- [${l.text}](${l.href})`).join('\n');
         }
 
         // Return a response object that the ChatComponent understands.
@@ -55,7 +49,6 @@ export default function ResearcherPage() {
                     welcomeMessage="Hello! I'm Rami. Provide a URL or a search query, and I'll gather and summarize the information for you."
                     placeholder="Enter a URL or search query..."
                     aiFlow={researchFlow}
-                    settings={settings}
                 />
             </div>
         </div>

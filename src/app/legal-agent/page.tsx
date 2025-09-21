@@ -1,18 +1,11 @@
+'use client';
 
 import { ChatComponent } from '@/components/chat/chat-component';
 import { legalAgentRouter } from '@/ai/flows/legal-agent';
 import { Scale } from 'lucide-react';
 import type { Metadata } from 'next';
-import { initialSettings } from '@/lib/settings';
-
-export const metadata: Metadata = {
-  title: "AI Admin & Legal Assistant",
-  description: "Your AI-powered legal co-pilot. Ask general legal questions, request a new document draft (like an NDA), or get an analysis of an existing document.",
-};
 
 export default function LegalAgentPage() {
-    const settings = initialSettings;
-
     // This is the new router flow that will decide which sub-task to perform.
     const agentFlow = async (input: { [key: string]: any }) => {
         // The chat component sends a 'message' property. We map it to 'query'.
@@ -39,7 +32,6 @@ export default function LegalAgentPage() {
                         welcomeMessage="Hello! I'm Aida, your AI Legal Assistant. How can I help you today? You can ask me to draft a new NDA, analyze an existing contract, or answer a general legal question."
                         placeholder="e.g., 'Draft an NDA for me' or 'Analyze the terms at https://example.com/terms'"
                         aiFlow={agentFlow}
-                        settings={settings}
                    />
                 </div>
             </div>
