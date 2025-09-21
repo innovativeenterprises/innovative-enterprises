@@ -78,13 +78,16 @@ const hrefMap: Record<string, string> = {
 };
 
 export const initialProducts: Product[] = allSaaSProducts.map((p, index) => ({
-    ...p,
     id: index + 1,
+    name: p.name,
+    description: p.description,
+    stage: p.stage,
+    category: p.category,
     price: 0,
     image: "https://placehold.co/600x400/293462/F0F4F8?text=Product",
     aiHint: "product image",
     rating: 0,
-    enabled: p.status === 'Live & Operating',
+    enabled: p.status === 'Live & Operating' || p.ready,
     adminStatus: p.status === 'Completed' ? 'Completed' : 'On Track',
     href: hrefMap[p.name] || '#',
 }));

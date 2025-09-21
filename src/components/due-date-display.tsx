@@ -15,7 +15,7 @@ export const DueDateDisplay = ({
   className?: string;
   prefix?: string;
 }) => {
-  const [displayState, setDisplayState = useState<{
+  const [displayState, setDisplayState] = useState<{
     isClient: boolean;
     formattedDate: string | null;
     daysRemaining: number | null;
@@ -56,7 +56,7 @@ export const DueDateDisplay = ({
   }, [date, prefix]);
 
   // On the server and during initial client render, show a skeleton loader.
-  if (!isClient) {
+  if (!displayState.isClient) {
     return <div className={cn("text-sm text-muted-foreground", className)}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   

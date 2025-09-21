@@ -30,7 +30,7 @@ import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
-import { CartContext } from './client-layout';
+import { useCartData } from '@/hooks/use-global-store-data';
 
 
 const ListItem = React.forwardRef<
@@ -74,7 +74,7 @@ export default function HeaderClient({
 }) { 
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const cartContext = useContext(CartContext);
+  const { cart } = useCartData();
   const [isClient, setIsClient] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -82,7 +82,7 @@ export default function HeaderClient({
     setIsClient(true);
   }, []);
 
-  const cartCount = cartContext?.cart ? cartContext.cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);

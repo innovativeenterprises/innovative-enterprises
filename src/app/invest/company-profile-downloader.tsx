@@ -3,30 +3,34 @@
 
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, Lightbulb, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ProfileDataLoader } from "./profile-data-loader";
-import { useStaffData, useServicesData, useSettingsData, useProductsData } from "@/hooks/use-global-store-data";
+import type { Agent, AgentCategory } from "@/lib/agents.schema";
+import type { Service } from "@/lib/services.schema";
+import type { AppSettings } from "@/lib/settings";
+import type { Product } from "@/lib/products.schema";
 
-export default function CompanyProfileDownloader() {
+interface DownloaderProps {
+    staffData: {
+        leadership: Agent[];
+        staff: Agent[];
+        agentCategories: AgentCategory[];
+    };
+    services: Service[];
+    settings: AppSettings;
+    products: Product[];
+}
+
+export default function CompanyProfileDownloader({ staffData, services, settings, products }: DownloaderProps) {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
-    const [isClient, setIsClient] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
-
-    const staffData = useStaffData();
-    const { services } = useServicesData();
-    const { settings } = useSettingsData();
-    const { products } = useProductsData();
-    
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
     
     const handleDownload = async () => {
-        if (!profileRef.current || !isClient) return;
+        if (!profileRef.current) return;
         setIsGenerating(true);
         toast({ title: 'Generating PDF...', description: 'Please wait while we create your company profile.' });
         
@@ -72,13 +76,6 @@ export default function CompanyProfileDownloader() {
         }
     };
     
-    if (!isClient) {
-        return (
-            <Button variant="outline" size="lg" className="bg-primary/10 border-primary/20 text-primary" disabled>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading Profile Data...
-            </Button>
-        );
-    }
 
     return (
         <>
