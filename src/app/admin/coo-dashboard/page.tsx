@@ -2,6 +2,7 @@
 'use server';
 
 import CooDashboardClientPage from './client-page';
+import { getProducts, getProviders, getCfoData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,7 +11,11 @@ export const metadata: Metadata = {
 };
 
 export default async function CooDashboardPage() {
-    // This page is now a Server Component. It doesn't fetch data itself,
-    // but it sets up the structure for its client component which will.
-    return <CooDashboardClientPage />;
+    const [products, providers, cfoData] = await Promise.all([
+        getProducts(),
+        getProviders(),
+        getCfoData(),
+    ]);
+
+    return <CooDashboardClientPage initialProducts={products} initialProviders={providers} initialCfoData={cfoData} />;
 }

@@ -1,6 +1,8 @@
 
-import { Suspense } from 'react';
+'use server';
+
 import GuardianAiClientPage from './client-page';
+import { getStudents } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,10 +11,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function GuardianAiPage() {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <GuardianAiClientPage />
-        </Suspense>
-    )
+export default async function GuardianAiPage() {
+    const students = await getStudents();
+    return <GuardianAiClientPage initialStudents={students} />;
 }

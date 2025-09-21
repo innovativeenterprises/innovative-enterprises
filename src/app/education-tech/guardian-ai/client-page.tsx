@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -17,17 +17,16 @@ import {
 } from "@/components/ui/dialog"
 import { ChatComponent } from '@/components/chat/chat-component';
 import { wellbeingCheckin } from '@/ai/flows/guardian-ai/wellbeing-checkin';
-import { useStudentsData } from '@/hooks/use-global-store-data';
 import { ScholarshipEssayAssistant } from '@/app/education-tech/guardian-ai/scholarship-essay-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from '@/components/ui/skeleton';
 import ScholarshipFinderForm from './scholarship-form';
 import InterviewCoachForm from '@/app/interview-coach/coach-form';
 import { useSearchParams } from 'next/navigation';
+import { useSettings } from '@/components/layout/settings-provider';
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
-    // Assuming useSettingsData is available and works on client
-    const [settings, setSettings] = useState({ voiceInteractionEnabled: false });
+    const { settings } = useSettings();
 
     const checkinFlow = async (input: { [key: string]: any }) => {
         return await wellbeingCheckin({ studentQuery: input.message });
@@ -124,8 +123,7 @@ const StudentDashboard = ({ students }: { students: Student[] }) => {
     );
 };
 
-export default function GuardianAiClientPage() {
-    const { students } = useStudentsData();
+function GuardianAiClientPageContent({ initialStudents }: { initialStudents: Student[] }) {
     const searchParams = useSearchParams();
     const initialTab = searchParams.get('tab') || 'dashboard';
     
@@ -158,7 +156,7 @@ export default function GuardianAiClientPage() {
                             <TabsTrigger value="interview"><Mic className="mr-2 h-4 w-4"/>AI Interview Coach</TabsTrigger>
                         </TabsList>
                         <TabsContent value="dashboard" className="mt-6">
-                            <StudentDashboard students={students} />
+                            <StudentDashboard students={initialStudents} />
                         </TabsContent>
                          <TabsContent value="scholarships" className="mt-6">
                              <ScholarshipFinderForm />
@@ -172,3 +170,12 @@ export default function GuardianAiClientPage() {
         </div>
     )
 }
+
+export default function GuardianAiClientPage({ initialStudents }: { initialStudents: Student[] }) {
+    return (
+        <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="animate-spin" /></div>}>
+            <GuardianAiClientPageContent initialStudents={initialStudents} />
+        </Suspense>
+    )
+}
+

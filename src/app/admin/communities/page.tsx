@@ -1,8 +1,8 @@
 
 'use server';
 
-import CommunitiesAdminPageClient from './client-page';
-import { getMembers } from '@/lib/firestore';
+import CommunitiesAdminClientPage from './client-page';
+import { getMembers, getCommunities } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,6 +12,9 @@ export const metadata: Metadata = {
 
 
 export default async function CommunitiesAdminPage() {
-    const members = await getMembers();
-    return <CommunitiesAdminPageClient initialMembers={members} />;
+    const [members, communities] = await Promise.all([
+        getMembers(),
+        getCommunities(),
+    ]);
+    return <CommunitiesAdminClientPage initialMembers={members} initialCommunities={communities} />;
 }

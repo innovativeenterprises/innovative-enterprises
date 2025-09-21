@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from '@/components/ui/skeleton';
 import { BrainCircuit, Loader2, RefreshCw, AlertTriangle, Lightbulb, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { useProductsData, useProvidersData, useGlobalStore } from '@/hooks/use-data-hooks';
+import type { Product } from '@/lib/products.schema';
+import type { Provider } from '@/lib/providers.schema';
+import type { CfoData } from '@/lib/cfo-data.schema';
 
 const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) => {
     const severityMap = {
@@ -35,17 +37,21 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
     )
 }
 
-export default function CooDashboardClientPage() {
+interface CooDashboardClientPageProps {
+    initialProducts: Product[];
+    initialProviders: Provider[];
+    initialCfoData: CfoData;
+}
+
+export default function CooDashboardClientPage({ initialProducts, initialProviders, initialCfoData }: CooDashboardClientPageProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
-    const { data: products } = useProductsData();
-    const { data: providers } = useProvidersData();
-    const { state } = useGlobalStore();
-    const { cfoData } = state;
+    const [products, setProducts] = useState(initialProducts);
+    const [providers, setProviders] = useState(initialProviders);
+    const [cfoData, setCfoData] = useState(initialCfoData);
 
 
     const runAnalysis = async () => {
-        if (!cfoData || !products || !providers) return;
         setIsLoading(true);
         setAnalysis(null);
         try {
