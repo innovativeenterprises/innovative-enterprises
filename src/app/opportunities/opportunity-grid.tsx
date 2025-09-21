@@ -16,12 +16,14 @@ const OpportunityGridSkeleton = () => (
 
 export default function OpportunityGrid({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
     const [isClient, setIsClient] = useState(false);
+    const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     
     useEffect(() => {
+        setOpportunities(initialOpportunities);
         setIsClient(true);
-    }, []);
+    }, [initialOpportunities]);
 
-    const publicOpportunities = initialOpportunities
+    const publicOpportunities = opportunities
             .filter(opp => opp.status !== 'Closed')
             .sort((a,b) => (a.status === 'In Progress' ? -1 : 1));
 

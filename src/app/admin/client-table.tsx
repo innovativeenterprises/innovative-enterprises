@@ -29,8 +29,13 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<ClientValues>({
         resolver: zodResolver(ClientSchema),
-        defaultValues: client
     });
+
+    useEffect(() => {
+        if(isOpen) {
+            form.reset(client || { name: "", logo: "", aiHint: "" });
+        }
+    }, [isOpen, client, form]);
 
     const handleSubmit: SubmitHandler<ClientValues> = (data) => {
         onSave(data, client?.id);
@@ -127,4 +132,3 @@ export default function ClientTable({ initialClients }: { initialClients: Client
         </Card>
     );
 }
-

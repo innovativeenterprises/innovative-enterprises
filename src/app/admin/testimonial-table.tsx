@@ -37,12 +37,17 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
         }
     }, [testimonial, form, isOpen]);
     
+    const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
+        onSave(data, testimonial?.id); 
+        setIsOpen(false);
+    }
+    
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{testimonial ? "Edit" : "Add"} Testimonial</DialogTitle></DialogHeader>
-                <Form {...form}><form onSubmit={form.handleSubmit(data => { onSave(data, testimonial?.id); setIsOpen(false); })} className="space-y-4">
+                <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                      <FormField control={form.control} name="quote" render={({ field }) => (
                         <FormItem><FormLabel>Quote</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
@@ -130,4 +135,3 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
         </Card>
     );
 }
-

@@ -1,7 +1,7 @@
 
 'use server';
 
-import AdminDashboardPageClient from './client-page';
+import AdminDashboardPageClient from './dashboard-client';
 import { getProducts, getStaffData, getProviders, getOpportunities, getServices } from '@/lib/firestore';
 import type { Metadata } from 'next';
 

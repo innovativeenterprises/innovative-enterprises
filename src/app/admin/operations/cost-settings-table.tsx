@@ -40,7 +40,6 @@ const AddEditCostRateDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const form = useForm<CostRateValues>({
         resolver: zodResolver(CostRateSchema),
-        defaultValues: rate || { name: "", category: 'Material', unit: "", rate: 0 },
     });
 
     useEffect(() => {
@@ -172,4 +171,3 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
         </Card>
     );
 }
-
