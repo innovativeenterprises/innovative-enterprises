@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { Property } from "@/lib/properties.schema";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
@@ -175,18 +175,20 @@ const AddEditPropertyDialog = ({
 }
 
 export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
-    const [properties, setProperties] = useState(initialProperties);
+    const [properties, setProperties] = useState<Property[]>([]);
     const { toast } = useToast();
-    const [isOpen, setIsOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProp, setSelectedProp] = useState<Property | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
         setProperties(initialProperties);
+        setIsClient(true);
     }, [initialProperties]);
 
     const handleOpenDialog = (prop?: Property) => {
       setSelectedProp(prop);
-      setIsOpen(true);
+      setIsDialogOpen(true);
     }
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
@@ -214,10 +216,10 @@ export default function PropertyTable({ initialProperties }: { initialProperties
                     <CardTitle>Property Listings Management</CardTitle>
                     <CardDescription>Manage all property listings for the Smart Listing platform.</CardDescription>
                 </div>
-                <AddEditPropertyDialog onSave={handleSave}><Button><PlusCircle /> Add Property</Button></AddEditPropertyDialog>
+                <Button onClick={() => handleOpenDialog()}><PlusCircle /> Add Property</Button>
             </CardHeader>
             <CardContent>
-                <AddEditPropertyDialog isOpen={isOpen} onOpenChange={setIsOpen} property={selectedProp} onSave={handleSave}><div/></AddEditPropertyDialog>
+                <AddEditPropertyDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} property={selectedProp} onSave={handleSave}><div/></AddEditPropertyDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -230,25 +232,30 @@ export default function PropertyTable({ initialProperties }: { initialProperties
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {properties.map(prop => (
-                            <TableRow key={prop.id}>
-                                <TableCell><Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" data-ai-hint={prop.aiHint} /></TableCell>
-                                <TableCell><p className="font-medium">{prop.title}</p><p className="text-sm text-muted-foreground">{prop.propertyType}</p></TableCell>
-                                <TableCell>{prop.location}</TableCell>
-                                <TableCell className="font-mono">{prop.price.toLocaleString()}</TableCell>
-                                <TableCell>{getStatusBadge(prop.status)}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(prop)}><Edit /></Button>
-                                        <AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id!)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                        {!isClient ? (
+                            Array.from({ length: 3 }).map((_, index) => (
+                                <TableRow key={index}><TableCell colSpan={6}><Skeleton className="h-12 w-full" /></TableCell></TableRow>
+                            ))
+                        ) : (
+                            properties.map(prop => (
+                                <TableRow key={prop.id}>
+                                    <TableCell><Image src={prop.imageUrl} alt={prop.title} width={80} height={60} className="rounded-md object-cover" data-ai-hint={prop.aiHint} /></TableCell>
+                                    <TableCell><p className="font-medium">{prop.title}</p><p className="text-sm text-muted-foreground">{prop.propertyType}</p></TableCell>
+                                    <TableCell>{prop.location}</TableCell>
+                                    <TableCell className="font-mono">{prop.price.toLocaleString()}</TableCell>
+                                    <TableCell>{getStatusBadge(prop.status)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(prop)}><Edit /></Button>
+                                            <AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id!)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
     );
 }
-

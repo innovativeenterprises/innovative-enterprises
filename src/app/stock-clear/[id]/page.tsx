@@ -5,39 +5,13 @@ import { useParams, notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
-import { ArrowLeft, MapPin, BedDouble, Bath, Home, Square, Building2, Banknote, Mail, Calendar, Clock, Package, Tag, Scale, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, Calendar, Package, Scale, ShoppingCart, Tag } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { formatDistanceToNow } from 'date-fns';
-import type { Metadata } from 'next';
-import type { StockItem } from '@/lib/stock-items.schema';
-import { getStockItems } from '@/lib/firestore';
 import { useStockItemsData } from '@/hooks/use-global-store-data';
-
-export async function generateStaticParams() {
-  const items = await getStockItems();
-  return items.map((item) => ({
-    id: item.id,
-  }));
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const items = await getStockItems();
-  const item = items.find(i => i.id === params.id);
-
-  if (!item) {
-    return {
-      title: 'Item Not Found',
-    };
-  }
-
-  return {
-    title: `${item.name} | StockClear`,
-    description: item.description,
-  };
-}
+import type { StockItem } from '@/lib/stock-items.schema';
 
 const CountdownTimer = ({ endDate }: { endDate: string }) => {
     const [timeLeft, setTimeLeft] = useState('');

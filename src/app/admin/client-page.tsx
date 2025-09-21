@@ -33,18 +33,36 @@ export default function AdminDashboardPageClient({
     initialServices
 }: AdminDashboardPageClientProps) {
     
+    const [products, setProducts] = useState<Product[]>([]);
+    const [providers, setProviders] = useState<Provider[]>([]);
+    const [leadership, setLeadership] = useState<Agent[]>([]);
+    const [staff, setStaff] = useState<Agent[]>([]);
+    const [agentCategories, setAgentCategories] = useState<AgentCategory[]>([]);
+    const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+    const [services, setServices] = useState<Service[]>([]);
+
+    useEffect(() => {
+        setProducts(initialProducts);
+        setProviders(initialProviders);
+        setLeadership(initialLeadership);
+        setStaff(initialStaff);
+        setAgentCategories(initialAgentCategories);
+        setOpportunities(initialOpportunities);
+        setServices(initialServices);
+    }, [initialProducts, initialProviders, initialLeadership, initialStaff, initialAgentCategories, initialOpportunities, initialServices]);
+
     const stats = useMemo(() => {
-        const totalAgents = initialAgentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
-        const totalStaff = initialLeadership.length + initialStaff.length;
+        const totalAgents = agentCategories.reduce((sum, cat) => sum + cat.agents.length, 0);
+        const totalStaff = leadership.length + staff.length;
         return [
-            { title: "Total Products", value: initialProducts.length, href: "/admin/projects" },
-            { title: "Active Services", value: initialServices.filter(s => s.enabled).length, href: "/admin/content" },
-            { title: "Partner Network", value: initialProviders.length, href: "/admin/network" },
-            { title: "Open Opportunities", value: initialOpportunities.filter(o => o.status === 'Open').length, href: "/admin/opportunities" },
+            { title: "Total Products", value: products.length, href: "/admin/projects" },
+            { title: "Active Services", value: services.filter(s => s.enabled).length, href: "/admin/content" },
+            { title: "Partner Network", value: providers.length, href: "/admin/network" },
+            { title: "Open Opportunities", value: opportunities.filter(o => o.status === 'Open').length, href: "/admin/opportunities" },
             { title: "Human Workforce", value: totalStaff, href: "/admin/people" },
             { title: "AI Workforce", value: totalAgents, href: "/admin/people" },
         ];
-    }, [initialProducts, initialServices, initialProviders, initialOpportunities, initialLeadership, initialStaff, initialAgentCategories]);
+    }, [products, services, providers, opportunities, leadership, staff, agentCategories]);
 
     return (
         <div className="space-y-8">
@@ -72,9 +90,9 @@ export default function AdminDashboardPageClient({
                 ))}
             </div>
             
-            <LeadershipTeam team={initialLeadership} />
+            <LeadershipTeam team={leadership} />
             
-            <DigitalWorkforce categories={initialAgentCategories} />
+            <DigitalWorkforce categories={agentCategories} />
 
         </div>
     );

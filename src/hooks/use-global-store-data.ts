@@ -1,1 +1,0 @@
-// This file is being removed as it represents an architectural pattern that is not compatible with the Next.js App Router and was the root cause of persistent rendering errors. Data will now be fetched in Server Components and passed down to Client Components via props. Client-side state will be managed locally or through React Context where necessary.

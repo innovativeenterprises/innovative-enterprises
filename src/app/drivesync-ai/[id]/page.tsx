@@ -1,5 +1,7 @@
 
-import { notFound } from 'next/navigation';
+'use client';
+
+import { useParams, notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -7,41 +9,51 @@ import { ArrowLeft, MapPin, Calendar, Fuel, Cog, Car } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import type { Metadata } from 'next';
-import { getCars } from '@/lib/firestore';
+import { initialCars as getCars } from '@/lib/cars';
 import type { Car as CarType } from '@/lib/cars.schema';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
-interface PageProps {
-  params: { id: string };
-}
-
-export async function generateStaticParams() {
-  const cars = await getCars();
-  return cars.map((car) => ({
-    id: car.id,
-  }));
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const cars = await getCars();
-  const car = cars.find(c => c.id === params.id);
-
-  if (!car) {
-    notFound();
-  }
-
-  return {
-    title: `${car.make} ${car.model} | DriveSync AI`,
-    description: `Details for the ${car.year} ${car.make} ${car.model}.`,
-  };
-}
-
-export default async function CarDetailPage({ params }: PageProps) {
+export default function CarDetailPage() {
+    const params = useParams();
     const { id } = params;
-    const cars = await getCars();
-    const car = cars.find(c => c.id === id);
+    const [car, setCar] = useState<CarType | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
 
-    if (!car) {
-        notFound();
+    useEffect(() => {
+        setIsClient(true);
+        const cars = getCars;
+        const foundCar = cars.find(c => c.id === id);
+        if (!foundCar) {
+            notFound();
+        }
+        setCar(foundCar);
+    }, [id]);
+
+    if (!isClient || !car) {
+        return (
+            <div className="bg-muted/20 min-h-screen">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-5xl mx-auto">
+                        <Skeleton className="h-10 w-44 mb-8" />
+                        <Card>
+                            <CardContent className="p-0">
+                                <div className="grid lg:grid-cols-2">
+                                    <Skeleton className="h-80 lg:h-full min-h-[400px] rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none" />
+                                    <div className="p-8 space-y-6">
+                                        <Skeleton className="h-6 w-1/4" />
+                                        <Skeleton className="h-10 w-3/4" />
+                                        <Skeleton className="h-6 w-1/2" />
+                                        <Skeleton className="h-24 w-full" />
+                                        <Skeleton className="h-10 w-1/3" />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            </div>
+        );
     }
     
     const details = [
