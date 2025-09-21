@@ -19,6 +19,7 @@ import { analyzeSanadTask } from '@/ai/flows/sanad-task-analysis';
 import type { SanadTaskAnalysisOutput } from '@/ai/flows/sanad-task-analysis.schema';
 import { sanadServiceGroups } from '@/lib/sanad-services';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import type { CostRate } from '@/lib/cost-settings.schema';
 
 
 // Dummy map component placeholder
@@ -40,7 +41,7 @@ const ProTaskFormSchema = ProTaskAnalysisInputSchema.extend({
 type ProTaskFormValues = z.infer<typeof ProTaskFormSchema>;
 
 
-export default function ProForm() {
+export default function ProForm({ costSettings }: { costSettings: CostRate[] }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<SanadTaskAnalysisOutput | null>(null);
@@ -76,7 +77,7 @@ export default function ProForm() {
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await analyzeProTask(data);
+      const result = await analyzeProTask(data, costSettings);
       setResponse(result);
       toast({
         title: 'Analysis Complete!',

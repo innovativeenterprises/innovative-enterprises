@@ -24,7 +24,7 @@ export default async function AdminOperationsPage() {
   ]);
 
   const internalTools = [
-    { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
+    { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm costSettings={costSettings} /> },
     { id: 'tender', title: 'Tender Response Assistant', icon: FileText, component: <TenderForm /> },
     { id: 'meeting', title: 'Online Meeting Agent', icon: NotebookText, component: <MeetingForm /> },
     { id: 'coupon', title: 'Coupon Generator', icon: Ticket, component: <CouponGenerator /> },

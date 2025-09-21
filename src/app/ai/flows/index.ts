@@ -48,6 +48,7 @@ import { estimateFireSafety } from './fire-safety-estimator';
 import { generateBoqCategory, generateFullBoq } from './boq-generator';
 import { estimateBoq } from './boq-estimator';
 import { transformImage } from './image-transformer';
+import { analyzeSalesData } from './pos-agent';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -104,4 +105,5 @@ export {
   generateFullBoq,
   estimateBoq,
   transformImage,
+  analyzeSalesData,
 };

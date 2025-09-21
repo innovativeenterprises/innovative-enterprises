@@ -1,11 +1,10 @@
-
 'use client';
 
+import React from 'react';
 import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/components/layout/settings-provider';
 import type { AppSettings } from '@/lib/settings';
 import ClientLayout from '@/components/layout/client-layout';
-import React from 'react';
 
 export function Providers({ 
     children, 
@@ -23,7 +22,7 @@ export function Providers({
     >
       <SettingsProvider initialSettings={initialSettings}>
         <ClientLayout>
-          {children}
+            {children}
         </ClientLayout>
       </SettingsProvider>
     </ThemeProvider>

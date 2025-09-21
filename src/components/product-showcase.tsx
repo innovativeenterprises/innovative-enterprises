@@ -1,3 +1,4 @@
+
 'use server';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,6 @@ import { StageBadge } from '@/components/stage-badge';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProducts } from "@/lib/firestore";
-import type { Product } from '@/lib/products.schema';
 
 export default async function ProductShowcase() {
   const products = await getProducts();
