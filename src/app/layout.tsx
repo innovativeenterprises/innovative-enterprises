@@ -6,7 +6,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { getSettings } from '@/lib/firestore';
-import { Providers } from './providers';
+import { Providers } from '@/app/providers';
 
 const inter = Inter({
   subsets: ['latin'],
