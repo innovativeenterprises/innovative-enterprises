@@ -2,9 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { Product } from '@/lib/products.schema';
-import type { Provider } from '@/lib/providers.schema';
-import type { KpiData } from '@/lib/cfo-data.schema';
 import { analyzeOperations } from '@/ai/flows/agentic-coo';
 import type { CooAnalysisOutput } from '@/ai/flows/agentic-coo.schema';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from '@/components/ui/skeleton';
 import { BrainCircuit, Loader2, RefreshCw, AlertTriangle, Lightbulb, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useProductsData, useProvidersData, useGlobalStore } from '@/hooks/use-data-hooks';
 
 const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) => {
     const severityMap = {
@@ -37,19 +35,21 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
     )
 }
 
-export default function CooDashboardClientPage({ products, providers, kpiData }: {
-    products: Product[],
-    providers: Provider[],
-    kpiData: KpiData[],
-}) {
+export default function CooDashboardClientPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
+    const { data: products } = useProductsData();
+    const { data: providers } = useProvidersData();
+    const { state } = useGlobalStore();
+    const { cfoData } = state;
+
 
     const runAnalysis = async () => {
+        if (!cfoData || !products || !providers) return;
         setIsLoading(true);
         setAnalysis(null);
         try {
-            const result = await analyzeOperations({ products, providers, kpiData });
+            const result = await analyzeOperations({ products, providers, kpiData: cfoData.kpiData });
             setAnalysis(result);
         } catch (error) {
             console.error("COO Analysis failed:", error);
@@ -63,7 +63,7 @@ export default function CooDashboardClientPage({ products, providers, kpiData }:
     useEffect(() => {
         runAnalysis();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products, providers, kpiData]);
+    }, [products, providers, cfoData]);
 
     return (
         <div className="space-y-8">

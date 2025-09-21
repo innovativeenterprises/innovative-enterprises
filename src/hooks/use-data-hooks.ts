@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { store } from '@/lib/global-store';
+import { store, type AppState } from '@/lib/global-store';
 import type { HireRequest } from "@/lib/raaha-requests.schema";
 import type { Agency as RaahaAgency } from "@/lib/raaha-agencies.schema";
 import type { Worker } from "@/lib/raaha-workers.schema";
@@ -28,24 +28,6 @@ import type { Investor } from '@/lib/investors.schema';
 import type { AppSettings } from '@/lib/settings';
 import type { Agent, AgentCategory } from '@/lib/agents.schema';
 
-const useDataState = <T>(initialData: T[], dataKey: keyof typeof store.get) => {
-    const [data, setData] = useState<T[]>(initialData);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        // This can be expanded to sync with global store or fetch updates
-    }, []);
-
-    const updateData = (updater: (prev: T[]) => T[]) => {
-        setData(updater);
-        // In a real app with global state, you'd update it here:
-        // store.set(state => ({ ...state, [dataKey]: updater(state[dataKey]) }));
-    };
-
-    return { data, setData: updateData, isClient };
-};
-
 const useGlobalStore = () => {
     const [state, setState] = useState(store.get());
     const [isClient, setIsClient] = useState(false);
@@ -61,74 +43,69 @@ const useGlobalStore = () => {
     return { state, store, isClient };
 }
 
+function useSlice<T extends keyof AppState>(
+  slice: T
+): { data: AppState[T]; setData: (updater: (prev: AppState[T]) => AppState[T]) => void; isClient: boolean } {
+  const { state, store, isClient } = useGlobalStore();
 
-export const useRequestsData = (initialData: HireRequest[] = []) => useDataState<HireRequest>(initialData, 'raahaRequests');
-export const useAgenciesData = (initialData: RaahaAgency[] = []) => useDataState<RaahaAgency>(initialData, 'raahaAgencies');
-export const useWorkersData = (initialData: Worker[] = []) => useDataState<Worker>(initialData, 'raahaWorkers');
-export const useStairspaceData = (initialListings: StairspaceListing[] = []) => useDataState(initialListings, 'stairspaceListings');
-export const useStairspaceRequestsData = (initialData: BookingRequest[] = []) => useDataState<BookingRequest>(initialData, 'stairspaceRequests');
-export const usePropertiesData = (initialData: Property[] = []) => useDataState<Property>(initialData, 'properties');
-export const useLeasesData = (initialData: SignedLease[] = []) => useDataState<SignedLease>(initialData, 'signedLeases');
-export const useProvidersData = (initialData: Provider[] = []) => useDataState<Provider>(initialData, 'providers');
-export const useOpportunitiesData = (initialOpportunities: Opportunity[] = []) => useDataState(initialOpportunities, 'opportunities');
-export const useStudentsData = (initialData: Student[] = []) => useDataState<Student>(initialData, 'students');
-export const useMembersData = (initialData: CommunityMember[] = []) => useDataState<CommunityMember>(initialData, 'communityMembers');
-export const useEventsData = (initialData: CommunityEvent[] = []) => useDataState<CommunityEvent>(initialData, 'communityEvents');
-export const useFinancesData = (initialData: CommunityFinance[] = []) => useDataState<CommunityFinance>(initialData, 'communityFinances');
-export const useClientsData = (initialData: Client[] = []) => useDataState<Client>(initialData, 'clients');
-export const useTestimonialsData = (initialData: Testimonial[] = []) => useDataState<Testimonial>(initialData, 'testimonials');
-export const useGiftCardsData = (initialData: GiftCard[] = []) => useDataState<GiftCard>(initialData, 'giftCards');
-export const useUsedItemsData = (initialItems: UsedItem[] = []) => useDataState(initialItems, 'usedItems');
-export const useDailySalesData = (initialData: DailySales = []) => useDataState<any>(initialData, 'dailySales');
-export const useSaasProductsData = (initialData: SaasCategory[] = []) => useDataState<SaasCategory>(initialData, 'saasProducts');
-export const usePricingData = (initialPricing: Pricing[] = []) => useDataState(initialPricing, 'pricing');
-export const useInvestorsData = (initialData: Investor[] = []) => useDataState<Investor>(initialData, 'investors');
-export const useCommunitiesData = (initialData: Community[] = []) => useDataState<Community>(initialData, 'communities');
-export const usePosProductsData = (initialProducts: PosProduct[] = []) => useDataState(initialProducts, 'posProducts');
+  const setData = (updater: (prev: AppState[T]) => AppState[T]) => {
+    const currentSlice = store.get()[slice];
+    store.set((s) => ({ ...s, [slice]: updater(currentSlice) }));
+  };
+
+  return { data: state[slice], setData, isClient };
+}
+
+export const useRequestsData = (initialData: HireRequest[] = []) => useSlice('raahaRequests');
+export const useAgenciesData = (initialData: RaahaAgency[] = []) => useSlice('raahaAgencies');
+export const useWorkersData = (initialData: Worker[] = []) => useSlice('raahaWorkers');
+export const useStairspaceData = (initialListings: StairspaceListing[] = []) => useSlice('stairspaceListings');
+export const useStairspaceRequestsData = (initialData: BookingRequest[] = []) => useSlice('stairspaceRequests');
+export const usePropertiesData = (initialData: Property[] = []) => useSlice('properties');
+export const useLeasesData = (initialData: SignedLease[] = []) => useSlice('signedLeases');
+export const useProvidersData = (initialData: Provider[] = []) => useSlice('providers');
+export const useOpportunitiesData = (initialOpportunities: Opportunity[] = []) => useSlice('opportunities');
+export const useStudentsData = (initialData: Student[] = []) => useSlice('students');
+export const useMembersData = (initialData: CommunityMember[] = []) => useSlice('communityMembers');
+export const useEventsData = (initialData: CommunityEvent[] = []) => useSlice('communityEvents');
+export const useFinancesData = (initialData: CommunityFinance[] = []) => useSlice('communityFinances');
+export const useClientsData = (initialData: Client[] = []) => useSlice('clients');
+export const useTestimonialsData = (initialData: Testimonial[] = []) => useSlice('testimonials');
+export const useGiftCardsData = (initialData: GiftCard[] = []) => useSlice('giftCards');
+export const useUsedItemsData = (initialItems: any[] = []) => useSlice('usedItems');
+export const useDailySalesData = (initialData: DailySales = []) => useSlice('dailySales');
+export const useSaasProductsData = (initialData: SaasCategory[] = []) => useSlice('saasProducts');
+export const usePricingData = (initialPricing: Pricing[] = []) => useSlice('pricing');
+export const useInvestorsData = (initialData: Investor[] = []) => useSlice('investors');
+export const useCommunitiesData = (initialData: Community[] = []) => useSlice('communities');
+export const usePosProductsData = (initialProducts: PosProduct[] = []) => useSlice('posProducts');
+export const useProductsData = (initialProducts: Product[] = []) => useSlice('products');
 
 export const useBriefcaseData = (initialData?: BriefcaseData) => {
-    const [data, setData] = useState<BriefcaseData | null>(initialData || null);
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-    const updateData = (updater: (prev: BriefcaseData | null) => BriefcaseData | null) => {
-        setData(updater);
-    };
-    return { data, setData: updateData, isClient };
-};
-
-export const useProductsData = (initialProducts: Product[] = []) => {
-    const [data, setData] = useState<Product[]>(initialProducts);
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { data, setData, isClient } = useSlice('briefcase');
+     useEffect(() => {
+        if(initialData) {
+            setData(() => initialData);
+        }
+    }, [initialData, setData]);
     return { data, setData, isClient };
 };
 
 export const useCartData = () => {
-    const { state, store, isClient } = useGlobalStore();
-    
-    const cart = isClient ? state.cart : [];
-
+    const { data, setData, isClient } = useSlice('cart');
     const setCart = (updater: (currentCart: CartItem[]) => CartItem[]) => {
-        const currentCart = store.get().cart;
-        store.set(s => ({ ...s, cart: updater(currentCart) }));
+        setData(updater);
     };
-    
-    return { cart, setCart, isClient };
+    return { cart: data, setCart, isClient };
 };
 
 
 export const usePosData = () => {
-    const { state, store, isClient } = useGlobalStore();
-    const dailySales = isClient ? state.dailySales : [];
-    const setDailySales = (updater: (currentSales: DailySales) => DailySales) => {
-        const currentSales = store.get().dailySales;
-        store.set(s => ({ ...s, dailySales: updater(currentSales) }));
+     const { data, setData, isClient } = useSlice('dailySales');
+     const setDailySales = (updater: (currentSales: DailySales) => DailySales) => {
+        setData(updater);
     };
-    return { dailySales, setDailySales, isClient };
+    return { dailySales: data, setDailySales, isClient };
 };
 
 
