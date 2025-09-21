@@ -56,7 +56,7 @@ export default function CfoDashboardPageClient({ initialData }: { initialData: C
                              <div key={index} className="flex justify-between items-center">
                                 <div>
                                     <p className="font-medium">{payment.source}</p>
-                                    <DueDateDisplay date={payment.dueDate} />
+                                    <DueDateDisplay date={new Date(payment.dueDate)} />
                                 </div>
                                 <p className="font-bold text-lg">OMR {payment.amount.toFixed(2)}</p>
                             </div>

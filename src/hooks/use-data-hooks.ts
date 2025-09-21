@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { store, type AppState } from '@/lib/global-store.tsx';
+import { useStore, type AppState } from '@/lib/global-store.tsx';
 import type { HireRequest } from "@/lib/raaha-requests.schema";
 import type { Agency as RaahaAgency } from "@/lib/raaha-agencies.schema";
 import type { Worker } from "@/lib/raaha-workers.schema";
@@ -28,7 +28,28 @@ import type { Investor } from '@/lib/investors.schema';
 import type { AppSettings } from '@/lib/settings';
 import type { Agent, AgentCategory } from '@/lib/agents.schema';
 
-const useGlobalStore = () => {
+function useSlice<T extends keyof AppState>(
+  slice: T,
+  initialData?: AppState[T]
+): { data: AppState[T]; setData: (updater: (prev: AppState[T]) => AppState[T]) => void; isClient: boolean } {
+  const { state, store, isClient } = useGlobalStore();
+
+  useEffect(() => {
+    if (initialData !== undefined) {
+      store.set((s) => ({ ...s, [slice]: initialData }));
+    }
+  }, [initialData, slice, store]);
+
+  const setData = (updater: (prev: AppState[T]) => AppState[T]) => {
+    store.set((s) => ({ ...s, [slice]: updater(s[slice]) }));
+  };
+
+  return { data: state[slice], setData, isClient };
+}
+
+
+export const useGlobalStore = () => {
+    const store = useStore();
     const [state, setState] = useState(store.get());
     const [isClient, setIsClient] = useState(false);
 
@@ -38,51 +59,41 @@ const useGlobalStore = () => {
             setState(store.get());
         });
         return unsubscribe;
-    }, []);
+    }, [store]);
 
     return { state, store, isClient };
 }
 
-function useSlice<T extends keyof AppState>(
-  slice: T
-): { data: AppState[T]; setData: (updater: (prev: AppState[T]) => AppState[T]) => void; isClient: boolean } {
-  const { state, store, isClient } = useGlobalStore();
+export const useRequestsData = (initialData: HireRequest[] = []) => useSlice('raahaRequests', initialData);
+export const useAgenciesData = (initialData: RaahaAgency[] = []) => useSlice('raahaAgencies', initialData);
+export const useWorkersData = (initialData: Worker[] = []) => useSlice('raahaWorkers', initialData);
+export const useStairspaceData = (initialListings: StairspaceListing[] = []) => useSlice('stairspaceListings', initialListings);
+export const useStairspaceRequestsData = (initialData: BookingRequest[] = []) => useSlice('stairspaceRequests', initialData);
+export const usePropertiesData = (initialData: Property[] = []) => useSlice('properties', initialData);
+export const useLeasesData = (initialData: SignedLease[] = []) => useSlice('signedLeases', initialData);
+export const useProvidersData = (initialData: Provider[] = []) => useSlice('providers', initialData);
+export const useOpportunitiesData = (initialOpportunities: Opportunity[] = []) => useSlice('opportunities', initialOpportunities);
+export const useStudentsData = (initialData: Student[] = []) => useSlice('students', initialData);
+export const useMembersData = (initialData: CommunityMember[] = []) => useSlice('communityMembers', initialData);
+export const useEventsData = (initialData: CommunityEvent[] = []) => useSlice('communityEvents', initialData);
+export const useFinancesData = (initialData: CommunityFinance[] = []) => useSlice('communityFinances', initialData);
+export const useClientsData = (initialData: Client[] = []) => useSlice('clients', initialData);
+export const useTestimonialsData = (initialData: Testimonial[] = []) => useSlice('testimonials', initialData);
+export const useGiftCardsData = (initialData: GiftCard[] = []) => useSlice('giftCards', initialData);
+export const useUsedItemsData = (initialItems: any[] = []) => useSlice('usedItems', initialItems);
+export const useSaasProductsData = (initialData: SaasCategory[] = []) => useSlice('saasProducts', initialData);
+export const usePricingData = (initialPricing: Pricing[] = []) => useSlice('pricing', initialPricing);
+export const useInvestorsData = (initialData: Investor[] = []) => useSlice('investors', initialData);
+export const useCommunitiesData = (initialData: Community[] = []) => useSlice('communities', initialData);
+export const useProductsData = (initialProducts: Product[] = []) => useSlice('products', initialProducts);
+export const useStaffData = () => useSlice('staff');
+export const useLeadershipData = () => useSlice('leadership');
+export const useAgentCategoriesData = () => useSlice('agentCategories');
+export const useServicesData = (initialData: Service[] = []) => useSlice('services', initialData);
 
-  const setData = (updater: (prev: AppState[T]) => AppState[T]) => {
-    const currentSlice = store.get()[slice];
-    store.set((s) => ({ ...s, [slice]: updater(currentSlice) }));
-  };
-
-  return { data: state[slice], setData, isClient };
-}
-
-export const useRequestsData = (initialData: HireRequest[] = []) => useSlice('raahaRequests');
-export const useAgenciesData = (initialData: RaahaAgency[] = []) => useSlice('raahaAgencies');
-export const useWorkersData = (initialData: Worker[] = []) => useSlice('raahaWorkers');
-export const useStairspaceData = (initialListings: StairspaceListing[] = []) => useSlice('stairspaceListings');
-export const useStairspaceRequestsData = (initialData: BookingRequest[] = []) => useSlice('stairspaceRequests');
-export const usePropertiesData = (initialData: Property[] = []) => useSlice('properties');
-export const useLeasesData = (initialData: SignedLease[] = []) => useSlice('signedLeases');
-export const useProvidersData = (initialData: Provider[] = []) => useSlice('providers');
-export const useOpportunitiesData = (initialOpportunities: Opportunity[] = []) => useSlice('opportunities');
-export const useStudentsData = (initialData: Student[] = []) => useSlice('students');
-export const useMembersData = (initialData: CommunityMember[] = []) => useSlice('communityMembers');
-export const useEventsData = (initialData: CommunityEvent[] = []) => useSlice('communityEvents');
-export const useFinancesData = (initialData: CommunityFinance[] = []) => useSlice('communityFinances');
-export const useClientsData = (initialData: Client[] = []) => useSlice('clients');
-export const useTestimonialsData = (initialData: Testimonial[] = []) => useSlice('testimonials');
-export const useGiftCardsData = (initialData: GiftCard[] = []) => useSlice('giftCards');
-export const useUsedItemsData = (initialItems: any[] = []) => useSlice('usedItems');
-export const useDailySalesData = (initialData: DailySales = []) => useSlice('dailySales');
-export const useSaasProductsData = (initialData: SaasCategory[] = []) => useSlice('saasProducts');
-export const usePricingData = (initialPricing: Pricing[] = []) => useSlice('pricing');
-export const useInvestorsData = (initialData: Investor[] = []) => useSlice('investors');
-export const useCommunitiesData = (initialData: Community[] = []) => useSlice('communities');
-export const usePosProductsData = (initialProducts: PosProduct[] = []) => useSlice('posProducts');
-export const useProductsData = (initialProducts: Product[] = []) => useSlice('products');
 
 export const useBriefcaseData = (initialData?: BriefcaseData) => {
-    const { data, setData, isClient } = useSlice('briefcase');
+    const { data, setData, isClient } = useSlice('briefcase', initialData);
      useEffect(() => {
         if(initialData) {
             setData(() => initialData);
@@ -142,12 +153,12 @@ export const useBeautySpecialistsData = (initialData: any[] = []) => {
     return { specialists: data, setSpecialists: setData, isClient };
 };
 
-export const useStaffData = () => {
+export const usePosProductsData = (initialData: PosProduct[] = []) => {
+    const { data, setData, isClient } = useSlice('posProducts', initialData);
+    return { posProducts: data, setPosProducts: setData, isClient };
+}
+
+export const useSettingsData = () => {
     const { state, isClient } = useGlobalStore();
-    return { 
-        leadership: state.leadership, 
-        staff: state.staff, 
-        agentCategories: state.agentCategories, 
-        isClient 
-    };
+    return { settings: state.settings!, isClient };
 };

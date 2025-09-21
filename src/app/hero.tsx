@@ -9,7 +9,7 @@ import OverviewAvatars from '@/components/overview-avatars';
 import type { Client } from '@/lib/clients.schema';
 
 
-export default function CompanyOverview({ clients }: { clients: Client[]}) {
+export default function Hero({ clients }: { clients: Client[]}) {
 
   return (
     <section className="bg-background">
@@ -70,4 +70,3 @@ export default function CompanyOverview({ clients }: { clients: Client[]}) {
     </section>
   );
 }
-

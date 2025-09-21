@@ -55,8 +55,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Using initialSettings directly as a fallback.
-  // The getSettings function now has internal error handling.
   const settings = await getSettings() || initialSettings;
 
   return (
