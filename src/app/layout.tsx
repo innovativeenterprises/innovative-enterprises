@@ -4,9 +4,8 @@
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
-import ClientLayout from '@/components/layout/client-layout';
 import type { Metadata } from 'next';
-import { getSolutions, getIndustries, getAiTools, getSettings } from '@/lib/firestore';
+import { getSettings } from '@/lib/firestore';
 import { Providers } from './providers';
 
 const inter = Inter({
@@ -56,25 +55,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [solutions, industries, aiTools, settings] = await Promise.all([
-    getSolutions(),
-    getIndustries(),
-    getAiTools(),
-    getSettings(),
-  ]);
+  const settings = await getSettings();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
           <Providers initialSettings={settings}>
-            <ClientLayout 
-                solutions={solutions}
-                industries={industries}
-                aiTools={aiTools}
-            >
-                {children}
-            </ClientLayout>
+            {children}
           </Providers>
       </body>
     </html>

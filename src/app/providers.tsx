@@ -4,6 +4,7 @@
 import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/components/layout/settings-provider';
 import type { AppSettings } from '@/lib/settings';
+import ClientLayout from '@/components/layout/client-layout';
 
 export function Providers({ 
     children, 
@@ -20,7 +21,9 @@ export function Providers({
       disableTransitionOnChange
     >
         <SettingsProvider initialSettings={initialSettings}>
-            {children}
+            <ClientLayout>
+                {children}
+            </ClientLayout>
         </SettingsProvider>
     </ThemeProvider>
   );

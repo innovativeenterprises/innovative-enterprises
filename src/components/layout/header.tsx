@@ -1,19 +1,15 @@
 
-
-'use client';
+'use server';
 
 import HeaderClient from "./header-client";
-import type { Solution, Industry, AiTool } from '@/lib/nav-links';
+import { getSolutions, getIndustries, getAiTools } from '@/lib/firestore';
 
-export default function Header({
-    solutions,
-    industries,
-    aiTools
-}: {
-    solutions: Solution[],
-    industries: Industry[],
-    aiTools: AiTool[]
-}) {
+export default async function Header() {
+    const [solutions, industries, aiTools] = await Promise.all([
+        getSolutions(),
+        getIndustries(),
+        getAiTools(),
+    ]);
 
     return <HeaderClient 
         solutions={solutions}

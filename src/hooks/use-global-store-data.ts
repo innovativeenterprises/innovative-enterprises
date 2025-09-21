@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { store, type AppState, type CartItem } from '@/lib/global-store';
-
+import type { BriefcaseData } from '@/lib/briefcase';
 
 const useGlobalStore = () => {
     const [state, setState] = useState(store.get());
