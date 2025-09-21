@@ -6,7 +6,7 @@ import CompanyOverview from "@/components/company-overview";
 import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import AiToolsCta from "@/components/ai-tools-cta";
-import ClientTestimonials from "@/components/client-testimonials-client";
+import ClientTestimonials from "@/components/client-testimonials";
 import { getProducts, getServices, getClients, getTestimonials } from "@/lib/firestore";
 
 export default async function HomePage() {
