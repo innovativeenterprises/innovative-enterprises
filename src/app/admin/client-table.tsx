@@ -67,7 +67,7 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
 
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
-    const { clients, setClients, isClient } = useClientsData(initialClients);
+    const { data: clients, setData: setClients, isClient } = useClientsData(initialClients);
     const { toast } = useToast();
     
     const handleClientSave = (values: ClientValues, id?: string) => {
@@ -126,4 +126,3 @@ export default function ClientTable({ initialClients }: { initialClients: Client
         </Card>
     );
 }
-

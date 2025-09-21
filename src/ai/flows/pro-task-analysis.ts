@@ -10,11 +10,12 @@ import { z } from 'zod';
 import { OMAN_MINISTRIES, ministryLocations, OMAN_GOVERNORATES } from '@/lib/oman-locations';
 import type { Ministry, Governorate } from '@/lib/oman-locations';
 import { calculateTotalDistance } from '@/lib/oman-locations';
-import { getCostSettings } from '@/lib/firestore';
+import type { CostRate } from '@/lib/cost-settings.schema';
 
 const ProTaskAnalysisInputSchema = z.object({
   serviceName: z.string().describe("The specific government service requested by the user."),
   governorate: z.enum(OMAN_GOVERNORATES).describe("The governorate where the service needs to be performed."),
+  costSettings: z.array(z.custom<CostRate>()).describe("The current market rates for cost calculation."),
   startLocationName: z.string().optional().describe("The name of the starting location for the trip, e.g., 'Al Amerat Office'."),
   startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).optional().describe("The GPS coordinates of the starting location."),
 });
@@ -49,7 +50,7 @@ const proTaskAnalysisFlow = ai.defineFlow(
   },
   async (input) => {
 
-    const costSettings = await getCostSettings();
+    const costSettings = input.costSettings;
     const fuelRatePerKm = costSettings.find(c => c.name === 'Fuel Rate' && c.category === 'Travel')?.rate || 0.04;
     
     // In a real-world, more complex app, this might be another LLM call with a knowledge base.

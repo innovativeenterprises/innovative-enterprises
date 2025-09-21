@@ -12,6 +12,6 @@ export const metadata: Metadata = {
 
 export default async function ConstructionTechPage() {
     const products = await getProducts();
-    const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
+    const contechProducts = products.filter(p => p.category === "Construction Tech");
     return <ConstructionTechClientPage initialProducts={contechProducts} />;
 }

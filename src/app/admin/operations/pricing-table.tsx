@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Edit } from "lucide-react";
+import { usePricingData } from "@/hooks/use-data-hooks";
 
 
 const PricingFormSchema = z.object({
@@ -78,16 +79,10 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
-    const [isClient, setIsClient] = useState(false);
+    const { data: pricing, setData: setPricing, isClient } = usePricingData(initialPricing);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
-    
-    useEffect(() => {
-        setPricing(initialPricing);
-        setIsClient(true);
-    }, [initialPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));

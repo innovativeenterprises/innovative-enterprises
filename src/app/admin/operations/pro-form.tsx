@@ -35,7 +35,7 @@ const DummyMap = ({ onLocationSelect }: { onLocationSelect: (loc: { lat: number,
     </div>
 );
 
-const ProTaskFormSchema = ProTaskAnalysisInputSchema.extend({
+const ProTaskFormSchema = ProTaskAnalysisInputSchema.omit({ costSettings: true }).extend({
     serviceName: z.string().min(1, "Please select a service."),
 });
 type ProTaskFormValues = z.infer<typeof ProTaskFormSchema>;
@@ -77,7 +77,7 @@ export default function ProForm({ costSettings }: { costSettings: CostRate[] }) 
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await analyzeProTask(data);
+      const result = await analyzeProTask({...data, costSettings});
       setResponse(result);
       toast({
         title: 'Analysis Complete!',

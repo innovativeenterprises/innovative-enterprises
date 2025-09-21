@@ -1,83 +1,95 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
-import { store, type AppState, type CartItem } from '@/lib/global-store';
-import type { BriefcaseData } from '@/lib/briefcase';
-import type { Product } from '@/lib/products.schema';
+import { store } from '@/lib/global-store';
+import type { HireRequest } from "@/lib/raaha-requests.schema";
+import type { Agency as RaahaAgency } from "@/lib/raaha-agencies.schema";
+import type { Worker } from "@/lib/raaha-workers.schema";
+import type { StairspaceListing } from '@/lib/stairspace.schema';
+import type { BookingRequest } from '@/lib/stairspace-requests';
+import type { Property } from '@/lib/properties.schema';
+import type { SignedLease } from '@/lib/leases';
 import type { Provider } from '@/lib/providers.schema';
 import type { Opportunity } from '@/lib/opportunities.schema';
-import type { Service } from '@/lib/services.schema';
-import type { Agent, AgentCategory } from '@/lib/agents.schema';
-import type { Pricing } from '@/lib/pricing.schema';
-import type { AppSettings } from '@/lib/settings';
-import type { PosProduct, DailySales } from '@/lib/pos-data.schema';
-import type { SaasCategory } from '@/lib/saas-products.schema';
+import type { Student } from '@/lib/students.schema';
+import type { CommunityMember } from '@/lib/community-members';
+import type { CommunityEvent } from '@/lib/community-events';
+import type { CommunityFinance } from '@/lib/community-finances';
+import type { Client, Testimonial } from '@/lib/clients.schema';
 import type { GiftCard } from '@/lib/gift-cards.schema';
-import type { Community } from '@/lib/communities';
+import type { DailySales, PosProduct, CartItem } from '@/lib/pos-data.schema';
+import type { SaasCategory } from '@/lib/saas-products.schema';
+import type { Pricing } from '@/lib/pricing.schema';
+import type { Product } from '@/lib/products.schema';
+import type { BriefcaseData } from '@/lib/briefcase';
 
-const useGlobalStore = () => {
-    const [state, setState] = useState(store.get());
+const useDataState = <T>(initialData: T[], dataKey: keyof typeof store.get) => {
+    const [data, setData] = useState<T[]>(initialData);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
-        const unsubscribe = store.subscribe(() => {
-            setState(store.get());
-        });
-        return unsubscribe;
+        // This can be expanded to sync with global store or fetch updates
     }, []);
 
-    return { state, store, isClient };
-}
-
-export default useGlobalStore;
-
-
-export const useCartData = () => {
-    const { state, store, isClient } = useGlobalStore();
-    
-    const cart = isClient ? state.cart : [];
-
-    const setCart = (updater: (currentCart: CartItem[]) => CartItem[]) => {
-        const currentCart = store.get().cart;
-        store.set(s => ({ ...s, cart: updater(currentCart) }));
+    const updateData = (updater: (prev: T[]) => T[]) => {
+        setData(updater);
+        // In a real app with global state, you'd update it here:
+        // store.set(state => ({ ...state, [dataKey]: updater(state[dataKey]) }));
     };
-    
-    return { cart, setCart, isClient };
+
+    return { data, setData: updateData, isClient };
 };
 
-export const useBriefcaseData = () => {
-    const { state, store, isClient } = useGlobalStore();
+export const useRequestsData = (initialData: HireRequest[] = []) => useDataState<HireRequest>(initialData, 'raahaRequests');
+export const useAgenciesData = (initialData: RaahaAgency[] = []) => useDataState<RaahaAgency>(initialData, 'raahaAgencies');
+export const useWorkersData = (initialData: Worker[] = []) => useDataState<Worker>(initialData, 'raahaWorkers');
+export const useStairspaceData = (initialData: StairspaceListing[] = []) => useDataState<StairspaceListing>(initialData, 'stairspaceListings');
+export const useStairspaceRequestsData = (initialData: BookingRequest[] = []) => useDataState<BookingRequest>(initialData, 'stairspaceRequests');
+export const usePropertiesData = (initialData: Property[] = []) => useDataState<Property>(initialData, 'properties');
+export const useLeasesData = (initialData: SignedLease[] = []) => useDataState<SignedLease>(initialData, 'signedLeases');
+export const useProvidersData = (initialData: Provider[] = []) => useDataState<Provider>(initialData, 'providers');
+export const useOpportunitiesData = (initialData: Opportunity[] = []) => useDataState<Opportunity>(initialData, 'opportunities');
+export const useStudentsData = (initialData: Student[] = []) => useDataState<Student>(initialData, 'students');
+export const useMembersData = (initialData: CommunityMember[] = []) => useDataState<CommunityMember>(initialData, 'communityMembers');
+export const useEventsData = (initialData: CommunityEvent[] = []) => useDataState<CommunityEvent>(initialData, 'communityEvents');
+export const useFinancesData = (initialData: CommunityFinance[] = []) => useDataState<CommunityFinance>(initialData, 'communityFinances');
+export const useClientsData = (initialData: Client[] = []) => useDataState<Client>(initialData, 'clients');
+export const useTestimonialsData = (initialData: Testimonial[] = []) => useDataState<Testimonial>(initialData, 'testimonials');
+export const useGiftCardsData = (initialData: GiftCard[] = []) => useDataState<GiftCard>(initialData, 'giftCards');
+export const usePosData = (initialData: PosProduct[] = []) => useDataState<PosProduct>(initialData, 'posProducts');
+export const useUsedItemsData = (initialData: UsedItem[] = []) => useDataState<UsedItem>(initialData, 'usedItems');
+export const useDailySalesData = (initialData: DailySales = []) => useDataState<any>(initialData, 'dailySales');
+export const useSaasProductsData = (initialData: SaasCategory[] = []) => useDataState<SaasCategory>(initialData, 'saasProducts');
+export const usePricingData = (initialData: Pricing[] = []) => useDataState<Pricing>(initialData, 'pricing');
 
+export const useBriefcaseData = (initialData: BriefcaseData) => {
+    const [data, setData] = useState<BriefcaseData>(initialData);
+    const [isClient, setIsClient] = useState(false);
     useEffect(() => {
-        if (isClient && !state.briefcase) {
-            try {
-                const savedBriefcase = localStorage.getItem('user_briefcase');
-                if (savedBriefcase) {
-                    store.set(s => ({ ...s, briefcase: JSON.parse(savedBriefcase) }));
-                } else {
-                    // This will be replaced by a fetch from a database in a real app
-                    import('@/lib/briefcase').then(mod => {
-                        store.set(s => ({ ...s, briefcase: mod.initialBriefcase }));
-                    });
-                }
-            } catch (error) {
-                console.error("Failed to load briefcase from localStorage", error);
-                 import('@/lib/briefcase').then(mod => {
-                    store.set(s => ({ ...s, briefcase: mod.initialBriefcase }));
-                });
-            }
-        }
-    }, [isClient, state.briefcase, store]);
-    
-    const setBriefcase = (updater: (currentBriefcase: AppState['briefcase']) => AppState['briefcase']) => {
-        const currentBriefcase = store.get().briefcase;
-        const newBriefcase = updater(currentBriefcase);
-        store.set(s => ({ ...s, briefcase: newBriefcase }));
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('user_briefcase', JSON.stringify(newBriefcase));
-        }
+        setIsClient(true);
+    }, []);
+    const updateData = (updater: (prev: BriefcaseData) => BriefcaseData) => {
+        setData(updater);
     };
-    return { data: isClient ? state.briefcase : null, setData: setBriefcase, isClient };
+    return { data, setData: updateData, isClient };
+};
+
+export const useProductsData = (initialData: Product[] = []) => {
+    const [data, setData] = useState<Product[]>(initialData);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+    return { data, setData, isClient };
+};
+
+export const useCartData = () => {
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [isClient, setIsClient] = useState(false);
+     useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    return { cart, setCart, isClient };
 };

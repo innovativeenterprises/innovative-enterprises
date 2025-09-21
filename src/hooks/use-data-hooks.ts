@@ -1,12 +1,11 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { store } from '@/lib/global-store';
-import type { HireRequest } from '@/lib/raaha-requests.schema';
-import type { Agency as RaahaAgency } from '@/lib/raaha-agencies.schema';
-import type { Worker } from '@/lib/raaha-workers.schema';
+import type { HireRequest } from "@/lib/raaha-requests.schema";
+import type { Agency as RaahaAgency } from "@/lib/raaha-agencies.schema";
+import type { Worker } from "@/lib/raaha-workers.schema";
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import type { Property } from '@/lib/properties.schema';
@@ -19,9 +18,11 @@ import type { CommunityEvent } from '@/lib/community-events';
 import type { CommunityFinance } from '@/lib/community-finances';
 import type { Client, Testimonial } from '@/lib/clients.schema';
 import type { GiftCard } from '@/lib/gift-cards.schema';
-import type { DailySales, PosProduct } from '@/lib/pos-data.schema';
-import type { UsedItem } from '@/lib/used-items.schema';
+import type { DailySales, PosProduct, CartItem } from '@/lib/pos-data.schema';
 import type { SaasCategory } from '@/lib/saas-products.schema';
+import type { Pricing } from '@/lib/pricing.schema';
+import type { Product } from '@/lib/products.schema';
+import type { BriefcaseData } from '@/lib/briefcase';
 
 const useDataState = <T>(initialData: T[], dataKey: keyof typeof store.get) => {
     const [data, setData] = useState<T[]>(initialData);
@@ -61,4 +62,35 @@ export const usePosData = (initialData: PosProduct[] = []) => useDataState<PosPr
 export const useUsedItemsData = (initialData: UsedItem[] = []) => useDataState<UsedItem>(initialData, 'usedItems');
 export const useDailySalesData = (initialData: DailySales = []) => useDataState<any>(initialData, 'dailySales');
 export const useSaasProductsData = (initialData: SaasCategory[] = []) => useDataState<SaasCategory>(initialData, 'saasProducts');
+export const usePricingData = (initialData: Pricing[] = []) => useDataState<Pricing>(initialData, 'pricing');
 
+export const useBriefcaseData = (initialData: BriefcaseData) => {
+    const [data, setData] = useState<BriefcaseData>(initialData);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+    const updateData = (updater: (prev: BriefcaseData) => BriefcaseData) => {
+        setData(updater);
+    };
+    return { data, setData: updateData, isClient };
+};
+
+export const useProductsData = (initialData: Product[] = []) => {
+    const [data, setData] = useState<Product[]>(initialData);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+    return { data, setData, isClient };
+};
+
+export const useCartData = () => {
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [isClient, setIsClient] = useState(false);
+     useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    return { cart, setCart, isClient };
+};

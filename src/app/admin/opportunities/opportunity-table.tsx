@@ -20,7 +20,7 @@ import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useOpportunitiesData } from "@/hooks/use-global-store-data";
+import { useOpportunitiesData } from "@/hooks/use-data-hooks";
 
 const AddEditOpportunityDialog = ({ 
     opportunity, onSave, children, isOpen, onOpenChange,
@@ -68,17 +68,10 @@ const AddEditOpportunityDialog = ({
 }
 
 export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
-    const { opportunities, setOpportunities } = useOpportunitiesData();
-    const [isClient, setIsClient] = useState(false);
+    const { data: opportunities, setData: setOpportunities, isClient } = useOpportunitiesData(initialOpportunities);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
-
-    useEffect(() => {
-        setOpportunities(initialOpportunities);
-        setIsClient(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialOpportunities]);
 
     const openDialog = (opp?: Opportunity) => { setSelectedOpp(opp); setIsDialogOpen(true); }
 

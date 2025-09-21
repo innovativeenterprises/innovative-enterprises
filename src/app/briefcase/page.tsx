@@ -22,7 +22,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { fileToDataURI } from '@/lib/utils';
 import type { BriefcaseData, UserDocument, ServiceRegistration, SavedBoQ } from '@/lib/briefcase';
-import { useBriefcaseData } from '@/hooks/use-global-store-data';
+import { useBriefcaseData } from '@/hooks/use-data-hooks';
 
 
 const businessCategories = [

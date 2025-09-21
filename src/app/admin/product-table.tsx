@@ -12,18 +12,14 @@ import { PlusCircle, Edit } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import type { ProjectStage } from "@/lib/stages";
-import { useProductsData } from "@/hooks/use-global-store-data";
+import { useProductsData } from "@/hooks/use-data-hooks";
 
 export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
-    const { products, setProducts } = useProductsData();
+    const { data: products, setData: setProducts } = useProductsData(initialProducts);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
     
-    useEffect(() => {
-        setProducts(initialProducts);
-    }, [initialProducts, setProducts]);
-
     const handleToggle = (id: number) => {
         setProducts(prev => 
             prev.map(p => p.id === id ? { ...p, enabled: !p.enabled } : p)
