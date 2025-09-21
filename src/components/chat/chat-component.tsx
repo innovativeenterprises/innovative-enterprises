@@ -11,15 +11,15 @@ import { Form } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Send, Square, Bot, User, Volume2, Link as LinkIcon, CheckCircle, ShoppingCart } from 'lucide-react';
 import type { LucideIcon } from "lucide-react";
-import type { AppSettings } from '@/lib/settings';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { store } from '@/lib/global-store';
-import { type Product } from '@/lib/products';
+import { type Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
+import { useSettings } from '../layout/settings-provider';
 
 interface Message {
   role: 'user' | 'bot';
@@ -46,7 +46,6 @@ interface ChatComponentProps {
     welcomeMessage: string;
     placeholder: string;
     aiFlow: (input: { [key: string]: any }) => Promise<any>;
-    settings: AppSettings;
     suggestedReplies?: string[];
 }
 
@@ -57,13 +56,13 @@ export const ChatComponent = ({
     welcomeMessage,
     placeholder,
     aiFlow,
-    settings,
     suggestedReplies: initialSuggestedReplies,
 }: ChatComponentProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const { settings } = useSettings();
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -196,7 +195,7 @@ export const ChatComponent = ({
   const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
 
   return (
-    <Card className="w-full h-full flex flex-col">
+    <Card className="w-full h-full flex flex-col border-0 shadow-none rounded-none">
         <CardHeader className="flex flex-row items-center gap-4">
             <Avatar>
                 <AvatarFallback><Bot /></AvatarFallback>
@@ -223,7 +222,7 @@ export const ChatComponent = ({
                                      {msg.itemAddedToCart && (
                                         <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex items-center gap-3">
                                             <div className="relative w-12 h-12 rounded-md overflow-hidden">
-                                                <Image src={msg.itemAddedToCart.image} alt={msg.itemAddedToCart.name} fill className="object-cover"/>
+                                                <Image src={msg.itemAddedToCart.image!} alt={msg.itemAddedToCart.name} fill className="object-cover"/>
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-sm">{msg.itemAddedToCart.name}</p>

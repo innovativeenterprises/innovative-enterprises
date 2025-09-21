@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import * as admin from 'firebase-admin';
@@ -155,10 +156,10 @@ async function getCollection<T>(collectionName: string): Promise<T[]> {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
 }
 
-async function getDoc<T>(docPath: string): Promise<T> {
+async function getDoc<T>(docPath: string): Promise<T | null> {
     await seedDatabase();
     const snapshot = await db.doc(docPath).get();
-    return snapshot.data() as T;
+    return snapshot.exists ? (snapshot.data() as T) : null;
 }
 
 export const getProducts = async () => getCollection<Product>('products');
@@ -174,11 +175,11 @@ export const getDailySales = async () => getCollection<any>('dailySales');
 export const getStages = async () => getCollection<any>('stages');
 export const getAssets = async () => getCollection<any>('assets');
 export const getInvestors = async () => getCollection<any>('investors');
-export const getKpiData = async () => (await getDoc<any>('cfo/dashboard')).kpiData;
-export const getTransactionData = async () => (await getDoc<any>('cfo/dashboard')).transactionData;
-export const getUpcomingPayments = async () => (await getDoc<any>('cfo/dashboard')).upcomingPayments;
-export const getVatPayment = async () => (await getDoc<any>('cfo/dashboard')).vatPayment;
-export const getCashFlowData = async () => (await getDoc<any>('cfo/dashboard')).cashFlowData;
+export const getKpiData = async () => (await getDoc<any>('cfo/dashboard'))?.kpiData || [];
+export const getTransactionData = async () => (await getDoc<any>('cfo/dashboard'))?.transactionData || [];
+export const getUpcomingPayments = async () => (await getDoc<any>('cfo/dashboard'))?.upcomingPayments || [];
+export const getVatPayment = async () => (await getDoc<any>('cfo/dashboard'))?.vatPayment || {};
+export const getCashFlowData = async () => (await getDoc<any>('cfo/dashboard'))?.cashFlowData || [];
 export const getProperties = async () => getCollection<any>('properties');
 export const getStairspaceListings = async () => getCollection<any>('stairspaceListings');
 export const getStairspaceRequests = async () => getCollection<any>('stairspaceRequests');
@@ -198,7 +199,11 @@ export const getBeautyCenters = async () => getCollection<any>('beautyCenters');
 export const getBeautyServices = async () => getCollection<any>('beautyServices');
 export const getBeautyAppointments = async () => getCollection<any>('beautyAppointments');
 export const getUsedItems = async () => getCollection<any>('usedItems');
-export const getSettings = async () => getDoc<any>('site/settings');
+export const getSettings = async () => {
+    const settings = await getDoc<any>('site/settings');
+    // Provide a fallback to the initial settings to prevent crashes if Firestore is unavailable.
+    return settings || initialSettings;
+};
 export const getKnowledgeBase = async () => getCollection<any>('knowledgeBase');
 export const getApplications = async () => getCollection<any>('applications');
 export const getBriefcase = async () => getDoc<any>('singleton/briefcase');
@@ -206,7 +211,10 @@ export const getSolutions = async () => getCollection<any>('solutions');
 export const getIndustries = async () => getCollection<any>('industries');
 export const getAiTools = async () => getCollection<any>('aiTools');
 
-export const getCfoData = async () => getDoc<any>('cfo/dashboard');
+export const getCfoData = async () => {
+    const data = await getDoc<any>('cfo/dashboard');
+    return data || initialCfoData;
+};
 
 export const getStaff = async () => getCollection<any>('staff');
 export const getStaffData = async () => {

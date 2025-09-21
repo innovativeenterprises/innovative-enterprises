@@ -1,11 +1,27 @@
 
-
 'use client';
 
-import { initialState, type AppState as FullAppState } from './initial-state';
+/**
+ * @fileOverview A simple global state management store for the prototype.
+ *
+ * This avoids the need for a full state management library like Redux or Zustand
+ * for this prototype application. It uses a simple listener pattern to update
+ * components when the state changes.
+ */
+import type { BriefcaseData } from './briefcase';
+import type { CartItem } from './pos-data.schema';
 
-export type AppState = FullAppState;
-export type CartItem = FullAppState['cart'][0];
+
+export interface AppState {
+  cart: CartItem[];
+  briefcase: BriefcaseData | null;
+};
+
+// This provides the default, empty state for the application.
+export const initialState: AppState = {
+  cart: [],
+  briefcase: null,
+};
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
     let state: AppState = { ...initialState, ...initState };

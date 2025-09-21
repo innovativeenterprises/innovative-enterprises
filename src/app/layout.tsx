@@ -55,7 +55,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fetch navigation data here in the root server component
   const [solutions, industries, aiTools, settings] = await Promise.all([
     getSolutions(),
     getIndustries(),
@@ -67,14 +66,14 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <ClientLayout 
-            solutions={solutions}
-            industries={industries}
-            aiTools={aiTools}
-            settings={settings}
-        >
-            {children}
-        </ClientLayout>
+          <ClientLayout 
+              solutions={solutions}
+              industries={industries}
+              aiTools={aiTools}
+              initialSettings={settings}
+          >
+              {children}
+          </ClientLayout>
       </body>
     </html>
   );
