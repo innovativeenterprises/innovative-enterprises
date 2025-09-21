@@ -5,11 +5,6 @@ import ValuationForm from "./valuation-form";
 import { BarChart } from "lucide-react";
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: "AI Property Valuator | Innovative Enterprises",
-  description: "Get an instant, data-driven market valuation for your property. Provide the details below and let our AI analyze the market to give you an estimated value.",
-};
-
 export default function PropertyValuatorPage() {
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
