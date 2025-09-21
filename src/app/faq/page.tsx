@@ -1,8 +1,11 @@
+
+'use client';
+
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Bot, MessageSquare } from 'lucide-react';
 import type { Metadata } from 'next';
-import { initialSettings } from '@/lib/settings';
+import { useSettings } from '@/components/layout/settings-provider';
 
 export const metadata: Metadata = {
   title: "AI-Powered FAQ | Innovative Enterprises",
@@ -10,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function FaqPage() {
-    const settings = initialSettings;
+    const { settings } = useSettings();
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)] py-16">

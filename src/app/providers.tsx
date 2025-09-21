@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React from 'react';
 import { ThemeProvider } from 'next-themes';
 import { SettingsProvider, useSettings } from '@/components/layout/settings-provider';
 import Header from '@/components/layout/header';
@@ -32,14 +32,14 @@ export function Providers({
 }) {
   return (
     <ThemeProvider
-    attribute="class"
-    defaultTheme="system"
-    enableSystem
-    disableTransitionOnChange
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
     >
-    <SettingsProvider initialSettings={initialSettings}>
+      <SettingsProvider initialSettings={initialSettings}>
         <AppLayout>{children}</AppLayout>
-    </SettingsProvider>
+      </SettingsProvider>
     </ThemeProvider>
   );
 }

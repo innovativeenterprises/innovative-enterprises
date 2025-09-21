@@ -12,7 +12,6 @@ import type { Provider } from "@/lib/providers.schema";
 import type { Opportunity } from "@/lib/opportunities.schema";
 import type { Service } from "@/lib/services.schema";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
-import { useProductsData, useProvidersData, useStaffData, useOpportunitiesData, useServicesData } from '@/hooks/use-data-hooks';
 
 
 const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[], dataKey: string, color: string }) => (
@@ -31,12 +30,26 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
     </Card>
 );
 
-export default function AdminDashboardPageClient() {
-    const { data: products } = useProductsData();
-    const { data: providers } = useProvidersData();
-    const { leadership, staff, agentCategories } = useStaffData();
-    const { data: opportunities } = useOpportunitiesData();
-    const { data: services } = useServicesData();
+interface AdminDashboardPageClientProps {
+    products: Product[];
+    providers: Provider[];
+    opportunities: Opportunity[];
+    services: Service[];
+    agentCategories: AgentCategory[];
+    leadership: Agent[];
+    staff: Agent[];
+}
+
+
+export default function AdminDashboardPageClient({ 
+    products, 
+    providers, 
+    opportunities, 
+    services, 
+    agentCategories, 
+    leadership, 
+    staff 
+}: AdminDashboardPageClientProps) {
     
     const kpiData = [
         { name: 'Products', value: products.length },

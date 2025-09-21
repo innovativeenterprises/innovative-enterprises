@@ -19,7 +19,8 @@ import Link from 'next/link';
 import { store } from '@/lib/global-store.tsx';
 import { type Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
-import { useSettings } from '../layout/settings-provider';
+import type { AppSettings } from '@/lib/settings';
+
 
 interface Message {
   role: 'user' | 'bot';
@@ -47,6 +48,7 @@ interface ChatComponentProps {
     placeholder: string;
     aiFlow: (input: { [key: string]: any }) => Promise<any>;
     suggestedReplies?: string[];
+    settings: AppSettings;
 }
 
 export const ChatComponent = ({
@@ -57,12 +59,12 @@ export const ChatComponent = ({
     placeholder,
     aiFlow,
     suggestedReplies: initialSuggestedReplies,
+    settings,
 }: ChatComponentProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
-  const { settings } = useSettings();
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
