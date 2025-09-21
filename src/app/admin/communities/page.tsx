@@ -92,15 +92,13 @@ const AddEditMemberDialog = ({ member, onSave, children }: { member?: CommunityM
     );
 };
 
-export default function CommunitiesAdminPage() {
-    const [members, setMembers] = useState<CommunityMember[]>([]);
+export default function CommunitiesAdminPage({ initialMembers }: { initialMembers: CommunityMember[] }) {
+    const [members, setMembers] = useState<CommunityMember[]>(initialMembers);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     
     useEffect(() => {
         setIsClient(true);
-        // In a real app with a database, you would fetch initial data here
-        // For this prototype, we'll assume it's passed or available in a store
     }, []);
 
     const handleSave = (values: MemberValues, id?: string) => {
@@ -188,5 +186,6 @@ export default function CommunitiesAdminPage() {
         </div>
     );
 }
-
     
+
+  
