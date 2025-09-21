@@ -1,7 +1,7 @@
 
 'use server';
 
-import ClientTestimonialsClient from "@/components/client-testimonials";
+import ClientTestimonials from "@/components/client-testimonials";
 import { getClients, getTestimonials } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
@@ -17,6 +17,6 @@ export default async function ClientTestimonialsPage() {
     ]);
     
     return (
-        <ClientTestimonialsClient clients={clients} testimonials={testimonials} />
+        <ClientTestimonials clients={clients} testimonials={testimonials} />
     );
 }

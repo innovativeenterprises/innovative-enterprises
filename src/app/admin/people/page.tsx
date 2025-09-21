@@ -1,3 +1,6 @@
+
+'use server';
+
 import { getStaffData } from "@/lib/firestore";
 import PeoplePageClient from "./client-page";
 import type { Metadata } from 'next';
