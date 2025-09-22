@@ -1,7 +1,7 @@
 
 'use server';
 
-import ClientTestimonialsClient from "@/components/client-testimonials";
+import ClientTestimonialsClient from "@/components/client-testimonials-client";
 import { getClients, getTestimonials } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
