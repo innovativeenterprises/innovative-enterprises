@@ -1,7 +1,7 @@
 
 'use server';
 
-import CfoDashboardClientPage from './client-page';
+import CfoDashboardPageClient from './cfo-dashboard';
 import type { Metadata } from 'next';
 import { getCfoData } from '@/lib/firestore';
 
@@ -12,5 +12,11 @@ export const metadata: Metadata = {
 
 export default async function CfoDashboardPage() {
     const cfoData = await getCfoData();
-    return <CfoDashboardClientPage initialData={cfoData} />;
+
+    if (!cfoData) {
+        return <div>Loading financial data...</div>;
+    }
+    
+    return <CfoDashboardPageClient initialData={cfoData} />;
 }
+

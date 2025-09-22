@@ -10,8 +10,6 @@ import type { Provider } from "@/lib/providers.schema";
 import type { Opportunity } from "@/lib/opportunities.schema";
 import type { Service } from "@/lib/services.schema";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
-import { useMemo, useEffect, useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[], dataKey: string, color: string }) => (
     <Card>
@@ -29,38 +27,36 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
     </Card>
 );
 
-interface AdminDashboardClientProps {
-    products: Product[];
-    providers: Provider[];
-    opportunities: Opportunity[];
-    services: Service[];
-    staffData: {
-        leadership: Agent[];
-        staff: Agent[];
-        agentCategories: AgentCategory[];
-    };
+interface AdminDashboardPageClientProps {
+  initialProducts: Product[];
+  initialProviders: Provider[];
+  initialOpportunities: Opportunity[];
+  initialServices: Service[];
+  initialStaffData: {
+    leadership: Agent[];
+    staff: Agent[];
+    agentCategories: AgentCategory[];
+  };
 }
 
+export default function AdminDashboardPageClient({
+  initialProducts,
+  initialProviders,
+  initialOpportunities,
+  initialServices,
+  initialStaffData,
+}: AdminDashboardPageClientProps) {
 
-export default function AdminDashboardPageClient({ products, providers, opportunities, services, staffData }: AdminDashboardClientProps) {
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    const kpiData = useMemo(() => {
-        if (!isClient) return [];
-        return [
-            { name: 'Products', value: products.length },
-            { name: 'Providers', value: providers.length },
-            { name: 'Opportunities', value: opportunities.length },
-            { name: 'Services', value: services.length },
-            { name: 'AI Agents', value: staffData.agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
-            { name: 'Staff', value: staffData.leadership.length + staffData.staff.length },
-        ];
-    }, [isClient, products, providers, opportunities, services, staffData]);
+    const kpiData = [
+        { name: 'Products', value: initialProducts.length },
+        { name: 'Providers', value: initialProviders.length },
+        { name: 'Opportunities', value: initialOpportunities.length },
+        { name: 'Services', value: initialServices.length },
+        { name: 'AI Agents', value: initialStaffData.agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
+        { name: 'Staff', value: initialStaffData.leadership.length + initialStaffData.staff.length },
+    ];
     
-    const recentProviders = useMemo(() => isClient ? providers.slice(0, 5) : [], [providers, isClient]);
+    const recentProviders = initialProviders.slice(0, 5);
 
     return (
         <div className="space-y-8">
@@ -81,17 +77,13 @@ export default function AdminDashboardPageClient({ products, providers, opportun
                         <Table>
                             <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Services</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {!isClient ? (
-                                    Array.from({length: 5}).map((_, i) => <TableRow key={i}><TableCell colSpan={3}><Skeleton className="h-10 w-full" /></TableCell></TableRow>)
-                                ) : (
-                                    recentProviders.map(provider => (
-                                        <TableRow key={provider.id}>
-                                            <TableCell className="font-medium">{provider.name}</TableCell>
-                                            <TableCell>{provider.services}</TableCell>
-                                            <TableCell>{getStatusBadge(provider.status)}</TableCell>
-                                        </TableRow>
-                                    ))
-                                )}
+                                {recentProviders.map(provider => (
+                                    <TableRow key={provider.id}>
+                                        <TableCell className="font-medium">{provider.name}</TableCell>
+                                        <TableCell>{provider.services}</TableCell>
+                                        <TableCell>{getStatusBadge(provider.status)}</TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </CardContent>

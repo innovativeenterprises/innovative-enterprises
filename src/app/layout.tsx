@@ -55,14 +55,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Using initialSettings directly as a fallback.
-  // The getSettings function now has internal error handling.
+  // Fetch settings on the server
   const settings = await getSettings() || initialSettings;
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
+        {/* Pass fetched settings to the client-side provider */}
         <Providers initialSettings={settings}>
           {children}
         </Providers>
@@ -70,4 +70,3 @@ export default async function RootLayout({
     </html>
   );
 }
-  

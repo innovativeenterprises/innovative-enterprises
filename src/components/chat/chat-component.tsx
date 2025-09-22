@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import type { Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
-import { useSettings } from '../layout/settings-provider';
+import { useSettings } from '@/components/layout/settings-provider';
 
 
 interface Message {
@@ -46,7 +46,6 @@ interface ChatComponentProps {
     welcomeMessage: string;
     placeholder: string;
     aiFlow: (input: { [key: string]: any }) => Promise<any>;
-    suggestedReplies?: string[];
 }
 
 export const ChatComponent = ({
@@ -56,7 +55,6 @@ export const ChatComponent = ({
     welcomeMessage,
     placeholder,
     aiFlow,
-    suggestedReplies: initialSuggestedReplies,
 }: ChatComponentProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,12 +91,12 @@ export const ChatComponent = ({
   }, [messages]);
 
   useEffect(() => {
-    setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: initialSuggestedReplies || ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
+    setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
     
     return () => {
       stopAudio();
     };
-  }, [welcomeMessage, initialSuggestedReplies, stopAudio]);
+  }, [welcomeMessage, stopAudio]);
 
   const handleTextToSpeech = async (text: string) => {
       stopAudio();
@@ -216,7 +214,7 @@ export const ChatComponent = ({
                                             <Link href={msg.meetingUrl} target="_blank">Book a Meeting</Link>
                                         </Button>
                                     )}
-                                    {msg.contactOptions && (
+                                     {msg.contactOptions && (
                                         <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex gap-2">
                                             {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${msg.contactOptions.email}`}>Email</a></Button>}
                                             {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${msg.contactOptions.whatsapp}`} target="_blank">WhatsApp</a></Button>}

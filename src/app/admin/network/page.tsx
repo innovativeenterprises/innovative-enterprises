@@ -1,8 +1,8 @@
 
 'use server';
 
-import { getProviders, getAssets } from '@/lib/firestore';
 import NetworkPageClient from './client-page';
+import { getProviders, getAssets } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -18,3 +18,4 @@ export default async function NetworkPage() {
 
     return <NetworkPageClient initialProviders={providers || []} initialAssets={assets || []} />;
 }
+

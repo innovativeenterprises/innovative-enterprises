@@ -1,8 +1,8 @@
 
 'use server';
 
-import { getProducts } from '@/lib/firestore';
 import ConstructionTechClientPage from './client-page';
+import { getProducts } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -15,3 +15,4 @@ export default async function ConstructionTechPage() {
     const contechProducts = products.filter(p => p.category === "Construction Tech");
     return <ConstructionTechClientPage initialProducts={contechProducts} />;
 }
+

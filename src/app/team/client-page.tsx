@@ -1,19 +1,24 @@
 
-'use server';
+'use client';
 
 import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
-import { getStaffData } from "@/lib/firestore";
 
-export default async function TeamClientPage() {
-    const { leadership, staff, agentCategories } = await getStaffData();
+interface TeamClientPageProps {
+  staffData: {
+    leadership: Agent[];
+    staff: Agent[];
+    agentCategories: AgentCategory[];
+  };
+}
 
-    const enabledLeadership = leadership.filter(member => member.enabled);
-    const enabledStaff = staff.filter(member => member.enabled);
-    const enabledAgentCategories = agentCategories.map(category => ({
+export default function TeamClientPage({ staffData }: TeamClientPageProps) {
+    const enabledLeadership = staffData.leadership.filter(member => member.enabled);
+    const enabledStaff = staffData.staff.filter(member => member.enabled);
+    const enabledAgentCategories = staffData.agentCategories.map(category => ({
         ...category,
         agents: category.agents.filter(agent => agent.enabled)
     })).filter(category => category.agents.length > 0);

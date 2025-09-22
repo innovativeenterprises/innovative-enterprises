@@ -18,3 +18,4 @@ export default async function CommunitiesAdminPage() {
     ]);
     return <CommunitiesAdminClientPage initialMembers={members} initialCommunities={communities} />;
 }
+

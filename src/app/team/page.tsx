@@ -3,6 +3,7 @@
 
 import type { Metadata } from 'next';
 import TeamClientPage from './client-page';
+import { getStaffData } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "Our Team | Innovative Enterprises",
@@ -10,5 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function TeamPage() {
-    return <TeamClientPage />;
+    const staffData = await getStaffData();
+    return <TeamClientPage staffData={staffData} />;
 }

@@ -6,7 +6,5 @@ import { getAiTools } from "@/lib/firestore";
 
 export default async function AiToolsCta() {
     const aiTools = await getAiTools();
-    return (
-        <AiToolsCtaClient aiTools={aiTools} />
-    )
+    return <AiToolsCtaClient aiTools={aiTools} />;
 }

@@ -1,7 +1,7 @@
 
 'use server';
 
-import AdminDashboardPageClient from './dashboard-client';
+import AdminDashboardPageClient from './client-page';
 import type { Metadata } from 'next';
 import { getProducts, getProviders, getOpportunities, getServices, getStaffData } from '@/lib/firestore';
 
@@ -18,14 +18,14 @@ export default async function AdminDashboardPage() {
         getServices(),
         getStaffData(),
     ]);
-    
+
     return (
-        <AdminDashboardPageClient 
-            products={products}
-            providers={providers}
-            opportunities={opportunities}
-            services={services}
-            staffData={staffData}
-        />
+      <AdminDashboardPageClient
+        initialProducts={products}
+        initialProviders={providers}
+        initialOpportunities={opportunities}
+        initialServices={services}
+        initialStaffData={staffData}
+      />
     );
 }

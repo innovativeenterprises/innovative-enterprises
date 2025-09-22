@@ -10,7 +10,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat-widget';
 
-export function Providers({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings | null }) {
+export function Providers({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings }) {
   return (
     <SettingsProvider initialSettings={initialSettings}>
       <ThemeProvider
