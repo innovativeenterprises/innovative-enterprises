@@ -3,9 +3,10 @@ import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { getSettings } from '@/lib/firestore';
 import { Providers } from '@/app/providers';
-import { initialSettings } from '@/lib/settings';
+import { getInitialState } from '@/lib/initial-state';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -55,18 +56,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fetch settings on the server
-  const settings = await getSettings() || initialSettings;
+  const initialState = await getInitialState();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        {/* Pass fetched settings to the client-side provider */}
-        <Providers initialSettings={settings}>
-          {children}
+        <Providers initialState={initialState}>
+           <div className="relative flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
         </Providers>
       </body>
     </html>
   );
 }
+

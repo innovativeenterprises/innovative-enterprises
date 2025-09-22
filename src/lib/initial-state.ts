@@ -30,7 +30,7 @@ import type { JobPosting } from './alumni-jobs';
 import type { RentalAgency } from './rental-agencies';
 import type { Car } from './cars.schema';
 import type { DailySales, PosProduct, CartItem } from './pos-data.schema';
-import type { SaasCategory } from '@/lib/saas-products.schema';
+import type { SaasCategory } from './saas-products.schema';
 import type { StockItem } from './stock-items.schema';
 import type { Pricing } from './pricing.schema';
 import { initialPricing } from './pricing';
@@ -77,15 +77,13 @@ import type { Property } from './properties.schema';
 import { initialProperties } from './properties';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import type { Solution, Industry, AiTool } from './nav-links';
-import type { AppState as AppStateType } from './global-store';
+import type { AppState } from '@/lib/global-store';
 import { saasProducts as initialSaasProducts } from './saas-products';
 
 
-export type AppState = AppStateType;
-
 // This provides the default, empty state for the application.
 // Actual data will be fetched by server components and passed as props.
-export const getInitialState = (): AppState => ({
+export const getInitialState = async (): Promise<AppState> => ({
   isClient: false,
   settings: initialSettings,
   cart: [],
