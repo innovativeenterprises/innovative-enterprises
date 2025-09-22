@@ -12,13 +12,17 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
-import { useLeasesData } from "@/hooks/use-data-hooks";
 import { DueDateDisplay } from "@/components/due-date-display";
 
 export default function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const { data: leases, setData: setLeases, isClient } = useLeasesData(initialLeases);
+    const [leases, setLeases] = useState<SignedLease[]>(initialLeases);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const expiringLeasesCount = useMemo(() => {
         if (!isClient) return null;
         const now = new Date();

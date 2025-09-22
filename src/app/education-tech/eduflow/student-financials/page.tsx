@@ -1,7 +1,9 @@
 
+'use server';
+
 import StudentFinancialsClientPage from './client-page';
-import type { Metadata } from 'next';
 import { getStudents } from '@/lib/firestore';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: "Student Financials | EduFlow Suite",
