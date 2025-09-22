@@ -20,7 +20,6 @@ export const useSettings = () => {
 };
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-    // This now correctly uses the data hook which safely gets data from the global store.
     const { settings, isClient } = useSettingsData();
 
     if (!isClient || !settings) {

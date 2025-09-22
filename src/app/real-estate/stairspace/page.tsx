@@ -1,8 +1,8 @@
 
 'use server';
 
-import StairspaceRequestsClientPage from "./client-page";
 import { getStairspaceRequests } from "@/lib/firestore";
+import StairspaceRequestsClientPage from "@/app/admin/real-estate/stairspace/client-page";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

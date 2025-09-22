@@ -6,14 +6,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Github } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useStore } from '@/hooks/use-data-hooks';
 
 export default function FooterClient() {
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useStore((state) => state.isClient);
   const currentYear = new Date().getFullYear().toString();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   if (!isClient) {
       return (

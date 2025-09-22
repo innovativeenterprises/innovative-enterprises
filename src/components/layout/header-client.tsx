@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
+import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search, GitBranch } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import {
@@ -12,6 +12,8 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuLink,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import {
@@ -29,6 +31,8 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import type { AppSettings } from '@/lib/settings';
+import { useStore } from '@/hooks/use-data-hooks';
+import MobileNavLinks from './mobile-nav-links';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -60,13 +64,14 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient({ settings, solutions, industries, aiTools }: { 
-    settings: AppSettings;
-    solutions: Solution[];
-    industries: Industry[];
-    aiTools: AiTool[];
-}) { 
-  const [cart, setCart] = useState<{ quantity: number }[]>([]);
+export default function HeaderClient() { 
+  const { cart, settings, solutions, industries, aiTools } = useStore((state) => ({
+      cart: state.cart,
+      settings: state.settings,
+      solutions: state.solutions,
+      industries: state.industries,
+      aiTools: state.aiTools,
+  }));
   const [isClient, setIsClient] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -98,19 +103,58 @@ export default function HeaderClient({ settings, solutions, industries, aiTools 
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
             <NavigationMenuList>
-              {navLinks.map((link) => (
-                <NavigationMenuItem key={link.href}>
-                  <NavigationMenuLink
-                    asChild
-                    active={pathname === link.href}
-                    className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
-                  >
-                    <Link href={link.href}>
-                      {link.label}
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">Solutions</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
+                    {solutions.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        icon={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">Industries</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                    {industries.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        icon={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+               <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base font-medium">AI Tools</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
+                    {aiTools.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        icon={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <DesktopNavLinks />
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
@@ -169,6 +213,8 @@ export default function HeaderClient({ settings, solutions, industries, aiTools 
                 <ScrollArea className="h-[calc(100vh-8rem)]">
                     <div className="flex flex-col gap-4 py-4">
                         <nav className="flex flex-col gap-2 px-2">
+                        <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">Main Menu</p>
+                        <MobileNavLinks handleLinkClick={handleLinkClick} />
                         
                         <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">My Account</p>
                         <Button

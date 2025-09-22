@@ -8,6 +8,7 @@ import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 import type { Client } from '@/lib/clients.schema';
 
+
 export default function Hero({ clients }: { clients: Client[]}) {
 
   return (

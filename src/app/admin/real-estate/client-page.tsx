@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -51,7 +52,7 @@ export default function AdminRealEstateClientPage({
                 </CardHeader>
                 <CardFooter>
                     <Button asChild>
-                        <Link href="/admin/real-estate/property-valuator">Launch Valuator <BarChart className="ml-2 h-4 w-4" /></Link>
+                        <Link href="/real-estate-tech/property-valuator">Launch Valuator <BarChart className="ml-2 h-4 w-4" /></Link>
                     </Button>
                 </CardFooter>
             </Card>

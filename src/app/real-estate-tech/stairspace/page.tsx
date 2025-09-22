@@ -1,16 +1,19 @@
+
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, Handshake, Gift } from "lucide-react";
 import Link from 'next/link';
-import { useStairspaceData } from '@/hooks/use-global-store-data';
+import { useStairspaceData } from '@/hooks/use-data-hooks';
 import type { StairspaceListing } from '@/lib/stairspace-listings';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { useStore } from '@/hooks/use-data-hooks';
+
 
 const ListingCard = ({ listing }: { listing: StairspaceListing }) => (
     <Link href={`/real-estate-tech/stairspace/${listing.id}`} className="flex">
@@ -55,7 +58,10 @@ const ListingGridSkeleton = () => (
 );
 
 export default function StairspacePage() {
-    const { stairspaceListings, isClient } = useStairspaceData();
+    const { stairspaceListings, isClient } = useStore((state) => ({
+      stairspaceListings: state.stairspaceListings,
+      isClient: state.isClient,
+    }));
     const [searchTerm, setSearchTerm] = useState('');
     const [tagFilter, setTagFilter] = useState('All');
 
