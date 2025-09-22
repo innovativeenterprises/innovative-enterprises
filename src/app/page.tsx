@@ -2,7 +2,7 @@
 'use server';
 
 import ClientTestimonials from "@/components/client-testimonials";
-import Hero from "@/app/hero";
+import CompanyOverview from "@/components/company-overview";
 import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import AiToolsCta from "@/components/ai-tools-cta";
@@ -19,7 +19,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero clients={clients} />
+      <CompanyOverview clients={clients} />
       <ServiceCatalog services={services} />
       <ProductShowcase products={products} />
       <ClientTestimonials clients={clients} testimonials={testimonials} />

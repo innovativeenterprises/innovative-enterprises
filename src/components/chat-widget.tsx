@@ -7,18 +7,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { X, MessageSquare, Bot } from "lucide-react";
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
-import { useSettingsData } from "@/hooks/use-data-hooks";
+import type { AppSettings } from "@/lib/settings";
 
-export default function ChatWidget() {
+export default function ChatWidget({ settings }: { settings: AppSettings }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    const { settings } = useSettingsData();
 
     useEffect(() => {
         setIsMounted(true);
     }, []);
 
-    if (!isMounted || !settings) {
+    if (!isMounted) {
         return null;
     }
 
@@ -48,6 +47,7 @@ export default function ChatWidget() {
                             welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
                             placeholder="Ask about our services or book a meeting..."
                             aiFlow={answerQuestion}
+                            settings={settings}
                        />
                     </div>
                 </PopoverContent>

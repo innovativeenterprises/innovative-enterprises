@@ -1,27 +1,14 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useStore } from '@/hooks/use-data-hooks';
 
 export default function FooterClient() {
-  const isClient = useStore((state) => state.isClient);
   const currentYear = new Date().getFullYear().toString();
 
-  if (!isClient) {
-      return (
-          <footer className="border-t bg-card">
-              <div className="container mx-auto py-8 px-4">
-                  <div className="h-10 animate-pulse bg-muted rounded-md" />
-              </div>
-          </footer>
-      );
-  }
-  
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto py-8 px-4">

@@ -31,7 +31,6 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import type { AppSettings } from '@/lib/settings';
-import { useStore } from '@/hooks/use-data-hooks';
 import MobileNavLinks from './mobile-nav-links';
 
 const ListItem = React.forwardRef<
@@ -64,23 +63,14 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient() { 
-  const { cart, settings, solutions, industries, aiTools } = useStore((state) => ({
-      cart: state.cart,
-      settings: state.settings,
-      solutions: state.solutions,
-      industries: state.industries,
-      aiTools: state.aiTools,
-  }));
-  const [isClient, setIsClient] = useState(false);
+export default function HeaderClient({ settings, solutions, industries, aiTools }: {
+    settings: AppSettings;
+    solutions: Solution[];
+    industries: Industry[];
+    aiTools: AiTool[];
+}) { 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const cartCount = isClient ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
@@ -154,14 +144,25 @@ export default function HeaderClient() {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <DesktopNavLinks />
+              {navLinks.map((link) => (
+                <NavigationMenuItem key={link.href}>
+                  <NavigationMenuLink
+                    asChild
+                    active={pathname === link.href}
+                    className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
+                  >
+                    <Link href={link.href}>
+                      {link.label}
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
         <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" asChild>
                 <Link href="/ecommerce/cart" className="relative">
-                     {cartCount > 0 && <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs">{cartCount}</span>}
                     <ShoppingCart className="h-5 w-5" />
                     <span className="sr-only">Shopping Cart</span>
                 </Link>

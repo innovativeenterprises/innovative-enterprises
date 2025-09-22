@@ -4,14 +4,11 @@
 import React, { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { StoreProvider, type AppState } from '@/lib/global-store';
 
 export function Providers({ 
     children,
-    initialState,
 }: { 
     children: ReactNode,
-    initialState: AppState,
 }) {
   return (
     <ThemeProvider
@@ -20,10 +17,8 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      <StoreProvider initialState={initialState}>
         {children}
         <Toaster />
-      </StoreProvider>
     </ThemeProvider>
   );
 }

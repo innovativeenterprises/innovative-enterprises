@@ -9,50 +9,7 @@ import { Providers } from '@/app/providers';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat-widget';
-import { 
-  getSettings, 
-  getSolutions, 
-  getIndustries, 
-  getAiTools,
-  getProducts,
-  getStoreProducts,
-  getProviders,
-  getOpportunities,
-  getServices,
-  getLeases,
-  getStairspaceRequests,
-  getStairspaceListings,
-  getStaffData,
-  getRaahaData,
-  getBeautyData,
-  getCostSettings,
-  getAssets,
-  getUsedItems,
-  getClients,
-  getTestimonials,
-  getGiftCards,
-  getStudents,
-  getCommunities,
-  getCommunityEvents,
-  getCommunityFinances,
-  getCommunityMembers,
-  getAlumniJobs,
-  getRentalAgencies,
-  getCars,
-  getPosProducts,
-  getDailySales,
-  getSaasProducts,
-  getStockItems,
-  getPricing,
-  getStages,
-  getApplications,
-  getBriefcase,
-  getInvestors,
-  getKnowledgeBase,
-  getCfoData,
-  getProperties
-} from '@/lib/firestore';
-import { initialState, type AppState } from '@/lib/initial-state';
+import { getSettings, getSolutions, getIndustries, getAiTools } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -102,87 +59,29 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-   const [
-    settings, solutions, industries, aiTools, products, storeProducts, providers, opportunities, services, 
-    leases, stairspaceRequests, stairspaceListings, staffData, raahaData, beautyData, costSettings, 
-    assets, usedItems, clients, testimonials, giftCards, students, communities, communityEvents, 
-    communityFinances, communityMembers, alumniJobs, rentalAgencies, cars, posProducts, dailySales, 
-    saasProducts, stockItems, pricing, stages, applications, briefcase, investors, knowledgeBase, 
-    cfoData, properties
-  ] = await Promise.all([
-    getSettings(), getSolutions(), getIndustries(), getAiTools(), getProducts(), getStoreProducts(), getProviders(),
-    getOpportunities(), getServices(), getLeases(), getStairspaceRequests(), getStairspaceListings(), getStaffData(),
-    getRaahaData(), getBeautyData(), getCostSettings(), getAssets(), getUsedItems(), getClients(), getTestimonials(),
-    getGiftCards(), getStudents(), getCommunities(), getCommunityEvents(), getCommunityFinances(), getCommunityMembers(),
-    getAlumniJobs(), getRentalAgencies(), getCars(), getPosProducts(), getDailySales(), getSaasProducts(),
-    getStockItems(), getPricing(), getStages(), getApplications(), getBriefcase(), getInvestors(), getKnowledgeBase(),
-    getCfoData(), getProperties()
+  const [settings, solutions, industries, aiTools] = await Promise.all([
+    getSettings(),
+    getSolutions(),
+    getIndustries(),
+    getAiTools()
   ]);
-
-  const appInitialState: AppState = {
-    ...initialState,
-    settings,
-    solutions,
-    industries,
-    aiTools,
-    products,
-    storeProducts,
-    providers,
-    opportunities,
-    services,
-    signedLeases: leases,
-    stairspaceRequests,
-    stairspaceListings,
-    leadership: staffData.leadership,
-    staff: staffData.staff,
-    agentCategories: staffData.agentCategories,
-    raahaAgencies: raahaData.raahaAgencies,
-    raahaWorkers: raahaData.raahaWorkers,
-    raahaRequests: raahaData.raahaRequests,
-    beautyCenters: beautyData.beautyCenters,
-    beautyServices: beautyData.beautyServices,
-    beautySpecialists: beautyData.beautySpecialists,
-    beautyAppointments: beautyData.beautyAppointments,
-    costSettings,
-    assets,
-    usedItems,
-    clients,
-    testimonials,
-    giftCards,
-    students,
-    communities,
-    communityEvents,
-    communityFinances,
-    communityMembers,
-    alumniJobs,
-    rentalAgencies,
-    cars,
-    posProducts,
-    dailySales,
-    saasProducts,
-    stockItems,
-    pricing,
-    stages,
-    applications,
-    briefcase,
-    investors,
-    knowledgeBase,
-    cfoData,
-    properties,
-  };
-
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialState={appInitialState}>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-              <ChatWidget />
-            </div>
+        <Providers>
+          <div className="flex min-h-screen flex-col">
+            <Header 
+              settings={settings} 
+              solutions={solutions} 
+              industries={industries}
+              aiTools={aiTools}
+            />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <ChatWidget settings={settings} />
+          </div>
         </Providers>
       </body>
     </html>

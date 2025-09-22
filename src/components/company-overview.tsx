@@ -47,7 +47,7 @@ export default function CompanyOverview({ clients }: { clients: Client[]}) {
                         <Star className="w-5 h-5 fill-current" />
                         <Star className="w-5 h-5 fill-current" />
                     </div>
-                    <div className="text-sm text-muted-foreground">Trusted by 100+ organizations</div>
+                    <div className="text-sm text-muted-foreground">Trusted by leading organizations</div>
                 </div>
             </div>
           </div>
