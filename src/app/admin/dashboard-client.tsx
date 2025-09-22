@@ -1,5 +1,5 @@
 
-'use client';
+'use server';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import type { Provider } from "@/lib/providers.schema";
 import type { Opportunity } from "@/lib/opportunities.schema";
 import type { Service } from "@/lib/services.schema";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
+import { getProducts, getProviders, getOpportunities, getServices, getStaffData } from '@/lib/firestore';
 
 
 const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[], dataKey: string, color: string }) => (
@@ -28,26 +29,17 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
     </Card>
 );
 
-interface AdminDashboardPageClientProps {
-    products: Product[];
-    providers: Provider[];
-    opportunities: Opportunity[];
-    services: Service[];
-    agentCategories: AgentCategory[];
-    leadership: Agent[];
-    staff: Agent[];
-}
+export default async function AdminDashboardPageClient() {
+    
+    const [products, providers, opportunities, services, staffData] = await Promise.all([
+        getProducts(),
+        getProviders(),
+        getOpportunities(),
+        getServices(),
+        getStaffData(),
+    ]);
 
-
-export default function AdminDashboardPageClient({ 
-    products, 
-    providers, 
-    opportunities, 
-    services, 
-    agentCategories, 
-    leadership, 
-    staff 
-}: AdminDashboardPageClientProps) {
+    const { agentCategories, leadership, staff } = staffData;
     
     const kpiData = [
         { name: 'Products', value: products.length },
