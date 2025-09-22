@@ -9,7 +9,7 @@ import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat/chat-widget';
 import { Toaster } from '@/components/ui/toaster';
 import { StoreProvider } from '@/lib/global-store';
-import type { AppState } from '@/lib/global-store';
+import type { AppState } from '@/lib/initial-state';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -37,7 +37,7 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      <StoreProvider initialAppState={initialAppState}>
+      <StoreProvider initialState={initialAppState}>
         <SettingsProvider>
             <AppLayout>{children}</AppLayout>
         </SettingsProvider>

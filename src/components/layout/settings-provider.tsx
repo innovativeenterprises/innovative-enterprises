@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import { useGlobalStore } from '@/lib/global-store';
+import { useStore } from '@/lib/global-store';
 import { Skeleton } from '../ui/skeleton';
 
 interface SettingsContextType {
@@ -21,7 +21,7 @@ export const useSettings = () => {
 };
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-    const { state } = useGlobalStore();
+    const { state } = useStore();
 
     if (!state.isClient || !state.settings) {
         return <div className="h-screen w-full flex items-center justify-center"><Skeleton className="h-full w-full" /></div>;

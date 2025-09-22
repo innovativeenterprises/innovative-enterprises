@@ -1,15 +1,20 @@
+
 'use client';
 
 import Link from 'next/link';
 import CompanyProfileDownloader from "@/app/invest/company-profile-downloader";
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { useGlobalStore } from '@/lib/global-store';
+import { useStore } from '@/lib/global-store';
 
 
 export default function FooterClient() {
-  const { state } = useGlobalStore();
+  const { state } = useStore();
   const currentYear = new Date().getFullYear().toString();
+  
+  if (!state.settings) {
+      return null;
+  }
   
   return (
     <footer className="border-t bg-card">
