@@ -1,6 +1,4 @@
 
-'use server';
-
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
@@ -8,8 +6,8 @@ import type { Metadata } from 'next';
 import { getSettings, getSolutions, getIndustries, getAiTools } from '@/lib/firestore';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import ChatWidget from '@/components/chat-widget';
 import { Providers } from '@/app/providers';
+import ChatWidget from '@/components/chat-widget';
 
 const inter = Inter({
   subsets: ['latin'],
