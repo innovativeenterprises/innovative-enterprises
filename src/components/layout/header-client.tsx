@@ -4,12 +4,15 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
+  NavigationMenuItem,
   NavigationMenuList,
+  NavigationMenuLink,
 } from "@/components/ui/navigation-menu"
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -22,11 +25,12 @@ import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
 import { useCartData } from '@/hooks/use-data-hooks';
-import DesktopNavLinks from './desktop-nav-links';
 import MobileNavLinks from './mobile-nav-links';
+import DesktopNavLinks from './desktop-nav-links';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
-
-export default function HeaderClient() { 
+export default function Header() { 
   const { cart, isClient } = useCartData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -36,6 +40,14 @@ export default function HeaderClient() {
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
   };
+  
+  const pathname = usePathname();
+  const navLinks = [
+    { href: "/about", label: "About" },
+    { href: "/invest", label: "Invest" },
+    { href: "/partner", label: "Partners" },
+  ];
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -46,7 +58,19 @@ export default function HeaderClient() {
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
             <NavigationMenuList>
-              <DesktopNavLinks />
+              {navLinks.map((link) => (
+                <NavigationMenuItem key={link.href}>
+                  <NavigationMenuLink
+                    asChild
+                    active={pathname === link.href}
+                    className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
+                  >
+                    <Link href={link.href}>
+                      {link.label}
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
