@@ -16,7 +16,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { store } from '@/lib/global-store.tsx';
 import { type Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 import type { AppSettings } from '@/lib/settings';
@@ -147,23 +146,6 @@ export const ChatComponent = ({
           suggestedReplies: result.suggestedReplies,
       };
       setMessages(prev => [...prev, botMessage]);
-
-      if (botMessage.itemAddedToCart) {
-          const product = botMessage.itemAddedToCart;
-          store.set(state => {
-            const existingItem = state.cart.find(item => item.id === product.id);
-            if (existingItem) {
-                return {
-                    ...state,
-                    cart: state.cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
-                }
-            }
-            return {
-                ...state,
-                cart: [...state.cart, { ...product, quantity: 1 }]
-            }
-        });
-      }
 
       setShowSuggestions(true);
       

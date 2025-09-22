@@ -4,9 +4,20 @@
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Bot, MessageSquare } from 'lucide-react';
-import { initialSettings } from '@/lib/settings';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 
 export default function FaqPage() {
+    const { data: settings } = useSettingsData();
+
+    // Render a loading state or nothing if settings aren't loaded yet
+    if (!settings) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
+    }
+    
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)] py-16">
             <div className="container mx-auto px-4">
@@ -27,7 +38,7 @@ export default function FaqPage() {
                         welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
                         placeholder="Ask about our services or book a meeting..."
                         aiFlow={answerQuestion}
-                        settings={initialSettings} // Pass initialSettings as a fallback
+                        settings={settings}
                    />
                 </div>
             </div>
