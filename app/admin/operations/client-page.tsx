@@ -12,7 +12,7 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "@/app/admin/pricing-table";
+import PricingTable from "@/app/admin/operations/pricing-table";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { Pricing } from "@/lib/pricing.schema";

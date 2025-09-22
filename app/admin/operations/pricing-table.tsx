@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -10,10 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePricingData } from "@/hooks/use-global-store-data";
 import { Edit } from "lucide-react";
 
 
@@ -77,11 +77,16 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable() { 
-    const { pricing, setPricing, isClient } = usePricingData();
+export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
+    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
+    
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
@@ -144,3 +149,4 @@ export default function PricingTable() {
         </Card>
     );
 }
+
