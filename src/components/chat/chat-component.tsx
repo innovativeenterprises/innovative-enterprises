@@ -47,7 +47,7 @@ interface ChatComponentProps {
     placeholder: string;
     aiFlow: (input: { [key: string]: any }) => Promise<any>;
     suggestedReplies?: string[];
-    settings: AppSettings;
+    settings?: AppSettings;
 }
 
 export const ChatComponent = ({
@@ -149,7 +149,7 @@ export const ChatComponent = ({
 
       setShowSuggestions(true);
       
-      if (settings.voiceInteractionEnabled && botMessage.content) {
+      if (settings?.voiceInteractionEnabled && botMessage.content) {
           handleTextToSpeech(botMessage.content);
       }
     } catch (error) {
@@ -260,7 +260,7 @@ export const ChatComponent = ({
         <div className="p-4 border-t">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-2">
-                    {settings.voiceInteractionEnabled && (
+                    {settings?.voiceInteractionEnabled && (
                     <>
                     {isPlaying ? (
                         <Button type="button" size="icon" variant="destructive" onClick={stopAudio}><Square className="h-5 w-5"/></Button>

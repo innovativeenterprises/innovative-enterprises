@@ -1,9 +1,8 @@
-
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import { useSettingsData } from '@/hooks/use-data-hooks';
+import { initialSettings } from '@/lib/settings';
 
 interface SettingsContextType {
   settings: AppSettings;
@@ -19,12 +18,21 @@ export const useSettings = () => {
   return context;
 };
 
-export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-    const { settings, isClient } = useSettingsData();
+export const SettingsProvider = ({ children, initialSettings: serverSettings }: { children: ReactNode, initialSettings: AppSettings }) => {
+    const [settings, setSettings] = useState(serverSettings || initialSettings);
+    const [isClient, setIsClient] = useState(false);
 
-    if (!isClient || !settings) {
-        // Render nothing or a loading skeleton on the server or before hydration
-        return null; 
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) {
+        // On the server and during the first client render, use the initial settings
+        return (
+             <SettingsContext.Provider value={{ settings: serverSettings }}>
+                {children}
+            </SettingsContext.Provider>
+        )
     }
 
     return (
