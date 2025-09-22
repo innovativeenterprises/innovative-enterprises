@@ -5,7 +5,8 @@ import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { Providers } from '@/app/providers';
+import { ThemeProvider } from 'next-themes';
+import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat-widget';
@@ -70,7 +71,12 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <div className="flex min-h-screen flex-col">
             <Header 
               settings={settings} 
@@ -82,7 +88,8 @@ export default async function RootLayout({
             <Footer />
             <ChatWidget settings={settings} />
           </div>
-        </Providers>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

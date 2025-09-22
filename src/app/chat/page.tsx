@@ -1,9 +1,10 @@
+
 'use client';
 
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Bot, MessageSquare } from 'lucide-react';
-import type { Metadata } from 'next';
+import { initialSettings } from '@/lib/settings';
 
 export default function FaqPage() {
     return (
@@ -26,6 +27,7 @@ export default function FaqPage() {
                         welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
                         placeholder="Ask about our services or book a meeting..."
                         aiFlow={answerQuestion}
+                        settings={initialSettings} // Pass initialSettings as a fallback
                    />
                 </div>
             </div>

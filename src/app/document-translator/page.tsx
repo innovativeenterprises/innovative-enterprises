@@ -1,4 +1,6 @@
 
+'use server';
+
 import TranslationForm from "./translation-form";
 import { Languages, FileText, Banknote, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
