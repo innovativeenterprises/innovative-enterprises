@@ -1,10 +1,10 @@
 
-'use client';
+'use server';
 
-import { useAiToolsData } from '@/hooks/use-data-hooks';
-import AiToolsCtaClient from './ai-tools-cta-client';
+import AiToolsCtaClient from "./ai-tools-cta-client";
+import { getAiTools } from "@/lib/firestore";
 
-export default function AiToolsCta() {
-    const { aiTools } = useAiToolsData();
+export default async function AiToolsCta() {
+    const aiTools = await getAiTools();
     return <AiToolsCtaClient aiTools={aiTools} />;
 }

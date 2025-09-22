@@ -10,8 +10,7 @@ import type { Provider } from "@/lib/providers.schema";
 import type { Opportunity } from "@/lib/opportunities.schema";
 import type { Service } from "@/lib/services.schema";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
-import { useProductsData, useProvidersData, useOpportunitiesData, useServicesData, useStaffData } from '@/hooks/use-data-hooks';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[], dataKey: string, color: string }) => (
@@ -30,14 +29,24 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
     </Card>
 );
 
-export default function AdminDashboardPageClient() {
-    const { data: products, isClient: isProductsClient } = useProductsData();
-    const { data: providers, isClient: isProvidersClient } = useProvidersData();
-    const { data: opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
-    const { data: services, isClient: isServicesClient } = useServicesData();
-    const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
-    
-    const isClient = isProductsClient && isProvidersClient && isOpportunitiesClient && isServicesClient && isStaffClient;
+interface AdminDashboardClientProps {
+    products: Product[];
+    providers: Provider[];
+    opportunities: Opportunity[];
+    services: Service[];
+    staffData: {
+        leadership: Agent[];
+        staff: Agent[];
+        agentCategories: AgentCategory[];
+    };
+}
+
+
+export default function AdminDashboardPageClient({ products, providers, opportunities, services, staffData }: AdminDashboardClientProps) {
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const kpiData = useMemo(() => {
         if (!isClient) return [];
@@ -46,10 +55,10 @@ export default function AdminDashboardPageClient() {
             { name: 'Providers', value: providers.length },
             { name: 'Opportunities', value: opportunities.length },
             { name: 'Services', value: services.length },
-            { name: 'AI Agents', value: agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
-            { name: 'Staff', value: leadership.length + staff.length },
+            { name: 'AI Agents', value: staffData.agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
+            { name: 'Staff', value: staffData.leadership.length + staffData.staff.length },
         ];
-    }, [isClient, products, providers, opportunities, services, agentCategories, leadership, staff]);
+    }, [isClient, products, providers, opportunities, services, staffData]);
     
     const recentProviders = useMemo(() => isClient ? providers.slice(0, 5) : [], [providers, isClient]);
 
