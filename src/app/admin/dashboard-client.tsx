@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +10,9 @@ import type { Provider } from "@/lib/providers.schema";
 import type { Opportunity } from "@/lib/opportunities.schema";
 import type { Service } from "@/lib/services.schema";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
-import { getProducts, getProviders, getOpportunities, getServices, getStaffData } from '@/lib/firestore';
-
+import { useProductsData, useProvidersData, useOpportunitiesData, useServicesData, useStaffData } from '@/hooks/use-data-hooks';
+import { useMemo, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[], dataKey: string, color: string }) => (
     <Card>
@@ -29,28 +30,28 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
     </Card>
 );
 
-export default async function AdminDashboardPageClient() {
+export default function AdminDashboardPageClient() {
+    const { data: products, isClient: isProductsClient } = useProductsData();
+    const { data: providers, isClient: isProvidersClient } = useProvidersData();
+    const { data: opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+    const { data: services, isClient: isServicesClient } = useServicesData();
+    const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
     
-    const [products, providers, opportunities, services, staffData] = await Promise.all([
-        getProducts(),
-        getProviders(),
-        getOpportunities(),
-        getServices(),
-        getStaffData(),
-    ]);
+    const isClient = isProductsClient && isProvidersClient && isOpportunitiesClient && isServicesClient && isStaffClient;
 
-    const { agentCategories, leadership, staff } = staffData;
+    const kpiData = useMemo(() => {
+        if (!isClient) return [];
+        return [
+            { name: 'Products', value: products.length },
+            { name: 'Providers', value: providers.length },
+            { name: 'Opportunities', value: opportunities.length },
+            { name: 'Services', value: services.length },
+            { name: 'AI Agents', value: agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
+            { name: 'Staff', value: leadership.length + staff.length },
+        ];
+    }, [isClient, products, providers, opportunities, services, agentCategories, leadership, staff]);
     
-    const kpiData = [
-        { name: 'Products', value: products.length },
-        { name: 'Providers', value: providers.length },
-        { name: 'Opportunities', value: opportunities.length },
-        { name: 'Services', value: services.length },
-        { name: 'AI Agents', value: agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
-        { name: 'Staff', value: leadership.length + staff.length },
-    ];
-    
-    const recentProviders = providers.slice(0, 5);
+    const recentProviders = useMemo(() => isClient ? providers.slice(0, 5) : [], [providers, isClient]);
 
     return (
         <div className="space-y-8">
@@ -71,13 +72,17 @@ export default async function AdminDashboardPageClient() {
                         <Table>
                             <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Services</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {recentProviders.map(provider => (
-                                    <TableRow key={provider.id}>
-                                        <TableCell className="font-medium">{provider.name}</TableCell>
-                                        <TableCell>{provider.services}</TableCell>
-                                        <TableCell>{getStatusBadge(provider.status)}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {!isClient ? (
+                                    Array.from({length: 5}).map((_, i) => <TableRow key={i}><TableCell colSpan={3}><Skeleton className="h-10 w-full" /></TableCell></TableRow>)
+                                ) : (
+                                    recentProviders.map(provider => (
+                                        <TableRow key={provider.id}>
+                                            <TableCell className="font-medium">{provider.name}</TableCell>
+                                            <TableCell>{provider.services}</TableCell>
+                                            <TableCell>{getStatusBadge(provider.status)}</TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>

@@ -1,14 +1,13 @@
 
-'use server';
+'use client';
 
-import ClientTestimonialsClient from "./client-testimonials-client";
-import { getClients, getTestimonials } from "@/lib/firestore";
+import ClientTestimonialsClient from "@/components/client-testimonials-client";
+import { useClientsData, useTestimonialsData } from "@/hooks/use-data-hooks";
 
-export default async function ClientTestimonials() {
-    const [clients, testimonials] = await Promise.all([
-        getClients(),
-        getTestimonials()
-    ]);
+
+export default function ClientTestimonials() {
+    const { clients } = useClientsData();
+    const { testimonials } = useTestimonialsData();
     
     return (
         <ClientTestimonialsClient clients={clients} testimonials={testimonials} />

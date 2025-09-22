@@ -34,7 +34,7 @@ import type { SaasCategory } from '@/lib/saas-products.schema';
 import type { StockItem } from '@/lib/stock-items.schema';
 import type { Pricing } from '@/lib/pricing.schema';
 import { initialPricing } from '@/lib/pricing';
-import { initialProducts, initialStoreProducts, saasProducts as initialSaasProducts } from '@/lib/products';
+import { initialProducts, initialStoreProducts } from '@/lib/products';
 import { initialServices } from '@/lib/services';
 import { initialClients, initialTestimonials } from '@/lib/clients';
 import { initialPosProducts, initialDailySales } from '@/lib/pos-data';
@@ -64,6 +64,7 @@ import { initialMembers } from '@/lib/community-members';
 import { initialAlumniJobs } from '@/lib/alumni-jobs';
 import { initialRentalAgencies } from '@/lib/rental-agencies';
 import { initialCars } from '@/lib/cars';
+import { saasProducts as initialSaasProducts } from '@/lib/saas-products';
 import { initialStockItems } from '@/lib/stock-items';
 import { initialBriefcase, type BriefcaseData } from '@/lib/briefcase';
 import { initialApplications } from '@/lib/admissions-applications';
@@ -79,6 +80,7 @@ import { initialSolutions, initialIndustries, initialAiTools } from '@/lib/nav-l
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 
 export interface AppState {
+  isClient: boolean;
   settings: AppSettings;
   cart: CartItem[];
   products: Product[];
@@ -133,6 +135,7 @@ export interface AppState {
 // This provides the default, empty state for the application.
 // Actual data will be fetched by server components and passed as props.
 export const getInitialState = (): AppState => ({
+  isClient: false,
   settings: initialSettings,
   cart: [],
   products: initialProducts,
