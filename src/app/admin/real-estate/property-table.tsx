@@ -21,7 +21,6 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePropertiesData } from "@/hooks/use-data-hooks";
 
 const PropertySchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -176,15 +175,20 @@ const AddEditPropertyDialog = ({
 }
 
 export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
-    const { data: properties, setData: setProperties, isClient } = usePropertiesData(initialProperties);
+    const [properties, setProperties] = useState<Property[]>(initialProperties);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
         if (id) {
-            setProperties(prev => prev.map(p => (p.id === id ? { ...p, ...values } : p)));
+            setProperties(prev => prev.map(p => (p.id === id ? { ...p, ...values } as Property : p)));
             toast({ title: 'Listing updated.' });
         } else {
-            const newProperty = { ...values, id: `prop_${Date.now()}` };
+            const newProperty: Property = { ...values, id: `prop_${Date.now()}` };
             setProperties(prev => [newProperty, ...prev]);
             toast({ title: 'Listing added.' });
         }

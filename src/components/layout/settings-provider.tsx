@@ -3,8 +3,6 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import { useSettingsData } from '@/hooks/use-data-hooks';
-import { Skeleton } from '../ui/skeleton';
 
 interface SettingsContextType {
   settings: AppSettings;
@@ -20,13 +18,7 @@ export const useSettings = () => {
   return context;
 };
 
-export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-    const { settings, isClient } = useSettingsData();
-
-    if (!isClient || !settings) {
-        return <div className="h-screen w-full flex items-center justify-center"><Skeleton className="h-full w-full" /></div>;
-    }
-
+export const SettingsProvider = ({ children, settings }: { children: ReactNode, settings: AppSettings }) => {
     return (
         <SettingsContext.Provider value={{ settings }}>
             {children}

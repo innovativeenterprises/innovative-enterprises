@@ -7,17 +7,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { X, MessageSquare, Bot } from "lucide-react";
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
-import { useSettingsData } from "@/hooks/use-data-hooks";
-import { useStore } from '@/hooks/use-data-hooks';
+import { useSettings } from "@/components/layout/settings-provider";
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
-    const isClient = useStore(s => s.isClient);
-    const { settings } = useSettingsData(); 
-
-    if (!isClient || !settings) {
-        return null;
-    }
+    const { settings } = useSettings();
 
     return (
         <div className="fixed bottom-4 right-4 z-50">

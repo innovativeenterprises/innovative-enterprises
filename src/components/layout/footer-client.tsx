@@ -6,20 +6,11 @@ import Link from 'next/link';
 import CompanyProfileDownloader from "@/app/invest/company-profile-downloader";
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { useStore } from '@/hooks/use-data-hooks';
-import type { AppState } from '@/lib/global-store';
-
+import { useSettings } from './settings-provider';
 
 export default function FooterClient() {
-  const { state, isClient } = {
-      state: useStore(s => s),
-      isClient: useStore(s => s.isClient),
-  }
+  const { settings } = useSettings();
   const currentYear = new Date().getFullYear().toString();
-  
-  if (!isClient || !state.settings) {
-      return null;
-  }
   
   return (
     <footer className="border-t bg-card">
@@ -30,18 +21,6 @@ export default function FooterClient() {
              <span className="font-bold text-lg">INNOVATIVE ENTERPRISES</span>
           </div>
           <div className="flex flex-col gap-4 items-center">
-             <div>
-                <CompanyProfileDownloader 
-                    staffData={{
-                        leadership: state.leadership,
-                        staff: state.staff,
-                        agentCategories: state.agentCategories,
-                    }}
-                    services={state.services}
-                    settings={state.settings!}
-                    products={state.products}
-                />
-             </div>
              <p className="text-sm text-muted-foreground text-center">
                 © {currentYear} INNOVATIVE ENTERPRISES. All rights reserved.
               </p>
@@ -60,5 +39,3 @@ export default function FooterClient() {
     </footer>
   );
 }
-
-    

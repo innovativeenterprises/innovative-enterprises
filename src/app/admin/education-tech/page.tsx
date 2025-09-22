@@ -3,7 +3,6 @@
 
 import { getProducts } from '@/lib/firestore';
 import EducationTechClientPage from './client-page';
-import type { Product } from '@/lib/products.schema';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -17,4 +16,3 @@ export default async function EducationTechPage() {
     const edutechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
     return <EducationTechClientPage initialProducts={edutechProducts} />;
 }
-    
