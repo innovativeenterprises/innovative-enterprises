@@ -6,10 +6,11 @@ import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/components/layout/settings-provider';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import ChatWidget from '@/components/chat/chat-widget';
+import ChatWidget from '@/components/chat-widget';
 import { Toaster } from '@/components/ui/toaster';
 import { StoreProvider } from '@/lib/global-store';
-import type { AppState } from '@/lib/initial-state';
+import type { AppSettings } from '@/lib/settings';
+import type { AppState } from '@/lib/global-store';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -25,10 +26,10 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
 
 export function Providers({ 
     children, 
-    initialAppState,
+    initialState,
 }: { 
     children: React.ReactNode,
-    initialAppState: AppState,
+    initialState: AppState,
 }) {
   return (
     <ThemeProvider
@@ -37,7 +38,7 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      <StoreProvider initialState={initialAppState}>
+      <StoreProvider initialState={initialState}>
         <SettingsProvider>
             <AppLayout>{children}</AppLayout>
         </SettingsProvider>

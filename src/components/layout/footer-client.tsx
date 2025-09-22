@@ -5,14 +5,21 @@ import Link from 'next/link';
 import CompanyProfileDownloader from "@/app/invest/company-profile-downloader";
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { useStore } from '@/lib/global-store';
+import { useStore } from '@/hooks/use-data-hooks';
+import type { AppState } from '@/lib/global-store';
 
 
-export default function FooterClient() {
-  const { state } = useStore();
+export default function FooterClient({ initialAppState }: { initialAppState: AppState }) {
+  const { state, setState, isClient } = useStore();
   const currentYear = new Date().getFullYear().toString();
+
+  React.useEffect(() => {
+    if (isClient && !state.products.length) {
+      setState(s => ({ ...s, ...initialAppState }));
+    }
+  }, [isClient, setState, initialAppState, state.products.length]);
   
-  if (!state.settings) {
+  if (!isClient || !state.settings) {
       return null;
   }
   
