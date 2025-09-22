@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, Bot, Handshake, Check, Star } from "lucide-react";
@@ -8,11 +9,12 @@ import Link from "next/link";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import { ChatComponent } from "@/components/chat/chat-component";
 import { answerHubQuery } from "@/ai/flows/business-hub-agent";
-import { useProvidersData } from "@/hooks/use-data-hooks";
-import type { Provider } from "@/lib/providers";
+import type { Provider } from "@/lib/providers.schema";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+import { initialProviders } from "@/lib/providers";
 
 const categories = [
     "All", "Tech & IT Services", "Creative & Design", "Consulting & Professional Services", "Legal Services", "Financial & Banking"
@@ -51,25 +53,31 @@ const ProviderCard = ({ provider }: { provider: Provider }) => {
 
 
 export default function BusinessHubPage() {
-  const { providers } = useProvidersData();
-  
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+    const [providers, setProviders] = useState<Provider[]>([]);
+    const [isClient, setIsClient] = useState(false);
 
-  const hubQueryFlow = async (input: { [key: string]: any }) => {
-    return await answerHubQuery({
-        query: input.message,
-        businessCategories: categories.filter(c => c !== 'All'),
-    });
-  };
-  
-  const filteredProviders = useMemo(() => {
-      return providers.filter(provider => {
-          const matchesCategory = selectedCategory === 'All' || provider.services.toLowerCase().includes(selectedCategory.toLowerCase());
-          const matchesSearch = provider.name.toLowerCase().includes(searchTerm.toLowerCase()) || provider.services.toLowerCase().includes(searchTerm.toLowerCase());
-          return matchesCategory && matchesSearch;
-      })
-  }, [providers, selectedCategory, searchTerm]);
+    useEffect(() => {
+        setProviders(initialProviders);
+        setIsClient(true);
+    }, []);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    const hubQueryFlow = async (input: { [key: string]: any }) => {
+        return await answerHubQuery({
+            query: input.message,
+            businessCategories: categories.filter(c => c !== 'All'),
+        });
+    };
+    
+    const filteredProviders = useMemo(() => {
+        return providers.filter(provider => {
+            const matchesCategory = selectedCategory === 'All' || provider.services.toLowerCase().includes(selectedCategory.toLowerCase());
+            const matchesSearch = provider.name.toLowerCase().includes(searchTerm.toLowerCase()) || provider.services.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesCategory && matchesSearch;
+        })
+    }, [providers, selectedCategory, searchTerm]);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -121,9 +129,16 @@ export default function BusinessHubPage() {
                     ))}
                  </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredProviders.map((provider) => (
-                        <ProviderCard key={provider.id} provider={provider} />
-                    ))}
+                    {!isClient ? (
+                        <>
+                            <Skeleton className="h-72 w-full" />
+                            <Skeleton className="h-72 w-full" />
+                        </>
+                    ) : (
+                        filteredProviders.map((provider) => (
+                            <ProviderCard key={provider.id} provider={provider} />
+                        ))
+                    )}
                 </div>
             </div>
         </div>

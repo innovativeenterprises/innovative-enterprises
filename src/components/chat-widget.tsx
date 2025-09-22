@@ -8,8 +8,10 @@ import { X, MessageSquare, Bot } from "lucide-react";
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import type { AppSettings } from "@/lib/settings";
+import { useSettingsData } from "@/hooks/use-data-hooks";
 
-export default function ChatWidget({ settings }: { settings: AppSettings }) {
+export default function ChatWidget() {
+    const { settings } = useSettingsData(); 
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 
@@ -17,7 +19,7 @@ export default function ChatWidget({ settings }: { settings: AppSettings }) {
         setIsMounted(true);
     }, []);
 
-    if (!isMounted) {
+    if (!isMounted || !settings) {
         return null;
     }
 

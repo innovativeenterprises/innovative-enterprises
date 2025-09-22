@@ -7,10 +7,31 @@ import { StageBadge } from '@/components/stage-badge';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/products.schema';
+import { useToast } from '@/hooks/use-toast';
+import { ShoppingCart } from 'lucide-react';
+import { useCartData } from '@/hooks/use-data-hooks';
 
 
 export default function ProductShowcaseClient({ products }: { products: Product[] }) {
   const enabledProducts = products.filter(p => p.enabled);
+  const { toast } = useToast();
+  const { setCart } = useCartData();
+  
+  const handleAddToCart = (product: Product, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCart(prevCart => {
+        const existingItem = prevCart.find(item => item.id === product.id);
+        if (existingItem) {
+            return prevCart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
+        }
+        return [...prevCart, { ...product, quantity: 1 }]
+    });
+    toast({
+        title: "Added to Cart!",
+        description: `1 x "${product.name}" has been added to your shopping cart.`,
+    });
+  };
 
   return (
     <section id="products" className="py-16 md:py-24 bg-muted/20 dark:bg-card">
@@ -42,7 +63,14 @@ export default function ProductShowcaseClient({ products }: { products: Product[
                     <CardDescription>{product.description}</CardDescription>
                     </CardContent>
                     <CardFooter className="p-6 pt-0">
-                    <Button variant="outline">Learn More</Button>
+                    {product.category === 'Electronics' ? (
+                       <Button className="w-full" onClick={(e) => handleAddToCart(product, e)}>
+                            <ShoppingCart className="mr-2 h-4 w-4"/>
+                            Add to Cart
+                        </Button>
+                    ) : (
+                        <Button variant="outline" className="w-full">Learn More</Button>
+                    )}
                     </CardFooter>
                 </Link>
             </Card>

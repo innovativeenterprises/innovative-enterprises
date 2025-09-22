@@ -4,12 +4,12 @@
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode } from 'react';
-import { SettingsProvider } from '@/components/layout/settings-provider';
-import type { AppSettings } from '@/lib/settings';
+import type { AppState } from '@/lib/initial-state';
+import { StoreProvider } from '@/lib/global-store';
 
-export function Providers({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings }) {
+export function Providers({ children, initialState }: { children: ReactNode, initialState: AppState }) {
   return (
-    <SettingsProvider initialSettings={initialSettings}>
+    <StoreProvider initialState={initialState}>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -19,6 +19,6 @@ export function Providers({ children, initialSettings }: { children: ReactNode, 
         {children}
         <Toaster />
       </ThemeProvider>
-    </SettingsProvider>
+    </StoreProvider>
   );
 }
