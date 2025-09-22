@@ -80,8 +80,8 @@ export default async function RootLayout({
             />
             <main className="flex-1">{children}</main>
             <Footer />
-            <ChatWidget settings={settings} />
           </div>
+          <ChatWidget settings={settings} />
         </Providers>
       </body>
     </html>
