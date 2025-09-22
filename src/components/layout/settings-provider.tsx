@@ -1,9 +1,8 @@
-
 'use client';
 
-import React, { createContext, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import { useStore } from '@/hooks/use-data-hooks';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '../ui/skeleton';
 
 interface SettingsContextType {
@@ -21,14 +20,14 @@ export const useSettings = () => {
 };
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-    const { state, isClient } = useStore();
+    const { settings, isClient } = useSettingsData();
 
-    if (!isClient || !state.settings) {
+    if (!isClient || !settings) {
         return <div className="h-screen w-full flex items-center justify-center"><Skeleton className="h-full w-full" /></div>;
     }
 
     return (
-        <SettingsContext.Provider value={{ settings: state.settings }}>
+        <SettingsContext.Provider value={{ settings }}>
             {children}
         </SettingsContext.Provider>
     );

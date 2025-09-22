@@ -1,149 +1,280 @@
-
 'use client';
 
-import { useStore, type AppState } from '@/lib/global-store';
+import { useContext, useEffect, useState } from 'react';
+import { StoreContext, type AppState } from '@/lib/global-store';
+import type { StoreType } from '@/lib/global-store';
 
-// A generic hook for managing a slice of the global state
-const useDataSlice = <T, K extends keyof AppState>(
-    sliceName: K,
-    initialData?: T[]
-) => {
-    const { state, setState } = useStore();
+export const useStore = <T>(selector: (state: AppState) => T): T => {
+    const store = useContext(StoreContext);
+    if (!store) {
+        throw new Error('useStore must be used within a StoreProvider.');
+    }
+    const [state, setState] = useState(() => selector(store.get())); 
 
-    // The state is already initialized in the provider, so we just use it.
-    // The initialData from props is used on the server to populate the store.
-    // On the client, the store is the single source of truth.
-    const data = state[sliceName] as T[];
-    const setData = (updater: (prev: T[]) => T[]) => {
-        setState(s => ({ ...s, [sliceName]: updater(s[sliceName] as T[]) }));
-    };
+    useEffect(() => {
+        const unsubscribe = store.subscribe(() => {
+            setState(selector(store.get()));
+        });
+        return () => unsubscribe();
+    }, [store, selector]);
 
-    return { data, setData, isClient: state.isClient };
+    return state;
 };
 
-export { useStore };
-
-// Specific hooks for each data slice
 export const useCartData = () => {
-    const { state, setState } = useStore();
-    const setCart = (updater: (prev: typeof state.cart) => typeof state.cart) => {
-        setState(s => ({ ...s, cart: updater(s.cart) }));
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useCartData must be used within a StoreProvider.');
+    
+    const cart = useStore(s => s.cart);
+    const isClient = useStore(s => s.isClient);
+
+    const setCart = (updater: (prev: AppState['cart']) => AppState['cart']) => {
+        store.set(s => ({ ...s, cart: updater(s.cart) }));
     };
-    return { cart: state.cart, setCart, isClient: state.isClient };
+    return { cart, setCart, isClient };
 };
 
-export const useProductsData = (initialData?: AppState['products']) => useDataSlice('products', initialData);
-export const useSaaSProductsData = (initialData?: AppState['saasProducts']) => useDataSlice('saasProducts', initialData);
-export const useProvidersData = (initialData?: AppState['providers']) => useDataSlice('providers', initialData);
-export const useOpportunitiesData = (initialData?: AppState['opportunities']) => useDataSlice('opportunities', initialData);
-export const useServicesData = (initialData?: AppState['services']) => useDataSlice('services', initialData);
-export const useLeasesData = (initialData?: AppState['signedLeases']) => useDataSlice('signedLeases', initialData);
-export const useStairspaceData = (initialData?: AppState['stairspaceListings']) => {
-    const slice = useDataSlice('stairspaceListings', initialData);
-    return {
-        stairspaceListings: slice.data,
-        setStairspaceListings: slice.setData,
-        isClient: slice.isClient,
-    }
+export const useProductsData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useProductsData must be used within a StoreProvider.');
+
+    const products = useStore(s => s.products);
+    const storeProducts = useStore(s => s.storeProducts);
+    const isClient = useStore(s => s.isClient);
+
+    const setProducts = (updater: (prev: AppState['products']) => AppState['products']) => {
+        store.set(s => ({ ...s, products: updater(s.products) }));
+    };
+
+    return { products, storeProducts, setProducts, isClient };
 }
-export const useStairspaceRequestsData = (initialData?: AppState['stairspaceRequests']) => {
-     const slice = useDataSlice('stairspaceRequests', initialData);
-    return {
-        data: slice.data,
-        setData: slice.setData,
-        isClient: slice.isClient,
-    }
+
+export const useSaaSProductsData = () => {
+    const data = useStore(s => s.saasProducts);
+    const isClient = useStore(s => s.isClient);
+    return { data, isClient };
+};
+
+export const useProvidersData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useProvidersData must be used within a StoreProvider.');
+    const data = useStore(s => s.providers);
+     const setData = (updater: (prev: AppState['providers']) => AppState['providers']) => {
+        store.set(s => ({ ...s, providers: updater(s.providers) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
 }
-export const useStaffData = (initialData?: { leadership: AppState['leadership'], staff: AppState['staff'], agentCategories: AppState['agentCategories'] }) => {
-    const { state } = useStore();
-    return {
-        leadership: state.leadership,
-        staff: state.staff,
-        agentCategories: state.agentCategories,
-        isClient: state.isClient,
-    }
+export const useOpportunitiesData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useOpportunitiesData must be used within a StoreProvider.');
+    const data = useStore(s => s.opportunities);
+    const setData = (updater: (prev: AppState['opportunities']) => AppState['opportunities']) => {
+        store.set(s => ({ ...s, opportunities: updater(s.opportunities) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
 }
-export const useAgenciesData = (initialData?: AppState['raahaAgencies']) => useDataSlice('raahaAgencies', initialData);
-export const useWorkersData = (initialData?: AppState['raahaWorkers']) => useDataSlice('raahaWorkers', initialData);
-export const useRequestsData = (initialData?: AppState['raahaRequests']) => useDataSlice('raahaRequests', initialData);
-export const useBeautyData = (initialAgencies?: any[], initialServices?: any[], initialAppointments?: any[]) => {
-    const { state, setState } = useStore();
-    const setAgencies = (updater: (prev: any[]) => any[]) => setState(s => ({...s, beautyCenters: updater(s.beautyCenters)}));
-    const setServices = (updater: (prev: any[]) => any[]) => setState(s => ({...s, beautyServices: updater(s.beautyServices)}));
-    const setAppointments = (updater: (prev: any[]) => any[]) => setState(s => ({...s, beautyAppointments: updater(s.beautyAppointments)}));
+export const useServicesData = () => useStore(s => s.services);
+export const useLeasesData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useLeasesData must be used within a StoreProvider.');
+    const data = useStore(s => s.signedLeases);
+    const setData = (updater: (prev: AppState['signedLeases']) => AppState['signedLeases']) => {
+        store.set(s => ({ ...s, signedLeases: updater(s.signedLeases) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
+}
+
+export const useStairspaceData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useStairspaceData must be used within a StoreProvider.');
+    const stairspaceListings = useStore(s => s.stairspaceListings);
+    const setStairspaceListings = (updater: (prev: AppState['stairspaceListings']) => AppState['stairspaceListings']) => {
+        store.set(s => ({ ...s, stairspaceListings: updater(s.stairspaceListings) }));
+    };
+    return { stairspaceListings, setStairspaceListings, isClient: useStore(s => s.isClient) };
+}
+
+export const useStairspaceRequestsData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useStairspaceRequestsData must be used within a StoreProvider.');
+    const data = useStore(s => s.stairspaceRequests);
+    const setData = (updater: (prev: AppState['stairspaceRequests']) => AppState['stairspaceRequests']) => {
+        store.set(s => ({ ...s, stairspaceRequests: updater(s.stairspaceRequests) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
+}
+export const useStaffData = () => {
+    const leadership = useStore(s => s.leadership);
+    const staff = useStore(s => s.staff);
+    const agentCategories = useStore(s => s.agentCategories);
+    return { leadership, staff, agentCategories, isClient: useStore(s => s.isClient) };
+}
+
+export const useAgenciesData = () => {
+     const store = useContext(StoreContext);
+    if (!store) throw new Error('useAgenciesData must be used within a StoreProvider.');
+    const data = useStore(s => s.raahaAgencies);
+    const setData = (updater: (prev: AppState['raahaAgencies']) => AppState['raahaAgencies']) => {
+        store.set(s => ({ ...s, raahaAgencies: updater(s.raahaAgencies) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
+}
+export const useWorkersData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useWorkersData must be used within a StoreProvider.');
+    const workers = useStore(s => s.raahaWorkers);
+    const setWorkers = (updater: (prev: AppState['raahaWorkers']) => AppState['raahaWorkers']) => {
+        store.set(s => ({ ...s, raahaWorkers: updater(s.raahaWorkers) }));
+    };
+    return { workers, setWorkers, isClient: useStore(s => s.isClient) };
+}
+export const useRequestsData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useRequestsData must be used within a StoreProvider.');
+    const data = useStore(s => s.raahaRequests);
+    const setData = (updater: (prev: AppState['raahaRequests']) => AppState['raahaRequests']) => {
+        store.set(s => ({ ...s, raahaRequests: updater(s.raahaRequests) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
+}
+
+export const useBeautyData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useBeautyData must be used within a StoreProvider.');
+
+    const agencies = useStore(s => s.beautyCenters);
+    const services = useStore(s => s.beautyServices);
+    const appointments = useStore(s => s.beautyAppointments);
+
+    const setAgencies = (updater: (prev: any[]) => any[]) => store.set(s => ({...s, beautyCenters: updater(s.beautyCenters)}));
+    const setServices = (updater: (prev: any[]) => any[]) => store.set(s => ({...s, beautyServices: updater(s.beautyServices)}));
+    const setAppointments = (updater: (prev: any[]) => any[]) => store.set(s => ({...s, beautyAppointments: updater(s.beautyAppointments)}));
+    
     return { 
-        agencies: state.beautyCenters, 
+        agencies, 
         setAgencies,
-        services: state.beautyServices,
+        services,
         setServices,
-        appointments: state.beautyAppointments,
+        appointments,
         setAppointments,
-        isClient: state.isClient,
+        isClient: useStore(s => s.isClient),
     };
 }
-export const useBeautySpecialistsData = (initialData?: AppState['beautySpecialists']) => useDataSlice('beautySpecialists', initialData);
-export const useUsedItemsData = (initialData?: AppState['usedItems']) => {
-     const slice = useDataSlice('usedItems', initialData);
-     return {
-        items: slice.data,
-        setItems: slice.setData,
-        isClient: slice.isClient,
-     }
+export const useBeautySpecialistsData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useBeautySpecialistsData must be used within a StoreProvider.');
+    const specialists = useStore(s => s.beautySpecialists);
+    const setSpecialists = (updater: (prev: AppState['beautySpecialists']) => AppState['beautySpecialists']) => {
+        store.set(s => ({ ...s, beautySpecialists: updater(s.beautySpecialists) }));
+    };
+    return { specialists, setSpecialists, isClient: useStore(s => s.isClient) };
 }
-export const useGiftCardsData = (initialData?: AppState['giftCards']) => useDataSlice('giftCards', initialData);
-export const useStudentsData = (initialData?: AppState['students']) => useDataSlice('students', initialData);
-export const useMembersData = (initialData?: AppState['communityMembers']) => useDataSlice('communityMembers', initialData);
-export const useCommunitiesData = (initialData?: AppState['communities']) => useDataSlice('communities', initialData);
-export const useEventsData = (initialData?: AppState['communityEvents']) => useDataSlice('communityEvents', initialData);
-export const useFinancesData = (initialData?: AppState['communityFinances']) => useDataSlice('communityFinances', initialData);
-export const useAlumniJobsData = (initialData?: AppState['alumniJobs']) => useDataSlice('alumniJobs', initialData);
-export const usePosProductsData = (initialData?: AppState['posProducts']) => {
-    const slice = useDataSlice('posProducts', initialData);
-    return {
-        posProducts: slice.data,
-        setPosProducts: slice.setData,
-        isClient: slice.isClient,
-    }
+export const useUsedItemsData = () => {
+     const store = useContext(StoreContext);
+    if (!store) throw new Error('useUsedItemsData must be used within a StoreProvider.');
+    const items = useStore(s => s.usedItems);
+    const setItems = (updater: (prev: AppState['usedItems']) => AppState['usedItems']) => {
+        store.set(s => ({ ...s, usedItems: updater(s.usedItems) }));
+    };
+     return { items, setItems, isClient: useStore(s => s.isClient) };
 }
-export const usePosData = (initialData?: AppState['dailySales']) => {
-    const salesSlice = useDataSlice('dailySales', initialData);
-    return {
-        dailySales: salesSlice.data,
-        setDailySales: salesSlice.setData,
-        isClient: salesSlice.isClient,
-    }
+export const useGiftCardsData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useGiftCardsData must be used within a StoreProvider.');
+    const giftCards = useStore(s => s.giftCards);
+    const setGiftCards = (updater: (prev: AppState['giftCards']) => AppState['giftCards']) => {
+        store.set(s => ({ ...s, giftCards: updater(s.giftCards) }));
+    };
+    return { giftCards, setGiftCards, isClient: useStore(s => s.isClient) };
 }
-export const useStockItemsData = (initialData?: AppState['stockItems']) => {
-     const slice = useDataSlice('stockItems', initialData);
-     return {
-        items: slice.data,
-        setItems: slice.setData,
-        isClient: slice.isClient,
-     }
+export const useStudentsData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useStudentsData must be used within a StoreProvider.');
+    const students = useStore(s => s.students);
+    const setStudents = (updater: (prev: AppState['students']) => AppState['students']) => {
+        store.set(s => ({ ...s, students: updater(s.students) }));
+    };
+    return { students, setStudents, isClient: useStore(s => s.isClient) };
 }
-export const usePropertiesData = (initialData?: AppState['properties']) => useDataSlice('properties', initialData);
-export const useBriefcaseData = (initialData?: AppState['briefcase']) => {
-    const { state, setState } = useStore();
-    return {
-        data: state.briefcase,
-        setData: (updater: (prev: typeof state.briefcase) => typeof state.briefcase) => {
-            setState(s => ({ ...s, briefcase: updater(s.briefcase) }));
-        },
-        isClient: state.isClient
-    }
+export const useMembersData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useMembersData must be used within a StoreProvider.');
+    const members = useStore(s => s.communityMembers);
+    const setMembers = (updater: (prev: AppState['communityMembers']) => AppState['communityMembers']) => {
+        store.set(s => ({ ...s, communityMembers: updater(s.communityMembers) }));
+    };
+    return { members, setMembers, isClient: useStore(s => s.isClient) };
+}
+export const useCommunitiesData = () => useStore(s => ({ communities: s.communities, isClient: s.isClient }));
+export const useEventsData = () => useStore(s => s.communityEvents);
+export const useFinancesData = () => useStore(s => s.communityFinances);
+export const useAlumniJobsData = () => useStore(s => s.alumniJobs);
+
+export const usePosProductsData = () => {
+    const posProducts = useStore(s => s.posProducts);
+    const isClient = useStore(s => s.isClient);
+    return { posProducts, isClient };
 };
+
+export const usePosData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('usePosData must be used within a StoreProvider.');
+    const dailySales = useStore(s => s.dailySales);
+    const setDailySales = (updater: (prev: AppState['dailySales']) => AppState['dailySales']) => {
+        store.set(s => ({ ...s, dailySales: updater(s.dailySales) }));
+    };
+    return { dailySales, setDailySales, isClient: useStore(s => s.isClient) };
+}
+
+export const useStockItemsData = () => {
+     const store = useContext(StoreContext);
+    if (!store) throw new Error('useStockItemsData must be used within a StoreProvider.');
+    const items = useStore(s => s.stockItems);
+    const setItems = (updater: (prev: AppState['stockItems']) => AppState['stockItems']) => {
+        store.set(s => ({ ...s, stockItems: updater(s.stockItems) }));
+    };
+     return { items, setItems, isClient: useStore(s => s.isClient) };
+}
+
+export const usePropertiesData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('usePropertiesData must be used within a StoreProvider.');
+    const data = useStore(s => s.properties);
+    const setData = (updater: (prev: AppState['properties']) => AppState['properties']) => {
+        store.set(s => ({ ...s, properties: updater(s.properties) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
+}
+
+export const useBriefcaseData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useBriefcaseData must be used within a StoreProvider.');
+    const data = useStore(s => s.briefcase);
+    const setData = (updater: (prev: AppState['briefcase']) => AppState['briefcase']) => {
+        store.set(s => ({ ...s, briefcase: updater(s.briefcase) }));
+    };
+    return { data, setData, isClient: useStore(s => s.isClient) };
+};
+
 export const useNavLinksData = () => {
-     const { state } = useStore();
-    return {
-        solutions: state.solutions,
-        industries: state.industries,
-        aiTools: state.aiTools,
-    }
+    const solutions = useStore(s => s.solutions);
+    const industries = useStore(s => s.industries);
+    const aiTools = useStore(s => s.aiTools);
+    return { solutions, industries, aiTools };
 };
 
 export const useSettingsData = () => {
-    const { state } = useStore();
-    return { settings: state.settings, isClient: state.isClient };
-}
+    const settings = useStore(s => s.settings);
+    const isClient = useStore(s => s.isClient);
+    return { settings, isClient };
+};
 
-export const usePricingData = (initialData?: AppState['pricing']) => useDataSlice('pricing', initialData);
+export const usePricingData = () => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('usePricingData must be used within a StoreProvider.');
+    const pricing = useStore(s => s.pricing);
+    const setPricing = (updater: (prev: AppState['pricing']) => AppState['pricing']) => {
+        store.set(s => ({ ...s, pricing: updater(s.pricing) }));
+    };
+    return { pricing, setPricing, isClient: useStore(s => s.isClient) };
+};

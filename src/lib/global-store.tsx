@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import type { BriefcaseData } from './briefcase';
 import type { CartItem, DailySales, PosProduct } from './pos-data.schema';
 import type { Product } from './products.schema';
@@ -98,34 +98,44 @@ export interface AppState {
 };
 
 export type StoreType = {
-  state: AppState;
-  setState: React.Dispatch<React.SetStateAction<AppState>>;
+  get: () => AppState;
+  set: (updater: (currentState: AppState) => AppState) => void;
+  subscribe: (listener: () => void) => () => void;
 };
 
-const StoreContext = createContext<StoreType | undefined>(undefined);
+export const StoreContext = createContext<StoreType | undefined>(undefined);
 
-export function useStore() {
-  const context = useContext(StoreContext);
-  if (!context) {
-    throw new Error('useStore must be used within a StoreProvider.');
-  }
-  return context;
-};
+export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: AppState }) => {
+    const storeRef = useRef<StoreType>();
 
-export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: Partial<AppState> }) => {
-    const [state, setState] = useState<AppState>({ 
-      ...({} as AppState), // Provide a default empty state to satisfy TypeScript
-      ...initialState, 
-      isClient: false 
-    });
+    if (!storeRef.current) {
+        const state: AppState = { ...initialState, isClient: false };
+        const listeners = new Set<() => void>();
+
+        storeRef.current = {
+            get: () => state,
+            set: (updater) => {
+                Object.assign(state, updater(state));
+                listeners.forEach((l) => l());
+            },
+            subscribe: (listener) => {
+                listeners.add(listener);
+                return () => listeners.delete(listener);
+            },
+        };
+    }
 
     useEffect(() => {
-        setState(s => ({...s, isClient: true}));
+        if (storeRef.current) {
+            storeRef.current.set(s => ({...s, isClient: true}));
+        }
     }, []);
 
     return (
-        <StoreContext.Provider value={{ state, setState }}>
+        <StoreContext.Provider value={storeRef.current}>
             {children}
         </StoreContext.Provider>
     );
 };
+
+    

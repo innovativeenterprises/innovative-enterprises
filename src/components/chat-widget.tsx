@@ -12,7 +12,7 @@ import { useStore } from '@/hooks/use-data-hooks';
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
-    const { isClient } = useStore();
+    const isClient = useStore(s => s.isClient);
     const { settings } = useSettings(); 
 
     if (!isClient) {
@@ -53,3 +53,5 @@ export default function ChatWidget() {
         </div>
     )
 }
+
+    
