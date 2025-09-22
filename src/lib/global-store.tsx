@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, ReactNode, useEffect, useRef } from 'react';
+import React, { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
 import type { BriefcaseData } from './briefcase';
 import type { CartItem, DailySales, PosProduct } from './pos-data.schema';
 import type { Product } from './products.schema';
@@ -44,6 +44,7 @@ import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { Application } from './admissions-applications';
 
+// Define the shape of the global state
 export interface AppState {
   isClient: boolean;
   settings: AppSettings;
@@ -95,21 +96,24 @@ export interface AppState {
   solutions: Solution[];
   industries: Industry[];
   aiTools: AiTool[];
-};
+}
 
+// Define the store's API
 export type StoreType = {
   get: () => AppState;
   set: (updater: (currentState: AppState) => AppState) => void;
   subscribe: (listener: () => void) => () => void;
 };
 
+// Create the context
 export const StoreContext = createContext<StoreType | undefined>(undefined);
 
+// Create the provider component
 export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: AppState }) => {
     const storeRef = useRef<StoreType>();
 
     if (!storeRef.current) {
-        let state = { ...initialState, isClient: false };
+        let state = { ...initialState, isClient: false }; // Start with isClient as false
         const listeners = new Set<() => void>();
         
         storeRef.current = {
@@ -125,7 +129,7 @@ export const StoreProvider = ({ children, initialState }: { children: ReactNode,
         };
     }
     
-    // This effect runs once on the client to mark it as hydrated.
+    // On the client, after the first render, we update the isClient flag.
     useEffect(() => {
         storeRef.current?.set(s => ({...s, isClient: true}));
     }, []);

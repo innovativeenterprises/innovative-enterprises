@@ -3,14 +3,24 @@
 
 import React from 'react';
 import Link from 'next/link';
-import CompanyProfileDownloader from "@/app/invest/company-profile-downloader";
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { useSettings } from './settings-provider';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 
 export default function FooterClient() {
-  const { settings } = useSettings();
+  const { settings, isClient } = useSettingsData();
   const currentYear = new Date().getFullYear().toString();
+
+  // On the server or before client is ready, render a placeholder or nothing
+  if (!isClient || !settings) {
+      return (
+          <footer className="border-t bg-card">
+              <div className="container mx-auto py-8 px-4">
+                  <div className="h-10 animate-pulse bg-muted rounded-md" />
+              </div>
+          </footer>
+      );
+  }
   
   return (
     <footer className="border-t bg-card">
