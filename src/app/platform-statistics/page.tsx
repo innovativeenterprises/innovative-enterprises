@@ -4,17 +4,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bot, Zap, FolderKanban, Network, Briefcase, Building2, GraduationCap, Handshake } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMemo } from 'react';
-import type { Metadata } from 'next';
+import { useMemo, useEffect, useState } from 'react';
 import { useProductsData, useStaffData, useProvidersData, useOpportunitiesData, useServicesData } from '@/hooks/use-data-hooks';
 
-export const metadata: Metadata = {
-  title: "Platform Statistics",
-  description: "A real-time overview of our ecosystem, showcasing the scale of our AI and human workforce, project pipeline, partner network, and product portfolio.",
-};
-
 export default function PlatformStatisticsPage() {
-    const { data: products, isClient: isProductsClient } = useProductsData();
+    const { products, isClient: isProductsClient } = useProductsData();
     const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
     const { data: providers, isClient: isProvidersClient } = useProvidersData();
     const { data: opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
