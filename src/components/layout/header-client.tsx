@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -73,8 +73,6 @@ export default function HeaderClient({ settings, solutions, industries, aiTools 
 
   useEffect(() => {
     setIsClient(true);
-    // In a real app, you might fetch cart data here or use a proper state manager
-    // For now, it remains a mock
   }, []);
 
   const cartCount = isClient ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;

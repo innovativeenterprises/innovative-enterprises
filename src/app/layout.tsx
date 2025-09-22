@@ -79,7 +79,7 @@ export default async function RootLayout({
                 settings={settings}
               />
               <main className="flex-1">{children}</main>
-              <ChatWidget settings={settings} />
+              {settings && <ChatWidget settings={settings} />}
               <Footer />
             </div>
         </Providers>
