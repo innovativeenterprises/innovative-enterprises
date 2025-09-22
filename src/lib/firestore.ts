@@ -1,43 +1,49 @@
+
+
 'use server';
 
-import { initialProducts, initialStoreProducts } from './products';
-import { initialServices } from './services';
-import { initialProviders } from './providers';
-import { initialOpportunities } from './opportunities';
-import { initialClients, initialTestimonials } from './clients';
-import { initialPricing } from './pricing';
-import { initialPosProducts, initialDailySales } from './pos-data';
-import { initialStages } from './stages';
-import { initialAssets } from './assets';
-import { initialInvestors } from './investors';
-import { initialCfoData } from './cfo-data';
-import { initialStaffData } from './agents';
-import { initialProperties } from './properties';
-import { initialStairspaceListings } from './stairspace-listings';
-import { initialStairspaceRequests } from './stairspace-requests';
-import { initialLeases } from './leases';
-import { initialStockItems } from './stock-items';
-import { initialGiftCards } from './gift-cards';
-import { initialStudents } from './students';
-import { initialCommunities } from './communities';
-import { initialEvents } from './community-events';
-import { initialFinances } from './community-finances';
-import { initialMembers } from './community-members';
-import { initialAlumniJobs } from './alumni-jobs';
-import { initialRentalAgencies } from './rental-agencies';
-import { initialCars } from './cars';
-import { initialCostSettings } from './cost-settings';
-import { initialBeautyCenters } from './beauty-centers';
-import { initialBeautyServices } from './beauty-services';
-import { initialBeautyAppointments } from './beauty-appointments';
-import { initialUsedItems } from './used-items';
-import { initialSettings } from './settings';
-import { initialKnowledgeBase } from './knowledge';
-import { initialApplications } from './admissions-applications';
-import { initialBriefcase } from './briefcase';
-import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
-import { saasProducts } from './saas-products';
-import { initialBeautySpecialists } from './beauty-specialists';
+import { initialProducts, initialStoreProducts } from '@/lib/products';
+import { initialServices } from '@/lib/services';
+import { initialProviders } from '@/lib/providers';
+import { initialOpportunities } from '@/lib/opportunities';
+import { initialClients, initialTestimonials } from '@/lib/clients';
+import { initialPricing } from '@/lib/pricing';
+import { initialPosProducts, initialDailySales } from '@/lib/pos-data';
+import { initialStages } from '@/lib/stages';
+import { initialAssets } from '@/lib/assets';
+import { initialInvestors } from '@/lib/investors';
+import { initialCfoData } from '@/lib/cfo-data';
+import { initialStaffData } from '@/lib/agents';
+import { initialProperties } from '@/lib/properties';
+import { initialStairspaceListings } from '@/lib/stairspace-listings';
+import { initialStairspaceRequests } from '@/lib/stairspace-requests';
+import { initialLeases } from '@/lib/leases';
+import { initialStockItems } from '@/lib/stock-items';
+import { initialGiftCards } from '@/lib/gift-cards';
+import { initialStudents } from '@/lib/students';
+import { initialCommunities } from '@/lib/communities';
+import { initialEvents } from '@/lib/community-events';
+import { initialFinances } from '@/lib/community-finances';
+import { initialMembers } from '@/lib/community-members';
+import { initialAlumniJobs } from '@/lib/alumni-jobs';
+import { initialRentalAgencies } from '@/lib/rental-agencies';
+import { initialCars } from '@/lib/cars';
+import { initialCostSettings } from '@/lib/cost-settings';
+import { initialBeautyCenters } from '@/lib/beauty-centers';
+import { initialBeautyServices } from '@/lib/beauty-services';
+import { initialBeautyAppointments } from '@/lib/beauty-appointments';
+import { initialUsedItems } from '@/lib/used-items';
+import { initialSettings } from '@/lib/settings';
+import { initialKnowledgeBase } from '@/lib/knowledge';
+import { initialApplications } from '@/lib/admissions-applications';
+import { initialBriefcase } from '@/lib/briefcase';
+import { initialSolutions, initialIndustries, initialAiTools } from '@/lib/nav-links';
+import { saasProducts } from '@/lib/saas-products';
+import { initialBeautySpecialists } from '@/lib/beauty-specialists';
+import { getInitialState } from '@/lib/initial-state';
+import { initialRaahaAgencies } from '@/lib/raaha-agencies';
+import { initialRaahaWorkers } from '@/lib/raaha-workers';
+import { initialRaahaRequests } from '@/lib/raaha-requests';
 
 // This file simulates fetching data from a database.
 // In a real application, you would replace these with actual Firestore queries.
@@ -108,3 +114,5 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
+
+export { getInitialState };

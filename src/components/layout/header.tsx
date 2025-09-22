@@ -1,9 +1,11 @@
 
+
 'use server';
 
 import HeaderClient from "./header-client";
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import type { AppSettings } from '@/lib/settings';
+import { useEffect } from "react";
 
 interface HeaderProps {
     settings: AppSettings;
