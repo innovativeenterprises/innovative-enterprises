@@ -46,7 +46,7 @@ interface ChatComponentProps {
     welcomeMessage: string;
     placeholder: string;
     aiFlow: (input: { [key: string]: any }) => Promise<any>;
-    settings: AppSettings;
+    settings?: AppSettings;
     suggestedReplies?: string[];
 }
 

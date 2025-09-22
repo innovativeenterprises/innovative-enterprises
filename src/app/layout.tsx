@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { getSettings, getSolutions, getIndustries, getAiTools, getInitialState } from '@/lib/firestore';
+import { getSettings } from '@/lib/firestore';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Providers } from '@/app/providers';
@@ -57,24 +57,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialState = await getInitialState();
+  const settings = await getSettings();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialState={initialState}>
+        <Providers>
             <div className="relative flex min-h-dvh flex-col bg-background">
-                <Header 
-                    settings={initialState.settings} 
-                    solutions={initialState.solutions} 
-                    industries={initialState.industries}
-                    aiTools={initialState.aiTools}
-                />
+                <Header />
                 <main className="flex-1">{children}</main>
                 <Footer />
             </div>
-            <ChatWidget settings={initialState.settings} />
+            <ChatWidget settings={settings} />
         </Providers>
       </body>
     </html>
