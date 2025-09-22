@@ -12,20 +12,23 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import { getKnowledgeBase, getCostSettings } from "@/lib/firestore";
-import { useEffect, useState } from "react";
+import PricingTable from "@/app/admin/pricing-table";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import type { CostRate } from "@/lib/cost-settings.schema";
+import type { Pricing } from "@/lib/pricing.schema";
 
 
-export default function AdminOperationsPage() {
-    const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeDocument[]>([]);
-    const [costSettings, setCostSettings] = useState<CostRate[]>([]);
+interface AdminOperationsClientPageProps {
+    initialKnowledgeBase: KnowledgeDocument[];
+    initialCostSettings: CostRate[];
+    initialPricing: Pricing[];
+}
 
-    useEffect(() => {
-        getKnowledgeBase().then(setKnowledgeBase);
-        getCostSettings().then(setCostSettings);
-    }, []);
+export default function AdminOperationsClientPage({ 
+    initialKnowledgeBase, 
+    initialCostSettings,
+    initialPricing 
+}: AdminOperationsClientPageProps) {
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -45,10 +48,11 @@ export default function AdminOperationsPage() {
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-3">
+             <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
                 <TabsTrigger value="costing">Market Rates</TabsTrigger>
+                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />
@@ -72,10 +76,13 @@ export default function AdminOperationsPage() {
                 </div>
             </TabsContent>
             <TabsContent value="knowledge-base" className="mt-6">
-                <KnowledgeTable initialKnowledgeBase={knowledgeBase} />
+                <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
-                <CostSettingsTable initialRates={costSettings} />
+                <CostSettingsTable initialRates={initialCostSettings} />
+            </TabsContent>
+             <TabsContent value="pricing" className="mt-6 space-y-8">
+                <PricingTable initialPricing={initialPricing} />
             </TabsContent>
         </Tabs>
     </div>

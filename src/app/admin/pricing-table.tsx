@@ -149,4 +149,3 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
         </Card>
     );
 }
-

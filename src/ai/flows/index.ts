@@ -49,20 +49,20 @@ import { generateBoqCategory, generateFullBoq } from './boq-generator';
 import { estimateBoq } from './boq-estimator';
 import { transformImage } from './image-transformer';
 import { analyzeSalesData } from './pos-agent';
-import { generateCouponCode } from './coupon-generator';
-import { generateRealEstateContract } from './real-estate-contract-generator';
-import { findBestPropertyMatch } from './property-matcher';
-import { extractPropertyDetailsFromUrl } from './property-extraction';
-import { findBestStairspaceMatch } from './stairspace-matcher';
-import { generateListingDescription } from './listing-description-generator';
-import { generateBookingResponse } from './booking-response-generator';
-import { textToSpeech } from './text-to-speech';
-import { beautyAgent } from './beauty-agent';
-import { generateGamifiedLesson } from './lesson-gamifier';
-import { handlePartnershipInquiry } from './partnership-inquiry';
-import { handleSanadOfficeRegistration } from './sanad-office-registration';
-import { checkSubscriptionsAndSendReminders } from './subscription-reminders';
-import { trainAgent } from './train-agent';
+import {generateCouponCode} from './coupon-generator';
+import {generateRealEstateContract} from './real-estate-contract-generator';
+import {findBestPropertyMatch} from './property-matcher';
+import {extractPropertyDetailsFromUrl} from './property-extraction';
+import {findBestStairspaceMatch} from './stairspace-matcher';
+import {generateListingDescription} from './listing-description-generator';
+import {generateBookingResponse} from './booking-response-generator';
+import {textToSpeech} from './text-to-speech';
+import {beautyAgent} from './beauty-agent';
+import {generateGamifiedLesson} from './lesson-gamifier';
+import {handlePartnershipInquiry} from './partnership-inquiry';
+import {handleSanadOfficeRegistration} from './sanad-office-registration';
+import {checkSubscriptionsAndSendReminders} from './subscription-reminders';
+import {trainAgent} from './train-agent';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.

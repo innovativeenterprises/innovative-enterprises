@@ -11,11 +11,11 @@ import { OMAN_MINISTRIES, ministryLocations, OMAN_GOVERNORATES } from '@/lib/oma
 import type { Ministry, Governorate } from '@/lib/oman-locations';
 import { calculateTotalDistance } from '@/lib/oman-locations';
 import type { CostRate } from '@/lib/cost-settings.schema';
+import { getCostSettings } from '@/lib/firestore';
 
-const ProTaskAnalysisInputSchema = z.object({
+export const ProTaskAnalysisInputSchema = z.object({
   serviceName: z.string().describe("The specific government service requested by the user."),
   governorate: z.enum(OMAN_GOVERNORATES).describe("The governorate where the service needs to be performed."),
-  costSettings: z.array(z.custom<CostRate>()).describe("The current market rates for cost calculation."),
   startLocationName: z.string().optional().describe("The name of the starting location for the trip, e.g., 'Al Amerat Office'."),
   startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).optional().describe("The GPS coordinates of the starting location."),
 });
@@ -27,7 +27,7 @@ const AllowanceSchema = z.object({
 });
 export type Allowance = z.infer<typeof AllowanceSchema>;
 
-const ProTaskAnalysisOutputSchema = z.object({
+export const ProTaskAnalysisOutputSchema = z.object({
   tripDescription: z.string().describe("A summary of the planned trip, including the route and total distance."),
   allowances: z.array(AllowanceSchema).describe("A list of calculated allowances for the trip."),
   grandTotal: z.number().describe("The total estimated cost for the task."),
@@ -49,8 +49,9 @@ const proTaskAnalysisFlow = ai.defineFlow(
     outputSchema: ProTaskAnalysisOutputSchema,
   },
   async (input) => {
-
-    const costSettings = input.costSettings;
+    
+    // Data fetching is now inside the server action.
+    const costSettings = await getCostSettings();
     const fuelRatePerKm = costSettings.find(c => c.name === 'Fuel Rate' && c.category === 'Travel')?.rate || 0.04;
     
     // In a real-world, more complex app, this might be another LLM call with a knowledge base.
