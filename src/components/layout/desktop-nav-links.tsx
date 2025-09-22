@@ -1,0 +1,37 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu"
+import { cn } from '@/lib/utils';
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
+
+export default function DesktopNavLinks() {
+  const pathname = usePathname();
+  const navLinks = [
+    { href: "/about", label: "About" },
+    { href: "/invest", label: "Invest" },
+    { href: "/partner", label: "Partners" },
+  ];
+
+  return (
+    <>
+      {navLinks.map((link) => (
+        <NavigationMenuItem key={link.href}>
+          <NavigationMenuLink
+            asChild
+            active={pathname === link.href}
+            className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
+          >
+            <Link href={link.href}>
+              {link.label}
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      ))}
+    </>
+  );
+};

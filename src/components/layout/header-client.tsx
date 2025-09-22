@@ -1,22 +1,14 @@
-
 'use client';
 
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import {
     DropdownMenu,
@@ -29,66 +21,13 @@ import {
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
-import { useCartData, useNavLinksData } from '@/hooks/use-data-hooks';
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { icon?: React.ElementType }
->(({ className, title, children, icon: Icon, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="flex items-center gap-2 text-sm font-medium leading-none">
-            {Icon && <Icon className="h-5 w-5 text-primary/80" />}
-            {title}
-          </div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground pl-7">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  )
-})
-ListItem.displayName = "ListItem"
-
-
-const DesktopNavLinks = () => {
-  const pathname = usePathname();
-  const navLinks = [
-    { href: "/about", label: "About" },
-    { href: "/invest", label: "Invest" },
-    { href: "/partner", label: "Partners" },
-  ];
-  return (
-    <>
-      {navLinks.map((link) => (
-        <NavigationMenuItem key={link.href}>
-          <NavigationMenuLink
-            href={link.href}
-            className={cn(navigationMenuTriggerStyle(), 'text-base font-medium', pathname === link.href ? 'bg-accent/50' : '')}
-            active={pathname === link.href}
-          >
-            {link.label}
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      ))}
-    </>
-  );
-};
+import { useCartData } from '@/hooks/use-data-hooks';
+import DesktopNavLinks from './desktop-nav-links';
+import MobileNavLinks from './mobile-nav-links';
 
 
 export default function HeaderClient() { 
   const { cart, isClient } = useCartData();
-  const { solutions, industries, aiTools } = useNavLinksData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -97,28 +36,6 @@ export default function HeaderClient() {
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
   };
-  
-    const navLinks = [
-        { href: "/about", label: "About" },
-        { href: "/invest", label: "Invest" },
-        { href: "/partner", label: "Partners" },
-    ];
-  
-   const mobileNavLinks = (
-        <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-                <Button
-                key={link.href}
-                asChild
-                variant="ghost"
-                className="justify-start text-base"
-                onClick={handleLinkClick}
-                >
-                <Link href={link.href}>{link.label}</Link>
-                </Button>
-            ))}
-        </div>
-    );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -188,7 +105,7 @@ export default function HeaderClient() {
                 <ScrollArea className="h-[calc(100vh-8rem)]">
                     <div className="flex flex-col gap-4 py-4">
                         <nav className="flex flex-col gap-2 px-2">
-                        {mobileNavLinks}
+                        <MobileNavLinks handleLinkClick={handleLinkClick} />
                         
                         <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">My Account</p>
                         <Button
