@@ -1,22 +1,10 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import type { Client } from '@/lib/clients.schema';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function OverviewAvatars({ clients }: { clients: Client[] }) {
-    const [isClient, setIsClient] = useState(false);
-    
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    if (!isClient) {
-        return <div className="flex -space-x-2 w-24 h-10 bg-gray-200 rounded-full animate-pulse" />;
-    }
-  
   // Use the first 3 clients from the passed-in prop
   const overviewClients = clients.slice(0, 3);
 

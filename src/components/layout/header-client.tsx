@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -7,7 +6,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescri
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -29,8 +28,7 @@ import {
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
-import type { Solution, Industry, AiTool } from '@/lib/nav-links';
-import { useCartData } from '@/hooks/use-data-hooks';
+import { useCartData, useNavLinksData } from '@/hooks/use-data-hooks';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -62,18 +60,10 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient({
-    solutions,
-    industries,
-    aiTools
-}: {
-    solutions: Solution[],
-    industries: Industry[],
-    aiTools: AiTool[]
-}) { 
-  const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+export default function HeaderClient() { 
   const { cart, isClient } = useCartData();
+  const { solutions, industries, aiTools } = useNavLinksData();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const cartCount = isClient ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
@@ -87,27 +77,6 @@ export default function HeaderClient({
         { href: "/invest", label: "Invest" },
         { href: "/partner", label: "Partners" },
     ];
-
-    if (!isClient) {
-        return (
-            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                 <div className="container flex h-20 items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-                    <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
-                    </Link>
-                 </div>
-            </header>
-        );
-    }
-    
-    const solutionsByCategory = {
-        "SaaS Platforms": solutions,
-        "AI Tools": aiTools,
-    }
-
-    const industriesByCategory = {
-        "Industries": industries,
-    }
   
   const renderNavLinks = () => (
     navLinks.map((link) => (

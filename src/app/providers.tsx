@@ -1,22 +1,22 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React from 'react';
 import { ThemeProvider } from 'next-themes';
-import { SettingsProvider, useSettings } from '@/components/layout/settings-provider';
+import { SettingsProvider } from '@/components/layout/settings-provider';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat/chat-widget';
 import { Toaster } from '@/components/ui/toaster';
-import type { AppSettings } from '@/lib/settings';
+import { StoreProvider } from '@/lib/global-store';
+import type { AppState } from '@/lib/global-store';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
-    const { settings } = useSettings();
     return (
         <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
-            {settings?.chatWidgetEnabled && <ChatWidget />}
+            <ChatWidget />
             <Footer />
             <Toaster />
         </div>
@@ -25,10 +25,10 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
 
 export function Providers({ 
     children, 
-    initialSettings,
+    initialAppState,
 }: { 
     children: React.ReactNode,
-    initialSettings: AppSettings,
+    initialAppState: AppState,
 }) {
   return (
     <ThemeProvider
@@ -37,9 +37,11 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      <SettingsProvider initialSettings={initialSettings}>
-          <AppLayout>{children}</AppLayout>
-      </SettingsProvider>
+      <StoreProvider initialAppState={initialAppState}>
+        <SettingsProvider>
+            <AppLayout>{children}</AppLayout>
+        </SettingsProvider>
+      </StoreProvider>
     </ThemeProvider>
   );
 }

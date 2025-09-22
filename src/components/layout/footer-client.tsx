@@ -1,27 +1,14 @@
-
 'use client';
 
 import Link from 'next/link';
 import CompanyProfileDownloader from "@/app/invest/company-profile-downloader";
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import type { Agent, AgentCategory } from "@/lib/agents.schema";
-import type { Service } from "@/lib/services.schema";
-import type { AppSettings } from "@/lib/settings";
-import type { Product } from "@/lib/products.schema";
+import { useGlobalStore } from '@/lib/global-store';
 
-interface FooterClientProps {
-    staffData: {
-        leadership: Agent[];
-        staff: Agent[];
-        agentCategories: AgentCategory[];
-    };
-    services: Service[];
-    settings: AppSettings;
-    products: Product[];
-}
 
-export default function FooterClient({ staffData, services, settings, products }: FooterClientProps) {
+export default function FooterClient() {
+  const { state } = useGlobalStore();
   const currentYear = new Date().getFullYear().toString();
   
   return (
@@ -35,10 +22,14 @@ export default function FooterClient({ staffData, services, settings, products }
           <div className="flex flex-col gap-4 items-center">
              <div>
                 <CompanyProfileDownloader 
-                    staffData={staffData}
-                    services={services}
-                    settings={settings}
-                    products={products}
+                    staffData={{
+                        leadership: state.leadership,
+                        staff: state.staff,
+                        agentCategories: state.agentCategories,
+                    }}
+                    services={state.services}
+                    settings={state.settings!}
+                    products={state.products}
                 />
              </div>
              <p className="text-sm text-muted-foreground text-center">

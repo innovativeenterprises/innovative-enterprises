@@ -3,9 +3,9 @@ import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { getSettings } from '@/lib/firestore';
 import { Providers } from '@/app/providers';
-import { initialSettings } from '@/lib/settings';
+import { getProducts, getServices, getClients, getTestimonials, getAiTools, getSettings, getStoreProducts, getProviders, getOpportunities, getStages, getCostSettings, getRaahaData, getLeases, getStairspaceListings, getStairspaceRequests, getBeautyData, getAssets, getUsedItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getPosProducts, getDailySales, getSaasProducts, getStockItems, getPricing, getApplications, getBriefcase, getInvestors, getKnowledgeBase, getCfoData, getProperties, getSolutions, getIndustries, getStaffData } from '@/lib/firestore';
+import { initialBriefcase } from '@/lib/briefcase';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -49,19 +49,154 @@ export const metadata: Metadata = {
   },
 }
 
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSettings() || initialSettings;
+  const [
+    products,
+    storeProducts,
+    services,
+    providers,
+    opportunities,
+    clients,
+    testimonials,
+    pricing,
+    posProducts,
+    dailySales,
+    stages,
+    assets,
+    investors,
+    properties,
+    stairspaceListings,
+    stairspaceRequests,
+    signedLeases,
+    stockItems,
+    giftCards,
+    students,
+    communities,
+    communityEvents,
+    communityFinances,
+    communityMembers,
+    alumniJobs,
+    rentalAgencies,
+    cars,
+    costSettings,
+    raahaData,
+    beautyData,
+    usedItems,
+    settings,
+    knowledgeBase,
+    applications,
+    briefcase,
+    solutions,
+    industries,
+    aiTools,
+    saasProducts,
+    cfoData,
+    staffData,
+  ] = await Promise.all([
+    getProducts(),
+    getStoreProducts(),
+    getServices(),
+    getProviders(),
+    getOpportunities(),
+    getClients(),
+    getTestimonials(),
+    getPricing(),
+    getPosProducts(),
+    getDailySales(),
+    getStages(),
+    getAssets(),
+    getInvestors(),
+    getProperties(),
+    getStairspaceListings(),
+    getStairspaceRequests(),
+    getLeases(),
+    getStockItems(),
+    getGiftCards(),
+    getStudents(),
+    getCommunities(),
+    getCommunityEvents(),
+    getCommunityFinances(),
+    getCommunityMembers(),
+    getAlumniJobs(),
+    getRentalAgencies(),
+    getCars(),
+    getCostSettings(),
+    getRaahaData(),
+    getBeautyData(),
+    getUsedItems(),
+    getSettings(),
+    getKnowledgeBase(),
+    getApplications(),
+    getBriefcase(),
+    getSolutions(),
+    getIndustries(),
+    getAiTools(),
+    getSaasProducts(),
+    getCfoData(),
+    getStaffData(),
+  ]);
+
+  const initialAppState = {
+    settings,
+    products,
+    storeProducts,
+    services,
+    providers,
+    opportunities,
+    clients,
+    testimonials,
+    pricing,
+    posProducts,
+    dailySales,
+    stages,
+    assets,
+    investors,
+    properties,
+    stairspaceListings,
+    stairspaceRequests,
+    signedLeases,
+    stockItems,
+    giftCards,
+    students,
+    communities,
+    communityEvents,
+    communityFinances,
+    communityMembers,
+    alumniJobs,
+    rentalAgencies,
+    cars,
+    costSettings,
+    raahaAgencies: raahaData.raahaAgencies,
+    raahaWorkers: raahaData.raahaWorkers,
+    raahaRequests: raahaData.raahaRequests,
+    beautyCenters: beautyData.beautyCenters,
+    beautyServices: beautyData.beautyServices,
+    beautySpecialists: beautyData.beautySpecialists,
+    beautyAppointments: beautyData.beautyAppointments,
+    usedItems,
+    knowledgeBase,
+    applications,
+    briefcase: briefcase || initialBriefcase,
+    solutions,
+    industries,
+    aiTools,
+    saasProducts,
+    cfoData,
+    leadership: staffData.leadership,
+    staff: staffData.staff,
+    agentCategories: staffData.agentCategories,
+    cart: [],
+  };
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialSettings={settings}>
+        <Providers initialAppState={initialAppState}>
           {children}
         </Providers>
       </body>

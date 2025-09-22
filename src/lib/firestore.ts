@@ -1,9 +1,4 @@
-
 'use server';
-
-// This file is now configured to use local initial data instead of Firestore.
-// This ensures the application can run without needing live database credentials,
-// which is ideal for development and prototyping.
 
 import { initialProducts, initialStoreProducts } from './products';
 import { initialServices } from './services';
@@ -41,14 +36,11 @@ import { initialKnowledgeBase } from './knowledge';
 import { initialApplications } from './admissions-applications';
 import { initialBriefcase } from './briefcase';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
-import type { Product } from './products.schema';
-import type { Service } from './services.schema';
-import type { Provider } from './providers.schema';
-import type { Opportunity } from './opportunities.schema';
-import type { Client, Testimonial } from './clients.schema';
-import type { Pricing } from './pricing.schema';
+import { saasProducts } from './saas-products';
+import { initialBeautySpecialists } from './beauty-specialists';
 
-// All `get` functions now return the initial data directly.
+// This file simulates fetching data from a database.
+// In a real application, you would replace these with actual Firestore queries.
 
 export const getProducts = async () => initialProducts;
 export const getStoreProducts = async () => initialStoreProducts;
@@ -57,17 +49,12 @@ export const getProviders = async () => initialProviders;
 export const getOpportunities = async () => initialOpportunities;
 export const getClients = async () => initialClients;
 export const getTestimonials = async () => initialTestimonials;
-export const getPricing = async (): Promise<Pricing[]> => initialPricing;
+export const getPricing = async () => initialPricing;
 export const getPosProducts = async () => initialPosProducts;
 export const getDailySales = async () => initialDailySales;
 export const getStages = async () => initialStages;
 export const getAssets = async () => initialAssets;
 export const getInvestors = async () => initialInvestors;
-export const getKpiData = async () => initialCfoData.kpiData;
-export const getTransactionData = async () => initialCfoData.transactionData;
-export const getUpcomingPayments = async () => initialCfoData.upcomingPayments;
-export const getVatPayment = async () => initialCfoData.vatPayment;
-export const getCashFlowData = async () => initialCfoData.cashFlowData;
 export const getProperties = async () => initialProperties;
 export const getStairspaceListings = async () => initialStairspaceListings;
 export const getStairspaceRequests = async () => initialStairspaceRequests;
@@ -85,6 +72,7 @@ export const getCars = async () => initialCars;
 export const getCostSettings = async () => initialCostSettings;
 export const getBeautyCenters = async () => initialBeautyCenters;
 export const getBeautyServices = async () => initialBeautyServices;
+export const getBeautySpecialists = async () => initialBeautySpecialists;
 export const getBeautyAppointments = async () => initialBeautyAppointments;
 export const getUsedItems = async () => initialUsedItems;
 export const getSettings = async () => initialSettings;
@@ -94,32 +82,14 @@ export const getBriefcase = async () => initialBriefcase;
 export const getSolutions = async () => initialSolutions;
 export const getIndustries = async () => initialIndustries;
 export const getAiTools = async () => initialAiTools;
-
-export const getCfoData = async () => {
-    return initialCfoData;
-};
-
-export const getStaff = async () => [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
+export const getSaasProducts = async () => saasProducts;
+export const getCfoData = async () => initialCfoData;
 
 export const getStaffData = async () => {
-    const allStaff = await getStaff();
-    const leadership = allStaff.filter(s => s.type === 'Leadership');
-    const staff = allStaff.filter(s => s.type === 'Staff');
-    const agents = allStaff.filter(s => s.type === 'AI Agent');
-
-    const agentCategories = agents.reduce((acc, agent) => {
-        const category = agent.category || 'Uncategorized';
-        if (!acc[category]) {
-            acc[category] = { category, agents: [] };
-        }
-        acc[category].agents.push(agent);
-        return acc;
-    }, {} as Record<string, any>);
-    
     return {
-        leadership,
-        staff,
-        agentCategories: Object.values(agentCategories)
+        leadership: initialStaffData.leadership,
+        staff: initialStaffData.staff,
+        agentCategories: initialStaffData.agentCategories,
     };
 };
 
@@ -135,5 +105,6 @@ export const getBeautyData = async () => {
         beautyCenters: initialBeautyCenters,
         beautyServices: initialBeautyServices,
         beautyAppointments: initialBeautyAppointments,
+        beautySpecialists: initialBeautySpecialists,
     }
 };

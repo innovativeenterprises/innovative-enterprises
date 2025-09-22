@@ -1,11 +1,13 @@
+
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import type { AppSettings } from '@/lib/settings';
+import { useGlobalStore } from '@/lib/global-store';
+import { Skeleton } from '../ui/skeleton';
 
 interface SettingsContextType {
   settings: AppSettings;
-  setSettings: React.Dispatch<React.SetStateAction<AppSettings>>;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -18,11 +20,15 @@ export const useSettings = () => {
   return context;
 };
 
-export const SettingsProvider = ({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings }) => {
-    const [settings, setSettings] = useState<AppSettings>(initialSettings);
+export const SettingsProvider = ({ children }: { children: ReactNode }) => {
+    const { state } = useGlobalStore();
+
+    if (!state.isClient || !state.settings) {
+        return <div className="h-screen w-full flex items-center justify-center"><Skeleton className="h-full w-full" /></div>;
+    }
 
     return (
-        <SettingsContext.Provider value={{ settings, setSettings }}>
+        <SettingsContext.Provider value={{ settings: state.settings }}>
             {children}
         </SettingsContext.Provider>
     );
