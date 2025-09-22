@@ -1,8 +1,8 @@
 
 'use server';
 
-import CompanyOverviewClient from "./company-overview-client";
 import { getClients } from "@/lib/firestore";
+import CompanyOverviewClient from "./company-overview-client";
 
 export default async function CompanyOverview() {
   const clients = await getClients();

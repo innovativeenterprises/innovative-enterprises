@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
@@ -5,7 +6,7 @@ import type { AppSettings } from '@/lib/settings';
 import { initialSettings } from '@/lib/settings';
 
 interface SettingsContextType {
-  settings: AppSettings;
+  settings: AppSettings | null;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -18,22 +19,13 @@ export const useSettings = () => {
   return context;
 };
 
-export const SettingsProvider = ({ children, initialSettings: serverSettings }: { children: ReactNode, initialSettings: AppSettings }) => {
-    const [settings, setSettings] = useState(serverSettings || initialSettings);
-    const [isClient, setIsClient] = useState(false);
+export const SettingsProvider = ({ children }: { children: ReactNode }) => {
+    const [settings, setSettings] = useState<AppSettings | null>(null);
 
     useEffect(() => {
-        setIsClient(true);
+        // In a real app, this might fetch settings. For now, we use initial.
+        setSettings(initialSettings);
     }, []);
-
-    if (!isClient) {
-        // On the server and during the first client render, use the initial settings
-        return (
-             <SettingsContext.Provider value={{ settings: serverSettings }}>
-                {children}
-            </SettingsContext.Provider>
-        )
-    }
 
     return (
         <SettingsContext.Provider value={{ settings }}>

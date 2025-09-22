@@ -16,9 +16,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { type Product } from '@/lib/products.schema';
+import type { Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
-import type { AppSettings } from '@/lib/settings';
+import { useSettings } from '../layout/settings-provider';
 
 
 interface Message {
@@ -46,7 +46,6 @@ interface ChatComponentProps {
     welcomeMessage: string;
     placeholder: string;
     aiFlow: (input: { [key: string]: any }) => Promise<any>;
-    settings?: AppSettings;
     suggestedReplies?: string[];
 }
 
@@ -58,12 +57,12 @@ export const ChatComponent = ({
     placeholder,
     aiFlow,
     suggestedReplies: initialSuggestedReplies,
-    settings
 }: ChatComponentProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const { settings } = useSettings();
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -96,7 +95,6 @@ export const ChatComponent = ({
   useEffect(() => {
     setMessages([{ role: 'bot', content: welcomeMessage, suggestedReplies: initialSuggestedReplies || ["What services do you offer?", "Tell me about your products", "How can I become a partner?"] }]);
     
-    // Cleanup function to stop audio when the component unmounts
     return () => {
       stopAudio();
     };
@@ -134,7 +132,6 @@ export const ChatComponent = ({
     form.reset();
 
     try {
-      // The AI flow can return 'answer' (from FAQ) or 'response' (from other agents)
       const result = await aiFlow({ question: message, message: message, query: message });
       const botMessage: Message = { 
           role: 'bot', 
