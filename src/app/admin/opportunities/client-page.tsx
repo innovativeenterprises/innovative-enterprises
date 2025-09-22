@@ -14,7 +14,7 @@ export default function OpportunityClientPage({ initialOpportunities }: { initia
                 <p className="text-muted-foreground">Analyze new ideas and manage all open projects, tasks, and competitions available to your partner network.</p>
             </div>
             <WorkOrderForm />
-            <OpportunityTable initialOpportunities={initialOpportunities} />
+            <OpportunityTable initialOpportunities={initialOpportunities || []} />
         </div>
     );
 }

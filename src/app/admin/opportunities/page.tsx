@@ -1,7 +1,7 @@
 
 'use server';
 
-import OpportunityClientPage from './opportunity-client-page';
+import OpportunityClientPage from './client-page';
 import type { Metadata } from 'next';
 import { getOpportunities } from '@/lib/firestore';
 
@@ -12,5 +12,5 @@ export const metadata: Metadata = {
 
 export default async function OpportunitiesPage() {
     const opportunities = await getOpportunities();
-    return <OpportunityClientPage initialOpportunities={opportunities} />
+    return <OpportunityClientPage initialOpportunities={opportunities || []} />
 }

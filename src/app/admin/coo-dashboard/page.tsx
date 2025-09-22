@@ -17,5 +17,10 @@ export default async function CooDashboardPage() {
         getCfoData(),
     ]);
 
+    if (!cfoData) {
+        // Handle the case where cfoData is null, maybe render an error or a loading state
+        return <div>Error loading financial data.</div>;
+    }
+
     return <CooDashboardClientPage initialProducts={products} initialProviders={providers} initialCfoData={cfoData} />;
 }

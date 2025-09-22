@@ -1,8 +1,7 @@
 
 'use server';
 
-import ClientTestimonialsClient from "@/components/client-testimonials-client";
-import { getClients, getTestimonials } from "@/lib/firestore";
+import ClientTestimonials from "@/components/client-testimonials";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,12 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ClientTestimonialsPage() {
-    const [clients, testimonials] = await Promise.all([
-        getClients(),
-        getTestimonials()
-    ]);
-    
     return (
-        <ClientTestimonialsClient clients={clients} testimonials={testimonials} />
+        // The ClientTestimonials component now fetches its own data
+        <ClientTestimonials />
     );
 }

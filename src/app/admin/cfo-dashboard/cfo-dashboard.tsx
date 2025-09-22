@@ -7,6 +7,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getStatusBadge } from "@/components/status-badges";
 import { DueDateDisplay } from "@/components/due-date-display";
 import type { CfoData } from '@/lib/cfo-data.schema';
+import { DollarSign, Users, CreditCard, Activity } from 'lucide-react';
+
+const kpiIcons: { [key: string]: React.ElementType } = {
+    "Total Revenue": DollarSign,
+    "Subscriptions": Users,
+    "Sales": CreditCard,
+    "Active Now": Activity,
+    "Projects": DollarSign,
+    "Test": DollarSign,
+};
+
 
 export default function CfoDashboardPageClient({ initialData }: { initialData: CfoData }) {
 
@@ -21,18 +32,21 @@ export default function CfoDashboardPageClient({ initialData }: { initialData: C
                 </p>
             </div>
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {kpiData.map(item => (
-                    <Card key={item.title}>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">{item.title}</CardTitle>
-                            <item.icon className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{item.value}</div>
-                            <p className="text-xs text-muted-foreground">{item.change}</p>
-                        </CardContent>
-                    </Card>
-                ))}
+                {kpiData.map(item => {
+                    const Icon = kpiIcons[item.title] || DollarSign;
+                    return (
+                        <Card key={item.title}>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">{item.title}</CardTitle>
+                                <Icon className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{item.value}</div>
+                                <p className="text-xs text-muted-foreground">{item.change}</p>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
             </div>
              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                  <Card className="lg:col-span-2">
