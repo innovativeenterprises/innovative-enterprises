@@ -5,8 +5,6 @@ import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
 import { getProducts, getServices, getClients, getTestimonials, getAiTools, getSettings, getStoreProducts, getProviders, getOpportunities, getStages, getCostSettings, getRaahaData, getLeases, getStairspaceListings, getStairspaceRequests, getBeautyData, getAssets, getUsedItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getPosProducts, getDailySales, getSaasProducts, getStockItems, getPricing, getApplications, getBriefcase, getInvestors, getKnowledgeBase, getCfoData, getProperties, getSolutions, getIndustries, getStaffData } from '@/lib/firestore';
-import { initialBriefcase } from '@/lib/briefcase';
-import { initialSettings } from '@/lib/settings';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,14 +48,13 @@ export const metadata: Metadata = {
   },
 }
 
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Using initialSettings directly as a fallback.
-  // The getSettings function now has internal error handling.
-  const settings = await getSettings() || initialSettings;
+  const settings = await getSettings();
 
   return (
     <html lang="en" suppressHydrationWarning>

@@ -20,15 +20,8 @@ export const useSettings = () => {
   return context;
 };
 
-export const SettingsProvider = ({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings }) => {
-    const { state, setState, isClient } = useStore();
-
-    useEffect(() => {
-        if(isClient && !state.settings) {
-            setState(s => ({...s, settings: initialSettings}));
-        }
-    }, [isClient, state.settings, setState, initialSettings]);
-
+export const SettingsProvider = ({ children }: { children: ReactNode }) => {
+    const { state, isClient } = useStore();
 
     if (!isClient || !state.settings) {
         return <div className="h-screen w-full flex items-center justify-center"><Skeleton className="h-full w-full" /></div>;

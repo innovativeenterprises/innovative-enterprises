@@ -92,7 +92,7 @@ export interface AppState {
   briefcase: BriefcaseData | null;
   investors: Investor[];
   knowledgeBase: KnowledgeDocument[];
-  cfoData: CfoData;
+  cfoData: CfoData | null;
   properties: Property[];
   solutions: Solution[];
   industries: Industry[];
@@ -116,8 +116,12 @@ export function useStore() {
   return context;
 };
 
-export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: AppState }) => {
-    const [state, setState] = useState<AppState>({ ...initialState, isClient: false });
+export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: Partial<AppState> }) => {
+    const [state, setState] = useState<AppState>({ 
+      ...({} as AppState), // Provide a default empty state to satisfy TypeScript
+      ...initialState, 
+      isClient: false 
+    });
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
