@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
@@ -42,6 +43,7 @@ import { initialBeautySpecialists } from './beauty-specialists';
 import { initialRaahaAgencies } from './raaha-agencies';
 import { initialRaahaWorkers } from './raaha-workers';
 import { initialRaahaRequests } from './raaha-requests';
+import { getEmptyState, type AppState } from './initial-state';
 
 // This file simulates fetching data from a database.
 // In a real application, you would replace these with actual Firestore queries.
@@ -67,8 +69,8 @@ export const getStockItems = async () => initialStockItems;
 export const getGiftCards = async () => initialGiftCards;
 export const getStudents = async () => initialStudents;
 export const getCommunities = async () => initialCommunities;
-export const getCommunityEvents = async () => initialCommunityEvents;
-export const getCommunityFinances = async () => initialFinances;
+export const getCommunityEvents = async () => initialEvents;
+export const getCommunityFinances = async () => initialCommunityFinances;
 export const getCommunityMembers = async () => initialMembers;
 export const getAlumniJobs = async () => initialAlumniJobs;
 export const getRentalAgencies = async () => initialRentalAgencies;
@@ -110,5 +112,87 @@ export const getBeautyData = async () => {
         beautyServices: initialBeautyServices,
         beautyAppointments: initialBeautyAppointments,
         beautySpecialists: initialBeautySpecialists,
+    }
+};
+
+export const getInitialState = async (): Promise<AppState> => {
+    const state = getEmptyState();
+
+    try {
+        const [
+            settings, products, storeProducts, providers, opportunities, services, signedLeases,
+            stairspaceRequests, stairspaceListings, staffData, raahaData, beautyData,
+            costSettings, assets, usedItems, clients, testimonials, giftCards, students,
+            communities, communityEvents, communityFinances, communityMembers, alumniJobs,
+            rentalAgencies, cars, posProducts, dailySales, saasProducts, stockItems,
+            pricing, stages, applications, briefcase, investors, knowledgeBase, cfoData,
+            properties, solutions, industries, aiTools
+        ] = await Promise.all([
+            getSettings(), getProducts(), getStoreProducts(), getProviders(), getOpportunities(),
+            getServices(), getLeases(), getStairspaceRequests(), getStairspaceListings(),
+            getStaffData(), getRaahaData(), getBeautyData(), getCostSettings(), getAssets(),
+            getUsedItems(), getClients(), getTestimonials(), getGiftCards(), getStudents(),
+            getCommunities(), getCommunityEvents(), getCommunityFinances(), getCommunityMembers(),
+            getAlumniJobs(), getRentalAgencies(), getCars(), getPosProducts(), getDailySales(),
+            getSaasProducts(), getStockItems(), getPricing(), getStages(), getApplications(),
+            getBriefcase(), getInvestors(), getKnowledgeBase(), getCfoData(), getProperties(),
+            getSolutions(), getIndustries(), getAiTools()
+        ]);
+
+        return {
+            ...state,
+            settings,
+            products,
+            storeProducts,
+            providers,
+            opportunities,
+            services,
+            signedLeases,
+            stairspaceRequests,
+            stairspaceListings,
+            leadership: staffData.leadership,
+            staff: staffData.staff,
+            agentCategories: staffData.agentCategories,
+            raahaAgencies: raahaData.raahaAgencies,
+            raahaWorkers: raahaData.raahaWorkers,
+            raahaRequests: raahaData.raahaRequests,
+            beautyCenters: beautyData.beautyCenters,
+            beautyServices: beautyData.beautyServices,
+            beautySpecialists: beautyData.beautySpecialists,
+            beautyAppointments: beautyData.beautyAppointments,
+            costSettings,
+            assets,
+            usedItems,
+            clients,
+            testimonials,
+            giftCards,
+            students,
+            communities,
+            communityEvents,
+            communityFinances,
+            communityMembers,
+            alumniJobs,
+            rentalAgencies,
+            cars,
+            posProducts,
+            dailySales,
+            saasProducts,
+            stockItems,
+            pricing,
+            stages,
+            applications,
+            briefcase: briefcase || initialBriefcase,
+            investors,
+            knowledgeBase,
+            cfoData,
+            properties,
+            solutions,
+            industries,
+            aiTools,
+        };
+    } catch (error) {
+        console.error("Failed to fetch initial state:", error);
+        // Return the empty state if any of the promises fail
+        return state;
     }
 };
