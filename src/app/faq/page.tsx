@@ -4,11 +4,9 @@
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Bot, MessageSquare } from 'lucide-react';
-import { useSettings } from '@/components/layout/settings-provider';
 
 export default function FaqPage() {
-    const { settings } = useSettings();
-
+    
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)] py-16">
             <div className="container mx-auto px-4">
@@ -29,7 +27,6 @@ export default function FaqPage() {
                         welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
                         placeholder="Ask about our services or book a meeting..."
                         aiFlow={answerQuestion}
-                        settings={settings}
                    />
                 </div>
             </div>

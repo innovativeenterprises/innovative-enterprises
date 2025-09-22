@@ -1,15 +1,10 @@
 
-'use server';
-
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
-import { Providers } from '@/app/providers';
-import ChatWidget from '@/components/chat-widget';
 import { getSettings } from '@/lib/firestore';
+import { Providers } from '@/app/providers';
 import { initialSettings } from '@/lib/settings';
 
 const inter = Inter({
@@ -69,14 +64,10 @@ export default async function RootLayout({
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <Providers initialSettings={settings}>
-          <div className="relative flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <ChatWidget />
+          {children}
         </Providers>
       </body>
     </html>
   );
 }
+  

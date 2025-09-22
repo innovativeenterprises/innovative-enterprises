@@ -30,9 +30,9 @@ import { ScrollArea } from '../ui/scroll-area';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
-import type { AppSettings } from '@/lib/settings';
 import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
+import { useSettings } from './settings-provider';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -64,12 +64,12 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
-export default function HeaderClient({ settings, solutions, industries, aiTools }: {
-    settings: AppSettings;
+export default function HeaderClient({ solutions, industries, aiTools }: {
     solutions: Solution[];
     industries: Industry[];
     aiTools: AiTool[];
 }) { 
+  const { settings } = useSettings();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
