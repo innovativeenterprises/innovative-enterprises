@@ -10,6 +10,7 @@ import Footer from '@/components/layout/footer';
 import { Providers } from '@/app/providers';
 import ChatWidget from '@/components/chat-widget';
 import { getSettings } from '@/lib/firestore';
+import { initialSettings } from '@/lib/settings';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -59,7 +60,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSettings();
+  // Using initialSettings directly as a fallback.
+  // The getSettings function now has internal error handling.
+  const settings = await getSettings() || initialSettings;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -71,7 +74,7 @@ export default async function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
-          <ChatWidget settings={settings!} />
+          <ChatWidget />
         </Providers>
       </body>
     </html>

@@ -218,8 +218,8 @@ export const ChatComponent = ({
                                     )}
                                     {msg.contactOptions && (
                                         <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex gap-2">
-                                            {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${msg.contactOptions.email}`}>Email</a></Button>}
-                                            {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${msg.contactOptions.whatsapp}`} target="_blank">WhatsApp</a></Button>}
+                                            {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${"'" + msg.contactOptions.email + "'"}`}>Email</a></Button>}
+                                            {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${"'" + msg.contactOptions.whatsapp + "'"}`} target="_blank">WhatsApp</a></Button>}
                                         </div>
                                     )}
                                     {msg.imageUrl && (
