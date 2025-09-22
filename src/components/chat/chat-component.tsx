@@ -106,7 +106,7 @@ export const ChatComponent = ({
       stopAudio();
       setIsPlaying(true);
       try {
-          const response = await textToSpeech({ textToSpeak: text, voice: 'onyx' });
+          const response = await textToSpeech({ textToSpeak: text });
           if(response.audioUrl) {
             const audio = new Audio(response.audioUrl);
             audioRef.current = audio;

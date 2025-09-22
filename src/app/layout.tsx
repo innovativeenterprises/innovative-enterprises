@@ -10,8 +10,6 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat-widget';
 import { Providers } from '@/app/providers';
-import { initialSettings } from '@/lib/settings';
-
 
 const inter = Inter({
   subsets: ['latin'],
@@ -72,7 +70,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialSettings={settings || initialSettings}>
+        <Providers>
           <div className="flex min-h-screen flex-col">
             <Header 
               settings={settings} 
@@ -82,7 +80,7 @@ export default async function RootLayout({
             />
             <main className="flex-1">{children}</main>
             <Footer />
-            <ChatWidget />
+            <ChatWidget settings={settings} />
           </div>
         </Providers>
       </body>
