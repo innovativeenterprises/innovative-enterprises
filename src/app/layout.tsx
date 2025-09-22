@@ -9,6 +9,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Providers } from '@/app/providers';
 import ChatWidget from '@/components/chat-widget';
+import { getSettings } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -53,23 +54,24 @@ export const metadata: Metadata = {
 }
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers>
+        <Providers initialSettings={settings}>
           <div className="relative flex flex-col min-h-screen">
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
-          <ChatWidget />
+          <ChatWidget settings={settings!} />
         </Providers>
       </body>
     </html>

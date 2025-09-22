@@ -4,10 +4,11 @@
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
 import { Bot, MessageSquare } from 'lucide-react';
-import { useSettingsData } from '@/hooks/use-data-hooks';
+import { Loader2 } from 'lucide-react';
+import { useSettings } from '@/components/layout/settings-provider';
 
 export default function FaqPage() {
-    const { data: settings } = useSettingsData();
+    const { settings } = useSettings();
 
     // Render a loading state or nothing if settings aren't loaded yet
     if (!settings) {
@@ -38,7 +39,6 @@ export default function FaqPage() {
                         welcomeMessage="Hello! I'm Aida, the virtual assistant for Innovative Enterprises. How can I help you today?"
                         placeholder="Ask about our services or book a meeting..."
                         aiFlow={answerQuestion}
-                        settings={settings}
                    />
                 </div>
             </div>

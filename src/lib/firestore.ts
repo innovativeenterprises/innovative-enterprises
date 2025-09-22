@@ -39,7 +39,6 @@ import { initialBriefcase } from './briefcase';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import { saasProducts } from './saas-products';
 import { initialBeautySpecialists } from './beauty-specialists';
-import { getInitialState } from './initial-state';
 import { initialRaahaAgencies } from './raaha-agencies';
 import { initialRaahaWorkers } from './raaha-workers';
 import { initialRaahaRequests } from './raaha-requests';
@@ -68,7 +67,7 @@ export const getStockItems = async () => initialStockItems;
 export const getGiftCards = async () => initialGiftCards;
 export const getStudents = async () => initialStudents;
 export const getCommunities = async () => initialCommunities;
-export const getCommunityEvents = async () => initialEvents;
+export const getCommunityEvents = async () => initialCommunityEvents;
 export const getCommunityFinances = async () => initialFinances;
 export const getCommunityMembers = async () => initialMembers;
 export const getAlumniJobs = async () => initialAlumniJobs;
@@ -113,5 +112,3 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
-
-export { getInitialState };

@@ -7,10 +7,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { X, MessageSquare, Bot } from "lucide-react";
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
-import { useSettings } from "./layout/settings-provider";
+import type { AppSettings } from "@/lib/settings";
 
-export default function ChatWidget() {
-    const { settings } = useSettings(); 
+export default function ChatWidget({ settings }: { settings: AppSettings }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 

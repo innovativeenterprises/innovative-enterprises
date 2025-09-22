@@ -3,7 +3,6 @@
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import type { AppSettings } from '@/lib/settings';
-import { initialSettings } from '@/lib/settings';
 
 interface SettingsContextType {
   settings: AppSettings | null;
@@ -19,16 +18,9 @@ export const useSettings = () => {
   return context;
 };
 
-export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-    const [settings, setSettings] = useState<AppSettings | null>(null);
-
-    useEffect(() => {
-        // In a real app, this might fetch settings. For now, we use initial.
-        setSettings(initialSettings);
-    }, []);
-
+export const SettingsProvider = ({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings | null }) => {
     return (
-        <SettingsContext.Provider value={{ settings }}>
+        <SettingsContext.Provider value={{ settings: initialSettings }}>
             {children}
         </SettingsContext.Provider>
     );
