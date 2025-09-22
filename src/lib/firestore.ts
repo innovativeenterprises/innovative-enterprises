@@ -1,7 +1,7 @@
 
 'use server';
 
-import { initialProducts, initialStoreProducts } from '@/lib/products';
+import { initialProducts, initialStoreProducts, saasProducts } from '@/lib/products';
 import { initialServices } from '@/lib/services';
 import { initialProviders } from '@/lib/providers';
 import { initialOpportunities } from '@/lib/opportunities';
@@ -37,7 +37,6 @@ import { initialKnowledgeBase } from '@/lib/knowledge';
 import { initialApplications } from '@/lib/admissions-applications';
 import { initialBriefcase } from '@/lib/briefcase';
 import { initialSolutions, initialIndustries, initialAiTools } from '@/lib/nav-links';
-import { saasProducts } from '@/lib/products';
 import { initialBeautySpecialists } from '@/lib/beauty-specialists';
 import { getInitialState } from '@/lib/initial-state';
 import { initialRaahaAgencies } from '@/lib/raaha-agencies';
