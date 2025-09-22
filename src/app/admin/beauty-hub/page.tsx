@@ -2,7 +2,7 @@
 'use server';
 
 import AgencyDashboardClientPage from './client-page';
-import { getBeautyCenters, getBeautyServices, getBeautyAppointments } from '@/lib/firestore';
+import { getBeautyData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,15 +12,11 @@ export const metadata: Metadata = {
 
 
 export default async function AdminBeautyHubPage() {
-    const [agencies, services, appointments] = await Promise.all([
-        getBeautyCenters(),
-        getBeautyServices(),
-        getBeautyAppointments()
-    ]);
+    const { beautyCenters, beautyServices, beautyAppointments } = await getBeautyData();
 
     return <AgencyDashboardClientPage 
-        initialAgencies={agencies} 
-        initialServices={services} 
-        initialAppointments={appointments} 
+        initialAgencies={beautyCenters} 
+        initialServices={beautyServices} 
+        initialAppointments={beautyAppointments} 
     />;
 }

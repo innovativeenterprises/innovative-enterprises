@@ -1,3 +1,4 @@
+
 'use client';
 
 import CfoDashboardPageClient from './cfo-dashboard';
