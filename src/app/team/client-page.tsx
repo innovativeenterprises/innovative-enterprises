@@ -5,7 +5,6 @@ import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useStaffData } from "@/hooks/use-data-hooks";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
 
 interface TeamClientPageProps {
@@ -17,7 +16,7 @@ interface TeamClientPageProps {
 }
 
 export default function TeamClientPage({ initialStaffData }: TeamClientPageProps) {
-    const { leadership, staff, agentCategories } = useStaffData(initialStaffData);
+    const { leadership, staff, agentCategories } = initialStaffData;
 
     const enabledLeadership = leadership.filter(member => member.enabled);
     const enabledStaff = staff.filter(member => member.enabled);
