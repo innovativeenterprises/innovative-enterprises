@@ -5,8 +5,8 @@ import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from "@/comp
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BarChart } from "lucide-react";
 import Link from 'next/link';
-import PropertyTable from "../property-table";
-import StairspaceTable from "../stairspace-table";
+import PropertyTable from "./property-table";
+import StairspaceTable from "./stairspace-table";
 import type { Property } from '@/lib/properties.schema';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 
@@ -52,7 +52,7 @@ export default function AdminRealEstateClientPage({
                 </CardHeader>
                 <CardFooter>
                     <Button asChild>
-                        <Link href="/real-estate-tech/property-valuator">Launch Valuator <BarChart className="ml-2 h-4 w-4" /></Link>
+                        <Link href="/admin/real-estate/property-valuator">Launch Valuator <BarChart className="ml-2 h-4 w-4" /></Link>
                     </Button>
                 </CardFooter>
             </Card>

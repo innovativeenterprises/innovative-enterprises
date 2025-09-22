@@ -6,17 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, Handshake, Gift } from "lucide-react";
 import Link from 'next/link';
-import { useStairspaceData } from '@/hooks/use-data-hooks';
 import type { StairspaceListing } from '@/lib/stairspace-listings';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { useStore } from '@/hooks/use-data-hooks';
-
+import { initialStairspaceListings } from '@/lib/stairspace-listings';
 
 const ListingCard = ({ listing }: { listing: StairspaceListing }) => (
-    <Link href={`/real-estate-tech/stairspace/${listing.id}`} className="flex">
+    <Link href={`/real-estate-tech/stairspace/listing/${listing.id}`} className="flex">
         <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
             <CardHeader className="p-0">
                 <div className="relative h-48 w-full">
@@ -58,12 +56,15 @@ const ListingGridSkeleton = () => (
 );
 
 export default function StairspacePage() {
-    const { stairspaceListings, isClient } = useStore((state) => ({
-      stairspaceListings: state.stairspaceListings,
-      isClient: state.isClient,
-    }));
+    const [stairspaceListings, setStairspaceListings] = useState<StairspaceListing[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [tagFilter, setTagFilter] = useState('All');
+
+    useEffect(() => {
+        setStairspaceListings(initialStairspaceListings);
+        setIsClient(true);
+    }, []);
 
     const allTags = useMemo(() => {
         if (!isClient) return [];

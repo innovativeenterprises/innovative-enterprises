@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
@@ -113,10 +113,10 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
     const handleSave = (values: ListingValues, id?: string) => {
         const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
         if (id) {
-            setListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } : l)));
+            setListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } as StairspaceListing : l)));
             toast({ title: 'Listing updated.' });
         } else {
-            const newListing = { ...newListingData, id: `stair_${Date.now()}` };
+            const newListing: StairspaceListing = { ...newListingData, id: `stair_${Date.now()}` };
             setListings(prev => [newListing, ...prev]);
             toast({ title: 'Listing added.' });
         }

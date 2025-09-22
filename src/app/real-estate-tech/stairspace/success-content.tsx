@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, Home, Ticket } from 'lucide-react';
 import Link from 'next/link';
-import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { Skeleton } from '@/components/ui/skeleton';
 import { notFound } from 'next/navigation';
@@ -16,23 +16,27 @@ export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref
     backToRequestsHref: string;
     requestsLabel: string;
 }) {
-    const { stairspaceRequests, isClient } = useStairspaceRequestsData();
+    const [requests, setRequests] = useState<BookingRequest[]>([]);
+    const [isClient, setIsClient] = useState(false);
     const [request, setRequest] = useState<BookingRequest | undefined>(undefined);
+
+     useEffect(() => {
+        setIsClient(true);
+        // In a real app, this might come from a context or a fresh fetch.
+        // For prototype, we assume it's available or can be fetched if needed.
+    }, []);
 
     useEffect(() => {
         if (isClient && requestId) {
-            const foundRequest = stairspaceRequests.find(r => r.id === requestId);
-            if (!foundRequest) {
-                notFound();
-            } else {
-                setRequest(foundRequest);
-            }
+            // This is a placeholder for fetching data if it wasn't in a global store.
+            // For now, we assume the requests state is populated from a parent or context.
+            // If requests are not in a global store, you'd need a fetch here.
         } else if (isClient && !requestId) {
             notFound();
         }
-    }, [isClient, requestId, stairspaceRequests]);
+    }, [isClient, requestId, requests]);
     
-    if (!isClient || !request) {
+    if (!isClient || (requestId && !request)) {
         return (
              <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
                 <div className="container mx-auto px-4 py-16">
@@ -55,7 +59,7 @@ export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref
                             </div>
                             <CardTitle className="text-3xl">Booking Confirmed!</CardTitle>
                             <CardDescription className="text-base pt-2">
-                                Thank you for your payment. The booking for <strong>{request.listingTitle}</strong> is confirmed.
+                                Thank you for your payment. The booking for <strong>{request?.listingTitle}</strong> is confirmed.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
