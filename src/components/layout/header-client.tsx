@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -60,6 +61,31 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
+const DesktopNavLinks = () => {
+  const pathname = usePathname();
+  const navLinks = [
+    { href: "/about", label: "About" },
+    { href: "/invest", label: "Invest" },
+    { href: "/partner", label: "Partners" },
+  ];
+  return (
+    <>
+      {navLinks.map((link) => (
+        <NavigationMenuItem key={link.href}>
+          <NavigationMenuLink
+            href={link.href}
+            className={cn(navigationMenuTriggerStyle(), 'text-base font-medium', pathname === link.href ? 'bg-accent/50' : '')}
+            active={pathname === link.href}
+          >
+            {link.label}
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      ))}
+    </>
+  );
+};
+
+
 export default function HeaderClient() { 
   const { cart, isClient } = useCartData();
   const { solutions, industries, aiTools } = useNavLinksData();
@@ -77,22 +103,6 @@ export default function HeaderClient() {
         { href: "/invest", label: "Invest" },
         { href: "/partner", label: "Partners" },
     ];
-  
-  const renderNavLinks = () => (
-    navLinks.map((link) => (
-        <NavigationMenuItem key={link.href}>
-          <NavigationMenuLink asChild>
-            <Link
-              href={link.href}
-              className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
-            >
-              {link.label}
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      )
-    )
-  );
   
    const mobileNavLinks = (
         <div className="flex flex-col gap-2">
@@ -119,7 +129,7 @@ export default function HeaderClient() {
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
             <NavigationMenuList>
-              {renderNavLinks()}
+              <DesktopNavLinks />
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
