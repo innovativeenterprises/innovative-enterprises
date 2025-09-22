@@ -1,10 +1,11 @@
+
 'use client';
 
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -24,16 +25,57 @@ import {
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
-import { useCartData } from '@/hooks/use-data-hooks';
-import MobileNavLinks from './mobile-nav-links';
-import DesktopNavLinks from './desktop-nav-links';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import type { Solution, Industry, AiTool } from '@/lib/nav-links';
+import type { AppSettings } from '@/lib/settings';
 
-export default function Header() { 
-  const { cart, isClient } = useCartData();
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & { icon: React.ElementType }
+>(({ className, title, children, icon: Icon, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="flex items-center gap-2">
+            <Icon className="h-5 w-5 text-primary" />
+            <div className="text-sm font-medium leading-none">{title}</div>
+          </div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
+
+
+export default function HeaderClient({ settings, solutions, industries, aiTools }: { 
+    settings: AppSettings;
+    solutions: Solution[];
+    industries: Industry[];
+    aiTools: AiTool[];
+}) { 
+  const [cart, setCart] = useState<{ quantity: number }[]>([]);
+  const [isClient, setIsClient] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setIsClient(true);
+    // In a real app, you might fetch cart data here or use a proper state manager
+    // For now, it remains a mock
+  }, []);
 
   const cartCount = isClient ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
@@ -129,7 +171,6 @@ export default function Header() {
                 <ScrollArea className="h-[calc(100vh-8rem)]">
                     <div className="flex flex-col gap-4 py-4">
                         <nav className="flex flex-col gap-2 px-2">
-                        <MobileNavLinks handleLinkClick={handleLinkClick} />
                         
                         <p className="px-3 pt-4 pb-2 text-sm font-semibold text-muted-foreground">My Account</p>
                         <Button

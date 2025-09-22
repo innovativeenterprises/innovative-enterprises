@@ -1,18 +1,21 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { useSettingsData } from '@/hooks/use-data-hooks';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FooterClient() {
-  const { settings, isClient } = useSettingsData();
+  const [isClient, setIsClient] = useState(false);
   const currentYear = new Date().getFullYear().toString();
 
-  // On the server or before client is ready, render a placeholder or nothing
-  if (!isClient || !settings) {
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
       return (
           <footer className="border-t bg-card">
               <div className="container mx-auto py-8 px-4">

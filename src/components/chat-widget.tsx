@@ -1,17 +1,25 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { X, MessageSquare, Bot } from "lucide-react";
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
-import { useSettings } from "@/components/layout/settings-provider";
+import type { AppSettings } from "@/lib/settings";
 
-export default function ChatWidget() {
+export default function ChatWidget({ settings }: { settings: AppSettings }) {
     const [isOpen, setIsOpen] = useState(false);
-    const { settings } = useSettings();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        return null;
+    }
 
     return (
         <div className="fixed bottom-4 right-4 z-50">

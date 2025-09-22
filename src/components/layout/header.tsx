@@ -2,18 +2,23 @@
 'use server';
 
 import HeaderClient from "./header-client";
-import { getAiTools, getIndustries, getSolutions } from "@/lib/firestore";
+import type { Solution, Industry, AiTool } from "@/lib/nav-links";
+import type { AppSettings } from "@/lib/settings";
 
-export default async function Header() {
-    const [solutions, industries, aiTools] = await Promise.all([
-        getSolutions(),
-        getIndustries(),
-        getAiTools(),
-    ]);
-    
-    return <HeaderClient 
+interface HeaderProps {
+    solutions: Solution[];
+    industries: Industry[];
+    aiTools: AiTool[];
+    settings: AppSettings;
+}
+
+export default async function Header({ solutions, industries, aiTools, settings }: HeaderProps) {
+    return (
+      <HeaderClient 
         solutions={solutions}
         industries={industries}
         aiTools={aiTools}
-    />;
+        settings={settings}
+      />
+    );
 }
