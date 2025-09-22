@@ -71,17 +71,17 @@ export default async function RootLayout({
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <Providers>
-          <div className="flex min-h-screen flex-col">
-            <Header 
-              settings={settings} 
-              solutions={solutions} 
-              industries={industries}
-              aiTools={aiTools}
-            />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <ChatWidget settings={settings} />
+            <div className="relative flex min-h-dvh flex-col bg-background">
+                <Header 
+                    settings={settings} 
+                    solutions={solutions} 
+                    industries={industries}
+                    aiTools={aiTools}
+                />
+                <main className="flex-1">{children}</main>
+                <Footer />
+            </div>
+            <ChatWidget settings={settings} />
         </Providers>
       </body>
     </html>

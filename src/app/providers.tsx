@@ -1,11 +1,10 @@
 
 'use client';
 
-import React, { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
 
-export function Providers({ children }: { children: ReactNode }) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
@@ -13,8 +12,8 @@ export function Providers({ children }: { children: ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-        {children}
-        <Toaster />
+      {children}
+      <Toaster />
     </ThemeProvider>
   );
 }
