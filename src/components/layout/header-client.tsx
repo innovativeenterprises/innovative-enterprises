@@ -32,6 +32,7 @@ import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import type { AppSettings } from '@/lib/settings';
 import MobileNavLinks from './mobile-nav-links';
+import DesktopNavLinks from './desktop-nav-links';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -77,12 +78,6 @@ export default function HeaderClient({ settings, solutions, industries, aiTools 
   };
   
   const pathname = usePathname();
-  const navLinks = [
-    { href: "/about", label: "About" },
-    { href: "/invest", label: "Invest" },
-    { href: "/partner", label: "Partners" },
-  ];
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -144,19 +139,7 @@ export default function HeaderClient({ settings, solutions, industries, aiTools 
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              {navLinks.map((link) => (
-                <NavigationMenuItem key={link.href}>
-                  <NavigationMenuLink
-                    asChild
-                    active={pathname === link.href}
-                    className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
-                  >
-                    <Link href={link.href}>
-                      {link.label}
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
+                <DesktopNavLinks />
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
