@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect, useRef } from 'react';
 import type { BriefcaseData } from './briefcase';
 import type { CartItem, DailySales, PosProduct } from './pos-data.schema';
 import type { Product } from './products.schema';
@@ -109,13 +109,13 @@ export const StoreProvider = ({ children, initialState }: { children: ReactNode,
     const storeRef = useRef<StoreType>();
 
     if (!storeRef.current) {
-        const state: AppState = { ...initialState, isClient: false };
+        let state = { ...initialState, isClient: false };
         const listeners = new Set<() => void>();
-
+        
         storeRef.current = {
             get: () => state,
             set: (updater) => {
-                Object.assign(state, updater(state));
+                state = updater(state);
                 listeners.forEach((l) => l());
             },
             subscribe: (listener) => {
@@ -124,11 +124,10 @@ export const StoreProvider = ({ children, initialState }: { children: ReactNode,
             },
         };
     }
-
+    
+    // This effect runs once on the client to mark it as hydrated.
     useEffect(() => {
-        if (storeRef.current) {
-            storeRef.current.set(s => ({...s, isClient: true}));
-        }
+        storeRef.current?.set(s => ({...s, isClient: true}));
     }, []);
 
     return (
@@ -137,5 +136,3 @@ export const StoreProvider = ({ children, initialState }: { children: ReactNode,
         </StoreContext.Provider>
     );
 };
-
-    

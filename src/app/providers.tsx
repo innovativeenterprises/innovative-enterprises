@@ -45,5 +45,3 @@ export function Providers({
     </ThemeProvider>
   );
 }
-
-    

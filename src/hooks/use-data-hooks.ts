@@ -1,24 +1,23 @@
+
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useSyncExternalStore } from 'react';
 import { StoreContext, type AppState } from '@/lib/global-store';
-import type { StoreType } from '@/lib/global-store';
 
 export const useStore = <T>(selector: (state: AppState) => T): T => {
     const store = useContext(StoreContext);
     if (!store) {
         throw new Error('useStore must be used within a StoreProvider.');
     }
-    const [state, setState] = useState(() => selector(store.get())); 
-
-    useEffect(() => {
-        const unsubscribe = store.subscribe(() => {
-            setState(selector(store.get()));
-        });
-        return () => unsubscribe();
-    }, [store, selector]);
-
-    return state;
+    
+    // The useSyncExternalStore hook is the key to correctly subscribing to an external store.
+    // The third argument, getServerSnapshot, is crucial for SSR. By returning the selector's
+    // value from the initial state, we ensure the server render matches the client.
+    return useSyncExternalStore(
+      store.subscribe,
+      () => selector(store.get()),
+      () => selector(store.get()) // Server snapshot
+    );
 };
 
 export const useCartData = () => {
@@ -37,22 +36,21 @@ export const useCartData = () => {
 export const useProductsData = () => {
     const store = useContext(StoreContext);
     if (!store) throw new Error('useProductsData must be used within a StoreProvider.');
-
     const products = useStore(s => s.products);
     const storeProducts = useStore(s => s.storeProducts);
-    const isClient = useStore(s => s.isClient);
-
     const setProducts = (updater: (prev: AppState['products']) => AppState['products']) => {
         store.set(s => ({ ...s, products: updater(s.products) }));
     };
+    const setStoreProducts = (updater: (prev: AppState['storeProducts']) => AppState['storeProducts']) => {
+        store.set(s => ({ ...s, storeProducts: updater(s.storeProducts) }));
+    };
 
-    return { products, storeProducts, setProducts, isClient };
+    return { products, setProducts, storeProducts, setStoreProducts, isClient: useStore(s => s.isClient) };
 }
 
 export const useSaaSProductsData = () => {
     const data = useStore(s => s.saasProducts);
-    const isClient = useStore(s => s.isClient);
-    return { data, isClient };
+    return { data, isClient: useStore(s => s.isClient) };
 };
 
 export const useProvidersData = () => {
@@ -73,7 +71,12 @@ export const useOpportunitiesData = () => {
     };
     return { data, setData, isClient: useStore(s => s.isClient) };
 }
-export const useServicesData = () => useStore(s => s.services);
+export const useServicesData = () => {
+    const services = useStore(s => s.services);
+    const isClient = useStore(s => s.isClient);
+    return { services, isClient };
+}
+
 export const useLeasesData = () => {
     const store = useContext(StoreContext);
     if (!store) throw new Error('useLeasesData must be used within a StoreProvider.');
@@ -169,6 +172,11 @@ export const useBeautySpecialistsData = () => {
     };
     return { specialists, setSpecialists, isClient: useStore(s => s.isClient) };
 }
+export const useAssetsData = () => {
+    const assets = useStore(s => s.assets);
+    const isClient = useStore(s => s.isClient);
+    return { assets, isClient };
+};
 export const useUsedItemsData = () => {
      const store = useContext(StoreContext);
     if (!store) throw new Error('useUsedItemsData must be used within a StoreProvider.');
@@ -181,11 +189,11 @@ export const useUsedItemsData = () => {
 export const useGiftCardsData = () => {
     const store = useContext(StoreContext);
     if (!store) throw new Error('useGiftCardsData must be used within a StoreProvider.');
-    const giftCards = useStore(s => s.giftCards);
-    const setGiftCards = (updater: (prev: AppState['giftCards']) => AppState['giftCards']) => {
+    const data = useStore(s => s.giftCards);
+    const setData = (updater: (prev: AppState['giftCards']) => AppState['giftCards']) => {
         store.set(s => ({ ...s, giftCards: updater(s.giftCards) }));
     };
-    return { giftCards, setGiftCards, isClient: useStore(s => s.isClient) };
+    return { data, setData, isClient: useStore(s => s.isClient) };
 }
 export const useStudentsData = () => {
     const store = useContext(StoreContext);
@@ -205,10 +213,26 @@ export const useMembersData = () => {
     };
     return { members, setMembers, isClient: useStore(s => s.isClient) };
 }
-export const useCommunitiesData = () => useStore(s => ({ communities: s.communities, isClient: s.isClient }));
-export const useEventsData = () => useStore(s => s.communityEvents);
-export const useFinancesData = () => useStore(s => s.communityFinances);
-export const useAlumniJobsData = () => useStore(s => s.alumniJobs);
+export const useCommunitiesData = () => {
+    const communities = useStore(s => s.communities);
+    const isClient = useStore(s => s.isClient);
+    return { communities, isClient };
+};
+export const useEventsData = () => {
+    const events = useStore(s => s.communityEvents);
+    const isClient = useStore(s => s.isClient);
+    return { events, isClient };
+}
+export const useFinancesData = () => {
+    const finances = useStore(s => s.communityFinances);
+    const isClient = useStore(s => s.isClient);
+    return { finances, isClient };
+}
+export const useAlumniJobsData = () => {
+    const jobs = useStore(s => s.alumniJobs);
+    const isClient = useStore(s => s.isClient);
+    return { jobs, isClient };
+}
 
 export const usePosProductsData = () => {
     const posProducts = useStore(s => s.posProducts);

@@ -70,5 +70,3 @@ export default function Hero({ clients }: { clients: Client[]}) {
     </section>
   );
 }
-
-    
