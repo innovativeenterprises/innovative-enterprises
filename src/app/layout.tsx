@@ -1,10 +1,13 @@
 
+'use server';
+
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
 import { getProducts, getServices, getClients, getTestimonials, getAiTools, getSettings, getStoreProducts, getProviders, getOpportunities, getStages, getCostSettings, getRaahaData, getLeases, getStairspaceListings, getStairspaceRequests, getBeautyData, getAssets, getUsedItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getPosProducts, getDailySales, getSaasProducts, getStockItems, getPricing, getApplications, getBriefcase, getInvestors, getKnowledgeBase, getCfoData, getProperties, getSolutions, getIndustries, getStaffData } from '@/lib/firestore';
+import type { AppState } from '@/lib/global-store';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,13 +57,51 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSettings();
+  
+  const [
+        settings, products, storeProducts, services, providers, opportunities, 
+        clients, testimonials, aiTools, stages, costSettings, raahaData, leases, 
+        stairspaceListings, stairspaceRequests, beautyData, assets, usedItems, 
+        giftCards, students, communities, communityEvents, communityFinances, 
+        communityMembers, alumniJobs, rentalAgencies, cars, posProducts, dailySales,
+        saasProducts, stockItems, pricing, applications, briefcase, investors, 
+        knowledgeBase, cfoData, properties, solutions, industries, staffData
+    ] = await Promise.all([
+        getSettings(), getProducts(), getStoreProducts(), getServices(), getProviders(), getOpportunities(),
+        getClients(), getTestimonials(), getAiTools(), getStages(), getCostSettings(), getRaahaData(), getLeases(),
+        getStairspaceListings(), getStairspaceRequests(), getBeautyData(), getAssets(), getUsedItems(),
+        getGiftCards(), getStudents(), getCommunities(), getCommunityEvents(), getCommunityFinances(),
+        getCommunityMembers(), getAlumniJobs(), getRentalAgencies(), getCars(), getPosProducts(), getDailySales(),
+        getSaasProducts(), getStockItems(), getPricing(), getApplications(), getBriefcase(), getInvestors(),
+        getKnowledgeBase(), getCfoData(), getProperties(), getSolutions(), getIndustries(), getStaffData()
+    ]);
+  
+  const initialAppState: Partial<AppState> = {
+    settings, products, storeProducts, services, providers, opportunities,
+    clients, testimonials, aiTools, stages, costSettings, signedLeases: leases,
+    stairspaceListings, stairspaceRequests, assets, usedItems, giftCards,
+    students, communities, communityEvents, communityFinances, communityMembers,
+    alumniJobs, rentalAgencies, cars, posProducts, dailySales, saasProducts,
+    stockItems, pricing, applications, briefcase, investors, knowledgeBase, cfoData, properties,
+    solutions, industries,
+    raahaAgencies: raahaData.raahaAgencies,
+    raahaWorkers: raahaData.raahaWorkers,
+    raahaRequests: raahaData.raahaRequests,
+    beautyCenters: beautyData.beautyCenters,
+    beautyServices: beautyData.beautyServices,
+    beautySpecialists: beautyData.beautySpecialists,
+    beautyAppointments: beautyData.beautyAppointments,
+    leadership: staffData.leadership,
+    staff: staffData.staff,
+    agentCategories: staffData.agentCategories,
+  };
+
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialSettings={settings}>
+        <Providers initialState={initialAppState as AppState}>
           {children}
         </Providers>
       </body>

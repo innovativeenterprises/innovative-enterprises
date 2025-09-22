@@ -2,7 +2,6 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-
 import type { BriefcaseData } from './briefcase';
 import type { CartItem, DailySales, PosProduct } from './pos-data.schema';
 import type { Product } from './products.schema';
@@ -44,7 +43,6 @@ import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { Application } from './admissions-applications';
-
 
 export interface AppState {
   isClient: boolean;
@@ -99,11 +97,9 @@ export interface AppState {
   aiTools: AiTool[];
 };
 
-
 export type StoreType = {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
-  isClient: boolean;
 };
 
 const StoreContext = createContext<StoreType | undefined>(undefined);
@@ -122,16 +118,13 @@ export const StoreProvider = ({ children, initialState }: { children: ReactNode,
       ...initialState, 
       isClient: false 
     });
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
-        setState(s => ({...s, ...initialState, isClient: true}));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialState]);
+        setState(s => ({...s, isClient: true}));
+    }, []);
 
     return (
-        <StoreContext.Provider value={{ state, setState, isClient }}>
+        <StoreContext.Provider value={{ state, setState }}>
             {children}
         </StoreContext.Provider>
     );

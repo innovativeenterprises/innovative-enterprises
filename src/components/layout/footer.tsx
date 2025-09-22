@@ -1,27 +1,20 @@
 
-'use server';
+'use client';
 
-import { getProducts, getServices, getStaffData } from '@/lib/firestore';
-import { initialSettings } from '@/lib/settings';
-import FooterClient from './footer-client';
-import type { AppState } from '@/lib/global-store';
+import { useStore } from "@/hooks/use-data-hooks";
+import FooterClient from "./footer-client";
 
+export default function Footer() {
+    const { state } = useStore();
 
-export default async function Footer() {
-    const [products, services, staffData] = await Promise.all([
-        getProducts(),
-        getServices(),
-        getStaffData(),
-    ]);
-
-    const initialAppState = {
-        products,
-        services,
-        leadership: staffData.leadership,
-        staff: staffData.staff,
-        agentCategories: staffData.agentCategories,
-        settings: initialSettings,
-    } as unknown as AppState;
-
-  return <FooterClient initialAppState={initialAppState}/>;
+    const appState = {
+        products: state.products,
+        services: state.services,
+        leadership: state.leadership,
+        staff: state.staff,
+        agentCategories: state.agentCategories,
+        settings: state.settings,
+    };
+    
+  return <FooterClient initialAppState={appState as any}/>;
 }

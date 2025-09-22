@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -7,8 +8,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ChatWidget from '@/components/chat-widget';
 import { Toaster } from '@/components/ui/toaster';
-import { StoreProvider } from '@/lib/global-store';
-import type { AppState } from '@/lib/global-store';
+import { StoreProvider, type AppState } from '@/lib/global-store';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
     return (

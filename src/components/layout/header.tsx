@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -25,10 +26,64 @@ import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
 import { useCartData } from '@/hooks/use-data-hooks';
-import MobileNavLinks from './mobile-nav-links';
-import DesktopNavLinks from './desktop-nav-links';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useNavLinksData } from '@/hooks/use-data-hooks';
+import {
+  ListItem,
+  NavigationMenuContent as NavMenuContent,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
+
+const MobileNavLinks = ({ handleLinkClick }: { handleLinkClick: () => void }) => {
+    const { solutions, industries, aiTools } = useNavLinksData();
+    const navLinks = [
+        { href: "/about", label: "About" },
+        { href: "/invest", label: "Invest" },
+        { href: "/partner", label: "Partners" },
+    ];
+    return (
+        <div className="flex flex-col gap-2">
+            {navLinks.map((link) => (
+                <Button
+                key={link.href}
+                asChild
+                variant="ghost"
+                className="justify-start text-base"
+                onClick={handleLinkClick}
+                >
+                <Link href={link.href}>{link.label}</Link>
+                </Button>
+            ))}
+        </div>
+    );
+}
+
+const DesktopNavLinks = () => {
+    const pathname = usePathname();
+    const navLinks = [
+        { href: "/about", label: "About" },
+        { href: "/invest", label: "Invest" },
+        { href: "/partner", label: "Partners" },
+    ];
+    return (
+        <>
+            {navLinks.map((link) => (
+                <NavigationMenuItem key={link.href}>
+                <NavigationMenuLink
+                    asChild
+                    active={pathname === link.href}
+                    className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
+                >
+                    <Link href={link.href}>
+                    {link.label}
+                    </Link>
+                </NavigationMenuLink>
+                </NavigationMenuItem>
+            ))}
+        </>
+    );
+};
 
 export default function Header() { 
   const { cart, isClient } = useCartData();
@@ -40,14 +95,6 @@ export default function Header() {
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
   };
-  
-  const pathname = usePathname();
-  const navLinks = [
-    { href: "/about", label: "About" },
-    { href: "/invest", label: "Invest" },
-    { href: "/partner", label: "Partners" },
-  ];
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -58,19 +105,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
             <NavigationMenuList>
-              {navLinks.map((link) => (
-                <NavigationMenuItem key={link.href}>
-                  <NavigationMenuLink
-                    asChild
-                    active={pathname === link.href}
-                    className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
-                  >
-                    <Link href={link.href}>
-                      {link.label}
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
+              <DesktopNavLinks />
             </NavigationMenuList>
           </NavigationMenu>
         </nav>

@@ -9,7 +9,7 @@ const useDataSlice = <T, K extends keyof ReturnType<typeof useStore>['state']>(
     sliceName: K,
     initialData?: T[]
 ) => {
-    const { state, setState, isClient } = useStore();
+    const { state, setState } = useStore();
 
     const data = state[sliceName] as T[];
     const setData = (updater: (prev: T[]) => T[]) => {
@@ -17,12 +17,12 @@ const useDataSlice = <T, K extends keyof ReturnType<typeof useStore>['state']>(
     };
 
     useEffect(() => {
-        if (initialData && isClient && (state[sliceName] as T[]).length === 0) {
+        if (initialData && state.isClient && (state[sliceName] as T[]).length === 0) {
            setData(() => initialData);
         }
-    }, [initialData, isClient, sliceName, state, setData]);
+    }, [initialData, state.isClient, sliceName, state, setData]);
 
-    return { data, setData, isClient };
+    return { data, setData, isClient: state.isClient };
 };
 
 export { useStore };
@@ -53,15 +53,15 @@ export const useStairspaceData = (initialData?: any[]) => {
 export const useStairspaceRequestsData = (initialData?: any[]) => {
      const slice = useDataSlice('stairspaceRequests', initialData);
     return {
-        stairspaceRequests: slice.data,
-        setStairspaceRequests: slice.setData,
+        data: slice.data,
+        setData: slice.setData,
         isClient: slice.isClient,
     }
 }
 export const useStaffData = (initialData?: any) => {
-    const { state, setState, isClient } = useStore();
+    const { state, setState } = useStore();
     useEffect(() => {
-        if (initialData && isClient && state.leadership.length === 0) {
+        if (initialData && state.isClient && state.leadership.length === 0) {
             setState(s => ({ 
                 ...s, 
                 leadership: initialData.leadership,
@@ -69,7 +69,7 @@ export const useStaffData = (initialData?: any) => {
                 agentCategories: initialData.agentCategories,
              }));
         }
-    }, [initialData, isClient, setState, state.leadership.length]);
+    }, [initialData, state.isClient, setState, state.leadership.length]);
 
     return {
         leadership: state.leadership,
@@ -82,9 +82,9 @@ export const useAgenciesData = (initialData?: any[]) => useDataSlice('raahaAgenc
 export const useWorkersData = (initialData?: any[]) => useDataSlice('raahaWorkers', initialData);
 export const useRequestsData = (initialData?: any[]) => useDataSlice('raahaRequests', initialData);
 export const useBeautyData = (initialAgencies?: any[], initialServices?: any[], initialAppointments?: any[]) => {
-    const { state, setState, isClient } = useStore();
+    const { state, setState } = useStore();
     useEffect(() => {
-        if(isClient && !state.beautyCenters.length) {
+        if(state.isClient && !state.beautyCenters.length) {
             setState(s => ({
                 ...s,
                 beautyCenters: initialAgencies || [],
@@ -92,7 +92,7 @@ export const useBeautyData = (initialAgencies?: any[], initialServices?: any[], 
                 beautyAppointments: initialAppointments || [],
             }))
         }
-    }, [isClient, setState, initialAgencies, initialServices, initialAppointments, state.beautyCenters.length]);
+    }, [state.isClient, setState, initialAgencies, initialServices, initialAppointments, state.beautyCenters.length]);
     const setAgencies = (updater: (prev: any[]) => any[]) => setState(s => ({...s, beautyCenters: updater(s.beautyCenters)}));
     const setServices = (updater: (prev: any[]) => any[]) => setState(s => ({...s, beautyServices: updater(s.beautyServices)}));
     const setAppointments = (updater: (prev: any[]) => any[]) => setState(s => ({...s, beautyAppointments: updater(s.beautyAppointments)}));
@@ -122,7 +122,14 @@ export const useCommunitiesData = (initialData?: any[]) => useDataSlice('communi
 export const useEventsData = (initialData?: any[]) => useDataSlice('communityEvents', initialData);
 export const useFinancesData = (initialData?: any[]) => useDataSlice('communityFinances', initialData);
 export const useAlumniJobsData = (initialData?: any[]) => useDataSlice('alumniJobs', initialData);
-export const usePosProductsData = (initialData?: any[]) => useDataSlice('posProducts', initialData);
+export const usePosProductsData = (initialData?: any[]) => {
+    const slice = useDataSlice('posProducts', initialData);
+    return {
+        posProducts: slice.data,
+        setPosProducts: slice.setData,
+        isClient: slice.isClient,
+    }
+}
 export const usePosData = (initialData?: any[]) => {
     const salesSlice = useDataSlice('dailySales', initialData);
     return {
@@ -141,12 +148,12 @@ export const useStockItemsData = (initialData?: any[]) => {
 }
 export const usePropertiesData = (initialData?: any[]) => useDataSlice('properties', initialData);
 export const useBriefcaseData = (initialData?: any) => {
-    const { state, setState, isClient } = useStore();
+    const { state, setState } = useStore();
      useEffect(() => {
-        if (initialData && isClient && !state.briefcase) {
+        if (initialData && state.isClient && !state.briefcase) {
            setState(s => ({ ...s, briefcase: initialData }));
         }
-    }, [initialData, isClient, setState, state.briefcase]);
+    }, [initialData, state.isClient, setState, state.briefcase]);
     return {
         data: state.briefcase,
         setData: (updater: (prev: typeof state.briefcase) => typeof state.briefcase) => {
