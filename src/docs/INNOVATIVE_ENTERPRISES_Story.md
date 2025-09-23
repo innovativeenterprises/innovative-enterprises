@@ -98,96 +98,60 @@ This chapter provides a detailed breakdown of each product and service offered b
 ### 4.1. Core Business Services
 
 #### Sanad Hub Platform
--   **Executive Summary:** A digital gateway that connects the public and businesses with the network of physical Sanad Service Centres across Oman. It transforms a fragmented, offline process into a streamlined, digital marketplace for government services.
--   **Concept:** The platform allows clients to submit a government service request (e.g., "Renew Commercial Registration") from a single interface. The request is then intelligently analyzed and routed to a network of vetted Sanad offices. These offices can then bid on the task, providing competitive quotes directly to the client. This model increases convenience and transparency for clients while generating new business for the Sanad offices.
--   **Objective:** To become the #1 digital channel for all government-related paperwork and transactions in Oman, reducing time and cost for clients and increasing business for Sanad offices.
--   **Methodology:**
-    1.  A user navigates to the Sanad Hub page and selects a specific government service from a predefined, categorized list.
-    2.  This selection triggers the `analyzeSanadTask` flow, powered by the AI agent **Fahim**. Fahim has been trained on Omani government regulations and procedures.
-    3.  Fahim's flow returns a checklist of required documents and important prerequisites for the selected service, which is displayed to the user.
-    4.  The user fills out their contact information, adds any relevant notes, and uploads the required documents.
-    5.  Upon submission, the task package is saved to the `opportunities` collection in Firestore. A notification is then automatically sent to all relevant Sanad offices registered on the platform.
-    6.  Sanad office partners view the task details in their dedicated dashboard and can submit a competitive bid for the work.
-    7.  The client receives notifications as bids arrive, allowing them to compare offers and select the best provider for their needs.
+-   **Purpose:** To digitize and streamline the process of procuring government-related services from Sanad Service Centres in Oman.
+-   **How it Works:** A user selects a government service (e.g., "Renew Commercial Registration"). The AI agent **Fahim** analyzes the request and provides a checklist of required documents. The user uploads the documents, and the task is broadcasted as a tender to a network of vetted Sanad offices, who then bid for the work. This creates a transparent and efficient marketplace.
 
 #### Business Hub
--   **Executive Summary:** A B2B and B2C marketplace designed to connect businesses, freelancers, and clients for new project opportunities, acting as a local, curated alternative to global freelance platforms.
--   **Concept:** Businesses can post projects or tasks (e.g., "Need a new company logo" or "Seeking a freelance accountant for quarterly audit"). A network of vetted local service providers (freelancers, agencies) can then browse these opportunities and submit proposals or bids. The platform is guided by the AI agent **Hubert**, who assists users in findin
-g the right service categories and providers.
--   **Objective:** To foster a vibrant local ecosystem of service providers and clients, keeping business and talent within the region and making it easier for businesses to find high-quality local expertise.
--   **Methodology:**
-    1.  A business user navigates to the `/submit-work` page and fills out a form detailing their project requirements, budget, and timeline.
-    2.  This submission triggers the `analyzeWorkOrder` flow, powered by the AI agent **Talia**.
-    3.  Talia categorizes the submission (e.g., 'Design', 'Development', 'Consulting') and creates a new entry in the `opportunities` collection in Firestore.
-    4.  Registered providers who have listed the relevant category in their profile are notified of the new opportunity.
-    5.  Providers can then review the work order and submit a detailed proposal or a direct bid.
-    6.  The client reviews the proposals, communicates with potential providers, and hires the best fit for their project.
+-   **Purpose:** To create a local B2B and B2C marketplace connecting businesses with Omani service providers, freelancers, and agencies.
+-   **How it Works:** A business posts a project or task (e.g., "Need a company logo"). The AI agent **Talia** categorizes the opportunity and notifies relevant providers. Providers can then submit proposals, fostering a local ecosystem of talent and business.
 
 #### Voxi Translator
--   **Executive Summary:** An enterprise-grade, AI-powered tool for high-fidelity translation of official and technical documents, such as legal contracts, financial reports, and medical records.
--   **Concept:** Users can upload a document in various formats (PDF, image, text). They then specify the source and target languages and the document type (e.g., 'Legal Contract'). The AI agent **Voxi**, which is specifically trained for context-aware translation, processes the document and provides a translation that preserves the original formatting and uses industry-specific terminology.
--   **Objective:** To offer a faster, more affordable, and highly accurate alternative to traditional human translation services, particularly for complex and official documents where precision is critical.
--   **Inputs:** `documentDataUri`, `sourceLanguage`, `targetLanguage`, `documentType`.
--   **Outputs:** `formattedTranslatedText` (maintaining the original layout, including tables and lists), `cleanTranslatedText` (for easy copying), and a formal `verificationStatement`.
--   **Methodology:**
-    1.  The user uploads a document through the `/document-translator` page.
-    2.  The frontend converts the file to a Data URI and calls the `translateDocument` flow.
-    3.  The **Voxi** agent, powered by a multimodal Gemini model, reads and understands the document's content and structure.
-    4.  It performs the translation from the specified source to the target language, paying close attention to the `documentType` to ensure the correct terminology and tone are used.
-    5.  The flow generates two versions of the translated output: one that meticulously replicates the original formatting (including placeholders for non-text elements like stamps or signatures) and a clean text version. It also generates a formal statement of translation accuracy.
+-   **Purpose:** To provide enterprise-grade, high-fidelity AI-powered translation for official documents.
+-   **How it Works:** A user uploads a document (PDF, image) and specifies the language and document type (e.g., 'Legal Contract'). The AI agent **Voxi** uses a multimodal model to read, understand, and translate the text, preserving the original formatting and using context-specific terminology.
 
 ### 4.2. SaaS Platforms
 
-This section covers our standalone Software-as-a-Service products.
-
 #### GENIUS Career Platform
--   **Executive Summary:** An end-to-end AI career coach that helps job seekers optimize their CVs for modern Applicant Tracking Systems (ATS) and prepare for interviews with confidence.
--   **Concept:** This is a two-part tool. The **CV Enhancer** analyzes a user's uploaded CV, provides an ATS compliance score, identifies weaknesses, and generates a new, enhanced version tailored to a specific job title. The **AI Interview Coach** generates a list of challenging, role-specific questions and can even provide feedback on the user's answers.
--   **Objective:** To empower Omani and regional job seekers with the AI-driven tools needed to compete effectively in the modern, automated job market.
--   **AI Agents:** The platform is powered by **Hira** (for CV analysis and enhancement) and **Coach** (for interview question generation and feedback).
--   **Methodology (CV Enhancer):**
-    1.  A user uploads their CV on the `/cv-enhancer` page.
-    2.  The `analyzeCv` flow is called. This flow first uses a sub-prompt to repair and extract clean text from the document, then passes that text to Hira for analysis, which returns a detailed ATS compatibility report.
-    3.  The user then provides a target job title and optionally pastes the job advertisement.
-    4.  The `generateEnhancedCv` flow is called, where Hira uses the original CV content and the target position to generate a completely new, optimized CV and a tailored cover letter in Markdown format.
--   **Methodology (Interview Coach):**
-    1.  The user enters a job title on the Interview Coach tab.
-    2.  The `generateInterviewQuestions` flow is called, and the **Coach** agent returns a list of 10-15 relevant behavioral, technical, and situational questions.
-    3.  The user can then practice by providing an answer to a question.
-    4.  Submitting the answer calls the `getInterviewFeedback` flow, where Coach analyzes the answer's structure and content, providing constructive feedback for improvement.
+-   **Purpose:** To provide job seekers with AI-powered tools to compete in the modern job market.
+-   **How it Works:** The platform has two main features. The **CV Enhancer**, powered by **Hira**, analyzes a user's resume for ATS compatibility and generates an enhanced version. The **AI Interview Coach**, powered by **Coach**, generates role-specific interview questions and provides feedback on user responses.
 
 #### RAAHA Platform
--   **Executive Summary:** An AI-powered, white-label Software-as-a-Service (SaaS) platform designed for domestic workforce and maid service agencies. It provides them with a branded digital solution to streamline their recruitment, management, and client-facing processes.
--   **Concept:** Each agency gets a private, secure dashboard to manage their database of candidates (helpers). They also get a public-facing portal that their clients can use to find a helper. When a client describes their needs in natural language (e.g., "I need a nanny who can also cook and speaks English"), an AI agent analyzes the request and intelligently matches it against the agency's database of available candidates.
--   **Objective:** To modernize the traditionally manual domestic workforce industry by providing agencies with powerful digital tools that improve efficiency, transparency, and client satisfaction.
--   **Methodology:**
-    1.  An agency's client visits the agency's white-labeled portal, specifically the `/raaha/find-a-helper` page.
-    2.  The client describes their requirements in a simple text box.
-    3.  This submission calls the `findHelpers` flow.
-    4.  An AI agent analyzes the client's unstructured text, identifies key requirements (e.g., skills: 'cooking', 'childcare'; language: 'English'), and converts them into a structured query.
-    5.  The agent then compares this query against the agency's private database of worker profiles, using vector embeddings or keyword matching to find the best candidates.
-    6.  The flow returns a ranked list of the top 3-5 matches, each with a justification explaining why they are a good fit.
-    7.  The client can review these profiles and submit a hire request, which appears in the agency's private dashboard for follow-up.
-    
+-   **Purpose:** To provide a white-label SaaS solution for domestic workforce agencies to modernize their operations.
+-   **How it Works:** Agencies get a dashboard to manage their candidates. Clients use a public portal to describe their needs in natural language (e.g., "I need a nanny who can cook"). An AI agent analyzes the request, matches it against the agency's database, and recommends the top candidates.
+
 #### Beauty & Wellness Hub
-- **Executive Summary:** A complete SaaS solution for salons, spas, and barbershops. It provides tools for managing appointments, staff, services, and client relationships, all powered by an AI-assisted dashboard.
-- **Concept:** Salon owners get a dedicated dashboard to manage their services, pricing, and staff schedules. Clients can book appointments through a public-facing portal. The system helps manage bookings and client history.
-- **Objective:** To provide a modern, affordable, and easy-to-use digital management solution for the beauty and wellness industry.
-- **Methodology:**
-    1.  Salon owners configure their services, prices, and staff in the agency dashboard.
-    2.  Clients can view available services and book appointments online.
-    3.  The system tracks all appointments, sends reminders, and maintains a history of each client's visits and preferences.
-    
-#### Teacher Toolkit
--   **Executive Summary:** A suite of AI-powered tools designed to assist educators in creating engaging and dynamic learning materials, reducing preparation time and enhancing the student experience.
--   **Concept:** The flagship tool, the "Lesson Gamifier," allows teachers to upload existing lesson materials (like a PDF or text from a textbook chapter). The AI then analyzes the content and generates a variety of new, interactive formats based on the educator's selection.
--   **Objective:** To empower teachers with AI tools that automate the creation of high-quality, interactive educational content, freeing them up to focus on teaching.
--   **Methodology (Lesson Gamifier):**
-    1.  An educator navigates to the `/education-tech/lesson-gamifier` page.
-    2.  They upload a document and provide key context: the lesson's topic and the target audience (e.g., "Grade 5 students").
-    3.  They select one or more desired outputs from a list: Interactive Book (HTML), Flashcards, Presentation Outline, or a PDF Study Guide. They can also choose "Let AI Decide," in which case the AI selects the most appropriate formats.
-    4.  The `generateGamifiedLesson` flow is triggered. The AI agent analyzes the source document and generates only the requested materials.
-    5.  The generated assets are displayed in a tabbed interface, where the teacher can review, copy, download, or (in a future version) share them or save them to their connected cloud drive.
+-   **Purpose:** A complete SaaS solution for salons, spas, and barbershops.
+-   **How it Works:** It provides tools for managing appointments, staff schedules, services, pricing, and client relationships through an AI-assisted dashboard, streamlining the entire salon operation from booking to client management.
+
+#### Teacher Toolkit (Lesson Gamifier)
+-   **Purpose:** To help educators create engaging and interactive learning materials from existing content.
+-   **How it Works:** A teacher uploads a lesson document (e.g., a textbook chapter). The AI analyzes the content and, based on the teacher's selection, generates various gamified outputs like an interactive HTML book, flashcards, a presentation outline, or a PDF study guide.
+
+#### Logistics Chain AI
+-   **Purpose:** To optimize delivery routes and vehicle assignments for logistics companies.
+-   **How it Works:** A user defines their delivery tasks, vehicles, and destinations. The AI scheduling agent generates an optimized, conflict-free weekly schedule to maximize efficiency and reduce operational costs.
+
+#### SiteGuard Compliance
+-   **Purpose:** To automate safety inspections on construction sites using computer vision.
+-   **How it Works:** A user captures a photo of a worker using their device's camera. The **SiteGuard** AI agent analyzes the image in real-time to verify compliance with Personal Protective Equipment (PPE) standards, drawing annotations on the image to highlight compliant or missing safety gear (e.g., hard hats, vests).
+
+### 4.3. AI & Creative Tools
+
+#### AI Interior Designer
+-   **Purpose:** To provide users with instant, AI-generated interior design concepts.
+-   **How it Works:** A user uploads a photo of their room and selects design preferences (style, color palette). The AI uses an image-to-image model to generate a new, photorealistic image showing the room redesigned according to the chosen style.
+
+#### AI PDF Form Filler
+-   **Purpose:** To eliminate the manual effort of filling out repetitive PDF forms.
+-   **How it Works:** A user uploads any PDF form. A multimodal AI agent visually analyzes the form to identify fields and their labels (e.g., "Name," "Date of Birth"). It then fetches the user's stored data from their secure E-Briefcase and returns the precise text and coordinates needed to automatically fill out the form.
+
+#### AI-POS (Point-of-Sale)
+-   **Purpose:** To provide a smart, affordable POS system for small businesses with built-in analytics.
+-   **How it Works:** The system features a product grid for transaction processing. In the background, it records all sales data. The business owner can then interact with the AI agent **Dana**, asking natural language questions like "What was our best-selling item today?" to get instant sales insights without needing complex reports.
+
+#### Facebook Cover Generator
+-   **Purpose:** To help businesses create professional Facebook cover photos instantly.
+-   **How it Works:** A user describes their business and desired aesthetic. The AI orchestrates a two-step process: first, it generates a high-quality background image, and second, it intelligently overlays the business name and tagline onto the image, creating a ready-to-use cover photo.
 
 ---
 *This document will continue to be updated as the INNOVATIVE ENTERPRISES ecosystem evolves. It stands as a testament to our commitment to structured, AI-driven innovation.*
