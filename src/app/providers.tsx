@@ -17,14 +17,9 @@ export function Providers({ children, initialState }: { children: ReactNode, ini
     // This case should ideally not be hit if getInitialState is correct.
     // This is a fallback to prevent a hard crash.
     return (
-      <html lang="en" suppressHydrationWarning>
-        <head/>
-        <body className='min-h-screen bg-background font-sans antialiased'>
-          <div className="flex h-screen w-full items-center justify-center">
-            <p>Loading application state...</p>
-          </div>
-        </body>
-      </html>
+      <div className="flex h-screen w-full items-center justify-center bg-background text-foreground">
+        <p>Loading application state...</p>
+      </div>
     );
   }
 
