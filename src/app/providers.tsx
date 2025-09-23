@@ -8,19 +8,7 @@ import ChatWidget from '@/components/chat-widget';
 import { SettingsProvider } from '@/components/layout/settings-provider';
 import type { AppSettings } from '@/lib/settings';
 
-export function Providers({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings | null }) {
-  if (!initialSettings) {
-    return (
-        <html lang="en" suppressHydrationWarning>
-         <head/>
-         <body className='min-h-screen bg-background font-sans antialiased'>
-           <div className="flex h-screen w-full items-center justify-center">
-             <p>Error loading application state. Please try again later.</p>
-           </div>
-         </body>
-        </html>
-    );
-  }
+export function Providers({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings }) {
   
   return (
     <SettingsProvider initialSettings={initialSettings}>
