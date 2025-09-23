@@ -39,7 +39,9 @@ import { initialBriefcase } from './briefcase';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import { saasProducts } from './saas-products';
 import { initialBeautySpecialists } from './beauty-specialists';
-import { getInitialState } from './initial-state';
+import { initialRaahaAgencies } from './raaha-agencies';
+import { initialRaahaWorkers } from './raaha-workers';
+import { initialRaahaRequests } from './raaha-requests';
 
 // This file simulates fetching data from a database.
 // In a real application, you would replace these with actual Firestore queries.
@@ -110,5 +112,3 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
-
-export { getInitialState };

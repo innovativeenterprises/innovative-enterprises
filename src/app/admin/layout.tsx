@@ -86,7 +86,6 @@ export default function AdminLayout({
   
   const operations = [
       { href: '/admin/operations', label: 'Internal AI Tools', icon: GanttChartSquare },
-      { href: '/admin/pos-management', label: 'AI-POS Management', icon: Store },
       { href: '/admin/stock-clear', label: 'StockClear', icon: Warehouse },
       { href: '/admin/hadeeya', label: 'Hadeeya Gift Cards', icon: Gift },
   ];
