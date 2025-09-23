@@ -1,11 +1,10 @@
 
-
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { getInitialState } from '@/lib/firestore';
+import { getInitialState } from '@/lib/initial-state';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 
@@ -64,9 +63,9 @@ export default async function RootLayout({
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <Providers initialState={initialState}>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>
