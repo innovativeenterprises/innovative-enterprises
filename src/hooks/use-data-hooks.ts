@@ -2,13 +2,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { AppState } from '@/lib/initial-state';
-import { getEmptyState } from '@/lib/initial-state';
+import type { AppState, getInitialState } from '@/lib/initial-state';
 
 // A generic hook factory
 const createDataHook = <K extends keyof AppState>(key: K, initialData: AppState[K] | null = null) => {
   return (initData?: AppState[K] | null) => {
-    const [data, setData] = useState(initData ?? initialData ?? getEmptyState()[key]);
+    const [data, setData] = useState(initData ?? initialData ?? []);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -40,11 +39,10 @@ export const useLeasesData = createDataHook('signedLeases');
 export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
 export const useStairspaceListingsData = createDataHook('stairspaceListings');
 export const useStaffData = (initialData?: Partial<{ leadership: AppState['leadership'], staff: AppState['staff'], agentCategories: AppState['agentCategories'] }>) => {
-    const emptyState = getEmptyState();
     const [data, setData] = useState({
-        leadership: initialData?.leadership ?? emptyState.leadership,
-        staff: initialData?.staff ?? emptyState.staff,
-        agentCategories: initialData?.agentCategories ?? emptyState.agentCategories,
+        leadership: initialData?.leadership ?? [],
+        staff: initialData?.staff ?? [],
+        agentCategories: initialData?.agentCategories ?? [],
     });
     const [isClient, setIsClient] = useState(false);
     useEffect(() => { setIsClient(true); }, []);
@@ -61,11 +59,10 @@ export const useBeautyData = (initialData?: Partial<{
     specialists: AppState['beautySpecialists'], 
     appointments: AppState['beautyAppointments'] 
 }>) => {
-    const emptyState = getEmptyState();
-    const [agencies, setAgencies] = useState(initialData?.centers ?? emptyState.beautyCenters);
-    const [services, setServices] = useState(initialData?.services ?? emptyState.beautyServices);
-    const [specialists, setSpecialists] = useState(initialData?.specialists ?? emptyState.beautySpecialists);
-    const [appointments, setAppointments] = useState(initialData?.appointments ?? emptyState.beautyAppointments);
+    const [agencies, setAgencies] = useState(initialData?.centers ?? []);
+    const [services, setServices] = useState(initialData?.services ?? []);
+    const [specialists, setSpecialists] = useState(initialData?.specialists ?? []);
+    const [appointments, setAppointments] = useState(initialData?.appointments ?? []);
     const [isClient, setIsClient] = useState(false);
     useEffect(() => { setIsClient(true); }, []);
 
@@ -94,8 +91,7 @@ export const useRentalAgenciesData = createDataHook('rentalAgencies');
 export const useCarsData = createDataHook('cars');
 export const usePosProductsData = createDataHook('posProducts');
 export const usePosData = (initialData?: Partial<{ dailySales: AppState['dailySales'] }>) => {
-    const emptyState = getEmptyState();
-    const [dailySales, setDailySales] = useState(initialData?.dailySales ?? emptyState.dailySales);
+    const [dailySales, setDailySales] = useState(initialData?.dailySales ?? []);
     const [isClient, setIsClient] = useState(false);
     useEffect(() => { setIsClient(true); }, []);
     return { dailySales, setDailySales, isClient };
@@ -106,7 +102,7 @@ export const usePricingData = createDataHook('pricing');
 export const useStagesData = createDataHook('stages');
 export const useApplicationsData = createDataHook('applications');
 export const useBriefcaseData = (initialData?: AppState['briefcase']) => {
-    const [data, setData] = useState(initialData ?? getEmptyState().briefcase);
+    const [data, setData] = useState(initialData);
     const [isClient, setIsClient] = useState(false);
     useEffect(() => { setIsClient(true); }, []);
     return { data, setData, isClient };
