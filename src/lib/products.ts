@@ -77,7 +77,6 @@ const hrefMap: Record<string, string> = {
     "Nova Commerce": "/ecommerce",
     "Logistics Chain AI": "/logistics-ai",
     "AI Smart Home Estimator": "/construction-tech/smart-home-estimator",
-    "Facebook Cover Generator": "/facebook-cover-generator",
 };
 
 export const initialProducts: Product[] = allSaaSProducts.map((p, index) => ({

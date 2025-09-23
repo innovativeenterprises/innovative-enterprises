@@ -95,6 +95,7 @@ export const saasProducts: SaasCategory[] = [
             { name: "AI Interior Designer", description: "Generates interior design ideas from photos.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
             { name: "AI PDF Form Filler", description: "Intelligently fills PDF forms from profile data.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
             { name: "AI-POS", description: "Smart Point-of-Sale system for small shops.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
+            { name: "Facebook Cover Generator", description: "AI tool to generate Facebook cover images.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
         ]
     }
 ];
