@@ -149,7 +149,7 @@ export default function ProviderTable({ initialProviders, setProviders }: { init
                                 <TableCell>{provider.services}</TableCell>
                                 <TableCell>{getStatusBadge(provider.status)}</TableCell>
                                 <TableCell>
-                                    <DueDateDisplay date={provider.subscriptionExpiry} prefix="Expires:" />
+                                    <DueDateDisplay date={provider.subscriptionExpiry as string} prefix="Expires:" />
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
