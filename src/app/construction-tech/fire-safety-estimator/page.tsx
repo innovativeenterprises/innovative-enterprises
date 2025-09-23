@@ -1,8 +1,7 @@
-
 'use client';
 
 import { useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
@@ -252,6 +251,17 @@ export default function FireSafetyEstimatorPage() {
                                     </FormItem>
                                 )}
                             />
+                            {analysis && (
+                                <Alert>
+                                    <FileCheck2 className="h-4 w-4" />
+                                    <AlertTitle>AI Analysis Complete</AlertTitle>
+                                    <AlertDescription>
+                                        {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
+                                        {analysis.suggestedDvrLocation && <p><strong>Suggested Equipment Room:</strong> {analysis.suggestedDvrLocation}</p>}
+                                        <p className="text-xs mt-1">This information has been used to pre-fill some form details. Please review and continue.</p>
+                                    </AlertDescription>
+                                </Alert>
+                            )}
                             <div className="grid md:grid-cols-3 gap-6">
                                 <FormField control={form.control} name="projectType" render={({ field }) => (
                                     <FormItem><FormLabel>2. Project Type</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
@@ -276,10 +286,10 @@ export default function FireSafetyEstimatorPage() {
                                 <FormLabel>6. Special Areas</FormLabel>
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <FormField control={form.control} name="hasKitchens" render={({ field }) => (
-                                        <FormItem className="flex flex-row items-center space-x-3 space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel>Contains commercial kitchens</FormLabel></FormItem>
+                                        <FormItem className="flex flex-row items-center space-x-3 space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><Label>Contains commercial kitchens</Label></FormItem>
                                     )}/>
                                     <FormField control={form.control} name="hasServerRoom" render={({ field }) => (
-                                        <FormItem className="flex flex-row items-center space-x-3 space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel>Contains server/data room</FormLabel></FormItem>
+                                        <FormItem className="flex flex-row items-center space-x-3 space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><Label>Contains server/data room</Label></FormItem>
                                     )}/>
                                 </div>
                             </div>
