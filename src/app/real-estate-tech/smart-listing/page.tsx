@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Search, BedDouble, Bath, MapPin, Filter } from 'lucide-react';
 import { PropertyMatcherInputSchema, type PropertyMatcherInput, type PropertyMatcherOutput } from '@/ai/flows/property-matcher.schema';
 import { findBestPropertyMatch } from '@/ai/flows/property-matcher';
-import { usePropertiesData } from '@/hooks/use-global-store-data';
 import type { Property } from '@/lib/properties';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getProperties } from '@/lib/firestore';
 
 const propertyCategories = ['All', 'Villa', 'Apartment', 'Townhouse'];
 
@@ -74,7 +73,17 @@ export default function SmartListingPage() {
     const [response, setResponse] = useState<PropertyMatcherOutput | null>(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const { toast } = useToast();
-    const { properties, isClient } = usePropertiesData();
+    const [properties, setProperties] = useState<Property[]>([]);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        async function fetchData() {
+            const props = await getProperties();
+            setProperties(props);
+        }
+        fetchData();
+    }, []);
 
     const form = useForm<PropertyMatcherInput>({
         resolver: zodResolver(PropertyMatcherInputSchema),

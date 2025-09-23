@@ -13,64 +13,29 @@ import { BookingRequestForm } from '../../booking-form';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getStairspaceListings } from '@/lib/firestore';
-import { useStairspaceData } from '@/hooks/use-global-store-data';
-import type { Metadata } from 'next';
-
-// Generate static pages for each listing at build time
-export async function generateStaticParams() {
-  const listings = await getStairspaceListings();
-  return listings.map((listing) => ({
-    id: listing.id,
-  }));
-}
-
-// Generate metadata for each page
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const listings = await getStairspaceListings();
-  const listing = listings.find(l => l.id === params.id);
-
-  if (!listing) {
-    return {
-      title: 'Listing Not Found',
-    };
-  }
-
-  return {
-    title: `${listing.title} | StairSpace`,
-    description: `Details for the micro-retail space: ${listing.title}, located in ${listing.location}.`,
-    openGraph: {
-        title: listing.title,
-        description: `Rent this unique space: ${listing.title}`,
-        images: [
-            {
-            url: listing.imageUrl,
-            width: 1200,
-            height: 630,
-            alt: listing.title,
-            },
-        ],
-    },
-  };
-}
-
 
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { stairspaceListings, isClient } = useStairspaceData();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [listing, setListing] = useState<StairspaceListing | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        if(isClient && id) {
-            const foundListing = stairspaceListings.find(l => l.id === id);
+        setIsClient(true);
+        async function fetchListing() {
+            const listings = await getStairspaceListings();
+            const foundListing = listings.find(l => l.id === id);
             if (foundListing) {
                 setListing(foundListing);
             } else {
                 notFound();
             }
         }
-    }, [id, stairspaceListings, isClient]);
+        if (id) {
+            fetchListing();
+        }
+    }, [id]);
 
     if (!isClient || !listing) {
         return (
@@ -156,3 +121,4 @@ export default function StairspaceDetailPage() {
         </div>
     );
 }
+

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
@@ -36,7 +36,10 @@ export default function MyStairspaceRequestsClientPage({ initialRequests }: { in
 
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
-    const myRequests = isClient ? requests.filter(r => r.clientName === 'Anwar Ahmed') : [];
+    const myRequests = useMemo(() => {
+        if (!isClient) return [];
+        return requests.filter(r => r.clientName === 'Anwar Ahmed');
+    }, [isClient, requests]);
     
     const onSchedule = (id: string, values: InterviewValues) => {
         setRequests(prev => prev.map(r => 
