@@ -6,6 +6,7 @@ export const PosProductSchema = z.object({
     name: z.string(),
     category: z.enum(['Hot Drinks', 'Cold Drinks', 'Sandwiches', 'Snacks', 'Pastries']),
     price: z.number(),
+    stock: z.number().int(),
     imageUrl: z.string().url(),
 });
 

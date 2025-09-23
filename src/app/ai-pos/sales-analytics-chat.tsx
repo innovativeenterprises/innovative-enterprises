@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import { ChatComponent } from "@/components/chat/chat-component";
 import { BarChart, BrainCircuit } from 'lucide-react';
 import { analyzeSalesData } from '@/ai/flows/pos-agent';
