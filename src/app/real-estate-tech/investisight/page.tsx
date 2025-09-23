@@ -1,4 +1,5 @@
 
+'use server';
 
 import { BarChart } from "lucide-react";
 import InvestisightForm from "./investisight-form";
