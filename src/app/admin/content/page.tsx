@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: "Site Content Management",
-    description: "Manage your public-facing services, products, clients, and pricing."
+    description: "Manage your public-facing services, products, clients, and POS items."
 };
 
 
