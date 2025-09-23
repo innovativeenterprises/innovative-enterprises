@@ -75,6 +75,7 @@ const hrefMap: Record<string, string> = {
     "Hadeeya": "/hadeeya",
     "RAAHA": "/raaha",
     "Nova Commerce": "/ecommerce",
+    "Logistics Chain AI": "/logistics-ai",
 };
 
 export const initialProducts: Product[] = allSaaSProducts.map((p, index) => ({
