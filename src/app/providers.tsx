@@ -6,7 +6,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import { SettingsProvider } from '@/components/layout/settings-provider';
-import type { AppSettings } from '@/lib/settings';
 import { StoreProvider } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 

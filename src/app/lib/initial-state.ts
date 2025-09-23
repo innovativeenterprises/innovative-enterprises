@@ -1,19 +1,20 @@
 
+
 import type { AppSettings } from '@/lib/settings';
-import type { Product } from '@/lib/products.schema';
-import type { Provider } from '@/lib/providers.schema';
-import type { Service } from '@/lib/services.schema';
-import type { Opportunity } from '@/lib/opportunities.schema';
-import type { SignedLease } from '@/lib/leases';
-import type { BookingRequest } from '@/lib/stairspace-requests';
-import type { StairspaceListing } from '@/lib/stairspace.schema';
-import type { Agent, AgentCategory } from '@/lib/agents.schema';
-import type { Agency as RaahaAgency } from '@/lib/raaha-agencies.schema';
-import type { Worker as RaahaWorker } from '@/lib/raaha-workers';
-import type { HireRequest } from '@/lib/raaha-requests.schema';
-import type { BeautyCenter } from '@/lib/beauty-centers.schema';
-import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
-import type { BeautyService } from '@/lib/beauty-services.schema';
+import type { Product } from './products.schema';
+import type { Provider } from './providers.schema';
+import type { Service } from './services.schema';
+import type { Opportunity } from './opportunities.schema';
+import type { SignedLease } from './leases';
+import type { BookingRequest } from './stairspace-requests';
+import type { StairspaceListing } from './stairspace.schema';
+import type { Agent, AgentCategory } from './agents.schema';
+import type { Agency as RaahaAgency } from './raaha-agencies.schema';
+import type { Worker as RaahaWorker } from './raaha-workers';
+import type { HireRequest } from './raaha-requests.schema';
+import type { BeautyCenter } from './beauty-centers.schema';
+import type { BeautySpecialist } from './beauty-specialists.schema';
+import type { BeautyService } from './beauty-services.schema';
 import type { BeautyAppointment } from './beauty-appointments';
 import type { CostRate } from './cost-settings.schema';
 import type { Asset } from './assets.schema';
@@ -33,107 +34,123 @@ import type { DailySales, PosProduct, CartItem } from './pos-data.schema';
 import type { SaasCategory } from './saas-products.schema';
 import type { StockItem } from './stock-items.schema';
 import type { Pricing } from './pricing.schema';
-import { initialPricing } from './pricing';
-import { initialProducts, initialStoreProducts } from './products';
-import { initialServices } from './services';
-import { initialClients, initialTestimonials } from './clients';
-import { initialPosProducts, initialDailySales } from './pos-data';
-import { initialStages } from './stages';
-import { initialCostSettings } from './cost-settings';
-import { initialProviders } from './providers';
-import { initialStaffData } from './agents';
-import { initialRaahaAgencies } from './raaha-agencies';
-import { initialRaahaWorkers } from './raaha-workers';
-import { initialRaahaRequests } from './raaha-requests';
-import { initialLeases } from './leases';
-import { initialOpportunities } from './opportunities';
-import { initialStairspaceRequests } from './stairspace-requests';
-import { initialStairspaceListings } from './stairspace-listings';
-import { initialBeautyCenters } from './beauty-centers';
-import { initialBeautyServices } from './beauty-services';
-import { initialBeautySpecialists } from './beauty-specialists';
-import { initialBeautyAppointments } from './beauty-appointments';
-import { initialAssets } from './assets';
-import { initialUsedItems } from './used-items';
-import { initialGiftCards } from './gift-cards';
-import { initialStudents } from './students';
-import { initialCommunities } from './communities';
-import { initialEvents } from './community-events';
-import { initialFinances } from './community-finances';
-import { initialMembers } from './community-members';
-import { initialAlumniJobs } from './alumni-jobs';
-import { initialRentalAgencies } from './rental-agencies';
-import { initialCars } from './cars';
-import { saasProducts as initialSaasProducts } from './saas-products';
-import { initialStockItems } from './stock-items';
 import { initialBriefcase, type BriefcaseData } from './briefcase';
-import { initialApplications } from './admissions-applications';
+import type { Application } from './admissions-applications';
 import type { ProjectStage } from './stages';
 import type { Investor } from './investors.schema';
-import { initialInvestors } from './investors';
-import { initialKnowledgeBase } from './knowledge';
-import { initialCfoData } from './cfo-data';
 import type { KnowledgeDocument } from './knowledge.schema';
+import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
-import { initialProperties } from './properties';
-import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { AppState as AppStateType } from './global-store';
-import { saasProducts } from './saas-products';
-
+import { getProducts, getStoreProducts, getServices, getProviders, getOpportunities, getClients, getTestimonials, getPricing, getPosProducts, getDailySales, getStages, getAssets, getInvestors, getProperties, getStairspaceListings, getStairspaceRequests, getLeases, getStockItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getCostSettings, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getUsedItems, getKnowledgeBase, getApplications, getBriefcase, getSolutions, getIndustries, getAiTools, getSaasProducts, getCfoData, getStaffData, getRaahaData, getBeautyData } from './firestore';
 
 export type AppState = AppStateType;
 
 // This provides the default, empty state for the application.
 // Actual data will be fetched by server components and passed as props.
-export const getInitialState = (): Omit<AppState, 'isClient'> => ({
+export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   settings: initialSettings,
   cart: [],
-  products: initialProducts,
-  storeProducts: initialStoreProducts,
-  providers: initialProviders,
-  opportunities: initialOpportunities,
-  services: initialServices,
-  signedLeases: initialLeases,
-  stairspaceRequests: initialStairspaceRequests,
-  stairspaceListings: initialStairspaceListings,
-  leadership: initialStaffData.leadership,
-  staff: initialStaffData.staff,
-  agentCategories: initialStaffData.agentCategories,
-  raahaAgencies: initialRaahaAgencies,
-  raahaWorkers: initialRaahaWorkers,
-  raahaRequests: initialRaahaRequests,
-  beautyCenters: initialBeautyCenters,
-  beautyServices: initialBeautyServices,
-  beautySpecialists: initialBeautySpecialists,
-  beautyAppointments: initialBeautyAppointments,
-  costSettings: initialCostSettings,
-  assets: initialAssets,
-  usedItems: initialUsedItems,
-  clients: initialClients,
-  testimonials: initialTestimonials,
-  giftCards: initialGiftCards,
-  students: initialStudents,
-  communities: initialCommunities,
-  communityEvents: initialEvents,
-  communityFinances: initialFinances,
-  communityMembers: initialMembers,
-  alumniJobs: initialAlumniJobs,
-  rentalAgencies: initialRentalAgencies,
-  cars: initialCars,
-  posProducts: initialPosProducts,
-  dailySales: initialDailySales,
-  saasProducts: initialSaasProducts,
-  stockItems: initialStockItems,
-  pricing: initialPricing,
-  stages: initialStages,
-  applications: initialApplications,
+  products: [],
+  storeProducts: [],
+  providers: [],
+  opportunities: [],
+  services: [],
+  signedLeases: [],
+  stairspaceRequests: [],
+  stairspaceListings: [],
+  leadership: [],
+  staff: [],
+  agentCategories: [],
+  raahaAgencies: [],
+  raahaWorkers: [],
+  raahaRequests: [],
+  beautyCenters: [],
+  beautyServices: [],
+  beautySpecialists: [],
+  beautyAppointments: [],
+  costSettings: [],
+  assets: [],
+  usedItems: [],
+  clients: [],
+  testimonials: [],
+  giftCards: [],
+  students: [],
+  communities: [],
+  communityEvents: [],
+  communityFinances: [],
+  communityMembers: [],
+  alumniJobs: [],
+  rentalAgencies: [],
+  cars: [],
+  posProducts: [],
+  dailySales: [],
+  saasProducts: [],
+  stockItems: [],
+  pricing: [],
+  stages: [],
+  applications: [],
   briefcase: initialBriefcase,
-  investors: initialInvestors,
-  knowledgeBase: initialKnowledgeBase,
-  cfoData: initialCfoData,
-  properties: initialProperties,
-  solutions: initialSolutions,
-  industries: initialIndustries,
-  aiTools: initialAiTools,
+  investors: [],
+  knowledgeBase: [],
+  cfoData: null,
+  properties: [],
+  solutions: [],
+  industries: [],
+  aiTools: [],
 });
+
+
+export interface AppState {
+  isClient: boolean;
+  settings: AppSettings;
+  cart: CartItem[];
+  products: Product[];
+  storeProducts: Product[];
+  providers: Provider[];
+  opportunities: Opportunity[];
+  services: Service[];
+  signedLeases: SignedLease[];
+  stairspaceRequests: BookingRequest[];
+  stairspaceListings: StairspaceListing[];
+  leadership: Agent[];
+  staff: Agent[];
+  agentCategories: AgentCategory[];
+  raahaAgencies: RaahaAgency[];
+  raahaWorkers: RaahaWorker[];
+  raahaRequests: HireRequest[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautySpecialists: BeautySpecialist[];
+  beautyAppointments: BeautyAppointment[];
+  costSettings: CostRate[];
+  assets: Asset[];
+  usedItems: UsedItem[];
+  clients: Client[];
+  testimonials: Testimonial[];
+  giftCards: GiftCard[];
+  students: Student[];
+  communities: Community[];
+  communityEvents: CommunityEvent[];
+  communityFinances: CommunityFinance[];
+  communityMembers: CommunityMember[];
+  alumniJobs: JobPosting[];
+  rentalAgencies: RentalAgency[];
+  cars: Car[];
+  posProducts: PosProduct[];
+  dailySales: DailySales;
+  saasProducts: SaasCategory[];
+  stockItems: StockItem[];
+  pricing: Pricing[];
+  stages: ProjectStage[];
+  applications: Application[];
+  briefcase: BriefcaseData | null;
+  investors: Investor[];
+  knowledgeBase: KnowledgeDocument[];
+  cfoData: CfoData | null;
+  properties: Property[];
+  solutions: Solution[];
+  industries: Industry[];
+  aiTools: AiTool[];
+}

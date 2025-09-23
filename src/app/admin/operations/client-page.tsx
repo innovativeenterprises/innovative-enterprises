@@ -16,7 +16,7 @@ import PricingTable from "@/app/admin/operations/pricing-table";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { Pricing } from "@/lib/pricing.schema";
-import PosProductTable from "../pos-product-table";
+import PosProductTable from "@/app/admin/pos-product-table";
 import type { PosProduct } from "@/lib/pos-data.schema";
 
 
