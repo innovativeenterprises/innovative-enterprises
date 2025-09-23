@@ -45,35 +45,42 @@ Return only the JSON array of filled form data. Be precise with the coordinates.
   },
 );
 
-export async function fillPdfForm(input: PdfFormFillerInput): Promise<FilledFormData> {
-    const briefcase = await getBriefcase();
-    const userProfile = {
-        fullName: briefcase.applicantName,
-        ...briefcase.userDocuments.reduce((acc, doc) => {
-            if (doc.analysis) {
-                if ('personalDetails' in doc.analysis) {
-                    Object.assign(acc, doc.analysis.personalDetails);
+export const fillPdfForm = ai.defineFlow(
+    {
+        name: 'pdfFormFillerFlow',
+        inputSchema: PdfFormFillerInputSchema,
+        outputSchema: PdfFormFillerOutputSchema,
+    },
+    async (input) => {
+        const briefcase = await getBriefcase();
+        const userProfile = {
+            fullName: briefcase.applicantName,
+            ...briefcase.userDocuments.reduce((acc, doc) => {
+                if (doc.analysis) {
+                    if ('personalDetails' in doc.analysis) {
+                        Object.assign(acc, doc.analysis.personalDetails);
+                    }
+                    if ('idCardDetails' in doc.analysis) {
+                        Object.assign(acc, doc.analysis.idCardDetails);
+                    }
+                    if ('companyInfo' in doc.analysis) {
+                        Object.assign(acc, doc.analysis.companyInfo);
+                    }
                 }
-                if ('idCardDetails' in doc.analysis) {
-                    Object.assign(acc, doc.analysis.idCardDetails);
-                }
-                 if ('companyInfo' in doc.analysis) {
-                    Object.assign(acc, doc.analysis.companyInfo);
-                }
-            }
-            return acc;
-        }, {} as any)
-    };
+                return acc;
+            }, {} as any)
+        };
 
 
-    const { output } = await prompt({
-        ...input,
-        userProfile,
-    });
-    
-    if (!output) {
-        throw new Error("The AI failed to analyze or fill the form.");
+        const { output } = await prompt({
+            ...input,
+            userProfile,
+        });
+        
+        if (!output) {
+            throw new Error("The AI failed to analyze or fill the form.");
+        }
+        
+        return output;
     }
-    
-    return output;
-}
+);
