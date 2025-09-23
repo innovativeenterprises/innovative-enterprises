@@ -46,7 +46,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
 
     return { data, setData: setGlobalData, isClient } as { 
       data: AppState[K]; 
-      setData: React.Dispatch<React.SetStateAction<AppState[K]>>;
+      setData: (updater: React.SetStateAction<AppState[K]>) => void;
       isClient: boolean;
     };
   };

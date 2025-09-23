@@ -101,7 +101,7 @@ export default function SmartLeaseManagerPage() {
 
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Lease & Payment Overview</CardTitle>
+                            <CardTitle>Lease &amp; Payment Overview</CardTitle>
                              <Button asChild>
                                 <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Lease</Link>
                             </Button>

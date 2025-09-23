@@ -20,7 +20,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import { useLeasesData } from '@/hooks/use-global-store-data';
+import { useLeasesData } from '@/hooks/use-data-hooks';
 import type { SignedLease } from '@/lib/leases';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
@@ -40,7 +40,7 @@ export default function DocuChainClientPage() {
   const [response, setResponse] = useState<RealEstateContractOutput | null>(null);
   const { toast } = useToast();
   const router = useRouter();
-  const { setSignedLeases } = useLeasesData();
+  const { setData: setSignedLeases } = useLeasesData();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -154,7 +154,7 @@ export default function DocuChainClientPage() {
                                                 <FormControl>
                                                     <RadioGroupItem value="Tenancy Agreement" id="tenancy" className="sr-only" />
                                                 </FormControl>
-                                                    <FormLabel htmlFor="tenancy" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Tenancy Agreement' && 'border-primary')}>
+                                                    <FormLabel htmlFor="tenancy" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Tenancy Agreement' && 'border-primary ring-2 ring-primary')}>
                                                     Tenancy Agreement
                                                 </FormLabel>
                                             </FormItem>
