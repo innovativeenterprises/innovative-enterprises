@@ -22,7 +22,6 @@ import { InvestorSchema } from "@/lib/investors.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import InvestForm from "./invest-form";
-import { useProductsData, useInvestorsData } from "@/hooks/use-data-hooks";
 
 const investmentReasons = [
     {
@@ -127,13 +126,18 @@ const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Inve
 };
 
 function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
-    const { data: investors, setData: setInvestors, isClient } = useInvestorsData(initialInvestors);
+    const [investors, setInvestors] = useState(initialInvestors);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     const handleSave = (values: InvestorValues, id?: string) => {
         const newInvestorData = { ...values, documents: {} };
         if (id) {
-            setInvestors(prev => prev.map(inv => inv.id === id ? { ...inv, ...newInvestorData } : inv));
+            setInvestors(prev => prev.map(inv => inv.id === id ? { ...inv, ...newInvestorData } as Investor : inv));
             toast({ title: 'Investor updated.' });
         } else {
             const newInvestor: Investor = { ...newInvestorData, id: `inv_${Date.now()}` };
@@ -200,11 +204,9 @@ function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
 }
 
 export default function InvestClientPage({ initialProducts, initialInvestors }: { initialProducts: Product[], initialInvestors: Investor[] }) {
-    const { data: products } = useProductsData(initialProducts);
-
-    const liveProducts = products.filter(p => p.stage === 'Live & Operating').slice(0, 5);
-    const devProducts = products.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
-    const futureProducts = products.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
+    const liveProducts = initialProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
+    const devProducts = initialProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
+    const futureProducts = initialProducts.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">

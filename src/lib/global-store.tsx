@@ -109,11 +109,11 @@ export type StoreType = {
 export const StoreContext = createContext<StoreType | undefined>(undefined);
 
 // Create the provider component
-export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: AppState }) => {
+export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: Partial<AppState> }) => {
     const storeRef = useRef<StoreType>();
 
     if (!storeRef.current) {
-        let state = { ...initialState, isClient: false }; // Start with isClient as false
+        let state: AppState = { ...initialState as AppState, isClient: false }; // Start with isClient as false
         const listeners = new Set<() => void>();
         
         storeRef.current = {
