@@ -79,13 +79,17 @@ export default function OpportunityTable({ initialOpportunities }: { initialOppo
     const openDialog = (opp?: Opportunity) => { setSelectedOpp(opp); setIsDialogOpen(true); }
 
     const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
-        // This would be a server action in a real app.
-        toast({ title: 'Action not implemented in prototype.' });
+        if (id) {
+            setOpportunities(prev => prev.map(opp => opp.id === id ? { ...opp, ...values } : opp));
+            toast({ title: "Opportunity updated successfully." });
+        } else {
+            const newOpp: Opportunity = { ...values, id: `opp_${values.title.toLowerCase().replace(/\s+/g, '_')}` };
+            setOpportunities(prev => [newOpp, ...prev]);
+            toast({ title: "Opportunity added successfully." });
+        }
     };
     
-    const handleDelete = (id: string) => { 
-        toast({ title: 'Action not implemented in prototype.', variant: 'destructive' });
-    };
+    const handleDelete = (id: string) => { setOpportunities(prev => prev.filter(opp => opp.id !== id)); toast({ title: "Opportunity removed.", variant: "destructive" }); };
     
     return (
         <Card>

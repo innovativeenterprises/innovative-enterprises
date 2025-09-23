@@ -69,7 +69,7 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
     industries: Industry[];
     aiTools: AiTool[];
 }) { 
-  const { settings } = useSettingsData();
+  const { settings, isClient } = useSettingsData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 

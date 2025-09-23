@@ -116,7 +116,7 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
             setListings(prev => prev.map(l => (l.id === id ? { ...l, ...newListingData } as StairspaceListing : l)));
             toast({ title: 'Listing updated.' });
         } else {
-            const newListing: StairspaceListing = { ...newListingData, id: `stair_${Date.now()}` };
+            const newListing = { ...newListingData, id: `stair_${Date.now()}` };
             setListings(prev => [newListing, ...prev]);
             toast({ title: 'Listing added.' });
         }
