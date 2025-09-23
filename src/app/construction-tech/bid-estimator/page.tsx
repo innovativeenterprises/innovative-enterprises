@@ -305,10 +305,10 @@ function EstimatorForm() {
         doc.save("tender_draft_response.pdf");
         toast({ title: "PDF Downloaded!" });
   };
-
-  return (
-    <div className="space-y-8">
-        <div className="bg-background min-h-[calc(100vh-8rem)]">
+  
+    return (
+        <div className="space-y-8">
+            <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">

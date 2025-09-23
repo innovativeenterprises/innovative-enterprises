@@ -4,9 +4,8 @@
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
-import { type GenerateTenderResponseOutput } from '@/ai/flows/tender-response-assistant';
+import { type GenerateTenderResponseOutput, GenerateTenderResponseInputSchema } from '@/ai/flows/tender-response-assistant.schema';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -14,19 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, FileText, Download, Copy, Bot } from 'lucide-react';
+import { fileToDataURI } from '@/lib/utils';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-const fileToDataURI = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-};
-
-const FormSchema = z.object({
-  tenderDocuments: z.any().refine(files => files?.length > 0, 'At least one tender document is required.'),
-  projectRequirements: z.string().min(20, 'Please provide a detailed description of the project requirements.'),
+const FormSchema = GenerateTenderResponseInputSchema.extend({
+  // Adding a separate field for file input that won't be sent to the AI flow directly
+  documentFiles: z.any().refine(files => files?.length > 0, 'At least one tender document is required.'),
 });
 type FormValues = z.infer<typeof FormSchema>;
 
@@ -39,6 +31,7 @@ export default function TenderForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       projectRequirements: '',
+      companyName: 'Innovative Enterprises', // Default to our company
     },
   });
 
@@ -46,12 +39,22 @@ export default function TenderForm() {
     setIsLoading(true);
     setResponse(null);
     try {
-      const documentPromises = Array.from(data.tenderDocuments as FileList).map(fileToDataURI);
+      const documentPromises = Array.from(data.documentFiles as FileList).map(fileToDataURI);
       const tenderDocuments = await Promise.all(documentPromises);
       
       const result = await generateTenderResponse({ 
           tenderDocuments, 
-          projectRequirements: data.projectRequirements 
+          projectRequirements: data.projectRequirements,
+          companyName: data.companyName,
+          projectName: data.projectName,
+          tenderingAuthority: data.tenderingAuthority,
+          companyOverview: data.companyOverview,
+          relevantExperience: data.relevantExperience,
+          projectTeam: data.projectTeam,
+          estimatedCost: data.estimatedCost,
+          priceValidityDays: data.priceValidityDays,
+          estimatedSchedule: data.estimatedSchedule,
+          contactInfo: data.contactInfo,
       });
       setResponse(result);
     } catch (error) {
@@ -98,7 +101,7 @@ export default function TenderForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                <FormField
                 control={form.control}
-                name="tenderDocuments"
+                name="documentFiles"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tender Documents</FormLabel>
@@ -126,6 +129,49 @@ export default function TenderForm() {
                   </FormItem>
                 )}
               />
+               <Accordion type="single" collapsible>
+                  <AccordionItem value="optional-info">
+                      <AccordionTrigger>
+                        <h3 className="text-lg font-semibold">Optional: Add More Details for a Better Response</h3>
+                      </AccordionTrigger>
+                      <AccordionContent className="pt-4 space-y-4">
+                            <FormField control={form.control} name="companyName" render={({ field }) => (
+                                <FormItem><FormLabel>Your Company Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <FormField control={form.control} name="projectName" render={({ field }) => (
+                                    <FormItem><FormLabel>Project Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                <FormField control={form.control} name="tenderingAuthority" render={({ field }) => (
+                                    <FormItem><FormLabel>Tendering Authority</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                            </div>
+                            <FormField control={form.control} name="companyOverview" render={({ field }) => (
+                                <FormItem><FormLabel>Company Overview</FormLabel><FormControl><Textarea rows={3} placeholder="e.g., A reputable construction company with X years of experience..." {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                             <FormField control={form.control} name="relevantExperience" render={({ field }) => (
+                                <FormItem><FormLabel>Relevant Experience / Past Projects</FormLabel><FormControl><Textarea rows={3} placeholder="e.g., Successfully completed the Al-Ameen Mosque project..." {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                             <FormField control={form.control} name="projectTeam" render={({ field }) => (
+                                <FormItem><FormLabel>Key Project Team</FormLabel><FormControl><Textarea rows={2} placeholder="e.g., John Doe (Project Manager), Jane Smith (Lead Engineer)" {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                             <div className="grid md:grid-cols-3 gap-4">
+                                <FormField control={form.control} name="estimatedCost" render={({ field }) => (
+                                    <FormItem><FormLabel>Estimated Cost (OMR)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                 <FormField control={form.control} name="priceValidityDays" render={({ field }) => (
+                                    <FormItem><FormLabel>Price Validity (Days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                                 <FormField control={form.control} name="estimatedSchedule" render={({ field }) => (
+                                    <FormItem><FormLabel>Estimated Schedule</FormLabel><FormControl><Input placeholder="e.g., 6 months" {...field} /></FormControl><FormMessage /></FormItem>
+                                )}/>
+                            </div>
+                             <FormField control={form.control} name="contactInfo" render={({ field }) => (
+                                <FormItem><FormLabel>Your Contact Information</FormLabel><FormControl><Input placeholder="e.g., John Doe, CEO, +968 1234 5678" {...field} /></FormControl><FormMessage /></FormItem>
+                            )}/>
+                      </AccordionContent>
+                  </AccordionItem>
+              </Accordion>
 
               <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                 {isLoading ? (
