@@ -90,7 +90,7 @@ export default function EduFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/education-tech/eduflow/student-financials">
+                        <Link href="/admin/education-tech/student-financials">
                             Launch Financials <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
@@ -108,7 +108,7 @@ export default function EduFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/education-tech/student-records">
+                        <Link href="/admin/education-tech/student-records">
                             Manage Records <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>
@@ -126,7 +126,7 @@ export default function EduFlowPage() {
                 </CardHeader>
                 <CardFooter className="mt-auto">
                     <Button asChild className="w-full">
-                        <Link href="/education-tech/eduflow/student-housing">
+                        <Link href="/admin/education-tech/student-housing">
                             Launch Housing Manager <ArrowRight className="ml-2 h-4 w-4"/>
                         </Link>
                     </Button>

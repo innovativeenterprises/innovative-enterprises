@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useLeasesData } from '@/hooks/use-global-store-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
+import { DueDateDisplay } from '@/components/due-date-display';
 
 const DateDisplay = ({ dateString }: { dateString: string }) => {
     const [formattedDate, setFormattedDate] = useState('');
