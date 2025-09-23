@@ -33,12 +33,11 @@ const loggedInUser = {
     phone: "+968 99887766"
 };
 
-export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose, setStairspaceRequests }: { 
+export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: { 
     listing: StairspaceListing, 
     isOpen: boolean, 
     onOpenChange: (open: boolean) => void, 
     onClose: () => void,
-    setStairspaceRequests: (updater: (prev: BookingRequest[]) => BookingRequest[]) => void
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
@@ -70,19 +69,8 @@ export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose, set
         setIsLoading(true);
         console.log("Submitting booking request for:", listing.title, "Data:", data);
         
-        const newRequest: BookingRequest = {
-            id: `req_stair_${Date.now()}`,
-            listingId: listing.id,
-            listingTitle: listing.title,
-            clientName: data.fullName,
-            clientEmail: data.email,
-            clientPhone: data.phone,
-            message: data.message,
-            requestDate: new Date().toISOString(),
-            status: 'Pending'
-        };
-
-        setStairspaceRequests(prev => [newRequest, ...prev]);
+        // In a real app, you would save this to the database.
+        // For the prototype, this part is simulated.
         
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
@@ -131,7 +119,7 @@ export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose, set
                                     <FormItem><FormLabel>Phone</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                                 )} />
                             </div>
-                            <FormField control={form.control} name="message" render={({ field }) => (
+                             <FormField control={form.control} name="message" render={({ field }) => (
                                 <FormItem><FormLabel>Message (Optional)</FormLabel><FormControl><Textarea rows={3} placeholder="Any specific dates or questions?" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                             <DialogFooter className="pt-4">

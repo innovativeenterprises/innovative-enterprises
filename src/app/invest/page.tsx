@@ -3,7 +3,7 @@
 
 import InvestClientPage from "./client-page";
 import type { Metadata } from 'next';
-import { getProducts, getInvestors } from "@/lib/firestore";
+import { getProducts, getInvestors, getStaffData, getServices, getSettings } from "@/lib/firestore";
 
 export const metadata: Metadata = {
   title: "Invest With Us | Innovative Enterprises",
@@ -11,10 +11,26 @@ export const metadata: Metadata = {
 };
 
 export default async function InvestPage() {
-    const [products, investors] = await Promise.all([
+    const [products, investors, staffData, services, settings] = await Promise.all([
         getProducts(),
-        getInvestors()
+        getInvestors(),
+        getStaffData(),
+        getServices(),
+        getSettings()
     ]);
     const allProducts = products.filter(p => p.enabled);
-    return <InvestClientPage initialProducts={allProducts} initialInvestors={investors} />;
+
+    if (!settings) {
+        return <div>Loading...</div>; // Or some error state
+    }
+    
+    return (
+        <InvestClientPage 
+            initialProducts={allProducts} 
+            initialInvestors={investors} 
+            staffData={staffData}
+            services={services}
+            settings={settings}
+        />
+    );
 }
