@@ -49,6 +49,7 @@ import { generateBoqCategory, generateFullBoq } from './boq-generator';
 import { estimateBoq } from './boq-estimator';
 import { transformImage } from './image-transformer';
 import { analyzeSalesData } from './pos-agent';
+import { estimateSmartHome } from './smart-home-estimator';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -106,4 +107,5 @@ export {
   estimateBoq,
   transformImage,
   analyzeSalesData,
+  estimateSmartHome,
 };
