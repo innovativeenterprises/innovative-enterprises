@@ -4,7 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { getInitialState } from '@/lib/firestore';
+import { getInitialState } from '@/lib/initial-state';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 

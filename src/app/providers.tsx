@@ -14,9 +14,9 @@ export function Providers({ children, initialState }: { children: ReactNode, ini
   // We can render a fallback UI here. In a real app, you might want to show a more user-friendly error page.
   if (!initialState) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <p>Error loading application state. Please try again later.</p>
-      </div>
+        <div className="flex h-screen w-full items-center justify-center">
+            <p>Error loading application state. Please try again later.</p>
+        </div>
     );
   }
   
