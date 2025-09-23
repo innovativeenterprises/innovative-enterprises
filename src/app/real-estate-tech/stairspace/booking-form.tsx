@@ -15,7 +15,6 @@ import { Loader2, Send } from "lucide-react";
 import Image from 'next/image';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
-import { useStairspaceRequestsData } from '@/hooks/use-global-store-data';
 
 
 const BookingSchema = z.object({
@@ -34,10 +33,15 @@ const loggedInUser = {
     phone: "+968 99887766"
 };
 
-export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: { listing: StairspaceListing, isOpen: boolean, onOpenChange: (open: boolean) => void, onClose: () => void }) => {
+export const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose, setStairspaceRequests }: { 
+    listing: StairspaceListing, 
+    isOpen: boolean, 
+    onOpenChange: (open: boolean) => void, 
+    onClose: () => void,
+    setStairspaceRequests: (updater: (prev: BookingRequest[]) => BookingRequest[]) => void
+}) => {
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
-    const { setStairspaceRequests } = useStairspaceRequestsData();
     
     const form = useForm<BookingValues>({
         resolver: zodResolver(BookingSchema),

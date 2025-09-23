@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
@@ -12,7 +12,6 @@ import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useRouter } from 'next/navigation';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
-import { useRequestsData } from '@/hooks/use-data-hooks';
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -25,16 +24,22 @@ const getStatusBadge = (status: HireRequest['status']) => {
     }
 };
 
-export default function MyRequestsClientPage() {
-    const { data: requests, setData: setRaahaRequests, isClient } = useRequestsData();
+export default function MyRequestsClientPage({ initialRequests }: { initialRequests: HireRequest[] }) {
+    const [requests, setRequests] = useState<HireRequest[]>(initialRequests);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    const router = useRouter();
     
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
     const myRequests = isClient ? requests.filter(r => r.clientName === 'Ahmed Al-Farsi') : [];
     
     const onSchedule = (id: string, values: InterviewValues) => {
-        setRaahaRequests(prev => prev.map(r => 
+        setRequests(prev => prev.map(r => 
             r.id === id ? { ...r, status: 'Interviewing', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Interview Scheduled!", description: `The interview has been scheduled.` });

@@ -7,11 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, PlusCircle, Sparkles } from 'lucide-react';
-import { useStairspaceData } from '@/hooks/use-global-store-data';
 import type { StairspaceListing } from '@/lib/stairspace-listings';
 import { useRouter } from 'next/navigation';
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
@@ -42,7 +41,7 @@ export default function ListSpaceForm() {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const { toast } = useToast();
     const router = useRouter();
-    const { stairspaceListings, setStairspaceListings } = useStairspaceData();
+    const [stairspaceListings, setStairspaceListings] = useState<StairspaceListing[]>([]);
 
     const form = useForm<ListSpaceValues>({
         resolver: zodResolver(ListSpaceSchema),
@@ -128,6 +127,7 @@ export default function ListSpaceForm() {
             imageUrl,
             id: String((stairspaceListings.length > 0 ? Math.max(...stairspaceListings.map(l => Number(l.id))) : 0) + 1),
             tags: data.tags.split(',').map(tag => tag.trim()),
+            description: data.description,
         };
 
         setStairspaceListings(prev => [newListing, ...prev]);
@@ -136,7 +136,7 @@ export default function ListSpaceForm() {
         
         toast({ title: "Listing Submitted!", description: `Your space "${newListing.title}" has been added to the marketplace.` });
         setIsLoading(false);
-        router.push(`/real-estate-tech/stairspace/${newListing.id}`);
+        router.push(`/real-estate-tech/stairspace/listing/${newListing.id}`);
     };
 
     return (
@@ -213,17 +213,6 @@ export default function ListSpaceForm() {
                                         {...field}
                                     />
                                     </FormControl>
-                                     <Button
-                                        type="button"
-                                        size="sm"
-                                        variant="outline"
-                                        className="absolute bottom-2 right-2"
-                                        onClick={handleGenerateDescription}
-                                        disabled={isGeneratingDesc}
-                                    >
-                                        {isGeneratingDesc ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Sparkles className="mr-2 h-4 w-4"/>}
-                                        Generate with AI
-                                    </Button>
                                 </div>
                                 <FormMessage />
                                 </FormItem>
