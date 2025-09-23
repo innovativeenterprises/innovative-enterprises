@@ -24,7 +24,7 @@ import 'jspdf-autotable';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { fileToDataURI } from '@/lib/utils';
-
+import { useBriefcaseData } from '@/hooks/use-data-hooks';
 
 const FormSchema = BoQGeneratorInputSchema.extend({
     floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
@@ -49,6 +49,7 @@ export default function CalculatorForm() {
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const boqTableRef = useRef(null);
   const router = useRouter();
+  const { setBriefcase } = useBriefcaseData();
   
   const { toast } = useToast();
 
@@ -227,7 +228,24 @@ export default function CalculatorForm() {
   };
 
   const handleSaveToBriefcase = () => {
-    toast({ title: "Coming Soon!", description: "Saving to E-Briefcase will be implemented in a future update." });
+    if (!boqItems.length) {
+        toast({ title: 'No BoQ data to save.', variant: 'destructive'});
+        return;
+    }
+    const newBoq = {
+        id: `boq_${Date.now()}`,
+        name: form.getValues('projectName') || 'Unnamed Project',
+        date: new Date().toISOString(),
+        items: boqItems,
+    };
+    setBriefcase(prev => {
+        if (!prev) return null;
+        return {
+            ...prev,
+            savedBoqs: [newBoq, ...prev.savedBoqs],
+        }
+    });
+    toast({ title: "BoQ Saved!", description: "The project has been saved to your E-Briefcase." });
   }
 
   const handleProceedToEstimator = () => {
