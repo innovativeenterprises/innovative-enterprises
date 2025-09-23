@@ -15,4 +15,3 @@ export default async function AdminStudentFinancialsPage() {
     const students = await getStudents();
     return <StudentFinancialsClientPage initialStudents={students} />;
 }
-
