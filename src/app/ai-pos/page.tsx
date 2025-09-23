@@ -10,10 +10,10 @@ import { BrainCircuit } from 'lucide-react';
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { usePosData, usePosProductsData } from '@/hooks/use-global-store-data';
+import { usePosData, usePosProductsData } from '@/hooks/use-data-hooks';
 
 export default function AiPosPage() {
-    const { posProducts: products } = usePosProductsData();
+    const { posProducts, setPosProducts } = usePosProductsData();
     const { dailySales, setDailySales } = usePosData();
     const [isClient, setIsClient] = useState(false);
 
@@ -30,6 +30,15 @@ export default function AiPosPage() {
         setCart(prevCart => {
             const existingItem = prevCart.find(item => item.id === product.id);
             if (existingItem) {
+                // Prevent adding more than available stock
+                if (existingItem.quantity >= product.stock) {
+                    toast({
+                        title: 'Stock Limit Reached',
+                        description: `You cannot add more of ${product.name}.`,
+                        variant: 'destructive',
+                    });
+                    return prevCart;
+                }
                 return prevCart.map(item =>
                     item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
                 );
@@ -39,6 +48,18 @@ export default function AiPosPage() {
     };
 
     const handleUpdateQuantity = (productId: string, quantity: number) => {
+        const product = posProducts.find(p => p.id === productId);
+        if (!product) return;
+        
+        if (quantity > product.stock) {
+             toast({
+                title: 'Stock Limit Reached',
+                description: `Only ${product.stock} of ${product.name} available.`,
+                variant: 'destructive',
+            });
+            return;
+        }
+
         setCart(prevCart => {
             if (quantity <= 0) {
                 return prevCart.filter(item => item.id !== productId);
@@ -67,6 +88,19 @@ export default function AiPosPage() {
                 total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) * 1.05, // with 5% tax
                 timestamp: new Date().toISOString(),
             };
+            
+            // Deduct stock
+            setPosProducts(currentProducts => {
+                const updatedProducts = [...currentProducts];
+                cart.forEach(cartItem => {
+                    const productIndex = updatedProducts.findIndex(p => p.id === cartItem.id);
+                    if (productIndex !== -1) {
+                        updatedProducts[productIndex].stock -= cartItem.quantity;
+                    }
+                });
+                return updatedProducts;
+            });
+
 
             setDailySales(prev => [newTransaction, ...prev]);
 
@@ -100,7 +134,7 @@ export default function AiPosPage() {
             <main className="flex-1 overflow-hidden p-4">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
                     <div className="lg:col-span-2 h-full overflow-y-auto">
-                        <PosGrid products={products} onAddToCart={handleAddToCart} />
+                        <PosGrid products={posProducts} onAddToCart={handleAddToCart} />
                     </div>
                     <div className="lg:col-span-1 h-full">
                          <CheckoutPanel 

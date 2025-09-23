@@ -22,6 +22,7 @@ const PosProductSchema = z.object({
   name: z.string().min(2, "Name is required"),
   category: z.enum(['Hot Drinks', 'Cold Drinks', 'Sandwiches', 'Snacks', 'Pastries']),
   price: z.coerce.number().positive("Price must be a positive number"),
+  stock: z.coerce.number().int().min(0, "Stock cannot be negative"),
   imageUrl: z.string().url("A valid image URL is required"),
 });
 type PosProductValues = z.infer<typeof PosProductSchema>;
@@ -42,7 +43,7 @@ const AddEditPosProductDialog = ({
     
     useEffect(() => {
         if (isOpen) {
-            form.reset(product || { name: "", category: "Snacks", price: 0, imageUrl: "https://images.unsplash.com/photo-1599405452230-74f00454a83a?q=80&w=600&auto=format&fit=crop" });
+            form.reset(product || { name: "", category: "Snacks", price: 0, stock: 0, imageUrl: "https://images.unsplash.com/photo-1599405452230-74f00454a83a?q=80&w=600&auto=format&fit=crop" });
         }
     }, [product, form, isOpen]);
 
@@ -64,7 +65,7 @@ const AddEditPosProductDialog = ({
                         <FormField control={form.control} name="name" render={({ field }) => (
                             <FormItem><FormLabel>Product Name</FormLabel><FormControl><Input placeholder="e.g., Cappuccino" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-3 gap-4">
                             <FormField control={form.control} name="category" render={({ field }) => (
                                 <FormItem><FormLabel>Category</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -81,6 +82,9 @@ const AddEditPosProductDialog = ({
                             )} />
                              <FormField control={form.control} name="price" render={({ field }) => (
                                 <FormItem><FormLabel>Price (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="stock" render={({ field }) => (
+                                <FormItem><FormLabel>Stock</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                         </div>
                         <FormField control={form.control} name="imageUrl" render={({ field }) => (
@@ -143,6 +147,7 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
                             <TableHead>Product Name</TableHead>
                             <TableHead>Category</TableHead>
                             <TableHead className="text-right">Price (OMR)</TableHead>
+                            <TableHead className="text-right">Stock</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -155,6 +160,7 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
                                 <TableCell className="font-medium">{item.name}</TableCell>
                                 <TableCell className="text-muted-foreground">{item.category}</TableCell>
                                 <TableCell className="text-right font-mono">{item.price.toFixed(2)}</TableCell>
+                                <TableCell className="text-right font-mono">{item.stock}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <AddEditPosProductDialog product={item} onSave={handleSave}>

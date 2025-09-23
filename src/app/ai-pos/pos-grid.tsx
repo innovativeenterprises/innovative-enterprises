@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState, useMemo } from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export function PosGrid({ products, onAddToCart }: { products: PosProduct[], onAddToCart: (product: PosProduct) => void }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -33,12 +34,20 @@ export function PosGrid({ products, onAddToCart }: { products: PosProduct[], onA
                 {filteredProducts.map(product => (
                     <Card
                         key={product.id}
-                        className="cursor-pointer hover:border-primary transition-colors flex flex-col"
-                        onClick={() => onAddToCart(product)}
+                        className={cn(
+                            "cursor-pointer hover:border-primary transition-colors flex flex-col",
+                            product.stock === 0 && "opacity-50 cursor-not-allowed hover:border-muted"
+                        )}
+                        onClick={() => product.stock > 0 && onAddToCart(product)}
                     >
                         <CardHeader className="p-0">
                              <div className="relative aspect-square w-full">
                                 <Image src={product.imageUrl} alt={product.name} fill className="object-cover rounded-t-lg" />
+                                {product.stock === 0 && (
+                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                        <p className="text-white font-bold text-sm">Out of Stock</p>
+                                    </div>
+                                )}
                              </div>
                         </CardHeader>
                         <CardContent className="p-3 flex-grow">
