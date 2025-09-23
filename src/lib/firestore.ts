@@ -115,7 +115,7 @@ export const getBeautyData = async () => {
     }
 };
 
-export async function getInitialState(): Promise<AppState> {
+export async function getInitialState(): Promise<AppState | null> {
     try {
         const [
             settings, products, storeProducts, providers, opportunities, services, signedLeases,
@@ -138,7 +138,7 @@ export async function getInitialState(): Promise<AppState> {
         ]);
 
         return {
-            isClient: false,
+            isClient: false, // This will be set to true on the client
             settings,
             cart: [],
             products,
@@ -191,8 +191,6 @@ export async function getInitialState(): Promise<AppState> {
         };
     } catch (error) {
         console.error("Failed to fetch initial state:", error);
-        // In case of a catastrophic failure, return a safe-to-render empty state.
-        return getEmptyState();
+        return null;
     }
 };
-

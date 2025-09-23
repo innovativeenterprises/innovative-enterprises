@@ -149,4 +149,3 @@ export interface AppState {
   industries: Industry[];
   aiTools: AiTool[];
 }
-
