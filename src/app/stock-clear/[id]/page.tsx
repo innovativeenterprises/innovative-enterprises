@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { useStockItemsData } from '@/hooks/use-global-store-data';
+import { useStockItemsData } from '@/hooks/use-data-hooks';
 import type { StockItem } from '@/lib/stock-items.schema';
 
 const CountdownTimer = ({ endDate }: { endDate: string }) => {
