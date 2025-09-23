@@ -1,67 +1,97 @@
 # Platform Overview
 
-This document provides a comprehensive, categorized list of all 84 current projects, services, and tools within the Innovative Enterprises ecosystem, including their descriptions and current operational stage and status.
+This document provides a comprehensive, categorized list of all 88 current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
 
-## Digital Products & SaaS Platforms (39 Total)
+## Digital Products & SaaS Platforms (44 Total)
 
 ### Category: Construction Tech (11)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
-| Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Development Phase | Completed |
-| BidWise Estimator | Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing. | Testing Phase | On Track |
-| SiteGuard Compliance | Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking. | Design Phase | On Track |
+| Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Live & Operating | Completed |
+| BidWise Estimator | Automated cost estimation (material, labor, equipment) and tender management platform with dynamic pricing. | Live & Operating | Completed |
+| SiteGuard Compliance | Mobile safety inspection app with AI image recognition for PPE violations and automated permit tracking. | Live & Operating | Completed |
 | WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed |
 | ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Live & Operating | Completed |
 | ConstructFin | Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects. | Live & Operating | Completed |
-| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual) | Idea Phase | On Track |
-| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual) | Development Phase | At Risk |
+| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. | Live & Operating | Completed |
+| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
 | StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
 
-### Category: Real Estate Tech (11)
+### Category: Real Estate Tech (12)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | AI Property Valuator | Automates property appraisal using AI, considering location, size, amenities, and market trends for instant valuations. | Live & Operating | Completed |
-| Smart Listing & Matching | AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget. | Development Phase | On Track |
-| 3D Virtual Tour SaaS | Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties. | Launch Phase | On Track |
+| Smart Listing & Matching | AI matches buyers/tenants with best-fit properties based on preferences, lifestyle, and budget. | Live & Operating | Completed |
+| 3D Virtual Tour SaaS | Offers 360° tours, AR/VR staging, and auto-generates furnished views of unfurnished properties. | Live & Operating | Completed |
 | DocuChain Compliance | Auto-generates sale agreements and tenancy contracts, tracking compliance with local laws and renewal dates. | Live & Operating | Completed |
 | SmartLease Manager | Automates online rent collection, reminders, and late fee calculations, including tenant background checks. | Live & Operating | Completed |
-| InvestiSight AI | Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps. | Validation Phase | On Hold |
-| FacilityFlow SaaS | A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking. | Planning Phase | On Track |
-| PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Research Phase | On Track |
-| Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Idea Phase | On Track |
-| EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Idea Phase | On Track |
+| InvestiSight AI | Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps. | Live & Operating | Completed |
+| FacilityFlow SaaS | A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking. | Live & Operating | Completed |
+| PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Live & Operating | Completed |
+| Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed |
+| EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed |
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed |
+| StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed |
 
-### Category: Education Tech (5)
+### Category: Education Tech (7)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
-| EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Idea Phase | On Track |
-| CognitaLearn | A personalized adaptive learning platform that uses AI to create custom learning paths and gamified modules. | Idea Phase | On Track |
-| Guardian AI | A student wellbeing and success platform offering risk profiling, AI career advisory, and mental health support. | Idea Phase | On Track |
-| CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Idea Phase | On Track |
-| CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Idea Phase | On Track |
+| EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed |
+| CognitaLearn | A personalized adaptive learning platform that uses AI to create custom learning paths and gamified modules. | Live & Operating | Completed |
+| Guardian AI | A student wellbeing and success platform offering risk profiling, AI career advisory, and mental health support. | Live & Operating | Completed |
+| CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Live & Operating | Completed |
+| CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed |
+| AI Scholarship Finder | An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level. | Live & Operating | Completed |
+| Teacher Toolkit | A suite of tools for educators, including a Lesson Gamifier to convert textbooks into interactive content, flashcards, and presentations. | Live & Operating | Completed |
 
-### Category: General Platforms & SaaS (9)
+
+### Category: Automotive Tech (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Live & Operating | Completed |
+
+### Category: Fintech (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| Fintech Super-App | An integrated financial services application providing AI-driven auditing, financial analysis, and CFO dashboard capabilities. | Live & Operating | Completed |
+
+
+### Category: Gaming & Social (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Research Phase | On Track |
+
+
+### Category: Beauty & Wellness (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| Beauty & Wellness Hub | A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships. | Live & Operating | Completed |
+
+
+### Category: General Platforms & SaaS (11)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
 | APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | In Development | On Track |
-| KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | In Development | On Track |
+| KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
 | VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | In Development | On Track |
 | Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
-| AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
-| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
+| AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | Completed |
+| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Live & Operating | Completed |
+| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
+| Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed |
+
 
 ### Category: AI & Creative Tools (3)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
-| AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Idea Phase | On Track |
-| AI-POS for Education| A smart, AI-driven Point-of-Sale system for university canteens or school stores. | Research Phase | On Track |
+| AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | Completed |
+| AI-POS | A smart, AI-driven Point-of-Sale system for small shops and groceries, providing inventory management and sales analytics without needing expensive hardware. | Live & Operating | Completed |
 
 ## Core Business Services (19 Total)
 
@@ -131,5 +161,3 @@ This document provides a comprehensive, categorized list of all 84 current proje
 | Sage | Business Strategist: Conducts feasibility studies on new business ideas by leveraging other agents for research and analysis. | Enabled |
 | Navi | Innovation Agent: Analyzes market gaps and internal capabilities to suggest new products and service offerings. | Enabled |
 | Paz | Partnership Agent: Identifies and onboards new freelancers, subcontractors, and strategic partners to expand our network. | Enabled |
-
-    

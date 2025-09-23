@@ -11,7 +11,7 @@ The platform is a multi-faceted application with several core modules:
 - **Product Showcase**: A display of the company's digital products and their current development stage.
 - **AI-Powered FAQ**: An interactive chat assistant (`Aida`) to answer user questions about the company.
 - **Document Translator**: A tool (`Voxi`) to translate official documents with high fidelity.
-- **Legal Assistant**: An AI agent (`Aida`) to provide preliminary legal analysis.
+- **Legal Assistant**: An AI agent (`Lexi`) to provide preliminary legal analysis.
 - **Career Platform (GENIUS)**: An end-to-end solution (`Hira`) for career development, including a CV Enhancer and AI Interview Coach.
 - **And many more...**: Including a Video Generator, Image Generator, and Marketing Content Creator.
 
@@ -29,7 +29,11 @@ A comprehensive back-office for managing the entire platform:
 - **Site Content**: Manage the content displayed on the public-facing pages, including services, products, and client testimonials.
 - **Operations**: A suite of internal AI tools for tasks like Tender Response Generation, PRO Task Delegation, and AI Agent Training.
 
-## Tech Stack
+## Tech Stack & Architecture
+
+This project is built with a **decoupled architecture** to ensure stability and flexibility. The backend logic (AI agents, database interactions) is separate from the frontend presentation (UI components, styling). This means you can completely redesign the user interface without affecting the core functionality.
+
+For more details, see `ARCHITECTURE_MODULARITY.md`.
 
 - **Framework**: Next.js (App Router)
 - **AI/Backend**: Genkit with Google's Gemini models
@@ -79,4 +83,3 @@ This application is configured for easy deployment to Firebase App Hosting.
 ```bash
 firebase deploy --only hosting
 ```
-
