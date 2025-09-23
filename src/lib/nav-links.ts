@@ -1,13 +1,13 @@
 
 
-import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart } from "lucide-react";
+import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren } from "lucide-react";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import AmeenSmartLockIcon from "@/components/icons/ameen-smart-lock-icon";
 import KhidmaIcon from "@/components/icons/khidma-icon";
 import VmallIcon from "@/components/icons/vmall-icon";
 import AppiIcon from "@/components/icons/appi-icon";
-import { Gift, Warehouse } from "lucide-react";
+import { Gift, Warehouse, Cpu, BarChart, Calculator } from "lucide-react";
 
 export const initialSolutions = [
     {
@@ -253,6 +253,30 @@ export const initialAiTools = [
     href: "/measurement-analyzer",
     description: "Use your camera to scan an object and let our AI estimate its physical dimensions.",
     icon: Layers,
+  },
+  {
+    title: "AI Property Valuator",
+    href: "/real-estate-tech/property-valuator",
+    description: "Get an instant, data-driven market valuation for your property.",
+    icon: BarChart,
+  },
+  {
+    title: "BoQ Generator",
+    href: "/construction-tech/quantity-calculator",
+    description: "Upload a floor plan and get an AI-generated preliminary Bill of Quantities.",
+    icon: Calculator,
+  },
+  {
+    title: "Fire & Safety Estimator",
+    href: "/construction-tech/fire-safety-estimator",
+    description: "Upload a floor plan and get a preliminary fire safety equipment list and cost estimate.",
+    icon: Siren,
+  },
+   {
+    title: "AI Smart Home Estimator",
+    href: "/construction-tech/smart-home-estimator",
+    description: "Get an AI-powered cost estimate for your smart home installation.",
+    icon: Cpu,
   },
 ];
 

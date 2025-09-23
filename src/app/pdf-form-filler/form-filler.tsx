@@ -58,11 +58,37 @@ export default function FormFiller() {
     toast({ title: 'Generating PDF...', description: 'Please wait while we create your filled document.' });
 
     try {
-        const canvas = await html2canvas(pdfDisplayRef.current, { scale: 2 });
+        const doc = new jsPDF('p', 'pt', 'a4');
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        
+        // Add the image first
+        const pdfImage = new Image();
+        pdfImage.src = pdfPreviewUrl!;
+        await new Promise(resolve => { pdfImage.onload = resolve; });
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = pdfImage.width;
+        canvas.height = pdfImage.height;
+        const ctx = canvas.getContext('2d');
+        ctx!.drawImage(pdfImage, 0, 0);
+        
         const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save('filled-form.pdf');
+        const imgWidth = pdfImage.width;
+        const imgHeight = pdfImage.height;
+        const ratio = imgWidth / imgHeight;
+        let finalWidth = pdfWidth;
+        let finalHeight = finalWidth / ratio;
+        
+        doc.addImage(imgData, 'PNG', 0, 0, finalWidth, finalHeight);
+
+        // Add text on top
+        filledData.forEach(field => {
+            doc.setFontSize(field.fontSize);
+            doc.setTextColor('#0000FF'); // Blue color for filled text
+            doc.text(field.value, field.x, field.y, { align: 'left' });
+        });
+
+        doc.save('filled-form.pdf');
     } catch (e) {
         toast({ title: "Download Failed", description: "Could not generate the PDF.", variant: 'destructive' });
     }
