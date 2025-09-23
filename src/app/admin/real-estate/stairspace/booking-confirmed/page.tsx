@@ -3,7 +3,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { SuccessContent } from '../success-content';
+import { SuccessContent } from '@/app/real-estate-tech/stairspace/success-content';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 
 function PublicSuccessPage() {
@@ -14,13 +14,13 @@ function PublicSuccessPage() {
         <SuccessContent 
             requestId={requestId}
             backToBrowseHref="/real-estate-tech/stairspace"
-            backToRequestsHref="/real-estate-tech/stairspace/my-requests"
-            requestsLabel="View My Bookings"
+            backToRequestsHref="/admin/real-estate/stairspace"
+            requestsLabel="View All Bookings"
         />
     )
 }
 
-export default function StairspaceBookingConfirmedPage() {
+export default function AdminStairspaceBookingConfirmedPage() {
     return (
         <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
             <PublicSuccessPage />
