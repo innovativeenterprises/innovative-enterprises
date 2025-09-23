@@ -11,7 +11,7 @@ export const DueDateDisplay = ({
   className,
   prefix = "Due:",
 }: {
-  date?: string | Date;
+  date?: string;
   className?: string;
   prefix?: string;
 }) => {
@@ -33,7 +33,7 @@ export const DueDateDisplay = ({
     }
     
     try {
-        const dueDate = typeof date === 'string' ? new Date(date) : date;
+        const dueDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 

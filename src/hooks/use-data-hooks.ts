@@ -45,13 +45,8 @@ export const useRaahaData = () => {
 
 export const useBeautySpecialistsData = createDataHook<'beautySpecialists'>('beautySpecialists', []);
 export const useAssetsData = createDataHook<'assets'>('assets', []);
-export const useUsedItemsData = createDataHook<'usedItems'>('usedItems', []);
 export const useGiftCardsData = createDataHook<'giftCards'>('giftCards', []);
 export const useStudentsData = createDataHook<'students'>('students', []);
-export const useMembersData = createDataHook<'communityMembers'>('communityMembers', []);
-export const useEventsData = createDataHook<'communityEvents'>('communityEvents', []);
-export const useFinancesData = createDataHook<'communityFinances'>('communityFinances', []);
-export const useCommunitiesData = createDataHook<'communities'>('communities', []);
 export const useAlumniJobsData = createDataHook<'alumniJobs'>('alumniJobs', []);
 export const useCarsData = createDataHook<'cars'>('cars', []);
 export const useRentalAgenciesData = createDataHook<'rentalAgencies'>('rentalAgencies', []);

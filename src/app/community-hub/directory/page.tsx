@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import type { CommunityMember } from '@/lib/community-members';
-import { useMembersData, useCommunitiesData } from '@/hooks/use-global-store-data';
+import type { Community } from '@/lib/communities';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -34,21 +34,18 @@ const MemberCard = ({ member }: { member: CommunityMember }) => (
     </Card>
 );
 
-export default function MemberDirectoryPage() {
-    const { members, setMembers, isClient } = useMembersData();
-    const { communities } = useCommunitiesData();
+export default function MemberDirectoryPage({ initialMembers, initialCommunities }: { initialMembers: CommunityMember[], initialCommunities: Community[]}) {
+    const [members, setMembers] = useState<CommunityMember[]>(initialMembers);
+    const [communities, setCommunities] = useState<Community[]>(initialCommunities);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCommunity, setSelectedCommunity] = useState('All');
     
-    useEffect(() => {
-        // Since we removed server-side fetching for this, we ensure data is present on client-side mount
-        // This is a pattern for client-heavy pages.
-        if (isClient) {
-            // In a real app, you might fetch initial data here if it wasn't pre-loaded
-            // For now, it's loaded from the store's initial state
-        }
-    }, [isClient]);
-
     const filteredMembers = useMemo(() => {
         return members.filter(member => {
             const matchesCommunity = selectedCommunity === 'All' || member.communityId === selectedCommunity;
