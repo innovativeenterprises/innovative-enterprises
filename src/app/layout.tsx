@@ -4,9 +4,10 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { getInitialState } from '@/lib/get-initial-state';
+import { getSettings } from '@/lib/firestore';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import { initialSettings } from '@/lib/settings';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -56,16 +57,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialState = await getInitialState();
+  // Using initialSettings directly as a fallback.
+  // The getSettings function now has internal error handling.
+  const settings = await getSettings() || initialSettings;
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialState={initialState}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+        <Providers initialSettings={settings}>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
         </Providers>
       </body>
     </html>
