@@ -63,7 +63,9 @@ export default async function RootLayout({
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <Providers initialState={initialState}>
-          {children}
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>

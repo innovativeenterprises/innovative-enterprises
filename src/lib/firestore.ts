@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
@@ -43,8 +42,7 @@ import { initialBeautySpecialists } from './beauty-specialists';
 import { initialRaahaAgencies } from './raaha-agencies';
 import { initialRaahaWorkers } from './raaha-workers';
 import { initialRaahaRequests } from './raaha-requests';
-import type { AppState } from './initial-state';
-import { getEmptyState } from './initial-state';
+import { getEmptyState, type AppState } from './initial-state';
 
 
 // This file simulates fetching data from a database.
@@ -117,7 +115,7 @@ export const getBeautyData = async () => {
     }
 };
 
-export const getInitialState = async (): Promise<AppState> => {
+export async function getInitialState(): Promise<AppState> {
     try {
         const [
             settings, products, storeProducts, providers, opportunities, services, signedLeases,
@@ -141,16 +139,16 @@ export const getInitialState = async (): Promise<AppState> => {
 
         return {
             isClient: false,
-            settings: settings,
+            settings,
             cart: [],
-            products: products,
-            storeProducts: storeProducts,
-            providers: providers,
-            opportunities: opportunities,
-            services: services,
-            signedLeases: signedLeases,
-            stairspaceRequests: stairspaceRequests,
-            stairspaceListings: stairspaceListings,
+            products,
+            storeProducts,
+            providers,
+            opportunities,
+            services,
+            signedLeases,
+            stairspaceRequests,
+            stairspaceListings,
             leadership: staffData.leadership,
             staff: staffData.staff,
             agentCategories: staffData.agentCategories,
@@ -161,38 +159,40 @@ export const getInitialState = async (): Promise<AppState> => {
             beautyServices: beautyData.beautyServices,
             beautySpecialists: beautyData.beautySpecialists,
             beautyAppointments: beautyData.beautyAppointments,
-            costSettings: costSettings,
-            assets: assets,
-            usedItems: usedItems,
-            clients: clients,
-            testimonials: testimonials,
-            giftCards: giftCards,
-            students: students,
-            communities: communities,
-            communityEvents: communityEvents,
-            communityFinances: communityFinances,
-            communityMembers: communityMembers,
-            alumniJobs: alumniJobs,
-            rentalAgencies: rentalAgencies,
-            cars: cars,
-            posProducts: posProducts,
-            dailySales: dailySales,
-            saasProducts: saasProducts,
-            stockItems: stockItems,
-            pricing: pricing,
-            stages: stages,
-            applications: applications,
-            briefcase: briefcase || initialBriefcase,
-            investors: investors,
-            knowledgeBase: knowledgeBase,
-            cfoData: cfoData,
-            properties: properties,
-            solutions: solutions,
-            industries: industries,
-            aiTools: aiTools,
+            costSettings,
+            assets,
+            usedItems,
+            clients,
+            testimonials,
+            giftCards,
+            students,
+            communities,
+            communityEvents,
+            communityFinances,
+            communityMembers,
+            alumniJobs,
+            rentalAgencies,
+            cars,
+            posProducts,
+            dailySales,
+            saasProducts,
+            stockItems,
+            pricing,
+            stages,
+            applications,
+            briefcase,
+            investors,
+            knowledgeBase,
+            cfoData,
+            properties,
+            solutions,
+            industries,
+            aiTools,
         };
     } catch (error) {
         console.error("Failed to fetch initial state:", error);
-        return getEmptyState() as AppState;
+        // In case of a catastrophic failure, return a safe-to-render empty state.
+        return getEmptyState();
     }
 };
+
