@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Truck } from "lucide-react";
