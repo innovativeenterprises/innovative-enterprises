@@ -9,6 +9,7 @@ import Link from 'next/link';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { Skeleton } from '@/components/ui/skeleton';
 import { notFound } from 'next/navigation';
+import { getStairspaceRequests } from '@/lib/firestore'; // Fetch directly
 
 export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref, requestsLabel }: {
     requestId: string | null;
@@ -16,25 +17,26 @@ export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref
     backToRequestsHref: string;
     requestsLabel: string;
 }) {
-    const [requests, setRequests] = useState<BookingRequest[]>([]);
-    const [isClient, setIsClient] = useState(false);
     const [request, setRequest] = useState<BookingRequest | undefined>(undefined);
+    const [isClient, setIsClient] = useState(false);
 
      useEffect(() => {
         setIsClient(true);
-        // In a real app, this might come from a context or a fresh fetch.
-        // For prototype, we assume it's available or can be fetched if needed.
-    }, []);
-
-    useEffect(() => {
-        if (isClient && requestId) {
-            // This is a placeholder for fetching data if it wasn't in a global store.
-            // For now, we assume the requests state is populated from a parent or context.
-            // If requests are not in a global store, you'd need a fetch here.
-        } else if (isClient && !requestId) {
+        if (requestId) {
+            async function fetchRequest() {
+                const allRequests = await getStairspaceRequests();
+                const foundRequest = allRequests.find(r => r.id === requestId);
+                if (foundRequest) {
+                    setRequest(foundRequest);
+                } else {
+                    notFound();
+                }
+            }
+            fetchRequest();
+        } else {
             notFound();
         }
-    }, [isClient, requestId, requests]);
+    }, [requestId]);
     
     if (!isClient || (requestId && !request)) {
         return (

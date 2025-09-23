@@ -2,20 +2,20 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { AgencySettings } from './agency-settings';
+import { AgencySettings } from '@/app/raaha/agency-dashboard/agency-settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { SpecialistTable } from './specialist-table';
+import { SpecialistTable } from '@/app/raaha/agency-dashboard/specialist-table';
 import { Badge } from '@/components/ui/badge';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { BeautyService } from '@/lib/beauty-services.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers.schema';
 import { useToast } from '@/hooks/use-toast';
-import { ServiceTable } from './service-table';
-import { ScheduleTable } from './schedule-table';
+import { ServiceTable } from '@/app/raaha/agency-dashboard/service-table';
+import { ScheduleTable } from '@/app/raaha/agency-dashboard/schedule-table';
 import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
 
 export default function AgencyDashboardClientPage({ 

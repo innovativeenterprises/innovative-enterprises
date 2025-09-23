@@ -1,9 +1,10 @@
 
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { SuccessContent } from './success-content';
+import { SuccessContent } from '../success-content';
+import type { BookingRequest } from '@/lib/stairspace-requests';
 
 
 function PublicSuccessPage() {

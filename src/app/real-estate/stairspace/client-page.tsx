@@ -12,7 +12,6 @@ import { useRouter } from 'next/navigation';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -26,25 +25,30 @@ const getStatusBadge = (status: BookingRequest['status']) => {
 };
 
 export default function StairspaceRequestsClientPage({ initialRequests }: { initialRequests: BookingRequest[] }) {
-    const { data: requests, setData: setStairspaceRequests, isClient } = useStairspaceRequestsData(initialRequests);
+    const [requests, setRequests] = useState(initialRequests);
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
 
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const onSchedule = (id: string, values: InterviewValues) => {
-        setStairspaceRequests(prev => prev.map(r => 
+        setRequests(prev => prev.map(r => 
             r.id === id ? { ...r, status: 'Contacted', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
         ));
         toast({ title: "Contact Scheduled!", description: `A meeting with ${values.interviewNotes} has been scheduled.` });
     };
 
     const handleConfirmBooking = (requestId: string) => {
-        setStairspaceRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Booked' } : r));
+        setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Booked' } : r));
         toast({ title: 'Booking Confirmed!', description: 'The client has been notified to proceed with payment.' });
     };
 
     const handlePayment = (requestId: string) => {
         toast({ title: 'Redirecting to payment...', description: 'Please wait.' });
-        setStairspaceRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
+        setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
         setTimeout(() => {
             router.push(`/admin/real-estate/stairspace/checkout/${requestId}`);
         }, 1000);
