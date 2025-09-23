@@ -42,10 +42,12 @@ import type { KnowledgeDocument } from './knowledge.schema';
 import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
+import type { AppState as AppStateType } from './global-store';
+
+export type AppState = AppStateType;
 
 // This provides the default, empty state for the application.
-export const getEmptyState = (): AppState => ({
-  isClient: false,
+export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   settings: initialSettings,
   cart: [],
   products: [],
