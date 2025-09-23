@@ -13,32 +13,42 @@ import { Badge } from '@/components/ui/badge';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { BeautyService } from '@/lib/beauty-services.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers.schema';
+import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
 import { useToast } from '@/hooks/use-toast';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
-import { useBeautyData } from '@/hooks/use-global-store-data';
 
-export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
-    const { agencies, setAgencies, services, setServices, appointments, setAppointments, isClient } = useBeautyData();
+export default function AgencyDashboardClientPage({ 
+    initialAgencies, 
+    initialServices, 
+    initialAppointments,
+    initialSpecialists
+}: { 
+    initialAgencies: BeautyCenter[], 
+    initialServices: BeautyService[], 
+    initialAppointments: BeautyAppointment[],
+    initialSpecialists: BeautySpecialist[]
+}) {
+    const [agencies, setAgencies] = useState(initialAgencies);
+    const [services, setServices] = useState(initialServices);
+    const [appointments, setAppointments] = useState(initialAppointments);
+    const [specialists, setSpecialists] = useState(initialSpecialists);
+
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
 
      useEffect(() => {
-        setAgencies(() => initialAgencies);
-        setServices(() => initialServices);
-        setAppointments(() => initialAppointments);
-    }, [initialAgencies, initialServices, initialAppointments, setAgencies, setServices, setAppointments]);
-
-     useEffect(() => {
-        if (agencies.length > 0 && !selectedAgencyId) {
-            setSelectedAgencyId(agencies[0].id);
+        setIsClient(true);
+        if (initialAgencies.length > 0) {
+            setSelectedAgencyId(initialAgencies[0].id);
         }
-    }, [agencies, selectedAgencyId]);
+    }, [initialAgencies]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
-    const filteredServices = services.filter(s => s.agencyId === selectedAgency?.id);
-    const filteredAppointments = appointments.filter(a => a.agencyId === selectedAgency?.id);
+    const filteredServices = useMemo(() => services.filter(s => s.agencyId === selectedAgency?.id), [services, selectedAgency]);
+    const filteredAppointments = useMemo(() => appointments.filter(a => a.agencyId === selectedAgency?.id), [appointments, selectedAgency]);
+    const filteredSpecialists = useMemo(() => specialists.filter(s => s.agencyId === selectedAgency?.id), [specialists, selectedAgency]);
 
 
     if (!isClient || !selectedAgency) {
@@ -103,10 +113,14 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialServ
                             <ServiceTable services={filteredServices} setServices={setServices} />
                         </TabsContent>
                          <TabsContent value="staff" className="mt-6">
-                            <SpecialistTable agencyId={selectedAgency.id} />
+                            <SpecialistTable 
+                                agencyId={selectedAgency.id} 
+                                initialSpecialists={filteredSpecialists}
+                                setSpecialists={setSpecialists}
+                             />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
+                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
                         </TabsContent>
                     </Tabs>
                 </div>

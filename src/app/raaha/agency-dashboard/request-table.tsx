@@ -12,7 +12,7 @@ import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } fr
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TimeAgoCell } from '@/components/request-table';
-import type { Agency } from "@/lib/raaha-agencies.schema";
+import type { Agency as RaahaAgency } from "@/lib/raaha-agencies.schema";
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -25,20 +25,22 @@ const getStatusBadge = (status: HireRequest['status']) => {
     }
 };
 
-export function RequestTable({ initialRequests, agency }: { initialRequests: HireRequest[], agency?: Agency }) {
-    const [requests, setRequests] = useState<HireRequest[]>([]);
+export function RequestTable({ initialRequests, agency, setRequests }: { 
+    initialRequests: HireRequest[], 
+    agency: RaahaAgency,
+    setRequests: (updater: (prev: HireRequest[]) => HireRequest[]) => void
+}) {
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
-        setRequests(initialRequests);
         setIsClient(true);
-    }, [initialRequests]);
+    }, []);
     
     const filteredRequests = useMemo(() => {
-        if (!agency) return requests;
-        return requests.filter(r => r.agencyId === agency.name);
-    }, [requests, agency]);
+        if (!agency) return initialRequests;
+        return initialRequests.filter(r => r.agencyId === agency.name);
+    }, [initialRequests, agency]);
 
     const onSchedule = (id: string, values: InterviewValues) => {
         setRequests(prev => prev.map(r => 

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -13,7 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import type { Worker } from "@/lib/raaha-workers";
 import { PlusCircle, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useWorkersData } from "@/hooks/use-data-hooks";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -149,16 +149,25 @@ export const AddEditWorkerDialog = ({
     )
 }
 
-export function CandidateTable({ columns, agencyId, initialWorkers }: { columns: any[], agencyId: string, initialWorkers: Worker[] }) {
-    const { workers, setWorkers, isClient } = useWorkersData(initialWorkers);
+export function CandidateTable({ columns, agencyId, initialWorkers, setWorkers }: { 
+    columns: any[], 
+    agencyId: string, 
+    initialWorkers: Worker[], 
+    setWorkers: (updater: (prev: Worker[]) => Worker[]) => void 
+}) {
+    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
-    const filteredWorkers = workers.filter(w => w.agencyId === agencyId);
+    const filteredWorkers = initialWorkers.filter(w => w.agencyId === agencyId);
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const newWorker = { ...values };
         if (id) {
-            setWorkers((prev: Worker[]) => prev.map(w => w.id === id ? { ...w, ...newWorker } : w));
+            setWorkers((prev: Worker[]) => prev.map(w => w.id === id ? { ...w, ...newWorker } as Worker : w));
             toast({ title: "Candidate updated." });
         } else {
             setWorkers((prev: Worker[]) => [...prev, { ...newWorker, id: `worker_${Date.now()}` }]);
