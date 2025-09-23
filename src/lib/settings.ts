@@ -25,6 +25,7 @@ export interface AppSettings {
     sanadOffice: SanadOfficeSettings;
     legalAgentPricing: LegalAgentPricing;
     voiceInteractionEnabled: boolean;
+    chatWidgetEnabled: boolean;
     vat: {
         enabled: boolean;
         rate: number; // Stored as a decimal, e.g., 0.05 for 5%
@@ -51,6 +52,7 @@ export const initialSettings: AppSettings = {
         b2gFee: 65.0,
     },
     voiceInteractionEnabled: true,
+    chatWidgetEnabled: true,
     vat: {
         enabled: true,
         rate: 0.05, // 5%

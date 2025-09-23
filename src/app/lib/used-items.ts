@@ -11,6 +11,8 @@ export const initialUsedItems: UsedItem[] = [
         imageUrl: 'https://images.unsplash.com/photo-1607936854259-c2b71bda4f8a?q=80&w=600&auto=format&fit=crop',
         seller: 'Ahmed Al-Farsi',
         listingType: 'For Sale',
+        status: 'Active',
+        aiHint: 'blue iphone',
     },
     {
         id: 'item_2',
@@ -22,6 +24,8 @@ export const initialUsedItems: UsedItem[] = [
         imageUrl: 'https://images.unsplash.com/photo-1540574163024-573506e6c469?q=80&w=600&auto=format&fit=crop',
         seller: 'Fatima Al-Balushi',
         listingType: 'For Sale',
+        status: 'Active',
+        aiHint: 'leather sofa',
     },
      {
         id: 'item_3',
@@ -33,5 +37,7 @@ export const initialUsedItems: UsedItem[] = [
         imageUrl: 'https://images.unsplash.com/photo-1574637651733-4125232145dc?q=80&w=600&auto=format&fit=crop',
         seller: 'Community Donations',
         listingType: 'For Donation',
+        status: 'Active',
+        aiHint: 'kids bikes',
     },
 ];
