@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import * as React from 'react';
@@ -134,7 +133,7 @@ export default function AdminLayout({
             </SidebarGroup>
             <SidebarSeparator />
              <SidebarGroup>
-                <SidebarGroupLabel>Network & People</SidebarGroupLabel>
+                <SidebarGroupLabel>Network &amp; People</SidebarGroupLabel>
                 {networkAndPeople.map(renderMenuItem)}
             </SidebarGroup>
              <SidebarSeparator />

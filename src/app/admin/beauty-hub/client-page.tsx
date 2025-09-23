@@ -8,14 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { SpecialistTable } from '@/app/raaha/agency-dashboard/specialist-table';
+import { SpecialistTable } from '@/app/beauty-hub/agency-dashboard/specialist-table';
 import { Badge } from '@/components/ui/badge';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { BeautyService } from '@/lib/beauty-services.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers.schema';
 import { useToast } from '@/hooks/use-toast';
-import { ServiceTable } from '@/app/raaha/agency-dashboard/service-table';
-import { ScheduleTable } from '@/app/raaha/agency-dashboard/schedule-table';
+import { ServiceTable } from '@/app/beauty-hub/agency-dashboard/service-table';
+import { ScheduleTable } from '@/app/beauty-hub/agency-dashboard/schedule-table';
 import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
 
 export default function AgencyDashboardClientPage({ 

@@ -11,12 +11,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import type { BeautyCenter } from "@/lib/beauty-centers";
+import type { BeautyCenter } from "@/lib/beauty-centers.schema";
 import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
 import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
 import { fileToDataURI } from '@/lib/utils';
-import { useBeautyData } from "@/hooks/use-global-store-data";
+import { useBeautyData } from '@/hooks/use-data-hooks';
 
 const AgencySchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -29,8 +29,10 @@ const AgencySchema = z.object({
 });
 type AgencyValues = z.infer<typeof AgencySchema>;
 
-export function AgencySettings({ agency }: { agency: BeautyCenter }) {
-    const { setAgencies } = useBeautyData();
+export function AgencySettings({ agency, setAgencies }: { 
+    agency: BeautyCenter;
+    setAgencies: (updater: (prev: BeautyCenter[]) => BeautyCenter[]) => void;
+}) {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
