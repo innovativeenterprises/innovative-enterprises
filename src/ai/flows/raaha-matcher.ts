@@ -6,13 +6,14 @@
  */
 
 import { ai } from '@/ai/genkit';
-import {
-    RaahaMatcherInput,
-    RaahaMatcherInputSchema,
-    RaahaMatcherOutput,
-    RaahaMatcherOutputSchema,
-} from './raaha-matcher.schema';
 import { getRaahaData } from '@/lib/firestore';
+import {
+    RaahaMatcherInputSchema,
+    type RaahaMatcherInput,
+    RaahaMatcherOutputSchema,
+    type RaahaMatcherOutput,
+} from './raaha-matcher.schema';
+import { z } from 'zod';
 
 
 export async function findHelpers(input: RaahaMatcherInput): Promise<RaahaMatcherOutput> {

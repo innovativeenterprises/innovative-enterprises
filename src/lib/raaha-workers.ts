@@ -1,16 +1,5 @@
 
-export interface Worker {
-    id: string;
-    name: string;
-    nationality: string;
-    age: number;
-    skills: string[];
-    experience: string;
-    availability: 'Available' | 'Not Available';
-    rating: number;
-    photo: string;
-    agencyId: 'Happy Homes Agency' | 'Premier Maids';
-}
+import type { Worker } from './raaha-workers.schema';
 
 export const initialRaahaWorkers: Worker[] = [
     {
@@ -378,7 +367,7 @@ export const initialRaahaWorkers: Worker[] = [
         name: 'Chaltu Girma',
         nationality: 'Ethiopian',
         age: 28,
-        skills: ['General Cleaning', 'Cooking (Basic)', 'Laundry & Ironing'],
+        skills: ['General Cleaning', 'Basic Arabic', 'Cooking (Ethiopian)'],
         experience: '3 years of dedicated service with one family in Bahrain. Good with children.',
         availability: 'Available',
         rating: 4.5,

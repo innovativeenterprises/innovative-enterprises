@@ -2,11 +2,11 @@
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
-import { useWorkersData, useAgenciesData, useRequestsData } from '@/hooks/use-global-store-data';
+import { useWorkersData, useAgenciesData, useRequestsData } from '@/hooks/use-data-hooks';
 import type { Worker } from '@/lib/raaha-workers';
 import type { Agency } from '@/lib/raaha-agencies';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Phone, Globe, Check, Star, Briefcase, Building2 } from 'lucide-react';
 import Link from 'next/link';
