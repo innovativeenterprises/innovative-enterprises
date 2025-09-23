@@ -1,4 +1,5 @@
 
+'use server';
 
 import AgentList from "@/components/agent-list";
 import { getStaffData } from "@/lib/firestore";

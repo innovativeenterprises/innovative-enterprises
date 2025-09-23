@@ -5,13 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ShieldCheck, PieChart, Repeat, Layers, Handshake, Users, ArrowRight } from "lucide-react";
 import Link from 'next/link';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "PropToken Platform | Innovative Enterprises",
-  description: "Democratizing real estate investment. Own fractions of high-value properties through secure, transparent blockchain technology.",
-};
-
 
 const benefits = [
     {

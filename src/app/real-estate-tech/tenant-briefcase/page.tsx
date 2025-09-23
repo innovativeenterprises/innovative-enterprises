@@ -1,4 +1,5 @@
 
+'use server';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,7 @@ const DocumentCard = ({ doc }: { doc: UserDocument }) => (
     </Card>
 );
 
-export default function TenantBriefcasePage() {
+export default async function TenantBriefcasePage() {
     const documents = initialUserDocuments;
     
     // In a real app, you would have a function to handle file uploads
