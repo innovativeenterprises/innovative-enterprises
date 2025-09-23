@@ -6,8 +6,10 @@ import type { Asset } from '@/lib/assets.schema';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProviderTable from './provider-table';
 import AssetTable from '../asset-table';
+import { useState } from 'react';
 
 export default function NetworkPageClient({ initialProviders, initialAssets }: { initialProviders: Provider[], initialAssets: Asset[] }) {
+    const [providers, setProviders] = useState(initialProviders);
     
     return (
         <div className="space-y-8">
@@ -21,7 +23,7 @@ export default function NetworkPageClient({ initialProviders, initialAssets }: {
                     <TabsTrigger value="assets">Rental Assets</TabsTrigger>
                 </TabsList>
                 <TabsContent value="providers" className="mt-6">
-                    <ProviderTable initialProviders={initialProviders} />
+                    <ProviderTable initialProviders={providers} setProviders={setProviders} />
                 </TabsContent>
                 <TabsContent value="assets" className="mt-6">
                     <AssetTable initialAssets={initialAssets} />
