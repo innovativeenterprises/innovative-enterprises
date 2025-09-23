@@ -1,191 +1,135 @@
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import type { StockItem } from "@/lib/stock-items.schema";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { ArrowRight, Search, Recycle } from "lucide-react";
+import Link from 'next/link';
+import type { StockItem } from '@/lib/stock-items.schema';
 import Image from 'next/image';
-import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { useStockItemsData } from '@/hooks/use-data-hooks';
 
-const StockItemSchema = z.object({
-  name: z.string().min(3, "Name is required"),
-  description: z.string().min(10, "Description is required."),
-  category: z.string().min(2, "Category is required."),
-  quantity: z.coerce.number().positive("Quantity must be positive."),
-  price: z.coerce.number().positive("Price must be positive."),
-  status: z.enum(['Active', 'Sold', 'Expired']),
-  saleType: z.enum(['Fixed Price', 'Auction']),
-  expiryDate: z.string().optional(),
-  auctionEndDate: z.string().optional(),
-  imageUrl: z.string().url("Image URL is required."),
-  aiHint: z.string().optional(),
-});
-type StockItemValues = z.infer<typeof StockItemSchema>;
+const categories = ['All', 'Electronics', 'Food & Beverage', 'Apparel', 'Home Goods'];
 
-const AddEditStockItemDialog = ({ 
-    item, 
-    onSave,
-    children 
-}: { 
-    item?: StockItem, 
-    onSave: (values: StockItemValues, id?: string) => void,
-    children: React.ReactNode 
-}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const form = useForm<StockItemValues>({ resolver: zodResolver(StockItemSchema) });
-
-    useEffect(() => {
-        if(isOpen) {
-           form.reset(item || { name: "", description: "", category: "Food & Beverage", quantity: 1, price: 0, status: 'Active', saleType: 'Fixed Price' });
+const ItemCard = ({ item }: { item: StockItem }) => {
+    const getListingTypeBadge = (type: StockItem['saleType']) => {
+        switch(type) {
+            case 'Fixed Price': return <Badge variant="default" className="bg-blue-500/20 text-blue-700">For Sale</Badge>;
+            case 'Auction': return <Badge variant="secondary" className="bg-purple-500/20 text-purple-700">Auction</Badge>;
         }
-    }, [item, form, isOpen]);
-
-    const onSubmit: SubmitHandler<StockItemValues> = (data) => {
-        onSave(data, item?.id);
-        setIsOpen(false);
-    };
+    }
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="sm:max-w-[725px]">
-                <DialogHeader><DialogTitle>{item ? "Edit" : "Add"} Stock Item</DialogTitle></DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField control={form.control} name="name" render={({ field }) => (
-                            <FormItem><FormLabel>Item Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                         <FormField control={form.control} name="description" render={({ field }) => (
-                            <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <div className="grid grid-cols-2 gap-4">
-                             <FormField control={form.control} name="category" render={({ field }) => (
-                                <FormItem><FormLabel>Category</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                             <FormField control={form.control} name="quantity" render={({ field }) => (
-                                <FormItem><FormLabel>Quantity</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormField control={form.control} name="price" render={({ field }) => (
-                                <FormItem><FormLabel>Total Price (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                            <FormField control={form.control} name="saleType" render={({ field }) => (
-                                <FormItem><FormLabel>Sale Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                    <SelectItem value="Fixed Price">Fixed Price</SelectItem><SelectItem value="Auction">Auction</SelectItem>
-                                </SelectContent></Select><FormMessage /></FormItem>
-                            )} />
-                        </div>
-                         {form.watch('saleType') === 'Auction' && (
-                             <FormField control={form.control} name="auctionEndDate" render={({ field }) => (
-                                <FormItem><FormLabel>Auction End Date</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
-                            )} />
-                         )}
-                         <FormField control={form.control} name="imageUrl" render={({ field }) => (
-                            <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Save Item</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
+        <Link href={`/stock-clear/${item.id}`} className="flex">
+            <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
+                <CardHeader className="p-0">
+                    <div className="relative h-48 w-full">
+                        <Image src={item.imageUrl} alt={item.name} fill className="object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                        <div className="absolute top-2 right-2">{getListingTypeBadge(item.saleType)}</div>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-4 flex-grow">
+                    <p className="text-sm text-muted-foreground">{item.category}</p>
+                    <h3 className="font-semibold text-lg truncate mt-1">{item.name}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
+                </CardContent>
+                <CardFooter className="p-4 pt-0">
+                    <p className="text-xl font-bold text-primary">OMR {item.price.toLocaleString()}</p>
+                </CardFooter>
+            </Card>
+        </Link>
     );
 };
 
+const ListingGridSkeleton = () => (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 3 }).map((_, index) => (
+            <Card key={index}>
+                <Skeleton className="h-48 w-full" />
+                <CardHeader><Skeleton className="h-6 w-3/4" /><Skeleton className="h-4 w-1/2" /></CardHeader>
+                <CardContent><Skeleton className="h-4 w-full" /></CardContent>
+                <CardFooter><Skeleton className="h-8 w-1/3" /></CardFooter>
+            </Card>
+        ))}
+    </div>
+);
+
 export default function StockClearClientPage({ initialItems }: { initialItems: StockItem[] }) {
-    const [items, setItems] = useState<StockItem[]>(initialItems);
-    const [isClient, setIsClient] = useState(false);
-    const { toast } = useToast();
+    const { data: items, isClient } = useStockItemsData(initialItems);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('All');
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    const handleSave = (values: StockItemValues, id?: string) => {
-        if (id) {
-            setItems(prev => prev.map(item => (item.id === id ? { ...item, ...values } as StockItem : item)));
-            toast({ title: "Item updated." });
-        } else {
-            const newItem: StockItem = { ...values, id: `stock_${Date.now()}` };
-            setItems(prev => [newItem, ...prev]);
-            toast({ title: "Item added." });
-        }
-    };
-
-    const handleDelete = (id: string) => {
-        setItems(prev => prev.filter(item => item.id !== id));
-        toast({ title: "Item removed.", variant: "destructive" });
-    };
+    const filteredItems = useMemo(() => {
+        return items.filter(item => {
+            const matchesCategory = categoryFilter === 'All' || item.category === categoryFilter;
+            const matchesSearch = searchTerm === '' || item.name.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesCategory && matchesSearch && item.status === 'Active';
+        });
+    }, [items, categoryFilter, searchTerm]);
 
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                    <CardTitle>StockClear Marketplace Management</CardTitle>
-                    <CardDescription>Manage all overstock and clearance item listings.</CardDescription>
+        <div className="bg-background min-h-screen">
+            <div className="container mx-auto px-4 py-16">
+                 <div className="max-w-4xl mx-auto text-center">
+                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                        <Recycle className="w-12 h-12 text-primary" />
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-bold text-primary">StockClear Marketplace</h1>
+                    <p className="mt-4 text-lg text-muted-foreground">
+                        A B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales.
+                    </p>
                 </div>
-                <AddEditStockItemDialog onSave={handleSave}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
-                </AddEditStockItemDialog>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Item</TableHead>
-                            <TableHead>Category</TableHead>
-                            <TableHead>Quantity</TableHead>
-                            <TableHead>Price (OMR)</TableHead>
-                            <TableHead>Sale Type</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {!isClient ? (
-                             <TableRow><TableCell colSpan={7}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
-                        ) : items.map(item => (
-                            <TableRow key={item.id}>
-                                <TableCell className="font-medium">{item.name}</TableCell>
-                                <TableCell>{item.category}</TableCell>
-                                <TableCell>{item.quantity}</TableCell>
-                                <TableCell className="font-mono">{item.price.toFixed(2)}</TableCell>
-                                <TableCell>{item.saleType}</TableCell>
-                                <TableCell>{item.status}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <AddEditStockItemDialog item={item} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditStockItemDialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader><AlertDialogTitle>Delete Item?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{item.name}".</AlertDialogDescription></AlertDialogHeader>
-                                                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(item.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
+
+                <div className="max-w-6xl mx-auto mt-16">
+                     <div className="flex flex-col md:flex-row gap-4 mb-8">
+                        <div className="relative flex-grow">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Input
+                                type="search"
+                                placeholder="Search by item name..."
+                                className="w-full pl-10"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <div className="flex overflow-x-auto gap-2 pb-2">
+                            {categories.map(category => (
+                                <Button
+                                    key={category}
+                                    variant={categoryFilter === category ? 'default' : 'outline'}
+                                    onClick={() => setCategoryFilter(category)}
+                                    className="shrink-0"
+                                >
+                                    {category}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                     {!isClient ? <ListingGridSkeleton /> : (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredItems.map(item => (
+                                <ItemCard key={item.id} item={item} />
+                            ))}
+                        </div>
+                     )}
+                </div>
+
+                <div className="max-w-3xl mx-auto mt-20 text-center">
+                    <Card className="bg-accent/10 border-accent">
+                        <CardHeader>
+                            <CardTitle className="text-2xl text-accent">Have Stock to Clear?</CardTitle>
+                        </CardHeader>
+                        <CardFooter className="justify-center">
+                            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                <Link href="/admin/stock-clear">List Your Items <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </div>
+        </div>
     );
 }
