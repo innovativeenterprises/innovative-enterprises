@@ -38,7 +38,7 @@ export default function FacilityFlowPage() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [assignedVendor, setAssignedVendor] = useState<string | null>(null);
     const { toast } = useToast();
-    const { providers } = useProvidersData();
+    const { data: providers } = useProvidersData();
 
     const form = useForm<TicketValues>({
         resolver: zodResolver(TicketSchema),
@@ -77,26 +77,28 @@ export default function FacilityFlowPage() {
 
     if (isSubmitted) {
         return (
-             <Card>
-                <CardContent className="p-10 text-center">
-                    <div className="flex flex-col items-center gap-6">
-                        <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
-                            <CheckCircle className="h-12 w-12 text-green-500" />
+            <div className="max-w-3xl mx-auto mt-12">
+                 <Card>
+                    <CardContent className="p-10 text-center">
+                        <div className="flex flex-col items-center gap-6">
+                            <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
+                                <CheckCircle className="h-12 w-12 text-green-500" />
+                            </div>
+                            <div className="space-y-2">
+                                <CardTitle className="text-2xl">Ticket Submitted Successfully!</CardTitle>
+                                <CardDescription>
+                                    Your service request for "{form.getValues('propertyAddress')}" has been assigned to:
+                                    <br/>
+                                    <strong className="text-primary">{assignedVendor}</strong>
+                                    <br/>
+                                    They will contact you shortly at {form.getValues('contactPhone')} to schedule the service.
+                                </CardDescription>
+                            </div>
+                            <Button onClick={() => { setIsSubmitted(false); form.reset(); }}>Submit Another Ticket</Button>
                         </div>
-                        <div className="space-y-2">
-                            <CardTitle className="text-2xl">Ticket Submitted Successfully!</CardTitle>
-                            <CardDescription>
-                                Your service request for "{form.getValues('propertyAddress')}" has been assigned to:
-                                <br/>
-                                <strong className="text-primary">{assignedVendor}</strong>
-                                <br/>
-                                They will contact you shortly at {form.getValues('contactPhone')} to schedule the service.
-                            </CardDescription>
-                        </div>
-                        <Button onClick={() => { setIsSubmitted(false); form.reset(); }}>Submit Another Ticket</Button>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </div>
         )
     }
 
