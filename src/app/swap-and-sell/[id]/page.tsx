@@ -2,7 +2,6 @@
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
-import { useUsedItemsData } from '@/hooks/use-global-store-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -11,29 +10,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import type { Metadata } from 'next';
-import { initialUsedItems, type UsedItem } from '@/lib/used-items.schema';
-
-export async function generateStaticParams() {
-  return initialUsedItems.map((item) => ({
-    id: item.id,
-  }));
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const item = initialUsedItems.find(i => i.id === params.id);
-
-  if (!item) {
-    return {
-      title: 'Item Not Found',
-    };
-  }
-
-  return {
-    title: `${item.name} | Swap & Sell Hub`,
-    description: item.description,
-  };
-}
+import { useUsedItemsData } from '@/hooks/use-data-hooks';
+import type { UsedItem } from '@/lib/used-items.schema';
 
 export default function ItemDetailPage() {
     const params = useParams();
@@ -85,7 +63,7 @@ export default function ItemDetailPage() {
                         <CardContent className="p-0">
                             <div className="grid lg:grid-cols-2">
                                 <div className="relative h-80 lg:h-full min-h-[400px]">
-                                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none" />
+                                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none" data-ai-hint={item.aiHint} />
                                 </div>
                                 <div className="p-8 flex flex-col">
                                     <CardHeader className="p-0 space-y-2">

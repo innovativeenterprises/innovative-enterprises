@@ -1,5 +1,7 @@
 
-import { Recycle } from "lucide-react";
+'use client';
+
+import { Recycle, Loader2, Wand2, Sparkles, Send, PlusCircle } from "lucide-react";
 import ListAnItemForm from "./list-item-form";
 import type { Metadata } from 'next';
 

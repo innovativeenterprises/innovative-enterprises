@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { useUsedItemsData } from '@/hooks/use-data-hooks';
 
 const categories = ['All', 'Electronics', 'Furniture', 'Apparel', 'Sports & Outdoors'];
 
@@ -28,7 +29,7 @@ const ItemCard = ({ item }: { item: UsedItem }) => {
             <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
                 <CardHeader className="p-0">
                     <div className="relative h-48 w-full">
-                        <Image src={item.imageUrl} alt={item.name} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+                        <Image src={item.imageUrl} alt={item.name} fill className="object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
                         <div className="absolute top-2 right-2">{getListingTypeBadge(item.listingType)}</div>
                     </div>
                 </CardHeader>
@@ -63,27 +64,22 @@ const ListingGridSkeleton = () => (
 );
 
 export default function SwapSellClientPage({ initialItems }: { initialItems: UsedItem[] }) {
-    const [items, setItems] = useState<UsedItem[]>(initialItems);
-    const [isClient, setIsClient] = useState(false);
+    const { data: items, isClient } = useUsedItemsData(initialItems);
     const [searchTerm, setSearchTerm] = useState('');
     const [tagFilter, setTagFilter] = useState('All');
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const filteredItems = useMemo(() => {
         return items.filter(item => {
             const matchesTag = tagFilter === 'All' || item.category === tagFilter;
             const matchesSearch = searchTerm === '' || item.name.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesTag && matchesSearch;
+            return matchesTag && item.status === 'Active';
         });
     }, [items, tagFilter, searchTerm]);
 
     return (
         <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
-                <div className="max-w-4xl mx-auto text-center">
+                 <div className="max-w-4xl mx-auto text-center">
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
                         <Recycle className="w-12 h-12 text-primary" />
                     </div>
@@ -106,14 +102,14 @@ export default function SwapSellClientPage({ initialItems }: { initialItems: Use
                             />
                         </div>
                         <div className="flex overflow-x-auto gap-2 pb-2">
-                            {categories.map(tag => (
+                            {categories.map(category => (
                                 <Button
-                                    key={tag}
-                                    variant={tagFilter === tag ? 'default' : 'outline'}
-                                    onClick={() => setTagFilter(tag)}
+                                    key={category}
+                                    variant={tagFilter === category ? 'default' : 'outline'}
+                                    onClick={() => setTagFilter(category)}
                                     className="shrink-0"
                                 >
-                                    {tag}
+                                    {category}
                                 </Button>
                             ))}
                         </div>

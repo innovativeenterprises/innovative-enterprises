@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { analyzeUsedItem } from '@/ai/flows/used-item-analyzer';
 import { fileToDataURI } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useUsedItemsData } from '@/hooks/use-global-store-data';
+import { useUsedItemsData } from '@/hooks/use-data-hooks';
 import type { UsedItem } from '@/lib/used-items.schema';
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
@@ -148,7 +148,8 @@ export default function ListAnItemForm() {
                                 <SelectItem value="For Sale">For Sale</SelectItem>
                                 <SelectItem value="For Donation">For Donation</SelectItem>
                                 <SelectItem value="Gift">Gift (Free)</SelectItem>
-                            </SelectContent></Select><FormMessage/></FormItem>)} />
+                            </SelectContent></Select><FormMessage/></FormItem>
+                        )} />
 
                         <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">
                             {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Listing...</> : <><Send className="mr-2 h-4 w-4" /> Publish Listing</>}
