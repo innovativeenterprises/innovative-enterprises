@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Download, TrendingUp, Users, Target, Building2, Lightbulb, PackageCheck, PlusCircle, Edit, Trash2 } from "lucide-react";
@@ -21,6 +22,9 @@ import { InvestorSchema } from "@/lib/investors.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import InvestForm from "./invest-form";
+import type { Agent, AgentCategory } from "@/lib/agents.schema";
+import type { Service } from "@/lib/services.schema";
+import type { AppSettings } from "@/lib/settings";
 
 const investmentReasons = [
     {
@@ -202,7 +206,19 @@ function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
     );
 }
 
-export default function InvestClientPage({ initialProducts, initialInvestors }: { initialProducts: Product[], initialInvestors: Investor[] }) {
+export default function InvestClientPage({ 
+    initialProducts, 
+    initialInvestors,
+    staffData,
+    services,
+    settings,
+}: { 
+    initialProducts: Product[], 
+    initialInvestors: Investor[],
+    staffData: { leadership: Agent[], staff: Agent[], agentCategories: AgentCategory[] },
+    services: Service[],
+    settings: AppSettings,
+}) {
     const liveProducts = initialProducts.filter(p => p.stage === 'Live & Operating').slice(0, 5);
     const devProducts = initialProducts.filter(p => p.stage === 'In Development' || p.stage === 'Testing Phase').slice(0, 5);
     const futureProducts = initialProducts.filter(p => p.stage === 'Research Phase' || p.stage === 'Idea Phase').slice(0, 5);
@@ -279,7 +295,7 @@ export default function InvestClientPage({ initialProducts, initialInvestors }: 
             <div>
                 <h2 className="text-3xl font-bold text-center text-primary mb-10">Pitch Decks & Downloads</h2>
                 <div className="max-w-4xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <CompanyProfileDownloader />
+                    <CompanyProfileDownloader staffData={staffData} services={services} settings={settings} products={initialProducts} />
                     <Button asChild variant="outline" size="lg">
                         <a href="/pitch-deck-company.pdf" download>
                             <Download className="mr-2 h-5 w-5" /> Company Pitch Deck
