@@ -1,12 +1,15 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, ChevronRight } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from 'date-fns';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Button } from "@/components/ui/button";
 
-type GenericRequest = Record<string, any>;
+type GenericRequest = Record<string, any> & { id: string };
 
 // Client-side component to prevent hydration errors with time formatting
 export const TimeAgoCell = ({ date, isClient }: { date: string, isClient: boolean }) => {
@@ -31,13 +34,16 @@ export function RequestTable({
     columns,
     isClient,
     renderActions,
+    renderExpandedContent,
 }: { 
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     renderActions?: (request: GenericRequest) => React.ReactNode,
+    renderExpandedContent?: (request: GenericRequest) => React.ReactNode,
 }) { 
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
+    const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
     const sortedData = useMemo(() => {
         let sortableItems = [...data];
@@ -62,6 +68,11 @@ export function RequestTable({
         }
         setSortConfig({ key, direction });
     };
+    
+     const toggleRow = (id: string) => {
+        setExpandedRow(expandedRow === id ? null : id);
+    };
+
 
     const SortableHeader = ({ label, sortKey }: { label: string, sortKey: string }) => (
          <TableHead onClick={() => requestSort(sortKey)} className="cursor-pointer">
@@ -76,6 +87,7 @@ export function RequestTable({
         <Table>
             <TableHeader>
                 <TableRow>
+                    {renderExpandedContent && <TableHead className="w-10" />}
                     {columns.map(col => (
                         <SortableHeader key={col.accessor || col.Header} label={col.Header} sortKey={col.accessor} />
                     ))}
@@ -85,19 +97,27 @@ export function RequestTable({
             <TableBody>
                     {!isClient ? (
                         <TableRow>
-                        <TableCell colSpan={columns.length + (renderActions ? 1: 0)} className="text-center h-24">
+                        <TableCell colSpan={columns.length + (renderActions ? 2: 1)} className="text-center h-24">
                             <Skeleton className="h-10 w-full" />
                         </TableCell>
                     </TableRow>
                     ) : data.length === 0 ? (
                         <TableRow>
-                        <TableCell colSpan={columns.length + (renderActions ? 1 : 0)} className="text-center text-muted-foreground py-8">
+                        <TableCell colSpan={columns.length + (renderActions ? 2 : 1)} className="text-center text-muted-foreground py-8">
                             No items found.
                         </TableCell>
                     </TableRow>
                 ) : (
                     sortedData.map(req => (
-                        <TableRow key={req.id}>
+                        <React.Fragment key={req.id}>
+                        <TableRow onClick={() => renderExpandedContent && toggleRow(req.id)} className={cn(renderExpandedContent && 'cursor-pointer')}>
+                            {renderExpandedContent && (
+                                <TableCell>
+                                    <Button variant="ghost" size="icon" className="h-6 w-6">
+                                        {expandedRow === req.id ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                                    </Button>
+                                </TableCell>
+                            )}
                             {columns.map(col => (
                             <TableCell key={col.accessor}>
                                 {col.Cell ? col.Cell({ row: { original: req } }) : req[col.accessor as keyof GenericRequest]}
@@ -109,6 +129,23 @@ export function RequestTable({
                                 </TableCell>
                             )}
                         </TableRow>
+                        <AnimatePresence>
+                        {expandedRow === req.id && (
+                             <TableRow>
+                                <TableCell colSpan={columns.length + (renderActions ? 2 : 1)}>
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {renderExpandedContent && renderExpandedContent(req)}
+                                    </motion.div>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                        </AnimatePresence>
+                        </React.Fragment>
                     ))
                 )}
             </TableBody>

@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import type { BookingRequest } from '@/lib/stairspace-requests';
+import { ResponseGenerator } from './response-generator';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -74,6 +75,14 @@ export default function StairspaceRequestsClientPage({ initialRequests }: { init
         }
         return <p className="text-xs text-muted-foreground italic text-right">No action required</p>;
     };
+    
+    const renderExpandedContent = (request: BookingRequest) => (
+        <div className="p-4 bg-muted/50">
+            <h4 className="font-semibold text-sm mb-2">Client Message:</h4>
+            <p className="text-sm text-muted-foreground italic">"{request.message || 'No message provided.'}"</p>
+            <ResponseGenerator request={request} />
+        </div>
+    );
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -108,6 +117,7 @@ export default function StairspaceRequestsClientPage({ initialRequests }: { init
                                 columns={columns}
                                 isClient={isClient}
                                 renderActions={(request) => renderActions(request as BookingRequest)}
+                                renderExpandedContent={(request) => renderExpandedContent(request as BookingRequest)}
                             />
                         </CardContent>
                     </Card>
