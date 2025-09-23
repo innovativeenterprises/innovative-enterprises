@@ -86,7 +86,8 @@ const AddEditStockItemDialog = ({
                             )} />
                             <FormField control={form.control} name="saleType" render={({ field }) => (
                                 <FormItem><FormLabel>Sale Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                    <SelectItem value="Fixed Price">Fixed Price</SelectItem><SelectItem value="Auction">Auction</SelectItem>
+                                    <SelectItem value="Fixed Price">Fixed Price</SelectItem>
+                                    <SelectItem value="Auction">Auction</SelectItem>
                                 </SelectContent></Select><FormMessage /></FormItem>
                             )} />
                         </div>
