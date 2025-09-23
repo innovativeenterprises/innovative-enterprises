@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { usePosData, usePosProductsData } from '@/hooks/use-data-hooks';
 
 export default function AiPosPage() {
-    const { posProducts, setPosProducts } = usePosProductsData();
+    const { data: posProducts, setData: setPosProducts } = usePosProductsData();
     const { dailySales, setDailySales } = usePosData();
     const [isClient, setIsClient] = useState(false);
 

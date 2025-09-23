@@ -43,10 +43,12 @@ import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { AppState as AppStateType } from './global-store';
+import { getProducts, getStoreProducts, getServices, getProviders, getOpportunities, getClients, getTestimonials, getPricing, getPosProducts, getDailySales, getStages, getAssets, getInvestors, getProperties, getStairspaceListings, getStairspaceRequests, getLeases, getStockItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getCostSettings, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getUsedItems, getKnowledgeBase, getApplications, getBriefcase, getSolutions, getIndustries, getAiTools, getSaasProducts, getCfoData, getStaffData, getRaahaData, getBeautyData } from './firestore';
 
 export type AppState = AppStateType;
 
 // This provides the default, empty state for the application.
+// Actual data will be fetched by server components and passed as props.
 export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   settings: initialSettings,
   cart: [],
