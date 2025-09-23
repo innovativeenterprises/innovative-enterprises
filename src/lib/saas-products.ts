@@ -16,6 +16,7 @@ export const saasProducts: SaasCategory[] = [
             { name: "ClientView Portal", description: "White-label dashboards for clients to see live project status.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "BoQ Generator", description: "AI-generated Bill of Quantities from floor plans.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "StructurAI BIM", description: "AI-powered BIM for automated clash detection.", stage: "Planning Phase", category: "Construction Tech", status: "On Hold", ready: false },
+            { name: "AI Smart Home Estimator", description: "AI-powered tool to estimate costs for smart home installations.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
         ]
     },
     {
