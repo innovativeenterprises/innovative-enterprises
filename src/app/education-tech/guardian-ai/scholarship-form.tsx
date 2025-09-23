@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -13,13 +14,13 @@ import { ScholarshipFinderInputSchema, type ScholarshipFinderInput, type Scholar
 import { findScholarships } from '@/ai/flows/scholarship-agent';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
-import { useStudentsData } from '@/hooks/use-global-store-data';
+import { useStudentsData } from '@/hooks/use-data-hooks';
 
 export default function ScholarshipFinderForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<ScholarshipFinderOutput | null>(null);
   const { toast } = useToast();
-  const { students } = useStudentsData();
+  const { data: students } = useStudentsData();
 
   const form = useForm<ScholarshipFinderInput>({
     resolver: zodResolver(ScholarshipFinderInputSchema),

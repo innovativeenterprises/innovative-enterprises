@@ -33,7 +33,7 @@ const WellbeingChat = ({ studentName }: { studentName: string }) => {
     };
 
     return (
-        <DialogContent className="w-[450px] h-[80vh] p-0 border-0">
+        <DialogContent className="w-[450px] h-[80vh] p-0 border-0 flex flex-col">
              <ChatComponent
                 agentName="Guardian AI"
                 agentIcon={Heart}
@@ -41,7 +41,7 @@ const WellbeingChat = ({ studentName }: { studentName: string }) => {
                 welcomeMessage={`Hi ${studentName}, this is a safe space to talk. How are you feeling today?`}
                 placeholder="You can talk about anything..."
                 aiFlow={checkinFlow}
-                settings={settings}
+                settings={settings!}
             />
         </DialogContent>
     )
@@ -178,4 +178,3 @@ export default function GuardianAiClientPage({ initialStudents }: { initialStude
         </Suspense>
     )
 }
-

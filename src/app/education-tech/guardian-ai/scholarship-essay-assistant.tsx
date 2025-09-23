@@ -16,7 +16,7 @@ import { Loader2, Sparkles, Download, Copy, PenSquare } from 'lucide-react';
 import { ScholarshipSchema } from '@/ai/flows/guardian-ai/scholarship-agent.schema';
 import type { ScholarshipEssayOutput } from '@/ai/flows/guardian-ai/scholarship-essay-assistant.schema';
 import { generateScholarshipEssay } from '@/ai/flows/guardian-ai/scholarship-essay-assistant';
-import type { Student } from '@/lib/students';
+import type { Student } from '@/lib/students.schema';
 
 const fileToDataURI = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
