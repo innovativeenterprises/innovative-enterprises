@@ -16,26 +16,39 @@ import type { BeautyCenter } from '@/lib/beauty-centers.schema';
 import { useToast } from '@/hooks/use-toast';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
-import { useBeautyData } from '@/hooks/use-data-hooks';
+import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
 
-export default function AgencyDashboardClientPage({ initialAgencies, initialServices, initialAppointments }: { initialAgencies: BeautyCenter[], initialServices: BeautyService[], initialAppointments: BeautyAppointment[] }) {
-    const { data: agencies, setData: setAgencies, isClient: isAgenciesClient } = useBeautyData(initialAgencies);
-    const { data: services, setData: setServices } = useBeautyData(initialServices);
-    const { data: appointments, setData: setAppointments } = useBeautyData(initialAppointments);
+export default function AgencyDashboardClientPage({ 
+    initialAgencies, 
+    initialServices, 
+    initialAppointments,
+    initialSpecialists
+}: { 
+    initialAgencies: BeautyCenter[], 
+    initialServices: BeautyService[], 
+    initialAppointments: BeautyAppointment[],
+    initialSpecialists: BeautySpecialist[],
+}) {
+    const [agencies, setAgencies] = useState(initialAgencies);
+    const [services, setServices] = useState(initialServices);
+    const [appointments, setAppointments] = useState(initialAppointments);
+    const [specialists, setSpecialists] = useState(initialSpecialists);
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const isClient = isAgenciesClient; // Simplified for clarity
+    const [isClient, setIsClient] = useState(false);
 
      useEffect(() => {
-        if (agencies.length > 0 && !selectedAgencyId) {
-            setSelectedAgencyId(agencies[0].id);
+        setIsClient(true);
+        if (initialAgencies.length > 0) {
+            setSelectedAgencyId(initialAgencies[0].id);
         }
-    }, [agencies, selectedAgencyId]);
+    }, [initialAgencies]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
     const filteredServices = useMemo(() => services.filter(s => s.agencyId === selectedAgency?.id), [services, selectedAgency]);
     const filteredAppointments = useMemo(() => appointments.filter(a => a.agencyId === selectedAgency?.id), [appointments, selectedAgency]);
+    const filteredSpecialists = useMemo(() => specialists.filter(s => s.agencyId === selectedAgency?.id), [specialists, selectedAgency]);
 
 
     if (!isClient || !selectedAgency) {
@@ -100,7 +113,11 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialServ
                             <ServiceTable services={filteredServices} setServices={setServices} />
                         </TabsContent>
                          <TabsContent value="staff" className="mt-6">
-                            <SpecialistTable agencyId={selectedAgency.id} />
+                            <SpecialistTable 
+                                agencyId={selectedAgency.id} 
+                                initialSpecialists={filteredSpecialists}
+                                setSpecialists={setSpecialists}
+                             />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
                             {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}

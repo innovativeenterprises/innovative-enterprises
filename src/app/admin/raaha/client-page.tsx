@@ -14,21 +14,21 @@ import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Worker } from '@/lib/raaha-workers.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies.schema';
 import { RequestTable } from '@/app/raaha/agency-dashboard/request-table';
-import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-data-hooks';
 
 export default function AdminRaahaClientPage({ initialAgencies, initialWorkers, initialRequests }: { initialAgencies: RaahaAgency[], initialWorkers: Worker[], initialRequests: HireRequest[] }) {
-    const { data: agencies, setData: setAgencies, isClient: isAgenciesClient } = useAgenciesData(initialAgencies);
-    const { data: workers, setData: setWorkers, isClient: isWorkersClient } = useWorkersData(initialWorkers);
-    const { data: requests, setData: setRequests, isClient: isRequestsClient } = useRequestsData(initialRequests);
+    const [agencies, setAgencies] = useState(initialAgencies);
+    const [workers, setWorkers] = useState(initialWorkers);
+    const [requests, setRequests] = useState(initialRequests);
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const isClient = isAgenciesClient && isWorkersClient && isRequestsClient;
+    const [isClient, setIsClient] = useState(false);
 
      useEffect(() => {
-        if (agencies.length > 0 && !selectedAgencyId) {
-            setSelectedAgencyId(agencies[0].id);
+        setIsClient(true);
+        if (initialAgencies.length > 0) {
+            setSelectedAgencyId(initialAgencies[0].id);
         }
-    }, [agencies, selectedAgencyId]);
+    }, [initialAgencies]);
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
@@ -112,13 +112,18 @@ export default function AdminRaahaClientPage({ initialAgencies, initialWorkers, 
                             <TabsTrigger value="settings">Agency Settings</TabsTrigger>
                         </TabsList>
                         <TabsContent value="requests" className="mt-6">
-                            <RequestTable initialRequests={requests} agency={selectedAgency} />
+                            <RequestTable initialRequests={requests} setRequests={setRequests} agency={selectedAgency} />
                         </TabsContent>
                         <TabsContent value="candidates" className="mt-6">
-                            <CandidateTable columns={candidateTableColumns} agencyId={selectedAgency.id} initialWorkers={workers} />
+                            <CandidateTable 
+                                columns={candidateTableColumns} 
+                                agencyId={selectedAgency.id} 
+                                initialWorkers={workers} 
+                                setWorkers={setWorkers}
+                            />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
+                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
                         </TabsContent>
                     </Tabs>
                 </div>

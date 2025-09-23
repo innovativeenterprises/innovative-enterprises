@@ -12,11 +12,12 @@ export const metadata: Metadata = {
 
 
 export default async function AdminBeautyHubPage() {
-    const { beautyCenters, beautyServices, beautyAppointments } = await getBeautyData();
+    const { beautyCenters, beautyServices, beautyAppointments, beautySpecialists } = await getBeautyData();
 
     return <AgencyDashboardClientPage 
         initialAgencies={beautyCenters} 
         initialServices={beautyServices} 
         initialAppointments={beautyAppointments} 
+        initialSpecialists={beautySpecialists}
     />;
 }
