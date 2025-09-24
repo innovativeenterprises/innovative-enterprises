@@ -6,35 +6,33 @@ import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import { SettingsProvider } from '@/components/layout/settings-provider';
-import { StoreProvider } from '@/lib/global-store';
+import { createAppStore } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 
 
-export function Providers({ children, initialState }: { children: ReactNode, initialState: AppState | null }) {
+export function Providers({ children, initialSettings }: { children: ReactNode, initialSettings: AppState['settings'] | null }) {
   
-  if (!initialState) {
+  if (!initialSettings) {
     // This case should ideally not happen if getInitialState is robust.
     return (
         <div className="flex h-screen w-full items-center justify-center">
-            <p>Error loading application state. Please try again later.</p>
+            <p>Error loading application settings. Please try again later.</p>
         </div>
     );
   }
   
   return (
-    <StoreProvider initialState={initialState}>
-      <SettingsProvider initialSettings={initialState.settings}>
-          <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-            {initialState.settings?.chatWidgetEnabled && <ChatWidget />}
-          </ThemeProvider>
-      </SettingsProvider>
-    </StoreProvider>
+    <SettingsProvider initialSettings={initialSettings}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+        {children}
+        <Toaster />
+        {initialSettings?.chatWidgetEnabled && <ChatWidget />}
+        </ThemeProvider>
+    </SettingsProvider>
   );
 }

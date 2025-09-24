@@ -7,27 +7,25 @@ import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
-import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import KnowledgeTable from "./knowledge-table";
-import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "@/app/admin/operations/pricing-table";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { Pricing } from "@/lib/pricing.schema";
-
+import type { PosProduct } from "@/lib/pos-data.schema";
 
 interface AdminOperationsClientPageProps {
     initialKnowledgeBase: KnowledgeDocument[];
     initialCostSettings: CostRate[];
     initialPricing: Pricing[];
+    initialPosProducts: PosProduct[];
 }
 
 export default function AdminOperationsClientPage({ 
     initialKnowledgeBase, 
     initialCostSettings,
-    initialPricing 
+    initialPricing,
+    initialPosProducts,
 }: AdminOperationsClientPageProps) {
 
   const internalTools = [
@@ -48,16 +46,12 @@ export default function AdminOperationsClientPage({
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-4">
+             <TabsList className="grid w-full grid-cols-1">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
-                <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
-                <TabsTrigger value="costing">Market Rates</TabsTrigger>
-                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
-                 <ThemeGenerator />
                 <div className="pt-8">
-                    <h2 className="text-2xl font-bold mb-4">Other Internal AI Tools</h2>
+                    <h2 className="text-2xl font-bold mb-4">Internal AI Tools</h2>
                     <Accordion type="single" collapsible className="w-full">
                     {internalTools.map(tool => (
                         <AccordionItem value={tool.id} key={tool.id}>
@@ -74,15 +68,6 @@ export default function AdminOperationsClientPage({
                     ))}
                     </Accordion>
                 </div>
-            </TabsContent>
-            <TabsContent value="knowledge-base" className="mt-6">
-                <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
-            </TabsContent>
-             <TabsContent value="costing" className="mt-6 space-y-8">
-                <CostSettingsTable initialRates={initialCostSettings} />
-            </TabsContent>
-             <TabsContent value="pricing" className="mt-6 space-y-8">
-                <PricingTable initialPricing={initialPricing} />
             </TabsContent>
         </Tabs>
     </div>

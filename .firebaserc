@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "innovative-enterprises"
-  }
+    "default": "innovative-enterprises",
+    "innovative-enterprises": "innovative-enterprises"
+  },
+  "targets": {},
+  "etags": {}
 }
