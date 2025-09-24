@@ -112,7 +112,8 @@ This chapter provides a detailed breakdown of each product and service offered b
 
 #### Business Hub
 -   **Executive Summary:** A B2B and B2C marketplace designed to connect businesses, freelancers, and clients for new project opportunities, acting as a local, curated alternative to global freelance platforms.
--   **Concept:** Businesses can post projects or tasks (e.g., "Need a new company logo" or "Seeking a freelance accountant for quarterly audit"). A network of vetted local service providers (freelancers, agencies) can then browse these opportunities and submit proposals or bids. The platform is guided by the AI agent **Hubert**, who assists users in finding the right service categories and providers.
+-   **Concept:** Businesses can post projects or tasks (e.g., "Need a new company logo" or "Seeking a freelance accountant for quarterly audit"). A network of vetted local service providers (freelancers, agencies) can then browse these opportunities and submit proposals or bids. The platform is guided by the AI agent **Hubert**, who assists users in findin
+g the right service categories and providers.
 -   **Objective:** To foster a vibrant local ecosystem of service providers and clients, keeping business and talent within the region and making it easier for businesses to find high-quality local expertise.
 -   **Methodology:**
     1.  A business user navigates to the `/submit-work` page and fills out a form detailing their project requirements, budget, and timeline.
@@ -190,6 +191,17 @@ This section covers our standalone Software-as-a-Service products.
     3.  To create a marketing description, the user can click a "Generate with AI" button. This triggers the `generateListingDescription` flow.
     4.  The AI agent takes the title, location, and tags as input and generates a professional, appealing 2-3 sentence description that highlights the space's benefits (e.g., "Unlock a prime retail opportunity in the heart of Avenues Mall...").
     5.  The owner reviews the AI-generated text, makes any edits, and submits the listing to the marketplace.
+
+#### Facebook Cover Generator
+-   **Executive Summary:** A creative AI tool that automatically generates a professional Facebook cover photo for a business, complete with branding and relevant imagery.
+-   **Concept:** A user provides basic information about their business, including its name, tagline, a brief description, and a desired visual style. The AI then orchestrates a two-step process to create a perfectly sized (851x315 pixels) and professionally designed cover photo.
+-   **Objective:** To provide small businesses and marketers with a quick, easy, and free tool to create high-quality social media assets, removing the need for graphic design skills or software.
+-   **Methodology:**
+    1.  A user fills out a form on the `/facebook-cover-generator` page with their business name, tagline, description, and style preferences (e.g., "modern and clean," "rustic and natural").
+    2.  This submission triggers the `generateFacebookCover` flow.
+    3.  **Step 1 (Background Generation):** The flow first calls the `generateImage` flow. It constructs a detailed prompt for a high-quality background image based on the business description and style, instructing the text-to-image model to leave clean space for text.
+    4.  **Step 2 (Text Overlay):** The `generateFacebookCover` flow then takes the data URI of the newly generated background image and calls the `transformImage` flow. It passes the base image along with a new prompt instructing the image-to-image model to professionally overlay the business name and tagline onto the image, ensuring readability and aesthetic placement.
+    5.  The final, combined image is returned to the user for download.
 
 ---
 *This document will continue to be updated as the INNOVATIVE ENTERPRISES ecosystem evolves. It stands as a testament to our commitment to structured, AI-driven innovation.*
