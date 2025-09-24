@@ -112,8 +112,7 @@ This chapter provides a detailed breakdown of each product and service offered b
 
 #### Business Hub
 -   **Executive Summary:** A B2B and B2C marketplace designed to connect businesses, freelancers, and clients for new project opportunities, acting as a local, curated alternative to global freelance platforms.
--   **Concept:** Businesses can post projects or tasks (e.g., "Need a new company logo" or "Seeking a freelance accountant for quarterly audit"). A network of vetted local service providers (freelancers, agencies) can then browse these opportunities and submit proposals or bids. The platform is guided by the AI agent **Hubert**, who assists users in findin
-g the right service categories and providers.
+-   **Concept:** Businesses can post projects or tasks (e.g., "Need a new company logo" or "Seeking a freelance accountant for quarterly audit"). A network of vetted local service providers (freelancers, agencies) can then browse these opportunities and submit proposals or bids. The platform is guided by the AI agent **Hubert**, who assists users in finding the right service categories and providers.
 -   **Objective:** To foster a vibrant local ecosystem of service providers and clients, keeping business and talent within the region and making it easier for businesses to find high-quality local expertise.
 -   **Methodology:**
     1.  A business user navigates to the `/submit-work` page and fills out a form detailing their project requirements, budget, and timeline.
@@ -202,6 +201,43 @@ This section covers our standalone Software-as-a-Service products.
     3.  **Step 1 (Background Generation):** The flow first calls the `generateImage` flow. It constructs a detailed prompt for a high-quality background image based on the business description and style, instructing the text-to-image model to leave clean space for text.
     4.  **Step 2 (Text Overlay):** The `generateFacebookCover` flow then takes the data URI of the newly generated background image and calls the `transformImage` flow. It passes the base image along with a new prompt instructing the image-to-image model to professionally overlay the business name and tagline onto the image, ensuring readability and aesthetic placement.
     5.  The final, combined image is returned to the user for download.
+
+### 4.3. Creative & Utility Tools
+
+#### AI-POS
+-   **Executive Summary:** A smart, AI-driven Point-of-Sale (POS) system designed for small shops, canteens, and groceries. It provides modern inventory management and sales analytics without requiring expensive, specialized hardware.
+-   **Concept:** A simple, touch-friendly grid interface allows cashiers to quickly add items to a cart. The system tracks all transactions and inventory levels in real-time. The key feature is the integrated AI data analyst, "Dana," who can be queried in natural language to get instant insights into the day's sales.
+-   **Objective:** To provide an affordable, easy-to-use, and intelligent POS solution that gives small business owners the data insights typically reserved for larger retail chains.
+-   **Methodology:**
+    1.  A user (e.g., a cashier) uses the interface at `/ai-pos` to record sales. Each transaction is saved to the `dailySales` collection.
+    2.  The business owner can open the "Sales Analytics" chat modal.
+    3.  The owner asks a question like, "What was our best-selling item today?" or "What was our total revenue?".
+    4.  The UI calls the `analyzeSalesData` flow, passing the user's query and the complete list of the day's transactions as a JSON object.
+    5.  The **Dana (AI Agent)** analyzes the transaction data to calculate the answer, then formulates a natural language response and extracts the key data point (e.g., "Cappuccino" or "OMR 1,234.56").
+    6.  The response is displayed in the chat interface, providing an instant, conversational way to access business intelligence.
+
+#### Swap & Sell Hub
+-   **Executive Summary:** A community-focused marketplace for buying and selling used or old items. It features an AI-powered listing assistant that helps users quickly create appealing and accurate listings from just a photo.
+-   **Concept:** Users wanting to sell, donate, or give away a pre-loved item can upload a picture. An AI agent analyzes the image and suggests a title, category, description, and even an estimated price, drastically simplifying the listing process. Other users can then browse, search, and contact sellers.
+-   **Objective:** To create a fluid and user-friendly second-hand marketplace that encourages reuse and trade within the community by minimizing the friction of creating a new listing.
+-   **Methodology:**
+    1.  A user navigates to the `/swap-and-sell/list-item` page and uploads a photo of their item.
+    2.  They click the "Analyze with AI" button, which calls the `analyzeUsedItem` flow.
+    3.  The AI agent processes the image and returns a structured JSON object containing a suggested `itemName`, `category`, `description`, and `estimatedPriceOMR`.
+    4.  The frontend uses this response to pre-fill the listing form.
+    5.  The user reviews and edits the AI-generated details, sets their final price and listing type, and publishes the item to the marketplace.
+
+#### AI Interior Designer
+-   **Executive Summary:** An AI-powered creative tool that allows users to reimagine their living space. Users upload a photo of their room and select design preferences, and the AI generates a photorealistic rendering of the redesigned space.
+-   **Concept:** This tool leverages generative image-to-image AI models. It takes an existing room photo as a base and "repaints" it according to a user's stylistic instructions, providing instant design inspiration without needing an interior designer.
+-   **Objective:** To give homeowners and renters a fun, easy, and powerful tool to visualize design ideas for their own spaces, helping them make more confident decisions about furniture, color, and layout.
+-   **Methodology:**
+    1.  A user uploads a photo of their room on the `/interior-designer` page.
+    2.  They select their desired `roomType`, `designStyle`, `colorPalette`, and a `keyFeature` they'd like to see included.
+    3.  The frontend combines these selections into a detailed text prompt (e.g., "Redesign this living room in a modern style. The color palette should be warm neutrals. Make sure to include a large plant.").
+    4.  The frontend then calls the `transformImage` flow, passing the user's uploaded image (as a data URI) and the generated text prompt.
+    5.  The AI model uses the base image as a structural reference and the prompt as a stylistic guide to generate a new, redesigned image of the room.
+    6.  The final image is displayed to the user, showing a "before and after" comparison.
 
 ---
 *This document will continue to be updated as the INNOVATIVE ENTERPRISES ecosystem evolves. It stands as a testament to our commitment to structured, AI-driven innovation.*
