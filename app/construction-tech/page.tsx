@@ -3,10 +3,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Check, HardHat, AlertTriangle, GanttChartSquare, ClipboardCheck, Users, Search, DollarSign, Cpu, BarChart, Calculator, Package, Siren, ShieldCheck, Camera, Layers } from "lucide-react";
+import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Siren } from "lucide-react";
 import Link from "next/link";
-import { useProductsData } from "@/hooks/use-data-hooks";
 import type { Product } from "@/lib/products.schema";
+import { useState, useEffect } from "react";
+import { initialProducts } from "@/lib/products";
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -50,7 +51,12 @@ const ProductCard = ({ product }: { product: Product }) => {
 )};
 
 export default function ConstructionTechPage() {
-    const { products } = useProductsData();
+    const [products, setProducts] = useState<Product[]>([]);
+    
+    useEffect(() => {
+        setProducts(initialProducts);
+    }, []);
+
     const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     
   return (

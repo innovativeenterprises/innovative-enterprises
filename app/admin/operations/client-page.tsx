@@ -13,6 +13,7 @@ import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { Pricing } from "@/lib/pricing.schema";
 import type { PosProduct } from "@/lib/pos-data.schema";
+import PosProductTable from "@/app/admin/pos-product-table";
 
 interface AdminOperationsClientPageProps {
     initialKnowledgeBase: KnowledgeDocument[];
@@ -68,6 +69,9 @@ export default function AdminOperationsClientPage({
                     ))}
                     </Accordion>
                 </div>
+            </TabsContent>
+             <TabsContent value="pos-products" className="mt-6">
+                <PosProductTable initialProducts={initialPosProducts} />
             </TabsContent>
         </Tabs>
     </div>
