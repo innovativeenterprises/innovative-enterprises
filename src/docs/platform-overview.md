@@ -5,7 +5,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 
 ## Digital Products & SaaS Platforms (44 Total)
 
-### Category: Construction Tech (11)
+### Category: Construction Tech (12)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Live & Operating | Completed |
@@ -19,6 +19,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
 | StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
+| AI Smart Home Estimator | AI-powered tool to estimate costs for smart home installations based on floor plans. | Live & Operating | Completed |
 
 ### Category: Real Estate Tech (12)
 | Name | Description | Stage | Status |
@@ -87,12 +88,13 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed |
 
 
-### Category: AI & Creative Tools (3)
+### Category: AI & Creative Tools (4)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
 | AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | Completed |
 | AI-POS | A smart, AI-driven Point-of-Sale system for small shops and groceries, providing inventory management and sales analytics without needing expensive hardware. | Live & Operating | Completed |
+| Facebook Cover Generator | An AI tool that generates a professional Facebook cover photo based on business details. | Live & Operating | Completed |
 
 ## Core Business Services (19 Total)
 

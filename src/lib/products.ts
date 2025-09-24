@@ -78,6 +78,7 @@ const hrefMap: Record<string, string> = {
     "Logistics Chain AI": "/logistics-ai",
     "AI Smart Home Estimator": "/construction-tech/smart-home-estimator",
     "AI-POS": "/ai-pos",
+    "Facebook Cover Generator": "/facebook-cover-generator",
 };
 
 export const initialProducts: Product[] = allSaaSProducts.map((p, index) => ({

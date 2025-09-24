@@ -7,7 +7,7 @@ import AmeenSmartLockIcon from "@/components/icons/ameen-smart-lock-icon";
 import KhidmaIcon from "@/components/icons/khidma-icon";
 import VmallIcon from "@/components/icons/vmall-icon";
 import AppiIcon from "@/components/icons/appi-icon";
-import { Gift, Warehouse, Cpu, BarChart, Calculator } from "lucide-react";
+import { Gift, Warehouse, Cpu, BarChart, Calculator, Facebook } from "lucide-react";
 
 export const initialSolutions = [
     {
@@ -234,7 +234,7 @@ export const initialAiTools = [
     title: "Facebook Cover Generator",
     href: "/facebook-cover-generator",
     description: "Generate a professional Facebook cover photo for your business page.",
-    icon: ImageIcon,
+    icon: Facebook,
   },
   {
     title: "PDF Form Filler",

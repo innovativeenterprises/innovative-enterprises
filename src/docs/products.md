@@ -1,6 +1,7 @@
-# Digital Products & SaaS Platforms (39 Total)
 
-## Category: Construction Tech (11)
+# Digital Products & SaaS Platforms (44 Total)
+
+## Category: Construction Tech (12)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Live & Operating | Completed |
@@ -9,11 +10,12 @@
 | WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed |
 | ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Live & Operating | Completed |
 | ConstructFin | Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects. | Live & Operating | Completed |
-| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. (Conceptual) | Idea Phase | On Track |
-| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. (Conceptual) | Development Phase | At Risk |
+| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. | Live & Operating | Completed |
+| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
 | StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
+| AI Smart Home Estimator | AI-powered tool to estimate costs for smart home installations based on floor plans. | Live & Operating | Completed |
 
 ## Category: Real Estate Tech (12)
 | Name | Description | Stage | Status |
@@ -31,7 +33,7 @@
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed |
 | StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed |
 
-## Category: Education Tech (5)
+## Category: Education Tech (7)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed |
@@ -39,13 +41,34 @@
 | Guardian AI | A student wellbeing and success platform offering risk profiling, AI career advisory, and mental health support. | Live & Operating | Completed |
 | CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Live & Operating | Completed |
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed |
+| AI Scholarship Finder | An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level. | Live & Operating | Completed |
+| Teacher Toolkit | A suite of tools for educators, including a Lesson Gamifier to convert textbooks into interactive content, flashcards, and presentations. | Live & Operating | Completed |
+
 
 ## Category: Automotive Tech (1)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | DriveSync AI | An AI-powered SaaS platform for car rental agencies, featuring an intelligent booking agent, fleet management, and integration with IVMS (In-Vehicle Monitoring Systems) for real-time tracking. | Live & Operating | Completed |
 
-## Category: General Platforms & SaaS (10)
+## Category: Fintech (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| Fintech Super-App | An integrated financial services application providing AI-driven auditing, financial analysis, and CFO dashboard capabilities. | Live & Operating | Completed |
+
+
+## Category: Gaming & Social (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Research Phase | On Track |
+
+
+## Category: Beauty & Wellness (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| Beauty & Wellness Hub | A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships. | Live & Operating | Completed |
+
+
+## Category: General Platforms & SaaS (11)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
@@ -55,14 +78,16 @@
 | Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
-| AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Research Phase | On Track |
-| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Research Phase | On Track |
+| AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | Completed |
+| Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Live & Operating | Completed |
 | StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
+| Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed |
 
 
-## Category: AI & Creative Tools (3)
+## Category: AI & Creative Tools (4)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
 | AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | Completed |
 | AI-POS | A smart, AI-driven Point-of-Sale system for small shops and groceries, providing inventory management and sales analytics without needing expensive hardware. | Live & Operating | Completed |
+| Facebook Cover Generator | An AI tool that generates a professional Facebook cover photo based on business details. | Live & Operating | Completed |
