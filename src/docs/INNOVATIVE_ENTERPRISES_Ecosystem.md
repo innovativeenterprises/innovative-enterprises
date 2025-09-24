@@ -231,5 +231,17 @@ This section covers our standalone Software-as-a-Service products.
     6.  The flow returns a ranked list of the top 3-5 matches, each with a justification explaining why they are a good fit.
     7.  The client can review these profiles and submit a hire request, which appears in the agency's private dashboard for follow-up.
 
+#### Beauty & Wellness Hub
+-   **Executive Summary:** A complete SaaS solution for salons, spas, and barbershops, providing tools for managing appointments, staff, services, and client relationships, all enhanced with an AI-powered customer assistant.
+-   **Concept:** Each beauty center gets a dedicated dashboard to manage their services, staff schedules, and appointments. The platform also includes a public-facing page for each salon where customers can view services and interact with an AI beauty consultant named "Mane."
+-   **Objective:** To provide small and medium-sized beauty businesses with an affordable, all-in-one digital platform that enhances their customer service and streamlines their back-office operations.
+-   **Methodology:**
+    1.  A customer visits a salon's page (e.g., `/beauty-hub/agency/[id]`).
+    2.  They can browse the list of services or interact with the chat widget.
+    3.  When a user asks a question like, "My hair is really dry, what do you recommend?", the query is sent to the `beautyAgent` flow.
+    4.  The **Mane** AI agent analyzes the user's query and compares it against the salon's list of available services.
+    5.  The agent identifies the best matching service (e.g., "Deep Conditioning Treatment") and generates a helpful, conversational response explaining why it's a good choice.
+    6.  The agent's response also includes the ID of the recommended service, allowing the UI to highlight it or prompt the user to book it.
+
 ---
 *This document will continue to be updated as the INNOVATIVE ENTERPRISES ecosystem evolves. It stands as a testament to our commitment to structured, AI-driven innovation.*
