@@ -60,4 +60,3 @@
 - [x] All form inputs have associated labels.
 - [ ] The app is fully navigable using only the keyboard. (Needs full check)
 - [x] Color contrast meets WCAG AA standards.
-

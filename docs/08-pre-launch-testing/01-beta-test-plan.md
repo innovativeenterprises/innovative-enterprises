@@ -60,4 +60,3 @@
 - **Week 2:** Active testing period. Our team will provide real-time support in the WhatsApp group.
 - **Week 3:** Send out feedback form reminders. Conduct follow-up calls.
 - **Week 4:** Consolidate all feedback, prioritize bugs in the bug tracking document, and create a "Go/No-Go" launch report.
-

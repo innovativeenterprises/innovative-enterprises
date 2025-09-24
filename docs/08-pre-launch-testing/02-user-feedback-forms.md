@@ -57,4 +57,3 @@ Thank you for helping us test our new platform! Your feedback is crucial for our
 (Open text)
 
 **Thank you for your time and valuable feedback!**
-
