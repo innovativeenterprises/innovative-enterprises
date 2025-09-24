@@ -14,4 +14,3 @@
 | **3**  | Monday    | **Case Study**      | "How Al-Batinah Logistics reduced their document processing time by 80% using our platform. Read the full case study. [Link to blog]" | A professional graphic with the key result "80% Time Saved". | `#CaseStudy #Logistics #OmanSMEs #Efficiency`   |
 |      | Wednesday | **Tip & Trick**       | "Pro Tip: When submitting a task to the Sanad Hub, provide as much detail as possible in the notes to get more accurate bids from our partners. #ProductivityHack" | A simple infographic showing the tip.               | `#SanadHub #Oman #Tips`                          |
 |      | Friday    | **Industry Insight**  | "AI isn't just for big corporations. Here are 3 ways Omani SMEs can leverage AI for immediate growth. (Hint: One of them is our platform). [Link to blog]" | Link to the thought leadership article.            | `#AI #FutureOfWork #DigitalTransformation`       |
-
