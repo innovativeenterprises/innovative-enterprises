@@ -14,7 +14,6 @@ export const metadata: Metadata = {
   description: "Driving the future of mobility with AI-powered platforms for rental agencies, fleet management, and beyond.",
 };
 
-
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
         "DriveSync AI": Car,
