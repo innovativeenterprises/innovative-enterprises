@@ -47,43 +47,49 @@ export default function AdminOperationsClientPage({
             </p>
         </div>
 
-        <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
-                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
-                <TabsTrigger value="pos-products">POS Products</TabsTrigger>
-                <TabsTrigger value="costing">Market Rates</TabsTrigger>
-            </TabsList>
-            <TabsContent value="ai-tools" className="mt-6 space-y-8">
-                <div className="pt-8">
-                    <h2 className="text-2xl font-bold mb-4">Internal AI Tools</h2>
-                    <Accordion type="single" collapsible className="w-full">
-                    {internalTools.map(tool => (
-                        <AccordionItem value={tool.id} key={tool.id}>
-                            <AccordionTrigger>
-                                <div className="flex items-center gap-3">
-                                    <tool.icon className="h-5 w-5 text-primary" />
-                                    <span className="text-lg font-semibold">{tool.title}</span>
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="pt-4">
-                                {tool.component}
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                    </Accordion>
-                </div>
-            </TabsContent>
-            <TabsContent value="pricing" className="mt-6">
-              <PricingTable initialPricing={initialPricing} />
-            </TabsContent>
-            <TabsContent value="pos-products" className="mt-6">
-                <PosProductTable initialProducts={initialPosProducts} />
-            </TabsContent>
-            <TabsContent value="costing" className="mt-6 space-y-8">
-                <CostSettingsTable initialRates={initialCostSettings} />
-            </TabsContent>
-        </Tabs>
+        <div className="space-y-8">
+             <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="ai-tools">
+                    <AccordionTrigger>
+                        <h2 className="text-2xl font-bold">Internal AI Tools</h2>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4">
+                         <Accordion type="single" collapsible className="w-full">
+                            {internalTools.map(tool => (
+                                <AccordionItem value={tool.id} key={tool.id}>
+                                    <AccordionTrigger>
+                                        <div className="flex items-center gap-3">
+                                            <tool.icon className="h-5 w-5 text-primary" />
+                                            <span className="text-lg font-semibold">{tool.title}</span>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="pt-4">
+                                        {tool.component}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </AccordionContent>
+                </AccordionItem>
+             </Accordion>
+
+            <Tabs defaultValue="pricing" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
+                    <TabsTrigger value="pos-products">POS Products</TabsTrigger>
+                    <TabsTrigger value="costing">Market Rates</TabsTrigger>
+                </TabsList>
+                <TabsContent value="pricing" className="mt-6">
+                <PricingTable initialPricing={initialPricing} />
+                </TabsContent>
+                <TabsContent value="pos-products" className="mt-6">
+                    <PosProductTable initialProducts={initialPosProducts} />
+                </TabsContent>
+                <TabsContent value="costing" className="mt-6">
+                    <CostSettingsTable initialRates={initialCostSettings} />
+                </TabsContent>
+            </Tabs>
+        </div>
     </div>
   );
 }
