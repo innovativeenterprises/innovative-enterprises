@@ -1,7 +1,7 @@
 
 'use server';
 
-import AgencyDashboardClientPage from '@/app/raaha/agency-dashboard/client-page';
+import AgencyDashboardClientPage from '@/app/beauty-hub/agency-dashboard/client-page';
 import { getBeautyData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
@@ -18,6 +18,5 @@ export default async function AdminBeautyHubPage() {
         initialServices={beautyServices} 
         initialAppointments={beautyAppointments}
         initialSpecialists={beautySpecialists}
-        dashboardType="beauty"
     />;
 }
