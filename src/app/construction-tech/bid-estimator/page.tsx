@@ -22,7 +22,7 @@ import { useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { fileToDataURI, fileToText } from '@/lib/utils';
 import type { CostRate } from '@/lib/cost-settings.schema';
-
+import { useCostSettingsData, useBriefcaseData } from '@/hooks/use-data-hooks';
 
 const FormSchema = z.object({
   boqFile: z.any().refine(file => file?.length == 1, 'A Bill of Quantities file is required.'),
@@ -36,14 +36,9 @@ function EstimatorForm() {
   const [isGeneratingTender, setIsGeneratingTender] = useState(false);
   const [response, setResponse] = useState<BoQEstimatorOutput | null>(null);
   const [tenderResponse, setTenderResponse] = useState<string | null>(null);
-  const [costSettings, setCostSettings] = useState<CostRate[]>([]);
-  const [isClient, setIsClient] = useState(false);
+  const { data: costSettings, isClient } = useCostSettingsData();
+  const { setData: setBriefcaseData } = useBriefcaseData();
   
-  useEffect(() => {
-    setIsClient(true);
-    // In a real app, you might fetch cost settings here if they're not in a store
-  }, []);
-
   const boqTableRef = useRef(null);
   const router = useRouter();
   const { toast } = useToast();
@@ -264,7 +259,26 @@ function EstimatorForm() {
   };
 
   const handleSaveToBriefcase = () => {
-    toast({ title: "Coming Soon!", description: "Saving to E-Briefcase will be implemented in a future update." });
+    if (!response) return;
+    const newBoq = {
+        id: `boq_${Date.now()}`,
+        name: form.getValues('boqFile')[0]?.name || 'Unnamed Project',
+        date: new Date().toISOString(),
+        items: response.costedItems,
+    };
+     setBriefcaseData(prev => {
+        if (!prev) return prev;
+        return {
+            ...prev,
+            savedBoqs: [newBoq, ...prev.savedBoqs],
+        }
+    });
+     toast({ 
+        title: "BoQ Saved!", 
+        description: (
+            <p>The project has been saved to your <Link href="/briefcase" className="font-bold underline">E-Briefcase</Link>.</p>
+        )
+    });
   }
 
   const handleCopy = () => {
@@ -507,7 +521,7 @@ function EstimatorForm() {
                         <div className="flex justify-end gap-2">
                             <Button variant="outline" size="sm" onClick={handleSaveToBriefcase}><Briefcase className="mr-2 h-4 w-4"/> Save</Button>
                             <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="mr-2 h-4 w-4"/> Copy</Button>
-                            <Button variant="outline" size="sm" onClick={handleDownloadPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
+                            <Button variant="outline" size="sm" onClick={handleDownloadTenderPdf}><Download className="mr-2 h-4 w-4"/> PDF</Button>
                             <Button variant="outline" size="sm" onClick={handleDownloadTenderTxt}><Download className="mr-2 h-4 w-4"/> TXT</Button>
                         </div>
                     </CardHeader>

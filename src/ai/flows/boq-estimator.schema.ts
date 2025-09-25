@@ -37,4 +37,3 @@ export const BoQEstimatorOutputSchema = z.object({
   summary: BoQSummarySchema.describe("A summary of the total calculated costs."),
 });
 export type BoQEstimatorOutput = z.infer<typeof BoQEstimatorOutputSchema>;
-
