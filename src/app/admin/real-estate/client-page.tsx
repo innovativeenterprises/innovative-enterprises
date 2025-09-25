@@ -5,8 +5,8 @@ import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from "@/comp
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BarChart } from "lucide-react";
 import Link from 'next/link';
-import PropertyTable from "../property-table";
-import StairspaceTable from "../stairspace/stairspace-listings-table";
+import PropertyTable from "./property-table";
+import StairspaceTable from "./stairspace-table";
 import type { Property } from '@/lib/properties.schema';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 

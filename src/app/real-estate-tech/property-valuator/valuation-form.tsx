@@ -10,8 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Check, TrendingUp, Banknote, MapPin, Building, BedDouble, Bath, BarChart } from 'lucide-react';
-import { PropertyValuationInputSchema, type PropertyValuationInput, type PropertyValuationOutput } from '@/ai/flows/property-valuation.schema';
+import { Loader2, Sparkles, Check, TrendingUp, Banknote, MapPin, Building, BedDouble, Bath } from 'lucide-react';
+import { PropertyValuationInputSchema, type PropertyValuationOutput } from '@/ai/flows/property-valuation.schema';
 import { evaluateProperty } from '@/ai/flows/property-valuation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
