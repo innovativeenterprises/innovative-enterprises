@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Download, ImageIcon, Wand2, ArrowRight, Home } from 'lucide-react';
+import { Loader2, Sparkles, Download, Wand2, ArrowRight, Home } from 'lucide-react';
 import Image from 'next/image';
 import { transformImage } from '@/ai/flows/image-transformer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -229,7 +229,7 @@ export default function InteriorDesignerPage() {
                     </CardFooter>
                 </Card>
             )}
-            </div>
+        </div>
       </div>
     </div>
   );

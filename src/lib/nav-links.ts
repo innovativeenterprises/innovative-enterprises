@@ -266,18 +266,12 @@ export const initialAiTools = [
     icon: Calculator,
   },
   {
-    title: "Fire & Safety Estimator",
+    title: "Building Systems Estimator",
     href: "/construction-tech/fire-safety-estimator",
-    description: "Upload a floor plan and get a preliminary fire safety equipment list and cost estimate.",
+    description: "Get AI-powered cost estimates for Fire Safety & Smart Home systems.",
     icon: Siren,
   },
    {
-    title: "AI Smart Home Estimator",
-    href: "/construction-tech/smart-home-estimator",
-    description: "Get an AI-powered cost estimate for your smart home installation.",
-    icon: Cpu,
-  },
-  {
     title: "AI-POS",
     href: "/ai-pos",
     description: "A smart Point-of-Sale system with AI-powered sales analytics.",
