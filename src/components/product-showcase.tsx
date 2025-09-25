@@ -2,9 +2,8 @@
 'use server';
 
 import ProductShowcaseClient from './product-showcase-client';
-import { getStoreProducts } from '@/lib/firestore';
+import type { Product } from '@/lib/products.schema';
 
-export default async function ProductShowcase() {
-    const products = await getStoreProducts();
+export default async function ProductShowcase({ products }: { products: Product[] }) {
     return <ProductShowcaseClient products={products} />;
 }

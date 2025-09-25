@@ -2,9 +2,8 @@
 'use server';
 
 import ServiceCatalogClient from './service-catalog-client';
-import { getServices } from '@/lib/firestore';
+import type { Service } from '@/lib/services.schema';
 
-export default async function ServiceCatalog() {
-    const services = await getServices();
+export default async function ServiceCatalog({ services }: { services: Service[]}) {
     return <ServiceCatalogClient services={services} />;
 }

@@ -2,14 +2,9 @@
 'use server';
 
 import ClientTestimonialsClient from "@/components/client-testimonials-client";
-import { getClients, getTestimonials } from "@/lib/firestore";
+import type { Client, Testimonial } from '@/lib/clients.schema';
 
-export default async function ClientTestimonials() {
-    const [clients, testimonials] = await Promise.all([
-        getClients(),
-        getTestimonials(),
-    ]);
-
+export default async function ClientTestimonials({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[] }) {
     return (
         <ClientTestimonialsClient clients={clients} testimonials={testimonials} />
     );

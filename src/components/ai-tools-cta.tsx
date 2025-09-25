@@ -2,9 +2,8 @@
 'use server';
 
 import AiToolsCtaClient from "./ai-tools-cta-client";
-import { getAiTools } from "@/lib/firestore";
+import type { AiTool } from '@/lib/nav-links';
 
-export default async function AiToolsCta() {
-    const aiTools = await getAiTools();
+export default async function AiToolsCta({ aiTools }: { aiTools: AiTool[]}) {
     return <AiToolsCtaClient aiTools={aiTools} />;
 }
