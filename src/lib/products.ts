@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 import { saasProducts } from '@/lib/saas-products';
 
@@ -51,6 +50,7 @@ const hrefMap: Record<string, string> = {
     "Facebook Cover Generator": "/facebook-cover-generator",
     "StructurAI BIM": "/construction-tech/structurai-bim",
     "We Match - MATCH CUP GAME": "/we-match",
+    "ConstructFin": "/construction-tech/constructfin",
 };
 
 const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
