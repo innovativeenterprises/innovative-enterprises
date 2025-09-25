@@ -1,9 +1,9 @@
 
 'use server';
 
-import StudentHousingClientPage from '@/app/admin/education-tech/student-housing/client-page';
 import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
+import StudentHousingClientPage from '@/app/admin/education-tech/student-housing/client-page';
 
 export const metadata: Metadata = {
   title: "Student Housing Management | EduFlow Suite",

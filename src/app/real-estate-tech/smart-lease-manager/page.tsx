@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { FileText, ArrowLeft, PlusCircle, Bell, DollarSign, TrendingUp, TrendingDown } from "lucide-react";
+import { FileText, ArrowLeft, PlusCircle, Bell, DollarSign } from "lucide-react";
 import Link from 'next/link';
 import { useLeasesData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';

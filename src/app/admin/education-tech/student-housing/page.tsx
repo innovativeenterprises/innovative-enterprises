@@ -1,9 +1,9 @@
 
 'use server';
 
-import StudentHousingClientPage from './client-page';
 import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
+import StudentHousingClientPage from './client-page';
 
 export const metadata: Metadata = {
   title: "Admin - Student Housing | Innovative Enterprises",
