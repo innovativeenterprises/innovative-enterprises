@@ -9,8 +9,25 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { Pricing } from "@/lib/pricing.schema";
+import type { PosProduct } from "@/lib/pos-data.schema";
+import PricingTable from "@/app/admin/pricing-table";
+import PosProductTable from "@/app/admin/pos-product-table";
+import CostSettingsTable from "./cost-settings-table";
+import type { CostRate } from "@/lib/cost-settings.schema";
 
-export default function AdminOperationsClientPage() {
+
+interface AdminOperationsClientPageProps {
+    initialPricing: Pricing[];
+    initialPosProducts: PosProduct[];
+    initialCostSettings: CostRate[];
+}
+
+export default function AdminOperationsClientPage({ 
+    initialPricing,
+    initialPosProducts,
+    initialCostSettings,
+}: AdminOperationsClientPageProps) {
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -23,15 +40,18 @@ export default function AdminOperationsClientPage() {
   return (
     <div className="space-y-8">
         <div>
-            <h1 className="text-3xl font-bold">Operations</h1>
+            <h1 className="text-3xl font-bold">Operations & Settings</h1>
             <p className="text-muted-foreground">
-                A suite of internal AI tools and configurations to enhance business operations.
+                A suite of internal AI tools and operational configurations.
             </p>
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-1">
-                <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
+             <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
+                <TabsTrigger value="pricing">Pricing</TabsTrigger>
+                <TabsTrigger value="pos-products">POS Products</TabsTrigger>
+                <TabsTrigger value="costing">Market Rates</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                 <div className="pt-8">
@@ -52,6 +72,15 @@ export default function AdminOperationsClientPage() {
                     ))}
                     </Accordion>
                 </div>
+            </TabsContent>
+            <TabsContent value="pricing" className="mt-6">
+              <PricingTable initialPricing={initialPricing} />
+            </TabsContent>
+            <TabsContent value="pos-products" className="mt-6">
+                <PosProductTable initialProducts={initialPosProducts} />
+            </TabsContent>
+            <TabsContent value="costing" className="mt-6 space-y-8">
+                <CostSettingsTable initialRates={initialCostSettings} />
             </TabsContent>
         </Tabs>
     </div>
