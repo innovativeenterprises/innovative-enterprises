@@ -8,4 +8,3 @@ export default async function RealEstateListingsPage() {
     const initialProperties = await getProperties();
     return <PropertyTable initialProperties={initialProperties} />;
 }
-
