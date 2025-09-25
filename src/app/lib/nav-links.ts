@@ -1,5 +1,4 @@
 
-
 import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook } from "lucide-react";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
@@ -289,4 +288,3 @@ export const initialAiTools = [
 export type Solution = typeof initialSolutions[number];
 export type Industry = typeof initialIndustries[number];
 export type AiTool = typeof initialAiTools[number];
-

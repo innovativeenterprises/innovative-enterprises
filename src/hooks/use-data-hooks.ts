@@ -2,18 +2,20 @@
 'use client';
 
 import { useGlobalStore } from '@/lib/global-store.tsx';
+import type { AppState } from '@/lib/initial-state';
 
 // Simplified hook creation
-const createDataHook = <T, K extends keyof T>(key: K) => {
-  return (initialData?: T[K]) => {
-    const data = useGlobalStore(state => state[key]) as T[K];
+const createDataHook = <K extends keyof AppState>(key: K) => {
+  return () => {
+    const data = useGlobalStore(state => state[key]) as AppState[K];
     const setData = useGlobalStore(state => state.set);
     const isClient = useGlobalStore(state => state.isClient);
-    
-    // This effect is now removed as initialization is handled in the main provider
-    // and this pattern caused issues with server components passing initial data.
 
-    return { data, setData, isClient };
+    const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
+      setData(state => ({ ...state, [key]: updater(state[key]) }));
+    };
+
+    return { data, setData: setKeyData, isClient };
   };
 };
 
@@ -22,7 +24,13 @@ export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
-export const useStaffData = createDataHook('leadership' || 'staff' || 'agentCategories');
+export const useStaffData = () => ({
+  leadership: useGlobalStore(state => state.leadership),
+  staff: useGlobalStore(state => state.staff),
+  agentCategories: useGlobalStore(state => state.agentCategories),
+  setData: useGlobalStore(state => state.set),
+  isClient: useGlobalStore(state => state.isClient)
+});
 export const useCfoData = createDataHook('cfoData');
 export const useAssetsData = createDataHook('assets');
 export const usePropertiesData = createDataHook('properties');
