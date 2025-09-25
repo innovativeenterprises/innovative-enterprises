@@ -51,6 +51,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
 // Create specific hooks for each part of the state
 export const useSettingsData = createDataHook('settings');
 export const useCartData = createDataHook('cart');
+export const useStoreProductsData = createDataHook('storeProducts');
 export const useProductsData = createDataHook('products');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
