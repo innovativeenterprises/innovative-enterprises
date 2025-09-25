@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -15,15 +16,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
-import { analyzeKnowledgeDocument } from "@/ai/flows/knowledge-document-analysis";
-import { trainAgent } from "@/ai/flows/train-agent";
-import { scrapeAndSummarize } from "@/ai/flows/web-scraper-agent";
+import { analyzeKnowledgeDocument } from '@/ai/flows/knowledge-document-analysis';
+import { trainAgent } from '@/ai/flows/train-agent';
+import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
 import { initialAgentCategories } from '@/lib/agents';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
+import { useKnowledgeBaseData } from "@/hooks/use-data-hooks";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -313,16 +315,10 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
 }
 
 export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowledgeBase: KnowledgeDocument[] }) {
-    const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeDocument[]>([]);
+    const { data: knowledgeBase, setData: setKnowledgeBase, isClient } = useKnowledgeBaseData(initialKnowledgeBase);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        setKnowledgeBase(initialKnowledgeBase);
-    }, [initialKnowledgeBase]);
 
     const handleOpenDialog = (doc?: KnowledgeDocument) => {
         setSelectedDoc(doc);
