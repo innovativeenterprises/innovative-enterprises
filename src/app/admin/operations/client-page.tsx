@@ -8,25 +8,17 @@ import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Pricing } from "@/lib/pricing.schema";
-import type { PosProduct } from "@/lib/pos-data.schema";
-import PricingTable from "@/app/admin/pricing-table";
-import PosProductTable from "@/app/admin/pos-product-table";
+import ThemeGenerator from "./theme-generator";
 import CostSettingsTable from "./cost-settings-table";
 import type { CostRate } from "@/lib/cost-settings.schema";
 
 
 // --- Main Operations Client Page ---
 interface AdminOperationsClientPageProps {
-    initialPricing: Pricing[];
-    initialPosProducts: PosProduct[];
     initialCostSettings: CostRate[];
 }
 
 export default function AdminOperationsClientPage({ 
-    initialPricing,
-    initialPosProducts,
     initialCostSettings,
 }: AdminOperationsClientPageProps) {
 
@@ -73,22 +65,8 @@ export default function AdminOperationsClientPage({
                 </AccordionItem>
              </Accordion>
 
-            <Tabs defaultValue="pricing" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
-                    <TabsTrigger value="pos-products">POS Products</TabsTrigger>
-                    <TabsTrigger value="costing">Market Rates</TabsTrigger>
-                </TabsList>
-                <TabsContent value="pricing" className="mt-6">
-                <PricingTable initialPricing={initialPricing} />
-                </TabsContent>
-                <TabsContent value="pos-products" className="mt-6">
-                    <PosProductTable initialProducts={initialPosProducts} />
-                </TabsContent>
-                <TabsContent value="costing" className="mt-6">
-                    <CostSettingsTable initialRates={initialCostSettings} />
-                </TabsContent>
-            </Tabs>
+            <CostSettingsTable initialRates={initialCostSettings} />
+            <ThemeGenerator />
         </div>
     </div>
   );

@@ -4,7 +4,7 @@
 import type { Provider } from '@/lib/providers.schema';
 import type { Asset } from '@/lib/assets.schema';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProviderTable from './provider-table';
+import ProviderTable from '@/components/provider-table';
 import AssetTable from '../asset-table';
 
 export default function NetworkPageClient({ initialProviders, initialAssets }: { initialProviders: Provider[], initialAssets: Asset[] }) {

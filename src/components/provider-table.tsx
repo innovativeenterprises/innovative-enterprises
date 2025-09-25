@@ -21,6 +21,7 @@ import { getStatusBadge } from "@/components/status-badges";
 import { PlusCircle, Edit, Trash2, ArrowRight } from "lucide-react";
 import { DueDateDisplay } from "@/components/due-date-display";
 import { useProvidersData } from "@/hooks/use-data-hooks";
+import { z } from 'zod';
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -167,7 +168,7 @@ export default function ProviderTable({ initialProviders }: { initialProviders: 
                                 <TableCell>{provider.services}</TableCell>
                                 <TableCell>{getStatusBadge(provider.status)}</TableCell>
                                 <TableCell>
-                                    <DueDateDisplay date={provider.subscriptionExpiry as string} prefix="Expires:" />
+                                    <DueDateDisplay date={provider.subscriptionExpiry?.toString()} prefix="Expires:" />
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
