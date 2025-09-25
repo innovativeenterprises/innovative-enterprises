@@ -42,7 +42,7 @@ const AddEditListingDialog = ({
     onSave: (values: ListingValues, id?: string) => void,
     children: React.ReactNode,
     isOpen: boolean,
-    onOpenChange: (open: boolean) => void
+    onOpenChange: (open: boolean) => void,
 }) => {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
@@ -141,11 +141,17 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div><CardTitle>StairSpace Listings</CardTitle><CardDescription>Manage all micro-retail space listings.</CardDescription></div>
-                 <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button>
+                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button>
             </CardHeader>
             <CardContent>
-                <AddEditListingDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} listing={selectedListing} onSave={handleSave}>
-                    <div />
+                <AddEditListingDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    listing={selectedListing}
+                    onSave={handleSave}
+                >
+                    {/* Placeholder for programmatic trigger */}
+                     <div/>
                 </AddEditListingDialog>
                 <Table><TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>{!isClient ? <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow> : (
