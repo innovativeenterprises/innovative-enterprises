@@ -9,31 +9,32 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SpecialistTable } from './specialist-table';
-import { Badge } from '@/components/ui/badge';
 import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import type { BeautyService } from '@/lib/beauty-services.schema';
 import type { BeautyCenter } from '@/lib/beauty-centers.schema';
 import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
-import { useToast } from '@/hooks/use-toast';
+import { useBeautyCentersData, useBeautyServicesData, useBeautyAppointmentsData, useBeautySpecialistsData } from '@/hooks/use-data-hooks';
 import { ServiceTable } from './service-table';
 import { ScheduleTable } from './schedule-table';
+
+interface AgencyDashboardClientPageProps {
+  initialAgencies: BeautyCenter[];
+  initialServices: BeautyService[];
+  initialAppointments: BeautyAppointment[];
+  initialSpecialists: BeautySpecialist[];
+}
 
 export default function AgencyDashboardClientPage({ 
     initialAgencies, 
     initialServices, 
     initialAppointments,
     initialSpecialists
-}: { 
-    initialAgencies: BeautyCenter[], 
-    initialServices: BeautyService[], 
-    initialAppointments: BeautyAppointment[],
-    initialSpecialists: BeautySpecialist[]
-}) {
-    const [agencies, setAgencies] = useState(initialAgencies);
-    const [services, setServices] = useState(initialServices);
-    const [appointments, setAppointments] = useState(initialAppointments);
-    const [specialists, setSpecialists] = useState(initialSpecialists);
-
+}: AgencyDashboardClientPageProps) {
+    const { data: agencies, setData: setAgencies } = useBeautyCentersData(initialAgencies);
+    const { data: services, setData: setServices } = useBeautyServicesData(initialServices);
+    const { data: appointments, setData: setAppointments } = useBeautyAppointmentsData(initialAppointments);
+    const { data: specialists, setData: setSpecialists } = useBeautySpecialistsData(initialSpecialists);
+    
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const [isClient, setIsClient] = useState(false);
 
@@ -46,9 +47,9 @@ export default function AgencyDashboardClientPage({
 
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
-    const filteredServices = useMemo(() => services.filter(s => s.agencyId === selectedAgency?.id), [services, selectedAgency]);
-    const filteredAppointments = useMemo(() => appointments.filter(a => a.agencyId === selectedAgency?.id), [appointments, selectedAgency]);
-    const filteredSpecialists = useMemo(() => specialists.filter(s => s.agencyId === selectedAgency?.id), [specialists, selectedAgency]);
+    const filteredServices = useMemo(() => services?.filter(s => s.agencyId === selectedAgency?.id), [services, selectedAgency]);
+    const filteredAppointments = useMemo(() => appointments?.filter(a => a.agencyId === selectedAgency?.id), [appointments, selectedAgency]);
+    const filteredSpecialists = useMemo(() => specialists?.filter(s => s.agencyId === selectedAgency?.id), [specialists, selectedAgency]);
 
 
     if (!isClient || !selectedAgency) {
@@ -107,20 +108,20 @@ export default function AgencyDashboardClientPage({
                             <TabsTrigger value="settings">Center Settings</TabsTrigger>
                         </TabsList>
                         <TabsContent value="schedule" className="mt-6">
-                            <ScheduleTable appointments={filteredAppointments} setAppointments={setAppointments} />
+                            <ScheduleTable appointments={filteredAppointments || []} setAppointments={setAppointments} />
                         </TabsContent>
                         <TabsContent value="services" className="mt-6">
-                            <ServiceTable services={filteredServices} setServices={setServices} />
+                            <ServiceTable services={filteredServices || []} setServices={setServices} />
                         </TabsContent>
                          <TabsContent value="staff" className="mt-6">
                             <SpecialistTable 
                                 agencyId={selectedAgency.id} 
-                                initialSpecialists={filteredSpecialists}
+                                specialists={filteredSpecialists || []}
                                 setSpecialists={setSpecialists}
                              />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
+                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
                         </TabsContent>
                     </Tabs>
                 </div>
