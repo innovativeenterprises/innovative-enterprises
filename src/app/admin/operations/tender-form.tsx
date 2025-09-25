@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { generateTenderResponse } from '@/ai/flows/tender-response-assistant';
@@ -60,9 +61,31 @@ export default function TenderForm() {
               <FormField control={form.control} name="tenderFiles" render={({ field }) => (
                 <FormItem><FormLabel>Tender Documents</FormLabel><FormControl><Input type="file" multiple onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
               )} />
+              <FormField control={form.control} name="projectRequirements" render={({ field }) => (
+                <FormItem><FormLabel>Project Requirements Summary</FormLabel><FormControl><Textarea placeholder="Briefly summarize the key project requirements mentioned in the tender..." rows={3} {...field} /></FormControl><FormMessage /></FormItem>
+              )}/>
+               <div className="grid md:grid-cols-2 gap-4">
+                  <FormField control={form.control} name="projectName" render={({ field }) => (
+                      <FormItem><FormLabel>Project Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  )}/>
+                  <FormField control={form.control} name="tenderingAuthority" render={({ field }) => (
+                      <FormItem><FormLabel>Tendering Authority</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  )}/>
+              </div>
               <FormField control={form.control} name="companyName" render={({ field }) => (
                 <FormItem><FormLabel>Your Company Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
               )} />
+                <FormField control={form.control} name="companyOverview" render={({ field }) => (
+                <FormItem><FormLabel>Company Overview</FormLabel><FormControl><Textarea placeholder="A brief overview of your company..." rows={3} {...field} /></FormControl><FormMessage /></FormItem>
+              )}/>
+              <div className="grid md:grid-cols-2 gap-4">
+                <FormField control={form.control} name="estimatedCost" render={({ field }) => (
+                    <FormItem><FormLabel>Estimated Cost (OMR)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                )}/>
+                <FormField control={form.control} name="priceValidityDays" render={({ field }) => (
+                    <FormItem><FormLabel>Price Validity (Days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                )}/>
+              </div>
               <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : 'Generate Draft Response'}
               </Button>
