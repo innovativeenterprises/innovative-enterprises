@@ -10,6 +10,11 @@ import type { Service } from "@/lib/services.schema";
 import type { Product } from "@/lib/products.schema";
 import type { ProjectStage } from "@/lib/stages";
 import type { Client, Testimonial } from "@/lib/clients.schema";
+import type { Pricing } from "@/lib/pricing.schema";
+import type { PosProduct } from "@/lib/pos-data.schema";
+import PricingTable from "@/app/admin/pricing-table";
+import PosProductTable from "@/app/admin/pos-product-table";
+
 
 interface AdminContentClientPageProps {
     initialServices: Service[];
@@ -17,6 +22,8 @@ interface AdminContentClientPageProps {
     initialStages: ProjectStage[];
     initialClients: Client[];
     initialTestimonials: Testimonial[];
+    initialPricing: Pricing[];
+    initialPosProducts: PosProduct[];
 }
 
 export default function AdminContentClientPage({
@@ -25,6 +32,8 @@ export default function AdminContentClientPage({
     initialStages,
     initialClients,
     initialTestimonials,
+    initialPricing,
+    initialPosProducts,
 }: AdminContentClientPageProps) {
   return (
     <div className="space-y-8">
@@ -35,10 +44,12 @@ export default function AdminContentClientPage({
         </p>
       </div>
       <Tabs defaultValue="services" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
+          <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
+          <TabsTrigger value="pos-products">POS Products</TabsTrigger>
         </TabsList>
         <TabsContent value="services" className="mt-6">
           <ServiceTable initialServices={initialServices} />
@@ -54,6 +65,12 @@ export default function AdminContentClientPage({
             <ClientTable initialClients={initialClients} />
             <TestimonialTable initialTestimonials={initialTestimonials} />
           </div>
+        </TabsContent>
+        <TabsContent value="pricing" className="mt-6">
+          <PricingTable initialPricing={initialPricing} />
+        </TabsContent>
+        <TabsContent value="pos-products" className="mt-6">
+            <PosProductTable initialProducts={initialPosProducts} />
         </TabsContent>
       </Tabs>
     </div>

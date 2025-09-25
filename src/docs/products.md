@@ -1,7 +1,7 @@
 
 # Digital Products & SaaS Platforms (45 Total)
 
-## Category: Construction Tech (12)
+## Category: Construction Tech (11)
 | Name | Description | Stage | Status | Ready |
 | :--- | :--- | :--- | :--- | :--- |
 | Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Live & Operating | Completed | Yes |
@@ -33,7 +33,7 @@
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed | Yes |
 | StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed | Yes |
 
-## Category: Education Tech (7)
+## Category: Education Tech (8)
 | Name | Description | Stage | Status | Ready |
 | :--- | :--- | :--- | :--- | :--- |
 | EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed | Yes |
@@ -43,6 +43,7 @@
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed | No |
 | AI Scholarship Finder | An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level. | Live & Operating | Completed | Yes |
 | Teacher Toolkit | A suite of tools for educators, including a Lesson Gamifier to convert textbooks into interactive content, flashcards, and presentations. | Live & Operating | Completed | Yes |
+| AI-POS for Education | A smart, AI-driven Point-of-Sale system for canteens/stores, providing inventory management and sales analytics. | Live & Operating | Completed | Yes |
 
 
 ## Category: Automotive Tech (1)
@@ -62,11 +63,6 @@
 | We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Live & Operating | Completed | Yes |
 
 
-## Category: Beauty & Wellness (1)
-| Name | Description | Stage | Status |
-| :--- | :--- | :--- | :--- |
-| Beauty & Wellness Hub | A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships. | Live & Operating | Completed |
-
 ## Category: General Platforms & SaaS (11)
 | Name | Description | Stage | Status | Ready |
 | :--- | :--- | :--- | :--- | :--- |
@@ -83,10 +79,9 @@
 | Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed | Yes |
 
 
-## Category: AI & Creative Tools (4)
+## Category: AI & Creative Tools (3)
 | Name | Description | Stage | Status | Ready |
 | :--- | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed | Yes |
 | AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | Completed | Yes |
-| AI-POS | A smart, AI-driven Point-of-Sale system for small shops and groceries, providing inventory management and sales analytics without needing expensive hardware. | Live & Operating | Completed | Yes |
 | Facebook Cover Generator | An AI tool that generates a professional Facebook cover photo based on business details. | Live & Operating | Completed | Yes |

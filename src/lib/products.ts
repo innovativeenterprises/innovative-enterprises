@@ -1,4 +1,5 @@
 
+
 import type { Product } from './products.schema';
 import { saasProducts } from '@/lib/saas-products';
 
@@ -46,7 +47,7 @@ const hrefMap: Record<string, string> = {
     "Nova Commerce": "/ecommerce",
     "Logistics Chain AI": "/logistics-ai",
     "AI Smart Home Estimator": "/construction-tech/smart-home-estimator",
-    "AI-POS": "/ai-pos",
+    "AI-POS for Education": "/education-tech/ai-pos",
     "Facebook Cover Generator": "/facebook-cover-generator",
     "StructurAI BIM": "/construction-tech/structurai-bim",
     "We Match - MATCH CUP GAME": "/we-match",
