@@ -32,7 +32,7 @@ import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
-import { useGlobalStore } from '@/hooks/use-global-store';
+import { useGlobalStore } from '@/lib/global-store.tsx';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
