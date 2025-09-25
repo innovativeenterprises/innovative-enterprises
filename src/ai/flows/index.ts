@@ -51,6 +51,9 @@ import { estimateBoq } from './boq-estimator';
 import { transformImage } from './image-transformer';
 import { analyzeSalesData } from './pos-agent';
 import { estimateSmartHome } from './smart-home-estimator';
+import { beautyAgent } from './beauty-agent';
+import { generateBookingResponse } from './booking-response-generator';
+import { generateListingDescription } from './listing-description-generator';
 
 // This file is a public API for the AI flows.
 // It is used by the client-side components to call the AI flows.
@@ -109,4 +112,7 @@ export {
   transformImage,
   analyzeSalesData,
   estimateSmartHome,
+  beautyAgent,
+  generateBookingResponse,
+  generateListingDescription,
 };
