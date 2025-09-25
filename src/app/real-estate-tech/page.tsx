@@ -57,9 +57,9 @@ const ProductCard = ({ product }: { product: Product }) => {
     );
 };
 
-export default function RealEstateTechPage({ initialProducts }: { initialProducts: Product[] }) {
-    const { data: products } = useProductsData(initialProducts);
-    const enabledProducts = products.filter(p => p.category === 'Real Estate Tech' && p.enabled);
+export default function RealEstateTechPage() {
+    const { data: products, isClient } = useProductsData();
+    const enabledProducts = isClient ? products.filter(p => p.category === 'Real Estate Tech' && p.enabled) : [];
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -101,4 +101,3 @@ export default function RealEstateTechPage({ initialProducts }: { initialProduct
         </div>
     );
 }
-
