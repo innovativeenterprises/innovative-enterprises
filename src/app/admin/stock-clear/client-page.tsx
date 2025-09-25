@@ -1,11 +1,13 @@
+
 'use client';
 
 import { useState } from "react";
 import StockItemTable from "./stock-item-table";
 import type { StockItem } from "@/lib/stock-items.schema";
+import { useStockItemsData } from "@/hooks/use-data-hooks";
 
 export default function StockClearClientPage({ initialItems }: { initialItems: StockItem[] }) {
-    const [items, setItems] = useState<StockItem[]>(initialItems);
+    const { data: items, setData: setItems } = useStockItemsData(initialItems);
     
     return (
        <StockItemTable items={items} setItems={setItems} />

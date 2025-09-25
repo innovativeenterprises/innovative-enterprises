@@ -8,6 +8,8 @@ import { getStatusBadge } from "@/components/status-badges";
 import { DueDateDisplay } from "@/components/due-date-display";
 import type { CfoData } from '@/lib/cfo-data.schema';
 import { DollarSign, Users, CreditCard, Activity } from 'lucide-react';
+import { useCfoData } from '@/hooks/use-data-hooks';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const kpiIcons: { [key: string]: React.ElementType } = {
     "Total Revenue": DollarSign,
@@ -20,8 +22,25 @@ const kpiIcons: { [key: string]: React.ElementType } = {
 
 
 export default function CfoDashboardPageClient({ initialData }: { initialData: CfoData }) {
+    const { data: cfoData, isClient } = useCfoData(initialData);
 
-    const { kpiData, transactionData, upcomingPayments, vatPayment, cashFlowData } = initialData;
+    if (!isClient || !cfoData) {
+        return (
+             <div className="space-y-8">
+                <Skeleton className="h-12 w-1/2" />
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28" />)}
+                </div>
+                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <Skeleton className="lg:col-span-2 h-80" />
+                    <Skeleton className="h-80" />
+                </div>
+                <Skeleton className="h-96" />
+            </div>
+        );
+    }
+    
+    const { kpiData, transactionData, upcomingPayments, cashFlowData } = cfoData;
     
     return (
         <div className="space-y-8">
@@ -70,7 +89,7 @@ export default function CfoDashboardPageClient({ initialData }: { initialData: C
                              <div key={index} className="flex justify-between items-center">
                                 <div>
                                     <p className="font-medium">{payment.source}</p>
-                                    <DueDateDisplay date={new Date(payment.dueDate)} />
+                                    <DueDateDisplay date={new Date(payment.dueDate).toISOString()} />
                                 </div>
                                 <p className="font-bold text-lg">OMR {payment.amount.toFixed(2)}</p>
                             </div>

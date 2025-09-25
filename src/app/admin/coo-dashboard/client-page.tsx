@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/lib/products.schema';
 import type { Provider } from '@/lib/providers.schema';
 import type { CfoData } from '@/lib/cfo-data.schema';
+import { useProductsData, useProvidersData, useCfoData } from '@/hooks/use-data-hooks';
 
 const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) => {
     const severityMap = {
@@ -45,12 +47,13 @@ interface CooDashboardClientPageProps {
 export default function CooDashboardClientPage({ initialProducts, initialProviders, initialCfoData }: CooDashboardClientPageProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
-    const [products, setProducts] = useState(initialProducts);
-    const [providers, setProviders] = useState(initialProviders);
-    const [cfoData, setCfoData] = useState(initialCfoData);
+    const { data: products } = useProductsData(initialProducts);
+    const { data: providers } = useProvidersData(initialProviders);
+    const { data: cfoData } = useCfoData(initialCfoData);
 
 
     const runAnalysis = async () => {
+        if (!cfoData) return;
         setIsLoading(true);
         setAnalysis(null);
         try {
@@ -66,7 +69,9 @@ export default function CooDashboardClientPage({ initialProducts, initialProvide
 
     // Run analysis on initial load
     useEffect(() => {
-        runAnalysis();
+        if(cfoData) {
+            runAnalysis();
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [products, providers, cfoData]);
 

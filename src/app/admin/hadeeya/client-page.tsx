@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGiftCardsData } from "@/hooks/use-data-hooks";
 
 export default function HadeeyaAdminClientPage({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
-    const { data: giftCards, setData: setGiftCards, isClient } = useGiftCardsData(initialGiftCards);
+    const { data: giftCards, isClient } = useGiftCardsData(initialGiftCards);
     const { toast } = useToast();
 
     const getStatusBadge = (status: GiftCard['status']) => {
