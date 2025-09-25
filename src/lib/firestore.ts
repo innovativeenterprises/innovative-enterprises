@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
@@ -22,7 +23,7 @@ import { initialGiftCards } from './gift-cards';
 import { initialStudents } from './students';
 import { initialCommunities } from './communities';
 import { initialEvents } from './community-events';
-import { initialFinances } from './community-finances';
+import { initialCommunityFinances } from './community-finances';
 import { initialMembers } from './community-members';
 import { initialAlumniJobs } from './alumni-jobs';
 import { initialRentalAgencies } from './rental-agencies';

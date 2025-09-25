@@ -13,12 +13,12 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
 
     useEffect(() => {
         if (isClient && initialData) {
-            setData((state) => ({ ...state, [key]: initialData }));
+            setData((state: AppState) => ({ ...state, [key]: initialData }));
         }
     }, [isClient, initialData, setData]);
     
     const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
-      setData(state => ({ ...state, [key]: updater(state[key]) }));
+      setData((state: AppState) => ({ ...state, [key]: updater(state[key]) }));
     };
 
     return { data: data as AppState[K], setData: setKeyData, isClient };
@@ -30,13 +30,16 @@ export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
-export const useStaffData = () => ({
-  leadership: useGlobalStore(state => state.leadership),
-  staff: useGlobalStore(state => state.staff),
-  agentCategories: useGlobalStore(state => state.agentCategories),
-  setData: useGlobalStore(state => state.set),
-  isClient: useGlobalStore(state => state.isClient)
-});
+export const useStaffData = () => {
+    const data = useGlobalStore(state => ({
+        leadership: state.leadership,
+        staff: state.staff,
+        agentCategories: state.agentCategories,
+    }));
+    const setData = useGlobalStore(state => state.set);
+    const isClient = useGlobalStore(state => state.isClient);
+    return { ...data, setData, isClient };
+};
 export const useCfoData = createDataHook('cfoData');
 export const useAssetsData = createDataHook('assets');
 export const usePropertiesData = createDataHook('properties');
@@ -48,7 +51,7 @@ export const useGiftCardsData = createDataHook('giftCards');
 export const useStudentsData = createDataHook('students');
 export const useCommunitiesData = createDataHook('communities');
 export const useCommunityEventsData = createDataHook('communityEvents');
-export const useMembersData = createDataHook('communityMembers');
+export const useCommunityMembersData = createDataHook('communityMembers');
 export const useAlumniJobsData = createDataHook('alumniJobs');
 export const useCarsData = createDataHook('cars');
 export const usePosProductsData = createDataHook('posProducts');
