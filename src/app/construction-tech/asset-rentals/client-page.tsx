@@ -4,13 +4,92 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Send, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import type { Asset } from "@/lib/assets.schema";
-import { RentalRequestForm } from './rental-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from 'zod';
+import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from "@/components/ui/input";
+import { Textarea } from '@/components/ui/textarea';
 
+// --- RentalRequestForm Logic ---
+const RentalRequestSchema = z.object({
+  fullName: z.string().min(3, "Full name is required."),
+  companyName: z.string().optional(),
+  contactEmail: z.string().email("A valid email is required."),
+  rentalDurationMonths: z.coerce.number().min(1, "Rental duration must be at least 1 month."),
+  deliveryAddress: z.string().min(10, "A delivery address is required."),
+});
+type RentalRequestValues = z.infer<typeof RentalRequestSchema>;
+
+const RentalRequestForm = ({ asset, isOpen, onOpenChange, onClose }: {
+    asset: Asset;
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    onClose: () => void;
+}) => {
+    const { toast } = useToast();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const form = useForm<RentalRequestValues>({ resolver: zodResolver(RentalRequestSchema) });
+
+    const onSubmit: SubmitHandler<RentalRequestValues> = async (data) => {
+        setIsSubmitting(true);
+        console.log("Rental Request:", { assetId: asset.id, ...data });
+        await new Promise(res => setTimeout(res, 1500));
+        toast({
+            title: "Request Sent!",
+            description: "Your rental request has been submitted. Our team will contact you shortly.",
+        });
+        setIsSubmitting(false);
+        onClose();
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Request to Rent: {asset.name}</DialogTitle>
+                    <DialogDescription>
+                        Please provide your details below. Our team will contact you to finalize the rental agreement.
+                    </DialogDescription>
+                </DialogHeader>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="fullName" render={({ field }) => (
+                            <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="companyName" render={({ field }) => (
+                            <FormItem><FormLabel>Company Name (Optional)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="contactEmail" render={({ field }) => (
+                            <FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="rentalDurationMonths" render={({ field }) => (
+                            <FormItem><FormLabel>Rental Duration (Months)</FormLabel><FormControl><Input type="number" min="1" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="deliveryAddress" render={({ field }) => (
+                            <FormItem><FormLabel>Delivery Address</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                            <Button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><Send className="mr-2 h-4 w-4"/>Submit Request</>}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+// --- AssetCard Component ---
 const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => void }) => {
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -55,6 +134,7 @@ const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => 
     );
 };
 
+// --- Main Page Component ---
 export default function AssetRentalsClientPage({ initialAssets }: { initialAssets: Asset[] }) {
     const [assets, setAssets] = useState<Asset[]>(initialAssets);
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
