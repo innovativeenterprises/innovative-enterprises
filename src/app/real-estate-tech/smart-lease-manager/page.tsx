@@ -11,10 +11,8 @@ import Link from 'next/link';
 import { useLeasesData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
-import { DueDateDisplay } from '@/components/due-date-display';
-import { useToast } from '@/hooks/use-toast';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-
+import { DueDateDisplay } from "@/components/due-date-display";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SmartLeaseManagerPage() {
     const { data: leases, setData: setLeases, isClient } = useLeasesData();
