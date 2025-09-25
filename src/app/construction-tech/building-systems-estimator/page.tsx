@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Siren, FireExtinguisher, Bell, Info, Cpu } from 'lucide-react';
+import { Loader2, Sparkles, Wand2, FileCheck2, Download, Image as ImageIcon, Shield, ShieldCheck, Siren, Cpu, ArrowLeft } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -24,6 +25,7 @@ import { fileToDataURI } from '@/lib/utils';
 import { analyzeFloorPlan, type FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import Link from 'next/link';
 
 const FormSchema = z.object({
   floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
@@ -137,6 +139,7 @@ export default function BuildingSystemsEstimatorPage() {
         if(result.numberOfFloors) {
             form.setValue('numberOfFloors', result.numberOfFloors);
         }
+
         toast({ title: 'Floor Plan Analyzed', description: 'AI has pre-filled some project details.' });
 
     } catch (e) {
@@ -288,7 +291,10 @@ export default function BuildingSystemsEstimatorPage() {
                                 <Alert>
                                     <FileCheck2 className="h-4 w-4" />
                                     <AlertTitle>AI Analysis Complete</AlertTitle>
-                                    <AlertDescription>The AI has pre-filled some project details. Please review and continue.</AlertDescription>
+                                    <AlertDescription>
+                                        {analysis.dimensions && <p><strong>Dimensions:</strong> {analysis.dimensions}</p>}
+                                        {analysis.suggestedDvrLocation && <p><strong>Suggested Equipment Room:</strong> {analysis.suggestedDvrLocation}</p>}
+                                    </AlertDescription>
                                 </Alert>
                             )}
                             <div className="grid md:grid-cols-2 gap-6">
@@ -350,8 +356,14 @@ export default function BuildingSystemsEstimatorPage() {
     <div className="bg-background min-h-screen">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
+             <Button asChild variant="outline" className="mb-4">
+                <Link href="/construction-tech">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Construction Tech
+                </Link>
+            </Button>
           <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-              <Siren className="w-10 h-10 text-primary" />
+              <Cpu className="w-10 h-10 text-primary" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Building Systems Estimator</h1>
           <p className="mt-4 text-lg text-muted-foreground">

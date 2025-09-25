@@ -52,7 +52,7 @@ const hrefMap: Record<string, string> = {
     "We Match - MATCH CUP GAME": "/we-match",
     "ConstructFin": "/construction-tech/constructfin",
     "ClientView Portal": "/client-portal",
-    "Building Systems Estimator": "/construction-tech/fire-safety-estimator",
+    "Building Systems Estimator": "/construction-tech/building-systems-estimator",
 };
 
 const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
@@ -102,4 +102,4 @@ export const initialStoreProducts: Product[] = [
     }
 ];
 
-export const initialProducts: Product[] = [...saasProductList, ...initialStoreProducts];
+export const initialProducts: Product[] = [...saasProductList.filter(p => p.name !== 'AI Smart Home Estimator'), ...initialStoreProducts];
