@@ -3,22 +3,12 @@
 
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import { StoreProvider } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
-import { getEmptyState } from '@/lib/initial-state';
 
-export function Providers({ children, initialState }: { children: ReactNode, initialState: Partial<AppState> | null }) {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  
-  if (!initialState) {
-    initialState = getEmptyState();
-  }
+export function Providers({ children, initialState }: { children: ReactNode, initialState: Partial<AppState> }) {
   
   return (
     <StoreProvider initialState={initialState}>
@@ -30,7 +20,7 @@ export function Providers({ children, initialState }: { children: ReactNode, ini
         >
         {children}
         <Toaster />
-        {isClient && <ChatWidget />}
+        <ChatWidget />
         </ThemeProvider>
     </StoreProvider>
   );

@@ -4,8 +4,9 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { getInitialState } from '@/lib/initial-state';
 import { getFirestoreData } from '@/lib/firestore';
+import { initialSettings } from '@/lib/settings';
+import { getSettings } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -55,6 +56,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch all initial data in one go
   const initialState = await getFirestoreData();
 
   return (
@@ -68,3 +70,4 @@ export default async function RootLayout({
     </html>
   );
 }
+

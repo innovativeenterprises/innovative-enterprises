@@ -30,13 +30,12 @@ export const createAppStore = (initState: Partial<AppState> = {}) => {
 
 export type StoreType = ReturnType<typeof createAppStore>;
 
-export let store: StoreType;
+// Initialize a default store instance.
+// This will be replaced by the provider's instance on the client.
+export let store = createAppStore();
 
 // This function allows re-initializing the store, useful for tests or HMR
 export function initializeStore(initialState?: Partial<AppState>) {
   store = createAppStore(initialState);
   return store;
 }
-
-// Initialize the store by default
-initializeStore();
