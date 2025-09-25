@@ -124,6 +124,7 @@ export const usePropertiesData = createDataHook('properties');
 export const useSolutionsData = createDataHook('solutions');
 export const useIndustriesData = createDataHook('industries');
 export const useAiToolsData = createDataHook('aiTools');
+export const useUserDocumentsData = createDataHook('userDocuments');
 
 
 // This custom hook provides a consolidated view of the data needed for the Beauty Hub.

@@ -42,6 +42,7 @@ import { initialBeautySpecialists } from './beauty-specialists';
 import { initialRaahaAgencies } from './raaha-agencies';
 import { initialRaahaWorkers } from './raaha-workers';
 import { initialRaahaRequests } from './raaha-requests';
+import { initialUserDocuments } from './user-documents';
 
 // This file simulates fetching data from a database.
 // In a real application, you would replace these with actual Firestore queries.
@@ -69,7 +70,7 @@ export const getStudents = async () => initialStudents;
 export const getCommunities = async () => initialCommunities;
 export const getCommunityEvents = async () => initialEvents;
 export const getCommunityFinances = async () => initialFinances;
-export const getCommunityMembers = async () => initialMembers;
+export const getMembers = async () => initialMembers;
 export const getAlumniJobs = async () => initialAlumniJobs;
 export const getRentalAgencies = async () => initialRentalAgencies;
 export const getCars = async () => initialCars;
@@ -79,6 +80,7 @@ export const getBeautyServices = async () => initialBeautyServices;
 export const getBeautySpecialists = async () => initialBeautySpecialists;
 export const getBeautyAppointments = async () => initialBeautyAppointments;
 export const getUsedItems = async () => initialUsedItems;
+export const getUserDocuments = async () => initialUserDocuments;
 
 export const getSettings = async () => {
     try {
@@ -124,3 +126,46 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
+
+export const getFirestoreData = async () => ({
+    products: await getProducts(),
+    services: await getServices(),
+    providers: await getProviders(),
+    opportunities: await getOpportunities(),
+    clients: await getClients(),
+    testimonials: await getTestimonials(),
+    pricing: await getPricing(),
+    posProducts: await getPosProducts(),
+    dailySales: await getDailySales(),
+    stages: await getStages(),
+    assets: await getAssets(),
+    investors: await getInvestors(),
+    properties: await getProperties(),
+    stairspaceListings: await getStairspaceListings(),
+    stairspaceRequests: await getStairspaceRequests(),
+    signedLeases: await getLeases(),
+    stockItems: await getStockItems(),
+    giftCards: await getGiftCards(),
+    students: await getStudents(),
+    communities: await getCommunities(),
+    communityEvents: await getCommunityEvents(),
+    communityFinances: await getCommunityFinances(),
+    communityMembers: await getMembers(),
+    alumniJobs: await getAlumniJobs(),
+    rentalAgencies: await getRentalAgencies(),
+    cars: await getCars(),
+    costSettings: await getCostSettings(),
+    ...await getRaahaData(),
+    ...await getBeautyData(),
+    settings: await getSettings(),
+    knowledgeBase: await getKnowledgeBase(),
+    applications: await getApplications(),
+    briefcase: await getBriefcase(),
+    solutions: await getSolutions(),
+    industries: await getIndustries(),
+    aiTools: await getAiTools(),
+    saasProducts: await getSaasProducts(),
+    cfoData: await getCfoData(),
+    ...await getStaffData(),
+    userDocuments: await getUserDocuments(),
+});

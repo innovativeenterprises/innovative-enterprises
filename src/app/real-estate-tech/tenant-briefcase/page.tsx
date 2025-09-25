@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -26,7 +25,7 @@ const DocumentCard = ({ doc }: { doc: UserDocument }) => (
                 </div>
             </div>
             <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon"><Download className="h-4 w-4"/></Button>
+                <Button variant="ghost" size="icon" disabled><Download className="h-4 w-4"/></Button>
             </div>
         </CardContent>
     </Card>

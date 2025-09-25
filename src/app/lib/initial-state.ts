@@ -9,7 +9,7 @@ import type { BookingRequest } from './stairspace-requests';
 import type { StairspaceListing } from './stairspace.schema';
 import type { Agent, AgentCategory } from './agents.schema';
 import type { Agency as RaahaAgency } from './raaha-agencies.schema';
-import type { Worker as RaahaWorker } from './raaha-workers';
+import type { Worker as RaahaWorker } from './raaha-workers.schema';
 import type { HireRequest } from './raaha-requests.schema';
 import type { BeautyCenter } from './beauty-centers.schema';
 import type { BeautySpecialist } from './beauty-specialists.schema';
@@ -41,6 +41,7 @@ import type { KnowledgeDocument } from './knowledge.schema';
 import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
+import type { UserDocument } from './user-documents';
 
 // Define the shape of the global state
 export interface AppState {
@@ -48,7 +49,6 @@ export interface AppState {
   settings: AppSettings;
   cart: CartItem[];
   products: Product[];
-  storeProducts: Product[];
   providers: Provider[];
   opportunities: Opportunity[];
   services: Service[];
@@ -94,6 +94,7 @@ export interface AppState {
   solutions: Solution[];
   industries: Industry[];
   aiTools: AiTool[];
+  userDocuments: UserDocument[];
 }
 
 
@@ -103,7 +104,6 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   settings: initialSettings,
   cart: [],
   products: [],
-  storeProducts: [],
   providers: [],
   opportunities: [],
   services: [],
@@ -149,4 +149,10 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   solutions: [],
   industries: [],
   aiTools: [],
+  userDocuments: [],
+});
+
+export const getInitialState = (): AppState => ({
+  ...getEmptyState(),
+  isClient: false,
 });
