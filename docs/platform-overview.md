@@ -1,11 +1,11 @@
 
 # Platform Overview
 
-This document provides a comprehensive, categorized list of all 88 current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
+This document provides a comprehensive, categorized list of all current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
 
-## Digital Products & SaaS Platforms (44 Total)
+## Digital Products & SaaS Platforms (45 Total)
 
-### Category: Construction Tech (11)
+### Category: Construction Tech (12)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | Smart PM SaaS | AI-based scheduling, Gantt charts, resource allocation, real-time collaboration, and document management. | Live & Operating | Completed |
@@ -18,7 +18,8 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
-| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
+| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. | Live & Operating | Completed |
+| AI Smart Home Estimator | AI-powered tool to estimate costs for smart home installations based on floor plans. | Live & Operating | Completed |
 
 ### Category: Real Estate Tech (12)
 | Name | Description | Stage | Status |
@@ -36,7 +37,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed |
 | StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed |
 
-### Category: Education Tech (7)
+### Category: Education Tech (8)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed |
@@ -46,6 +47,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed |
 | AI Scholarship Finder | An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level. | Live & Operating | Completed |
 | Teacher Toolkit | A suite of tools for educators, including a Lesson Gamifier to convert textbooks into interactive content, flashcards, and presentations. | Live & Operating | Completed |
+| AI-POS for Education | A smart, AI-driven Point-of-Sale system for canteens/stores, providing inventory management and sales analytics. | Live & Operating | Completed |
 
 
 ### Category: Automotive Tech (1)
@@ -62,14 +64,14 @@ This document provides a comprehensive, categorized list of all 88 current proje
 ### Category: Gaming & Social (1)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
-| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Research Phase | On Track |
+| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Live & Operating | Completed |
 
 
 ### Category: General Platforms & SaaS (11)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
-| APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | In Development | On Track |
+| APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | Live & Operating | Completed |
 | KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
 | VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | In Development | On Track |
 | Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
@@ -86,7 +88,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | :--- | :--- | :--- | :--- |
 | AI Interior Designer | Upload a photo of your room and get instant interior design ideas powered by AI. | Live & Operating | Completed |
 | AI PDF Form Filler | Upload any PDF form and let our AI intelligently fill it out based on your profile data. | Live & Operating | Completed |
-| AI-POS | A smart, AI-driven Point-of-Sale system for small shops and groceries, providing inventory management and sales analytics without needing expensive hardware. | Live & Operating | Completed |
+| Facebook Cover Generator | An AI tool that generates a professional Facebook cover photo based on business details. | Live & Operating | Completed |
 
 ## Core Business Services (19 Total)
 
