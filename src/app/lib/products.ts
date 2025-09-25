@@ -49,6 +49,8 @@ const hrefMap: Record<string, string> = {
     "AI Smart Home Estimator": "/construction-tech/smart-home-estimator",
     "AI-POS": "/ai-pos",
     "Facebook Cover Generator": "/facebook-cover-generator",
+    "StructurAI BIM": "/construction-tech/structurai-bim",
+    "We Match - MATCH CUP GAME": "/we-match",
 };
 
 const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
@@ -67,7 +69,7 @@ const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
 }));
 
 
-const storeProducts: Product[] = [
+export const initialStoreProducts: Product[] = [
     {
         id: 100, // Using a high number to avoid conflicts
         name: "AI-Powered Smart Camera",
@@ -98,4 +100,4 @@ const storeProducts: Product[] = [
     }
 ];
 
-export const initialProducts: Product[] = [...saasProductList, ...storeProducts];
+export const initialProducts: Product[] = [...saasProductList, ...initialStoreProducts];

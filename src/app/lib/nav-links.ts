@@ -1,13 +1,13 @@
 
 
-import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren } from "lucide-react";
+import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook } from "lucide-react";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import AmeenSmartLockIcon from "@/components/icons/ameen-smart-lock-icon";
 import KhidmaIcon from "@/components/icons/khidma-icon";
 import VmallIcon from "@/components/icons/vmall-icon";
 import AppiIcon from "@/components/icons/appi-icon";
-import { Gift, Warehouse, Cpu, BarChart, Calculator } from "lucide-react";
+import { Gift, Warehouse } from "lucide-react";
 
 export const initialSolutions = [
     {
@@ -234,7 +234,7 @@ export const initialAiTools = [
     title: "Facebook Cover Generator",
     href: "/facebook-cover-generator",
     description: "Generate a professional Facebook cover photo for your business page.",
-    icon: ImageIcon,
+    icon: Facebook,
   },
   {
     title: "PDF Form Filler",
@@ -278,8 +278,15 @@ export const initialAiTools = [
     description: "Get an AI-powered cost estimate for your smart home installation.",
     icon: Cpu,
   },
+  {
+    title: "AI-POS",
+    href: "/ai-pos",
+    description: "A smart Point-of-Sale system with AI-powered sales analytics.",
+    icon: Cpu,
+  },
 ];
 
 export type Solution = typeof initialSolutions[number];
 export type Industry = typeof initialIndustries[number];
 export type AiTool = typeof initialAiTools[number];
+

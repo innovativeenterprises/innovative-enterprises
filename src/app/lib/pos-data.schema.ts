@@ -25,6 +25,4 @@ export const TransactionSchema = z.object({
     timestamp: z.string(), // ISO string
 });
 
-export const DailySalesSchema = z.array(TransactionSchema);
-
-export type DailySales = z.infer<typeof DailySalesSchema>;
+export type DailySales = z.infer<typeof TransactionSchema>[];
