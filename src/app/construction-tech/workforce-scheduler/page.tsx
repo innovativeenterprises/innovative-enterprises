@@ -1,7 +1,11 @@
+
+'use client';
+
 import { GanttChartSquare } from "lucide-react";
 import TimetableForm from "@/components/timetable-form";
-import type { Metadata } from 'next';
-import { TimetableGeneratorInput } from "@/ai/flows/timetable-generator.schema";
+import type { TimetableGeneratorInput } from "@/ai/flows/timetable-generator.schema";
+import { generateLogisticsSchedule } from "@/ai/flows/logistics-scheduler";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "WorkforceFlow | Innovative Enterprises",
@@ -10,19 +14,18 @@ export const metadata: Metadata = {
 
 const workforceDefaultValues: TimetableGeneratorInput = {
   subjects: [
-    { id: 'delivery_sohar', name: 'Delivery to Sohar', teacher: 'Truck A (10-ton)', requiredSlots: 2 },
-    { id: 'delivery_nizwa', name: 'Delivery to Nizwa', teacher: 'Truck B (5-ton)', requiredSlots: 3 },
-    { id: 'delivery_sur', name: 'Delivery to Sur', teacher: 'Truck C (3-ton)', requiredSlots: 1 },
-    { id: 'local_muscat', name: 'Local Muscat Deliveries', teacher: 'Van 1', requiredSlots: 6 },
+    { id: 'task_concrete', name: 'Concrete Pouring - Foundation', teacher: 'Concrete Team A', requiredSlots: 3 },
+    { id: 'task_steel', name: 'Steel Framing - Sector B', teacher: 'Steel Crew 1', requiredSlots: 5 },
+    { id: 'task_mep', name: 'MEP Rough-in - First Floor', teacher: 'Plumbing & Electrical Subcontractor', requiredSlots: 4 },
+    { id: 'task_facade', name: 'Facade Installation', teacher: 'Facade Specialists', requiredSlots: 6 },
   ],
   classrooms: [
-    { id: 'dest_sohar', name: 'Sohar Port' },
-    { id: 'dest_nizwa', name: 'Nizwa Industrial Area' },
-    { id: 'dest_sur', name: 'Sur Warehouse' },
-    { id: 'dest_muscat', name: 'Muscat Hub' },
+    { id: 'site_sector_a', name: 'Project Site - Sector A' },
+    { id: 'site_sector_b', name: 'Project Site - Sector B' },
+    { id: 'site_precast_yard', name: 'Pre-cast Yard' },
   ],
-  timeSlots: ["08:00 - 12:00 (Morning)", "13:00 - 17:00 (Afternoon)"],
-  days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"],
+  timeSlots: ["07:00 - 11:00 (Morning Shift)", "13:00 - 17:00 (Afternoon Shift)"],
+  days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
 };
 
 const workforceLabels = {
@@ -39,7 +42,8 @@ const workforceLabels = {
     classroomNameLabel: "Site Name",
     classroomNamePlaceholder: "e.g., Project Site A",
     addClassroomLabel: "Add Job Site",
-    generateButtonText: "Generate Work Schedule"
+    generateButtonText: "Generate Work Schedule",
+    aiFlow: generateLogisticsSchedule,
 };
 
 export default function WorkforceFlowPage() {
@@ -52,7 +56,7 @@ export default function WorkforceFlowPage() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary">WorkforceFlow</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            An AI-driven platform for workforce scheduling, digital timecards with face recognition, and IoT equipment tracking to optimize your construction site operations.
+            An AI-driven platform for workforce scheduling. Optimize your construction site operations by defining tasks, teams, and locations to generate a conflict-free weekly plan.
           </p>
         </div>
         <div className="max-w-6xl mx-auto mt-12 space-y-12">
