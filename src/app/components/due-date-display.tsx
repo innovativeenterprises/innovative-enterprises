@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { format, differenceInCalendarDays } from 'date-fns';
-import { cn } from '@/lib/utils';
 
 export const DueDateDisplay = ({
   date,
@@ -57,16 +56,16 @@ export const DueDateDisplay = ({
 
   // On the server and during initial client render, show a skeleton loader.
   if (!displayState.isClient) {
-    return <div className={cn("text-sm text-muted-foreground", className)}><Skeleton className="h-4 w-32 mt-1" /></div>;
+    return <div className={`text-sm text-muted-foreground ${className}`}><Skeleton className="h-4 w-32 mt-1" /></div>;
   }
   
   // After hydration on the client, render the actual formatted date.
   return (
-    <div className={cn("text-sm text-muted-foreground", className)}>
+    <div className={`text-sm text-muted-foreground ${className}`}>
       {displayState.formattedDate}
       {displayState.daysRemaining !== null &&
         (displayState.daysRemaining >= 0 ? (
-          <span className={cn('font-medium', displayState.daysRemaining < 7 && 'text-destructive')}>
+          <span className={displayState.daysRemaining < 7 ? 'text-destructive font-medium' : ''}>
             {' '}
             ({displayState.daysRemaining} days left)
           </span>

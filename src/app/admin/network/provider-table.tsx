@@ -148,7 +148,6 @@ export default function ProviderTable({ initialProviders }: { initialProviders: 
                     provider={selectedProvider} 
                     onSave={handleSave}
                 >
-                    {/* This is a controlled dialog, trigger is external */}
                     <div/>
                 </AddEditProviderDialog>
                 <Table>

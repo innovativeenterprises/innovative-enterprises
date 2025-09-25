@@ -1,3 +1,4 @@
+
 # Customer Support Playbook
 
 ---
@@ -39,5 +40,4 @@
   - **When to Escalate:** When a bug is confirmed and reproducible, when there's a system outage, or for any issues related to AI agent performance.
 - **Tier 3 (Partnership/Billing Issues):** **Jumaa Salim Al Hadidi (CEO)**
   - **When to Escalate:** For refund requests, major subscription issues, or serious complaints/disputes between users.
-
     
