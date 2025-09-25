@@ -96,7 +96,21 @@ export const getSettings = async () => {
 
 export const getKnowledgeBase = async () => initialKnowledgeBase;
 export const getApplications = async () => initialApplications;
-export const getBriefcase = async () => initialBriefcase;
+export const getBriefcase = async () => {
+    try {
+        // In a real app, this would fetch from a user-specific document in Firestore.
+        // For this prototype, we'll try to get it from localStorage.
+        if (typeof window !== 'undefined') {
+            const savedBriefcase = localStorage.getItem('user_briefcase');
+            if (savedBriefcase) {
+                return JSON.parse(savedBriefcase);
+            }
+        }
+    } catch (e) {
+        console.error("Could not parse briefcase from local storage:", e);
+    }
+    return initialBriefcase;
+};
 export const getSolutions = async () => initialSolutions;
 export const getIndustries = async () => initialIndustries;
 export const getAiTools = async () => initialAiTools;
