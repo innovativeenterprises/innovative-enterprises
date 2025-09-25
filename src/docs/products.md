@@ -75,7 +75,7 @@
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed | Yes |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | Completed | Yes |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Live & Operating | Completed | Yes |
-| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed | Yes |
+| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | On Track | No |
 | Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed | Yes |
 
 

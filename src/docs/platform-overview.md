@@ -74,12 +74,12 @@ This document provides a comprehensive, categorized list of all current projects
 | APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | Live & Operating | Completed |
 | KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
 | VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | Live & Operating | Completed |
-| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
+| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | Live & Operating | Completed |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | Completed |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Live & Operating | Completed |
-| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
+| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | In Development | On Track |
 | Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed |
 
 

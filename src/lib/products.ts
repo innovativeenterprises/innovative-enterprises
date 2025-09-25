@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 import { saasProducts } from '@/lib/saas-products';
 
@@ -65,7 +64,7 @@ const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
     image: "https://placehold.co/600x400/293462/F0F4F8?text=Product",
     aiHint: "product image",
     rating: 0,
-    enabled: p.status === 'Completed' || p.stage === 'Live & Operating',
+    enabled: p.ready,
     adminStatus: p.status,
     href: hrefMap[p.name] || '#',
 }));
