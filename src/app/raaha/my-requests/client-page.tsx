@@ -12,6 +12,7 @@ import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useRouter } from 'next/navigation';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
+import { useRequestsData } from '@/hooks/use-data-hooks';
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -25,18 +26,16 @@ const getStatusBadge = (status: HireRequest['status']) => {
 };
 
 export default function MyRequestsClientPage({ initialRequests }: { initialRequests: HireRequest[] }) {
-    const [requests, setRequests] = useState<HireRequest[]>(initialRequests);
-    const [isClient, setIsClient] = useState(false);
+    const { data: requests, setData: setRequests, isClient } = useRequestsData(initialRequests);
     const { toast } = useToast();
     const router = useRouter();
     
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
-    const myRequests = isClient ? requests.filter(r => r.clientName === 'Ahmed Al-Farsi') : [];
+    const myRequests = useMemo(() => {
+        if (!isClient) return [];
+        return requests.filter(r => r.clientName === 'Ahmed Al-Farsi');
+    }, [isClient, requests]);
     
     const onSchedule = (id: string, values: InterviewValues) => {
         setRequests(prev => prev.map(r => 

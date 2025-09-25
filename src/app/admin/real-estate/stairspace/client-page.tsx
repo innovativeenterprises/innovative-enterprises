@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
@@ -13,6 +13,7 @@ import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { ResponseGenerator } from './response-generator';
+import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -26,14 +27,9 @@ const getStatusBadge = (status: BookingRequest['status']) => {
 };
 
 export default function StairspaceRequestsClientPage({ initialRequests }: { initialRequests: BookingRequest[] }) {
-    const [requests, setRequests] = useState(initialRequests);
-    const [isClient, setIsClient] = useState(false);
+    const { data: requests, setData: setRequests, isClient } = useStairspaceRequestsData(initialRequests);
     const { toast } = useToast();
     const router = useRouter();
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const onSchedule = (id: string, values: InterviewValues) => {
         setRequests(prev => prev.map(r => 
@@ -51,7 +47,7 @@ export default function StairspaceRequestsClientPage({ initialRequests }: { init
         toast({ title: 'Redirecting to payment...', description: 'Please wait.' });
         setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
         setTimeout(() => {
-            router.push(`/admin/real-estate/stairspace/checkout/${requestId}`);
+            router.push(`/real-estate-tech/stairspace/booking-confirmed?requestId=${requestId}`);
         }, 1000);
     };
 

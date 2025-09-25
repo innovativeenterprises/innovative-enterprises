@@ -2,10 +2,10 @@
 'use server';
 
 import CompanyOverview from "@/components/company-overview";
-import ServiceCatalog from "@/components/service-catalog";
-import ProductShowcase from "@/components/product-showcase";
-import ClientTestimonials from "@/components/client-testimonials";
-import AiToolsCta from "@/components/ai-tools-cta";
+import ServiceCatalogClient from "@/components/service-catalog-client";
+import ProductShowcaseClient from "@/components/product-showcase-client";
+import ClientTestimonialsClient from "@/components/client-testimonials-client";
+import AiToolsCtaClient from "@/components/ai-tools-cta-client";
 import { getClients, getServices, getStoreProducts, getTestimonials, getAiTools } from "@/lib/firestore";
 
 export default async function HomePage() {
@@ -20,10 +20,10 @@ export default async function HomePage() {
   return (
     <>
       <CompanyOverview clients={clients} />
-      <ServiceCatalog services={services} />
-      <ProductShowcase products={storeProducts} />
-      <ClientTestimonials clients={clients} testimonials={testimonials} />
-      <AiToolsCta aiTools={aiTools} />
+      <ServiceCatalogClient services={services} />
+      <ProductShowcaseClient products={storeProducts} />
+      <ClientTestimonialsClient clients={clients} testimonials={testimonials} />
+      <AiToolsCtaClient aiTools={aiTools} />
     </>
   );
 }
