@@ -1,4 +1,5 @@
 
+
 import type { SaasCategory } from './saas-products.schema';
 
 export const saasProducts: SaasCategory[] = [
@@ -16,7 +17,7 @@ export const saasProducts: SaasCategory[] = [
             { name: "ClientView Portal", description: "White-label dashboards for clients to see live project status.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "BoQ Generator", description: "AI-generated Bill of Quantities from floor plans.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "StructurAI BIM", description: "AI-powered BIM for automated clash detection.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
-            { name: "AI Smart Home Estimator", description: "AI-powered tool to estimate costs for smart home installations.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
+            { name: "Building Systems Estimator", description: "AI-powered tool to estimate costs for Fire Safety & Smart Home systems.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
         ]
     },
     {

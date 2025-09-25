@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { getProducts } from "@/lib/firestore";
@@ -27,7 +28,6 @@ const ProductCard = ({ product }: { product: Product }) => {
         "AeroSite AI (DaaS)": Camera,
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
-        "Fire & Safety Estimator": Siren,
         "Building Systems Estimator": Cpu,
     };
     const Icon = iconMap[product.name] || HardHat;
@@ -100,4 +100,3 @@ export default async function ConstructionTechPage() {
     </div>
   );
 }
-

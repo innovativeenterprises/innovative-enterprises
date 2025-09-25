@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -23,6 +22,8 @@ import type { SmartHomeEstimatorOutput } from '@/ai/flows/smart-home-estimator.s
 import { transformImage } from '@/ai/flows/image-transformer';
 import { fileToDataURI } from '@/lib/utils';
 import { analyzeFloorPlan, type FloorPlanAnalysisOutput } from '@/ai/flows/floor-plan-analysis';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 const FormSchema = z.object({
   floorPlanFile: z.any().refine(file => file?.length == 1, 'A floor plan file is required.'),
@@ -269,7 +270,10 @@ export default function BuildingSystemsEstimatorPage() {
                                         <FormLabel>1. Upload Floor Plan</FormLabel>
                                          <div className="flex gap-2">
                                             <FormControl className="flex-1">
-                                                <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                                                <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => {
+                                                    field.onChange(e.target.files);
+                                                    setAnalysis(null);
+                                                }} />
                                             </FormControl>
                                             <Button type="button" variant="secondary" onClick={handleFloorPlanAnalysis} disabled={isAnalyzing}>
                                                 {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
@@ -284,9 +288,7 @@ export default function BuildingSystemsEstimatorPage() {
                                 <Alert>
                                     <FileCheck2 className="h-4 w-4" />
                                     <AlertTitle>AI Analysis Complete</AlertTitle>
-                                    <AlertDescription>
-                                        The AI has pre-filled some project details. Please review and continue.
-                                    </AlertDescription>
+                                    <AlertDescription>The AI has pre-filled some project details. Please review and continue.</AlertDescription>
                                 </Alert>
                             )}
                             <div className="grid md:grid-cols-2 gap-6">
@@ -363,4 +365,3 @@ export default function BuildingSystemsEstimatorPage() {
     </div>
   );
 }
-
