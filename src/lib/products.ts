@@ -69,35 +69,4 @@ const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
 }));
 
 
-export const initialStoreProducts: Product[] = [
-    {
-        id: 100, // Using a high number to avoid conflicts
-        name: "AI-Powered Smart Camera",
-        description: "A high-resolution security camera with onboard AI for object detection and intelligent alerts.",
-        stage: "Live & Operating",
-        category: "Electronics",
-        price: 79.900,
-        image: "https://images.unsplash.com/photo-1588052163994-b3d5b9b8c253?q=80&w=600&auto=format&fit=crop",
-        aiHint: "smart camera",
-        rating: 4.8,
-        enabled: true,
-        adminStatus: 'Completed',
-        href: '/ecommerce/100',
-    },
-    {
-        id: 101,
-        name: "VR Headset 'PANOSPACE'",
-        description: "Experience immersive virtual reality with our flagship VR headset, PANOSPACE. Perfect for gaming, virtual tours, and professional training.",
-        stage: "Live & Operating",
-        category: "Electronics",
-        price: 189.900,
-        image: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=600&auto=format&fit=crop",
-        aiHint: "vr headset",
-        rating: 4.9,
-        enabled: true,
-        adminStatus: 'Completed',
-        href: '/ecommerce/101',
-    }
-];
-
-export const initialProducts: Product[] = [...saasProductList, ...initialStoreProducts];
+export const initialProducts: Product[] = [...saasProductList];
