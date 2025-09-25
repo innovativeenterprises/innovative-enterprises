@@ -18,7 +18,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { useGlobalStore, useSetStore } from "@/lib/global-store.tsx";
+import { useGlobalStore } from "@/lib/global-store.tsx";
 
 const skillOptions = [
     "Childcare", "Elderly Care", "Cooking (Arabic)", "Cooking (Indian)", "Cooking (International)", 
@@ -230,3 +230,5 @@ export function CandidateTable({ columns, agencyId, initialWorkers, setWorkers }
         </Card>
     )
 }
+
+    

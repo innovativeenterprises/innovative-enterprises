@@ -110,28 +110,24 @@ interface AgencyDashboardClientPageProps {
   initialAgencies: RaahaAgency[];
   initialWorkers: Worker[];
   initialRequests: HireRequest[];
-  dashboardType: 'raaha' | 'beauty';
 }
 
 export default function AgencyDashboardClientPage({ 
-    initialAgencies,
+    initialAgencies, 
     initialWorkers,
     initialRequests,
-    dashboardType,
 }: AgencyDashboardClientPageProps) {
-    const { data: agencies, setData: setAgencies } = useAgenciesData(initialAgencies);
+    const { data: agencies, setData: setAgencies, isClient } = useAgenciesData(initialAgencies);
     const { data: workers, setData: setWorkers } = useWorkersData(initialWorkers);
     const { data: requests, setData: setRequests } = useRequestsData(initialRequests);
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const [isClient, setIsClient] = useState(false);
 
      useEffect(() => {
-        setIsClient(true);
-        if (initialAgencies.length > 0) {
+        if (isClient && initialAgencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(initialAgencies[0].id);
         }
-    }, [initialAgencies]);
+    }, [isClient, initialAgencies, selectedAgencyId]);
     
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
@@ -173,8 +169,8 @@ export default function AgencyDashboardClientPage({
     }
     
     const tabs = [
-          { value: 'requests', label: 'Hire Requests', content: <RequestTableWrapper requests={requests || []} setRequests={setRequests} agency={selectedAgency as RaahaAgency} isClient={isClient} /> },
-          { value: 'candidates', label: 'Candidates', content: <CandidateTable columns={workerTableColumns} agencyId={selectedAgency.id} initialWorkers={workers || []} setWorkers={setWorkers} /> },
+          { value: 'requests', label: 'Hire Requests', content: <RequestTableWrapper requests={requests} setRequests={setRequests} agency={selectedAgency as RaahaAgency} isClient={isClient} /> },
+          { value: 'candidates', label: 'Candidates', content: <CandidateTable columns={workerTableColumns} agencyId={selectedAgency.id} initialWorkers={workers} setWorkers={setWorkers} /> },
           { value: 'settings', label: 'Agency Settings', content: <AgencySettings agency={selectedAgency} /> }
         ];
 
