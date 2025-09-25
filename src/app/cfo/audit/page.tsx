@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -18,12 +17,6 @@ import { auditOffices } from '@/lib/audit-offices';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { fileToDataURI } from '@/lib/utils';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Finley: AI CFO & Audit Assistant | Innovative Enterprises",
-  description: "Get an expert-level preliminary audit of your financial documents. Upload your balance sheets, income statements, and more.",
-};
 
 const FormSchema = z.object({
   financialDocuments: z.any().refine(files => files?.length > 0, 'At least one financial document is required.'),
@@ -287,4 +280,3 @@ export default function CfoAuditPage() {
     </div>
   );
 }
-
