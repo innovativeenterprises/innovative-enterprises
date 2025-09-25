@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -8,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CandidateTable } from '@/app/raaha/agency-dashboard/candidate-table';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Worker } from '@/lib/raaha-workers.schema';
@@ -18,11 +16,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useAgenciesData, useWorkersData, useRequestsData, useBeautyCentersData, useBeautyServicesData, useBeautyAppointmentsData, useBeautySpecialistsData } from '@/hooks/use-data-hooks';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, CalendarIcon } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { ServiceTable } from '@/app/admin/beauty-hub/agency-dashboard/service-table';
 import { ScheduleTable } from '@/app/admin/beauty-hub/agency-dashboard/schedule-table';
-import { SpecialistTable } from '@/app/admin/beauty-hub/agency-dashboard/specialist-table';
+import { AgencyStaffTable } from '@/components/agency-dashboard/agency-staff-table';
 
 type GenericAgency = RaahaAgency | BeautyCenter;
 
@@ -131,18 +129,18 @@ export default function AgencyDashboardClientPage({
     initialRequests,
     dashboardType,
 }: AgencyDashboardClientPageProps) {
-    const { data: raahaAgencies, setData: setRaahaAgencies } = useAgenciesData(dashboardType === 'raaha' ? initialAgencies as RaahaAgency[] : []);
-    const { data: beautyCenters, setData: setBeautyCenters } = useBeautyCentersData(dashboardType === 'beauty' ? initialAgencies as BeautyCenter[] : []);
-    const { data: services, setData: setServices } = useBeautyServicesData(initialServices);
-    const { data: appointments, setData: setAppointments } = useBeautyAppointmentsData(initialAppointments);
-    const { data: specialists, setData: setSpecialists } = useBeautySpecialistsData(initialSpecialists);
-    const { data: workers, setData: setWorkers } = useWorkersData(initialWorkers);
-    const { data: requests, setData: setRequests } = useRequestsData(initialRequests);
+    const { data: raahaAgencies, setData: setRaahaAgencies } = useAgenciesData();
+    const { data: beautyCenters, setData: setBeautyCenters } = useBeautyCentersData();
+    const { data: services, setData: setServices } = useBeautyServicesData();
+    const { data: appointments, setData: setAppointments } = useBeautyAppointmentsData();
+    const { data: specialists, setData: setSpecialists } = useBeautySpecialistsData();
+    const { data: workers, setData: setWorkers } = useWorkersData();
+    const { data: requests, setData: setRequests } = useRequestsData();
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const [isClient, setIsClient] = useState(false);
 
-     useEffect(() => {
+    useEffect(() => {
         setIsClient(true);
         if (initialAgencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(initialAgencies[0].id);
@@ -154,8 +152,10 @@ export default function AgencyDashboardClientPage({
     
     const filteredServices = useMemo(() => services?.filter(s => s.agencyId === selectedAgency?.id), [services, selectedAgency]);
     const filteredAppointments = useMemo(() => appointments?.filter(a => a.agencyId === selectedAgency?.id), [appointments, selectedAgency]);
-    const filteredSpecialists = useMemo(() => specialists?.filter(s => s.agencyId === selectedAgency?.id), [specialists, selectedAgency]);
     
+    const staffData = dashboardType === 'raaha' ? workers : specialists;
+    const setStaffData = dashboardType === 'raaha' ? setWorkers : setSpecialists;
+
     const workerTableColumns = [
         { Header: 'Candidate', accessor: 'name', Cell: ({ row }: { row: { original: Worker } }) => (
             <div className="flex items-center gap-3">
@@ -180,6 +180,18 @@ export default function AgencyDashboardClientPage({
         )},
     ];
 
+    const specialistTableColumns = [
+         { Header: 'Specialist', accessor: 'name', Cell: ({ row }: { row: { original: BeautySpecialist } }) => (
+            <div className="flex items-center gap-3">
+                <Image src={row.original.photo} alt={row.original.name} width={40} height={40} className="rounded-full object-cover" />
+                <p className="font-medium">{row.original.name}</p>
+            </div>
+        )},
+        { Header: 'Specialty', accessor: 'specialty' },
+    ];
+    
+    const staffColumns = dashboardType === 'raaha' ? workerTableColumns : specialistTableColumns;
+
     if (!isClient || !selectedAgency) {
          return (
             <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -196,14 +208,14 @@ export default function AgencyDashboardClientPage({
     const tabs = dashboardType === 'raaha'
       ? [
           { value: 'requests', label: 'Hire Requests', content: <RequestTableWrapper requests={requests || []} setRequests={setRequests} agency={selectedAgency as RaahaAgency} isClient={isClient} /> },
-          { value: 'candidates', label: 'Candidates', content: <CandidateTable columns={workerTableColumns} agencyId={selectedAgency.id} initialWorkers={workers || []} setWorkers={setWorkers} /> },
-          { value: 'settings', label: 'Agency Settings', content: <AgencySettings agency={selectedAgency as RaahaAgency} dashboardType={dashboardType} /> }
+          { value: 'staff', label: 'Candidates', content: <AgencyStaffTable columns={staffColumns} agencyId={selectedAgency.id} staff={staffData || []} setStaff={setStaffData as any} dashboardType={dashboardType} /> },
+          { value: 'settings', label: 'Agency Settings', content: <AgencySettings agency={selectedAgency} dashboardType={dashboardType} /> }
         ]
       : [
           { value: 'schedule', label: 'Appointments', content: <ScheduleTable appointments={filteredAppointments || []} setAppointments={setAppointments} /> },
           { value: 'services', label: 'Services', content: <ServiceTable services={filteredServices || []} setServices={setServices} /> },
-          { value: 'staff', label: 'Staff', content: <SpecialistTable agencyId={selectedAgency.id} initialSpecialists={filteredSpecialists || []} setSpecialists={setSpecialists} /> },
-          { value: 'settings', label: 'Center Settings', content: <AgencySettings agency={selectedAgency as BeautyCenter} dashboardType={dashboardType} /> }
+          { value: 'staff', label: 'Staff', content: <AgencyStaffTable columns={staffColumns} agencyId={selectedAgency.id} staff={staffData || []} setStaff={setStaffData as any} dashboardType={dashboardType}/> },
+          { value: 'settings', label: 'Center Settings', content: <AgencySettings agency={selectedAgency} dashboardType={dashboardType} /> }
         ];
 
     return (

@@ -2,9 +2,9 @@
 'use server';
 
 import { getStairspaceListings } from "@/lib/firestore";
-import StairspaceTable from "../../stairspace-table";
+import StairspaceListingsTable from "./stairspace-listings-table";
 
 export default async function StairspaceListingsPage() {
     const initialListings = await getStairspaceListings();
-    return <StairspaceTable initialListings={initialListings} />;
+    return <StairspaceListingsTable initialListings={initialListings} />;
 }

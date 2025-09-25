@@ -72,6 +72,11 @@ const GenerationSchema = z.object({
 });
 type GenerationValues = z.infer<typeof GenerationSchema>;
 
+const AnswerSchema = z.object({
+    answer: z.string().min(10, 'Please provide an answer of at least 10 characters.'),
+});
+type AnswerValues = z.infer<typeof AnswerSchema>;
+
 interface Selection {
     cv: boolean;
     coverLetter: boolean;
@@ -398,6 +403,8 @@ export default function CvForm() {
       defaultValues: { answer: '' }
   });
 
+  const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
+
   // Effect for handling camera logic
   useEffect(() => {
     let stream: MediaStream | null = null;
@@ -573,8 +580,6 @@ export default function CvForm() {
   const handleGeneratedSocialPost = (output: GenerateSocialMediaPostOutput) => {
     setSocialPost(output);
   }
-
-  const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
 
   return (
     <div className="space-y-8">
@@ -786,17 +791,17 @@ export default function CvForm() {
 
                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="cv" disabled={!isUnlocked}>Enhanced CV</TabsTrigger>
-                        <TabsTrigger value="letter" disabled={!isUnlocked}>Cover Letter</TabsTrigger>
+                        <TabsTrigger value="cv" disabled={!isUnlocked && !selections.cv}>Enhanced CV</TabsTrigger>
+                        <TabsTrigger value="letter" disabled={!isUnlocked && !selections.coverLetter}>Cover Letter</TabsTrigger>
                     </TabsList>
                     <TabsContent value="cv">
                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                            {isUnlocked ? generatedCv.newCvContent : "Unlock to view your enhanced CV."}
+                            {isUnlocked && selections.cv ? generatedCv.newCvContent : "Unlock to view your enhanced CV."}
                         </div>
                     </TabsContent>
                     <TabsContent value="letter">
                          <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                             {isUnlocked ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
+                             {isUnlocked && selections.coverLetter ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
                         </div>
                     </TabsContent>
                 </Tabs>
@@ -855,5 +860,3 @@ export default function CvForm() {
     </div>
   );
 }
-
-    
