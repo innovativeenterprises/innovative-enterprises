@@ -6,13 +6,13 @@ import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
+import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Brush } from "lucide-react";
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KnowledgeTable from "./knowledge-table";
 import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "@/app/admin/operations/pricing-table";
+import PricingTable from "@/app/admin/pricing-table";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { Pricing } from "@/lib/pricing.schema";
@@ -23,15 +23,11 @@ import type { PosProduct } from "@/lib/pos-data.schema";
 interface AdminOperationsClientPageProps {
     initialKnowledgeBase: KnowledgeDocument[];
     initialCostSettings: CostRate[];
-    initialPricing: Pricing[];
-    initialPosProducts: PosProduct[];
 }
 
 export default function AdminOperationsClientPage({ 
     initialKnowledgeBase, 
     initialCostSettings,
-    initialPricing,
-    initialPosProducts,
 }: AdminOperationsClientPageProps) {
 
   const internalTools = [
@@ -52,12 +48,10 @@ export default function AdminOperationsClientPage({
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-5">
+             <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
                 <TabsTrigger value="costing">Market Rates</TabsTrigger>
-                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
-                <TabsTrigger value="pos-products">POS Products</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />
@@ -85,12 +79,6 @@ export default function AdminOperationsClientPage({
             </TabsContent>
              <TabsContent value="costing" className="mt-6 space-y-8">
                 <CostSettingsTable initialRates={initialCostSettings} />
-            </TabsContent>
-             <TabsContent value="pricing" className="mt-6 space-y-8">
-                <PricingTable initialPricing={initialPricing} />
-            </TabsContent>
-            <TabsContent value="pos-products" className="mt-6">
-                <PosProductTable initialProducts={initialPosProducts} />
             </TabsContent>
         </Tabs>
     </div>
