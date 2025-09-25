@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -22,29 +23,29 @@ const prompt = ai.definePrompt({
   name: 'timetableGeneratorPrompt',
   input: { schema: TimetableGeneratorInputSchema },
   output: { schema: TimetableGeneratorOutputSchema },
-  prompt: `You are an expert AI-powered scheduler for construction and logistics projects. Your task is to generate a valid, conflict-free weekly work schedule based on a given set of constraints.
+  prompt: `You are an expert AI-powered scheduler. Your task is to generate a valid, conflict-free weekly work schedule based on a given set of constraints.
+
+**Your Goal:** Create the most optimal and balanced schedule possible.
 
 **Constraints:**
 
 *   **Workings Days:** {{{json days}}}
 *   **Time Slots per Day:** {{{json timeSlots}}}
-*   **Available Job Sites:** {{{json classrooms}}}
-*   **Tasks & Assigned Workers/Teams:** {{{json subjects}}}
+*   **Available Locations/Venues:** {{{json classrooms}}}
+*   **Tasks & Assigned People/Teams:** {{{json subjects}}}
 
 **Rules & Objectives:**
-1.  **No Worker Conflicts:** A worker/team ('teacher') cannot be in two different job sites ('classrooms') at the same time.
-2.  **No Site Conflicts:** A job site ('classroom') cannot be occupied by two different teams for different tasks at the same time.
+1.  **No Worker Conflicts:** A person/team ('teacher') cannot be in two different locations ('classrooms') at the same time.
+2.  **No Location Conflicts:** A location ('classroom') cannot be occupied by two different teams for different tasks at the same time.
 3.  **Fulfill Required Slots:** Each task ('subject') must be scheduled for its exact number of 'requiredSlots' per week.
 4.  **Optimal Distribution:** Spread the work for each task as evenly as possible throughout the week. Avoid scheduling the same task back-to-back on the same day if possible.
 
 **Output Generation:**
-*   **Schedule:** Generate a flat JSON array of schedule entry objects. Each object in the array represents one scheduled block and must contain the \`day\`, \`timeSlot\`, \`subjectId\`, \`classroomId\`, and \`teacher\`.
+*   **Schedule:** Generate a flat JSON array of schedule entry objects. Each object represents one scheduled block and MUST contain the \`day\`, \`timeSlot\`, \`subjectId\`, \`classroomId\`, and \`teacher\`.
 *   **Diagnostics:**
     *   Set \`isPossible\` to \`true\` if a valid schedule that meets all constraints can be created. If not, set it to \`false\`.
     *   Provide a \`message\` summarizing the result. If impossible, explain why (e.g., "Not enough time slots available to schedule all required tasks.").
     *   If any tasks ('subjects') could not be fully scheduled, list their names in the \`unassignedSubjects\` array.
-
-Create the most optimal and balanced work schedule possible.
 `,
 });
 
