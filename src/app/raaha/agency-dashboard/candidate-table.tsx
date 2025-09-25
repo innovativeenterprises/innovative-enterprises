@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -43,13 +43,16 @@ export const AddEditWorkerDialog = ({
     onSave,
     agencyId,
     children,
+    isOpen,
+    onOpenChange,
 }: { 
     worker?: Worker, 
     onSave: (values: WorkerValues, id?: string) => void,
     agencyId: string,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     
     const form = useForm<WorkerValues>({
         resolver: zodResolver(WorkerSchema),
@@ -66,11 +69,11 @@ export const AddEditWorkerDialog = ({
 
     const onSubmit: SubmitHandler<WorkerValues> = (data) => {
         onSave(data, worker?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -217,3 +220,5 @@ export function CandidateTable({ columns, agencyId, initialWorkers, setWorkers }
         </Card>
     )
 }
+
+    
