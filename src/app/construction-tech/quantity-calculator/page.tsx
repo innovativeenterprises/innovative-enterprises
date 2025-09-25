@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
@@ -39,7 +39,7 @@ const calculationSteps = [
     { id: 'Finishing Works', label: 'Finishing', icon: Sparkles },
 ];
 
-export default function QuantityCalculatorPage() {
+export default function BoQGeneratorPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<FloorPlanAnalysisOutput | null>(null);
   const [isGenerating, setIsGenerating] = useState<string | null>(null);

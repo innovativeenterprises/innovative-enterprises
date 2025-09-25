@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, AlertTriangle, FileText, Percent, CheckCircle, Lightbulb, DollarSign } from 'lucide-react';
+import { Loader2, Sparkles, AlertTriangle, FileText, Percent, CheckCircle, Lightbulb, DollarSign, Send } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { auditOffices } from '@/lib/audit-offices';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -34,7 +34,7 @@ const FormSchema = z.object({
 });
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function CfoPage() {
+export default function CfoAuditPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<FinancialAnalysisOutput | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -94,29 +94,6 @@ export default function CfoPage() {
     }, 1500);
   }
 
-  if (isSubmitted) {
-       return (
-        <div className="max-w-4xl mx-auto mt-12 space-y-8">
-            <Card>
-                <CardContent className="p-10 text-center">
-                    <div className="flex flex-col items-center gap-6">
-                        <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
-                            <CheckCircle className="h-12 w-12 text-green-500" />
-                        </div>
-                        <div className="space-y-2">
-                            <CardTitle className="text-2xl">Analysis Sent Successfully!</CardTitle>
-                            <CardDescription>
-                               Your preliminary financial analysis has been securely transmitted to your selected audit office. They will contact you shortly to begin the formal engagement.
-                            </CardDescription>
-                        </div>
-                        <Button onClick={() => { setIsSubmitted(false); form.reset(); setResponse(null); }}>Start a New Analysis</Button>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-      )
-  }
-
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="container mx-auto px-4 py-16">
@@ -130,6 +107,24 @@ export default function CfoPage() {
           </p>
         </div>
         <div className="max-w-4xl mx-auto mt-12 space-y-8">
+            {isSubmitted ? (
+                 <Card>
+                    <CardContent className="p-10 text-center">
+                        <div className="flex flex-col items-center gap-6">
+                            <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
+                                <CheckCircle className="h-12 w-12 text-green-500" />
+                            </div>
+                            <div className="space-y-2">
+                                <CardTitle className="text-2xl">Analysis Sent Successfully!</CardTitle>
+                                <CardDescription>
+                                Your preliminary financial analysis has been securely transmitted to your selected audit office. They will contact you shortly to begin the formal engagement.
+                                </CardDescription>
+                            </div>
+                            <Button onClick={() => { setIsSubmitted(false); form.reset(); setResponse(null); }}>Start a New Analysis</Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            ) : (
             <Card>
                 <CardHeader>
                 <CardTitle>Financial Document Analysis</CardTitle>
@@ -217,8 +212,9 @@ export default function CfoPage() {
                 </Form>
                 </CardContent>
             </Card>
+            )}
 
-            {isLoading && (
+            {isLoading && !response && (
                 <Card>
                     <CardContent className="p-6 text-center">
                         <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
@@ -227,7 +223,7 @@ export default function CfoPage() {
                 </Card>
             )}
 
-            {response && (
+            {response && !isSubmitted && (
                 <Card className="mt-8">
                 <CardHeader>
                     <CardTitle>AI-Generated Financial Analysis</CardTitle>
@@ -280,7 +276,7 @@ export default function CfoPage() {
                 </CardContent>
                 <CardFooter>
                     <Button className="w-full" size="lg" onClick={handleSubmitToOffice} disabled={isLoading}>
-                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <FileText className="mr-2 h-4 w-4" />}
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Send className="mr-2 h-4 w-4" />}
                         Submit Analysis to {form.getValues('assignedOffice')}
                     </Button>
                 </CardFooter>
@@ -291,3 +287,4 @@ export default function CfoPage() {
     </div>
   );
 }
+
