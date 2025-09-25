@@ -12,33 +12,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2, Lightbulb, BookOpen, HelpCircle, BrainCircuit } from 'lucide-react';
 import { generateAdaptiveLesson } from '@/ai/flows/adaptive-learning-tutor';
-import { AdaptiveTutorInputSchema, type AdaptiveTutorInput, type AdaptiveTutorOutput } from '@/ai/flows/adaptive-learning-tutor.schema';
+import { AdaptiveTutorInputSchema, type AdaptiveTutorInput, type AdaptiveTutorOutput } from '@/ai/flows/adaptive-learning-tutor';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: "AI Adaptive Learning Tutor | Innovative Enterprises",
-  description: "Struggling with a concept? Tell our AI tutor what you're having trouble with, and it will generate a custom explanation just for you.",
-};
-
-
-const FormSchema = AdaptiveTutorInputSchema;
-type FormValues = z.infer<typeof FormSchema>;
-
-function AdaptiveLearningForm() {
+export default function AdaptiveLearningPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<AdaptiveTutorOutput | null>(null);
   const { toast } = useToast();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<AdaptiveTutorInput>({
+    resolver: zodResolver(AdaptiveTutorInputSchema),
     defaultValues: {
       topic: '',
       struggleDescription: '',
     },
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<AdaptiveTutorInput> = async (data) => {
     setIsLoading(true);
     setResponse(null);
     try {
@@ -54,84 +44,6 @@ function AdaptiveLearningForm() {
   };
 
   return (
-    <div className="space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Get a Custom Explanation</CardTitle>
-          <CardDescription>Tell the AI Tutor what you're finding difficult.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="topic"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Topic or Subject</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Photosynthesis" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="struggleDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>What are you struggling with?</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="e.g., 'I don't understand the difference between the light and dark reactions.'" rows={4} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">
-                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : <><Wand2 className="mr-2 h-4 w-4" /> Explain It to Me</>}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-
-       {isLoading && (
-        <Card><CardContent className="p-6 text-center space-y-4"><Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" /><p className="text-muted-foreground">The AI Tutor is preparing your lesson...</p></CardContent></Card>
-      )}
-
-      {response && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Personalized Lesson</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <Alert>
-              <BookOpen className="h-4 w-4" />
-              <AlertTitle>Tailored Explanation</AlertTitle>
-              <AlertDescription>{response.tailoredExplanation}</AlertDescription>
-            </Alert>
-             <Alert>
-              <Lightbulb className="h-4 w-4" />
-              <AlertTitle>Simple Analogy</AlertTitle>
-              <AlertDescription>{response.analogy}</AlertDescription>
-            </Alert>
-             <Alert>
-              <HelpCircle className="h-4 w-4" />
-              <AlertTitle>Practice Question</AlertTitle>
-              <AlertDescription>{response.practiceQuestion}</AlertDescription>
-            </Alert>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-}
-
-
-export default function AdaptiveLearningPage() {
-  return (
     <div className="bg-background min-h-screen">
         <div className="container mx-auto px-4 py-16">
             <div className="max-w-3xl mx-auto space-y-8">
@@ -144,7 +56,77 @@ export default function AdaptiveLearningPage() {
                         Struggling with a concept? Tell our AI tutor what you're having trouble with, and it will generate a custom explanation just for you.
                     </p>
                 </div>
-                <AdaptiveLearningForm />
+                
+                 <Card>
+                    <CardHeader>
+                    <CardTitle>Get a Custom Explanation</CardTitle>
+                    <CardDescription>Tell the AI Tutor what you're finding difficult.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="topic"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Topic or Subject</FormLabel>
+                                <FormControl>
+                                <Input placeholder="e.g., Photosynthesis" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="struggleDescription"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>What are you struggling with?</FormLabel>
+                                <FormControl>
+                                <Textarea placeholder="e.g., 'I don't understand the difference between the light and dark reactions.'" rows={4} {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">
+                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : <><Wand2 className="mr-2 h-4 w-4" /> Explain It to Me</>}
+                        </Button>
+                        </form>
+                    </Form>
+                    </CardContent>
+                </Card>
+
+                {isLoading && (
+                    <Card><CardContent className="p-6 text-center space-y-4"><Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" /><p className="text-muted-foreground">The AI Tutor is preparing your lesson...</p></CardContent></Card>
+                )}
+
+                {response && (
+                    <Card>
+                    <CardHeader>
+                        <CardTitle>Your Personalized Lesson</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <Alert>
+                        <BookOpen className="h-4 w-4" />
+                        <AlertTitle>Tailored Explanation</AlertTitle>
+                        <AlertDescription>{response.tailoredExplanation}</AlertDescription>
+                        </Alert>
+                        <Alert>
+                        <Lightbulb className="h-4 w-4" />
+                        <AlertTitle>Simple Analogy</AlertTitle>
+                        <AlertDescription>{response.analogy}</AlertDescription>
+                        </Alert>
+                        <Alert>
+                        <HelpCircle className="h-4 w-4" />
+                        <AlertTitle>Practice Question</AlertTitle>
+                        <AlertDescription>{response.practiceQuestion}</AlertDescription>
+                        </Alert>
+                    </CardContent>
+                    </Card>
+                )}
             </div>
         </div>
     </div>

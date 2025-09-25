@@ -46,7 +46,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 export default async function AutomotiveTechPage() {
     const products = await getProducts();
-    const autotechProducts = products.filter(p => p.category === "Automotive Tech" && p.enabled);
+    const autotechProducts = products.filter(p => p.category === "Automotive Tech");
     
      return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -73,4 +73,3 @@ export default async function AutomotiveTechPage() {
         </div>
     );
 }
-

@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import StudentHousingClientPage from '@/app/admin/education-tech/student-housing/client-page';
@@ -16,6 +15,3 @@ export default async function StudentHousingPage() {
     const leases = await getLeases();
     return <StudentHousingClientPage initialLeases={leases} />;
 }
-
-
-    
