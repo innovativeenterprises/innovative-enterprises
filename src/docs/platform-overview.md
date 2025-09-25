@@ -64,7 +64,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 ### Category: Gaming & Social (1)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
-| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | In Development | On Track |
+| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Live & Operating | On Track |
 
 
 ### Category: Beauty & Wellness (1)
