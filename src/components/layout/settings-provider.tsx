@@ -1,17 +1,9 @@
 
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
-import type { AppSettings } from '@/lib/settings';
-import { useStore } from '@/lib/global-store.tsx';
-
-interface SettingsContextType {
-  settings: AppSettings | null;
-}
-
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+import { useGlobalStore } from '@/lib/global-store.tsx';
 
 export const useSettings = () => {
-  const settings = useStore(state => state.settings);
+  const settings = useGlobalStore(state => state.settings);
   return { settings };
 };

@@ -8,7 +8,7 @@ import { BrainCircuit, ShoppingCart, Trash2, Minus, Plus, CreditCard, Loader2 } 
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { usePosData, usePosProductsData, useSettingsData } from '@/hooks/use-data-hooks';
+import { useGlobalStore, useSetGlobalStore } from '@/hooks/use-data-hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -48,7 +48,7 @@ const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCh
     onCheckout: () => void,
     isCheckingOut: boolean,
 }) => {
-    const { settings } = useSettingsData();
+    const settings = useGlobalStore(s => s.settings);
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const vat = settings?.vat.enabled ? subtotal * settings.vat.rate : 0;
     const total = subtotal + vat;
@@ -107,9 +107,10 @@ const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCh
 
 // --- Main AI POS Page ---
 export default function AiPosPage() {
-    const { data: posProducts, setData: setPosProducts } = usePosProductsData();
-    const { data: dailySales, setData: setDailySales } = usePosData();
-    const { isClient } = useStore(s => ({ isClient: s.isClient }));
+    const posProducts = useGlobalStore(s => s.posProducts);
+    const dailySales = useGlobalStore(s => s.dailySales);
+    const isClient = useGlobalStore(s => s.isClient);
+    const setStore = useSetGlobalStore();
 
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -188,19 +189,16 @@ export default function AiPosPage() {
             };
             
             // Deduct stock
-            setPosProducts(currentProducts => {
-                const updatedProducts = [...currentProducts];
-                cart.forEach(cartItem => {
-                    const productIndex = updatedProducts.findIndex(p => p.id === cartItem.id);
-                    if (productIndex !== -1) {
-                        updatedProducts[productIndex].stock -= cartItem.quantity;
+            setStore(state => ({
+                posProducts: state.posProducts.map(p => {
+                    const cartItem = cart.find(ci => ci.id === p.id);
+                    if (cartItem) {
+                        return { ...p, stock: p.stock - cartItem.quantity };
                     }
-                });
-                return updatedProducts;
-            });
-
-
-            setDailySales(prev => [newTransaction, ...prev]);
+                    return p;
+                }),
+                dailySales: [newTransaction, ...state.dailySales],
+            }));
 
             toast({
                 title: "Payment Successful",

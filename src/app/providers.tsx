@@ -6,19 +6,17 @@ import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import { StoreProvider } from '@/lib/global-store.tsx';
-import type { AppState } from '@/lib/initial-state';
-import type { AppSettings } from '@/lib/settings';
+import type { AppState } from './lib/initial-state';
 
 export function Providers({
   children,
-  initialSettings,
+  initialState,
 }: {
   children: ReactNode;
-  initialSettings: AppSettings | null;
+  initialState: Partial<AppState>;
 }) {
-
   return (
-    <StoreProvider initialState={{ settings: initialSettings }}>
+    <StoreProvider initialState={initialState}>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
