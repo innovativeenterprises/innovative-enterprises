@@ -18,4 +18,3 @@ export default async function NetworkPage() {
 
     return <NetworkPageClient initialProviders={providers || []} initialAssets={assets || []} />;
 }
-

@@ -10,6 +10,7 @@ import type { Provider } from "@/lib/providers.schema";
 import type { Opportunity } from "@/lib/opportunities.schema";
 import type { Service } from "@/lib/services.schema";
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
+import { useProductsData, useProvidersData, useOpportunitiesData, useServicesData, useStaffData } from '@/hooks/use-data-hooks';
 
 const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[], dataKey: string, color: string }) => (
     <Card>
@@ -47,16 +48,22 @@ export default function AdminDashboardPageClient({
   initialStaffData,
 }: AdminDashboardPageClientProps) {
 
+    const { data: products } = useProductsData(initialProducts);
+    const { data: providers } = useProvidersData(initialProviders);
+    const { data: opportunities } = useOpportunitiesData(initialOpportunities);
+    const { data: services } = useServicesData(initialServices);
+    const { leadership, staff, agentCategories } = useStaffData(initialStaffData);
+
     const kpiData = [
-        { name: 'Products', value: initialProducts.length },
-        { name: 'Providers', value: initialProviders.length },
-        { name: 'Opportunities', value: initialOpportunities.length },
-        { name: 'Services', value: initialServices.length },
-        { name: 'AI Agents', value: initialStaffData.agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
-        { name: 'Staff', value: initialStaffData.leadership.length + initialStaffData.staff.length },
+        { name: 'Products', value: products.length },
+        { name: 'Providers', value: providers.length },
+        { name: 'Opportunities', value: opportunities.length },
+        { name: 'Services', value: services.length },
+        { name: 'AI Agents', value: agentCategories.reduce((acc, cat) => acc + cat.agents.length, 0) },
+        { name: 'Staff', value: leadership.length + staff.length },
     ];
     
-    const recentProviders = initialProviders.slice(0, 5);
+    const recentProviders = providers.slice(0, 5);
 
     return (
         <div className="space-y-8">
