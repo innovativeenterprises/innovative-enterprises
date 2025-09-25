@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, forwardRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowUpDown, ChevronDown, ChevronRight } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,19 +30,19 @@ export const TimeAgoCell = ({ date, isClient }: { date: string, isClient: boolea
 };
 
 
-export function RequestTable({ 
-    data,
-    columns,
-    isClient,
-    renderActions,
-    renderExpandedContent,
-}: { 
+export const RequestTable = forwardRef<HTMLTableElement, {
     data: GenericRequest[], 
     columns: any[],
     isClient: boolean,
     renderActions?: (request: GenericRequest) => React.ReactNode,
     renderExpandedContent?: (request: GenericRequest) => React.ReactNode,
-}) { 
+}>(({ 
+    data,
+    columns,
+    isClient,
+    renderActions,
+    renderExpandedContent,
+}, ref) => { 
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
     const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
@@ -85,7 +85,7 @@ export function RequestTable({
     );
 
     return (
-        <Table>
+        <Table ref={ref}>
             <TableHeader>
                 <TableRow>
                     {renderExpandedContent && <TableHead className="w-10" />}
@@ -152,4 +152,6 @@ export function RequestTable({
             </TableBody>
         </Table>
     );
-}
+});
+RequestTable.displayName = "RequestTable";
+
