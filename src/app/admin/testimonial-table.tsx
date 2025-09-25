@@ -25,8 +25,19 @@ const TestimonialSchema = z.object({
 });
 type TestimonialValues = z.infer<typeof TestimonialSchema>;
 
-const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimonial?: Testimonial, onSave: (values: TestimonialValues, id?: string) => void, children: React.ReactNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const AddEditTestimonialDialog = ({ 
+    testimonial, 
+    onSave, 
+    children,
+    isOpen,
+    onOpenChange,
+}: { 
+    testimonial?: Testimonial, 
+    onSave: (values: TestimonialValues, id?: string) => void, 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
+}) => {
     const form = useForm<TestimonialValues>({
         resolver: zodResolver(TestimonialSchema),
     });
@@ -39,11 +50,11 @@ const AddEditTestimonialDialog = ({ testimonial, onSave, children }: { testimoni
     
     const onSubmit: SubmitHandler<TestimonialValues> = (data) => {
         onSave(data, testimonial?.id); 
-        setIsOpen(false);
+        onOpenChange(false);
     }
     
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{testimonial ? "Edit" : "Add"} Testimonial</DialogTitle></DialogHeader>
@@ -71,10 +82,17 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
     const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | undefined>(undefined);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    const handleOpenDialog = (testimonial?: Testimonial) => {
+        setSelectedTestimonial(testimonial);
+        setIsDialogOpen(true);
+    };
 
     const handleTestimonialSave = (values: TestimonialValues, id?: string) => {
         if (id) {
@@ -96,11 +114,19 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Testimonials</CardTitle>
-                 <AddEditTestimonialDialog onSave={handleTestimonialSave}>
-                    <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4"/> Add Testimonial</Button>
-                </AddEditTestimonialDialog>
+                 <Button variant="outline" onClick={() => handleOpenDialog()}>
+                    <PlusCircle className="mr-2 h-4 w-4"/> Add Testimonial
+                 </Button>
             </CardHeader>
             <CardContent>
+                <AddEditTestimonialDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    testimonial={selectedTestimonial}
+                    onSave={handleTestimonialSave}
+                >
+                    <div />
+                </AddEditTestimonialDialog>
                  <Table>
                     <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
@@ -118,9 +144,9 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground italic">"{t.quote}"</TableCell>
                                 <TableCell className="text-right">
-                                    <AddEditTestimonialDialog testimonial={t} onSave={handleTestimonialSave}>
-                                        <Button variant="ghost" size="icon"><Edit /></Button>
-                                    </AddEditTestimonialDialog>
+                                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(t)}>
+                                        <Edit />
+                                    </Button>
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
                                         <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Testimonial?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleTestimonialDelete(t.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>

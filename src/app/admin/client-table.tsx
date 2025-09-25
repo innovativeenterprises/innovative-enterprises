@@ -25,8 +25,19 @@ const ClientSchema = z.object({
 });
 type ClientValues = z.infer<typeof ClientSchema>;
 
-const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, onSave: (values: ClientValues, id?: string) => void, children: React.ReactNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const AddEditClientDialog = ({ 
+    client, 
+    onSave, 
+    children,
+    isOpen,
+    onOpenChange,
+}: { 
+    client?: Client, 
+    onSave: (values: ClientValues, id?: string) => void, 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
+}) => {
     const form = useForm<ClientValues>({
         resolver: zodResolver(ClientSchema),
     });
@@ -39,11 +50,11 @@ const AddEditClientDialog = ({ client, onSave, children }: { client?: Client, on
 
     const handleSubmit: SubmitHandler<ClientValues> = (data) => {
         onSave(data, client?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{client ? "Edit" : "Add"} Client</DialogTitle></DialogHeader>
@@ -69,10 +80,17 @@ export default function ClientTable({ initialClients }: { initialClients: Client
     const [clients, setClients] = useState<Client[]>(initialClients);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedClient, setSelectedClient] = useState<Client | undefined>(undefined);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    const handleOpenDialog = (client?: Client) => {
+        setSelectedClient(client);
+        setIsDialogOpen(true);
+    };
     
     const handleClientSave = (values: ClientValues, id?: string) => {
         if (id) {
@@ -93,11 +111,19 @@ export default function ClientTable({ initialClients }: { initialClients: Client
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Clients</CardTitle>
-                <AddEditClientDialog onSave={handleClientSave}>
-                    <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4"/> Add Client</Button>
-                </AddEditClientDialog>
+                <Button variant="outline" onClick={() => handleOpenDialog()}>
+                    <PlusCircle className="mr-2 h-4 w-4"/> Add Client
+                </Button>
             </CardHeader>
             <CardContent>
+                <AddEditClientDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    client={selectedClient}
+                    onSave={handleClientSave}
+                >
+                    <div/>
+                </AddEditClientDialog>
                 <Table>
                     <TableHeader><TableRow><TableHead>Logo</TableHead><TableHead>Name</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
@@ -113,9 +139,9 @@ export default function ClientTable({ initialClients }: { initialClients: Client
                                     <TableCell><Image src={client.logo} alt={client.name} width={100} height={40} className="object-contain"/></TableCell>
                                     <TableCell>{client.name}</TableCell>
                                     <TableCell className="text-right">
-                                        <AddEditClientDialog client={client} onSave={handleClientSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditClientDialog>
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(client)}>
+                                            <Edit />
+                                        </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive"/></Button></AlertDialogTrigger>
                                             <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Client?</AlertDialogTitle><AlertDialogDescription>This will remove "{client.name}" from your client list.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleClientDelete(client.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
@@ -130,3 +156,4 @@ export default function ClientTable({ initialClients }: { initialClients: Client
         </Card>
     );
 }
+

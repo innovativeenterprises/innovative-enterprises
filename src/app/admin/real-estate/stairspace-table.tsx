@@ -115,10 +115,10 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
         setIsClient(true);
     }, []);
 
-    const openDialog = (listing?: StairspaceListing) => {
+    const handleOpenDialog = (listing?: StairspaceListing) => {
         setSelectedListing(listing);
         setIsDialogOpen(true);
-    };
+    }
 
     const handleSave = (values: ListingValues, id?: string) => {
         const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
@@ -141,7 +141,7 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div><CardTitle>StairSpace Listings</CardTitle><CardDescription>Manage all micro-retail space listings.</CardDescription></div>
-                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button>
+                <Button onClick={() => handleOpenDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button>
             </CardHeader>
             <CardContent>
                 <AddEditListingDialog
@@ -150,12 +150,13 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
                     listing={selectedListing}
                     onSave={handleSave}
                 >
-                    {/* Placeholder for programmatic trigger */}
-                     <div/>
+                    <div />
                 </AddEditListingDialog>
                 <Table><TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Location</TableHead><TableHead>Price</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>{!isClient ? <TableRow><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow> : (
-                        listings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2"><Button variant="ghost" size="icon" onClick={() => openDialog(listing)}><Edit /></Button><AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
+                        listings.map(listing => <TableRow key={listing.id}><TableCell><Image src={listing.imageUrl} alt={listing.title} width={80} height={60} className="rounded-md object-cover" /></TableCell><TableCell className="font-medium">{listing.title}</TableCell><TableCell>{listing.location}</TableCell><TableCell>{listing.price}</TableCell><TableCell className="text-right"><div className="flex justify-end gap-2">
+                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(listing)}><Edit /></Button>
+                            <AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Listing?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{listing.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(listing.id)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></div></TableCell></TableRow>)
                     )}</TableBody>
                 </Table>
             </CardContent>

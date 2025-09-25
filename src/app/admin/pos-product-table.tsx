@@ -31,13 +31,16 @@ type PosProductValues = z.infer<typeof PosProductSchema>;
 const AddEditPosProductDialog = ({ 
     product, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     product?: PosProduct, 
     onSave: (values: PosProductValues, id?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<PosProductValues>({
         resolver: zodResolver(PosProductSchema),
     });
@@ -51,11 +54,11 @@ const AddEditPosProductDialog = ({
 
     const onSubmit: SubmitHandler<PosProductValues> = (data) => {
         onSave(data, product?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -108,6 +111,13 @@ const AddEditPosProductDialog = ({
 export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
     const { data: products, setData: setProducts } = usePosProductsData(initialProducts);
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);
+
+    const handleOpenDialog = (product?: PosProduct) => {
+        setSelectedProduct(product);
+        setIsDialogOpen(true);
+    };
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
@@ -132,11 +142,19 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
                     <CardTitle>AI-POS Product Management</CardTitle>
                     <CardDescription>Manage the products available in the canteen's point-of-sale system.</CardDescription>
                 </div>
-                 <AddEditPosProductDialog onSave={handleSave}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Product</Button>
-                </AddEditPosProductDialog>
+                 <Button onClick={() => handleOpenDialog()}>
+                    <PlusCircle className="mr-2 h-4 w-4"/> Add Product
+                 </Button>
             </CardHeader>
             <CardContent>
+                <AddEditPosProductDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    product={selectedProduct}
+                    onSave={handleSave}
+                >
+                    <div />
+                </AddEditPosProductDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -160,9 +178,9 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
                                 <TableCell className="text-right font-mono">{item.stock}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <AddEditPosProductDialog product={item} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditPosProductDialog>
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}>
+                                            <Edit />
+                                        </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button>
@@ -182,3 +200,4 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
         </Card>
     );
 }
+

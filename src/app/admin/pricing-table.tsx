@@ -29,7 +29,7 @@ const EditPriceDialog = ({
     isOpen,
     onOpenChange,
 }: { 
-    item: Pricing, 
+    item: Pricing | undefined, 
     onSave: (values: PricingValues, id: string) => void,
     children: React.ReactNode,
     isOpen: boolean,
@@ -40,12 +40,13 @@ const EditPriceDialog = ({
     });
 
     useEffect(() => {
-        if(isOpen) {
+        if(isOpen && item) {
             form.reset({ price: item.price });
         }
     }, [item, form, isOpen]);
 
     const onSubmit: SubmitHandler<PricingValues> = (data) => {
+        if (!item) return;
         onSave(data, item.id);
         onOpenChange(false);
     };
@@ -57,21 +58,23 @@ const EditPriceDialog = ({
                 <DialogHeader>
                     <DialogTitle>Edit Price</DialogTitle>
                 </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <div>
-                            <p className="font-medium text-sm">{item.type}</p>
-                            <p className="text-sm text-muted-foreground">{item.group}</p>
-                        </div>
-                        <FormField control={form.control} name="price" render={({ field }) => (
-                            <FormItem><FormLabel>Price per page (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Save Price</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                {item && (
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <div>
+                                <p className="font-medium text-sm">{item.type}</p>
+                                <p className="text-sm text-muted-foreground">{item.group}</p>
+                            </div>
+                            <FormField control={form.control} name="price" render={({ field }) => (
+                                <FormItem><FormLabel>Price per page (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <DialogFooter>
+                                <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                                <Button type="submit">Save Price</Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                )}
             </DialogContent>
         </Dialog>
     )
@@ -105,16 +108,14 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                 <CardDescription>Manage the per-page price for document translation.</CardDescription>
             </CardHeader>
             <CardContent>
-                {selectedItem && (
-                    <EditPriceDialog
-                      isOpen={isDialogOpen}
-                      onOpenChange={setIsDialogOpen}
-                      item={selectedItem}
-                      onSave={handleSave}
-                    >
-                      <div />
-                    </EditPriceDialog>
-                )}
+                <EditPriceDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    item={selectedItem}
+                    onSave={handleSave}
+                >
+                    <div />
+                </EditPriceDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
