@@ -1,7 +1,7 @@
 
 'use server';
 
-import StudentHousingClientPage from './client-page';
+import StudentHousingClientPage from '@/app/admin/education-tech/student-housing/client-page';
 import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
