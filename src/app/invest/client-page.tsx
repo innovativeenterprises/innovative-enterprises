@@ -83,28 +83,36 @@ const ProjectCard = ({ product }: { product: Product }) => {
 
 type InvestorValues = z.infer<typeof InvestorSchema>;
 
-const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Investor, onSave: (values: InvestorValues, id?: string) => void, children: React.ReactNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const AddEditInvestorDialog = ({ 
+    investor, 
+    onSave,
+    children,
+    isOpen,
+    onOpenChange,
+}: { 
+    investor?: Investor, 
+    onSave: (values: InvestorValues, id?: string) => void, 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
+}) => {
     const form = useForm<InvestorValues>({
         resolver: zodResolver(InvestorSchema),
-        defaultValues: investor || {
-            name: "",
-            type: "Investor",
-            subType: "Angel",
-        }
     });
 
     useEffect(() => {
-        if(isOpen) form.reset(investor);
+        if(isOpen) {
+            form.reset(investor || { name: "", type: "Investor", subType: "Angel" });
+        }
     }, [investor, form, isOpen]);
 
     const onSubmit: SubmitHandler<InvestorValues> = (data) => {
         onSave(data, investor?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader><DialogTitle>{investor ? "Edit" : "Add"} Investor/Funder</DialogTitle></DialogHeader>
@@ -140,11 +148,18 @@ const AddEditInvestorDialog = ({ investor, onSave, children }: { investor?: Inve
 function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
     const [investors, setInvestors] = useState(initialInvestors);
     const [isClient, setIsClient] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedInvestor, setSelectedInvestor] = useState<Investor | undefined>(undefined);
     const { toast } = useToast();
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    const openDialog = (investor?: Investor) => {
+        setSelectedInvestor(investor);
+        setIsDialogOpen(true);
+    };
     
     const handleSave = (values: InvestorValues, id?: string) => {
         const newInvestorData = { ...values, documents: {} };
@@ -170,8 +185,13 @@ function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
                     <CardTitle>Investors & Funders</CardTitle>
                     <CardDescription>Manage your list of potential and current investors.</CardDescription>
                 </div>
-                <AddEditInvestorDialog onSave={handleSave}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4" /> Add Investor</Button>
+                <AddEditInvestorDialog 
+                    isOpen={isDialogOpen} 
+                    onOpenChange={setIsDialogOpen} 
+                    investor={selectedInvestor} 
+                    onSave={handleSave}
+                >
+                    <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4" /> Add Investor</Button>
                 </AddEditInvestorDialog>
             </CardHeader>
             <CardContent>
@@ -192,9 +212,7 @@ function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
                                     <TableCell>{investor.subType}</TableCell>
                                     <TableCell>{investor.focusArea}</TableCell>
                                     <TableCell className="text-right">
-                                        <AddEditInvestorDialog investor={investor} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
-                                        </AddEditInvestorDialog>
+                                        <Button variant="ghost" size="icon" onClick={() => openDialog(investor)}><Edit className="h-4 w-4" /></Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
                                             <AlertDialogContent>
@@ -210,6 +228,118 @@ function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
                             ))}
                     </TableBody>
                 </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+const InvestFormSchema = PartnershipInquiryInputSchema.extend({
+  fullName: z.string().min(2, "Full name is required."),
+  organizationName: z.string().optional(),
+  investorType: z.enum(['Personal/Private', 'Angel', 'Institute/Government', 'VC Fund']),
+  country: z.string().min(2, "Country is required"),
+  website: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
+  investmentRange: z.string().min(1, "Please select an investment range."),
+});
+type InvestFormValues = z.infer<typeof InvestFormSchema>;
+
+function InvestForm() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [generatedLetter, setGeneratedLetter] = useState<GenerateLetterOfInterestOutput | null>(null);
+    const { toast } = useToast();
+
+    const form = useForm<InvestFormValues>({
+        resolver: zodResolver(InvestFormSchema),
+        defaultValues: { investorType: 'Angel' }
+    });
+
+    const onSubmit: SubmitHandler<InvestFormValues> = async (data) => {
+        setIsLoading(true);
+        setGeneratedLetter(null);
+        try {
+            const letter = await generateLetterOfInterest(data);
+            setGeneratedLetter(letter);
+
+            await handlePartnershipInquiry({
+                companyName: data.organizationName || data.fullName,
+                contactName: data.fullName,
+                email: data.email,
+                partnershipDetails: data.areaOfInterest,
+                undertaking: true, // Assume undertaking for this specific form
+            });
+
+            setIsSubmitted(true);
+            toast({ title: "Inquiry Sent!", description: "Your letter of interest has been generated and sent." });
+        } catch(e) {
+            console.error(e);
+            toast({ title: "Submission Failed", description: "Could not process your inquiry at this time.", variant: "destructive" });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    if (isSubmitted && generatedLetter) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl">Thank You for Your Interest</CardTitle>
+                    <CardDescription>A copy of this letter of interest has been sent to your email. Our team will be in touch shortly.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+                        {generatedLetter.letterContent}
+                    </div>
+                </CardContent>
+                <CardFooter>
+                     <Button onClick={() => setIsSubmitted(false)} className="w-full">Submit Another Inquiry</Button>
+                </CardFooter>
+            </Card>
+        )
+    }
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Investor Inquiry</CardTitle>
+                <CardDescription>Please provide your details below. Our AI sales agent, Sami, will draft a personalized letter of interest.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={form.control} name="fullName" render={({ field }) => <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field}/></FormControl><FormMessage/></FormItem>} />
+                            <FormField control={form.control} name="organizationName" render={({ field }) => <FormItem><FormLabel>Organization (Optional)</FormLabel><FormControl><Input {...field}/></FormControl><FormMessage/></FormItem>} />
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <FormField control={form.control} name="investorType" render={({ field }) => (
+                                <FormItem><FormLabel>I am a(n)...</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
+                                    <SelectItem value="Personal/Private">Personal/Private Investor</SelectItem>
+                                    <SelectItem value="Angel">Angel Investor</SelectItem>
+                                    <SelectItem value="Institute/Government">Institute/Government Fund</SelectItem>
+                                    <SelectItem value="VC Fund">VC Fund</SelectItem>
+                                </SelectContent></Select><FormMessage/></FormItem>
+                            )}/>
+                            <FormField control={form.control} name="country" render={({ field }) => <FormItem><FormLabel>Country</FormLabel><FormControl><Input {...field}/></FormControl><FormMessage/></FormItem>} />
+                        </div>
+                         <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" {...field}/></FormControl><FormMessage/></FormItem>} />
+                         <FormField control={form.control} name="website" render={({ field }) => <FormItem><FormLabel>Website (Optional)</FormLabel><FormControl><Input {...field}/></FormControl><FormMessage/></FormItem>} />
+                         <FormField control={form.control} name="investmentRange" render={({ field }) => (
+                             <FormItem><FormLabel>Indicative Investment Range</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a range..."/></SelectTrigger></FormControl><SelectContent>
+                                <SelectItem value="< OMR 50,000">&lt; OMR 50,000</SelectItem>
+                                <SelectItem value="OMR 50,000 - 250,000">OMR 50,000 - 250,000</SelectItem>
+                                <SelectItem value="OMR 250,000 - 1,000,000">OMR 250,000 - 1,000,000</SelectItem>
+                                <SelectItem value="> OMR 1,000,000">&gt; OMR 1,000,000</SelectItem>
+                             </SelectContent></Select><FormMessage/></FormItem>
+                         )}/>
+                          <FormField control={form.control} name="areaOfInterest" render={({ field }) => (
+                            <FormItem><FormLabel>Area of Interest</FormLabel><FormControl><VoiceEnabledTextarea placeholder="Tell us which of our projects or technology areas you are most interested in..." rows={4} {...field} /></FormControl><FormMessage/></FormItem>
+                        )}/>
+                        <Button type="submit" disabled={isLoading} className="w-full">
+                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : <><Send className="mr-2 h-4 w-4"/>Submit Inquiry</>}
+                        </Button>
+                    </form>
+                </Form>
             </CardContent>
         </Card>
     );

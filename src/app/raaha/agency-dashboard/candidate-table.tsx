@@ -159,6 +159,8 @@ export function CandidateTable({ columns, agencyId, initialWorkers, setWorkers }
     setWorkers: (updater: (prev: Worker[]) => Worker[]) => void 
 }) {
     const [isClient, setIsClient] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedWorker, setSelectedWorker] = useState<Worker | undefined>(undefined);
     const { toast } = useToast();
     
     useEffect(() => {
@@ -166,6 +168,11 @@ export function CandidateTable({ columns, agencyId, initialWorkers, setWorkers }
     }, []);
 
     const filteredWorkers = initialWorkers.filter(w => w.agencyId === agencyId);
+    
+    const openDialog = (worker?: Worker) => {
+        setSelectedWorker(worker);
+        setIsDialogOpen(true);
+    };
 
     const handleSave = (values: WorkerValues, id?: string) => {
         const newWorker = { ...values };
@@ -185,8 +192,14 @@ export function CandidateTable({ columns, agencyId, initialWorkers, setWorkers }
                     <CardTitle>Candidate Database</CardTitle>
                     <CardDescription>Manage your agency's roster of available domestic workers.</CardDescription>
                 </div>
-                 <AddEditWorkerDialog onSave={handleSave} agencyId={agencyId}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Candidate</Button>
+                 <AddEditWorkerDialog 
+                    isOpen={isDialogOpen} 
+                    onOpenChange={setIsDialogOpen}
+                    worker={selectedWorker}
+                    onSave={handleSave} 
+                    agencyId={agencyId}
+                >
+                    <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Candidate</Button>
                 </AddEditWorkerDialog>
             </CardHeader>
             <CardContent>
