@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 import { saasProducts } from '@/lib/saas-products';
 
@@ -13,7 +12,6 @@ const hrefMap: Record<string, string> = {
     "VMALL": "/vmall",
     "BidWise Estimator": "/construction-tech/bid-estimator",
     "AI Property Valuator": "/real-estate-tech/property-valuator",
-    "Smart Listing & Matching": "/real-estate-tech/smart-listing",
     "DocuChain Compliance": "/real-estate-tech/docu-chain",
     "SmartLease Manager": "/real-estate-tech/smart-lease-manager",
     "InvestiSight AI": "/real-estate-tech/investisight",
@@ -23,6 +21,7 @@ const hrefMap: Record<string, string> = {
     "CertiTrust": "/education-tech/certitrust",
     "CampusOS": "/education-tech/campus-os",
     "BoQ Generator": "/construction-tech/quantity-calculator",
+    "Fire & Safety Estimator": "/construction-tech/fire-safety-estimator",
     "SiteGuard Compliance": "/construction-tech/site-guard",
     "WorkforceFlow": "/construction-tech/workforce-scheduler",
     "FacilityFlow SaaS": "/real-estate-tech/facility-flow",
@@ -46,6 +45,7 @@ const hrefMap: Record<string, string> = {
     "RAAHA": "/raaha",
     "Nova Commerce": "/ecommerce",
     "Logistics Chain AI": "/logistics-ai",
+    "AI Smart Home Estimator": "/construction-tech/smart-home-estimator",
     "AI-POS for Education": "/education-tech/ai-pos",
     "Facebook Cover Generator": "/facebook-cover-generator",
     "StructurAI BIM": "/construction-tech/structurai-bim",

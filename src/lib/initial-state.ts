@@ -1,5 +1,4 @@
 
-
 import type { AppSettings } from '@/lib/settings';
 import type { Product } from './products.schema';
 import type { Provider } from './providers.schema';

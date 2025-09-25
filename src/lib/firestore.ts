@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
@@ -166,7 +165,7 @@ export const getFirestoreData = async () => ({
     communities: await getCommunities(),
     communityEvents: await getCommunityEvents(),
     communityFinances: await getCommunityFinances(),
-    communityMembers: await getMembers(),
+    communityMembers: await getCommunityMembers(),
     alumniJobs: await getAlumniJobs(),
     rentalAgencies: await getRentalAgencies(),
     cars: await getCars(),
