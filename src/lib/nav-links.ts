@@ -295,4 +295,3 @@ export const initialAiTools = [
 export type Solution = typeof initialSolutions[number];
 export type Industry = typeof initialIndustries[number];
 export type AiTool = typeof initialAiTools[number];
-
