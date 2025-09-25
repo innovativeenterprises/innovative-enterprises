@@ -1,4 +1,6 @@
 
+'use server';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { DollarSign, ArrowRight, TrendingUp, FileText, Bot } from "lucide-react";
@@ -72,7 +74,7 @@ export default function ConstructFinPage() {
                 </CardHeader>
                 <CardFooter className="justify-center">
                     <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                        <Link href="/admin/cfo-dashboard">View Demo Dashboard <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                        <Link href="/cfo">View Demo Dashboard <ArrowRight className="ml-2 h-4 w-4"/></Link>
                     </Button>
                 </CardFooter>
             </Card>
