@@ -3,6 +3,12 @@
 
 import { Truck } from "lucide-react";
 import LogisticsSchedulerForm from "./scheduler-form";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Logistics Chain AI | Innovative Enterprises",
+  description: "An AI-powered platform to optimize your supply chain and logistics. Define your delivery tasks, vehicles, and destinations, and our AI will create an optimized, conflict-free schedule to maximize efficiency.",
+};
 
 export default function LogisticsAiPage() {
   return (
