@@ -4,14 +4,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from 'zod';
+import { z } from "zod";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Briefcase, Download, FileSignature, FileText, AlertTriangle, FileSpreadsheet, Edit, PlusCircle, Upload, Loader2, CheckCircle, Package, Trash2, User, Wand2, ClipboardList } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -22,7 +22,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { fileToDataURI } from '@/lib/utils';
 import type { BriefcaseData, UserDocument, ServiceRegistration, SavedBoQ } from '@/lib/briefcase';
-import { useBriefcaseData } from '@/hooks/use-data-hooks';
+import { useBriefcaseData, useUserDocumentsData } from '@/hooks/use-data-hooks';
 
 
 const businessCategories = [
@@ -290,9 +290,23 @@ const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | Iden
 
 
 export default function BriefcasePage() {
-    const { data: briefcase, setData: setBriefcase, isClient } = useBriefcaseData();
+    const { data: briefcase, setData: setBriefcase } = useBriefcaseData();
+    const { data: userDocuments, setData: setUserDocuments, isClient } = useUserDocumentsData(briefcase?.userDocuments);
     const [analyzingDocId, setAnalyzingDocId] = useState<string | null>(null);
     const { toast } = useToast();
+
+    useEffect(() => {
+        // If briefcase has documents from initial state, use them
+        if (briefcase?.userDocuments && briefcase.userDocuments.length > 0) {
+            setUserDocuments(briefcase.userDocuments);
+        }
+    }, [briefcase, setUserDocuments]);
+    
+    useEffect(() => {
+        // When the local userDocuments state changes, update the briefcase
+        setBriefcase(prev => prev ? ({ ...prev, userDocuments: userDocuments }) : null);
+    }, [userDocuments, setBriefcase]);
+
 
     const handleAddService = (category: string, priceListUrl: string, priceListFilename: string) => {
         if (!briefcase) return;
@@ -311,7 +325,6 @@ export default function BriefcasePage() {
     }
 
     const handleUploadDocument = async (file: File) => {
-        if (!briefcase) return;
         const dataUri = await fileToDataURI(file);
         const newDocument: UserDocument = {
             id: `doc_${file.name.replace(/\s+/g, '_')}_${new Date().getTime()}`,
@@ -320,36 +333,30 @@ export default function BriefcasePage() {
             dataUri: dataUri,
             uploadedAt: new Date().toISOString(),
         };
-        const newData = { ...briefcase, userDocuments: [...briefcase.userDocuments, newDocument]};
-        setBriefcase(() => newData);
+        setUserDocuments(prev => [...prev, newDocument]);
     }
 
     const handleDeleteDocument = (docId: string) => {
-        if (!briefcase) return;
-        const updatedDocuments = briefcase.userDocuments.filter(doc => doc.id !== docId);
-        const newData = { ...briefcase, userDocuments: updatedDocuments };
-        setBriefcase(() => newData);
+        setUserDocuments(prev => prev.filter(doc => doc.id !== docId));
         toast({ title: 'Document Deleted', description: 'The document has been removed from your briefcase.', variant: 'destructive'});
     }
 
     const handleAnalyzeDocument = async (doc: UserDocument) => {
-        if (!briefcase) return;
+        if (!userDocuments) return;
         setAnalyzingDocId(doc.id);
         
         try {
             let result;
-            // Simple heuristic to determine which AI agent to call
             if (doc.name.toLowerCase().includes('cr') || doc.name.toLowerCase().includes('commercial')) {
                 result = await analyzeCrDocument({ documentDataUri: doc.dataUri });
             } else {
                  result = await analyzeIdentity({ idDocumentFrontUri: doc.dataUri });
             }
 
-            const updatedDocuments = briefcase.userDocuments.map(d => 
+            const updatedDocuments = userDocuments.map(d => 
                 d.id === doc.id ? { ...d, analysis: result, name: result.suggestedFilename || d.name } : d
             );
-            const newData = { ...briefcase, userDocuments: updatedDocuments };
-            setBriefcase(() => newData);
+            setUserDocuments(() => updatedDocuments);
 
             toast({ title: "Analysis Complete", description: `Successfully analyzed ${doc.name}.` });
         } catch (error) {
@@ -465,9 +472,9 @@ export default function BriefcasePage() {
                                 <UploadDocumentDialog onUpload={handleUploadDocument} />
                             </CardHeader>
                             <CardContent>
-                                {briefcase.userDocuments.length > 0 ? (
+                                {userDocuments.length > 0 ? (
                                     <div className="space-y-4">
-                                        {briefcase.userDocuments.map(doc => (
+                                        {userDocuments.map(doc => (
                                             <Card key={doc.id} className="p-4 bg-muted/50">
                                                 <div className="flex justify-between items-center">
                                                     <div>

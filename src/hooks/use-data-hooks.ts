@@ -13,6 +13,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
       throw new Error(`useDataHook for ${String(key)} must be used within a StoreProvider`);
     }
     
+    // Initialize state from props if available, otherwise from the global store
     const [data, setData] = useState(initialData ?? store.get()[key]);
     const [isClient, setIsClient] = useState(false);
 
@@ -23,6 +24,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
             setData(newState);
         };
         
+        // Initial sync with store, in case the initialData prop was stale
         handleStoreChange();
 
         const unsubscribe = store.subscribe(handleStoreChange);
