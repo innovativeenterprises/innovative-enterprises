@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -79,7 +80,7 @@ const AddEditTestimonialDialog = ({
 };
 
 export default function TestimonialTable({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
-    const { data: testimonials, setData: setTestimonials } = useTestimonialsData(initialTestimonials);
+    const { data: testimonials, setData: setTestimonials, isClient } = useTestimonialsData(initialTestimonials);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | undefined>(undefined);
@@ -125,7 +126,9 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
                  <Table>
                     <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {testimonials.map(t => (
+                        {!isClient ? (
+                             <TableRow><TableCell colSpan={3}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
+                        ) : testimonials.map(t => (
                             <TableRow key={t.id}>
                                 <TableCell>
                                     <p className="font-medium">{t.author}</p>

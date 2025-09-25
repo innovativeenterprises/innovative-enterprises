@@ -17,6 +17,7 @@ import type { Client } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useClientsData } from "@/hooks/use-data-hooks";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -77,15 +78,10 @@ const AddEditClientDialog = ({
 
 
 export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
-    const [clients, setClients] = useState<Client[]>(initialClients);
-    const [isClient, setIsClient] = useState(false);
+    const { data: clients, setData: setClients, isClient } = useClientsData(initialClients);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<Client | undefined>(undefined);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleOpenDialog = (client?: Client) => {
         setSelectedClient(client);
@@ -156,4 +152,3 @@ export default function ClientTable({ initialClients }: { initialClients: Client
         </Card>
     );
 }
-
