@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Briefcase, Calendar, GraduationCap, HandCoins, Building2, User, MapPin } from "lucide-react";
+import { Briefcase, Calendar, GraduationCap, HandCoins, Building2, User, MapPin, Mail, Linkedin, Phone } from "lucide-react";
 import Link from "next/link";
 import type { CommunityMember } from '@/lib/community-members';
 import type { CommunityEvent } from '@/lib/community-events';
@@ -154,4 +154,3 @@ export default function AlumniConnectPage() {
     );
 }
 
-    

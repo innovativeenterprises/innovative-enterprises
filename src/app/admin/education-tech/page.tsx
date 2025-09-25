@@ -23,6 +23,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "CampusOS": Cpu,
         "AI Scholarship Finder": Cpu,
         "Teacher Toolkit": BookOpen,
+        "AI-POS for Education": Cpu,
     };
     const Icon = iconMap[product.name] || GraduationCap;
 

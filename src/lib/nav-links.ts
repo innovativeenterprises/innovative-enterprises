@@ -1,6 +1,6 @@
 
 
-import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook, Brush } from "lucide-react";
+import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook, Brush, FileSignature } from "lucide-react";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import AmeenSmartLockIcon from "@/components/icons/ameen-smart-lock-icon";
@@ -283,6 +283,12 @@ export const initialAiTools = [
     href: "/ai-pos",
     description: "A smart Point-of-Sale system with AI-powered sales analytics.",
     icon: Cpu,
+  },
+  {
+    title: "Digital Signature",
+    href: "/e-signature",
+    description: "Sign your documents digitally with a secure and verifiable signature.",
+    icon: FileSignature,
   },
 ];
 
