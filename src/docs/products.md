@@ -15,7 +15,7 @@
 | AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
-| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | In Development | On Track |
+| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. | Live & Operating | Completed |
 | AI Smart Home Estimator | AI-powered tool to estimate costs for smart home installations based on floor plans. | Live & Operating | Completed |
 
 ## Category: Real Estate Tech (12)

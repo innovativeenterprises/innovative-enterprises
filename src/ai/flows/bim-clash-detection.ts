@@ -26,10 +26,10 @@ For the purpose of this simulation, you don't need to actually parse the file. I
 1.  **Generate Fictional Clashes:** Create a list of 3-5 clashes.
 2.  **Vary Severity:** Include clashes with 'High', 'Medium', and 'Low' severity.
 3.  **Be Specific:** For each clash, provide:
-    *   A clear `description` (e.g., "HVAC duct passing through structural beam").
-    *   Fictional `elementIds` (e.g., ["HVAC-Duct-052", "Beam-C-2-45"]).
-    *   An actionable `recommendation` (e.g., "Reroute HVAC duct below beam or create a penetration.").
-4.  **Return Data:** Populate the results into the specified JSON format, including the original `fileName`.
+    *   A clear \`description\` (e.g., "HVAC duct passing through structural beam").
+    *   Fictional \`elementIds\` (e.g., ["HVAC-Duct-052", "Beam-C-2-45"]).
+    *   An actionable \`recommendation\` (e.g., "Reroute HVAC duct below beam or create a penetration.").
+4.  **Return Data:** Populate the results into the specified JSON format, including the original \`fileName\`.
 
 **Example High-Severity Clash:** "Main water pipe conflicts with primary electrical conduit."
 **Example Medium-Severity Clash:** "Fire sprinkler head is partially obstructed by a cable tray."

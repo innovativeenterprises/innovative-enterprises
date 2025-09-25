@@ -16,7 +16,7 @@ export const saasProducts: SaasCategory[] = [
             { name: "AeroSite AI (DaaS)", description: "Drone-as-a-Service for automated aerial surveys.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: false },
             { name: "ClientView Portal", description: "White-label dashboards for clients to see live project status.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "BoQ Generator", description: "AI-generated Bill of Quantities from floor plans.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
-            { name: "StructurAI BIM", description: "AI-powered BIM for automated clash detection.", stage: "In Development", category: "Construction Tech", status: "On Track", ready: false },
+            { name: "StructurAI BIM", description: "AI-powered BIM for automated clash detection.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "AI Smart Home Estimator", description: "AI-powered tool to estimate costs for smart home installations.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
         ]
     },
@@ -64,7 +64,7 @@ export const saasProducts: SaasCategory[] = [
     {
         name: "Gaming & Social",
         products: [
-             { name: "We Match - MATCH CUP GAME", description: "Immersive AR social game for real-world challenges.", stage: "Research Phase", category: "Gaming & Social", status: "On Track", ready: false },
+             { name: "We Match - MATCH CUP GAME", description: "Immersive AR social game for real-world challenges.", stage: "In Development", category: "Gaming & Social", status: "On Track", ready: false },
         ]
     },
      {
@@ -77,10 +77,10 @@ export const saasProducts: SaasCategory[] = [
         name: "General Platforms & SaaS",
         products: [
             { name: "ameen", description: "Secure digital identity and Smart Lost & Found.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
-            { name: "APPI – عـبِّـي", description: "Real-time insights into household utility consumption.", stage: "In Development", category: "General Platforms & SaaS", status: "On Track", ready: false },
+            { name: "APPI – عـبِّـي", description: "Real-time insights into household utility consumption.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "On Track", ready: true },
             { name: "KHIDMA", description: "AI-powered marketplace for service seekers and providers.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
-            { name: "VMALL", description: "Immersive VR/AR shopping experiences.", stage: "In Development", category: "General Platforms & SaaS", status: "On Track", ready: false },
-            { name: "Logistics Chain AI", description: "AI model to optimize supply chains.", stage: "In Development", category: "General Platforms & SaaS", status: "On Track", ready: false },
+            { name: "VMALL", description: "Immersive VR/AR shopping experiences.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "On Track", ready: true },
+            { name: "Logistics Chain AI", description: "AI model to optimize supply chains.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "On Track", ready: true },
             { name: "RAAHA", description: "White-label SaaS platform for domestic workforce agencies.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
             { name: "Nova Commerce", description: "End-to-end e-commerce solutions.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
             { name: "AlumniConnect", description: "Digital platform for university alumni networks.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },

@@ -77,6 +77,7 @@ export * from './letter-of-interest';
 export * from './listing-description-generator.schema';
 export * from './listing-description-generator';
 export * from './logistics-scheduler';
+export * from './logistics-scheduler.schema';
 export * from './meeting-analysis.schema';
 export * from './meeting-analysis';
 export * from './partnership-inquiry.schema';
@@ -134,4 +135,3 @@ export * from './web-scraper-agent';
 export * from './whatsapp-agent';
 export * from './work-order-analysis.schema';
 export * from './work-order-analysis';
-
