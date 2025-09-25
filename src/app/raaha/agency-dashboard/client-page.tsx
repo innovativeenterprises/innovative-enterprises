@@ -9,16 +9,22 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CandidateTable } from './candidate-table';
+import { SpecialistTable } from '@/app/admin/beauty-hub/agency-dashboard/specialist-table';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Worker } from '@/lib/raaha-workers.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies.schema';
+import type { BeautyCenter, BeautyAppointment, BeautyService, BeautySpecialist } from '@/lib/beauty-centers.schema';
 import { useToast } from '@/hooks/use-toast';
-import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-data-hooks';
+import { useAgenciesData, useWorkersData, useRequestsData, useBeautyCentersData, useBeautyServicesData, useBeautyAppointmentsData, useBeautySpecialistsData } from '@/hooks/use-data-hooks';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { Button } from '@/components/ui/button';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, CalendarIcon } from 'lucide-react';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
+import { ServiceTable } from '@/app/admin/beauty-hub/agency-dashboard/service-table';
+import { ScheduleTable } from '@/app/admin/beauty-hub/agency-dashboard/schedule-table';
+
+type GenericAgency = RaahaAgency | BeautyCenter;
 
 const getStatusBadge = (status: HireRequest['status']) => {
     switch (status) {
@@ -31,22 +37,18 @@ const getStatusBadge = (status: HireRequest['status']) => {
     }
 };
 
-const RequestTableWrapper = ({ initialRequests, agency, setRequests }: { 
-    initialRequests: HireRequest[], 
+const RequestTableWrapper = ({ requests, setRequests, agency, isClient }: { 
+    requests: HireRequest[], 
     agency: RaahaAgency,
-    setRequests: (updater: (prev: HireRequest[]) => HireRequest[]) => void
+    setRequests: (updater: (prev: HireRequest[]) => HireRequest[]) => void,
+    isClient: boolean,
 }) => {
-    const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
     
     const filteredRequests = useMemo(() => {
-        if (!agency) return initialRequests;
-        return initialRequests.filter(r => r.agencyId === agency.name);
-    }, [initialRequests, agency]);
+        if (!agency) return requests;
+        return requests.filter(r => r.agencyId === agency.name);
+    }, [requests, agency]);
 
     const onSchedule = (id: string, values: InterviewValues) => {
         setRequests(prev => prev.map(r => 
@@ -110,9 +112,31 @@ const RequestTableWrapper = ({ initialRequests, agency, setRequests }: {
     )
 }
 
-export default function AgencyDashboardClientPage({ initialAgencies, initialWorkers, initialRequests }: { initialAgencies: RaahaAgency[], initialWorkers: Worker[], initialRequests: HireRequest[] }) {
-    const { data: agencies, setData: setAgencies } = useAgenciesData(initialAgencies);
-    const { data: workers } = useWorkersData(initialWorkers);
+interface AgencyDashboardClientPageProps {
+  initialAgencies: GenericAgency[];
+  initialServices?: BeautyService[];
+  initialAppointments?: BeautyAppointment[];
+  initialSpecialists?: BeautySpecialist[];
+  initialWorkers?: Worker[];
+  initialRequests?: HireRequest[];
+  dashboardType: 'raaha' | 'beauty';
+}
+
+export default function AgencyDashboardClientPage({ 
+    initialAgencies, 
+    initialServices,
+    initialAppointments,
+    initialSpecialists,
+    initialWorkers,
+    initialRequests,
+    dashboardType,
+}: AgencyDashboardClientPageProps) {
+    const { data: raahaAgencies, setData: setRaahaAgencies } = useAgenciesData(dashboardType === 'raaha' ? initialAgencies as RaahaAgency[] : []);
+    const { data: beautyCenters, setData: setBeautyCenters } = useBeautyCentersData(dashboardType === 'beauty' ? initialAgencies as BeautyCenter[] : []);
+    const { data: services, setData: setServices } = useBeautyServicesData(initialServices);
+    const { data: appointments, setData: setAppointments } = useBeautyAppointmentsData(initialAppointments);
+    const { data: specialists, setData: setSpecialists } = useBeautySpecialistsData(initialSpecialists);
+    const { data: workers, setData: setWorkers } = useWorkersData(initialWorkers);
     const { data: requests, setData: setRequests } = useRequestsData(initialRequests);
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
@@ -124,10 +148,15 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
             setSelectedAgencyId(initialAgencies[0].id);
         }
     }, [initialAgencies]);
-
+    
+    const agencies = dashboardType === 'raaha' ? raahaAgencies : beautyCenters;
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
-    const candidateTableColumns = [
+    const filteredServices = useMemo(() => services?.filter(s => s.agencyId === selectedAgency?.id), [services, selectedAgency]);
+    const filteredAppointments = useMemo(() => appointments?.filter(a => a.agencyId === selectedAgency?.id), [appointments, selectedAgency]);
+    const filteredSpecialists = useMemo(() => specialists?.filter(s => s.agencyId === selectedAgency?.id), [specialists, selectedAgency]);
+    
+    const workerTableColumns = [
         { Header: 'Candidate', accessor: 'name', Cell: ({ row }: { row: { original: Worker } }) => (
             <div className="flex items-center gap-3">
                 <Image src={row.original.photo} alt={row.original.name} width={40} height={40} className="rounded-full object-cover"/>
@@ -151,7 +180,6 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
         )},
     ];
 
-
     if (!isClient || !selectedAgency) {
          return (
             <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -165,6 +193,19 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
          );
     }
     
+    const tabs = dashboardType === 'raaha'
+      ? [
+          { value: 'requests', label: 'Hire Requests', content: <RequestTableWrapper requests={requests || []} setRequests={setRequests} agency={selectedAgency as RaahaAgency} isClient={isClient} /> },
+          { value: 'candidates', label: 'Candidates', content: <CandidateTable columns={workerTableColumns} agencyId={selectedAgency.id} initialWorkers={workers || []} setWorkers={setWorkers} /> },
+          { value: 'settings', label: 'Agency Settings', content: <AgencySettings agency={selectedAgency} /> }
+        ]
+      : [
+          { value: 'schedule', label: 'Appointments', content: <ScheduleTable appointments={filteredAppointments || []} setAppointments={setAppointments} /> },
+          { value: 'services', label: 'Services', content: <ServiceTable services={filteredServices || []} setServices={setServices} /> },
+          { value: 'staff', label: 'Staff', content: <SpecialistTable agencyId={selectedAgency.id} initialSpecialists={filteredSpecialists || []} setSpecialists={setSpecialists} /> },
+          { value: 'settings', label: 'Center Settings', content: <AgencySettings agency={selectedAgency} /> }
+        ];
+
     return (
          <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -200,25 +241,11 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
                         </div>
                     </Card>
 
-                     <Tabs defaultValue="requests" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="requests">Hire Requests</TabsTrigger>
-                            <TabsTrigger value="candidates">Candidates</TabsTrigger>
-                            <TabsTrigger value="settings">Agency Settings</TabsTrigger>
+                     <Tabs defaultValue={tabs[0].value} className="w-full">
+                        <TabsList className={`grid w-full grid-cols-${tabs.length}`}>
+                           {tabs.map(tab => <TabsTrigger key={tab.value} value={tab.value}>{tab.label}</TabsTrigger>)}
                         </TabsList>
-                        <TabsContent value="requests" className="mt-6">
-                            <RequestTableWrapper initialRequests={requests} setRequests={setRequests} agency={selectedAgency} />
-                        </TabsContent>
-                        <TabsContent value="candidates" className="mt-6">
-                            <CandidateTable 
-                                columns={candidateTableColumns} 
-                                agencyId={selectedAgency.id} 
-                                initialWorkers={workers} 
-                            />
-                        </TabsContent>
-                        <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
-                        </TabsContent>
+                        {tabs.map(tab => <TabsContent key={tab.value} value={tab.value} className="mt-6">{tab.content}</TabsContent>)}
                     </Tabs>
                 </div>
             </div>

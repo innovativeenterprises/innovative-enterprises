@@ -1,7 +1,8 @@
 
-'use client';
 
-import { useProductsData } from "@/hooks/use-data-hooks";
+'use server';
+
+import { getProducts } from '@/lib/firestore';
 import type { Metadata } from 'next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -50,8 +51,8 @@ const ProductCard = ({ product }: { product: Product }) => {
 )};
 
 
-export default function EducationTechPage() {
-    const { products } = useProductsData();
+export default async function EducationTechPage() {
+    const products = await getProducts();
     const edutechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
     
     return (

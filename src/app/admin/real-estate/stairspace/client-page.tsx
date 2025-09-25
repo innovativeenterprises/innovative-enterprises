@@ -1,10 +1,9 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
+import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket, Wand2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -12,8 +11,51 @@ import { useRouter } from 'next/navigation';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { ResponseGenerator } from './response-generator';
 import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
+import { generateBookingResponse } from '@/ai/flows/booking-response-generator';
+import { Textarea } from '@/components/ui/textarea';
+
+const ResponseGenerator = ({ request }: { request: BookingRequest }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [response, setResponse] = useState('');
+    const { toast } = useToast();
+
+    const handleGenerate = async () => {
+        setIsLoading(true);
+        try {
+            const result = await generateBookingResponse({
+                listingTitle: request.listingTitle,
+                clientName: request.clientName,
+                clientMessage: request.message,
+            });
+            setResponse(result.response);
+        } catch (e) {
+            toast({ title: 'Error generating response', variant: 'destructive' });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    const handleSend = () => {
+        toast({ title: 'Response Sent!', description: 'The client has been notified.' });
+    };
+
+    return (
+        <div className="mt-4 pt-4 border-t">
+            <h4 className="font-semibold text-sm mb-2">Respond to Client:</h4>
+            <div className="space-y-2">
+                <Textarea value={response} onChange={(e) => setResponse(e.target.value)} placeholder="Draft your response here or let the AI generate one." rows={4} />
+                <div className="flex justify-end gap-2">
+                    <Button variant="outline" size="sm" onClick={handleGenerate} disabled={isLoading}>
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                        Generate with AI
+                    </Button>
+                    <Button size="sm" onClick={handleSend} disabled={!response}>Send Response</Button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -47,7 +89,7 @@ export default function StairspaceRequestsClientPage({ initialRequests }: { init
         toast({ title: 'Redirecting to payment...', description: 'Please wait.' });
         setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Confirmed' } : r));
         setTimeout(() => {
-            router.push(`/real-estate-tech/stairspace/booking-confirmed?requestId=${requestId}`);
+            router.push(`/admin/real-estate/stairspace/checkout/${requestId}`);
         }, 1000);
     };
 
