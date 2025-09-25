@@ -1,4 +1,5 @@
 
+
 'use server';
 
 export * from './adaptive-learning-tutor';
@@ -61,6 +62,7 @@ export * from './image-generator.schema';
 export * from './image-generator';
 export * from './image-transformer.schema';
 export * from './image-transformer';
+export * from './interior-designer';
 export * from './interview-coach.schema';
 export * from './interview-coach';
 export * from './interview-feedback.schema';
@@ -92,6 +94,7 @@ export * from './proctoring-agent';
 export * from './project-inception.schema';
 export * from './project-inception';
 export * from './property-extraction';
+export * from './property-matcher.schema';
 export * from './property-matcher';
 export * from './property-valuation.schema';
 export * from './property-valuation';
