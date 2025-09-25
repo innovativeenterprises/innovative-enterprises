@@ -20,6 +20,7 @@ import { ProviderSchema } from "@/lib/providers.schema";
 import { getStatusBadge } from "@/components/status-badges";
 import { PlusCircle, Edit, Trash2, ArrowRight } from "lucide-react";
 import { DueDateDisplay } from "@/components/due-date-display";
+import { useProvidersData } from "@/hooks/use-data-hooks";
 
 type ProviderValues = z.infer<typeof ProviderSchema>;
 
@@ -46,6 +47,18 @@ const AddEditProviderDialog = ({
             subscriptionTier: 'None',
         },
     });
+
+    React.useEffect(() => {
+        if(isOpen) {
+           form.reset(provider || {
+                name: "",
+                email: "",
+                services: "",
+                status: "Pending Review",
+                subscriptionTier: 'None',
+           });
+        }
+    }, [provider, form, isOpen]);
 
     const onSubmit: SubmitHandler<ProviderValues> = async (data) => {
         onSave(data, provider?.id);
@@ -90,7 +103,8 @@ const AddEditProviderDialog = ({
     );
 }
 
-export default function ProviderTable({ initialProviders, setProviders }: { initialProviders: Provider[], setProviders: React.Dispatch<React.SetStateAction<Provider[]>> }) {
+export default function ProviderTable({ initialProviders }: { initialProviders: Provider[] }) {
+    const { data: providers, setData: setProviders } = useProvidersData(initialProviders);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<Provider | undefined>(undefined);
@@ -102,7 +116,7 @@ export default function ProviderTable({ initialProviders, setProviders }: { init
     
     const handleSave = (values: ProviderValues, id?: string) => {
         if (id) {
-            setProviders(prev => prev.map(p => (p.id === id ? { ...p, ...values } : p)));
+            setProviders(prev => prev.map(p => (p.id === id ? { ...p, ...values } as Provider : p)));
             toast({ title: "Provider updated successfully." });
         } else {
             const newProvider: Provider = { ...values, id: `prov_${Date.now()}` };
@@ -128,9 +142,14 @@ export default function ProviderTable({ initialProviders, setProviders }: { init
                 </Button>
             </CardHeader>
             <CardContent>
-                <AddEditProviderDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} provider={selectedProvider} onSave={handleSave}>
-                    {/* This div is a placeholder for the trigger which is handled programmatically */}
-                    <div />
+                <AddEditProviderDialog 
+                    isOpen={isDialogOpen} 
+                    onOpenChange={setIsDialogOpen} 
+                    provider={selectedProvider} 
+                    onSave={handleSave}
+                >
+                    {/* This is a controlled dialog, trigger is external */}
+                    <div/>
                 </AddEditProviderDialog>
                 <Table>
                     <TableHeader>
@@ -143,7 +162,7 @@ export default function ProviderTable({ initialProviders, setProviders }: { init
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {initialProviders.map(provider => (
+                        {providers.map(provider => (
                             <TableRow key={provider.id}>
                                 <TableCell className="font-medium">{provider.name}</TableCell>
                                 <TableCell>{provider.services}</TableCell>

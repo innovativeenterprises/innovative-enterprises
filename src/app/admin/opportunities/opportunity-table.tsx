@@ -19,6 +19,7 @@ import { opportunityIconMap } from "@/lib/opportunities";
 import { OpportunitySchema, type OpportunityValues } from "@/lib/opportunities.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useOpportunitiesData } from "@/hooks/use-data-hooks";
 
 const AddEditOpportunityDialog = ({ 
     opportunity, onSave, children, isOpen, onOpenChange,
@@ -66,21 +67,16 @@ const AddEditOpportunityDialog = ({
 }
 
 export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
-    const [opportunities, setOpportunities] = useState<Opportunity[]>(initialOpportunities);
-    const [isClient, setIsClient] = useState(false);
+    const { data: opportunities, setData: setOpportunities, isClient } = useOpportunitiesData(initialOpportunities);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const openDialog = (opp?: Opportunity) => { setSelectedOpp(opp); setIsDialogOpen(true); }
 
     const handleSave = (values: OpportunityValues & { iconName: keyof typeof opportunityIconMap, badgeVariant: OpportunityBadgeVariant }, id?: string) => {
         if (id) {
-            setOpportunities(prev => prev.map(opp => opp.id === id ? { ...opp, ...values } : opp));
+            setOpportunities(prev => prev.map(opp => opp.id === id ? { ...opp, ...values } as Opportunity : opp));
             toast({ title: "Opportunity updated successfully." });
         } else {
             const newOpp: Opportunity = { ...values, id: `opp_${values.title.toLowerCase().replace(/\s+/g, '_')}` };
@@ -95,7 +91,7 @@ export default function OpportunityTable({ initialOpportunities }: { initialOppo
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div><CardTitle>Opportunities & Competitions</CardTitle><CardDescription>Manage the open tasks and projects available to your partner network.</CardDescription></div>
-                <Button onClick={() => openDialog()}><PlusCircle /> Add Opportunity</Button>
+                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Opportunity</Button>
             </CardHeader>
             <CardContent>
                 <AddEditOpportunityDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} opportunity={selectedOpp} onSave={handleSave}><div /></AddEditOpportunityDialog>
