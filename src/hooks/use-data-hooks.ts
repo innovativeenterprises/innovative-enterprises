@@ -131,9 +131,8 @@ export const useAiToolsData = createDataHook('aiTools');
 export const useBeautyData = () => {
     const { data: agencies, isClient: agenciesLoaded } = useBeautyCentersData();
     const { data: services, isClient: servicesLoaded } = useBeautyServicesData();
-    const { data: appointments, isClient: appointmentsLoaded } = useBeautyAppointmentsData();
+    const { data: appointments, isClient: appointmentsLoaded, setData: setAppointments } = useBeautyAppointmentsData();
     const { data: specialists, isClient: specialistsLoaded } = useBeautySpecialistsData();
-    const { setData: setAppointments } = useBeautyAppointmentsData();
 
     return {
         agencies,

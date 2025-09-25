@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
-import { getAlumniJobs, getCommunityEvents, getMembers } from "@/lib/firestore";
+import { useCommunityEventsData, useCommunityMembersData, useAlumniJobsData } from '@/hooks/use-data-hooks';
 
 const MemberCard = ({ member }: { member: CommunityMember }) => (
     <Card className="p-4">
@@ -50,17 +50,10 @@ const JobCard = ({ job }: { job: JobPosting }) => (
 );
 
 export default function AlumniConnectPage() {
-    const [members, setMembers] = useState<CommunityMember[]>([]);
-    const [events, setEvents] = useState<CommunityEvent[]>([]);
-    const [jobs, setJobs] = useState<JobPosting[]>([]);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-        getMembers().then(setMembers);
-        getCommunityEvents().then(setEvents);
-        getAlumniJobs().then(setJobs);
-    }, []);
+    const { data: members, isClient: isMembersClient } = useCommunityMembersData();
+    const { data: events, isClient: isEventsClient } = useCommunityEventsData();
+    const { data: jobs, isClient: isJobsClient } = useAlumniJobsData();
+    const isClient = isMembersClient && isEventsClient && isJobsClient;
     
     const alumni = isClient ? members.filter(m => m.status === 'Active').slice(0,4) : [];
     const upcomingEvents = isClient ? events.slice(0, 3) : [];

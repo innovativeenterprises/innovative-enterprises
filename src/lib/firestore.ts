@@ -1,6 +1,7 @@
+
 'use server';
 
-import { initialProducts } from './products';
+import { initialProducts, initialStoreProducts } from './products';
 import { initialServices } from './services';
 import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';
@@ -46,6 +47,7 @@ import { initialRaahaRequests } from './raaha-requests';
 // In a real application, you would replace these with actual Firestore queries.
 
 export const getProducts = async () => initialProducts;
+export const getStoreProducts = async () => initialStoreProducts;
 export const getServices = async () => initialServices;
 export const getProviders = async () => initialProviders;
 export const getOpportunities = async () => initialOpportunities;
@@ -67,7 +69,7 @@ export const getStudents = async () => initialStudents;
 export const getCommunities = async () => initialCommunities;
 export const getCommunityEvents = async () => initialEvents;
 export const getCommunityFinances = async () => initialFinances;
-export const getCommunityMembers = async () => initialMembers;
+export const getMembers = async () => initialMembers;
 export const getAlumniJobs = async () => initialAlumniJobs;
 export const getRentalAgencies = async () => initialRentalAgencies;
 export const getCars = async () => initialCars;
@@ -122,3 +124,45 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
+
+export const getFirestoreData = async () => ({
+    products: await getProducts(),
+    services: await getServices(),
+    providers: await getProviders(),
+    opportunities: await getOpportunities(),
+    clients: await getClients(),
+    testimonials: await getTestimonials(),
+    pricing: await getPricing(),
+    posProducts: await getPosProducts(),
+    dailySales: await getDailySales(),
+    stages: await getStages(),
+    assets: await getAssets(),
+    investors: await getInvestors(),
+    properties: await getProperties(),
+    stairspaceListings: await getStairspaceListings(),
+    stairspaceRequests: await getStairspaceRequests(),
+    signedLeases: await getLeases(),
+    stockItems: await getStockItems(),
+    giftCards: await getGiftCards(),
+    students: await getStudents(),
+    communities: await getCommunities(),
+    communityEvents: await getCommunityEvents(),
+    communityFinances: await getCommunityFinances(),
+    communityMembers: await getMembers(),
+    alumniJobs: await getAlumniJobs(),
+    rentalAgencies: await getRentalAgencies(),
+    cars: await getCars(),
+    costSettings: await getCostSettings(),
+    ...await getRaahaData(),
+    ...await getBeautyData(),
+    settings: await getSettings(),
+    knowledgeBase: await getKnowledgeBase(),
+    applications: await getApplications(),
+    briefcase: await getBriefcase(),
+    solutions: await getSolutions(),
+    industries: await getIndustries(),
+    aiTools: await getAiTools(),
+    saasProducts: await getSaasProducts(),
+    cfoData: await getCfoData(),
+    ...await getStaffData(),
+});
