@@ -1,9 +1,9 @@
 
 'use server';
 
-import InvestClientPage from "./client-page";
 import type { Metadata } from 'next';
 import { getProducts, getInvestors, getStaffData, getServices, getSettings } from "@/lib/firestore";
+import InvestClientPage from "./client-page";
 
 export const metadata: Metadata = {
   title: "Invest With Us | Innovative Enterprises",
@@ -34,3 +34,4 @@ export default async function InvestPage() {
         />
     );
 }
+
