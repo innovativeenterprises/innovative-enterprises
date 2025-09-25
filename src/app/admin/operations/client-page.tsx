@@ -11,7 +11,7 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Pricing } from "@/lib/pricing.schema";
 import type { PosProduct } from "@/lib/pos-data.schema";
-import PricingTable from "@/app/admin/operations/pricing-table";
+import PricingTable from "@/app/admin/pricing-table";
 import PosProductTable from "@/app/admin/pos-product-table";
 import CostSettingsTable from "./cost-settings-table";
 import type { CostRate } from "@/lib/cost-settings.schema";
