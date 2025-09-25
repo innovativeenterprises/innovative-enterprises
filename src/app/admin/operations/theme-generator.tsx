@@ -13,6 +13,7 @@ import { ThemeGeneratorInputSchema, type ThemeGeneratorInput, type ThemeGenerato
 import { generateTheme } from '@/ai/flows/theme-generator';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
 import { cn } from '@/lib/utils';
+import { store } from '@/lib/global-store';
 
 const ColorPreview = ({ title, color, className }: { title: string, color: any, className?: string }) => (
     <div className={cn("p-4 rounded-lg border text-sm", className)}>
@@ -62,9 +63,6 @@ export default function ThemeGenerator() {
   const handleApplyTheme = () => {
     if (!response) return;
     
-    // In a real application, you'd make an API call to a backend that can write to files.
-    // For this prototype, we'll simulate this by logging to console and showing a success message.
-    // The actual file change will be handled by the backend based on this log.
     const newThemeCss = `:root {
     --background: ${response.background.hsl};
     --foreground: ${response.foreground.hsl};
@@ -88,18 +86,24 @@ export default function ThemeGenerator() {
     --radius: 0.5rem;
 }`;
     
+    // In a real app, this would make an API call to a backend that can write to files.
+    // For this prototype, we'll log to console. The backend will watch for this log.
     console.log("---- APPLYING NEW THEME ----");
+    console.log("File: src/app/globals.css");
     console.log(newThemeCss);
     console.log("---- END THEME ----");
+
+    store.set(s => ({
+        ...s,
+        themeCss: newThemeCss,
+    }));
+
 
     toast({
         title: "Theme Applied!",
         description: "The application's color scheme has been updated. The changes might require a page refresh to take full effect.",
         duration: 9000,
     });
-    
-    // Here you would typically make an API call to a backend endpoint:
-    // await fetch('/api/update-theme', { method: 'POST', body: JSON.stringify({ css: newThemeCss }) });
   }
 
   return (
@@ -139,9 +143,29 @@ export default function ThemeGenerator() {
             </form>
           </Form>
         </CardContent>
+        {response && (
+            <CardFooter className="flex-col gap-4 items-stretch">
+                <div className="text-center">
+                    <p className="text-muted-foreground">Generated Theme:</p>
+                    <h3 className="text-xl font-bold">{response.themeName}</h3>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                    <ColorPreview title="Primary" color={response.primary} />
+                    <ColorPreview title="Secondary" color={response.secondary} />
+                    <ColorPreview title="Accent" color={response.accent} />
+                    <ColorPreview title="Background" color={response.background} />
+                    <ColorPreview title="Foreground" color={response.foreground} />
+                    <ColorPreview title="Card" color={response.card} />
+                    <ColorPreview title="Destructive" color={response.destructive} className="bg-destructive/10 border-destructive/20"/>
+                </div>
+                 <Button className="w-full mt-4" onClick={handleApplyTheme}>
+                    <Wand2 className="mr-2 h-4 w-4" /> Apply This Theme
+                </Button>
+            </CardFooter>
+        )}
       </Card>
       
-      {isLoading && (
+      {isLoading && !response && (
          <Card>
             <CardContent className="p-6 text-center">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
@@ -150,28 +174,6 @@ export default function ThemeGenerator() {
          </Card>
       )}
 
-      {response && (
-        <Card>
-            <CardHeader>
-                <CardTitle>Generated Theme: "{response.themeName}"</CardTitle>
-                <CardDescription>Review the generated palette below. If you're happy with it, click "Apply Theme".</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                <ColorPreview title="Primary" color={response.primary} />
-                <ColorPreview title="Secondary" color={response.secondary} />
-                <ColorPreview title="Accent" color={response.accent} />
-                <ColorPreview title="Background" color={response.background} />
-                <ColorPreview title="Foreground" color={response.foreground} />
-                <ColorPreview title="Card" color={response.card} />
-                <ColorPreview title="Destructive" color={response.destructive} className="bg-destructive/10 border-destructive/20"/>
-            </CardContent>
-            <CardFooter>
-                 <Button className="w-full" onClick={handleApplyTheme}>
-                    <Wand2 className="mr-2 h-4 w-4" /> Apply This Theme
-                </Button>
-            </CardFooter>
-        </Card>
-      )}
     </div>
   );
 }

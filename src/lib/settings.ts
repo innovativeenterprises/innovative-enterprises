@@ -1,41 +1,44 @@
 
+import { z } from 'zod';
 
-export interface SanadOfficeSettings {
-    registrationFee: number;
-    monthlyFee: number;
-    yearlyFee: number;
-    lifetimeFee: number;
-    firstTimeDiscountPercentage: number; // Stored as 0.0 to 1.0
-}
+export const SanadOfficeSettingsSchema = z.object({
+    registrationFee: z.coerce.number(),
+    monthlyFee: z.coerce.number(),
+    yearlyFee: z.coerce.number(),
+    lifetimeFee: z.coerce.number(),
+    firstTimeDiscountPercentage: z.coerce.number().min(0).max(1),
+});
 
-export interface LegalAgentPricing {
-    b2cFee: number;
-    b2bFee: number;
-    b2gFee: number;
-}
+export const LegalAgentPricingSchema = z.object({
+    b2cFee: z.coerce.number(),
+    b2bFee: z.coerce.number(),
+    b2gFee: z.coerce.number(),
+});
 
-export interface WhatsAppSettings {
-    businessAccountId: string;
-    phoneNumberId: string;
-    accessToken: string; // Note: For display only, actual value from env.
-}
+export const WhatsAppSettingsSchema = z.object({
+    businessAccountId: z.string(),
+    phoneNumberId: z.string(),
+    accessToken: z.string(),
+});
 
-export interface AppSettings {
-    translationAssignmentMode: 'direct' | 'tender' | 'builtin';
-    sanadOffice: SanadOfficeSettings;
-    legalAgentPricing: LegalAgentPricing;
-    voiceInteractionEnabled: boolean;
-    chatWidgetEnabled: boolean;
-    vat: {
-        enabled: boolean;
-        rate: number; // Stored as a decimal, e.g., 0.05 for 5%
-    };
-    headerImageUrl?: string;
-    footerImageUrl?: string;
-    servicesMenuColumns: 1 | 2 | 3 | 4;
-    aiToolsMenuColumns: 1 | 2 | 3 | 4;
-    whatsapp: WhatsAppSettings;
-}
+export const AppSettingsSchema = z.object({
+    translationAssignmentMode: z.enum(['direct', 'tender', 'builtin']),
+    sanadOffice: SanadOfficeSettingsSchema,
+    legalAgentPricing: LegalAgentPricingSchema,
+    voiceInteractionEnabled: z.boolean(),
+    chatWidgetEnabled: z.boolean(),
+    vat: z.object({
+        enabled: z.boolean(),
+        rate: z.coerce.number().min(0).max(1),
+    }),
+    headerImageUrl: z.string().url().optional().or(z.literal('')),
+    footerImageUrl: z.string().url().optional().or(z.literal('')),
+    servicesMenuColumns: z.coerce.number().min(1).max(4).int() as z.ZodType<1 | 2 | 3 | 4>,
+    aiToolsMenuColumns: z.coerce.number().min(1).max(4).int() as z.ZodType<1 | 2 | 3 | 4>,
+    whatsapp: WhatsAppSettingsSchema,
+});
+
+export type AppSettings = z.infer<typeof AppSettingsSchema>;
 
 export const initialSettings: AppSettings = {
     translationAssignmentMode: 'direct',
