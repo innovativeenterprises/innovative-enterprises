@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -211,7 +212,7 @@ export default function CfoAuditPage() {
                 <Card>
                     <CardContent className="p-6 text-center">
                         <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                        <p className="mt-4 text-muted-foreground">Our AI is analyzing your financial documents...</p>
+                        <p className="mt-4 text-muted-foreground">Finley is analyzing your financial documents...</p>
                     </CardContent>
                 </Card>
             )}

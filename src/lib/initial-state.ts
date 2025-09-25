@@ -46,9 +46,10 @@ import type { UserDocument } from './user-documents';
 // Define the shape of the global state
 export interface AppState {
   isClient: boolean;
-  settings: AppSettings;
+  settings: AppSettings | null;
   cart: CartItem[];
   products: Product[];
+  storeProducts: Product[];
   providers: Provider[];
   opportunities: Opportunity[];
   services: Service[];
@@ -104,6 +105,7 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   settings: initialSettings,
   cart: [],
   products: [],
+  storeProducts: [],
   providers: [],
   opportunities: [],
   services: [],

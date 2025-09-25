@@ -143,6 +143,7 @@ export const getBeautyData = async () => {
 
 export const getFirestoreData = async () => ({
     products: await getProducts(),
+    storeProducts: await getStoreProducts(),
     services: await getServices(),
     providers: await getProviders(),
     opportunities: await getOpportunities(),

@@ -1,4 +1,5 @@
 
+
 # Digital Products & SaaS Platforms (45 Total)
 
 ## Category: Construction Tech (12)
@@ -62,6 +63,11 @@
 | :--- | :--- | :--- | :--- | :--- |
 | We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Live & Operating | Completed | Yes |
 
+## Category: Beauty & Wellness (1)
+| Name | Description | Stage | Status | Ready |
+| :--- | :--- | :--- | :--- | :--- |
+| Beauty & Wellness Hub | A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships. | Live & Operating | Completed | Yes |
+
 
 ## Category: General Platforms & SaaS (11)
 | Name | Description | Stage | Status | Ready |
@@ -69,8 +75,8 @@
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed | Yes |
 | APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | Live & Operating | Completed | Yes |
 | KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed | Yes |
-| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | In Development | On Track | No |
-| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track | No |
+| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | Live & Operating | Completed | Yes |
+| Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | Live & Operating | Completed | Yes |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed | Yes |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed | Yes |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | Completed | Yes |
