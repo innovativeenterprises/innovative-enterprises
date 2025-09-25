@@ -8,7 +8,7 @@ import { BrainCircuit, ShoppingCart, Trash2, Minus, Plus, CreditCard, Loader2 } 
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useGlobalStore, useSetGlobalStore } from '@/hooks/use-data-hooks';
+import { useGlobalStore, useSetStore } from '@/hooks/use-data-hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -110,7 +110,7 @@ export default function AiPosPage() {
     const posProducts = useGlobalStore(s => s.posProducts);
     const dailySales = useGlobalStore(s => s.dailySales);
     const isClient = useGlobalStore(s => s.isClient);
-    const setStore = useSetGlobalStore();
+    const setStore = useSetStore();
 
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);

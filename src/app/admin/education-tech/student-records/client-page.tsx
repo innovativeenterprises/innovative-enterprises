@@ -20,6 +20,7 @@ import { PlusCircle, Edit, Trash2, ArrowLeft, Users } from "lucide-react";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStudentsData } from "@/hooks/use-data-hooks";
 
 const StudentSchema = z.object({
   id: z.string().min(3, "Student ID is required"),
@@ -93,19 +94,14 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
     );
 };
 
+
 export default function StudentRecordsClientPage({ initialStudents }: { initialStudents: Student[] }) {
-    const [students, setStudents] = useState<Student[]>([]);
-    const [isClient, setIsClient] = useState(false);
+    const { data: students, setData: setStudents, isClient } = useStudentsData(initialStudents);
     const { toast } = useToast();
     
-    useEffect(() => {
-        setStudents(initialStudents);
-        setIsClient(true);
-    }, [initialStudents]);
-
     const handleSave = (values: StudentValues, id?: string) => {
         if (id) {
-            setStudents(prev => prev.map(s => s.id === id ? { ...s, ...values } : s));
+            setStudents(prev => prev.map(s => s.id === id ? { ...s, ...values } as Student : s));
             toast({ title: "Student record updated." });
         } else {
             const newStudent: Student = { ...values, tuitionBilled: 0, scholarshipAmount: 0, amountPaid: 0 };
@@ -134,7 +130,7 @@ export default function StudentRecordsClientPage({ initialStudents }: { initialS
                 <div className="max-w-5xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/education-tech/eduflow">
+                            <Link href="/admin/education-tech/eduflow">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to EduFlow Suite
                             </Link>
