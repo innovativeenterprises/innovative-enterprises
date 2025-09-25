@@ -66,6 +66,11 @@ This document provides a comprehensive, categorized list of all current projects
 | :--- | :--- | :--- | :--- |
 | We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Live & Operating | Completed |
 
+### Category: Beauty & Wellness (1)
+| Name | Description | Stage | Status |
+| :--- | :--- | :--- | :--- |
+| Beauty & Wellness Hub | A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships. | Live & Operating | Completed |
+
 
 ### Category: General Platforms & SaaS (11)
 | Name | Description | Stage | Status |
@@ -79,7 +84,7 @@ This document provides a comprehensive, categorized list of all current projects
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
 | AlumniConnect | A comprehensive digital platform for universities to engage their alumni network. | Live & Operating | Completed |
 | Hadeeya | A sophisticated prepaid digital gift card platform for individuals and corporate clients. | Live & Operating | Completed |
-| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | In Development | On Track |
+| StockClear | B2B marketplace for wholesalers and retailers to liquidate excess or near-expiry stock through auctions and bulk sales. | Live & Operating | Completed |
 | Professional Hub | A digital platform connecting trainers, educators, and professionals with their local markets, offering tools for marketing and networking. | Live & Operating | Completed |
 
 
