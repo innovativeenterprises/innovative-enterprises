@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type GenericRequest = Record<string, any> & { id: string };
 
