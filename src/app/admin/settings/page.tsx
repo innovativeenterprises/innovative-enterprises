@@ -2,7 +2,7 @@
 'use server';
 
 import AdminSettingsClientPage from './client-page';
-import { getSettings } from '@/lib/firestore';
+import { getSettings, getPricing, getCostSettings } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,6 +11,17 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminSettingsPage() {
-    const settings = await getSettings();
-    return <AdminSettingsClientPage initialSettings={settings} />;
+    const [settings, pricing, costSettings] = await Promise.all([
+        getSettings(),
+        getPricing(),
+        getCostSettings(),
+    ]);
+
+    return (
+        <AdminSettingsClientPage 
+            initialSettings={settings} 
+            initialPricing={pricing} 
+            initialCostSettings={costSettings} 
+        />
+    );
 }

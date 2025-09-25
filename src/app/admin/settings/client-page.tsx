@@ -12,23 +12,38 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AppSettingsSchema, type AppSettings } from '@/lib/settings';
-import { useSettingsData } from '@/hooks/use-data-hooks';
-import ThemeGenerator from '@/app/admin/operations/theme-generator';
+import { useGlobalStore } from '@/lib/global-store';
+import ThemeGenerator from '@/app/admin/settings/theme-generator';
 import { Switch } from '@/components/ui/switch';
+import type { Pricing } from '@/lib/pricing.schema';
+import type { CostRate } from '@/lib/cost-settings.schema';
+import CostSettingsTable from './cost-settings-table';
+import PricingTable from './pricing-table';
 
-export default function AdminSettingsClientPage({ initialSettings }: { initialSettings: AppSettings | null }) {
+interface AdminSettingsClientPageProps {
+    initialSettings: AppSettings | null;
+    initialPricing: Pricing[];
+    initialCostSettings: CostRate[];
+}
+
+export default function AdminSettingsClientPage({ 
+    initialSettings, 
+    initialPricing, 
+    initialCostSettings 
+}: AdminSettingsClientPageProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const { settings, setData: setSettings } = useSettingsData(initialSettings);
+    const setStore = useGlobalStore(s => s.set);
+    const settings = useGlobalStore(s => s.settings);
     const { toast } = useToast();
 
     const form = useForm<AppSettings>({
         resolver: zodResolver(AppSettingsSchema),
-        defaultValues: settings || undefined,
+        defaultValues: settings || initialSettings || undefined,
     });
 
     const onSubmit: SubmitHandler<AppSettings> = async (data) => {
         setIsLoading(true);
-        setSettings(data);
+        setStore(state => ({ ...state, settings: data }));
         toast({ title: "Settings Saved", description: "Your application settings have been updated." });
         setIsLoading(false);
     };
@@ -102,6 +117,8 @@ export default function AdminSettingsClientPage({ initialSettings }: { initialSe
                         </CardContent>
                     </Card>
 
+                    <PricingTable initialPricing={initialPricing} />
+                    <CostSettingsTable initialRates={initialCostSettings} />
                     <ThemeGenerator />
                     
                     <div className="flex justify-end">
@@ -115,4 +132,3 @@ export default function AdminSettingsClientPage({ initialSettings }: { initialSe
         </div>
     );
 }
-
