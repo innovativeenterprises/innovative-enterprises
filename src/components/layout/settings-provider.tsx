@@ -3,6 +3,7 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import type { AppSettings } from '@/lib/settings';
+import { useStore } from '@/lib/global-store.tsx';
 
 interface SettingsContextType {
   settings: AppSettings | null;
@@ -11,17 +12,6 @@ interface SettingsContextType {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const useSettings = () => {
-  const context = useContext(SettingsContext);
-  if (context === undefined) {
-    throw new Error('useSettings must be used within a SettingsProvider');
-  }
-  return context;
-};
-
-export const SettingsProvider = ({ children, initialSettings }: { children: ReactNode, initialSettings: AppSettings | null }) => {
-    return (
-        <SettingsContext.Provider value={{ settings: initialSettings }}>
-            {children}
-        </SettingsContext.Provider>
-    );
+  const settings = useStore(state => state.settings);
+  return { settings };
 };

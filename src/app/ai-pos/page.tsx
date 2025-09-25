@@ -50,7 +50,7 @@ const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCh
 }) => {
     const { settings } = useSettingsData();
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const vat = settings.vat.enabled ? subtotal * settings.vat.rate : 0;
+    const vat = settings?.vat.enabled ? subtotal * settings.vat.rate : 0;
     const total = subtotal + vat;
 
     return (
@@ -88,7 +88,7 @@ const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCh
             <CardFooter className="flex-col gap-4 border-t pt-4">
                 <div className="w-full space-y-2 text-sm">
                     <div className="flex justify-between"><span>Subtotal</span><span>OMR {subtotal.toFixed(2)}</span></div>
-                    {settings.vat.enabled && <div className="flex justify-between"><span>VAT ({settings.vat.rate * 100}%)</span><span>OMR {vat.toFixed(2)}</span></div>}
+                    {settings?.vat.enabled && <div className="flex justify-between"><span>VAT ({settings.vat.rate * 100}%)</span><span>OMR {vat.toFixed(2)}</span></div>}
                     <Separator />
                     <div className="flex justify-between font-bold text-lg"><span>Total</span><span>OMR {total.toFixed(2)}</span></div>
                 </div>
@@ -109,11 +109,7 @@ const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCh
 export default function AiPosPage() {
     const { data: posProducts, setData: setPosProducts } = usePosProductsData();
     const { data: dailySales, setData: setDailySales } = usePosData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { isClient } = useStore(s => ({ isClient: s.isClient }));
 
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);

@@ -1,8 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext } from 'react';
-import { createStore, useStore as useZustandStore } from 'zustand';
+import { createStore } from 'zustand';
 import { type AppState, getInitialState } from './initial-state';
 
 /**
@@ -12,7 +11,9 @@ import { type AppState, getInitialState } from './initial-state';
  * state management solution.
  */
 
-export type AppStore = AppState;
+export type AppStore = AppState & {
+  set: (updater: (state: AppState) => AppState) => void;
+};
 
 export type StoreType = ReturnType<typeof createAppStore>;
 
@@ -25,17 +26,6 @@ export const createAppStore = (initState: Partial<AppState> = {}) => {
     set: (updater) => set(updater),
   }));
 };
-
-export const AppContext = createContext<StoreType | null>(null);
-
-// This is the hook that components will use to access the store.
-export function useStore<T>(selector: (state: AppStore) => T): T {
-  const store = React.useContext(AppContext);
-  if (!store) {
-    throw new Error('useStore must be used within a StoreProvider');
-  }
-  return useZustandStore(store, selector);
-}
 
 // Global instance that can be imported by server components or utilities if needed.
 // Note: This instance is for read-only purposes on the server.

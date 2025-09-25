@@ -32,7 +32,7 @@ import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
-import { useSettingsData } from '@/hooks/use-data-hooks';
+import { useGlobalStore } from '@/hooks/use-global-store';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -69,7 +69,8 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
     industries: Industry[];
     aiTools: AiTool[];
 }) { 
-  const { settings, isClient } = useSettingsData();
+  const settings = useGlobalStore(state => state.settings);
+  const isClient = useGlobalStore(state => state.isClient);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 

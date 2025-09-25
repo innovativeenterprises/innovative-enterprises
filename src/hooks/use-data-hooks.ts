@@ -1,39 +1,30 @@
 
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
-import { StoreContext } from '@/lib/global-store';
+import React, { useEffect, useState } from 'react';
+import { useStore, useSetStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 // A generic hook factory
 const createDataHook = <K extends keyof AppState>(key: K) => {
   return (initialData?: AppState[K]) => {
-    const store = useContext(StoreContext);
-    if (!store) {
-      throw new Error(`useDataHook for ${String(key)} must be used within a StoreProvider`);
-    }
+    const isClient = useStore(state => state.isClient);
+    const data = useStore(state => state[key]);
+    const set = useSetStore();
+
+    // The logic below for setting initial state is complex and might be refactored further,
+    // but it handles server-side initial data and client-side updates.
+    const [isInitialized, setIsInitialized] = useState(isClient);
     
-    // Initialize state from props if available, otherwise from the global store
-    const [data, setData] = useState(initialData ?? store.get()[key]);
-    const [isClient, setIsClient] = useState(false);
-
     useEffect(() => {
-        setIsClient(true);
-        const handleStoreChange = () => {
-            const newState = store.get()[key];
-            setData(newState);
-        };
-        
-        // Initial sync with store, in case the initialData prop was stale
-        handleStoreChange();
+      if (!isInitialized && initialData !== undefined) {
+        set(state => ({...state, [key]: initialData}));
+        setIsInitialized(true);
+      }
+    }, [initialData, isInitialized, set, key]);
 
-        const unsubscribe = store.subscribe(handleStoreChange);
-        return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const setGlobalData = (updater: React.SetStateAction<AppState[K]>) => {
-        store.set(s => {
+    const setData = (updater: React.SetStateAction<AppState[K]>) => {
+        set(s => {
             const newValue = typeof updater === 'function' 
                 // @ts-ignore - TS can't infer the type of the updater function correctly
                 ? updater(s[key]) 
@@ -42,7 +33,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
         });
     }
 
-    return { data, setData: setGlobalData, isClient } as { 
+    return { data, setData, isClient } as { 
       data: AppState[K]; 
       setData: (updater: React.SetStateAction<AppState[K]>) => void;
       isClient: boolean;
@@ -62,33 +53,31 @@ export const useLeasesData = createDataHook('signedLeases');
 export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
 export const useStairspaceListingsData = createDataHook('stairspaceListings');
 export const useStaffData = (initialData?: Partial<{ leadership: AppState['leadership'], staff: AppState['staff'], agentCategories: AppState['agentCategories'] }>) => {
-    const store = useContext(StoreContext);
-    if (!store) throw new Error('useStaffData must be used within a StoreProvider');
+    const isClient = useStore(state => state.isClient);
+    const leadership = useStore(state => state.leadership);
+    const staff = useStore(state => state.staff);
+    const agentCategories = useStore(state => state.agentCategories);
+    const set = useSetStore();
 
-    const [data, setData] = useState({
-        leadership: initialData?.leadership ?? store.get().leadership,
-        staff: initialData?.staff ?? store.get().staff,
-        agentCategories: initialData?.agentCategories ?? store.get().agentCategories,
-    });
-    const [isClient, setIsClient] = useState(false);
-    
+    const [isInitialized, setIsInitialized] = useState(isClient);
+
     useEffect(() => {
-        setIsClient(true);
-        const handleStoreChange = () => {
-             const { leadership, staff, agentCategories } = store.get();
-             setData({ leadership, staff, agentCategories });
-        };
-        handleStoreChange();
-        const unsubscribe = store.subscribe(handleStoreChange);
-        return () => unsubscribe();
-    }, [store]);
+        if (!isInitialized && initialData !== undefined) {
+            set(state => ({...state, ...initialData}));
+            setIsInitialized(true);
+        }
+    }, [initialData, isInitialized, set]);
 
-    const setGlobalData = (updater: React.SetStateAction<typeof data>) => {
-        const newValue = typeof updater === 'function' ? updater(data) : updater;
-        store.set(s => ({ ...s, ...newValue }));
+
+    const setGlobalData = (updater: React.SetStateAction<{ leadership: AppState['leadership'], staff: AppState['staff'], agentCategories: AppState['agentCategories'] }>) => {
+        set(s => {
+            const currentData = { leadership: s.leadership, staff: s.staff, agentCategories: s.agentCategories };
+            const newValue = typeof updater === 'function' ? updater(currentData) : updater;
+            return { ...s, ...newValue };
+        });
     };
 
-    return { ...data, setData: setGlobalData, isClient };
+    return { leadership, staff, agentCategories, setData: setGlobalData, isClient };
 };
 
 export const useAgenciesData = createDataHook('raahaAgencies');
@@ -132,17 +121,19 @@ export const useUserDocumentsData = createDataHook('userDocuments');
 
 // This custom hook provides a consolidated view of the data needed for the Beauty Hub.
 export const useBeautyData = () => {
-    const { data: agencies, isClient: agenciesLoaded } = useBeautyCentersData();
-    const { data: services, isClient: servicesLoaded } = useBeautyServicesData();
-    const { data: appointments, isClient: appointmentsLoaded, setData: setAppointments } = useBeautyAppointmentsData();
-    const { data: specialists, isClient: specialistsLoaded } = useBeautySpecialistsData();
-
+    const agencies = useStore(state => state.beautyCenters);
+    const services = useStore(state => state.beautyServices);
+    const appointments = useStore(state => state.beautyAppointments);
+    const specialists = useStore(state => state.beautySpecialists);
+    const setAppointments = useSetStore();
+    const isClient = useStore(state => state.isClient);
+    
     return {
         agencies,
         services,
         appointments,
         specialists,
-        setAppointments,
-        isClient: agenciesLoaded && servicesLoaded && appointmentsLoaded && specialistsLoaded
+        setAppointments: (updater: React.SetStateAction<AppState['beautyAppointments']>) => setAppointments(s => ({...s, beautyAppointments: typeof updater === 'function' ? updater(s.beautyAppointments) : updater })),
+        isClient
     };
 };
