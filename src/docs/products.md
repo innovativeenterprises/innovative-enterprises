@@ -39,7 +39,7 @@
 | EduFlow Suite | An all-in-one administrative automation platform for schools, featuring smart timetabling and automated admissions. | Live & Operating | Completed | Yes |
 | CognitaLearn | A personalized adaptive learning platform that uses AI to create custom learning paths and gamified modules. | Live & Operating | Completed | Yes |
 | Guardian AI | A student wellbeing and success platform offering risk profiling, AI career advisory, and mental health support. | Live & Operating | Completed | Yes |
-| CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Live & Operating | Completed | No |
+| CertiTrust | A blockchain-based digital credentialing system combined with AI proctoring for secure, verifiable certificates. | Live & Operating | Completed | Yes |
 | CampusOS | A smart campus management platform leveraging IoT for energy efficiency, space optimization, and predictive maintenance. | Live & Operating | Completed | Yes |
 | AI Scholarship Finder | An AI-powered tool that searches the web for scholarship opportunities based on a student's field of study and academic level. | Live & Operating | Completed | Yes |
 | Teacher Toolkit | A suite of tools for educators, including a Lesson Gamifier to convert textbooks into interactive content, flashcards, and presentations. | Live & Operating | Completed | Yes |

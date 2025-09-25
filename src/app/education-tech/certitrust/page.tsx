@@ -1,8 +1,16 @@
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, ShieldCheck, Camera, Bot, Layers, CheckSquare, ArrowRight } from "lucide-react";
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "CertiTrust - Secure Digital Credentials | Innovative Enterprises",
+  description: "A revolutionary platform combining AI proctoring with blockchain technology to deliver secure, verifiable digital credentials.",
+};
 
 const features = [
     {
@@ -50,11 +58,11 @@ export default function CertiTrustPage() {
                                     </div>
                                     <CardTitle className="pt-2">{feature.title}</CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="flex-grow">
                                     <p className="text-muted-foreground">{feature.description}</p>
                                 </CardContent>
                                 {feature.title === "AI-Powered Proctoring" && (
-                                     <CardFooter>
+                                     <CardFooter className="mt-auto">
                                          <Button asChild className="w-full">
                                             <Link href="/education-tech/certitrust/proctoring-session">Launch Proctoring Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
                                         </Button>
@@ -70,7 +78,7 @@ export default function CertiTrustPage() {
                         <CardHeader>
                             <CardTitle className="text-2xl text-accent">Secure Your Institution's Reputation</CardTitle>
                             <CardDescription className="text-accent-foreground/80">
-                               CertiTrust is currently in development. Contact us to learn how you can become a pilot partner and lead the charge in academic integrity.
+                               CertiTrust is a demonstration platform. Contact us to learn how you can become a pilot partner and lead the charge in academic integrity.
                             </CardDescription>
                         </CardHeader>
                         <CardFooter className="justify-center">
