@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import { initialProviders } from "@/lib/providers";
+import { useProvidersData } from "@/hooks/use-data-hooks";
 
 const categories = [
     "All", "Tech & IT Services", "Creative & Design", "Consulting & Professional Services", "Legal Services", "Financial & Banking"
@@ -53,13 +53,7 @@ const ProviderCard = ({ provider }: { provider: Provider }) => {
 
 
 export default function BusinessHubPage() {
-    const [providers, setProviders] = useState<Provider[]>([]);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setProviders(initialProviders);
-        setIsClient(true);
-    }, []);
+    const { data: providers, isClient } = useProvidersData();
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -72,12 +66,13 @@ export default function BusinessHubPage() {
     };
     
     const filteredProviders = useMemo(() => {
+        if (!isClient) return [];
         return providers.filter(provider => {
             const matchesCategory = selectedCategory === 'All' || provider.services.toLowerCase().includes(selectedCategory.toLowerCase());
             const matchesSearch = provider.name.toLowerCase().includes(searchTerm.toLowerCase()) || provider.services.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesCategory && matchesSearch;
         })
-    }, [providers, selectedCategory, searchTerm]);
+    }, [providers, selectedCategory, searchTerm, isClient]);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
