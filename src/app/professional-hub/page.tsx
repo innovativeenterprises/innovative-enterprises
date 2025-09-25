@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, BookUser, BarChart3, XCircle, CheckCircle, Handshake, Briefcase, DollarSign } from "lucide-react";
 import Link from "next/link";
-import { useMembersData, useEventsData, useAlumniJobsData } from "@/hooks/use-global-store-data";
+import { useCommunityMembersData, useCommunityEventsData, useAlumniJobsData } from "@/hooks/use-data-hooks";
 import type { CommunityMember } from '@/lib/community-members';
 import type { CommunityEvent } from '@/lib/community-events';
 import type { JobPosting } from '@/lib/alumni-jobs';
