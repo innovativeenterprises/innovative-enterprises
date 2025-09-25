@@ -12,18 +12,23 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
-import { useCommunityEventsData, useCommunityMembersData, useAlumniJobsData } from '@/hooks/use-data-hooks';
+import { useCommunityEventsData, useCommunityMembersData, useAlumniJobsData } from "@/hooks/use-data-hooks";
 
 const MemberCard = ({ member }: { member: CommunityMember }) => (
     <Card className="p-4">
         <div className="flex items-center gap-4">
-            <Avatar>
+            <Avatar className="h-16 w-16">
                 <AvatarImage src={member.photo} alt={member.name} />
                 <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
                 <p className="font-semibold">{member.name}</p>
                 <p className="text-sm text-muted-foreground">{member.position} at {member.employer}</p>
+                 <div className="flex gap-2 mt-2">
+                    <Button variant="outline" size="icon" className="h-7 w-7"><Mail className="h-4 w-4"/></Button>
+                    <Button variant="outline" size="icon" className="h-7 w-7"><Linkedin className="h-4 w-4"/></Button>
+                    <Button variant="outline" size="icon" className="h-7 w-7"><Phone className="h-4 w-4"/></Button>
+                </div>
             </div>
         </div>
     </Card>
