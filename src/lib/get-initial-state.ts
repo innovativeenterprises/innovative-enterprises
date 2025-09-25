@@ -36,9 +36,13 @@ export async function getInitialState(): Promise<AppState | null> {
             getSolutions(), getIndustries(), getAiTools()
         ]);
 
+        if (!settings) {
+            throw new Error("Failed to load critical application settings.");
+        }
+
         return {
             isClient: false,
-            settings,
+            settings: settings,
             cart: [],
             products,
             storeProducts,

@@ -3,7 +3,7 @@
 
 import { ImageIcon } from "lucide-react";
 import GeneratorForm from "./generator-form";
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "AI Facebook Cover Generator | Innovative Enterprises",

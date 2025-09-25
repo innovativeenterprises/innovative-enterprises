@@ -43,6 +43,7 @@ import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { Application } from './admissions-applications';
+import { getEmptyState } from './initial-state';
 
 // Define the shape of the global state
 export interface AppState {
@@ -113,7 +114,8 @@ export const StoreProvider = ({ children, initialState }: { children: ReactNode,
     const storeRef = useRef<StoreType>();
 
     if (!storeRef.current) {
-        let state: AppState = { ...initialState as AppState, isClient: false }; // Start with isClient as false
+        const emptyState = getEmptyState();
+        let state: AppState = { ...emptyState, ...initialState, isClient: false }; // Start with isClient as false
         const listeners = new Set<() => void>();
         
         storeRef.current = {
