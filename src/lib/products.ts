@@ -50,6 +50,7 @@ const hrefMap: Record<string, string> = {
     "AI-POS": "/ai-pos",
     "Facebook Cover Generator": "/facebook-cover-generator",
     "StructurAI BIM": "/construction-tech/structurai-bim",
+    "We Match - MATCH CUP GAME": "/we-match",
 };
 
 const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({

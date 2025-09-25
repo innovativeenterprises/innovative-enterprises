@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ export default function WeMatchPage() {
     <div className="bg-background min-h-[calc(100vh-8rem)]">
       <div className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10 h-full w-full bg-background">
-             <Image src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop" alt="People collaborating" fill className="object-cover opacity-10" />
+             <Image src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop" alt="People collaborating" fill className="object-cover opacity-10" data-ai-hint="people collaborating" />
         </div>
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32">
           <div className="max-w-2xl text-center mx-auto">
@@ -31,7 +30,7 @@ export default function WeMatchPage() {
                 <CardHeader>
                     <CardTitle className="text-2xl text-accent">Coming Soon to an App Store Near You!</CardTitle>
                     <CardDescription className="text-accent-foreground/80">
-                       This project is currently in the research and development phase. Follow our journey for updates on the official launch.
+                       This project is currently in development. Follow our journey for updates on the official launch.
                     </CardDescription>
                 </CardHeader>
                 <CardFooter className="justify-center">

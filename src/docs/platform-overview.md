@@ -18,7 +18,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
-| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
+| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. | In Development | On Track |
 | AI Smart Home Estimator | AI-powered tool to estimate costs for smart home installations based on floor plans. | Live & Operating | Completed |
 
 
@@ -64,7 +64,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 ### Category: Gaming & Social (1)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
-| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Research Phase | On Track |
+| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | In Development | On Track |
 
 
 ### Category: Beauty & Wellness (1)
