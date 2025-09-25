@@ -8,8 +8,25 @@ import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { KnowledgeDocument } from "@/lib/knowledge.schema";
+import type { CostRate } from "@/lib/cost-settings.schema";
+import type { Pricing } from "@/lib/pricing.schema";
+import CostSettingsTable from './cost-settings-table';
+import PricingTable from './pricing-table';
 
-export default function AdminOperationsClientPage() {
+interface AdminOperationsClientPageProps {
+    initialKnowledgeBase: KnowledgeDocument[];
+    initialCostSettings: CostRate[];
+    initialPricing: Pricing[];
+}
+
+export default function AdminOperationsClientPage({ 
+    initialKnowledgeBase, 
+    initialCostSettings,
+    initialPricing,
+}: AdminOperationsClientPageProps) {
+
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
     { id: 'tender', title: 'Tender Response Assistant', icon: FileText, component: <TenderForm /> },
@@ -23,24 +40,40 @@ export default function AdminOperationsClientPage() {
         <div>
             <h1 className="text-3xl font-bold">Operations</h1>
             <p className="text-muted-foreground">
-                A suite of internal AI tools to enhance business operations.
+                A suite of internal AI tools and configurations to enhance business operations.
             </p>
         </div>
-        <Accordion type="single" collapsible className="w-full" defaultValue="pro">
-        {internalTools.map(tool => (
-            <AccordionItem value={tool.id} key={tool.id}>
-                <AccordionTrigger>
-                    <div className="flex items-center gap-3">
-                        <tool.icon className="h-5 w-5 text-primary" />
-                        <span className="text-lg font-semibold">{tool.title}</span>
-                    </div>
-                </AccordionTrigger>
-                <AccordionContent className="pt-4">
-                    {tool.component}
-                </AccordionContent>
-            </AccordionItem>
-        ))}
-        </Accordion>
+
+        <Tabs defaultValue="ai-tools" className="w-full">
+             <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
+                <TabsTrigger value="market-rates">Market Rates</TabsTrigger>
+                <TabsTrigger value="translation-pricing">Translation Pricing</TabsTrigger>
+            </TabsList>
+            <TabsContent value="ai-tools" className="mt-6">
+                <Accordion type="single" collapsible className="w-full">
+                {internalTools.map(tool => (
+                    <AccordionItem value={tool.id} key={tool.id}>
+                        <AccordionTrigger>
+                            <div className="flex items-center gap-3">
+                                <tool.icon className="h-5 w-5 text-primary" />
+                                <span className="text-lg font-semibold">{tool.title}</span>
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-4">
+                            {tool.component}
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+                </Accordion>
+            </TabsContent>
+            <TabsContent value="market-rates" className="mt-6">
+                <CostSettingsTable initialRates={initialCostSettings} />
+            </TabsContent>
+            <TabsContent value="translation-pricing" className="mt-6">
+                <PricingTable initialPricing={initialPricing} />
+            </TabsContent>
+        </Tabs>
     </div>
   );
 }

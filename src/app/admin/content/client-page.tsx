@@ -11,6 +11,7 @@ import type { Product } from "@/lib/products.schema";
 import type { ProjectStage } from "@/lib/stages";
 import type { Client, Testimonial } from "@/lib/clients.schema";
 
+
 interface AdminContentClientPageProps {
     initialServices: Service[];
     initialProducts: Product[];

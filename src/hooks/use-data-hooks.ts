@@ -3,19 +3,25 @@
 
 import { useGlobalStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
+import { useState, useEffect } from 'react';
 
-// Simplified hook creation
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return () => {
-    const data = useGlobalStore(state => state[key]) as AppState[K];
+  return (initialData?: AppState[K]) => {
+    const data = useGlobalStore(state => state[key]);
     const setData = useGlobalStore(state => state.set);
     const isClient = useGlobalStore(state => state.isClient);
 
+    useEffect(() => {
+        if (isClient && initialData) {
+            setData({ [key]: initialData } as Partial<AppState>);
+        }
+    }, [isClient, initialData, setData]);
+    
     const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
       setData(state => ({ ...state, [key]: updater(state[key]) }));
     };
 
-    return { data, setData: setKeyData, isClient };
+    return { data: data as AppState[K], setData: setKeyData, isClient };
   };
 };
 
