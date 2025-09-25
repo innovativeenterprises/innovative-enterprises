@@ -1,5 +1,4 @@
 
-
 import { ClipboardCheck } from "lucide-react";
 import DocuChainClientPage from "./client-page";
 import type { Metadata } from 'next';

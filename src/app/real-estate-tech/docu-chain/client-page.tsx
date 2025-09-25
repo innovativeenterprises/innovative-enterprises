@@ -154,17 +154,17 @@ export default function DocuChainClientPage() {
                                                 <FormControl>
                                                     <RadioGroupItem value="Tenancy Agreement" id="tenancy" className="sr-only" />
                                                 </FormControl>
-                                                    <FormLabel htmlFor="tenancy" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Tenancy Agreement' && 'border-primary ring-2 ring-primary')}>
+                                                    <label htmlFor="tenancy" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Tenancy Agreement' && 'border-primary ring-2 ring-primary')}>
                                                     Tenancy Agreement
-                                                </FormLabel>
+                                                </label>
                                             </FormItem>
                                                 <FormItem className="flex items-center">
                                                 <FormControl>
                                                     <RadioGroupItem value="Sale Agreement" id="sale" className="sr-only" />
                                                 </FormControl>
-                                                    <FormLabel htmlFor="sale" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Sale Agreement' && 'border-primary')}>
+                                                    <label htmlFor="sale" className={cn('flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground w-full cursor-pointer', field.value === 'Sale Agreement' && 'border-primary')}>
                                                     Sale Agreement
-                                                </FormLabel>
+                                                </label>
                                             </FormItem>
                                         </RadioGroup>
                                     </FormControl>
@@ -237,11 +237,7 @@ export default function DocuChainClientPage() {
                             </div>
                         )}
                         <FormField control={form.control} name="additionalClauses" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Additional Clauses (Optional)</FormLabel>
-                                <FormControl><Textarea placeholder="e.g., 'The tenant is responsible for all utility bills.' or 'Property is sold as-is.'" rows={4} {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
+                            <FormItem><FormLabel>Additional Clauses (Optional)</FormLabel><FormControl><Textarea placeholder="e.g., 'The tenant is responsible for all utility bills.' or 'Property is sold as-is.'" rows={4} {...field} /></FormControl><FormMessage /></FormItem>
                         )}/>
 
                     <Button type="submit" disabled={isLoading} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-base" size="lg">
