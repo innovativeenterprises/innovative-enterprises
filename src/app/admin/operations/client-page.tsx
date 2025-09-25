@@ -6,29 +6,13 @@ import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Brush } from "lucide-react";
+import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import ThemeGenerator from "./theme-generator";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import KnowledgeTable from "./knowledge-table";
-import CostSettingsTable from "./cost-settings-table";
-import PricingTable from "@/app/admin/pricing-table";
-import type { KnowledgeDocument } from "@/lib/knowledge.schema";
-import type { CostRate } from "@/lib/cost-settings.schema";
-import type { Pricing } from "@/lib/pricing.schema";
-import PosProductTable from "@/app/admin/pos-product-table";
-import type { PosProduct } from "@/lib/pos-data.schema";
 
 
-interface AdminOperationsClientPageProps {
-    initialKnowledgeBase: KnowledgeDocument[];
-    initialCostSettings: CostRate[];
-}
-
-export default function AdminOperationsClientPage({ 
-    initialKnowledgeBase, 
-    initialCostSettings,
-}: AdminOperationsClientPageProps) {
+export default function AdminOperationsClientPage() {
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -48,10 +32,8 @@ export default function AdminOperationsClientPage({
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-3">
+             <TabsList className="grid w-full grid-cols-1">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
-                <TabsTrigger value="knowledge-base">AI Knowledge Base</TabsTrigger>
-                <TabsTrigger value="costing">Market Rates</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6 space-y-8">
                  <ThemeGenerator />
@@ -73,12 +55,6 @@ export default function AdminOperationsClientPage({
                     ))}
                     </Accordion>
                 </div>
-            </TabsContent>
-            <TabsContent value="knowledge-base" className="mt-6">
-                <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
-            </TabsContent>
-             <TabsContent value="costing" className="mt-6 space-y-8">
-                <CostSettingsTable initialRates={initialCostSettings} />
             </TabsContent>
         </Tabs>
     </div>

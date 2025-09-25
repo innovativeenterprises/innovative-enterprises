@@ -14,6 +14,10 @@ import type { Pricing } from "@/lib/pricing.schema";
 import type { PosProduct } from "@/lib/pos-data.schema";
 import PricingTable from "@/app/admin/pricing-table";
 import PosProductTable from "@/app/admin/pos-product-table";
+import KnowledgeTable from "@/app/admin/operations/knowledge-table";
+import CostSettingsTable from "../operations/cost-settings-table";
+import type { KnowledgeDocument } from "@/lib/knowledge.schema";
+import type { CostRate } from "@/lib/cost-settings.schema";
 
 
 interface AdminContentClientPageProps {
@@ -24,6 +28,8 @@ interface AdminContentClientPageProps {
     initialTestimonials: Testimonial[];
     initialPricing: Pricing[];
     initialPosProducts: PosProduct[];
+    initialKnowledgeBase: KnowledgeDocument[];
+    initialCostSettings: CostRate[];
 }
 
 export default function AdminContentClientPage({
@@ -34,22 +40,26 @@ export default function AdminContentClientPage({
     initialTestimonials,
     initialPricing,
     initialPosProducts,
+    initialKnowledgeBase,
+    initialCostSettings,
 }: AdminContentClientPageProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Site Content</h1>
+        <h1 className="text-3xl font-bold">Site Content &amp; Data</h1>
         <p className="text-muted-foreground">
-          Manage your public-facing services, products, and clients.
+          Manage public-facing content and core data powering the AI.
         </p>
       </div>
       <Tabs defaultValue="services" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
-          <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
-          <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
-          <TabsTrigger value="pos-products">POS Products</TabsTrigger>
+          <TabsTrigger value="clients">Clients</TabsTrigger>
+          <TabsTrigger value="pricing">Pricing</TabsTrigger>
+          <TabsTrigger value="pos-products">POS</TabsTrigger>
+          <TabsTrigger value="knowledge">Knowledge</TabsTrigger>
+          <TabsTrigger value="costing">Rates</TabsTrigger>
         </TabsList>
         <TabsContent value="services" className="mt-6">
           <ServiceTable initialServices={initialServices} />
@@ -71,6 +81,12 @@ export default function AdminContentClientPage({
         </TabsContent>
         <TabsContent value="pos-products" className="mt-6">
             <PosProductTable initialProducts={initialPosProducts} />
+        </TabsContent>
+        <TabsContent value="knowledge" className="mt-6">
+            <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
+        </TabsContent>
+         <TabsContent value="costing" className="mt-6 space-y-8">
+            <CostSettingsTable initialRates={initialCostSettings} />
         </TabsContent>
       </Tabs>
     </div>

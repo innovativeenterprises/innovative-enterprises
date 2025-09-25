@@ -2,17 +2,17 @@
 'use server';
 
 import AdminContentClientPage from './client-page';
-import { getPricing, getProducts, getServices, getClients, getTestimonials, getStages, getPosProducts } from "@/lib/firestore";
+import { getPricing, getProducts, getServices, getClients, getTestimonials, getStages, getPosProducts, getKnowledgeBase, getCostSettings } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Site Content Management",
-    description: "Manage your public-facing services, products, clients, and pricing."
+    title: "Site Content & Data Management",
+    description: "Manage your public-facing services, products, clients, and internal data like pricing and AI knowledge."
 };
 
 
 export default async function AdminContentPage() {
-    const [services, products, stages, clients, testimonials, pricing, posProducts] = await Promise.all([
+    const [services, products, stages, clients, testimonials, pricing, posProducts, knowledgeBase, costSettings] = await Promise.all([
         getServices(),
         getProducts(),
         getStages(),
@@ -20,6 +20,8 @@ export default async function AdminContentPage() {
         getTestimonials(),
         getPricing(),
         getPosProducts(),
+        getKnowledgeBase(),
+        getCostSettings(),
     ]);
 
     return (
@@ -31,6 +33,8 @@ export default async function AdminContentPage() {
             initialTestimonials={testimonials}
             initialPricing={pricing}
             initialPosProducts={posProducts}
+            initialKnowledgeBase={knowledgeBase}
+            initialCostSettings={costSettings}
         />
     );
 }
