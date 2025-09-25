@@ -1,3 +1,4 @@
+
 import type { StockItem } from './stock-items.schema';
 
 export const initialStockItems: StockItem[] = [
