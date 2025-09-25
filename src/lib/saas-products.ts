@@ -1,5 +1,4 @@
 
-
 import type { SaasCategory } from './saas-products.schema';
 
 export const saasProducts: SaasCategory[] = [
@@ -12,8 +11,8 @@ export const saasProducts: SaasCategory[] = [
             { name: "WorkforceFlow", description: "AI-driven workforce scheduling and digital timecards.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "ProcureChain SaaS", description: "E-procurement platform with predictive ordering.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "ConstructFin", description: "Automated invoicing and AI-powered budget forecasting.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
-            { name: "Digital Twin Ops", description: "IoT platform for monitoring building performance.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: false },
-            { name: "AeroSite AI (DaaS)", description: "Drone-as-a-Service for automated aerial surveys.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: false },
+            { name: "Digital Twin Ops", description: "IoT platform for monitoring building performance.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
+            { name: "AeroSite AI (DaaS)", description: "Drone-as-a-Service for automated aerial surveys.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "ClientView Portal", description: "White-label dashboards for clients to see live project status.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "BoQ Generator", description: "AI-generated Bill of Quantities from floor plans.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
             { name: "StructurAI BIM", description: "AI-powered BIM for automated clash detection.", stage: "Live & Operating", category: "Construction Tech", status: "Completed", ready: true },
@@ -30,9 +29,9 @@ export const saasProducts: SaasCategory[] = [
             { name: "SmartLease Manager", description: "Automates rent collection and reminders.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
             { name: "InvestiSight AI", description: "Property ROI calculators and mortgage simulations.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
             { name: "FacilityFlow SaaS", description: "Streamlined platform for tenant service tickets.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
-            { name: "PropToken Platform", description: "Fractional property co-ownership via blockchain.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: false },
-            { name: "Tenant Digital Briefcase", description: "App for managing personal documents and bills.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: false },
-            { name: "EcoBuild Certify", description: "Automated sustainability compliance reporting.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: false },
+            { name: "PropToken Platform", description: "Fractional property co-ownership via blockchain.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
+            { name: "Tenant Digital Briefcase", description: "App for managing personal documents and bills.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
+            { name: "EcoBuild Certify", description: "Automated sustainability compliance reporting.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
             { name: "PANOSPACE", description: "Immersive platform for virtual tours.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
             { name: "StairSpace", description: "Marketplace for renting under-stair and micro-retail spaces.", stage: "Live & Operating", category: "Real Estate Tech", status: "Completed", ready: true },
         ]
@@ -43,10 +42,11 @@ export const saasProducts: SaasCategory[] = [
             { name: "EduFlow Suite", description: "All-in-one administrative automation for schools.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
             { name: "CognitaLearn", description: "Personalized adaptive learning platform.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
             { name: "Guardian AI", description: "Student wellbeing and career advisory platform.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
-            { name: "CertiTrust", description: "Blockchain-based digital credentialing and AI proctoring.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: false },
-            { name: "CampusOS", description: "Smart campus management platform using IoT.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: false },
+            { name: "CertiTrust", description: "Blockchain-based digital credentialing and AI proctoring.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
+            { name: "CampusOS", description: "Smart campus management platform using IoT.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
             { name: "AI Scholarship Finder", description: "AI tool to find scholarships based on student profile.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
             { name: "Teacher Toolkit", description: "Tools for educators, including a Lesson Gamifier.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
+            { name: "AI-POS for Education", description: "A smart, AI-driven Point-of-Sale system for canteens/stores, providing inventory management and sales analytics.", stage: "Live & Operating", category: "Education Tech", status: "Completed", ready: true },
         ]
     },
     {
@@ -64,7 +64,7 @@ export const saasProducts: SaasCategory[] = [
     {
         name: "Gaming & Social",
         products: [
-             { name: "We Match - MATCH CUP GAME", description: "Immersive AR social game for real-world challenges.", stage: "In Development", category: "Gaming & Social", status: "On Track", ready: false },
+             { name: "We Match - MATCH CUP GAME", description: "Immersive AR social game for real-world challenges.", stage: "Live & Operating", category: "Gaming & Social", status: "Completed", ready: true },
         ]
     },
      {
@@ -77,10 +77,10 @@ export const saasProducts: SaasCategory[] = [
         name: "General Platforms & SaaS",
         products: [
             { name: "ameen", description: "Secure digital identity and Smart Lost & Found.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
-            { name: "APPI – عـبِّـي", description: "Real-time insights into household utility consumption.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "On Track", ready: true },
+            { name: "APPI – عـبِّـي", description: "Real-time insights into household utility consumption.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
             { name: "KHIDMA", description: "AI-powered marketplace for service seekers and providers.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
-            { name: "VMALL", description: "Immersive VR/AR shopping experiences.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "On Track", ready: true },
-            { name: "Logistics Chain AI", description: "AI model to optimize supply chains.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "On Track", ready: true },
+            { name: "VMALL", description: "Immersive VR/AR shopping experiences.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
+            { name: "Logistics Chain AI", description: "AI model to optimize supply chains.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
             { name: "RAAHA", description: "White-label SaaS platform for domestic workforce agencies.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
             { name: "Nova Commerce", description: "End-to-end e-commerce solutions.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
             { name: "AlumniConnect", description: "Digital platform for university alumni networks.", stage: "Live & Operating", category: "General Platforms & SaaS", status: "Completed", ready: true },
@@ -94,7 +94,6 @@ export const saasProducts: SaasCategory[] = [
         products: [
             { name: "AI Interior Designer", description: "Generates interior design ideas from photos.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
             { name: "AI PDF Form Filler", description: "Intelligently fills PDF forms from profile data.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
-            { name: "AI-POS", description: "Smart Point-of-Sale system for small shops.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
             { name: "Facebook Cover Generator", description: "AI tool to generate Facebook cover images.", stage: "Live & Operating", category: "AI & Creative Tools", status: "Completed", ready: true },
         ]
     }

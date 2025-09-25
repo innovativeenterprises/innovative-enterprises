@@ -45,7 +45,7 @@ const CountdownTimer = ({ endDate }: { endDate: string }) => {
 export default function StockItemDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { stockItems, isClient } = useStockItemsData();
+    const { data: stockItems, isClient } = useStockItemsData();
     const [item, setItem] = useState<StockItem | undefined>(undefined);
 
     useEffect(() => {

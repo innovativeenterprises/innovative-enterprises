@@ -12,7 +12,7 @@ export const initialStockItems: StockItem[] = [
     status: 'Active',
     saleType: 'Fixed Price',
     expiryDate: new Date(new Date().getTime() + 60 * 24 * 60 * 60 * 1000).toISOString(),
-    imageUrl: 'https://images.unsplash.com/photo-1579584379934-2c589e416a9a?q=80&w=600&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1578506435159-8f9671cf6991?q=80&w=600&auto=format&fit=crop',
     aiHint: 'canned food',
   },
   {

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -66,7 +67,7 @@ export default function StockClearClientPage({ initialItems }: { initialItems: S
         return items.filter(item => {
             const matchesCategory = categoryFilter === 'All' || item.category === categoryFilter;
             const matchesSearch = searchTerm === '' || item.name.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesCategory && matchesSearch && item.status === 'Active';
+            return matchesCategory && item.status === 'Active';
         });
     }, [items, categoryFilter, searchTerm]);
 
