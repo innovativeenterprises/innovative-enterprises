@@ -1,6 +1,6 @@
 
 
-import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook } from "lucide-react";
+import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook, Brush } from "lucide-react";
 import SanadHubIcon from "@/components/icons/sanad-hub-icon";
 import BusinessHubIcon from "@/components/icons/business-hub-icon";
 import AmeenSmartLockIcon from "@/components/icons/ameen-smart-lock-icon";
@@ -218,6 +218,12 @@ export const initialAiTools = [
     description: "Describe any image and our AI will generate it for you in seconds.",
     icon: ImageIcon,
   },
+   {
+    title: "Image Transformer (Vista)",
+    href: "/image-transformer",
+    description: "Upload an image and use a prompt to transform or redesign it.",
+    icon: Brush,
+  },
   {
     title: "Video Generator (VEO)",
     href: "/video-generator",
@@ -283,3 +289,4 @@ export const initialAiTools = [
 export type Solution = typeof initialSolutions[number];
 export type Industry = typeof initialIndustries[number];
 export type AiTool = typeof initialAiTools[number];
+
