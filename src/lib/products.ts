@@ -1,4 +1,5 @@
 
+
 import type { Product } from './products.schema';
 import { saasProducts } from '@/lib/saas-products';
 
@@ -98,4 +99,4 @@ const storeProducts: Product[] = [
 ];
 
 export const initialProducts: Product[] = [...saasProductList, ...storeProducts];
-export const initialStoreProducts = storeProducts;
+
