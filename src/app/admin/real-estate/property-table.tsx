@@ -272,4 +272,3 @@ export default function PropertyTable({ initialProperties }: { initialProperties
         </Card>
     );
 }
-

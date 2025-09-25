@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -18,6 +19,7 @@ import type { StockItem } from "@/lib/stock-items.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { useStockItemsData } from "@/hooks/use-data-hooks";
 
 const StockItemSchema = z.object({
   name: z.string().min(3, "Name is required"),
@@ -37,13 +39,16 @@ type StockItemValues = z.infer<typeof StockItemSchema>;
 const AddEditStockItemDialog = ({ 
     item, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     item?: StockItem, 
     onSave: (values: StockItemValues, id?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<StockItemValues>({ resolver: zodResolver(StockItemSchema) });
 
     useEffect(() => {
@@ -54,11 +59,11 @@ const AddEditStockItemDialog = ({
 
     const onSubmit: SubmitHandler<StockItemValues> = (data) => {
         onSave(data, item?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[725px]">
                 <DialogHeader><DialogTitle>{item ? "Edit" : "Add"} Stock Item</DialogTitle></DialogHeader>
@@ -111,10 +116,17 @@ const AddEditStockItemDialog = ({
 export default function StockItemTable({ items, setItems }: { items: StockItem[], setItems: React.Dispatch<React.SetStateAction<StockItem[]>> }) {
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<StockItem | undefined>(undefined);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+    
+    const openDialog = (item?: StockItem) => {
+        setSelectedItem(item);
+        setIsDialogOpen(true);
+    }
 
     const handleSave = (values: StockItemValues, id?: string) => {
         if (id) {
@@ -149,11 +161,17 @@ export default function StockItemTable({ items, setItems }: { items: StockItem[]
                     <CardTitle>StockClear Marketplace Management</CardTitle>
                     <CardDescription>Manage all overstock and clearance item listings.</CardDescription>
                 </div>
-                <AddEditStockItemDialog onSave={handleSave}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
-                </AddEditStockItemDialog>
+                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
             </CardHeader>
             <CardContent>
+                 <AddEditStockItemDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    item={selectedItem}
+                    onSave={handleSave}
+                >
+                    <div/>
+                </AddEditStockItemDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -179,9 +197,7 @@ export default function StockItemTable({ items, setItems }: { items: StockItem[]
                                 <TableCell>{getStatusBadge(item.status)}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <AddEditStockItemDialog item={item} onSave={handleSave}>
-                                            <Button variant="ghost" size="icon"><Edit /></Button>
-                                        </AddEditStockItemDialog>
+                                        <Button variant="ghost" size="icon" onClick={() => openDialog(item)}><Edit /></Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                             <AlertDialogContent>

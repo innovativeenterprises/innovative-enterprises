@@ -159,4 +159,3 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
         </Card>
     );
 }
-
