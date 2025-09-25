@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, AlertTriangle, PlusCircle, Trash2 } from 'lucide-react';
 import { TimetableGeneratorInputSchema, type TimetableGeneratorInput, type TimetableGeneratorOutput } from '@/ai/flows/timetable-generator.schema';
-import { generateTimetable } from '@/ai/flows/timetable-generator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
@@ -32,10 +31,11 @@ interface TimetableFormProps {
         classroomNamePlaceholder: string;
         addClassroomLabel: string;
         generateButtonText: string;
-    }
+    };
+    generationFlow: (input: TimetableGeneratorInput) => Promise<TimetableGeneratorOutput>;
 }
 
-export default function TimetableForm({ defaultValues, labels }: TimetableFormProps) {
+export default function TimetableForm({ defaultValues, labels, generationFlow }: TimetableFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<TimetableGeneratorOutput | null>(null);
   const { toast } = useToast();
@@ -59,7 +59,7 @@ export default function TimetableForm({ defaultValues, labels }: TimetableFormPr
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await generateTimetable(data);
+      const result = await generationFlow(data);
       setResponse(result);
       if (result.diagnostics.isPossible) {
           toast({ title: 'Schedule Generated!', description: 'Your optimized schedule is ready.' });
