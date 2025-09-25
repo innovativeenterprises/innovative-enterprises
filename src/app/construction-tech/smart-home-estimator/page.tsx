@@ -13,7 +13,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Cpu, Lightbulb, Thermometer, Lock, Clapperboard, Download } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { fileToDataURI } from '@/lib/utils';
 import { estimateSmartHome } from '@/ai/flows/smart-home-estimator';
 import type { SmartHomeEstimatorOutput } from '@/ai/flows/smart-home-estimator.schema';
