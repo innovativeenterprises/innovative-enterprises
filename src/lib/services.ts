@@ -1,5 +1,5 @@
 
-import { Bot, Cloud, Shield, Handshake, Briefcase, FileText, GanttChartSquare } from "lucide-react";
+import { Bot, Cloud, Shield, Handshake, Briefcase, FileText, GanttChartSquare, Server } from "lucide-react";
 import type { Service } from "./services.schema";
 
 
@@ -59,5 +59,13 @@ export const initialServices: Service[] = [
     category: "AI Powered & Automation",
     enabled: false,
     href: '#'
+  },
+  {
+    title: "InfraRent",
+    description: "On-demand rental of IT equipment like servers, workstations, and networking gear for events and projects.",
+    icon: Server,
+    category: "Business Tech Solutions",
+    enabled: true,
+    href: '/construction-tech/asset-rentals'
   },
 ];
