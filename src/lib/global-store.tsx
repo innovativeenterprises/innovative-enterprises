@@ -2,44 +2,24 @@
 'use client';
 
 import React, { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
+import { useStore as useZustandStore } from 'zustand';
+import { type StoreType, createAppStore } from './global-store';
 import type { AppState } from './initial-state';
 import { getEmptyState } from './initial-state';
 
-// Define the store's API
-export type StoreType = {
-  get: () => AppState;
-  set: (updater: (currentState: AppState) => AppState) => void;
-  subscribe: (listener: () => void) => () => void;
-};
+export const StoreContext = createContext<StoreType | null>(null);
 
-// Create the context
-export const StoreContext = createContext<StoreType | undefined>(undefined);
-
-// Create the provider component
-export const StoreProvider = ({ children, initialState }: { children: ReactNode, initialState: Partial<AppState> }) => {
+export function StoreProvider({ children, initialState }: { children: ReactNode; initialState: Partial<AppState> }) {
     const storeRef = useRef<StoreType>();
 
     if (!storeRef.current) {
-        const emptyState = getEmptyState();
-        let state: AppState = { ...emptyState, ...initialState, isClient: false }; // Start with isClient as false
-        const listeners = new Set<() => void>();
-        
-        storeRef.current = {
-            get: () => state,
-            set: (updater) => {
-                state = updater(state);
-                listeners.forEach((l) => l());
-            },
-            subscribe: (listener) => {
-                listeners.add(listener);
-                return () => listeners.delete(listener);
-            },
-        };
+        storeRef.current = createAppStore(initialState);
     }
     
-    // On the client, after the first render, we update the isClient flag.
-    useEffect(() => {
-        storeRef.current?.set(s => ({...s, isClient: true}));
+     useEffect(() => {
+        if (storeRef.current) {
+            storeRef.current.setState({ isClient: true });
+        }
     }, []);
 
     return (
@@ -48,3 +28,20 @@ export const StoreProvider = ({ children, initialState }: { children: ReactNode,
         </StoreContext.Provider>
     );
 };
+
+export function useStore<T>(selector: (state: AppState) => T): T {
+  const store = useContext(StoreContext)
+  if (!store) {
+    throw new Error('useStore must be used within a StoreProvider')
+  }
+  return useZustandStore(store, selector)
+}
+
+// Add a hook for setting state to avoid direct store manipulation in components
+export function useSetStore() {
+    const store = useContext(StoreContext);
+    if (!store) {
+        throw new Error('useSetStore must be used within a StoreProvider');
+    }
+    return store.setState;
+}

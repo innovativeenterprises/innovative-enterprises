@@ -1,41 +1,42 @@
 
 'use client';
 
+import React, { createContext, useContext } from 'react';
+import { createStore, useStore as useZustandStore } from 'zustand';
+import { type AppState, getInitialState } from './initial-state';
+
 /**
- * @fileOverview A simple global state management store for the prototype.
+ * @fileOverview A global state management store for the prototype using Zustand.
  *
- * This avoids the need for a full state management library like Redux or Zustand
- * for this prototype application. It uses a simple listener pattern to update
- * components when the state changes.
+ * This avoids the need for prop drilling and provides a simple, modern
+ * state management solution.
  */
-import { getInitialState, type AppState } from './initial-state';
 
-export const createAppStore = (initState: Partial<AppState> = {}) => {
-    const initialState = getInitialState();
-    let state: AppState = { ...initialState, ...initState, isClient: false };
-    const listeners = new Set<() => void>();
-
-    return {
-        get: (): AppState => state,
-        set: (updater: (currentState: AppState) => AppState) => {
-            state = updater(state);
-            listeners.forEach((listener) => listener());
-        },
-        subscribe: (listener: () => void) => {
-            listeners.add(listener);
-            return () => listeners.delete(listener);
-        },
-    };
-}
+export type AppStore = AppState;
 
 export type StoreType = ReturnType<typeof createAppStore>;
 
-// Initialize a default store instance.
-// This will be replaced by the provider's instance on the client.
-export let store = createAppStore();
+export const createAppStore = (initState: Partial<AppState> = {}) => {
+  const initialState = { ...getInitialState(), ...initState };
+  return createStore<AppStore>((set) => ({
+    ...initialState,
+    // The 'set' function is provided by Zustand and allows components to update the state.
+    // We are exposing it here to be used in custom hooks.
+    set: (updater) => set(updater),
+  }));
+};
 
-// This function allows re-initializing the store, useful for tests or HMR
-export function initializeStore(initialState?: Partial<AppState>) {
-  store = createAppStore(initialState);
-  return store;
+export const AppContext = createContext<StoreType | null>(null);
+
+// This is the hook that components will use to access the store.
+export function useStore<T>(selector: (state: AppStore) => T): T {
+  const store = React.useContext(AppContext);
+  if (!store) {
+    throw new Error('useStore must be used within a StoreProvider');
+  }
+  return useZustandStore(store, selector);
 }
+
+// Global instance that can be imported by server components or utilities if needed.
+// Note: This instance is for read-only purposes on the server.
+export const store = createAppStore();

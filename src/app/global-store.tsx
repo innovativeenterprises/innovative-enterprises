@@ -3,20 +3,14 @@
 
 import React, { createContext, useContext, ReactNode, useRef } from 'react';
 import { useStore as useZustandStore } from 'zustand';
-import { type StoreType, createAppStore } from './global-store';
-import type { AppState } from './initial-state';
+import { type StoreType } from './lib/global-store';
+import type { AppState } from './lib/initial-state';
 
 export const StoreContext = createContext<StoreType | null>(null);
 
-export function StoreProvider({ children, initialState }: { children: ReactNode; initialState: Partial<AppState> }) {
-    const storeRef = useRef<StoreType>();
-
-    if (!storeRef.current) {
-        storeRef.current = createAppStore(initialState);
-    }
-    
+export function StoreProvider({ children, store }: { children: ReactNode; store: StoreType }) {
     return (
-        <StoreContext.Provider value={storeRef.current}>
+        <StoreContext.Provider value={store}>
             {children}
         </StoreContext.Provider>
     );
