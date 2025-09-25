@@ -1,3 +1,4 @@
+
 import { GanttChartSquare } from "lucide-react";
 import TimetableForm from "@/components/timetable-form";
 import type { Metadata } from 'next';

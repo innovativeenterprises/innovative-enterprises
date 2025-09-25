@@ -1,6 +1,7 @@
 
 'use client';
 
+import ProForm from "./pro-form";
 import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
@@ -10,11 +11,10 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Pricing } from "@/lib/pricing.schema";
 import type { PosProduct } from "@/lib/pos-data.schema";
-import PricingTable from "@/app/admin/pricing-table";
+import PricingTable from "@/app/admin/operations/pricing-table";
 import PosProductTable from "@/app/admin/pos-product-table";
 import CostSettingsTable from "./cost-settings-table";
 import type { CostRate } from "@/lib/cost-settings.schema";
-import ProForm from "./pro-form";
 
 
 // --- Main Operations Client Page ---
