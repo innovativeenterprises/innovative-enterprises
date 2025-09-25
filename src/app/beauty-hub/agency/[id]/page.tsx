@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
-import { useBeautyData } from '@/hooks/use-global-store-data';
+import { useBeautyData } from '@/hooks/use-data-hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

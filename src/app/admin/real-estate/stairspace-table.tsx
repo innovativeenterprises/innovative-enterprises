@@ -19,6 +19,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
+import { useStairspaceListingsData } from "@/hooks/use-data-hooks";
 
 const ListingSchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -105,20 +106,15 @@ const AddEditListingDialog = ({
 };
 
 export default function StairspaceTable({initialListings}: {initialListings: StairspaceListing[]}) {
-    const [listings, setListings] = useState<StairspaceListing[]>(initialListings);
-    const [isClient, setIsClient] = useState(false);
+    const { data: listings, setData: setListings, isClient } = useStairspaceListingsData(initialListings);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState<StairspaceListing | undefined>(undefined);
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
     const handleOpenDialog = (listing?: StairspaceListing) => {
         setSelectedListing(listing);
         setIsDialogOpen(true);
-    }
+    };
 
     const handleSave = (values: ListingValues, id?: string) => {
         const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };
@@ -144,7 +140,7 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
                 <Button onClick={() => handleOpenDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Listing</Button>
             </CardHeader>
             <CardContent>
-                <AddEditListingDialog
+                 <AddEditListingDialog
                     isOpen={isDialogOpen}
                     onOpenChange={setIsDialogOpen}
                     listing={selectedListing}
@@ -163,3 +159,4 @@ export default function StairspaceTable({initialListings}: {initialListings: Sta
         </Card>
     );
 }
+

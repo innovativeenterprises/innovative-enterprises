@@ -49,7 +49,7 @@ export default function AdminOperationsClientPage({
         <Tabs defaultValue="ai-tools" className="w-full">
              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
-                <TabsTrigger value="pricing">Pricing</TabsTrigger>
+                <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
                 <TabsTrigger value="pos-products">POS Products</TabsTrigger>
                 <TabsTrigger value="costing">Market Rates</TabsTrigger>
             </TabsList>
@@ -86,3 +86,4 @@ export default function AdminOperationsClientPage({
     </div>
   );
 }
+

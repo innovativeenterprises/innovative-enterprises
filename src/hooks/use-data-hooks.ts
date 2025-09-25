@@ -52,6 +52,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
 export const useSettingsData = createDataHook('settings');
 export const useCartData = createDataHook('cart');
 export const useProductsData = createDataHook('products');
+export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
@@ -124,3 +125,22 @@ export const usePropertiesData = createDataHook('properties');
 export const useSolutionsData = createDataHook('solutions');
 export const useIndustriesData = createDataHook('industries');
 export const useAiToolsData = createDataHook('aiTools');
+
+
+// This custom hook provides a consolidated view of the data needed for the Beauty Hub.
+export const useBeautyData = () => {
+    const { data: agencies, isClient: agenciesLoaded } = useBeautyCentersData();
+    const { data: services, isClient: servicesLoaded } = useBeautyServicesData();
+    const { data: appointments, isClient: appointmentsLoaded } = useBeautyAppointmentsData();
+    const { data: specialists, isClient: specialistsLoaded } = useBeautySpecialistsData();
+    const { setData: setAppointments } = useBeautyAppointmentsData();
+
+    return {
+        agencies,
+        services,
+        appointments,
+        specialists,
+        setAppointments,
+        isClient: agenciesLoaded && servicesLoaded && appointmentsLoaded && specialistsLoaded
+    };
+};

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { notFound, useParams } from 'next/navigation';
@@ -10,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useCartData, useProductsData } from '@/hooks/use-global-store-data';
+import { useCartData, useStoreProductsData } from '@/hooks/use-data-hooks';
 import type { Product } from '@/lib/products.schema';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -37,7 +38,7 @@ const RelatedProductCard = ({ product }: { product: Product }) => (
 export default function ProductDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { storeProducts, isClient } = useProductsData();
+    const { data: storeProducts, isClient } = useStoreProductsData();
     const [product, setProduct] = useState<Product | undefined>(undefined);
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
@@ -64,7 +65,7 @@ export default function ProductDetailPage() {
         setCart(prevCart => {
             const existingItem = prevCart.find(item => item.id === product.id);
             if (existingItem) {
-                return prevCart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
+                return prevCart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item)
             }
             return [...prevCart, { ...product, quantity }];
         });

@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { CostRate } from "@/lib/cost-settings.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { useCostSettingsData } from "@/hooks/use-data-hooks";
 
 
 const CostRateSchema = z.object({
@@ -94,15 +95,10 @@ const AddEditCostRateDialog = ({
 };
 
 export default function CostSettingsTable({ initialRates }: { initialRates: CostRate[] }) {
-    const [costSettings, setCostSettings] = useState<CostRate[]>(initialRates);
-    const [isClient, setIsClient] = useState(false);
+    const { data: costSettings, setData: setCostSettings, isClient } = useCostSettingsData(initialRates);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedRate, setSelectedRate] = useState<CostRate | undefined>(undefined);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleOpenDialog = (rate?: CostRate) => {
         setSelectedRate(rate);
@@ -186,3 +182,4 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
         </Card>
     );
 }
+
