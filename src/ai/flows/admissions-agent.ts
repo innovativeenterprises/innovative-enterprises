@@ -13,6 +13,7 @@ import {
     AdmissionsAgentOutputSchema,
     type AdmissionsAgentOutput,
 } from './admissions-agent.schema';
+import { z } from 'zod';
 
 export async function analyzeApplication(input: AdmissionsAgentInput): Promise<AdmissionsAgentOutput> {
   return admissionsAgentFlow(input);
@@ -20,7 +21,7 @@ export async function analyzeApplication(input: AdmissionsAgentInput): Promise<A
 
 const prompt = ai.definePrompt({
   name: 'admissionsAgentPrompt',
-  input: { schema: AdmissionsAgentInputSchema.extend({ generatedId: ai.defineSchema('generatedId', z => z.string()) }) },
+  input: { schema: AdmissionsAgentInputSchema.extend({ generatedId: z.string() }) },
   output: { schema: AdmissionsAgentOutputSchema },
   prompt: `You are "Admito," an expert AI admissions officer for a prestigious university. Your task is to conduct a preliminary analysis of a student's application to provide a structured summary for the human admissions committee.
 
@@ -70,7 +71,16 @@ const admissionsAgentFlow = ai.defineFlow(
     // Generate a unique ID using crypto for better uniqueness.
     const generatedId = `APP-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
     
-    const { output } = await prompt({ ...input, generatedId });
-    return output!;
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: { ...input, generatedId },
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: AdmissionsAgentOutputSchema,
+      }
+    });
+
+    return llmResponse.output()!;
   }
 );

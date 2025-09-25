@@ -44,10 +44,16 @@ const partnershipInquiryFlow = ai.defineFlow(
     // For this prototype, we'll just simulate the confirmation.
     console.log('Received verified partnership inquiry:', input);
     
-    // Here, you would add logic to save the partner to your database or CRM.
-    // For instance, you might call a function like `saveProvider(input)`.
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: input,
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: PartnershipInquiryOutputSchema,
+      }
+    });
 
-    const { output } = await prompt(input);
-    return output!;
+    return llmResponse.output()!;
   }
 );

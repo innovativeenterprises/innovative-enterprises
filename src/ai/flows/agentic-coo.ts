@@ -67,7 +67,16 @@ const cooAnalysisFlow = ai.defineFlow(
     outputSchema: CooAnalysisOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
-    return output!;
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: input,
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: CooAnalysisOutputSchema,
+      }
+    });
+
+    return llmResponse.output()!;
   }
 );

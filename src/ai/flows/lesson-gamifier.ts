@@ -69,7 +69,17 @@ export const generateGamifiedLesson = ai.defineFlow(
     outputSchema: GamifiedLessonOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: input,
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: GamifiedLessonOutputSchema,
+      }
+    });
+
+    const output = llmResponse.output();
     if (!output) {
       throw new Error("Failed to generate gamified lesson materials.");
     }

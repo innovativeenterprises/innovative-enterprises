@@ -39,7 +39,7 @@ const categoryPrompt = ai.definePrompt({
 4.  **Itemize:** For each item, provide a clear description, the correct unit of measurement (e.g., m³, m², kg, nos, L.S.), and the calculated quantity.
 5.  **Assumptions:** If you have to make assumptions, state them clearly in the 'notes' for the relevant item.
 
-Return ONLY the items for the requested category. Do not calculate for other categories.
+Return ONLY the items for the requested category.
 `,
 });
 
@@ -50,8 +50,17 @@ const boqCategoryGeneratorFlow = ai.defineFlow(
     outputSchema: BoQCategoryGeneratorOutputSchema,
   },
   async (input) => {
-    const { output } = await categoryPrompt(input);
-    return output!;
+    const llmResponse = await ai.generate({
+      prompt: categoryPrompt,
+      input: input,
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: BoQCategoryGeneratorOutputSchema,
+      }
+    });
+
+    return llmResponse.output()!;
   }
 );
 

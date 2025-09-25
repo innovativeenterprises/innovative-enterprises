@@ -64,7 +64,16 @@ const boqEstimatorFlow = ai.defineFlow(
     outputSchema: BoQEstimatorOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
-    return output!;
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: input,
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: BoQEstimatorOutputSchema,
+      }
+    });
+
+    return llmResponse.output()!;
   }
 );

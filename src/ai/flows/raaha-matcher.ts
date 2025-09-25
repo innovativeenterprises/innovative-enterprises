@@ -64,11 +64,19 @@ const raahaMatcherFlow = ai.defineFlow(
     const availableWorkers = raahaWorkers.filter(w => w.availability === 'Available');
     const availableWorkersJson = JSON.stringify(availableWorkers, null, 2);
 
-    const { output } = await prompt({
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: {
         ...input,
         availableWorkersJson
+      },
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: RaahaMatcherOutputSchema,
+      }
     });
     
-    return output!;
+    return llmResponse.output()!;
   }
 );

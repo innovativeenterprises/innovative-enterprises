@@ -81,7 +81,16 @@ const trainAgentFlow = ai.defineFlow(
     console.log('Number of uploaded documents:', input.knowledgeDocuments?.length || 0);
     console.log('Number of Q&A pairs:', input.qaPairs?.length || 0);
     
-    const { output } = await prompt(input);
-    return output!;
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: input,
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: TrainAgentOutputSchema,
+      }
+    });
+
+    return llmResponse.output()!;
   }
 );

@@ -75,11 +75,19 @@ export const extractPropertyDetailsFromUrl = ai.defineFlow(
     }
 
     // Step 2: Use the property extraction specialist agent to get structured data.
-    const { output } = await propertyExtractionPrompt({
-        scrapedContent: scrapedData.summary,
-        url,
+    const llmResponse = await ai.generate({
+        prompt: propertyExtractionPrompt,
+        input: {
+            scrapedContent: scrapedData.summary,
+            url,
+        },
+        model: 'googleai/gemini-2.0-flash',
+        output: {
+            format: 'json',
+            schema: PropertyExtractionOutputSchema,
+        }
     });
     
-    return output!;
+    return llmResponse.output()!;
   }
 );

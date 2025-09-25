@@ -53,7 +53,17 @@ const smartHomeEstimatorFlow = ai.defineFlow(
     outputSchema: SmartHomeEstimatorOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: input,
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: SmartHomeEstimatorOutputSchema,
+      }
+    });
+
+    const output = llmResponse.output();
     if (!output) {
       throw new Error("The AI model failed to return a valid estimation.");
     }

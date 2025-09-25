@@ -77,12 +77,20 @@ const seoAnalyzerFlow = ai.defineFlow(
     }
 
     // Step 2: Use the SEO specialist agent to get structured analysis.
-    const { output } = await prompt({
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: {
         url,
         keyword,
         pageContent: scrapedData.summary,
+      },
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: SeoAnalysisOutputSchema,
+      }
     });
     
-    return output!;
+    return llmResponse.output()!;
   }
 );

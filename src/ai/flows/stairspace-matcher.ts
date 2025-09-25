@@ -58,11 +58,19 @@ const stairspaceMatcherFlow = ai.defineFlow(
     // In a real app, this would query a database. For the prototype, we use a static list.
     const availableSpacesJson = JSON.stringify(initialStairspaceListings, null, 2);
 
-    const { output } = await prompt({
+    const llmResponse = await ai.generate({
+      prompt: prompt,
+      input: {
         ...input,
         availableSpacesJson
+      },
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+        format: 'json',
+        schema: StairspaceMatcherOutputSchema,
+      }
     });
     
-    return output!;
+    return llmResponse.output()!;
   }
 );
