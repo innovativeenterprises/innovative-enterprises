@@ -43,6 +43,7 @@ const getProTaskPlanTool = ai.defineTool(
         inputSchema: z.object({
             ministriesToVisit: z.array(z.enum(OMAN_MINISTRIES)),
             governorate: z.enum(OMAN_GOVERNORATES),
+            serviceFee: z.number().optional(),
             startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).optional(),
             startLocationName: z.string().optional(),
         }),
@@ -76,6 +77,11 @@ const getProTaskPlanTool = ai.defineTool(
         const allowances: Allowance[] = [];
         let grandTotal = 0;
 
+        if (input.serviceFee && input.serviceFee > 0) {
+            allowances.push({ description: 'Government Service Fee', amount: input.serviceFee });
+            grandTotal += input.serviceFee;
+        }
+
         if (fuelAllowance > 0) {
             allowances.push({ description: `Fuel Allowance (${distance.toFixed(1)} km)`, amount: fuelAllowance });
             grandTotal += fuelAllowance;
@@ -97,15 +103,19 @@ const getProTaskPlanTool = ai.defineTool(
 const proTaskAnalysisAgentFlow = ai.defineFlow(
   {
     name: 'proTaskAnalysisAgentFlow',
-    inputSchema: ProTaskAnalysisInputSchema,
+    inputSchema: z.object({
+        proTaskInput: ProTaskAnalysisInputSchema,
+        sanadAnalysis: z.any(),
+    }),
     outputSchema: ProTaskAnalysisOutputSchema,
     tools: [getProTaskPlanTool]
   },
-  async (input) => {
+  async ({ proTaskInput, sanadAnalysis }) => {
     
-    const prompt = `You are Fahim, an expert PRO agent. A user needs to perform the service: "${input.serviceName}".
+    const prompt = `You are Fahim, an expert PRO agent. A user needs to perform the service: "${proTaskInput.serviceName}".
+    The initial analysis suggests a service fee of OMR ${sanadAnalysis.serviceFee}.
     1. Determine which government ministries are required to visit to complete this service.
-    2. Then, use the getProTaskPlan tool to calculate the travel route and costs for visiting these ministries in the "${input.governorate}" governorate.`;
+    2. Then, use the getProTaskPlan tool to calculate the travel route and costs for visiting these ministries in the "${proTaskInput.governorate}" governorate. You MUST pass the serviceFee of ${sanadAnalysis.serviceFee} to the tool.`;
 
     const llmResponse = await ai.generate({
         prompt: prompt,
@@ -124,15 +134,11 @@ const proTaskAnalysisAgentFlow = ai.defineFlow(
     
     // Augment the tool input with coordinates if they were passed from the client
     const toolInput = toolRequest.input;
-    toolInput.startLocationCoords = input.startLocationCoords;
-    toolInput.startLocationName = input.startLocationName;
+    toolInput.startLocationCoords = proTaskInput.startLocationCoords;
+    toolInput.startLocationName = proTaskInput.startLocationName;
 
     const toolResponse = await toolRequest.run();
 
     return toolResponse.output as ProTaskAnalysisOutput;
   }
 );
-
-export async function analyzeProTask(input: ProTaskAnalysisInput): Promise<ProTaskAnalysisOutput> {
-  return proTaskAnalysisAgentFlow(input);
-}
