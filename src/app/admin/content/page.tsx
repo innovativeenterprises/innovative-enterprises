@@ -2,7 +2,7 @@
 'use server';
 
 import AdminContentClientPage from './client-page';
-import { getPricing, getProducts, getServices, getClients, getTestimonials, getStages, getPosProducts } from "@/lib/firestore";
+import { getProducts, getServices, getClients, getTestimonials, getStages, getPosProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,13 +12,12 @@ export const metadata: Metadata = {
 
 
 export default async function AdminContentPage() {
-    const [services, products, stages, clients, testimonials, pricing, posProducts] = await Promise.all([
+    const [services, products, stages, clients, testimonials, posProducts] = await Promise.all([
         getServices(),
         getProducts(),
         getStages(),
         getClients(),
         getTestimonials(),
-        getPricing(),
         getPosProducts(),
     ]);
 
@@ -29,7 +28,6 @@ export default async function AdminContentPage() {
             initialStages={stages}
             initialClients={clients}
             initialTestimonials={testimonials}
-            initialPricing={pricing}
             initialPosProducts={posProducts}
         />
     );

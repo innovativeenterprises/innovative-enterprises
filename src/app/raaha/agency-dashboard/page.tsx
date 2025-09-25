@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { getRaahaData } from '@/lib/firestore';
@@ -17,5 +16,6 @@ export default async function AgencyDashboardPage() {
         initialAgencies={raahaAgencies} 
         initialRequests={raahaRequests} 
         initialWorkers={raahaWorkers} 
+        dashboardType="raaha"
     />;
 }

@@ -40,7 +40,7 @@ export default function AdminOperationsClientPage({
         </div>
 
         <div className="space-y-8">
-             <Accordion type="single" collapsible className="w-full">
+             <Accordion type="single" collapsible className="w-full" defaultValue="ai-tools">
                 <AccordionItem value="ai-tools">
                     <AccordionTrigger>
                         <h2 className="text-2xl font-bold">Internal AI Tools</h2>
