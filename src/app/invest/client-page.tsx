@@ -34,6 +34,7 @@ import html2canvas from 'html2canvas';
 import type { Agent, AgentCategory } from "@/lib/agents.schema";
 import type { Service } from "@/lib/services.schema";
 import type { AppSettings } from "@/lib/settings";
+import { useInvestorsData } from "@/hooks/use-data-hooks";
 
 const investmentReasons = [
     {
@@ -145,16 +146,11 @@ const AddEditInvestorDialog = ({
     );
 };
 
-function InvestorTable({initialInvestors}: {initialInvestors: Investor[]}) {
-    const [investors, setInvestors] = useState(initialInvestors);
-    const [isClient, setIsClient] = useState(false);
+const InvestorTable = ({initialInvestors}: {initialInvestors: Investor[]}) => {
+    const { data: investors, setData: setInvestors, isClient } = useInvestorsData(initialInvestors);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedInvestor, setSelectedInvestor] = useState<Investor | undefined>(undefined);
     const { toast } = useToast();
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const openDialog = (investor?: Investor) => {
         setSelectedInvestor(investor);
@@ -477,3 +473,4 @@ export default function InvestClientPage({
     </div>
   );
 }
+
