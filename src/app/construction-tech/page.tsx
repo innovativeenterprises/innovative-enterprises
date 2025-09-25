@@ -1,12 +1,18 @@
 
 'use server';
 
+import { getProducts } from "@/lib/firestore";
+import type { Metadata } from 'next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Siren } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
-import { getProducts } from "@/lib/firestore";
+
+export const metadata: Metadata = {
+  title: "Construction Technology Solutions",
+  description: "A suite of AI-powered SaaS platforms designed to automate, optimize, and revolutionize the construction industry in the Gulf and beyond.",
+};
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -22,7 +28,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
         "Fire & Safety Estimator": Siren,
-        "AI Smart Home Estimator": Cpu,
+        "Building Systems Estimator": Cpu,
     };
     const Icon = iconMap[product.name] || HardHat;
 
@@ -94,3 +100,4 @@ export default async function ConstructionTechPage() {
     </div>
   );
 }
+
