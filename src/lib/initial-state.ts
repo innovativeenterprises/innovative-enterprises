@@ -41,6 +41,7 @@ import type { KnowledgeDocument } from './knowledge.schema';
 import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
+import type { UserDocument } from './user-documents';
 
 // Define the shape of the global state
 export interface AppState {
@@ -93,6 +94,7 @@ export interface AppState {
   solutions: Solution[];
   industries: Industry[];
   aiTools: AiTool[];
+  userDocuments: UserDocument[];
 }
 
 
@@ -147,6 +149,7 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   solutions: [],
   industries: [],
   aiTools: [],
+  userDocuments: [],
 });
 
 export const getInitialState = (): AppState => ({

@@ -42,6 +42,7 @@ import { initialBeautySpecialists } from './beauty-specialists';
 import { initialRaahaAgencies } from './raaha-agencies';
 import { initialRaahaWorkers } from './raaha-workers';
 import { initialRaahaRequests } from './raaha-requests';
+import { initialUserDocuments } from './user-documents';
 
 // This file simulates fetching data from a database.
 // In a real application, you would replace these with actual Firestore queries.
@@ -68,7 +69,7 @@ export const getGiftCards = async () => initialGiftCards;
 export const getStudents = async () => initialStudents;
 export const getCommunities = async () => initialCommunities;
 export const getCommunityEvents = async () => initialEvents;
-export const getCommunityFinances = async () => initialFinances;
+export const getCommunityFinances = async () => initialCommunityFinances;
 export const getMembers = async () => initialMembers;
 export const getAlumniJobs = async () => initialAlumniJobs;
 export const getRentalAgencies = async () => initialRentalAgencies;
@@ -79,6 +80,7 @@ export const getBeautyServices = async () => initialBeautyServices;
 export const getBeautySpecialists = async () => initialBeautySpecialists;
 export const getBeautyAppointments = async () => initialBeautyAppointments;
 export const getUsedItems = async () => initialUsedItems;
+export const getUserDocuments = async () => initialUserDocuments;
 
 export const getSettings = async () => {
     try {
@@ -165,4 +167,5 @@ export const getFirestoreData = async () => ({
     saasProducts: await getSaasProducts(),
     cfoData: await getCfoData(),
     ...await getStaffData(),
+    userDocuments: await getUserDocuments(),
 });
