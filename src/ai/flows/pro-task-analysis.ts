@@ -7,10 +7,8 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { OMAN_MINISTRIES, ministryLocations, OMAN_GOVERNORATES } from '@/lib/oman-locations';
+import { OMAN_MINISTRIES, ministryLocations, OMAN_GOVERNORATES, calculateTotalDistance } from '@/lib/oman-locations';
 import type { Ministry, Governorate } from '@/lib/oman-locations';
-import { calculateTotalDistance } from '@/lib/oman-locations';
-import type { CostRate } from '@/lib/cost-settings.schema';
 import { getCostSettings } from '@/lib/firestore';
 
 export const ProTaskAnalysisInputSchema = z.object({
@@ -35,98 +33,106 @@ export const ProTaskAnalysisOutputSchema = z.object({
 });
 export type ProTaskAnalysisOutput = z.infer<typeof ProTaskAnalysisOutputSchema>;
 
-
 const SNACKS_ALLOWANCE = 2.000;
 
-export async function analyzeProTask(input: ProTaskAnalysisInput): Promise<ProTaskAnalysisOutput> {
-  return proTaskAnalysisFlow(input);
-}
+// Tool to get the travel plan and cost
+const getProTaskPlanTool = ai.defineTool(
+    {
+        name: "getProTaskPlan",
+        description: "Calculates the optimal travel route, distance, and cost for a PRO task based on a list of ministries to visit in a specific governorate.",
+        inputSchema: z.object({
+            ministriesToVisit: z.array(z.enum(OMAN_MINISTRIES)),
+            governorate: z.enum(OMAN_GOVERNORATES),
+            startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).optional(),
+            startLocationName: z.string().optional(),
+        }),
+        outputSchema: ProTaskAnalysisOutputSchema,
+    },
+    async (input) => {
+        const costSettings = await getCostSettings();
+        const fuelRatePerKm = costSettings.find(c => c.name === 'Fuel Rate' && c.category === 'Travel')?.rate || 0.04;
+        
+        const locationsToVisit = [];
+        const unmappedLocations: string[] = [];
+        const governorateLocations = ministryLocations[input.governorate];
 
-const proTaskAnalysisFlow = ai.defineFlow(
+        for (const ministryName of input.ministriesToVisit) {
+            if (governorateLocations && governorateLocations[ministryName]) {
+                locationsToVisit.push({ name: ministryName, ...governorateLocations[ministryName]! });
+            } else {
+                unmappedLocations.push(ministryName);
+            }
+        }
+        
+        const startPoint = input.startLocationCoords 
+            ? { name: input.startLocationName || 'Custom Start', ...input.startLocationCoords }
+            : { name: "Innovative Enterprises HQ", lat: 23.5518, lon: 58.5024 };
+
+        const { distance, path } = calculateTotalDistance(locationsToVisit, startPoint);
+        
+        let tripDescription = `The optimized route is: ${path.join(' -> ')}. The total round-trip distance is approximately ${distance.toFixed(1)} km.`;
+        let fuelAllowance = distance > 0 ? distance * fuelRatePerKm : 0;
+        
+        const allowances: Allowance[] = [];
+        let grandTotal = 0;
+
+        if (fuelAllowance > 0) {
+            allowances.push({ description: `Fuel Allowance (${distance.toFixed(1)} km)`, amount: fuelAllowance });
+            grandTotal += fuelAllowance;
+        }
+        
+        allowances.push({ description: 'Snacks & Refreshments Allowance', amount: SNACKS_ALLOWANCE });
+        grandTotal += SNACKS_ALLOWANCE;
+
+        return {
+            tripDescription,
+            allowances,
+            grandTotal,
+            unmappedLocations: unmappedLocations.length > 0 ? unmappedLocations : undefined,
+        };
+    }
+);
+
+
+const proTaskAnalysisAgentFlow = ai.defineFlow(
   {
-    name: 'proTaskAnalysisFlow',
+    name: 'proTaskAnalysisAgentFlow',
     inputSchema: ProTaskAnalysisInputSchema,
     outputSchema: ProTaskAnalysisOutputSchema,
+    tools: [getProTaskPlanTool]
   },
   async (input) => {
     
-    // Data fetching is now inside the server action.
-    const costSettings = await getCostSettings();
-    const fuelRatePerKm = costSettings.find(c => c.name === 'Fuel Rate' && c.category === 'Travel')?.rate || 0.04;
-    
-    // In a real-world, more complex app, this might be another LLM call with a knowledge base.
-    // For this prototype, a simple mapping is more reliable and demonstrates deterministic logic.
-    const serviceLower = input.serviceName.toLowerCase();
-    const institutions = new Set<Ministry>();
-    if (serviceLower.includes('cr') || serviceLower.includes('commercial') || serviceLower.includes('trademark') || serviceLower.includes('agency') || serviceLower.includes('license')) {
-        institutions.add("Ministry of Commerce, Industry & Investment Promotion (MOCIIP)");
-    }
-    if (serviceLower.includes('labour') || serviceLower.includes('work permit') || serviceLower.includes('employee') || serviceLower.includes('omanisation') || serviceLower.includes('sponsorship')) {
-        institutions.add("Ministry of Labour");
-    }
-    if (serviceLower.includes('visa') || serviceLower.includes('resident card') || serviceLower.includes('driving') || serviceLower.includes('mulkiya') || serviceLower.includes('traffic')) {
-        institutions.add("Royal Oman Police (ROP)");
-    }
-    if (serviceLower.includes('housing') || serviceLower.includes('rent') || serviceLower.includes('land')) {
-        institutions.add("Ministry of Housing and Urban Planning");
-    }
-    if (serviceLower.includes('tax') || serviceLower.includes('vat')) {
-        institutions.add("Tax Authority");
-    }
-    if (serviceLower.includes('attestation')) {
-        institutions.add("Ministry of Foreign Affairs");
-    }
-    if (institutions.size === 0) {
-        institutions.add("Ministry of Commerce, Industry & Investment Promotion (MOCIIP)");
-    }
-    const ministriesToVisit = Array.from(institutions);
-    
-    // Calculate travel plan
-    const locationsToVisit = [];
-    const unmappedLocations: string[] = [];
-    const governorateLocations = ministryLocations[input.governorate];
+    const prompt = `You are Fahim, an expert PRO agent. A user needs to perform the service: "${input.serviceName}".
+    1. Determine which government ministries are required to visit to complete this service.
+    2. Then, use the getProTaskPlan tool to calculate the travel route and costs for visiting these ministries in the "${input.governorate}" governorate.`;
 
-    for (const ministryName of ministriesToVisit) {
-      if (governorateLocations && governorateLocations[ministryName]) {
-        locationsToVisit.push({
-          name: ministryName,
-          ...governorateLocations[ministryName]!,
-        });
-      } else {
-        unmappedLocations.push(ministryName);
-      }
+    const llmResponse = await ai.generate({
+        prompt: prompt,
+        model: 'googleai/gemini-2.0-flash',
+        tools: [getProTaskPlanTool],
+        output: {
+            format: 'json',
+            schema: ProTaskAnalysisOutputSchema
+        }
+    });
+
+    const toolRequest = llmResponse.toolRequest();
+    if (!toolRequest || toolRequest.name !== 'getProTaskPlan') {
+        throw new Error("The AI agent failed to use the required planning tool.");
     }
     
-    const startPoint = input.startLocationCoords 
-      ? { name: input.startLocationName || 'Custom Start', ...input.startLocationCoords }
-      : { name: "Innovative Enterprises HQ", lat: 23.5518, lon: 58.5024 };
+    // Augment the tool input with coordinates if they were passed from the client
+    const toolInput = toolRequest.input;
+    toolInput.startLocationCoords = input.startLocationCoords;
+    toolInput.startLocationName = input.startLocationName;
 
-    const { distance, path } = calculateTotalDistance(locationsToVisit, startPoint);
-    
-    let tripDescription = `The optimized route is: ${path.join(' -> ')}. The total round-trip distance is approximately ${distance.toFixed(1)} km.`;
-    let fuelAllowance = 0;
+    const toolResponse = await toolRequest.run();
 
-    if (distance > 0) {
-        fuelAllowance = distance * fuelRatePerKm;
-    }
-    
-    // Consolidate allowances
-    const allowances: Allowance[] = [];
-    let grandTotal = 0;
-
-    if (fuelAllowance > 0) {
-        allowances.push({ description: `Fuel Allowance (${distance.toFixed(1)} km)`, amount: fuelAllowance });
-        grandTotal += fuelAllowance;
-    }
-    
-    allowances.push({ description: 'Snacks & Refreshments Allowance', amount: SNACKS_ALLOWANCE });
-    grandTotal += SNACKS_ALLOWANCE;
-
-    return {
-        tripDescription,
-        allowances,
-        grandTotal,
-        unmappedLocations: unmappedLocations.length > 0 ? unmappedLocations : undefined,
-    };
+    return toolResponse.output as ProTaskAnalysisOutput;
   }
 );
+
+export async function analyzeProTask(input: ProTaskAnalysisInput): Promise<ProTaskAnalysisOutput> {
+  return proTaskAnalysisAgentFlow(input);
+}
