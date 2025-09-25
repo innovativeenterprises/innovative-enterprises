@@ -1,5 +1,4 @@
 
-
 # Platform Overview
 
 This document provides a comprehensive, categorized list of all current projects, services, and tools within the INNOVATIVE ENTERPRISES ecosystem, including their descriptions and current operational stage and status.
