@@ -1,7 +1,7 @@
 
 'use server';
 
-import DriveSyncClientPage from './client-page';
+import DriveSyncClientPage from '@/app/admin/drivesync-ai/client-page';
 import { getRentalAgencies, getCars } from '@/lib/firestore';
 import type { Metadata } from 'next';
 

@@ -1,7 +1,7 @@
 
 'use server';
 
-import ConstructionTechClientPage from "./client-page";
+import ConstructionTechClientPage from "@/app/admin/construction-tech/client-page";
 import { getProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 

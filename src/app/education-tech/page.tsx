@@ -1,7 +1,7 @@
 
 'use server';
 
-import EducationTechClientPage from "./client-page";
+import EducationTechClientPage from "@/app/admin/education-tech/client-page";
 import { getProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 

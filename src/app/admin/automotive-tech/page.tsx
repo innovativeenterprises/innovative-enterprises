@@ -1,7 +1,7 @@
 
 'use server';
 
-import AdminAutomotiveClientPage from "@/app/admin/automotive-tech/client-page";
+import AutomotiveTechClientPage from "./client-page";
 import { getProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
@@ -15,5 +15,5 @@ export default async function AutomotiveTechPage() {
     const products = await getProducts();
     const autotechProducts = products.filter(p => p.category === "Automotive Tech" && p.enabled);
     
-    return <AdminAutomotiveClientPage initialProducts={autotechProducts} />;
+    return <AutomotiveTechClientPage initialProducts={autotechProducts} />;
 }
