@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useGlobalStore } from '@/lib/global-store';
+import { useGlobalStore } from '@/lib/global-store.tsx';
 
 export const useProductsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.products, setData: state.set, isClient: state.isClient }));
 export const useStoreProductsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.storeProducts, isClient: state.isClient }));
@@ -23,7 +23,7 @@ export const useCommunityEventsData = (initialData?: any[]) => useGlobalStore(st
 export const useMembersData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.communityMembers, setData: state.set, isClient: state.isClient }));
 export const useAlumniJobsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.alumniJobs, setData: state.set, isClient: state.isClient }));
 export const useCarsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.cars, setData: state.set, isClient: state.isClient }));
-export const usePosProductsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.posProducts, setData: state.set, isClient: state.isClient }));
+export const usePosProductsData = () => useGlobalStore(state => ({ data: state.posProducts, setData: state.set, isClient: state.isClient }));
 export const useBriefcaseData = () => useGlobalStore(state => ({ data: state.briefcase, setData: state.set, isClient: state.isClient }));
 export const useKnowledgeBaseData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.knowledgeBase, setData: state.set, isClient: state.isClient }));
 export const useClientsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.clients, setData: state.set, isClient: state.isClient }));
@@ -40,5 +40,5 @@ export const useUsedItemsData = (initialData?: any[]) => useGlobalStore(state =>
 export const useUserDocumentsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.userDocuments, setData: state.set, isClient: state.isClient }));
 export const useCartData = () => useGlobalStore(state => ({ cart: state.cart, setCart: state.set, isClient: state.isClient }));
 export const useSettingsData = () => useGlobalStore(state => ({ settings: state.settings, setSettings: state.set, isClient: state.isClient }));
-export const useCostSettingsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.costSettings, setData: state.set, isClient: state.isClient }));
-export const usePricingData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.pricing, setData: state.set, isClient: state.isClient }));
+export const useCostSettingsData = () => useGlobalStore(state => ({ data: state.costSettings, setData: state.set, isClient: state.isClient }));
+export const usePricingData = () => useGlobalStore(state => ({ data: state.pricing, setData: state.set, isClient: state.isClient }));

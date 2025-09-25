@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -14,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Edit } from "lucide-react";
-import { useGlobalStore } from "@/lib/global-store";
+import { usePricingData } from "@/hooks/use-data-hooks";
 
 
 const PricingFormSchema = z.object({
@@ -81,22 +82,19 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
-    const pricing = useGlobalStore(state => state.pricing);
-    const set = useGlobalStore(state => state.set);
-    const isClient = useGlobalStore(state => state.isClient);
-
-    useEffect(() => {
-        if (isClient) {
-            set({ pricing: initialPricing });
-        }
-    }, [isClient, initialPricing, set]);
-    
+    const { data: pricing, setData: setPricing, isClient } = usePricingData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
+    
+     useEffect(() => {
+        if(isClient) {
+            setPricing({ pricing: initialPricing });
+        }
+    }, [isClient, initialPricing, setPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
-        set(state => ({ pricing: state.pricing.map(p => p.id === id ? { ...p, ...values } : p)}));
+        setPricing(state => ({ pricing: state.pricing.map(p => p.id === id ? { ...p, ...values } : p)}));
         toast({ title: "Price updated successfully." });
     };
     

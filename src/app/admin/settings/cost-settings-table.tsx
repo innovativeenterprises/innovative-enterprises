@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { CostRate } from "@/lib/cost-settings.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { useGlobalStore } from "@/lib/global-store";
+import { useCostSettingsData } from "@/hooks/use-data-hooks";
 
 
 const CostRateSchema = z.object({
@@ -94,19 +95,17 @@ const AddEditCostRateDialog = ({
 };
 
 export default function CostSettingsTable({ initialRates }: { initialRates: CostRate[] }) {
-    const costSettings = useGlobalStore(state => state.costSettings);
-    const set = useGlobalStore(state => state.set);
-    const isClient = useGlobalStore(state => state.isClient);
-    
-    useEffect(() => {
-        if(isClient) {
-            set({ costSettings: initialRates });
-        }
-    }, [isClient, initialRates, set]);
-
+    const { data: costSettings, setData: setCostSettings, isClient } = useCostSettingsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedRate, setSelectedRate] = useState<CostRate | undefined>(undefined);
+
+    useEffect(() => {
+        if(isClient) {
+            setCostSettings({ costSettings: initialRates });
+        }
+    }, [isClient, initialRates, setCostSettings]);
+
 
     const handleOpenDialog = (rate?: CostRate) => {
         setSelectedRate(rate);
@@ -115,17 +114,17 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
 
     const handleSave = (values: CostRateValues, id?: string) => {
         if (id) {
-            set(state => ({ costSettings: state.costSettings.map(r => (r.id === id ? { ...r, ...values } as CostRate : r))}));
+            setCostSettings(state => ({ costSettings: state.costSettings.map(r => (r.id === id ? { ...r, ...values } as CostRate : r))}));
             toast({ title: "Rate updated." });
         } else {
             const newRate: CostRate = { ...values, id: `cost_${Date.now()}` };
-            set(state => ({ costSettings: [newRate, ...state.costSettings]}));
+            setCostSettings(state => ({ costSettings: [newRate, ...state.costSettings]}));
             toast({ title: "Rate added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        set(state => ({ costSettings: state.costSettings.filter(r => r.id !== id) }));
+        setCostSettings(state => ({ costSettings: state.costSettings.filter(r => r.id !== id) }));
         toast({ title: "Rate removed.", variant: "destructive" });
     };
 
