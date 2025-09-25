@@ -1,13 +1,13 @@
 
-'use client';
+
+'use server';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Siren } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
-import { useState, useEffect } from "react";
-import { useProductsData } from "@/hooks/use-data-hooks";
+import { getProducts } from "@/lib/firestore";
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -50,9 +50,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-export default function ConstructionTechPage() {
-    const { products } = useProductsData();
-    
+export default async function ConstructionTechPage() {
+    const products = await getProducts();
     const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     
   return (
