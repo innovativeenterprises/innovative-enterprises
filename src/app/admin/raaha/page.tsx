@@ -1,7 +1,7 @@
 
 'use server';
 
-import AdminRaahaClientPage from './client-page';
+import AgencyDashboardClientPage from '@/app/admin/beauty-hub/agency-dashboard/client-page';
 import { getRaahaData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
@@ -12,9 +12,10 @@ export const metadata: Metadata = {
 
 export default async function AdminRaahaPage() {
     const { raahaAgencies, raahaWorkers, raahaRequests } = await getRaahaData();
-    return <AdminRaahaClientPage 
+    return <AgencyDashboardClientPage 
         initialAgencies={raahaAgencies} 
         initialRequests={raahaRequests} 
         initialWorkers={raahaWorkers} 
+        dashboardType="raaha"
     />;
 }

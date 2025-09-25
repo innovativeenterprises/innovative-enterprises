@@ -205,7 +205,7 @@ export default function ProForm() {
                 )}
 
 
-              <Button type="submit" disabled={isLoading || isAnalyzing} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button type="submit" disabled={isLoading || isAnalyzing || !analysisResult} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                 {isLoading ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</>
                 ) : (
