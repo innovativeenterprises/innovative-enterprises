@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Search, Recycle, Package, HandCoins, Gift } from "lucide-react";
+import { ArrowRight, Search, Recycle } from "lucide-react";
 import Link from 'next/link';
 import type { UsedItem } from '@/lib/used-items.schema';
 import Image from 'next/image';
@@ -123,7 +123,7 @@ export default function SwapSellClientPage({ initialItems }: { initialItems: Use
                      )}
                 </div>
 
-                 <div className="max-w-3xl mx-auto mt-20 text-center">
+                <div className="max-w-3xl mx-auto mt-20 text-center">
                     <Card className="bg-accent/10 border-accent">
                         <CardHeader>
                             <CardTitle className="text-2xl text-accent">Have Something to Sell, Donate or Gift?</CardTitle>

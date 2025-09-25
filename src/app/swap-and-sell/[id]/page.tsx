@@ -16,7 +16,7 @@ import type { UsedItem } from '@/lib/used-items.schema';
 export default function ItemDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { items, isClient } = useUsedItemsData();
+    const { data: items, isClient } = useUsedItemsData();
     const [item, setItem] = useState<UsedItem | undefined>(undefined);
 
     useEffect(() => {

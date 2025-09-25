@@ -1,13 +1,12 @@
 
 'use client';
 
-import { Recycle, Loader2, Wand2, Sparkles, Send, PlusCircle } from "lucide-react";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,8 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useUsedItemsData } from '@/hooks/use-data-hooks';
 import type { UsedItem } from '@/lib/used-items.schema';
 import { useRouter } from 'next/navigation';
-import Image from "next/image";
-import { generateImage } from '@/ai/flows/image-generator';
+import { Loader2, Wand2, Send, PlusCircle } from 'lucide-react';
+
 
 const FormSchema = z.object({
   itemImage: z.any().refine(file => file?.length == 1, 'An image of the item is required.'),
@@ -37,7 +36,7 @@ export default function ListAnItemForm() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
-    const { setItems } = useUsedItemsData();
+    const { setData: setUsedItems } = useUsedItemsData();
 
     const form = useForm<FormValues>({
         resolver: zodResolver(FormSchema),
@@ -82,17 +81,13 @@ export default function ListAnItemForm() {
         
         const newItem: UsedItem = {
             id: `item_${Date.now()}`,
-            name: data.name,
-            category: data.category,
-            description: data.description,
-            condition: data.condition,
-            price: data.price,
-            listingType: data.listingType,
-            imageUrl: imageUri,
+            status: 'Active',
             seller: 'Current User', // In a real app, this would be the logged-in user
+            ...data,
+            imageUrl: imageUri,
         };
         
-        setItems(prev => [newItem, ...prev]);
+        setUsedItems(prev => [newItem, ...prev]);
 
         await new Promise(resolve => setTimeout(resolve, 500));
         

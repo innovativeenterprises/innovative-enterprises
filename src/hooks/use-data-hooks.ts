@@ -5,7 +5,16 @@ import { useGlobalStore } from '@/lib/global-store.tsx';
 
 // Simplified hook creation
 const createDataHook = <T, K extends keyof T>(key: K) => {
-  return () => useGlobalStore(state => ({ data: state[key], setData: state.set, isClient: state.isClient }));
+  return (initialData?: T[K]) => {
+    const data = useGlobalStore(state => state[key]) as T[K];
+    const setData = useGlobalStore(state => state.set);
+    const isClient = useGlobalStore(state => state.isClient);
+    
+    // This effect is now removed as initialization is handled in the main provider
+    // and this pattern caused issues with server components passing initial data.
+
+    return { data, setData, isClient };
+  };
 };
 
 export const useProductsData = createDataHook('products');

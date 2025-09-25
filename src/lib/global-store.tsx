@@ -31,7 +31,7 @@ export function StoreProvider({ children, initialState }: { children: ReactNode;
     
      useEffect(() => {
         if (storeRef.current) {
-            storeRef.current.setState({ isClient: true });
+            storeRef.current.setState((state) => ({ ...state, isClient: true }));
         }
     }, []);
 
@@ -55,7 +55,7 @@ export function useSetStore() {
     if (!store) {
         throw new Error('useSetStore must be used within a StoreProvider');
     }
-    return store.setState;
+    return store.getState().set;
 }
 
 // Global instance for read-only access if needed outside React components.
