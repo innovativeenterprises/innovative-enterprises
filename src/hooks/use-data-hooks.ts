@@ -93,10 +93,79 @@ export const useStaffData = (initialData?: Partial<{ leadership: AppState['leade
     return { ...data, setData: setGlobalData, isClient };
 };
 
-export const useRaahaData = createDataHook('raahaAgencies');
+export const useRaahaData = (initialData?: Partial<{ raahaAgencies: AppState['raahaAgencies'], raahaWorkers: AppState['raahaWorkers'], raahaRequests: AppState['raahaRequests'] }>) => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useRaahaData must be used within a StoreProvider');
+
+    const [agencies, setAgencies] = useState(initialData?.raahaAgencies ?? store.get().raahaAgencies);
+    const [workers, setWorkers] = useState(initialData?.raahaWorkers ?? store.get().raahaWorkers);
+    const [requests, setRequests] = useState(initialData?.raahaRequests ?? store.get().raahaRequests);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const handleStoreChange = () => {
+            setAgencies(store.get().raahaAgencies);
+            setWorkers(store.get().raahaWorkers);
+            setRequests(store.get().raahaRequests);
+        };
+        handleStoreChange();
+        const unsubscribe = store.subscribe(handleStoreChange);
+        return () => unsubscribe();
+    }, [store]);
+    
+    const setGlobalAgencies = (updater: React.SetStateAction<AppState['raahaAgencies']>) => store.set(s => ({ ...s, raahaAgencies: typeof updater === 'function' ? updater(s.raahaAgencies) : updater }));
+    const setGlobalWorkers = (updater: React.SetStateAction<AppState['raahaWorkers']>) => store.set(s => ({ ...s, raahaWorkers: typeof updater === 'function' ? updater(s.raahaWorkers) : updater }));
+    const setGlobalRequests = (updater: React.SetStateAction<AppState['raahaRequests']>) => store.set(s => ({ ...s, raahaRequests: typeof updater === 'function' ? updater(s.raahaRequests) : updater }));
+    
+    return { agencies, setAgencies: setGlobalAgencies, workers, setWorkers: setGlobalWorkers, requests, setRequests: setGlobalRequests, isClient };
+};
+
 export const useAgenciesData = createDataHook('raahaAgencies');
 export const useWorkersData = createDataHook('raahaWorkers');
 export const useRequestsData = createDataHook('raahaRequests');
+
+export const useBeautyData = (initialData?: Partial<{ 
+    beautyCenters: AppState['beautyCenters'], 
+    beautyServices: AppState['beautyServices'],
+    beautySpecialists: AppState['beautySpecialists'], 
+    beautyAppointments: AppState['beautyAppointments'] 
+}>) => {
+    const store = useContext(StoreContext);
+    if (!store) throw new Error('useBeautyData must be used within a StoreProvider');
+
+    const [data, setData] = useState({
+        agencies: initialData?.beautyCenters ?? store.get().beautyCenters,
+        services: initialData?.beautyServices ?? store.get().beautyServices,
+        specialists: initialData?.beautySpecialists ?? store.get().beautySpecialists,
+        appointments: initialData?.beautyAppointments ?? store.get().beautyAppointments,
+    });
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        const handleStoreChange = () => {
+            const s = store.get();
+            setData({
+                agencies: s.beautyCenters,
+                services: s.beautyServices,
+                specialists: s.beautySpecialists,
+                appointments: s.beautyAppointments,
+            });
+        };
+        handleStoreChange();
+        const unsubscribe = store.subscribe(handleStoreChange);
+        return () => unsubscribe();
+    }, [store]);
+
+    const setAgencies = (updater: React.SetStateAction<AppState['beautyCenters']>) => store.set(s => ({ ...s, beautyCenters: typeof updater === 'function' ? updater(s.beautyCenters) : updater }));
+    const setServices = (updater: React.SetStateAction<AppState['beautyServices']>) => store.set(s => ({ ...s, beautyServices: typeof updater === 'function' ? updater(s.beautyServices) : updater }));
+    const setSpecialists = (updater: React.SetStateAction<AppState['beautySpecialists']>) => store.set(s => ({ ...s, beautySpecialists: typeof updater === 'function' ? updater(s.beautySpecialists) : updater }));
+    const setAppointments = (updater: React.SetStateAction<AppState['beautyAppointments']>) => store.set(s => ({ ...s, beautyAppointments: typeof updater === 'function' ? updater(s.beautyAppointments) : updater }));
+
+    return { ...data, setAgencies, setServices, setSpecialists, setAppointments, isClient };
+};
+
 export const useBeautyCentersData = createDataHook('beautyCenters');
 export const useBeautyServicesData = createDataHook('beautyServices');
 export const useBeautySpecialistsData = createDataHook('beautySpecialists');
