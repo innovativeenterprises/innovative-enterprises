@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -139,7 +140,7 @@ export default function CampusOsPage() {
                             <Button className="w-full md:w-auto" disabled><Upload className="mr-2 h-4 w-4"/> Upload Utility Bills</Button>
                             <Button className="w-full md:w-auto" disabled><Download className="mr-2 h-4 w-4"/> Download Full Report</Button>
                             <p className="text-xs text-muted-foreground text-center md:text-left">
-                                (Full reporting and automated data ingestion features coming soon)
+                                (Full reporting and automated data ingestion features are in development)
                             </p>
                         </CardFooter>
                     </Card>
