@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import StockItemTable from "./stock-item-table";
 import type { StockItem } from "@/lib/stock-items.schema";
 import { useStockItemsData } from "@/hooks/use-data-hooks";

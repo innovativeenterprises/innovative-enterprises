@@ -1,14 +1,14 @@
-
 import { GanttChartSquare } from "lucide-react";
 import TimetableForm from "@/components/timetable-form";
 import type { Metadata } from 'next';
+import { TimetableGeneratorInput } from "@/ai/flows/timetable-generator.schema";
 
 export const metadata: Metadata = {
   title: "WorkforceFlow | Innovative Enterprises",
   description: "AI-driven workforce scheduling, digital timecards, and IoT equipment tracking to optimize your construction site operations.",
 };
 
-const workforceDefaultValues = {
+const workforceDefaultValues: TimetableGeneratorInput = {
   subjects: [
     { id: 'delivery_sohar', name: 'Delivery to Sohar', teacher: 'Truck A (10-ton)', requiredSlots: 2 },
     { id: 'delivery_nizwa', name: 'Delivery to Nizwa', teacher: 'Truck B (5-ton)', requiredSlots: 3 },

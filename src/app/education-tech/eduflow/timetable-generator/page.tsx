@@ -1,3 +1,6 @@
+
+'use client';
+    
 import { GanttChartSquare } from "lucide-react";
 import TimetableForm from "@/components/timetable-form";
 import type { TimetableGeneratorInput } from "@/ai/flows/timetable-generator.schema";

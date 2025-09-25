@@ -37,14 +37,17 @@ const AddEditMemberDialog = ({
     member, 
     communities,
     onSave, 
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     member?: CommunityMember, 
     communities: Community[],
     onSave: (v: MemberValues, id?: string) => void, 
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const form = useForm<MemberValues>({
         resolver: zodResolver(MemberSchema),
     });
@@ -57,11 +60,11 @@ const AddEditMemberDialog = ({
 
     const onSubmit: SubmitHandler<MemberValues> = (data) => {
         onSave(data, member?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader><DialogTitle>{member ? "Edit" : "Add"} Member</DialogTitle></DialogHeader>
@@ -108,6 +111,13 @@ export default function CommunitiesAdminClientPage({ initialMembers, initialComm
     const { data: members, setData: setMembers, isClient } = useMembersData(initialMembers);
     const { data: communities } = useCommunitiesData(initialCommunities);
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedMember, setSelectedMember] = useState<CommunityMember | undefined>(undefined);
+
+    const openDialog = (member?: CommunityMember) => {
+        setSelectedMember(member);
+        setIsDialogOpen(true);
+    };
 
     const handleSave = (values: MemberValues, id?: string) => {
         if (id) {
@@ -142,11 +152,20 @@ export default function CommunitiesAdminClientPage({ initialMembers, initialComm
                         <CardTitle>Community Members</CardTitle>
                         <CardDescription>A list of all members across all communities.</CardDescription>
                     </div>
-                    <AddEditMemberDialog onSave={handleSave} communities={communities}>
-                        <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Member</Button>
-                    </AddEditMemberDialog>
+                    <Button onClick={() => openDialog()}>
+                        <PlusCircle className="mr-2 h-4 w-4"/> Add Member
+                    </Button>
                 </CardHeader>
                 <CardContent>
+                     <AddEditMemberDialog
+                        isOpen={isDialogOpen}
+                        onOpenChange={setIsDialogOpen}
+                        member={selectedMember}
+                        communities={communities}
+                        onSave={handleSave}
+                     >
+                        <div />
+                    </AddEditMemberDialog>
                     <Table>
                         <TableHeader><TableRow><TableHead>Member</TableHead><TableHead>Community</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                         <TableBody>
@@ -168,7 +187,7 @@ export default function CommunitiesAdminClientPage({ initialMembers, initialComm
                                         <TableCell>{getStatusBadge(member.status)}</TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
-                                                <AddEditMemberDialog member={member} onSave={handleSave} communities={communities}><Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button></AddEditMemberDialog>
+                                                 <Button variant="ghost" size="icon" onClick={() => openDialog(member)}><Edit className="h-4 w-4"/></Button>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
                                                     <AlertDialogContent>

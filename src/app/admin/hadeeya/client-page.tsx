@@ -2,9 +2,8 @@
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import type { GiftCard } from "@/lib/gift-cards.schema";
 import { Badge } from '@/components/ui/badge';
@@ -54,7 +53,7 @@ export default function HadeeyaAdminClientPage({ initialGiftCards }: { initialGi
                                     </TableCell>
                                     <TableCell className="font-mono">OMR {card.amount.toFixed(2)}</TableCell>
                                     <TableCell>{getStatusBadge(card.status)}</TableCell>
-                                    <TableCell>{format(new Date(card.issueDate), 'PPP')}</TableCell>
+                                    <TableCell>{isClient ? format(new Date(card.issueDate), 'PPP') : <Skeleton className="h-4 w-24" />}</TableCell>
                                     <TableCell className="font-mono">{card.code}</TableCell>
                                 </TableRow>
                             ))}
