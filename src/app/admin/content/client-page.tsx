@@ -20,7 +20,6 @@ interface AdminContentClientPageProps {
     initialStages: ProjectStage[];
     initialClients: Client[];
     initialTestimonials: Testimonial[];
-    initialKnowledgeBase: KnowledgeDocument[];
 }
 
 export default function AdminContentClientPage({
@@ -29,22 +28,20 @@ export default function AdminContentClientPage({
     initialStages,
     initialClients,
     initialTestimonials,
-    initialKnowledgeBase,
 }: AdminContentClientPageProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Site Content & Data</h1>
+        <h1 className="text-3xl font-bold">Site Content</h1>
         <p className="text-muted-foreground">
-          Manage public-facing content and core data powering the AI.
+          Manage your public-facing services, products, and clients.
         </p>
       </div>
       <Tabs defaultValue="services" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
-          <TabsTrigger value="knowledge">Knowledge Base</TabsTrigger>
         </TabsList>
         <TabsContent value="services" className="mt-6">
           <ServiceTable initialServices={initialServices} />
@@ -60,9 +57,6 @@ export default function AdminContentClientPage({
             <ClientTable initialClients={initialClients} />
             <TestimonialTable initialTestimonials={initialTestimonials} />
           </div>
-        </TabsContent>
-        <TabsContent value="knowledge" className="mt-6">
-            <KnowledgeTable initialKnowledgeBase={initialKnowledgeBase} />
         </TabsContent>
       </Tabs>
     </div>
