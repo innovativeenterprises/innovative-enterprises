@@ -92,7 +92,6 @@ export * from './proctoring-agent';
 export * from './project-inception.schema';
 export * from './project-inception';
 export * from './property-extraction';
-export * from './property-matcher.schema';
 export * from './property-matcher';
 export * from './property-valuation.schema';
 export * from './property-valuation';

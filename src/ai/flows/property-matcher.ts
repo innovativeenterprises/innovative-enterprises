@@ -6,14 +6,14 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { initialProperties } from '@/lib/properties';
+import { getProperties } from '@/lib/firestore';
 import {
     PropertyMatcherInputSchema,
     PropertyMatcherInput,
     PropertyMatcherOutputSchema,
     PropertyMatcherOutput,
 } from './property-matcher.schema';
-
+import { z } from 'zod';
 
 export async function findBestPropertyMatch(input: PropertyMatcherInput): Promise<PropertyMatcherOutput> {
   return propertyMatcherFlow(input);
@@ -54,8 +54,8 @@ const propertyMatcherFlow = ai.defineFlow(
     outputSchema: PropertyMatcherOutputSchema,
   },
   async (input) => {
-    // In a real app, this would query a database. For the prototype, we use a static list.
-    const availableProperties = initialProperties.filter(p => p.status === 'Available');
+    const allProperties = await getProperties();
+    const availableProperties = allProperties.filter(p => p.status === 'Available');
     const availablePropertiesJson = JSON.stringify(availableProperties, null, 2);
 
     const { output } = await prompt({

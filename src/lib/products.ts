@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 import { saasProducts } from '@/lib/saas-products';
 
@@ -13,6 +12,7 @@ const hrefMap: Record<string, string> = {
     "VMALL": "/vmall",
     "BidWise Estimator": "/construction-tech/bid-estimator",
     "AI Property Valuator": "/real-estate-tech/property-valuator",
+    "Smart Listing & Matching": "/real-estate-tech/smart-listing",
     "DocuChain Compliance": "/real-estate-tech/docu-chain",
     "SmartLease Manager": "/real-estate-tech/smart-lease-manager",
     "InvestiSight AI": "/real-estate-tech/investisight",
