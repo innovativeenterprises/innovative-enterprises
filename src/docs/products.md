@@ -1,3 +1,4 @@
+
 # Digital Products & SaaS Platforms (45 Total)
 
 ## Category: Construction Tech (12)
@@ -9,8 +10,8 @@
 | WorkforceFlow | AI-driven workforce scheduling, digital timecards with face recognition, and IoT equipment tracking. | Live & Operating | Completed | Yes |
 | ProcureChain SaaS | E-procurement platform with automated vendor approvals, asset rentals, and predictive ordering. | Live & Operating | Completed | Yes |
 | ConstructFin | Automated invoicing, expense tracking, AI-powered budget forecasting, and fraud detection for projects. | Live & Operating | Completed | Yes |
-| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. | Live & Operating | Completed | No |
-| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed | No |
+| Digital Twin Ops | IoT platform for ongoing monitoring of building performance and predictive maintenance. | Live & Operating | Completed | Yes |
+| AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed | Yes |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed | Yes |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed | Yes |
 | StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. | Live & Operating | Completed | Yes |
@@ -27,8 +28,8 @@
 | InvestiSight AI | Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps. | Live & Operating | Completed | Yes |
 | FacilityFlow SaaS | A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking. | Live & Operating | Completed | Yes |
 | PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Live & Operating | Completed | Yes |
-| Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed | No |
-| EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed | No |
+| Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed | Yes |
+| EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed | Yes |
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed | Yes |
 | StairSpace | A marketplace that turns unused under-stair spaces into rentable micro-business spots for individuals and small businesses. | Live & Operating | Completed | Yes |
 
