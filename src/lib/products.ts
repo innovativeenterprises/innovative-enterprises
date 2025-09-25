@@ -103,4 +103,3 @@ export const initialStoreProducts: Product[] = [
 ];
 
 export const initialProducts: Product[] = [...saasProductList.filter(p => p.name !== 'AI Smart Home Estimator'), ...initialStoreProducts];
-
