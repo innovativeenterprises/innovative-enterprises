@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
@@ -13,29 +13,15 @@ import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AppSettingsSchema, type AppSettings } from '@/lib/settings';
 import { useGlobalStore } from '@/lib/global-store.tsx';
-import ThemeGenerator from '@/app/admin/settings/theme-generator';
+import ThemeGenerator from '@/app/admin/operations/theme-generator';
 import { Switch } from '@/components/ui/switch';
-import type { Pricing } from '@/lib/pricing.schema';
-import type { CostRate } from '@/lib/cost-settings.schema';
-import CostSettingsTable from './cost-settings-table';
-import PricingTable from './pricing-table';
-import PosProductTable from './pos-product-table';
-import type { PosProduct } from '@/lib/pos-data.schema';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 
 interface AdminSettingsClientPageProps {
     initialSettings: AppSettings | null;
-    initialPricing: Pricing[];
-    initialCostSettings: CostRate[];
-    initialPosProducts: PosProduct[];
 }
 
 export default function AdminSettingsClientPage({ 
-    initialSettings, 
-    initialPricing, 
-    initialCostSettings,
-    initialPosProducts,
+    initialSettings,
 }: AdminSettingsClientPageProps) {
     const [isLoading, setIsLoading] = useState(false);
     const setStore = useGlobalStore(s => s.set);
@@ -63,7 +49,7 @@ export default function AdminSettingsClientPage({
              <div>
                 <h1 className="text-3xl font-bold flex items-center gap-3"><SettingsIcon className="h-8 w-8"/> Settings</h1>
                 <p className="text-muted-foreground">
-                   Manage core operational settings, pricing, and feature flags for your application.
+                   Manage core application settings and theme configurations.
                 </p>
             </div>
             <Form {...form}>
@@ -132,26 +118,7 @@ export default function AdminSettingsClientPage({
                 </form>
             </Form>
             
-            <Tabs defaultValue="market-rates">
-                <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="market-rates">Market Rates</TabsTrigger>
-                    <TabsTrigger value="translation-pricing">Translation Pricing</TabsTrigger>
-                    <TabsTrigger value="pos-products">POS Products</TabsTrigger>
-                    <TabsTrigger value="theme">Theme Generator</TabsTrigger>
-                </TabsList>
-                <TabsContent value="market-rates" className="mt-6">
-                    <CostSettingsTable initialRates={initialCostSettings} />
-                </TabsContent>
-                <TabsContent value="translation-pricing" className="mt-6">
-                    <PricingTable initialPricing={initialPricing} />
-                </TabsContent>
-                 <TabsContent value="pos-products" className="mt-6">
-                    <PosProductTable initialProducts={initialPosProducts} />
-                </TabsContent>
-                <TabsContent value="theme" className="mt-6">
-                    <ThemeGenerator />
-                </TabsContent>
-            </Tabs>
+            <ThemeGenerator />
 
         </div>
     );
