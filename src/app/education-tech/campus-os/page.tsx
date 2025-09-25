@@ -1,9 +1,12 @@
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Leaf, Droplets, Wind, Upload, Download, CheckCircle, Cpu, Wrench } from "lucide-react";
+import { Leaf, Droplets, Wind, Upload, Download, CheckCircle, Cpu, Wrench, ArrowLeft } from "lucide-react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import Link from "next/link";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -37,8 +40,8 @@ const carbonData = [
   { month: 'Feb', footprint: 22000 },
   { month: 'Mar', footprint: 23500 },
   { month: 'Apr', footprint: 25000 },
-  { month: 'May', consumption: 28000 },
-  { month: 'Jun', consumption: 32000 },
+  { month: 'May', footprint: 28000 },
+  { month: 'Jun', footprint: 32000 },
 ];
 const carbonChartConfig = { footprint: { label: "kgCO2e", color: "hsl(var(--muted-foreground))" } };
 
@@ -49,7 +52,7 @@ export default function CampusOsPage() {
              return (
                 <ChartContainer config={energyChartConfig} className="h-48 w-full">
                     <LineChart data={energyData} margin={{ left: -20, right: 20 }}>
-                        <YAxis tickFormatter={(value) => `${"'" + value/1000 + "'"}` + 'k'} />
+                        <YAxis tickFormatter={(value) => `${value/1000}k`} />
                         <Tooltip content={<ChartTooltipContent />} />
                         <Line type="monotone" dataKey="consumption" stroke="var(--color-consumption)" strokeWidth={2} dot={false} />
                     </LineChart>
@@ -61,7 +64,7 @@ export default function CampusOsPage() {
             return (
                 <ChartContainer config={waterChartConfig} className="h-48 w-full">
                     <BarChart data={waterData} accessibilityLayer>
-                        <YAxis tickFormatter={(value) => `${"'" + value/1000 + "'"}` + 'k'} />
+                        <YAxis tickFormatter={(value) => `${value/1000}k`} />
                         <Tooltip content={<ChartTooltipContent />} />
                         <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
                     </BarChart>
@@ -73,7 +76,7 @@ export default function CampusOsPage() {
             return (
                  <ChartContainer config={carbonChartConfig} className="h-48 w-full">
                      <BarChart data={carbonData} accessibilityLayer>
-                        <YAxis tickFormatter={(value) => `${"'" + value/1000 + "'"}` + 'k'} />
+                        <YAxis tickFormatter={(value) => `${value/1000}k`} />
                         <Tooltip content={<ChartTooltipContent />} />
                         <Bar dataKey="footprint" fill="var(--color-footprint)" radius={4} />
                     </BarChart>
@@ -86,6 +89,12 @@ export default function CampusOsPage() {
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-3xl mx-auto text-center">
+                    <Button asChild variant="outline" className="mb-4">
+                        <Link href="/education-tech">
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Back to Education Tech
+                        </Link>
+                    </Button>
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
                         <Cpu className="w-10 h-10 text-primary" />
                     </div>
