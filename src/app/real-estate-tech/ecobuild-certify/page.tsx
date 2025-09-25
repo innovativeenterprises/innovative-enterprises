@@ -6,6 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Leaf, Droplets, Wind, Upload, Download, CheckCircle } from "lucide-react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "EcoBuild Certify | Sustainability Reporting",
+  description: "Automated energy usage tracking, water consumption, and carbon footprint reporting for green building compliance.",
+};
 
 const energyData = [
   { month: 'Jan', consumption: 45000 },
@@ -32,8 +38,8 @@ const carbonData = [
   { month: 'Feb', footprint: 22000 },
   { month: 'Mar', footprint: 23500 },
   { month: 'Apr', footprint: 25000 },
-  { month: 'May', consumption: 28000 },
-  { month: 'Jun', consumption: 32000 },
+  { month: 'May', footprint: 28000 },
+  { month: 'Jun', footprint: 32000 },
 ];
 const carbonChartConfig = { footprint: { label: "kgCO2e", color: "hsl(var(--muted-foreground))" } };
 
@@ -63,7 +69,7 @@ export default function EcoBuildCertifyPage() {
                 </ChartContainer>
             );
         }
-
+        
         if (chartType === 'carbon') {
             return (
                  <ChartContainer config={carbonChartConfig} className="h-48 w-full">
