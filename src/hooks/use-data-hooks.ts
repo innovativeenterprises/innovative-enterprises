@@ -1,4 +1,7 @@
 
 'use client';
 
-export { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
+import { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
+
+// The main hooks to access and update the global state.
+export { useGlobalStore, useSetStore };

@@ -18,7 +18,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { useWorkersData } from "@/hooks/use-data-hooks";
+import { useGlobalStore, useSetStore } from "@/lib/global-store.tsx";
 
 const skillOptions = [
     "Childcare", "Elderly Care", "Cooking (Arabic)", "Cooking (Indian)", "Cooking (International)", 
@@ -44,13 +44,16 @@ export const AddEditWorkerDialog = ({
     onSave,
     agencyId,
     children,
+    isOpen,
+    onOpenChange,
 }: { 
     worker?: Worker, 
     onSave: (values: WorkerValues, id?: string) => void,
     agencyId: string,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     
     const form = useForm<WorkerValues>({
         resolver: zodResolver(WorkerSchema),
@@ -67,11 +70,11 @@ export const AddEditWorkerDialog = ({
 
     const onSubmit: SubmitHandler<WorkerValues> = (data) => {
         onSave(data, worker?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
@@ -150,21 +153,24 @@ export const AddEditWorkerDialog = ({
     )
 }
 
-export function CandidateTable({ columns, agencyId, initialWorkers }: { 
+export function CandidateTable({ columns, agencyId, initialWorkers, setWorkers }: { 
     columns: any[], 
     agencyId: string, 
-    initialWorkers: Worker[]
+    initialWorkers: Worker[], 
+    setWorkers: (updater: (prev: Worker[]) => Worker[]) => void 
 }) {
-    const [isClient, setIsClient] = useState(false);
+    const isClient = useGlobalStore(s => s.isClient);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedWorker, setSelectedWorker] = useState<Worker | undefined>(undefined);
     const { toast } = useToast();
-    const { data: workers, setData: setWorkers } = useWorkersData(initialWorkers);
     
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const filteredWorkers = initialWorkers.filter(w => w.agencyId === agencyId);
+    
+    const openDialog = (worker?: Worker) => {
+        setSelectedWorker(worker);
+        setIsDialogOpen(true);
+    };
 
-    const filteredWorkers = workers.filter(w => w.agencyId === agencyId);
-    
     const handleSave = (values: WorkerValues, id?: string) => {
         const newWorker = { ...values };
         if (id) {
@@ -183,8 +189,14 @@ export function CandidateTable({ columns, agencyId, initialWorkers }: {
                     <CardTitle>Candidate Database</CardTitle>
                     <CardDescription>Manage your agency's roster of available domestic workers.</CardDescription>
                 </div>
-                 <AddEditWorkerDialog onSave={handleSave} agencyId={agencyId}>
-                    <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Candidate</Button>
+                 <AddEditWorkerDialog 
+                    isOpen={isDialogOpen} 
+                    onOpenChange={setIsDialogOpen}
+                    worker={selectedWorker}
+                    onSave={handleSave} 
+                    agencyId={agencyId}
+                >
+                    <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Candidate</Button>
                 </AddEditWorkerDialog>
             </CardHeader>
             <CardContent>
