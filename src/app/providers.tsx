@@ -29,7 +29,7 @@ export function Providers({ children, initialState }: { children: ReactNode, ini
         >
         {children}
         <Toaster />
-        {initialState.settings?.chatWidgetEnabled && <ChatWidget />}
+        <ChatWidget />
         </ThemeProvider>
     </StoreProvider>
   );

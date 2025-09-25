@@ -4,7 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { getProducts, getStoreProducts, getServices, getProviders, getOpportunities, getClients, getTestimonials, getPricing, getPosProducts, getDailySales, getStages, getAssets, getInvestors, getProperties, getStairspaceListings, getStairspaceRequests, getLeases, getStockItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getCostSettings, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getUsedItems, getSettings, getKnowledgeBase, getApplications, getBriefcase, getSolutions, getIndustries, getAiTools, getSaasProducts, getCfoData, getStaffData, getRaahaData, getBeautyData } from '@/lib/firestore';
+import { getProducts, getServices, getProviders, getOpportunities, getClients, getTestimonials, getPricing, getPosProducts, getDailySales, getStages, getAssets, getInvestors, getProperties, getStairspaceListings, getStairspaceRequests, getLeases, getStockItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getCostSettings, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getUsedItems, getSettings, getKnowledgeBase, getApplications, getBriefcase, getSolutions, getIndustries, getAiTools, getSaasProducts, getCfoData, getStaffData, getRaahaData, getBeautyData } from '@/lib/firestore';
 import type { AppState } from '@/lib/initial-state';
 
 const inter = Inter({
