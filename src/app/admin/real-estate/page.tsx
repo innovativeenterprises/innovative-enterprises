@@ -2,7 +2,6 @@
 'use server';
 
 import type { Metadata } from 'next';
-import { getProperties, getStairspaceListings } from '@/lib/firestore';
 import AdminRealEstateClientPage from './client-page';
 
 export const metadata: Metadata = {
@@ -11,15 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminRealEstatePage() {
-    const [initialProperties, initialStairspaceListings] = await Promise.all([
-        getProperties(),
-        getStairspaceListings(),
-    ]);
-
-    return (
-        <AdminRealEstateClientPage
-            initialProperties={initialProperties}
-            initialStairspaceListings={initialStairspaceListings}
-        />
-    )
+    return <AdminRealEstateClientPage />;
 }
