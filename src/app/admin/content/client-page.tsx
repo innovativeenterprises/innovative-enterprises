@@ -10,6 +10,8 @@ import type { Service } from "@/lib/services.schema";
 import type { Product } from "@/lib/products.schema";
 import type { ProjectStage } from "@/lib/stages";
 import type { Client, Testimonial } from "@/lib/clients.schema";
+import type { Pricing } from "@/lib/pricing.schema";
+import PricingTable from "@/app/admin/operations/pricing-table";
 
 
 interface AdminContentClientPageProps {
@@ -18,6 +20,7 @@ interface AdminContentClientPageProps {
     initialStages: ProjectStage[];
     initialClients: Client[];
     initialTestimonials: Testimonial[];
+    initialPricing: Pricing[];
 }
 
 export default function AdminContentClientPage({
@@ -26,6 +29,7 @@ export default function AdminContentClientPage({
     initialStages,
     initialClients,
     initialTestimonials,
+    initialPricing,
 }: AdminContentClientPageProps) {
   return (
     <div className="space-y-8">
@@ -36,10 +40,11 @@ export default function AdminContentClientPage({
         </p>
       </div>
       <Tabs defaultValue="services" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
+          <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
         </TabsList>
         <TabsContent value="services" className="mt-6">
           <ServiceTable initialServices={initialServices} />
@@ -55,6 +60,9 @@ export default function AdminContentClientPage({
             <ClientTable initialClients={initialClients} />
             <TestimonialTable initialTestimonials={initialTestimonials} />
           </div>
+        </TabsContent>
+        <TabsContent value="pricing" className="mt-6">
+          <PricingTable initialPricing={initialPricing} />
         </TabsContent>
       </Tabs>
     </div>

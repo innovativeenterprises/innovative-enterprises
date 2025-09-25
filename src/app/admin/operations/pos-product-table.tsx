@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { PosProduct } from "@/lib/pos-data.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
-import { usePosProductsData } from "@/hooks/use-data-hooks";
+import { usePosProductsData } from '@/hooks/use-data-hooks';
 
 const PosProductSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -121,17 +121,17 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
-            setProducts((prev: PosProduct[]) => prev.map(item => item.id === id ? { ...item, ...values } : item));
+            setProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Product updated." });
         } else {
             const newItem: PosProduct = { ...values, id: `pos_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
-            setProducts((prev: PosProduct[]) => [newItem, ...prev]);
+            setProducts(prev => [newItem, ...prev]);
             toast({ title: "Product added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setProducts((prev: PosProduct[]) => prev.filter(item => item.id !== id));
+        setProducts(prev => prev.filter(item => item.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
 
@@ -140,7 +140,7 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                     <CardTitle>AI-POS Product Management</CardTitle>
-                    <CardDescription>Manage the products available in the canteen's point-of-sale system.</CardDescription>
+                    <CardDescription>Manage the products available in the point-of-sale system.</CardDescription>
                 </div>
                  <Button onClick={() => handleOpenDialog()}>
                     <PlusCircle className="mr-2 h-4 w-4"/> Add Product
@@ -200,4 +200,3 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
         </Card>
     );
 }
-

@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import type { CostRate } from "@/lib/cost-settings.schema";
 import type { Pricing } from "@/lib/pricing.schema";
+import type { PosProduct } from "@/lib/pos-data.schema";
+import PosProductTable from "./pos-product-table";
 import CostSettingsTable from './cost-settings-table';
 import PricingTable from './pricing-table';
 
@@ -19,12 +21,14 @@ interface AdminOperationsClientPageProps {
     initialKnowledgeBase: KnowledgeDocument[];
     initialCostSettings: CostRate[];
     initialPricing: Pricing[];
+    initialPosProducts: PosProduct[];
 }
 
 export default function AdminOperationsClientPage({ 
     initialKnowledgeBase, 
     initialCostSettings,
     initialPricing,
+    initialPosProducts,
 }: AdminOperationsClientPageProps) {
 
   const internalTools = [
@@ -45,10 +49,11 @@ export default function AdminOperationsClientPage({
         </div>
 
         <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-3">
+             <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
                 <TabsTrigger value="market-rates">Market Rates</TabsTrigger>
                 <TabsTrigger value="translation-pricing">Translation Pricing</TabsTrigger>
+                <TabsTrigger value="pos-products">POS Products</TabsTrigger>
             </TabsList>
             <TabsContent value="ai-tools" className="mt-6">
                 <Accordion type="single" collapsible className="w-full">
@@ -72,6 +77,9 @@ export default function AdminOperationsClientPage({
             </TabsContent>
             <TabsContent value="translation-pricing" className="mt-6">
                 <PricingTable initialPricing={initialPricing} />
+            </TabsContent>
+            <TabsContent value="pos-products" className="mt-6">
+                <PosProductTable initialProducts={initialPosProducts} />
             </TabsContent>
         </Tabs>
     </div>
