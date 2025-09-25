@@ -149,7 +149,7 @@ export default function AppiPage() {
                         </CardContent>
                          <CardFooter className="flex-col md:flex-row gap-4">
                             <Button className="w-full md:w-auto" disabled><Upload className="mr-2 h-4 w-4"/> Upload Utility Bills</Button>
-                            <Button className="w-full md:w-auto" disabled><Download className="mr-2 h-4 w-4"/> Download Full Report</Button>
+                            <Button className="w-full md-w-auto" disabled><Download className="mr-2 h-4 w-4"/> Download Full Report</Button>
                             <p className="text-xs text-muted-foreground text-center md:text-left">
                                This platform is in development. Full reporting and automated data ingestion features coming soon.
                             </p>
