@@ -15,11 +15,12 @@ import type { Worker } from '@/lib/raaha-workers.schema';
 import type { Agency as RaahaAgency } from '@/lib/raaha-agencies.schema';
 import { useToast } from '@/hooks/use-toast';
 import { RequestTable } from './request-table';
+import { useAgenciesData, useWorkersData, useRequestsData } from '@/hooks/use-data-hooks';
 
 export default function AgencyDashboardClientPage({ initialAgencies, initialWorkers, initialRequests }: { initialAgencies: RaahaAgency[], initialWorkers: Worker[], initialRequests: HireRequest[] }) {
-    const [agencies, setAgencies] = useState(initialAgencies);
-    const [workers, setWorkers] = useState(initialWorkers);
-    const [requests, setRequests] = useState(initialRequests);
+    const { data: agencies, setData: setAgencies } = useAgenciesData(initialAgencies);
+    const { data: workers, setData: setWorkers } = useWorkersData(initialWorkers);
+    const { data: requests, setData: setRequests } = useRequestsData(initialRequests);
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const [isClient, setIsClient] = useState(false);
@@ -120,11 +121,10 @@ export default function AgencyDashboardClientPage({ initialAgencies, initialWork
                                 columns={candidateTableColumns} 
                                 agencyId={selectedAgency.id} 
                                 initialWorkers={workers} 
-                                setWorkers={setWorkers}
                             />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
+                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
                         </TabsContent>
                     </Tabs>
                 </div>

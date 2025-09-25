@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ServiceTable } from '@/app/beauty-hub/agency-dashboard/service-table';
 import { ScheduleTable } from '@/app/beauty-hub/agency-dashboard/schedule-table';
 import type { BeautySpecialist } from '@/lib/beauty-specialists.schema';
+import { useBeautyCentersData, useBeautyServicesData, useBeautyAppointmentsData, useBeautySpecialistsData } from '@/hooks/use-data-hooks';
 
 export default function AgencyDashboardClientPage({ 
     initialAgencies, 
@@ -29,10 +30,10 @@ export default function AgencyDashboardClientPage({
     initialAppointments: BeautyAppointment[],
     initialSpecialists: BeautySpecialist[],
 }) {
-    const [agencies, setAgencies] = useState(initialAgencies);
-    const [services, setServices] = useState(initialServices);
-    const [appointments, setAppointments] = useState(initialAppointments);
-    const [specialists, setSpecialists] = useState(initialSpecialists);
+    const { data: agencies, setData: setAgencies } = useBeautyCentersData(initialAgencies);
+    const { data: services, setData: setServices } = useBeautyServicesData(initialServices);
+    const { data: appointments, setData: setAppointments } = useBeautyAppointmentsData(initialAppointments);
+    const { data: specialists, setData: setSpecialists } = useBeautySpecialistsData(initialSpecialists);
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
     const [isClient, setIsClient] = useState(false);
@@ -116,11 +117,10 @@ export default function AgencyDashboardClientPage({
                             <SpecialistTable 
                                 agencyId={selectedAgency.id} 
                                 initialSpecialists={filteredSpecialists}
-                                setSpecialists={setSpecialists}
                              />
                         </TabsContent>
                         <TabsContent value="settings" className="mt-6">
-                            {selectedAgency && <AgencySettings agency={selectedAgency} setAgencies={setAgencies} />}
+                            {selectedAgency && <AgencySettings agency={selectedAgency} />}
                         </TabsContent>
                     </Tabs>
                 </div>
