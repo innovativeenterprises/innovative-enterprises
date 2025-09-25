@@ -44,7 +44,6 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-
 export default async function AutomotiveTechPage() {
     const products = await getProducts();
     const autotechProducts = products.filter(p => p.category === "Automotive Tech" && p.enabled);

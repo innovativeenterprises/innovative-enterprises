@@ -19,7 +19,6 @@ import type { StockItem } from "@/lib/stock-items.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { useStockItemsData } from "@/hooks/use-data-hooks";
 
 const StockItemSchema = z.object({
   name: z.string().min(3, "Name is required"),
@@ -36,7 +35,7 @@ const StockItemSchema = z.object({
 });
 type StockItemValues = z.infer<typeof StockItemSchema>;
 
-const AddEditStockItemDialog = ({ 
+export const AddEditStockItemDialog = ({ 
     item, 
     onSave,
     children,
@@ -161,17 +160,16 @@ export default function StockItemTable({ items, setItems }: { items: StockItem[]
                     <CardTitle>StockClear Marketplace Management</CardTitle>
                     <CardDescription>Manage all overstock and clearance item listings.</CardDescription>
                 </div>
-                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
-            </CardHeader>
-            <CardContent>
-                 <AddEditStockItemDialog
+                <AddEditStockItemDialog
                     isOpen={isDialogOpen}
                     onOpenChange={setIsDialogOpen}
                     item={selectedItem}
                     onSave={handleSave}
                 >
-                    <div/>
+                    <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
                 </AddEditStockItemDialog>
+            </CardHeader>
+            <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
