@@ -53,5 +53,5 @@ export * from './pos-agent';
 export * from './smart-home-estimator';
 export * from './beauty-agent';
 export * from './booking-response-generator';
-export from './listing-description-generator';
+export * from './listing-description-generator';
 export * from './social-media-post-generator.schema';
