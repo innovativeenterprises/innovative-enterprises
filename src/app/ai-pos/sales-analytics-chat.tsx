@@ -5,9 +5,12 @@ import { ChatComponent } from "@/components/chat/chat-component";
 import { BarChart, BrainCircuit } from 'lucide-react';
 import { analyzeSalesData } from '@/ai/flows/pos-agent';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import type { DailySales } from '@/lib/pos-data.schema';
+import { type DailySales } from '@/lib/pos-data.schema';
+import { useSettingsData } from "@/hooks/use-data-hooks";
 
 export function SalesAnalyticsChat({ dailySales }: { dailySales: DailySales }) {
+    const { settings } = useSettingsData();
+
     const salesAnalyticsFlow = async (input: { [key: string]: any }) => {
         return await analyzeSalesData({
             query: input.message,

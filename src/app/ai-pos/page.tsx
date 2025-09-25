@@ -2,18 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { type PosProduct, type CartItem, type DailySales, CartItemSchema } from '@/lib/pos-data.schema';
+import { type PosProduct, type CartItem, CartItemSchema } from '@/lib/pos-data.schema';
 import { useToast } from '@/hooks/use-toast';
 import { BrainCircuit, ShoppingCart, Trash2, Minus, Plus, CreditCard, Loader2 } from 'lucide-react';
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { usePosData, usePosProductsData } from '@/hooks/use-data-hooks';
+import { usePosData, usePosProductsData, useSettingsData } from '@/hooks/use-data-hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useSettingsData } from '@/hooks/use-global-store-data';
 
 // --- PosGrid Component Logic ---
 const PosGrid = ({ products, onAddToCart }: { products: PosProduct[], onAddToCart: (product: PosProduct) => void }) => {

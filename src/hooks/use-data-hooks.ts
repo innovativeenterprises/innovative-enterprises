@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StoreContext } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 
@@ -28,7 +28,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
         const unsubscribe = store.subscribe(handleStoreChange);
         return () => unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [store, key]);
+    }, []);
 
     const setGlobalData = (updater: React.SetStateAction<AppState[K]>) => {
         store.set(s => {
