@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, BookCopy, FileText } from 'lucide-react';
 import { ScholarshipFinderInputSchema, type ScholarshipFinderInput, type ScholarshipFinderOutput, type Scholarship } from '@/ai/flows/scholarship-agent.schema';
 import { findScholarships } from '@/ai/flows/scholarship-agent';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ScholarshipEssayAssistant } from './scholarship-essay-assistant';
 import { useStudentsData } from '@/hooks/use-data-hooks';
 
@@ -60,7 +60,7 @@ export default function ScholarshipFinderForm() {
       <CardFooter className="justify-between">
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Draft Essay</Button>
+                <Button variant="outline"><FileText className="mr-2 h-4 w-4"/>Draft Essay</Button>
             </DialogTrigger>
             <ScholarshipEssayAssistant student={students[0]} />
         </Dialog>

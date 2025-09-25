@@ -20,4 +20,3 @@ export const ScholarshipEssayOutputSchema = z.object({
   essay: z.string().describe("The generated personal statement essay in Markdown format."),
 });
 export type ScholarshipEssayOutput = z.infer<typeof ScholarshipEssayOutputSchema>;
-
