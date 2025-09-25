@@ -278,6 +278,12 @@ export const initialAiTools = [
     description: "Get an AI-powered cost estimate for your smart home installation.",
     icon: Cpu,
   },
+  {
+    title: "AI-POS",
+    href: "/ai-pos",
+    description: "A smart Point-of-Sale system with AI-powered sales analytics.",
+    icon: Cpu,
+  },
 ];
 
 export type Solution = typeof initialSolutions[number];
