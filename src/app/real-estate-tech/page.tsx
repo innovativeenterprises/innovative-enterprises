@@ -1,7 +1,7 @@
 
 'use server';
 
-import RealEstateTechClientPage from "./client-page";
+import RealEstateTechClientPage from "@/app/admin/real-estate-tech/client-page";
 import { getProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
