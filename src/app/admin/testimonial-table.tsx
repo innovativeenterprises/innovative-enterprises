@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Testimonial } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTestimonialsData } from "@/hooks/use-data-hooks";
 
 const TestimonialSchema = z.object({
   quote: z.string().min(10, "Quote is required"),
@@ -79,15 +79,10 @@ const AddEditTestimonialDialog = ({
 };
 
 export default function TestimonialTable({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
-    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
-    const [isClient, setIsClient] = useState(false);
+    const { data: testimonials, setData: setTestimonials } = useTestimonialsData(initialTestimonials);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | undefined>(undefined);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleOpenDialog = (testimonial?: Testimonial) => {
         setSelectedTestimonial(testimonial);
@@ -130,13 +125,7 @@ export default function TestimonialTable({ initialTestimonials }: { initialTesti
                  <Table>
                     <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
-                        {!isClient ? (
-                                <TableRow>
-                                    <TableCell colSpan={3} className="text-center h-24">
-                                        <Skeleton className="h-10 w-full" />
-                                    </TableCell>
-                                </TableRow>
-                            ) : testimonials.map(t => (
+                        {testimonials.map(t => (
                             <TableRow key={t.id}>
                                 <TableCell>
                                     <p className="font-medium">{t.author}</p>

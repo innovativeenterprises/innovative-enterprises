@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -19,6 +18,7 @@ import { AssetSchema } from "@/lib/assets.schema";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
+import { useAssetsData } from "@/hooks/use-data-hooks";
 
 const AddEditAssetDialog = ({ 
     asset, 
@@ -98,7 +98,7 @@ const AddEditAssetDialog = ({
 }
 
 export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }) {
-    const [assets, setAssets] = useState<Asset[]>(initialAssets);
+    const { data: assets, setData: setAssets } = useAssetsData(initialAssets);
     const { toast } = useToast();
 
     const handleSave = (values: Asset, id?: string) => {
