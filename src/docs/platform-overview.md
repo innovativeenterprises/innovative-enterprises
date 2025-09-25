@@ -79,7 +79,7 @@ This document provides a comprehensive, categorized list of all 88 current proje
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
 | APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | In Development | On Track |
 | KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
-| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | In Development | On Track |
+| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | Live & Operating | Completed |
 | Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |

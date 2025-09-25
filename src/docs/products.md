@@ -14,7 +14,7 @@
 | AeroSite AI (DaaS) | Drone-as-a-Service for automated aerial surveys, progress tracking, and 3D terrain mapping. | Live & Operating | Completed |
 | ClientView Portal | White-label dashboards for clients to see live project status, track payment milestones, and manage warranties. | Live & Operating | Completed |
 | BoQ Generator | Upload a floor plan and get an AI-generated preliminary Bill of Quantities for your project. | Live & Operating | Completed |
-| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | Planning Phase | On Hold |
+| StructurAI BIM | AI-powered BIM for automated clash detection and material optimization. (Conceptual) | In Development | On Track |
 | AI Smart Home Estimator | AI-powered tool to estimate costs for smart home installations based on floor plans. | Live & Operating | Completed |
 
 ## Category: Real Estate Tech (12)
@@ -59,7 +59,7 @@
 ## Category: Gaming & Social (1)
 | Name | Description | Stage | Status |
 | :--- | :--- | :--- | :--- |
-| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | Research Phase | On Track |
+| We Match - MATCH CUP GAME | An immersive Augmented Reality (AR) social game designed to connect people through interactive, real-world challenges and competitions. | In Development | On Track |
 
 
 ## Category: Beauty & Wellness (1)
@@ -74,7 +74,7 @@
 | ameen | A secure digital identity and authentication solution, expanding into a Smart Lost & Found Solution App. | Live & Operating | Completed |
 | APPI – عـبِّـي | An innovative mobile application that leverages AI/Deeptech and IoT to provide real-time, personalized insights into household utility consumption. | In Development | On Track |
 | KHIDMA | A revolutionary AI/Deep-tech powered mobile application that acts as a dynamic marketplace connecting service seekers with qualified providers. | Live & Operating | Completed |
-| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | In Development | On Track |
+| VMALL | A revolutionary Web & Mobile application that leverages VR and AR to create immersive shopping experiences. | Live & Operating | Completed |
 | Logistics Chain AI | AI model to optimize supply chain and logistics for local and regional distributors. | In Development | On Track |
 | RAAHA | An AI-powered, white-label SaaS platform for domestic workforce agencies to streamline recruitment and management. | Live & Operating | Completed |
 | Nova Commerce | End-to-end solutions to build, manage, and scale your online business. | Live & Operating | Completed |
