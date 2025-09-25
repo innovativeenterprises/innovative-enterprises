@@ -56,7 +56,7 @@ const hrefMap: Record<string, string> = {
 
 const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
     id: index + 1,
-    name: p.name,
+    name: p.name === 'AI Smart Home Estimator' ? 'Building Systems Estimator' : p.name,
     description: p.description,
     stage: p.stage,
     category: p.category,
