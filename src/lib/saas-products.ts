@@ -1,5 +1,4 @@
 
-
 import type { SaasCategory } from './saas-products.schema';
 
 export const saasProducts: SaasCategory[] = [
