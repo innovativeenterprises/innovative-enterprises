@@ -26,7 +26,7 @@
 | SmartLease Manager | Automates online rent collection, reminders, and late fee calculations, including tenant background checks. | Live & Operating | Completed | Yes |
 | InvestiSight AI | Provides property ROI calculators, mortgage simulations, and rental yield forecasting with investment heatmaps. | Live & Operating | Completed | Yes |
 | FacilityFlow SaaS | A streamlined platform for tenants to raise service tickets, with auto-assignment to vendors and resolution tracking. | Live & Operating | Completed | Yes |
-| PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Live & Operating | Completed | No |
+| PropToken Platform | Automates fractional property co-ownership via blockchain, with smart contracts for profit sharing and ownership transfer. | Live & Operating | Completed | Yes |
 | Tenant Digital Briefcase| A one-stop app for users to manage their ID, contracts, utility bills, and insurance, with auto-reminders for renewals. | Live & Operating | Completed | No |
 | EcoBuild Certify | Automated energy usage tracking, water consumption, and carbon footprint reporting for sustainability compliance. | Live & Operating | Completed | No |
 | PANOSPACE | Immersive platform for virtual tours. | Live & Operating | Completed | Yes |
