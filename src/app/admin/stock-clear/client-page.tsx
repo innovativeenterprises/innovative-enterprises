@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from 'lucide-react';
 import type { StockItem } from '@/lib/stock-items.schema';

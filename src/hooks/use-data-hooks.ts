@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useGlobalStore } from '@/lib/global-store.tsx';
+import { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
 
 export const useProductsData = () => useGlobalStore(state => ({ data: state.products, setData: state.set, isClient: state.isClient }));
 export const useStoreProductsData = () => useGlobalStore(state => ({ data: state.storeProducts, isClient: state.isClient }));
