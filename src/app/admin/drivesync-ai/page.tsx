@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { getRentalAgencies, getCars } from '@/lib/firestore';

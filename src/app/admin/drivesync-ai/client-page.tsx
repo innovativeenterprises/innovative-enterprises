@@ -124,6 +124,13 @@ export default function DriveSyncClientPage({ initialAgencies, initialCars }: { 
                                 </Card>
                             </div>
                         </CardContent>
+                        <CardFooter className="justify-center">
+                            <Button asChild>
+                                <Link href="/drivesync-ai/find-a-car">
+                                    Launch AI Booking Assistant <ArrowRight className="ml-2 h-4 w-4" />
+                                </Link>
+                            </Button>
+                        </CardFooter>
                     </Card>
                 </div>
             </div>
