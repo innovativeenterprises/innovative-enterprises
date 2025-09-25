@@ -52,7 +52,6 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
 export const useSettingsData = createDataHook('settings');
 export const useCartData = createDataHook('cart');
 export const useProductsData = createDataHook('products');
-export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
