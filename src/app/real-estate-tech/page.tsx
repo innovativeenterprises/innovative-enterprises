@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import { getProducts } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Building, BarChart, FileText, Home, Search, Tv, Layers, HandCoins, User } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
+import { useEffect, useState } from "react";
+import { useProductsData } from "@/hooks/use-data-hooks";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -55,8 +57,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     );
 };
 
-export default async function RealEstateTechPage() {
-    const products = await getProducts();
+export default function RealEstateTechPage({ initialProducts }: { initialProducts: Product[] }) {
+    const { data: products } = useProductsData(initialProducts);
     const enabledProducts = products.filter(p => p.category === 'Real Estate Tech' && p.enabled);
 
     return (
@@ -99,3 +101,4 @@ export default async function RealEstateTechPage() {
         </div>
     );
 }
+

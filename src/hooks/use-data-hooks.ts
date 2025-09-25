@@ -1,10 +1,7 @@
 
 'use client';
 
-import { useGlobalStore } from '@/lib/global-store.tsx';
-
-// The main hooks to access and update the global state.
-export { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
+import { useGlobalStore } from '@/lib/global-store';
 
 export const useProductsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.products, setData: state.set, isClient: state.isClient }));
 export const useStoreProductsData = (initialData?: any[]) => useGlobalStore(state => ({ data: state.storeProducts, isClient: state.isClient }));

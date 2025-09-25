@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
@@ -48,7 +47,7 @@ export default function BoQGeneratorPage() {
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const boqTableRef = useRef(null);
   const router = useRouter();
-  const { setBriefcase } = useBriefcaseData();
+  const { setData: setBriefcase } = useBriefcaseData();
   
   const { toast } = useToast();
 
@@ -244,7 +243,12 @@ export default function BoQGeneratorPage() {
             savedBoqs: [newBoq, ...prev.savedBoqs],
         }
     });
-    toast({ title: "BoQ Saved!", description: "The project has been saved to your E-Briefcase." });
+    toast({ 
+        title: "BoQ Saved!", 
+        description: (
+            <p>The project has been saved to your <Link href="/briefcase" className="font-bold underline">E-Briefcase</Link>.</p>
+        )
+    });
   }
 
   const handleProceedToEstimator = () => {
@@ -308,7 +312,7 @@ export default function BoQGeneratorPage() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Floor Plan Document (PDF or Image)</FormLabel>
-                                    <div className="flex gap-2">
+                                     <div className="flex gap-2">
                                         <FormControl className="flex-1">
                                             <Input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => {
                                                 field.onChange(e.target.files);

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -83,21 +82,21 @@ const EditPriceDialog = ({
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
     const pricing = useGlobalStore(state => state.pricing);
-    const setPricing = useGlobalStore(state => state.set);
+    const set = useGlobalStore(state => state.set);
     const isClient = useGlobalStore(state => state.isClient);
 
     useEffect(() => {
         if (isClient) {
-            setPricing({ pricing: initialPricing });
+            set({ pricing: initialPricing });
         }
-    }, [isClient, initialPricing, setPricing]);
+    }, [isClient, initialPricing, set]);
     
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
 
     const handleSave = (values: PricingValues, id: string) => {
-        setPricing(state => ({ pricing: state.pricing.map(p => p.id === id ? { ...p, ...values } : p)}));
+        set(state => ({ pricing: state.pricing.map(p => p.id === id ? { ...p, ...values } : p)}));
         toast({ title: "Price updated successfully." });
     };
     

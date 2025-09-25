@@ -1,19 +1,13 @@
 
-'use server';
+'use client';
 
-import ConstructionTechClientPage from './client-page';
-import { getProducts } from '@/lib/firestore';
-import type { Metadata } from 'next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Siren } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
-
-export const metadata: Metadata = {
-    title: "Construction Technology",
-    description: "Manage and monitor all construction-focused platforms and tools."
-};
+import { useState, useEffect } from "react";
+import { useProductsData } from "@/hooks/use-data-hooks";
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -28,8 +22,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "AeroSite AI (DaaS)": Camera,
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
-        "Fire & Safety Estimator": Siren,
-        "AI Smart Home Estimator": Cpu,
+        "Building Systems Estimator": Cpu,
     };
     const Icon = iconMap[product.name] || HardHat;
 
@@ -57,9 +50,9 @@ const ProductCard = ({ product }: { product: Product }) => {
 )};
 
 
-export default async function ConstructionTechPage() {
-    const products = await getProducts();
-    const contechProducts = products.filter(p => p.category === "Construction Tech");
+export default function ConstructionTechPage({ initialProducts }: { initialProducts: Product[] }) {
+    const { data: products } = useProductsData(initialProducts);
+    const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -102,4 +95,5 @@ export default async function ConstructionTechPage() {
         </div>
     );
 }
+
 
