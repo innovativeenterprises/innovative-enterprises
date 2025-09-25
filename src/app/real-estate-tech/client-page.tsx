@@ -1,12 +1,17 @@
+'use server';
 
-'use client';
-
-import { useProductsData } from "@/hooks/use-data-hooks";
+import { getProducts } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Building, BarChart, FileText, Home, Search, Tv, Layers, HandCoins, User } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Real Estate Technology Solutions",
+  description: "A suite of automated SaaS platforms designed to revolutionize property valuation, management, and investment in the Gulf and beyond.",
+};
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -49,9 +54,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     );
 };
 
-export default function RealEstateTechClientPage({ initialProducts }: { initialProducts: Product[] }) {
-    const { data: products } = useProductsData(initialProducts);
-    
+export default async function RealEstateTechPage() {
+    const products = await getProducts();
     const enabledProducts = products.filter(p => p.category === 'Real Estate Tech' && p.enabled);
 
     return (
