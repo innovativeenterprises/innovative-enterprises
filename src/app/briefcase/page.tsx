@@ -22,7 +22,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { fileToDataURI } from '@/lib/utils';
 import type { BriefcaseData, UserDocument, ServiceRegistration, SavedBoQ } from '@/lib/briefcase';
-import { useBriefcaseData, useUserDocumentsData } from '@/hooks/use-data-hooks';
+import { useBriefcaseData } from '@/hooks/use-data-hooks';
 
 
 const businessCategories = [
@@ -290,29 +290,14 @@ const AnalysisResultDisplay = ({ analysis }: { analysis: CrAnalysisOutput | Iden
 
 
 export default function BriefcasePage() {
-    const { data: briefcase, setData: setBriefcase } = useBriefcaseData();
-    const { data: userDocuments, setData: setUserDocuments, isClient } = useUserDocumentsData(briefcase?.userDocuments);
+    const { data: briefcase, setData: setBriefcaseData, isClient } = useBriefcaseData();
     const [analyzingDocId, setAnalyzingDocId] = useState<string | null>(null);
     const { toast } = useToast();
-
-    useEffect(() => {
-        // If briefcase has documents from initial state, use them
-        if (briefcase?.userDocuments && briefcase.userDocuments.length > 0) {
-            setUserDocuments(briefcase.userDocuments);
-        }
-    }, [briefcase, setUserDocuments]);
-    
-    useEffect(() => {
-        // When the local userDocuments state changes, update the briefcase
-        setBriefcase(prev => prev ? ({ ...prev, userDocuments: userDocuments }) : null);
-    }, [userDocuments, setBriefcase]);
-
 
     const handleAddService = (category: string, priceListUrl: string, priceListFilename: string) => {
         if (!briefcase) return;
         const newRegistration: ServiceRegistration = { category, priceListUrl, priceListFilename };
-        const newData = { ...briefcase, registrations: [...briefcase.registrations, newRegistration]};
-        setBriefcase(() => newData);
+        setBriefcaseData({ briefcase: { ...briefcase, registrations: [...briefcase.registrations, newRegistration]}});
     }
     
     const handleUpdatePriceList = (category: string, priceListUrl: string, priceListFilename: string) => {
@@ -320,11 +305,11 @@ export default function BriefcasePage() {
          const updatedRegistrations = briefcase.registrations.map(reg => 
             reg.category === category ? { ...reg, priceListUrl, priceListFilename } : reg
          );
-         const newData = { ...briefcase, registrations: updatedRegistrations };
-         setBriefcase(() => newData);
+         setBriefcaseData({ briefcase: { ...briefcase, registrations: updatedRegistrations }});
     }
 
     const handleUploadDocument = async (file: File) => {
+        if (!briefcase) return;
         const dataUri = await fileToDataURI(file);
         const newDocument: UserDocument = {
             id: `doc_${file.name.replace(/\s+/g, '_')}_${new Date().getTime()}`,
@@ -333,16 +318,18 @@ export default function BriefcasePage() {
             dataUri: dataUri,
             uploadedAt: new Date().toISOString(),
         };
-        setUserDocuments(prev => [...prev, newDocument]);
+        setBriefcaseData({ briefcase: { ...briefcase, userDocuments: [...briefcase.userDocuments, newDocument]}});
     }
 
     const handleDeleteDocument = (docId: string) => {
-        setUserDocuments(prev => prev.filter(doc => doc.id !== docId));
+        if (!briefcase) return;
+        const updatedDocs = briefcase.userDocuments.filter(doc => doc.id !== docId);
+        setBriefcaseData({ briefcase: { ...briefcase, userDocuments: updatedDocs }});
         toast({ title: 'Document Deleted', description: 'The document has been removed from your briefcase.', variant: 'destructive'});
     }
 
     const handleAnalyzeDocument = async (doc: UserDocument) => {
-        if (!userDocuments) return;
+        if (!briefcase) return;
         setAnalyzingDocId(doc.id);
         
         try {
@@ -353,10 +340,10 @@ export default function BriefcasePage() {
                  result = await analyzeIdentity({ idDocumentFrontUri: doc.dataUri });
             }
 
-            const updatedDocuments = userDocuments.map(d => 
+            const updatedDocuments = briefcase.userDocuments.map(d => 
                 d.id === doc.id ? { ...d, analysis: result, name: result.suggestedFilename || d.name } : d
             );
-            setUserDocuments(() => updatedDocuments);
+            setBriefcaseData({ briefcase: { ...briefcase, userDocuments: updatedDocuments }});
 
             toast({ title: "Analysis Complete", description: `Successfully analyzed ${doc.name}.` });
         } catch (error) {
@@ -472,9 +459,9 @@ export default function BriefcasePage() {
                                 <UploadDocumentDialog onUpload={handleUploadDocument} />
                             </CardHeader>
                             <CardContent>
-                                {userDocuments.length > 0 ? (
+                                {briefcase.userDocuments.length > 0 ? (
                                     <div className="space-y-4">
-                                        {userDocuments.map(doc => (
+                                        {briefcase.userDocuments.map(doc => (
                                             <Card key={doc.id} className="p-4 bg-muted/50">
                                                 <div className="flex justify-between items-center">
                                                     <div>

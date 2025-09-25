@@ -1,10 +1,24 @@
 
 'use client';
 
-import React, { createContext, useContext, ReactNode, useRef } from 'react';
-import { useStore as useZustandStore } from 'zustand';
-import { type StoreType, createAppStore } from './global-store';
+import React, { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
+import { createStore, useStore as useZustandStore } from 'zustand';
 import type { AppState } from './initial-state';
+import { getInitialState } from './initial-state';
+
+export type AppStore = AppState & {
+  set: (updater: Partial<AppState>) => void;
+};
+
+export const createAppStore = (initState: Partial<AppState> = {}) => {
+  const initialState = { ...getInitialState(), ...initState };
+  return createStore<AppStore>((set) => ({
+    ...initialState,
+    set: (updater) => set(updater),
+  }));
+};
+
+export type StoreType = ReturnType<typeof createAppStore>;
 
 export const StoreContext = createContext<StoreType | null>(null);
 
@@ -15,6 +29,12 @@ export function StoreProvider({ children, initialState }: { children: ReactNode;
         storeRef.current = createAppStore(initialState);
     }
     
+     useEffect(() => {
+        if (storeRef.current) {
+            storeRef.current.setState({ isClient: true });
+        }
+    }, []);
+
     return (
         <StoreContext.Provider value={storeRef.current}>
             {children}
@@ -22,19 +42,21 @@ export function StoreProvider({ children, initialState }: { children: ReactNode;
     );
 };
 
-export function useStore<T>(selector: (state: AppState) => T): T {
+export function useGlobalStore<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext)
   if (!store) {
-    throw new Error('useStore must be used within a StoreProvider')
+    throw new Error('useGlobalStore must be used within a StoreProvider')
   }
   return useZustandStore(store, selector)
 }
 
-// Add a hook for setting state to avoid direct store manipulation in components
 export function useSetStore() {
     const store = useContext(StoreContext);
     if (!store) {
         throw new Error('useSetStore must be used within a StoreProvider');
     }
-    return store.setState;
+    return store.getState().set;
 }
+
+// Global instance for read-only access if needed outside React components.
+export const store = createAppStore();
