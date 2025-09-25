@@ -1,7 +1,7 @@
 
 'use server';
 
-import AgencyDashboardClientPage from './client-page';
+import AgencyDashboardClientPage from './agency-dashboard/client-page';
 import { getBeautyData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
