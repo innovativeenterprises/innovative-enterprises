@@ -1,13 +1,44 @@
-import { GanttChartSquare, UserCheck, ArrowRight, ClipboardCheck, DollarSign, Users, Cpu } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from 'next/link';
-import WorkforceTimetableForm from "./workforce-timetable-form";
+import { GanttChartSquare } from "lucide-react";
+import TimetableForm from "@/components/timetable-form";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "WorkforceFlow | Innovative Enterprises",
   description: "AI-driven workforce scheduling, digital timecards, and IoT equipment tracking to optimize your construction site operations.",
+};
+
+const workforceDefaultValues = {
+  subjects: [
+    { id: 'delivery_sohar', name: 'Delivery to Sohar', teacher: 'Truck A (10-ton)', requiredSlots: 2 },
+    { id: 'delivery_nizwa', name: 'Delivery to Nizwa', teacher: 'Truck B (5-ton)', requiredSlots: 3 },
+    { id: 'delivery_sur', name: 'Delivery to Sur', teacher: 'Truck C (3-ton)', requiredSlots: 1 },
+    { id: 'local_muscat', name: 'Local Muscat Deliveries', teacher: 'Van 1', requiredSlots: 6 },
+  ],
+  classrooms: [
+    { id: 'dest_sohar', name: 'Sohar Port' },
+    { id: 'dest_nizwa', name: 'Nizwa Industrial Area' },
+    { id: 'dest_sur', name: 'Sur Warehouse' },
+    { id: 'dest_muscat', name: 'Muscat Hub' },
+  ],
+  timeSlots: ["08:00 - 12:00 (Morning)", "13:00 - 17:00 (Afternoon)"],
+  days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"],
+};
+
+const workforceLabels = {
+    cardTitle: "Define Your Project Constraints",
+    cardDescription: "Define your tasks, teams, and job sites. Our AI will generate an optimized, conflict-free work schedule.",
+    subjectsTitle: "Tasks & Assigned Teams",
+    subjectNameLabel: "Task",
+    subjectNamePlaceholder: "e.g., Concrete Pouring",
+    teacherNameLabel: "Worker/Team",
+    teacherNamePlaceholder: "e.g., Concrete Team A",
+    slotsLabel: "Weekly Slots Required",
+    addSubjectLabel: "Add Task",
+    classroomsTitle: "Job Sites",
+    classroomNameLabel: "Site Name",
+    classroomNamePlaceholder: "e.g., Project Site A",
+    addClassroomLabel: "Add Job Site",
+    generateButtonText: "Generate Work Schedule"
 };
 
 export default function WorkforceFlowPage() {
@@ -24,45 +55,7 @@ export default function WorkforceFlowPage() {
           </p>
         </div>
         <div className="max-w-6xl mx-auto mt-12 space-y-12">
-            <WorkforceTimetableForm />
-             <div className="grid md:grid-cols-2 gap-8">
-                 <Card className="flex flex-col bg-muted/30">
-                    <CardHeader>
-                        <div className="flex items-center gap-3 mb-2">
-                            <UserCheck className="h-8 w-8 text-primary" />
-                            <CardTitle className="text-2xl">Digital Timecards</CardTitle>
-                        </div>
-                        <CardDescription>
-                           (Coming Soon) Use facial recognition for secure and accurate employee check-in and check-out, eliminating time theft and manual entry.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardFooter className="mt-auto">
-                        <Button asChild className="w-full" variant="secondary" disabled>
-                            <Link href="#">
-                                Coming Soon
-                            </Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-                <Card className="flex flex-col bg-muted/30">
-                    <CardHeader>
-                        <div className="flex items-center gap-3 mb-2">
-                            <Cpu className="h-8 w-8 text-primary" />
-                            <CardTitle className="text-2xl">IoT Equipment Tracking</CardTitle>
-                        </div>
-                        <CardDescription>
-                           (Coming Soon) Monitor the location and usage of your valuable equipment in real-time across all your project sites.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardFooter className="mt-auto">
-                        <Button asChild className="w-full" variant="secondary" disabled>
-                            <Link href="#">
-                                Coming Soon
-                            </Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </div>
+            <TimetableForm defaultValues={workforceDefaultValues} labels={workforceLabels} />
         </div>
       </div>
     </div>

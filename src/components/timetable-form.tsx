@@ -1,45 +1,47 @@
-
 'use client';
 
 import { useState } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, AlertTriangle, PlusCircle, Trash2 } from 'lucide-react';
-import { TimetableGeneratorInputSchema, type TimetableGeneratorInput, type TimetableGeneratorOutput, type Subject, type Classroom } from '@/ai/flows/timetable-generator.schema';
+import { TimetableGeneratorInputSchema, type TimetableGeneratorInput, type TimetableGeneratorOutput } from '@/ai/flows/timetable-generator.schema';
 import { generateTimetable } from '@/ai/flows/timetable-generator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-const timeSlots = ["08:00 - 12:00 (Morning)", "13:00 - 17:00 (Afternoon)"];
-const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"];
+interface TimetableFormProps {
+    defaultValues: TimetableGeneratorInput;
+    labels: {
+        cardTitle: string;
+        cardDescription: string;
+        subjectsTitle: string;
+        subjectNameLabel: string;
+        subjectNamePlaceholder: string;
+        teacherNameLabel: string;
+        teacherNamePlaceholder: string;
+        slotsLabel: string;
+        addSubjectLabel: string;
+        classroomsTitle: string;
+        classroomNameLabel: string;
+        classroomNamePlaceholder: string;
+        addClassroomLabel: string;
+        generateButtonText: string;
+    }
+}
 
-export default function WorkforceTimetableForm() {
+export default function TimetableForm({ defaultValues, labels }: TimetableFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<TimetableGeneratorOutput | null>(null);
   const { toast } = useToast();
 
   const form = useForm<TimetableGeneratorInput>({
     resolver: zodResolver(TimetableGeneratorInputSchema),
-    defaultValues: {
-      subjects: [
-        { id: 'concrete_team', name: 'Concrete Pouring', teacher: 'Concrete Team A', requiredSlots: 5 },
-        { id: 'electrical_team', name: 'Electrical Wiring', teacher: 'Elec. Team 1', requiredSlots: 4 },
-        { id: 'plumbing_team', name: 'Plumbing Installation', teacher: 'Plumbing Experts', requiredSlots: 5 },
-        { id: 'finishing_team', name: 'Painting & Finishing', teacher: 'Finishing Crew', requiredSlots: 3 },
-      ],
-      classrooms: [
-        { id: 'site_a', name: 'Project Site A (Villa)' },
-        { id: 'site_b', name: 'Project Site B (Tower)' },
-        { id: 'workshop', name: 'Main Workshop' },
-      ],
-      timeSlots: timeSlots,
-      days: days,
-    },
+    defaultValues: defaultValues,
   });
 
   const { fields: subjectFields, append: appendSubject, remove: removeSubject } = useFieldArray({
@@ -59,7 +61,7 @@ export default function WorkforceTimetableForm() {
       const result = await generateTimetable(data);
       setResponse(result);
       if (result.diagnostics.isPossible) {
-          toast({ title: 'Schedule Generated!', description: 'Your optimized work schedule is ready.' });
+          toast({ title: 'Schedule Generated!', description: 'Your optimized schedule is ready.' });
       } else {
           toast({ title: 'Scheduling Failed', description: result.diagnostics.message, variant: 'destructive', duration: 10000 });
       }
@@ -84,8 +86,8 @@ export default function WorkforceTimetableForm() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Define Your Project Constraints</CardTitle>
-          <CardDescription>Define your tasks, teams, and job sites. Our AI will generate an optimized, conflict-free work schedule.</CardDescription>
+          <CardTitle>{labels.cardTitle}</CardTitle>
+          <CardDescription>{labels.cardDescription}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -93,36 +95,36 @@ export default function WorkforceTimetableForm() {
                 <div className="grid md:grid-cols-2 gap-8">
                     {/* Tasks */}
                     <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Tasks & Assigned Teams</h3>
+                        <h3 className="text-lg font-semibold">{labels.subjectsTitle}</h3>
                         {subjectFields.map((field, index) => (
                              <Card key={field.id} className="p-4 bg-muted/50 relative">
                                 <div className="grid grid-cols-2 gap-4">
-                                     <FormField control={form.control} name={`subjects.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Task</FormLabel><FormControl><Input placeholder="e.g., Concrete Pouring" {...field} /></FormControl><FormMessage/></FormItem>)} />
-                                     <FormField control={form.control} name={`subjects.${index}.teacher`} render={({ field }) => (<FormItem><FormLabel>Worker/Team</FormLabel><FormControl><Input placeholder="e.g., Concrete Team A" {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                     <FormField control={form.control} name={`subjects.${index}.name`} render={({ field }) => (<FormItem><FormLabel>{labels.subjectNameLabel}</FormLabel><FormControl><Input placeholder={labels.subjectNamePlaceholder} {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                     <FormField control={form.control} name={`subjects.${index}.teacher`} render={({ field }) => (<FormItem><FormLabel>{labels.teacherNameLabel}</FormLabel><FormControl><Input placeholder={labels.teacherNamePlaceholder} {...field} /></FormControl><FormMessage/></FormItem>)} />
                                 </div>
-                                <FormField control={form.control} name={`subjects.${index}.requiredSlots`} render={({ field }) => (<FormItem className="mt-4"><FormLabel>Weekly Slots Required</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                <FormField control={form.control} name={`subjects.${index}.requiredSlots`} render={({ field }) => (<FormItem className="mt-4"><FormLabel>{labels.slotsLabel}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)} />
                                 <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => removeSubject(index)}><Trash2 className="h-4 w-4" /></Button>
                             </Card>
                         ))}
-                         <Button type="button" variant="outline" size="sm" onClick={() => appendSubject({ id: `task_${Date.now()}`, name: '', teacher: '', requiredSlots: 4 })}><PlusCircle className="mr-2 h-4 w-4"/> Add Task</Button>
+                         <Button type="button" variant="outline" size="sm" onClick={() => appendSubject({ id: `task_${Date.now()}`, name: '', teacher: '', requiredSlots: 4 })}><PlusCircle className="mr-2 h-4 w-4"/> {labels.addSubjectLabel}</Button>
                     </div>
                      {/* Job Sites */}
                     <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Job Sites</h3>
+                        <h3 className="text-lg font-semibold">{labels.classroomsTitle}</h3>
                         {classroomFields.map((field, index) => (
                              <Card key={field.id} className="p-4 bg-muted/50 relative">
-                                <FormField control={form.control} name={`classrooms.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Site Name</FormLabel><FormControl><Input placeholder="e.g., Project Site A" {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                <FormField control={form.control} name={`classrooms.${index}.name`} render={({ field }) => (<FormItem><FormLabel>{labels.classroomNameLabel}</FormLabel><FormControl><Input placeholder={labels.classroomNamePlaceholder} {...field} /></FormControl><FormMessage/></FormItem>)} />
                                 <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => removeClassroom(index)}><Trash2 className="h-4 w-4" /></Button>
                             </Card>
                         ))}
-                         <Button type="button" variant="outline" size="sm" onClick={() => appendClassroom({ id: `site_${Date.now()}`, name: '' })}><PlusCircle className="mr-2 h-4 w-4"/> Add Job Site</Button>
+                         <Button type="button" variant="outline" size="sm" onClick={() => appendClassroom({ id: `site_${Date.now()}`, name: '' })}><PlusCircle className="mr-2 h-4 w-4"/> {labels.addClassroomLabel}</Button>
                     </div>
                 </div>
               <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
                 {isLoading ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Schedule...</>
                 ) : (
-                  <><Sparkles className="mr-2 h-4 w-4" /> Generate Work Schedule</>
+                  <><Sparkles className="mr-2 h-4 w-4" /> {labels.generateButtonText}</>
                 )}
               </Button>
             </form>
@@ -149,14 +151,14 @@ export default function WorkforceTimetableForm() {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="border-r">Time</TableHead>
-                            {days.map(day => <TableHead key={day} className="text-center border-r">{day}</TableHead>)}
+                            {defaultValues.days.map(day => <TableHead key={day} className="text-center border-r">{day}</TableHead>)}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                       {timeSlots.map(slot => (
+                       {defaultValues.timeSlots.map(slot => (
                            <TableRow key={slot}>
                              <TableCell className="font-medium border-r">{slot}</TableCell>
-                             {days.map(day => {
+                             {defaultValues.days.map(day => {
                                 const entry = scheduleGrid?.[slot]?.[day];
                                 const subject = entry ? form.getValues('subjects').find(s => s.id === entry.subjectId) : null;
                                 const classroom = entry ? form.getValues('classrooms').find(c => c.id === entry.classroomId) : null;
