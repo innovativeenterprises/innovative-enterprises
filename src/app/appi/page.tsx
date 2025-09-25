@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Leaf, Droplets, Wind, Upload, Download, Flame } from "lucide-react";
@@ -69,7 +70,7 @@ export default function AppiPage() {
                      <BarChart data={gasData} accessibilityLayer>
                         <YAxis />
                         <Tooltip content={<ChartTooltipContent />} />
-                        <Bar dataKey="consumption" fill="var(--color-consumption)" radius={4} />
+                        <Bar dataKey="footprint" fill="var(--color-footprint)" radius={4} />
                     </BarChart>
                 </ChartContainer>
             );

@@ -69,7 +69,7 @@ const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
 }));
 
 
-const storeProducts: Product[] = [
+export const initialStoreProducts: Product[] = [
     {
         id: 100, // Using a high number to avoid conflicts
         name: "AI-Powered Smart Camera",
@@ -100,4 +100,4 @@ const storeProducts: Product[] = [
     }
 ];
 
-export const initialProducts: Product[] = [...saasProductList, ...storeProducts];
+export const initialProducts: Product[] = [...saasProductList, ...initialStoreProducts];
