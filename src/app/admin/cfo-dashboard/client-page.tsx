@@ -21,7 +21,7 @@ const kpiIcons: { [key: string]: React.ElementType } = {
 };
 
 
-export default function CfoDashboardPageClient({ initialData }: { initialData: CfoData }) {
+export default function CfoDashboardPageClient({ initialData }: { initialData: CfoData | null }) {
     const { data: cfoData, isClient } = useCfoData(initialData);
 
     if (!isClient || !cfoData) {

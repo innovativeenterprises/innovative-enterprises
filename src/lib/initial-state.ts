@@ -148,3 +148,8 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   industries: [],
   aiTools: [],
 });
+
+export const getInitialState = (): AppState => ({
+  ...getEmptyState(),
+  isClient: false,
+});
