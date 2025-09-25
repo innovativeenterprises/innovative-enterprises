@@ -3,7 +3,7 @@
 
 import { getRaahaData } from '@/lib/firestore';
 import type { Metadata } from 'next';
-import AgencyDashboardClientPage from './client-page';
+import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
 
 export const metadata: Metadata = {
   title: "Agency Dashboard | RAAHA",

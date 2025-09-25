@@ -1,7 +1,7 @@
 
 'use server';
 
-import AgencyDashboardClientPage from '@/app/admin/beauty-hub/agency-dashboard/client-page';
+import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
 import { getRaahaData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 

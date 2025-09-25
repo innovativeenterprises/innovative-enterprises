@@ -8,8 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CandidateTable } from './candidate-table';
-import { SpecialistTable } from '@/app/admin/beauty-hub/agency-dashboard/specialist-table';
+import { CandidateTable } from '@/app/raaha/agency-dashboard/candidate-table';
 import { Badge } from '@/components/ui/badge';
 import type { HireRequest } from '@/lib/raaha-requests.schema';
 import type { Worker } from '@/lib/raaha-workers.schema';
@@ -23,6 +22,7 @@ import { MessageSquare, CalendarIcon } from 'lucide-react';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { ServiceTable } from '@/app/admin/beauty-hub/agency-dashboard/service-table';
 import { ScheduleTable } from '@/app/admin/beauty-hub/agency-dashboard/schedule-table';
+import { SpecialistTable } from '@/app/admin/beauty-hub/agency-dashboard/specialist-table';
 
 type GenericAgency = RaahaAgency | BeautyCenter;
 
@@ -144,10 +144,10 @@ export default function AgencyDashboardClientPage({
 
      useEffect(() => {
         setIsClient(true);
-        if (initialAgencies.length > 0) {
+        if (initialAgencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(initialAgencies[0].id);
         }
-    }, [initialAgencies]);
+    }, [initialAgencies, selectedAgencyId]);
     
     const agencies = dashboardType === 'raaha' ? raahaAgencies : beautyCenters;
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
@@ -197,13 +197,13 @@ export default function AgencyDashboardClientPage({
       ? [
           { value: 'requests', label: 'Hire Requests', content: <RequestTableWrapper requests={requests || []} setRequests={setRequests} agency={selectedAgency as RaahaAgency} isClient={isClient} /> },
           { value: 'candidates', label: 'Candidates', content: <CandidateTable columns={workerTableColumns} agencyId={selectedAgency.id} initialWorkers={workers || []} setWorkers={setWorkers} /> },
-          { value: 'settings', label: 'Agency Settings', content: <AgencySettings agency={selectedAgency} /> }
+          { value: 'settings', label: 'Agency Settings', content: <AgencySettings agency={selectedAgency as RaahaAgency} dashboardType={dashboardType} /> }
         ]
       : [
           { value: 'schedule', label: 'Appointments', content: <ScheduleTable appointments={filteredAppointments || []} setAppointments={setAppointments} /> },
           { value: 'services', label: 'Services', content: <ServiceTable services={filteredServices || []} setServices={setServices} /> },
           { value: 'staff', label: 'Staff', content: <SpecialistTable agencyId={selectedAgency.id} initialSpecialists={filteredSpecialists || []} setSpecialists={setSpecialists} /> },
-          { value: 'settings', label: 'Center Settings', content: <AgencySettings agency={selectedAgency} /> }
+          { value: 'settings', label: 'Center Settings', content: <AgencySettings agency={selectedAgency as BeautyCenter} dashboardType={dashboardType} /> }
         ];
 
     return (
