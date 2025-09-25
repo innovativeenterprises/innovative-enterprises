@@ -4,7 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { getInitialState } from '@/lib/get-initial-state';
+import { getInitialState } from '@/lib/initial-state';
 
 const inter = Inter({
   subsets: ['latin'],

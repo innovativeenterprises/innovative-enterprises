@@ -5,7 +5,6 @@ import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode } from 'react';
 import ChatWidget from '@/components/chat-widget';
-import { SettingsProvider } from '@/components/layout/settings-provider';
 import { StoreProvider } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 import { getEmptyState } from '@/lib/initial-state';
@@ -23,18 +22,16 @@ export function Providers({ children, initialState }: { children: ReactNode, ini
   
   return (
     <StoreProvider initialState={initialState}>
-      <SettingsProvider initialSettings={initialState.settings || getEmptyState().settings}>
-          <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-          >
-          {children}
-          <Toaster />
-          {initialState.settings?.chatWidgetEnabled && <ChatWidget />}
-          </ThemeProvider>
-      </SettingsProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+        {children}
+        <Toaster />
+        {initialState.settings?.chatWidgetEnabled && <ChatWidget />}
+        </ThemeProvider>
     </StoreProvider>
   );
 }

@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import type { Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
-import { useSettings } from '@/components/layout/settings-provider';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 
 
 interface Message {
@@ -60,7 +60,7 @@ export const ChatComponent = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
-  const { settings } = useSettings();
+  const { settings } = useSettingsData();
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -216,8 +216,8 @@ export const ChatComponent = ({
                                     )}
                                      {msg.contactOptions && (
                                         <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex gap-2">
-                                            {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${msg.contactOptions.email}`}>Email</a></Button>}
-                                            {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${msg.contactOptions.whatsapp}`} target="_blank">WhatsApp</a></Button>}
+                                            {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${"'" + msg.contactOptions.email + "'"}`}>Email</a></Button>}
+                                            {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${"'" + msg.contactOptions.whatsapp + "'"}`} target="_blank">WhatsApp</a></Button>}
                                         </div>
                                     )}
                                     {msg.imageUrl && (

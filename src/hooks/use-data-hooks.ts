@@ -2,7 +2,8 @@
 'use client';
 
 import { useState, useEffect, useContext } from 'react';
-import { StoreContext, type AppState } from '@/lib/global-store';
+import { StoreContext } from '@/lib/global-store';
+import type { AppState } from '@/lib/initial-state';
 
 // A generic hook factory
 const createDataHook = <K extends keyof AppState>(key: K) => {
@@ -51,7 +52,6 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
 export const useSettingsData = createDataHook('settings');
 export const useCartData = createDataHook('cart');
 export const useProductsData = createDataHook('products');
-export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
@@ -88,7 +88,6 @@ export const useStaffData = (initialData?: Partial<{ leadership: AppState['leade
     return { ...data, setData: setGlobalData, isClient };
 };
 
-export const useRaahaData = createDataHook('raahaAgencies'); // Example, can be more specific if needed
 export const useAgenciesData = createDataHook('raahaAgencies');
 export const useWorkersData = createDataHook('raahaWorkers');
 export const useRequestsData = createDataHook('raahaRequests');

@@ -1,7 +1,6 @@
-
 'use server';
 
-import { initialProducts, initialStoreProducts } from './products';
+import { initialProducts } from './products';
 import { initialServices } from './services';
 import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';

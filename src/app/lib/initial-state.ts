@@ -20,9 +20,9 @@ import type { CostRate } from './cost-settings.schema';
 import type { Asset } from './assets.schema';
 import type { UsedItem } from './used-items.schema';
 import { initialSettings } from '@/lib/settings';
-import type { Client, Testimonial } from '@/lib/clients.schema';
-import type { GiftCard } from '@/lib/gift-cards.schema';
-import type { Student } from '@/lib/students.schema';
+import type { Client, Testimonial } from './clients.schema';
+import type { GiftCard } from './gift-cards.schema';
+import type { Student } from './students.schema';
 import type { Community } from './communities';
 import type { CommunityEvent } from './community-events';
 import type { CommunityFinance } from './community-finances';
@@ -42,10 +42,61 @@ import type { KnowledgeDocument } from './knowledge.schema';
 import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
-import type { AppState as AppStateType } from './global-store';
-import { getProducts, getStoreProducts, getServices, getProviders, getOpportunities, getClients, getTestimonials, getPricing, getPosProducts, getDailySales, getStages, getAssets, getInvestors, getProperties, getStairspaceListings, getStairspaceRequests, getLeases, getStockItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getCostSettings, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getUsedItems, getKnowledgeBase, getApplications, getBriefcase, getSolutions, getIndustries, getAiTools, getSaasProducts, getCfoData, getStaffData, getRaahaData, getBeautyData } from './firestore';
+import { getProducts, getServices, getProviders, getOpportunities, getClients, getTestimonials, getPricing, getPosProducts, getDailySales, getStages, getAssets, getInvestors, getProperties, getStairspaceListings, getStairspaceRequests, getLeases, getStockItems, getGiftCards, getStudents, getCommunities, getCommunityEvents, getCommunityFinances, getCommunityMembers, getAlumniJobs, getRentalAgencies, getCars, getCostSettings, getBeautyCenters, getBeautyServices, getBeautySpecialists, getBeautyAppointments, getUsedItems, getKnowledgeBase, getApplications, getBriefcase, getSolutions, getIndustries, getAiTools, getSaasProducts, getCfoData, getStaffData, getRaahaData, getBeautyData } from './firestore';
 
-export type AppState = AppStateType;
+// Define the shape of the global state
+export interface AppState {
+  isClient: boolean;
+  settings: AppSettings;
+  cart: CartItem[];
+  products: Product[];
+  providers: Provider[];
+  opportunities: Opportunity[];
+  services: Service[];
+  signedLeases: SignedLease[];
+  stairspaceRequests: BookingRequest[];
+  stairspaceListings: StairspaceListing[];
+  leadership: Agent[];
+  staff: Agent[];
+  agentCategories: AgentCategory[];
+  raahaAgencies: RaahaAgency[];
+  raahaWorkers: RaahaWorker[];
+  raahaRequests: HireRequest[];
+  beautyCenters: BeautyCenter[];
+  beautyServices: BeautyService[];
+  beautySpecialists: BeautySpecialist[];
+  beautyAppointments: BeautyAppointment[];
+  costSettings: CostRate[];
+  assets: Asset[];
+  usedItems: UsedItem[];
+  clients: Client[];
+  testimonials: Testimonial[];
+  giftCards: GiftCard[];
+  students: Student[];
+  communities: Community[];
+  communityEvents: CommunityEvent[];
+  communityFinances: CommunityFinance[];
+  communityMembers: CommunityMember[];
+  alumniJobs: JobPosting[];
+  rentalAgencies: RentalAgency[];
+  cars: Car[];
+  posProducts: PosProduct[];
+  dailySales: DailySales;
+  saasProducts: SaasCategory[];
+  stockItems: StockItem[];
+  pricing: Pricing[];
+  stages: ProjectStage[];
+  applications: Application[];
+  briefcase: BriefcaseData | null;
+  investors: Investor[];
+  knowledgeBase: KnowledgeDocument[];
+  cfoData: CfoData | null;
+  properties: Property[];
+  solutions: Solution[];
+  industries: Industry[];
+  aiTools: AiTool[];
+}
+
 
 // This provides the default, empty state for the application.
 // Actual data will be fetched by server components and passed as props.
@@ -53,7 +104,6 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   settings: initialSettings,
   cart: [],
   products: [],
-  storeProducts: [],
   providers: [],
   opportunities: [],
   services: [],
@@ -101,56 +151,86 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   aiTools: [],
 });
 
+export async function getInitialState(): Promise<AppState | null> {
+    try {
+        const [
+            settings, products, providers, opportunities, services, signedLeases,
+            stairspaceRequests, stairspaceListings, staffData, raahaData, beautyData,
+            costSettings, assets, usedItems, clients, testimonials, giftCards, students,
+            communities, communityEvents, communityFinances, communityMembers, alumniJobs,
+            rentalAgencies, cars, posProducts, dailySales, saasProducts, stockItems,
+            pricing, stages, applications, briefcase, investors, knowledgeBase, cfoData,
+            properties, solutions, industries, aiTools
+        ] = await Promise.all([
+            getSettings(), getProducts(), getProviders(), getOpportunities(),
+            getServices(), getLeases(), getStairspaceRequests(), getStairspaceListings(),
+            getStaffData(), getRaahaData(), getBeautyData(), getCostSettings(), getAssets(),
+            getUsedItems(), getClients(), getTestimonials(), getGiftCards(), getStudents(),
+            getCommunities(), getCommunityEvents(), getCommunityFinances(), getCommunityMembers(),
+            getAlumniJobs(), getRentalAgencies(), getCars(), getPosProducts(), getDailySales(),
+            getSaasProducts(), getStockItems(), getPricing(), getStages(), getApplications(),
+            getBriefcase(), getInvestors(), getKnowledgeBase(), getCfoData(), getProperties(),
+            getSolutions(), getIndustries(), getAiTools()
+        ]);
 
-export interface AppState {
-  isClient: boolean;
-  settings: AppSettings;
-  cart: CartItem[];
-  products: Product[];
-  storeProducts: Product[];
-  providers: Provider[];
-  opportunities: Opportunity[];
-  services: Service[];
-  signedLeases: SignedLease[];
-  stairspaceRequests: BookingRequest[];
-  stairspaceListings: StairspaceListing[];
-  leadership: Agent[];
-  staff: Agent[];
-  agentCategories: AgentCategory[];
-  raahaAgencies: RaahaAgency[];
-  raahaWorkers: RaahaWorker[];
-  raahaRequests: HireRequest[];
-  beautyCenters: BeautyCenter[];
-  beautyServices: BeautyService[];
-  beautySpecialists: BeautySpecialist[];
-  beautyAppointments: BeautyAppointment[];
-  costSettings: CostRate[];
-  assets: Asset[];
-  usedItems: UsedItem[];
-  clients: Client[];
-  testimonials: Testimonial[];
-  giftCards: GiftCard[];
-  students: Student[];
-  communities: Community[];
-  communityEvents: CommunityEvent[];
-  communityFinances: CommunityFinance[];
-  communityMembers: CommunityMember[];
-  alumniJobs: JobPosting[];
-  rentalAgencies: RentalAgency[];
-  cars: Car[];
-  posProducts: PosProduct[];
-  dailySales: DailySales;
-  saasProducts: SaasCategory[];
-  stockItems: StockItem[];
-  pricing: Pricing[];
-  stages: ProjectStage[];
-  applications: Application[];
-  briefcase: BriefcaseData | null;
-  investors: Investor[];
-  knowledgeBase: KnowledgeDocument[];
-  cfoData: CfoData | null;
-  properties: Property[];
-  solutions: Solution[];
-  industries: Industry[];
-  aiTools: AiTool[];
+        if (!settings) {
+            throw new Error("Failed to load critical application settings.");
+        }
+
+        return {
+            isClient: false,
+            settings: settings,
+            cart: [],
+            products,
+            storeProducts: products.filter(p => p.category === 'Electronics'),
+            providers,
+            opportunities,
+            services,
+            signedLeases,
+            stairspaceRequests,
+            stairspaceListings,
+            leadership: staffData.leadership,
+            staff: staffData.staff,
+            agentCategories: staffData.agentCategories,
+            raahaAgencies: raahaData.raahaAgencies,
+            raahaWorkers: raahaData.raahaWorkers,
+            raahaRequests: raahaData.raahaRequests,
+            beautyCenters: beautyData.beautyCenters,
+            beautyServices: beautyData.beautyServices,
+            beautySpecialists: beautyData.beautySpecialists,
+            beautyAppointments: beautyData.beautyAppointments,
+            costSettings,
+            assets,
+            usedItems,
+            clients,
+            testimonials,
+            giftCards,
+            students,
+            communities,
+            communityEvents,
+            communityFinances,
+            communityMembers,
+            alumniJobs,
+            rentalAgencies,
+            cars,
+            posProducts,
+            dailySales,
+            saasProducts,
+            stockItems,
+            pricing,
+            stages,
+            applications,
+            briefcase,
+            investors,
+            knowledgeBase,
+            cfoData,
+            properties,
+            solutions,
+            industries,
+            aiTools,
+        };
+    } catch (error) {
+        console.error("Failed to fetch initial state:", error);
+        return null;
+    }
 }
