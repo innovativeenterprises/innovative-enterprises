@@ -56,7 +56,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fetch all initial data in one go
+  // Fetch only the necessary data for the root layout.
   const initialState = await getFirestoreData();
 
   return (
@@ -70,4 +70,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
