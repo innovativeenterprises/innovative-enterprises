@@ -47,7 +47,6 @@ import { initialRaahaRequests } from './raaha-requests';
 // In a real application, you would replace these with actual Firestore queries.
 
 export const getProducts = async () => initialProducts;
-export const getStoreProducts = async () => initialStoreProducts;
 export const getServices = async () => initialServices;
 export const getProviders = async () => initialProviders;
 export const getOpportunities = async () => initialOpportunities;
@@ -79,7 +78,19 @@ export const getBeautyServices = async () => initialBeautyServices;
 export const getBeautySpecialists = async () => initialBeautySpecialists;
 export const getBeautyAppointments = async () => initialBeautyAppointments;
 export const getUsedItems = async () => initialUsedItems;
-export const getSettings = async () => initialSettings;
+
+export const getSettings = async () => {
+    try {
+        // In a real app, this would be a Firestore call.
+        // For now, we return the initial settings.
+        // We add a try-catch to simulate resilient fetching.
+        return initialSettings;
+    } catch (error) {
+        console.error("Failed to fetch settings:", error);
+        return null; // Return null on error
+    }
+}
+
 export const getKnowledgeBase = async () => initialKnowledgeBase;
 export const getApplications = async () => initialApplications;
 export const getBriefcase = async () => initialBriefcase;

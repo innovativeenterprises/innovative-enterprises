@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -9,7 +10,7 @@ import Link from 'next/link';
 import { useProductsData } from '@/hooks/use-global-store-data';
 import type { Product } from '@/lib/products.schema';
 import { useToast } from '@/hooks/use-toast';
-import { useCartData } from '@/hooks/use-global-store-data';
+import { useCartData } from '@/hooks/use-data-hooks';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -54,7 +55,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                         src={product.image!} 
                         alt={product.name} 
                         fill 
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="object-cover transition-transform duration-300 group-hover:scale-110"
                         data-ai-hint={product.aiHint}
                     />
                 </div>
@@ -82,11 +83,13 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 export default function EcommercePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const { storeProducts } = useProductsData();
+  const { products } = useProductsData();
+
+  const storeProducts = useMemo(() => products.filter(p => p.category === 'Electronics' && p.enabled), [products]);
 
   const filteredProducts = selectedCategory === 'All'
-    ? storeProducts.filter(p => p.enabled)
-    : storeProducts.filter(product => product.enabled && product.category === selectedCategory);
+    ? storeProducts
+    : storeProducts.filter(product => product.category === selectedCategory);
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
