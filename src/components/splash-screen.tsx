@@ -5,14 +5,16 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
-const title = "INNOVATIVE ENTERPRISES";
+const title1 = "INNOVATIVE";
+const title2 = "ENTERPRISES";
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
+      delayChildren: 0.2,
     },
   },
 };
@@ -41,6 +43,26 @@ const splashScreenVariants = {
     }
 }
 
+const AnimatedTitle = ({ title }: { title: string }) => (
+    <motion.h1
+        className="text-2xl md:text-4xl font-bold tracking-wider text-primary"
+        aria-label={title}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+    >
+        {title.split("").map((char, index) => (
+        <motion.span
+            key={index}
+            variants={letterVariants}
+            className="inline-block"
+        >
+            {char === ' ' ? '\u00A0' : char}
+        </motion.span>
+        ))}
+    </motion.h1>
+)
+
 export function SplashScreen({ onFinished }: { onFinished: () => void }) {
     const [show, setShow] = useState(true);
 
@@ -64,28 +86,15 @@ export function SplashScreen({ onFinished }: { onFinished: () => void }) {
                 variants={splashScreenVariants}
                 exit="exit"
              >
-                <motion.div
-                    className="flex items-center gap-4"
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    <Image src="/icon.png" alt="Logo" width={64} height={64} className="w-16 h-16" />
-                    <motion.h1
-                        className="text-2xl md:text-4xl font-bold tracking-wider text-primary"
-                        aria-label={title}
-                    >
-                        {title.split("").map((char, index) => (
-                        <motion.span
-                            key={index}
-                            variants={letterVariants}
-                            className="inline-block"
-                        >
-                            {char === ' ' ? '\u00A0' : char}
-                        </motion.span>
-                        ))}
-                    </motion.h1>
-                </motion.div>
+                <div className="flex items-center gap-4">
+                    <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+                        <Image src="/icon.png" alt="Logo" width={64} height={64} className="w-16 h-16" />
+                    </motion.div>
+                    <div className="flex flex-col">
+                        <AnimatedTitle title={title1} />
+                        <AnimatedTitle title={title2} />
+                    </div>
+                </div>
                 <motion.div
                     className="absolute bottom-10 text-sm text-muted-foreground"
                     initial={{ opacity: 0 }}
