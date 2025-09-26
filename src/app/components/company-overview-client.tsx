@@ -6,10 +6,11 @@ import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
-import type { Client } from '@/lib/clients.schema';
+import { useClientsData } from "@/hooks/use-data-hooks";
 
 
-export default function CompanyOverviewClient({ clients }: { clients: Client[]}) {
+export default function CompanyOverviewClient() {
+  const { data: clients } = useClientsData();
 
   return (
     <section className="bg-background">

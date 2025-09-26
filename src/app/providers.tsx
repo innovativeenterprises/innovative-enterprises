@@ -6,17 +6,15 @@ import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import { StoreProvider } from '@/lib/global-store.tsx';
-import type { AppState } from './lib/initial-state';
 
 export function Providers({
   children,
-  initialState,
 }: {
   children: ReactNode;
-  initialState: Partial<AppState>;
 }) {
+  // StoreProvider now initializes its own store without initial props.
   return (
-    <StoreProvider initialState={initialState}>
+    <StoreProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"

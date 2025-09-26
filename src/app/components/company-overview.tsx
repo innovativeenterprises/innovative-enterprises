@@ -1,9 +1,9 @@
 
 'use server';
 
-import CompanyOverviewClient from '@/components/company-overview-client';
-import type { Client } from '@/lib/clients.schema';
+import CompanyOverviewClient from '@/app/components/company-overview-client';
 
-export default async function CompanyOverview({ clients }: { clients: Client[] }) {
-  return <CompanyOverviewClient clients={clients} />;
+export default async function CompanyOverview() {
+  // The client component now fetches its own data.
+  return <CompanyOverviewClient />;
 }

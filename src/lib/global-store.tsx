@@ -4,7 +4,7 @@
 import React, { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
 import { createStore, useStore as useZustandStore } from 'zustand';
 import type { AppState } from './initial-state';
-import { getInitialState } from './initial-state';
+import { getFirestoreData, getInitialState } from './initial-state';
 
 export type AppStore = AppState & {
   set: (updater: (state: AppState) => Partial<AppState>) => void;
@@ -22,20 +22,25 @@ export type StoreType = ReturnType<typeof createAppStore>;
 
 export const StoreContext = createContext<StoreType | null>(null);
 
-export function StoreProvider({ children, initialState }: { children: ReactNode; initialState: Partial<AppState> }) {
+export function StoreProvider({ children }: { children: ReactNode; }) {
     const storeRef = useRef<StoreType>();
 
     if (!storeRef.current) {
-        storeRef.current = createAppStore(initialState);
+        storeRef.current = createAppStore();
     }
     
      useEffect(() => {
-        if (storeRef.current) {
-            // Set the isClient flag to true once the component has mounted on the client.
-            // This is crucial for preventing hydration mismatches with components that
-            // rely on client-side state.
-            storeRef.current.getState().set(state => ({...state, isClient: true }));
-        }
+        const store = storeRef.current!;
+        const fetchAndSetData = async () => {
+            try {
+                const data = await getFirestoreData();
+                store.getState().set(state => ({ ...state, ...data, isClient: true }));
+            } catch (error) {
+                console.error("Failed to fetch initial data for the store:", error);
+                store.getState().set(state => ({ ...state, isClient: true })); // Still mark as client
+            }
+        };
+        fetchAndSetData();
     }, []);
 
     return (

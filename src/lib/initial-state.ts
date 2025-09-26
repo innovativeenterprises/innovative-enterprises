@@ -42,6 +42,7 @@ import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { UserDocument } from './user-documents';
+import * as firestore from './firestore';
 
 // Define the shape of the global state
 export interface AppState {
@@ -100,8 +101,9 @@ export interface AppState {
 
 
 // This provides the default, empty state for the application.
-// Actual data will be fetched by server components and passed as props.
-export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
+// Actual data will be fetched client-side.
+export const getInitialState = (): AppState => ({
+  isClient: false,
   settings: initialSettings,
   cart: [],
   products: [],
@@ -154,7 +156,35 @@ export const getEmptyState = (): Omit<AppState, 'isClient'> => ({
   userDocuments: [],
 });
 
-export const getInitialState = (): AppState => ({
-  ...getEmptyState(),
-  isClient: false,
-});
+// New function to fetch all data, intended to be used on the client.
+export const getFirestoreData = async () => {
+  const [
+    products, storeProducts, services, providers, opportunities, clients, testimonials, pricing,
+    posProducts, dailySales, stages, assets, investors, properties, stairspaceListings,
+    stairspaceRequests, signedLeases, stockItems, giftCards, students, communities, communityEvents,
+    communityFinances, communityMembers, alumniJobs, rentalAgencies, cars, costSettings, raahaData,
+    beautyData, settings, knowledgeBase, applications, briefcase, solutions, industries, aiTools,
+    saasProducts, cfoData, staffData, userDocuments,
+  ] = await Promise.all([
+    firestore.getProducts(), firestore.getStoreProducts(), firestore.getServices(), firestore.getProviders(),
+    firestore.getOpportunities(), firestore.getClients(), firestore.getTestimonials(), firestore.getPricing(),
+    firestore.getPosProducts(), firestore.getDailySales(), firestore.getStages(), firestore.getAssets(),
+    firestore.getInvestors(), firestore.getProperties(), firestore.getStairspaceListings(), firestore.getStairspaceRequests(),
+    firestore.getLeases(), firestore.getStockItems(), firestore.getGiftCards(), firestore.getStudents(),
+    firestore.getCommunities(), firestore.getCommunityEvents(), firestore.getCommunityFinances(), firestore.getMembers(),
+    firestore.getAlumniJobs(), firestore.getRentalAgencies(), firestore.getCars(), firestore.getCostSettings(),
+    firestore.getRaahaData(), firestore.getBeautyData(), firestore.getSettings(), firestore.getKnowledgeBase(),
+    firestore.getApplications(), firestore.getBriefcase(), firestore.getSolutions(), firestore.getIndustries(),
+    firestore.getAiTools(), firestore.getSaasProducts(), firestore.getCfoData(), firestore.getStaffData(),
+    firestore.getUserDocuments(),
+  ]);
+
+  return {
+    products, storeProducts, services, providers, opportunities, clients, testimonials, pricing,
+    posProducts, dailySales, stages, assets, investors, properties, stairspaceListings,
+    stairspaceRequests, signedLeases, stockItems, giftCards, students, communities, communityEvents,
+    communityFinances, communityMembers, alumniJobs, rentalAgencies, cars, costSettings, ...raahaData,
+    ...beautyData, settings, knowledgeBase, applications, briefcase, solutions, industries, aiTools,
+    saasProducts, cfoData, ...staffData, userDocuments,
+  };
+};

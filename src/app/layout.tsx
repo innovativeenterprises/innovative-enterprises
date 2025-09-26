@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
 import MainLayout from './main-layout';
-import { getFirestoreData } from '@/lib/firestore';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -55,16 +54,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Fetch the initial state for the entire app.
-  // This is a pattern to avoid fetching the same data on multiple pages
-  // and passing props around.
-  const initialState = await getFirestoreData();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <Providers initialState={initialState}>
+          <Providers>
             <MainLayout>
               {children}
             </MainLayout>
