@@ -108,7 +108,6 @@ export const analyzeProTask = ai.defineFlow(
         sanadAnalysis: z.any(),
     }),
     outputSchema: ProTaskAnalysisOutputSchema,
-    tools: [getProTaskPlanTool]
   },
   async ({ proTaskInput, sanadAnalysis }) => {
     
