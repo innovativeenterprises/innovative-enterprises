@@ -1,7 +1,7 @@
 
 'use client';
 
-import ConstructionTechClientPage from '@/app/construction-tech/page';
+import ConstructionTechPage from '@/app/construction-tech/page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,6 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminConstructionTechPage() {
-    // The client component will now fetch data from the global store.
-    return <ConstructionTechClientPage />;
+    return <ConstructionTechPage />;
 }

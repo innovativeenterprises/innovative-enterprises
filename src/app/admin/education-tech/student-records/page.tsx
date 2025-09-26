@@ -1,8 +1,8 @@
+
 'use client';
 
 import type { Metadata } from 'next';
 import StudentRecordsClientPage from './client-page';
-import { useStudentsData } from '@/hooks/use-data-hooks';
 
 export const metadata: Metadata = {
   title: "Admin - Student Records",
@@ -11,6 +11,6 @@ export const metadata: Metadata = {
 
 
 export default function StudentRecordsPage() {
-    const { data: students } = useStudentsData();
-    return <StudentRecordsClientPage initialStudents={students} />;
+    // The client component now fetches its own data from the global store.
+    return <StudentRecordsClientPage />;
 }

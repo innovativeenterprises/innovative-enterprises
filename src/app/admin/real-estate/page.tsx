@@ -7,12 +7,6 @@ import { ArrowRight, BarChart } from "lucide-react";
 import Link from 'next/link';
 import PropertyTable from "./property-table";
 import StairspaceTable from "./stairspace-table";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "Real Estate Management",
-    description: "Manage property listings and utilize real estate AI tools."
-};
 
 // --- Main Page Component ---
 export default function AdminRealEstatePage() {
