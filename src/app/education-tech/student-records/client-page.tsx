@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -31,11 +32,21 @@ const StudentSchema = z.object({
 });
 type StudentValues = z.infer<typeof StudentSchema>;
 
-const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student, onSave: (v: StudentValues, id?: string) => void, children: React.ReactNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const AddEditStudentDialog = ({ 
+    student, 
+    onSave, 
+    children,
+    isOpen,
+    onOpenChange,
+}: { 
+    student?: Student, 
+    onSave: (v: StudentValues, id?: string) => void, 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
+}) => {
     const form = useForm<StudentValues>({
         resolver: zodResolver(StudentSchema),
-        defaultValues: student || { status: 'On Track', photo: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format&fit=crop' },
     });
 
     useEffect(() => {
@@ -46,11 +57,11 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 
     const onSubmit: SubmitHandler<StudentValues> = (data) => {
         onSave(data, student?.id);
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader><DialogTitle>{student ? "Edit" : "Add"} Student Record</DialogTitle></DialogHeader>
@@ -97,10 +108,17 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 export default function StudentRecordsClientPage() {
     const { data: students, setData: setStudents, isClient } = useStudentsData();
     const { toast } = useToast();
-    
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState<Student | undefined>(undefined);
+
+    const openDialog = (student?: Student) => {
+        setSelectedStudent(student);
+        setIsDialogOpen(true);
+    };
+
     const handleSave = (values: StudentValues, id?: string) => {
         if (id) {
-            setStudents(prev => prev.map(s => s.id === id ? { ...s, ...values } as Student : s));
+            setStudents(prev => prev.map(s => s.id === id ? { ...s, ...values } : s));
             toast({ title: "Student record updated." });
         } else {
             const newStudent: Student = { ...values, tuitionBilled: 0, scholarshipAmount: 0, amountPaid: 0 };
@@ -150,11 +168,20 @@ export default function StudentRecordsClientPage() {
                                 <CardTitle>Student Registry</CardTitle>
                                 <CardDescription>A list of all enrolled students.</CardDescription>
                             </div>
-                            <AddEditStudentDialog onSave={handleSave}>
-                                <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Student</Button>
+                            <AddEditStudentDialog onSave={handleSave} communities={[]}>
+                                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Student</Button>
                             </AddEditStudentDialog>
                         </CardHeader>
                         <CardContent>
+                             <AddEditStudentDialog
+                                isOpen={isDialogOpen}
+                                onOpenChange={setIsDialogOpen}
+                                student={selectedStudent}
+                                onSave={handleSave}
+                                communities={[]}
+                             >
+                                <div />
+                            </AddEditStudentDialog>
                             <Table>
                                 <TableHeader><TableRow><TableHead>Student</TableHead><TableHead>Major</TableHead><TableHead>Year</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                                 <TableBody>
@@ -177,7 +204,7 @@ export default function StudentRecordsClientPage() {
                                                 <TableCell>{getStatusBadge(student.status)}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
-                                                        <AddEditStudentDialog student={student} onSave={handleSave}><Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button></AddEditStudentDialog>
+                                                        <Button variant="ghost" size="icon" onClick={() => openDialog(student)}><Edit className="h-4 w-4"/></Button>
                                                         <AlertDialog>
                                                             <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
                                                             <AlertDialogContent>

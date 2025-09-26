@@ -1,4 +1,5 @@
 
+
 import AiPosPage from '@/app/ai-pos/page';
 import type { Metadata } from 'next';
 

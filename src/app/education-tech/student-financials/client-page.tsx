@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, PlusCircle, DollarSign } from 'lucide-react';
+import { ArrowLeft, PlusCircle, DollarSign, FileText, Calendar, Trash2, Home, TrendingUp, TrendingDown, Percent } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
