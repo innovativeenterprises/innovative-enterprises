@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
@@ -16,14 +15,14 @@ import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.sc
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
-import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket, BadgePercent, Phone, ArrowLeft, Star, Mic } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket, BadgePercent, Phone, ArrowLeft, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CameraCapture } from '@/components/camera-capture';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useSettingsData } from '@/hooks/use-global-store-data';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 import Image from 'next/image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -180,7 +179,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
         <div ref={cardRef} className={`w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl`}>
             <div className="bg-gray-800 rounded-lg p-6 relative h-full text-white">
                  <div className="absolute top-4 right-4">
-                    <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240730-192534-315-lightbulb_logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
+                    <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
                 </div>
                  <div className="absolute bottom-0 right-0 w-32 h-32">
                     <img src="https://www.svgrepo.com/show/493547/qr-code.svg" alt="QR Code" className="w-full h-full opacity-10" />
@@ -229,7 +228,7 @@ const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDa
 
 export default function PartnerPage() {
   const { settings } = useSettingsData();
-  const { sanadOffice: sanadSettings } = settings;
+  const { sanadOffice: sanadSettings } = settings || {};
   
   const [pageState, setPageState] = useState<PageState>('selection');
   const [applicantType, setApplicantType] = useState<ApplicantType>('company');
@@ -254,6 +253,7 @@ export default function PartnerPage() {
   const watchCouponCode = paymentForm.watch('coupon');
 
   const { subtotal, discount, totalPrice } = useMemo(() => {
+    if (!sanadSettings) return { subtotal: 0, discount: 0, totalPrice: 0 };
     let currentSubtotal = 0;
     if (watchSubscriptionTier === 'lifetime') {
         currentSubtotal = sanadSettings.lifetimeFee;
@@ -1072,7 +1072,7 @@ export default function PartnerPage() {
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
-        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onRepIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_cr': return <CameraCapture title="Scan Commercial Record" onCapture={onCrCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         default: return <SelectionScreen />;
     }

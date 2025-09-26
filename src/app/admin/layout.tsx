@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -47,6 +46,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { useGlobalStore } from '@/app/lib/global-store';
 
 
 export default function AdminLayout({
@@ -55,6 +55,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const settings = useGlobalStore(state => state.settings);
 
   const dashboards = [
       { href: '/admin', label: 'Main Dashboard', icon: LayoutDashboard },
@@ -116,8 +117,12 @@ export default function AdminLayout({
         <SidebarHeader>
           <Button asChild variant="ghost" className="h-auto w-auto p-1">
             <Link href="/admin" className="flex items-center gap-2">
-               <Image src="/logo.png" alt="Innovative Enterprises Logo" width={160} height={40} className="w-32 h-auto object-contain group-data-[collapsible=icon]:hidden" priority />
-               <Image src="/icon.png" alt="Innovative Enterprises Logo" width={32} height={32} className="w-8 h-8 h-auto object-contain hidden group-data-[collapsible=icon]:block" priority />
+               {settings?.headerImageUrl ? (
+                    <Image src={settings.headerImageUrl} alt="Innovative Enterprises Logo" width={128} height={32} className="w-32 h-auto object-contain group-data-[collapsible=icon]:hidden" priority />
+                ) : (
+                    <span className="font-bold group-data-[collapsible=icon]:hidden">INNOVATIVE</span>
+                )}
+               <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="Innovative Enterprises Logo" width={32} height={32} className="w-8 h-8 h-auto object-contain hidden group-data-[collapsible=icon]:block" priority />
             </Link>
           </Button>
         </SidebarHeader>

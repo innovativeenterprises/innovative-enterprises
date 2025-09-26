@@ -1,21 +1,28 @@
-
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Github } from 'lucide-react';
+import { useGlobalStore } from '@/app/lib/global-store';
 
 export default function FooterClient() {
   const currentYear = new Date().getFullYear().toString();
+  const settings = useGlobalStore(state => state.settings);
 
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto py-8 px-4">
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="flex items-center gap-2 justify-center md:justify-start">
-             <Image src="/icon.png" alt="INNOVATIVE ENTERPRISES Logo" width={40} height={40} className="w-10 h-10" />
-             <span className="font-bold text-lg">INNOVATIVE ENTERPRISES</span>
+             {settings?.footerImageUrl ? (
+                <Image src={settings.footerImageUrl} alt="Company Footer Logo" width={160} height={40} className="w-40 h-auto object-contain" />
+             ) : (
+                <>
+                    <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={40} height={40} className="w-10 h-10" />
+                    <span className="font-bold text-lg">INNOVATIVE ENTERPRISES</span>
+                </>
+             )}
           </div>
           <div className="flex flex-col gap-4 items-center">
              <p className="text-sm text-muted-foreground text-center">

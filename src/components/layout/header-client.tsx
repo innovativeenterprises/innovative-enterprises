@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -32,7 +31,7 @@ import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
-import { useGlobalStore } from '@/lib/global-store.tsx';
+import { useGlobalStore } from '@/app/lib/global-store';
 import * as Icons from 'lucide-react';
 
 const ListItem = React.forwardRef<
@@ -86,7 +85,11 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" />
+          {settings?.headerImageUrl ? (
+            <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+          ) : (
+            <span>INNOVATIVE ENTERPRISES</span>
+          )}
         </Link>
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
@@ -190,7 +193,11 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
                  <SheetHeader className="p-4 border-b">
                     <SheetTitle>
                         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" onClick={handleLinkClick}>
-                            <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" />
+                             {settings?.headerImageUrl ? (
+                                <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+                            ) : (
+                                <span>INNOVATIVE ENTERPRISES</span>
+                            )}
                         </Link>
                     </SheetTitle>
                     <SheetDescription className="sr-only">
