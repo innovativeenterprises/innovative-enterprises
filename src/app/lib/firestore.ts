@@ -1,8 +1,9 @@
 
+
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
-import { initialServices } from './services';
+import { initialServices } from '@/lib/services';
 import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';
 import { initialClients, initialTestimonials } from './clients';
@@ -184,4 +185,3 @@ export const getFirestoreData = async () => ({
     ...await getStaffData(),
     userDocuments: await getUserDocuments(),
 });
-
