@@ -10,13 +10,18 @@ import { z } from 'zod';
 import { OMAN_MINISTRIES, ministryLocations, OMAN_GOVERNORATES, calculateTotalDistance } from '@/lib/oman-locations';
 import type { Ministry, Governorate } from '@/lib/oman-locations';
 import { getCostSettings } from '@/lib/firestore';
+import { SanadTaskAnalysisOutputSchema } from './sanad-task-analysis.schema';
 
-export const ProTaskAnalysisInputSchema = z.object({
+const ProTaskBaseInputSchema = z.object({
   serviceName: z.string().describe("The specific government service requested by the user."),
   governorate: z.enum(OMAN_GOVERNORATES).describe("The governorate where the service needs to be performed."),
   startLocationName: z.string().optional().describe("The name of the starting location for the trip, e.g., 'Al Amerat Office'."),
   startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).optional().describe("The GPS coordinates of the starting location."),
 });
+export type ProTaskBaseInput = z.infer<typeof ProTaskBaseInputSchema>;
+
+
+export const ProTaskAnalysisInputSchema = ProTaskBaseInputSchema.merge(SanadTaskAnalysisOutputSchema);
 export type ProTaskAnalysisInput = z.infer<typeof ProTaskAnalysisInputSchema>;
 
 const AllowanceSchema = z.object({
@@ -102,38 +107,40 @@ const getProTaskPlanTool = ai.defineTool(
 
 const proTaskAnalysisPrompt = ai.definePrompt({
     name: 'proTaskAnalysisPrompt',
-    input: { schema: z.object({ proTaskInput: ProTaskAnalysisInputSchema, sanadAnalysis: z.any() }) },
+    input: { schema: ProTaskAnalysisInputSchema },
     output: { schema: ProTaskAnalysisOutputSchema },
     tools: [getProTaskPlanTool],
-    prompt: `You are Fahim, an expert PRO agent. A user needs to perform the service: "{{proTaskInput.serviceName}}".
-    The initial analysis suggests a service fee of OMR {{sanadAnalysis.serviceFee}}.
+    prompt: `You are Fahim, an expert PRO agent. A user needs to perform the service: "{{serviceName}}".
+    The initial analysis suggests a service fee of OMR {{serviceFee}}.
     1. Determine which government ministries are required to visit to complete this service.
-    2. Then, use the getProTaskPlan tool to calculate the travel route and costs for visiting these ministries in the "{{proTaskInput.governorate}}" governorate. You MUST pass the serviceFee of {{sanadAnalysis.serviceFee}} to the tool.`,
+    2. Then, use the getProTaskPlan tool to calculate the travel route and costs for visiting these ministries in the "{{governorate}}" governorate. You MUST pass the serviceFee of {{serviceFee}} to the tool.`,
 });
 
 export const analyzeProTask = ai.defineFlow(
   {
     name: 'proTaskAnalysisAgentFlow',
-    inputSchema: z.object({
-        proTaskInput: ProTaskAnalysisInputSchema,
-        sanadAnalysis: z.any(),
-    }),
+    inputSchema: ProTaskAnalysisInputSchema,
     outputSchema: ProTaskAnalysisOutputSchema,
   },
-  async ({ proTaskInput, sanadAnalysis }) => {
+  async (input) => {
     
-    const llmResponse = await proTaskAnalysisPrompt({ proTaskInput, sanadAnalysis });
+    const llmResponse = await ai.generate({
+        prompt: proTaskAnalysisPrompt,
+        input: input,
+        tools: [getProTaskPlanTool],
+    });
 
-    if (!llmResponse.toolRequest || llmResponse.toolRequest.name !== 'getProTaskPlan') {
+    const toolRequest = llmResponse.toolRequest();
+    if (!toolRequest || toolRequest.name !== 'getProTaskPlan') {
         throw new Error("The AI agent failed to use the required planning tool.");
     }
     
     // Augment the tool input with coordinates if they were passed from the client
-    const toolInput = llmResponse.toolRequest.input;
-    toolInput.startLocationCoords = proTaskInput.startLocationCoords;
-    toolInput.startLocationName = proTaskInput.startLocationName;
+    const toolInput = toolRequest.input;
+    toolInput.startLocationCoords = input.startLocationCoords;
+    toolInput.startLocationName = input.startLocationName;
 
-    const toolResponse = await llmResponse.toolRequest.run();
+    const toolResponse = await toolRequest.run();
 
     return toolResponse.output as ProTaskAnalysisOutput;
   }

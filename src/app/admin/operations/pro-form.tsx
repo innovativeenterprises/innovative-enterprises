@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Route, MapPin, ListChecks, FileText, Bot, DollarSign } from 'lucide-react';
-import { ProTaskAnalysisInputSchema, type ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis';
+import { ProTaskBaseInput, type ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { OMAN_GOVERNORATES } from '@/lib/oman-locations';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -34,7 +34,7 @@ const DummyMap = ({ onLocationSelect }: { onLocationSelect: (loc: { lat: number,
     </div>
 );
 
-const ProTaskFormSchema = ProTaskAnalysisInputSchema.omit({ documentList: true, notes: true, serviceFee: true});
+const ProTaskFormSchema = ProTaskBaseInput;
 type ProTaskFormValues = z.infer<typeof ProTaskFormSchema>;
 
 
