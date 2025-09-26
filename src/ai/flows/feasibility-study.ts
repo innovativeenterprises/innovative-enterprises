@@ -79,21 +79,13 @@ const feasibilityStudyFlow = ai.defineFlow(
     ]);
 
     // Step 2: Use the synthesizer agent (Sage) to compile the research into a study.
-    const llmResponse = await ai.generate({
-        prompt: synthesizerPrompt,
-        input: {
-            businessIdea,
-            marketAnalysisReport: marketAnalysis.summary,
-            competitorReport: competitorAnalysis.summary,
-            targetAudienceReport: targetAudienceAnalysis.summary,
-        },
-        model: 'googleai/gemini-2.0-flash',
-        output: {
-            format: 'json',
-            schema: FeasibilityStudyOutputSchema,
-        }
+    const { output } = await synthesizerPrompt({
+        businessIdea,
+        marketAnalysisReport: marketAnalysis.summary,
+        competitorReport: competitorAnalysis.summary,
+        targetAudienceReport: targetAudienceAnalysis.summary,
     });
     
-    return llmResponse.output()!;
+    return output!;
   }
 );

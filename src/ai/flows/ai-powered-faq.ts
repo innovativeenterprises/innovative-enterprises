@@ -53,7 +53,6 @@ const answerQuestionFlow = ai.defineFlow(
     const response = await ai.generate({
       prompt: answerQuestionPrompt,
       input: input,
-      model: 'googleai/gemini-2.0-flash',
       output: {
         format: 'json',
         schema: AnswerQuestionOutputSchema,

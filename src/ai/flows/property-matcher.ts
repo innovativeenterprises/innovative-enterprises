@@ -58,19 +58,11 @@ const propertyMatcherFlow = ai.defineFlow(
     const availableProperties = allProperties.filter(p => p.status === 'Available');
     const availablePropertiesJson = JSON.stringify(availableProperties, null, 2);
 
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: {
+    const { output } = await prompt({
         ...input,
         availablePropertiesJson
-      },
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: PropertyMatcherOutputSchema,
-      }
     });
     
-    return llmResponse.output()!;
+    return output!;
   }
 );

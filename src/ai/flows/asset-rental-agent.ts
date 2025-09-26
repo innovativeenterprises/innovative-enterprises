@@ -13,6 +13,7 @@ import {
     AssetRentalProposalOutput,
     AssetRentalProposalOutputSchema,
 } from './asset-rental-agent.schema';
+import { z } from 'zod';
 
 export async function generateAssetRentalProposal(input: AssetRentalInquiryInput): Promise<AssetRentalProposalOutput> {
   return assetRentalProposalFlow(input);

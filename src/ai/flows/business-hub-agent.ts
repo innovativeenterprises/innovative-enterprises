@@ -50,17 +50,7 @@ const businessHubFlow = ai.defineFlow(
     outputSchema: BusinessHubAgentOutputSchema,
   },
   async (input) => {
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: input,
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: BusinessHubAgentOutputSchema,
-      }
-    });
-
-    const output = llmResponse.output();
+    const { output } = await prompt(input);
     
     if (output && (!output.suggestedReplies || output.suggestedReplies.length === 0)) {
         output.suggestedReplies = ["List all categories", "What is the Business Hub?", "How do I register?"];

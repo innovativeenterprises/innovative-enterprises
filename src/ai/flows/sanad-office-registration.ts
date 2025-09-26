@@ -52,17 +52,7 @@ const sanadOfficeRegistrationFlow = ai.defineFlow(
     
     console.log('Received new Sanad Office registration:', input);
 
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: input,
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: SanadOfficeRegistrationOutputSchema,
-      }
-    });
-
-    const output = llmResponse.output();
+    const { output } = await prompt(input);
     
     // Here, you would add logic to save the partner to your database.
     // e.g., db.collection('sanad_offices').doc(output.officeId).set(input);

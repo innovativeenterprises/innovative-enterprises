@@ -100,7 +100,7 @@ const getProTaskPlanTool = ai.defineTool(
 );
 
 
-const proTaskAnalysisAgentFlow = ai.defineFlow(
+export const analyzeProTask = ai.defineFlow(
   {
     name: 'proTaskAnalysisAgentFlow',
     inputSchema: z.object({
@@ -119,7 +119,6 @@ const proTaskAnalysisAgentFlow = ai.defineFlow(
 
     const llmResponse = await ai.generate({
         prompt: prompt,
-        model: 'googleai/gemini-2.0-flash',
         tools: [getProTaskPlanTool],
         output: {
             format: 'json',

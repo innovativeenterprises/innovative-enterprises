@@ -70,19 +70,11 @@ const propertyValuationFlow = ai.defineFlow(
     const comparableProperties = allProperties.filter(p => p.status !== 'Available');
     const comparablePropertiesJson = JSON.stringify(comparableProperties, null, 2);
     
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: {
+    const { output } = await prompt({
         ...input,
         comparablePropertiesJson,
-      },
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: PropertyValuationOutputSchema,
-      }
     });
 
-    return llmResponse.output()!;
+    return output!;
   }
 );

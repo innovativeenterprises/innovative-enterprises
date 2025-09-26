@@ -50,17 +50,8 @@ const boqCategoryGeneratorFlow = ai.defineFlow(
     outputSchema: BoQCategoryGeneratorOutputSchema,
   },
   async (input) => {
-    const llmResponse = await ai.generate({
-      prompt: categoryPrompt,
-      input: input,
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: BoQCategoryGeneratorOutputSchema,
-      }
-    });
-
-    return llmResponse.output()!;
+    const { output } = await prompt(input);
+    return output!;
   }
 );
 

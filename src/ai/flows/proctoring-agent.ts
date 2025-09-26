@@ -65,17 +65,7 @@ const proctoringAgentFlow = ai.defineFlow(
     // Generate a unique, deterministic ID within the flow itself.
     const generatedId = `PR-EXAM-${input.examId}-${String(new Date().getTime()).slice(-4)}`;
     
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: { ...input, generatedId },
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: ProctoringOutputSchema,
-      }
-    });
-
-    const output = llmResponse.output();
+    const { output } = await prompt({ ...input, generatedId });
     
     if(!output) {
         // If the model returns nothing (e.g., no violations found), create a default "clean" report.

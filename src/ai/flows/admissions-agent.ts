@@ -71,16 +71,8 @@ const admissionsAgentFlow = ai.defineFlow(
     // Generate a unique ID using crypto for better uniqueness.
     const generatedId = `APP-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
     
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: { ...input, generatedId },
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: AdmissionsAgentOutputSchema,
-      }
-    });
+    const { output } = await prompt({ ...input, generatedId });
 
-    return llmResponse.output()!;
+    return output!;
   }
 );

@@ -61,17 +61,8 @@ const adaptiveLearningTutorFlow = ai.defineFlow(
     outputSchema: AdaptiveTutorOutputSchema,
   },
   async (input) => {
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: input,
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: AdaptiveTutorOutputSchema,
-      }
-    });
-
-    return llmResponse.output()!;
+    const { output } = await prompt(input);
+    return output!;
   }
 );
   

@@ -88,19 +88,11 @@ const scholarshipFinderFlow = ai.defineFlow(
     }));
     
     // Step 2: Use the synthesizer agent to compile the research into a structured list.
-    const llmResponse = await ai.generate({
-      prompt: synthesizerPrompt,
-      input: {
+    const { output } = await synthesizerPrompt({
         inputQuery: input,
         researchData: researchData,
-      },
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: ScholarshipFinderOutputSchema,
-      }
     });
     
-    return llmResponse.output()!;
+    return output!;
   }
 );

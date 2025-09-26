@@ -44,16 +44,8 @@ const partnershipInquiryFlow = ai.defineFlow(
     // For this prototype, we'll just simulate the confirmation.
     console.log('Received verified partnership inquiry:', input);
     
-    const llmResponse = await ai.generate({
-      prompt: prompt,
-      input: input,
-      model: 'googleai/gemini-2.0-flash',
-      output: {
-        format: 'json',
-        schema: PartnershipInquiryOutputSchema,
-      }
-    });
+    const { output } = await prompt(input);
 
-    return llmResponse.output()!;
+    return output!;
   }
 );
