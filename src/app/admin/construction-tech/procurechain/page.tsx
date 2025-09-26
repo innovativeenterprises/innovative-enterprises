@@ -1,19 +1,16 @@
 
-'use server';
+'use client';
 
-import { getAssets } from "@/lib/firestore";
 import AssetTable from "@/app/admin/asset-table";
-import type { Metadata } from 'next';
 import { Package } from "lucide-react";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "ProcureChain SaaS | Innovative Enterprises",
   description: "An e-procurement platform with automated vendor approvals, asset rentals, and predictive ordering for the construction industry.",
 };
 
-export default async function ProcureChainPage() {
-    const assets = await getAssets();
-    const constructionAssets = assets.filter(asset => ['Heavy Machinery', 'Power Tools', 'Vehicles', 'Scaffolding'].includes(asset.type));
+export default function ProcureChainPage() {
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -29,7 +26,7 @@ export default async function ProcureChainPage() {
                         </p>
                     </div>
 
-                    <AssetTable initialAssets={constructionAssets} />
+                    <AssetTable />
                 </div>
             </div>
         </div>

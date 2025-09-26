@@ -6,9 +6,8 @@ import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
+import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Palette } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
-import ThemeGenerator from '@/app/admin/operations/theme-generator';
 
 export default function AdminOperationsPage() {
 

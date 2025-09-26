@@ -60,7 +60,7 @@ export default function CooDashboardPage() {
 
     // Run analysis on initial load
     useEffect(() => {
-        if(cfoData) {
+        if(cfoData && products.length > 0 && providers.length > 0) {
             runAnalysis();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,3 +139,4 @@ export default function CooDashboardPage() {
         </div>
     );
 }
+
