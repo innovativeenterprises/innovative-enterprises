@@ -62,20 +62,11 @@ const ecommerceFlow = ai.defineFlow(
     outputSchema: EcommerceAgentOutputSchema,
   },
   async (input) => {
-    const llmResponse = await ai.generate({
-      prompt: prompt.prompt,
-      history: [{role: 'user', content: [{text: input.query}]}],
-      tools: [addProductToCartTool],
-      output: {
-        format: 'json',
-        schema: EcommerceAgentOutputSchema,
-      }
-    });
+    const llmResponse = await prompt(input);
 
     // Handle tool call for adding to cart
-    const toolRequest = llmResponse.toolRequest();
-    if (toolRequest && toolRequest.name === 'addProductToCart') {
-        const toolResponse = await toolRequest.run();
+    if (llmResponse.toolRequest && llmResponse.toolRequest.name === 'addProductToCart') {
+        const toolResponse = await llmResponse.toolRequest.run();
         const toolOutput = toolResponse.output as z.infer<typeof addProductToCartTool.outputSchema>;
         
         if (toolOutput.product) {

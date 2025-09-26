@@ -50,15 +50,7 @@ const answerQuestionFlow = ai.defineFlow(
     outputSchema: AnswerQuestionOutputSchema,
   },
   async (input) => {
-    const response = await ai.generate({
-      prompt: answerQuestionPrompt.prompt,
-      history: [{role: 'user', content: [{text: input.question}]}],
-      tools: [routeToSpecialistTool],
-      output: {
-        format: 'json',
-        schema: AnswerQuestionOutputSchema,
-      }
-    });
+    const response = await answerQuestionPrompt(input);
     
     // Check if the model decided to use a tool.
     if (response.toolRequest) {

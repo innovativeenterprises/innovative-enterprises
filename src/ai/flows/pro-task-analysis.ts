@@ -100,6 +100,17 @@ const getProTaskPlanTool = ai.defineTool(
 );
 
 
+const proTaskAnalysisPrompt = ai.definePrompt({
+    name: 'proTaskAnalysisPrompt',
+    input: { schema: z.object({ proTaskInput: ProTaskAnalysisInputSchema, sanadAnalysis: z.any() }) },
+    output: { schema: ProTaskAnalysisOutputSchema },
+    tools: [getProTaskPlanTool],
+    prompt: `You are Fahim, an expert PRO agent. A user needs to perform the service: "{{proTaskInput.serviceName}}".
+    The initial analysis suggests a service fee of OMR {{sanadAnalysis.serviceFee}}.
+    1. Determine which government ministries are required to visit to complete this service.
+    2. Then, use the getProTaskPlan tool to calculate the travel route and costs for visiting these ministries in the "{{proTaskInput.governorate}}" governorate. You MUST pass the serviceFee of {{sanadAnalysis.serviceFee}} to the tool.`,
+});
+
 export const analyzeProTask = ai.defineFlow(
   {
     name: 'proTaskAnalysisAgentFlow',
@@ -111,31 +122,18 @@ export const analyzeProTask = ai.defineFlow(
   },
   async ({ proTaskInput, sanadAnalysis }) => {
     
-    const prompt = `You are Fahim, an expert PRO agent. A user needs to perform the service: "${proTaskInput.serviceName}".
-    The initial analysis suggests a service fee of OMR ${sanadAnalysis.serviceFee}.
-    1. Determine which government ministries are required to visit to complete this service.
-    2. Then, use the getProTaskPlan tool to calculate the travel route and costs for visiting these ministries in the "${proTaskInput.governorate}" governorate. You MUST pass the serviceFee of ${sanadAnalysis.serviceFee} to the tool.`;
+    const llmResponse = await proTaskAnalysisPrompt({ proTaskInput, sanadAnalysis });
 
-    const llmResponse = await ai.generate({
-        prompt: prompt,
-        tools: [getProTaskPlanTool],
-        output: {
-            format: 'json',
-            schema: ProTaskAnalysisOutputSchema
-        }
-    });
-
-    const toolRequest = llmResponse.toolRequest();
-    if (!toolRequest || toolRequest.name !== 'getProTaskPlan') {
+    if (!llmResponse.toolRequest || llmResponse.toolRequest.name !== 'getProTaskPlan') {
         throw new Error("The AI agent failed to use the required planning tool.");
     }
     
     // Augment the tool input with coordinates if they were passed from the client
-    const toolInput = toolRequest.input;
+    const toolInput = llmResponse.toolRequest.input;
     toolInput.startLocationCoords = proTaskInput.startLocationCoords;
     toolInput.startLocationName = proTaskInput.startLocationName;
 
-    const toolResponse = await toolRequest.run();
+    const toolResponse = await llmResponse.toolRequest.run();
 
     return toolResponse.output as ProTaskAnalysisOutput;
   }
