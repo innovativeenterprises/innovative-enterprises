@@ -125,7 +125,7 @@ export const analyzeProTask = ai.defineFlow(
     
     const llmResponse = await ai.generate({
         prompt: proTaskAnalysisPrompt,
-        input,
+        input: input,
         tools: [getProTaskPlanTool],
     });
 
@@ -141,6 +141,6 @@ export const analyzeProTask = ai.defineFlow(
 
     const toolResponse = await toolRequest.run();
 
-    return toolResponse as ProTaskAnalysisOutput;
+    return toolResponse.output as ProTaskAnalysisOutput;
   }
 );

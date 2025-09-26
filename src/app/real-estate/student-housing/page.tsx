@@ -1,8 +1,7 @@
 
-'use server';
+'use client';
 
 import StudentHousingClientPage from '@/app/admin/education-tech/student-housing/client-page';
-import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 };
 
 
-export default async function StudentHousingPage() {
-    const leases = await getLeases();
-    return <StudentHousingClientPage initialLeases={leases} />;
+export default function StudentHousingPage() {
+    return <StudentHousingClientPage />;
 }

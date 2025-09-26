@@ -11,16 +11,6 @@ import type { Product } from '@/lib/products.schema';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { useProductsData, useStagesData } from "@/hooks/use-data-hooks";
 
-const projectIdeas = [
-    "A B2B marketplace for overstock inventory called StockClear",
-    "An AI-powered platform for generating legal contracts for startups in Oman",
-    "A mobile app for booking private chefs for home dining experiences",
-    "A virtual reality platform for architectural visualization called 'PANOSPACE'",
-    "A gamified language learning app for learning the Omani Arabic dialect",
-    "A sustainable e-commerce platform for eco-friendly products made in Oman",
-    "A drone delivery service for remote areas in the Sharqiyah Sands",
-];
-
 export default function ProjectsPage() {
     const { data: products, setData: setProducts } = useProductsData();
     const { data: stages } = useStagesData();
@@ -47,11 +37,11 @@ export default function ProjectsPage() {
     
     const handleGenerateProject = async () => {
         setIsLoading(true);
-        toast({ title: 'Generating New Project...', description: 'Navi is analyzing an idea and creating a project plan.' });
+        toast({ title: 'Generating New Project...', description: 'Navi is analyzing the idea and creating a project plan.' });
 
         try {
-            // Select a random idea to make the generation more dynamic
-            const idea = projectIdeas[Math.floor(Math.random() * projectIdeas.length)];
+            // In a real scenario, you might get the idea from a form or another source
+            const idea = "A B2B marketplace for overstock inventory called StockClear";
             const plan = await generateProjectPlan({ idea });
             
             const newProject: Product = {

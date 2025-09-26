@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
@@ -6,7 +7,7 @@ import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';
 import { initialClients, initialTestimonials } from './clients';
 import { initialPricing } from './pricing';
-import { initialCanteenProducts, initialDailySales } from './pos-data';
+import { initialPosProducts, initialDailySales } from './pos-data';
 import { initialStages } from './stages';
 import { initialAssets } from './assets';
 import { initialInvestors } from './investors';
@@ -123,7 +124,7 @@ export const getOpportunities = async () => initialOpportunities;
 export const getClients = async () => initialClients;
 export const getTestimonials = async () => initialTestimonials;
 export const getPricing = async () => initialPricing;
-export const getPosProducts = async () => initialCanteenProducts;
+export const getPosProducts = async () => initialPosProducts;
 export const getDailySales = async () => initialDailySales;
 export const getStages = async () => initialStages;
 export const getAssets = async () => initialAssets;
@@ -208,4 +209,3 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
-

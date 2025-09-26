@@ -1,0 +1,26 @@
+diff --git a/node_modules/genkit/lib/runner.js b/node_modules/genkit/lib/runner.js
+index c57764d..d19d28c 100644
+--- a/node_modules/genkit/lib/runner.js
++++ b/node_modules/genkit/lib/runner.js
+@@ -37,7 +37,7 @@ const handlebars = require("handlebars");
+ const path = require("path");
+ const z = require("zod");
+ const crypto = require("crypto");
+-const packageJson = require('../package.json');
++const packageJson = { version: '1.0.0' };
+ const runner = __importStar(require("./runner.js"));
+ const telemetry_2 = require("./telemetry.js");
+ const __1 = require("..");
+diff --git a/node_modules/genkit/package.json b/node_modules/genkit/package.json
+index 322c3ba..84c30c7 100644
+--- a/node_modules/genkit/package.json
++++ b/node_modules/genkit/package.json
+@@ -27,7 +27,7 @@
+   "dependencies": {
+     "long": "^5.2.3",
+     "zod": "^3.22.4",
+-    "handlebars": "^4.7.8"
++    "handlebars": "4.7.8"
+   },
+   "devDependencies": {
+     "@types/long": "^5.0.0",

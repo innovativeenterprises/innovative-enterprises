@@ -6,12 +6,6 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Bot } from 'lucide-react';
 import CfoDashboardPage from '@/app/admin/cfo-dashboard/page';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Fintech Super-App | CFO Dashboard",
-  description: "Financial overview and analysis for your business operations.",
-};
 
 export default function CfoPage() {
     return (

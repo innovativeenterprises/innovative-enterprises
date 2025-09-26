@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -27,10 +26,10 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
 );
 
 export default function AdminDashboardPage() {
-    const { products, isClient: isProductsClient } = useProductsData();
-    const { providers, isClient: isProvidersClient } = useProvidersData();
-    const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
-    const { services, isClient: isServicesClient } = useServicesData();
+    const { data: products, isClient: isProductsClient } = useProductsData();
+    const { data: providers, isClient: isProvidersClient } = useProvidersData();
+    const { data: opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+    const { data: services, isClient: isServicesClient } = useServicesData();
     const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
     
     const isClient = isProductsClient && isProvidersClient && isOpportunitiesClient && isServicesClient && isStaffClient;
@@ -85,6 +84,41 @@ export default function AdminDashboardPage() {
                     </CardContent>
                </Card>
             </div>
+        </div>
+    );
+}
+
+```
+  </change>
+  <change>
+    <file>src/app/admin/network/page.tsx</file>
+    <content><![CDATA[
+'use client';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProviderTable from '@/components/provider-table';
+import AssetTable from '../asset-table';
+
+export default function NetworkPage() {
+    
+    return (
+        <div className="space-y-8">
+            <div>
+                <h1 className="text-3xl font-bold">Network Management</h1>
+                <p className="text-muted-foreground">Manage your external network of providers and rental assets.</p>
+            </div>
+            <Tabs defaultValue="providers">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="providers">Providers & Partners</TabsTrigger>
+                    <TabsTrigger value="assets">Rental Assets</TabsTrigger>
+                </TabsList>
+                <TabsContent value="providers" className="mt-6">
+                    <ProviderTable />
+                </TabsContent>
+                <TabsContent value="assets" className="mt-6">
+                    <AssetTable />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }
