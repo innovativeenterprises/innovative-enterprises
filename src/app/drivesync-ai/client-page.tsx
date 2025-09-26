@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useCarsData, useRentalAgenciesData } from '@/hooks/use-data-hooks';
 
 const bookingData = [
     { date: 'Mon', bookings: 12 }, { date: 'Tue', bookings: 15 }, { date: 'Wed', bookings: 8 },
@@ -19,17 +20,22 @@ const bookingData = [
 ];
 const chartConfig = { bookings: { label: "Bookings", color: "hsl(var(--chart-1))" } };
 
-export default function DriveSyncClientPage({ initialAgencies, initialCars }: { initialAgencies: RentalAgency[], initialCars: CarType[] }) {
-    const [selectedAgencyId, setSelectedAgencyId] = useState(initialAgencies[0]?.id || '');
-    const [isClient, setIsClient] = useState(false);
+export default function DriveSyncClientPage() {
+    const { data: agencies, isClient: isAgenciesClient } = useRentalAgenciesData();
+    const { data: cars, isClient: isCarsClient } = useCarsData();
+    const isClient = isAgenciesClient && isCarsClient;
+    
+    const [selectedAgencyId, setSelectedAgencyId] = useState('');
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        if (isClient && agencies.length > 0 && !selectedAgencyId) {
+            setSelectedAgencyId(agencies[0].id);
+        }
+    }, [isClient, agencies, selectedAgencyId]);
 
     const agencyCars = useMemo(() => {
-        return initialCars.filter(c => c.rentalAgencyId === selectedAgencyId);
-    }, [selectedAgencyId, initialCars]);
+        return cars.filter(c => c.rentalAgencyId === selectedAgencyId);
+    }, [selectedAgencyId, cars]);
     
     const kpiData = useMemo(() => {
         if (!isClient) return { total: 0, available: 0, rented: 0, revenue: 0 };
@@ -82,7 +88,7 @@ export default function DriveSyncClientPage({ initialAgencies, initialCars }: { 
                                     <SelectValue placeholder="Select an agency..."/>
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {initialAgencies.map(agency => (
+                                    {agencies.map(agency => (
                                         <SelectItem key={agency.id} value={agency.id}>{agency.name}</SelectItem>
                                     ))}
                                 </SelectContent>

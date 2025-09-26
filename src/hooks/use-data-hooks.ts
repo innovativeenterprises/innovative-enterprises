@@ -5,7 +5,7 @@ import { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return (initialData?: AppState[K]) => { // initialData is now optional
+  return () => { 
     const data = useGlobalStore(state => state[key]);
     const setData = useSetStore();
     const isClient = useGlobalStore(state => state.isClient);
@@ -23,7 +23,7 @@ export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
-export const useStaffData = (initialData?: { leadership: AppState['leadership'], staff: AppState['staff'], agentCategories: AppState['agentCategories'] }) => {
+export const useStaffData = () => {
     const data = useGlobalStore(state => ({
         leadership: state.leadership,
         staff: state.staff,
@@ -47,6 +47,7 @@ export const useCommunityEventsData = createDataHook('communityEvents');
 export const useCommunityMembersData = createDataHook('communityMembers');
 export const useAlumniJobsData = createDataHook('alumniJobs');
 export const useCarsData = createDataHook('cars');
+export const useRentalAgenciesData = createDataHook('rentalAgencies');
 export const usePosProductsData = createDataHook('posProducts');
 export const useBriefcaseData = createDataHook('briefcase');
 export const useKnowledgeBaseData = createDataHook('knowledgeBase');

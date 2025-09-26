@@ -3,7 +3,7 @@
 
 import { getRentalAgencies, getCars } from '@/lib/firestore';
 import type { Metadata } from 'next';
-import DriveSyncClientPage from './client-page';
+import DriveSyncClientPage from '@/app/drivesync-ai/client-page';
 
 export const metadata: Metadata = {
     title: "Admin - DriveSync AI | Car Rental Management",
@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DriveSyncAiPage() {
-    const [agencies, cars] = await Promise.all([
+    // Data is fetched to ensure it's in the initial global store state.
+    await Promise.all([
         getRentalAgencies(),
         getCars(),
     ]);
-    return <DriveSyncClientPage initialAgencies={agencies} initialCars={cars} />;
+    return <DriveSyncClientPage />;
 }
