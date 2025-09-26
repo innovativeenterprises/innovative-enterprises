@@ -50,12 +50,15 @@ const answerQuestionFlow = ai.defineFlow(
     outputSchema: AnswerQuestionOutputSchema,
   },
   async (input) => {
-    const llmResponse = await answerQuestionPrompt(input);
+    const llmResponse = await ai.generate({
+      prompt: answerQuestionPrompt,
+      input: input,
+    });
     
-    // Check if the model decided to use a tool.
-    if (llmResponse.toolRequest) {
-        const toolResponse = await llmResponse.toolRequest.run();
-        const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
+    const toolRequest = llmResponse.toolRequest();
+    if (toolRequest) {
+        const toolResponse = await toolRequest.run();
+        const toolOutput = toolResponse as z.infer<typeof routeToSpecialistTool.outputSchema>;
 
         return {
             answer: toolOutput.response,
@@ -65,17 +68,14 @@ const answerQuestionFlow = ai.defineFlow(
         };
     }
 
-    // If no tool was called, return the direct text response.
-    const directAnswer = llmResponse.output;
+    const directAnswer = llmResponse.output();
     if (directAnswer) {
-      // Ensure there are always some suggestions, even if the model forgets.
       if (!directAnswer.suggestedReplies || directAnswer.suggestedReplies.length === 0) {
         directAnswer.suggestedReplies = ["What services do you offer?", "How do I become a partner?", "Tell me about your products."];
       }
       return directAnswer;
     }
     
-    // Fallback in case of unexpected response from the model
     return {
         answer: "I'm sorry, I'm not sure how to handle that request. Could you please rephrase it?",
         suggestedReplies: ["What are your services?", "How do I partner with you?", "Tell me about your products."],

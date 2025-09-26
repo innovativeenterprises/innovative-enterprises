@@ -34,9 +34,7 @@ const DummyMap = ({ onLocationSelect }: { onLocationSelect: (loc: { lat: number,
     </div>
 );
 
-const ProTaskFormSchema = ProTaskAnalysisInputSchema.extend({
-    serviceName: z.string().min(1, "Please select a service."),
-});
+const ProTaskFormSchema = ProTaskAnalysisInputSchema.omit({ documentList: true, notes: true, serviceFee: true});
 type ProTaskFormValues = z.infer<typeof ProTaskFormSchema>;
 
 

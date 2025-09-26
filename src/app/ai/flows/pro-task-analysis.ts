@@ -129,16 +129,17 @@ export const analyzeProTask = ai.defineFlow(
         tools: [getProTaskPlanTool],
     });
 
-    if (!llmResponse.toolRequest || llmResponse.toolRequest.name !== 'getProTaskPlan') {
+    const toolRequest = llmResponse.toolRequest();
+    if (!toolRequest || toolRequest.name !== 'getProTaskPlan') {
         throw new Error("The AI agent failed to use the required planning tool.");
     }
     
     // Augment the tool input with coordinates if they were passed from the client
-    const toolInput = llmResponse.toolRequest.input;
+    const toolInput = toolRequest.input;
     toolInput.startLocationCoords = input.startLocationCoords;
     toolInput.startLocationName = input.startLocationName;
 
-    const toolResponse = await llmResponse.toolRequest.run();
+    const toolResponse = await toolRequest.run();
 
     return toolResponse.output as ProTaskAnalysisOutput;
   }
