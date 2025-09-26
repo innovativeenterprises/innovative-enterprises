@@ -1,7 +1,6 @@
 'use server';
 
 import AdminOperationsClientPage from "./client-page";
-import { getPosProducts } from "@/lib/firestore";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,11 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminOperationsPage() {
-    const posProducts = await getPosProducts();
-
     return (
-        <AdminOperationsClientPage
-            initialPosProducts={posProducts}
-        />
+        <AdminOperationsClientPage />
     );
 }

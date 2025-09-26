@@ -19,6 +19,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
+import { useStairspaceListingsData } from '@/hooks/use-data-hooks';
 
 const ListingSchema = z.object({
   title: z.string().min(3, "Title is required"),
@@ -101,14 +102,9 @@ const AddEditListingDialog = ({
     );
 };
 
-export default function StairspaceTable({initialListings}: {initialListings: StairspaceListing[]}) {
-    const [listings, setListings] = useState<StairspaceListing[]>(initialListings);
-    const [isClient, setIsClient] = useState(false);
+export default function StairspaceTable() {
+    const { data: listings, setData: setListings, isClient } = useStairspaceListingsData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: ListingValues, id?: string) => {
         const newListingData = { ...values, tags: values.tags.split(',').map(tag => tag.trim()) };

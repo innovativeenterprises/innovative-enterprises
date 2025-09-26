@@ -7,17 +7,8 @@ import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { PosProduct } from "@/lib/pos-data.schema";
-import PosProductTable from "@/app/admin/settings/pos-product-table";
 
-interface AdminOperationsClientPageProps {
-    initialPosProducts: PosProduct[];
-}
-
-export default function AdminOperationsClientPage({ 
-    initialPosProducts,
-}: AdminOperationsClientPageProps) {
+export default function AdminOperationsClientPage() {
 
   const internalTools = [
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
@@ -32,38 +23,25 @@ export default function AdminOperationsClientPage({
         <div>
             <h1 className="text-3xl font-bold">Operations</h1>
             <p className="text-muted-foreground">
-                A suite of internal AI tools and configurations to enhance business operations.
+                A suite of internal AI tools to enhance business operations.
             </p>
         </div>
 
-        <Tabs defaultValue="ai-tools" className="w-full">
-             <TabsList className="grid w-full grid-cols-1">
-                <TabsTrigger value="ai-tools">AI Tools & Generators</TabsTrigger>
-            </TabsList>
-            <TabsContent value="ai-tools" className="mt-6 space-y-8">
-                <div className="pt-8">
-                    <h2 className="text-2xl font-bold mb-4">Internal AI Tools</h2>
-                    <Accordion type="single" collapsible className="w-full">
-                    {internalTools.map(tool => (
-                        <AccordionItem value={tool.id} key={tool.id}>
-                            <AccordionTrigger>
-                                <div className="flex items-center gap-3">
-                                    <tool.icon className="h-5 w-5 text-primary" />
-                                    <span className="text-lg font-semibold">{tool.title}</span>
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="pt-4">
-                                {tool.component}
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                    </Accordion>
-                </div>
-            </TabsContent>
-             <TabsContent value="pos-products" className="mt-6">
-                <PosProductTable initialProducts={initialPosProducts} />
-            </TabsContent>
-        </Tabs>
+        <Accordion type="single" collapsible className="w-full">
+        {internalTools.map(tool => (
+            <AccordionItem value={tool.id} key={tool.id}>
+                <AccordionTrigger>
+                    <div className="flex items-center gap-3">
+                        <tool.icon className="h-5 w-5 text-primary" />
+                        <span className="text-lg font-semibold">{tool.title}</span>
+                    </div>
+                </AccordionTrigger>
+                <AccordionContent className="pt-4">
+                    {tool.component}
+                </AccordionContent>
+            </AccordionItem>
+        ))}
+        </Accordion>
     </div>
   );
 }

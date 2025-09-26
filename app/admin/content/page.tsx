@@ -2,7 +2,7 @@
 'use server';
 
 import AdminContentClientPage from './client-page';
-import { getPricing, getProducts, getServices, getClients, getTestimonials, getStages, getPosProducts } from "@/lib/firestore";
+import { getProducts, getServices, getClients, getTestimonials, getStages, getPricing, getPosProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 
 
 export default async function AdminContentPage() {
-    const [services, products, stages, clients, testimonials, pricing, posProducts] = await Promise.all([
+    // Data is fetched here to ensure it's available for the initial state of the global store,
+    // but we no longer need to pass it down as props.
+    await Promise.all([
         getServices(),
         getProducts(),
         getStages(),
@@ -23,14 +25,6 @@ export default async function AdminContentPage() {
     ]);
 
     return (
-        <AdminContentClientPage
-            initialServices={services}
-            initialProducts={products}
-            initialStages={stages}
-            initialClients={clients}
-            initialTestimonials={testimonials}
-            initialPricing={pricing}
-            initialPosProducts={posProducts}
-        />
+        <AdminContentClientPage />
     );
 }
