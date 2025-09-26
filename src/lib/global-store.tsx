@@ -31,17 +31,18 @@ export function StoreProvider({ children }: { children: ReactNode; }) {
 
     useEffect(() => {
         const store = storeRef.current!;
-        if (!store.getState().isClient) {
+        const currentState = store.getState();
+        
+        if (!currentState.isClient) {
             getFirestoreData().then(data => {
-                store.getState().set(state => ({
+                store.setState(state => ({
                     ...state,
                     ...data,
                     isClient: true,
                 }));
             }).catch(error => {
                 console.error("Failed to load initial data:", error);
-                // Still set isClient to true to unblock UI, even if data is partial
-                 store.getState().set(state => ({ ...state, isClient: true }));
+                store.setState({ isClient: true }); // Still unblock UI
             });
         }
     }, []);
@@ -53,10 +54,10 @@ export function StoreProvider({ children }: { children: ReactNode; }) {
     );
 };
 
-export function useStore<T>(selector: (state: AppState) => T): T {
+export function useGlobalStore<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext)
   if (!store) {
-    throw new Error('useStore must be used within a StoreProvider')
+    throw new Error('useGlobalStore must be used within a StoreProvider')
   }
   return useZustandStore(store, selector)
 }
@@ -71,4 +72,3 @@ export function useSetStore() {
 
 // Global instance for read-only access if needed outside React components.
 export const store = createAppStore();
-
