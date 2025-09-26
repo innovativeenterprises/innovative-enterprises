@@ -11,10 +11,11 @@ export const metadata: Metadata = {
 };
 
 export default async function NetworkPage() {
-    const [providers, assets] = await Promise.all([
+    // Data is fetched to ensure it's in the initial global store state.
+    await Promise.all([
         getProviders(),
         getAssets(),
     ]);
 
-    return <NetworkPageClient initialProviders={providers || []} initialAssets={assets || []} />;
+    return <NetworkPageClient />;
 }

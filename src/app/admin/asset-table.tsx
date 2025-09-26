@@ -98,8 +98,8 @@ const AddEditAssetDialog = ({
     )
 }
 
-export default function AssetTable({ initialAssets }: { initialAssets: Asset[] }) {
-    const { data: assets, setData: setAssets } = useAssetsData(initialAssets);
+export default function AssetTable() {
+    const { data: assets, setData: setAssets } = useAssetsData();
     const { toast } = useToast();
 
     const handleSave = (values: Asset, id?: string) => {
