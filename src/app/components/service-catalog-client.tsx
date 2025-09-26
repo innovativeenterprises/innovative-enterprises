@@ -2,28 +2,31 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GitBranch } from "lucide-react";
 import Link from 'next/link';
 import { useMemo } from 'react';
 import type { Service } from "@/lib/services.schema";
+import * as Icons from 'lucide-react';
 
-const ServiceCard = ({ service }: { service: Service }) => (
-    <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
-      <CardHeader>
-        <div className="flex items-center gap-4">
+const ServiceCard = ({ service }: { service: Service }) => {
+    const Icon = (Icons as any)[service.icon] || Icons.Briefcase;
+    return (
+        <Card key={service.title} className="bg-card border-none shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group h-full">
+        <CardHeader>
+            <div className="flex items-center gap-4">
            <div className="bg-primary/10 p-4 rounded-full transition-colors duration-300 group-hover:bg-accent">
-             <service.icon className="w-8 h-8 text-primary transition-colors duration-300 group-hover:text-accent-foreground" />
+             <Icon className="w-8 h-8 text-primary transition-colors duration-300 group-hover:text-accent-foreground" />
            </div>
            <CardTitle className="text-xl text-foreground">{service.title}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <CardDescription className="text-base text-muted-foreground">
-            {service.description}
-        </CardDescription>
-      </CardContent>
-    </Card>
-);
+            </div>
+        </CardHeader>
+        <CardContent>
+            <CardDescription className="text-base text-muted-foreground">
+                {service.description}
+            </CardDescription>
+        </CardContent>
+        </Card>
+    );
+};
 
 export default function ServiceCatalogClient({ services }: { services: Service[]}) {
   const enabledServices = services.filter(s => s.enabled);
@@ -56,11 +59,13 @@ export default function ServiceCatalogClient({ services }: { services: Service[]
         </div>
 
         <div className="space-y-16">
-            {categoryOrder.map(category => (
+            {categoryOrder.map(category => {
+                const CategoryIcon = (Icons as any)[servicesByCategory[category]?.[0]?.icon] || Icons.GitBranch;
+                return (
                 servicesByCategory[category] && (
                     <div key={category}>
                         <h3 className="text-2xl md:text-3xl font-bold text-center text-primary/80 mb-8 flex items-center justify-center gap-3">
-                            <GitBranch /> {category}
+                            <CategoryIcon /> {category}
                         </h3>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {servicesByCategory[category].map((service) => (
@@ -75,7 +80,7 @@ export default function ServiceCatalogClient({ services }: { services: Service[]
                         </div>
                     </div>
                 )
-            ))}
+            )})}
         </div>
       </div>
     </section>
