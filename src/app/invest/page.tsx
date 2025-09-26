@@ -2,8 +2,7 @@
 'use server';
 
 import type { Metadata } from 'next';
-import { getProducts, getInvestors, getStaffData, getServices, getSettings } from "@/lib/firestore";
-import InvestClientPage from "./client-page";
+import InvestClientPage from "@/app/invest/client-page";
 
 export const metadata: Metadata = {
   title: "Invest With Us | Innovative Enterprises",
@@ -11,27 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function InvestPage() {
-    const [products, investors, staffData, services, settings] = await Promise.all([
-        getProducts(),
-        getInvestors(),
-        getStaffData(),
-        getServices(),
-        getSettings()
-    ]);
-    const allProducts = products.filter(p => p.enabled);
-
-    if (!settings) {
-        return <div>Loading...</div>; // Or some error state
-    }
-    
     return (
-        <InvestClientPage 
-            initialProducts={allProducts} 
-            initialInvestors={investors} 
-            staffData={staffData}
-            services={services}
-            settings={settings}
-        />
+        <InvestClientPage />
     );
 }
-
