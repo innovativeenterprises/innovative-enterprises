@@ -118,33 +118,29 @@ interface AgencyDashboardClientPageProps {
 export default function AgencyDashboardClientPage({ 
     dashboardType,
 }: AgencyDashboardClientPageProps) {
-    const { data: raahaAgencies } = useAgenciesData();
-    const { data: beautyCenters } = useBeautyCentersData();
-    const { data: services, setData: setServices } = useBeautyServicesData();
-    const { data: appointments, setData: setAppointments } = useBeautyAppointmentsData();
-    const { data: specialists } = useBeautySpecialistsData();
-    const { data: workers } = useWorkersData();
-    const { data: requests, setData: setRequests } = useRequestsData();
+    const { data: raahaAgencies, isClient: isRaahaAgenciesClient } = useAgenciesData();
+    const { data: beautyCenters, isClient: isBeautyCentersClient } = useBeautyCentersData();
+    const { data: services, setData: setServices, isClient: isServicesClient } = useBeautyServicesData();
+    const { data: appointments, setData: setAppointments, isClient: isAppointmentsClient } = useBeautyAppointmentsData();
+    const { data: staff, isClient: isStaffClient } = dashboardType === 'raaha' ? useWorkersData() : useBeautySpecialistsData();
+    const { data: requests, setData: setRequests, isClient: isRequestsClient } = useRequestsData();
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
-    const [isClient, setIsClient] = useState(false);
 
+    const isClient = isRaahaAgenciesClient && isBeautyCentersClient && isServicesClient && isAppointmentsClient && isStaffClient && isRequestsClient;
     const agencies = dashboardType === 'raaha' ? raahaAgencies : beautyCenters;
 
     useEffect(() => {
-        setIsClient(true);
-        if (agencies.length > 0 && !selectedAgencyId) {
+        if (isClient && agencies.length > 0 && !selectedAgencyId) {
             setSelectedAgencyId(agencies[0].id);
         }
-    }, [agencies, selectedAgencyId]);
+    }, [isClient, agencies, selectedAgencyId]);
     
     const selectedAgency = agencies.find(a => a.id === selectedAgencyId);
     
     const filteredServices = useMemo(() => services?.filter(s => s.agencyId === selectedAgency?.id), [services, selectedAgency]);
     const filteredAppointments = useMemo(() => appointments?.filter(a => a.agencyId === selectedAgency?.id), [appointments, selectedAgency]);
     
-    const staffData = dashboardType === 'raaha' ? workers : specialists;
-
     const workerTableColumns = [
         { Header: 'Candidate', accessor: 'name', Cell: ({ row }: { row: { original: Worker } }) => (
             <div className="flex items-center gap-3">
@@ -197,13 +193,13 @@ export default function AgencyDashboardClientPage({
     const tabs = dashboardType === 'raaha'
       ? [
           { value: 'requests', label: 'Hire Requests', content: <RequestTableWrapper requests={requests || []} setRequests={setRequests} agency={selectedAgency as RaahaAgency} isClient={isClient} /> },
-          { value: 'staff', label: 'Candidates', content: <AgencyStaffTable columns={staffColumns} agencyId={selectedAgency.id} staff={staffData || []} dashboardType={dashboardType} /> },
+          { value: 'staff', label: 'Candidates', content: <AgencyStaffTable columns={staffColumns} agencyId={selectedAgency.id} staff={staff || []} dashboardType={dashboardType} /> },
           { value: 'settings', label: 'Agency Settings', content: <AgencySettings agency={selectedAgency} dashboardType={dashboardType} /> }
         ]
       : [
           { value: 'schedule', label: 'Appointments', content: <ScheduleTable appointments={filteredAppointments || []} setAppointments={setAppointments} /> },
           { value: 'services', label: 'Services', content: <ServiceTable services={filteredServices || []} setServices={setServices} /> },
-          { value: 'staff', label: 'Staff', content: <AgencyStaffTable columns={staffColumns} agencyId={selectedAgency.id} staff={staffData || []} dashboardType={dashboardType}/> },
+          { value: 'staff', label: 'Staff', content: <AgencyStaffTable columns={staffColumns} agencyId={selectedAgency.id} staff={staff || []} dashboardType={dashboardType}/> },
           { value: 'settings', label: 'Center Settings', content: <AgencySettings agency={selectedAgency} dashboardType={dashboardType} /> }
         ];
 

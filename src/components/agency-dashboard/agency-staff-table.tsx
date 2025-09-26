@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -18,6 +19,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useWorkersData, useBeautySpecialistsData } from "@/hooks/use-data-hooks";
 
 type GenericStaff = Worker | BeautySpecialist;
 
@@ -204,11 +206,10 @@ const AddEditStaffDialog = ({
     )
 }
 
-export function AgencyStaffTable({ columns, agencyId, staff, setStaff, dashboardType }: { 
+export function AgencyStaffTable({ columns, agencyId, staff, dashboardType }: { 
     columns: any[], 
     agencyId: string, 
     staff: GenericStaff[], 
-    setStaff: (updater: (prev: any[]) => any[]) => void,
     dashboardType: 'raaha' | 'beauty',
 }) {
     const [isClient, setIsClient] = useState(false);
@@ -216,6 +217,11 @@ export function AgencyStaffTable({ columns, agencyId, staff, setStaff, dashboard
     const [selectedStaff, setSelectedStaff] = useState<GenericStaff | undefined>(undefined);
     const { toast } = useToast();
     
+    const { setData: setWorkers } = useWorkersData();
+    const { setData: setSpecialists } = useBeautySpecialistsData();
+    
+    const setStaffData = dashboardType === 'raaha' ? setWorkers : setSpecialists;
+
     useEffect(() => {
         setIsClient(true);
     }, []);
@@ -229,11 +235,11 @@ export function AgencyStaffTable({ columns, agencyId, staff, setStaff, dashboard
 
     const handleSave = (values: Partial<GenericStaff>, id?: string) => {
         if (id) {
-            setStaff(prev => prev.map(s => s.id === id ? { ...s, ...values } : s));
+            setStaffData((prev: any[]) => prev.map(s => s.id === id ? { ...s, ...values } : s));
             toast({ title: `${dashboardType === 'raaha' ? 'Candidate' : 'Specialist'} updated.` });
         } else {
             const newStaffMember = { ...values, id: `staff_${Date.now()}`, agencyId };
-            setStaff(prev => [...prev, newStaffMember]);
+            setStaffData((prev: any[]) => [...prev, newStaffMember]);
             toast({ title: `${dashboardType === 'raaha' ? 'Candidate' : 'Specialist'} added.` });
         }
     };

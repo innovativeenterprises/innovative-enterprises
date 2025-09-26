@@ -17,8 +17,7 @@ import { Loader2, Save, Wand2 } from "lucide-react";
 import Image from 'next/image';
 import { analyzeCrDocument } from '@/ai/flows/cr-analysis';
 import { fileToDataURI } from '@/lib/utils';
-import { useAgenciesData } from "@/hooks/use-data-hooks";
-import { useBeautyCentersData } from "@/hooks/use-data-hooks";
+import { useAgenciesData, useBeautyCentersData } from '@/hooks/use-data-hooks';
 
 type GenericAgency = RaahaAgency | BeautyCenter;
 
