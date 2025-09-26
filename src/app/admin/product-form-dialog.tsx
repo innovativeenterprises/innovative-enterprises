@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -13,20 +14,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from '@/hooks/use-toast';
 import type { Product } from "@/lib/products.schema";
-import { ProductSchema } from "@/lib/products.schema";
 import { Sparkles, Loader2 } from "lucide-react";
-import type { ProjectStage } from "@/lib/stages";
+import type { ProjectStage } from '@/lib/stages';
 import Image from 'next/image';
 import { generateImage } from '@/ai/flows/image-generator';
-import { fileToDataURI } from "@/lib/utils";
+import { fileToDataURI } from '@/lib/utils';
 import { Card, CardContent } from "@/components/ui/card";
 
+const ProductSchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(3, "Name is required"),
+  description: z.string().min(10, "Description is required"),
+  stage: z.string().min(1, "Stage is required"),
+  category: z.string().min(1, "Category is required."),
+  price: z.coerce.number().min(0, "Price is required."),
+  rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5."),
+  enabled: z.boolean(),
+  adminStatus: z.enum(['On Track', 'At Risk', 'On Hold', 'Completed']).optional(),
+  adminNotes: z.string().optional(),
+  href: z.string().optional(),
+  aiHint: z.string().optional(),
+});
+
+
 const DialogProductSchema = ProductSchema.extend({
-  imageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
+  image: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   imageFile: z.any().optional(),
-}).refine(data => data.imageUrl || (data.imageFile && data.imageFile.length > 0), {
-    message: "Either an Image URL or an Image File is required.",
-    path: ["imageUrl"],
 });
 
 export type ProductValues = z.infer<typeof ProductSchema> & { image?: string };
@@ -54,7 +67,7 @@ export const AddEditProductDialog = ({
         resolver: zodResolver(DialogProductSchema),
     });
 
-     const watchImageUrl = form.watch('imageUrl');
+     const watchImageUrl = form.watch('image');
      const watchImageFile = form.watch('imageFile');
 
     useEffect(() => {
@@ -78,7 +91,7 @@ export const AddEditProductDialog = ({
                 price: product?.price || 0,
                 rating: product?.rating || 0,
                 category: product?.category || 'Uncategorized',
-                imageUrl: product?.image || "",
+                image: product?.image || "",
                 imageFile: undefined,
                 adminStatus: product?.adminStatus,
                 adminNotes: product?.adminNotes,
@@ -98,7 +111,7 @@ export const AddEditProductDialog = ({
         toast({ title: "Generating Image...", description: "Lina is creating your image. This might take a moment."});
         try {
             const { imageUrl } = await generateImage({ prompt: hint });
-            form.setValue('imageUrl', imageUrl, { shouldValidate: true });
+            form.setValue('image', imageUrl, { shouldValidate: true });
             form.setValue('imageFile', undefined);
             setImagePreview(imageUrl);
              toast({ title: "Image Generated!", description: "The new image has been added."});
@@ -115,8 +128,8 @@ export const AddEditProductDialog = ({
         
         if (data.imageFile && data.imageFile.length > 0) {
             imageValue = await fileToDataURI(data.imageFile[0]);
-        } else if (data.imageUrl) {
-            imageValue = data.imageUrl;
+        } else if (data.image) {
+            imageValue = data.image;
         }
 
         onSave({ 
@@ -198,7 +211,7 @@ export const AddEditProductDialog = ({
                                         <FormMessage />
                                     </FormItem>
                                 )} />
-                                <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                                <FormField control={form.control} name="image" render={({ field }) => (
                                     <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
                                 )} />
 
