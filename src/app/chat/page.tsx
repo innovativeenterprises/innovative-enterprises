@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { ChatComponent } from '@/components/chat/chat-component';

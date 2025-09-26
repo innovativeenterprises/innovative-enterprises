@@ -23,7 +23,7 @@ export async function answerQuestion(input: AnswerQuestionInput): Promise<Answer
   return answerQuestionFlow(input);
 }
 
-const prompt = ai.definePrompt({
+const answerQuestionPrompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
   input: {schema: AnswerQuestionInputSchema},
   output: {schema: AnswerQuestionOutputSchema},
@@ -50,10 +50,18 @@ const answerQuestionFlow = ai.defineFlow(
     outputSchema: AnswerQuestionOutputSchema,
   },
   async (input) => {
-    const response = await prompt(input);
+    const response = await ai.generate({
+      prompt: answerQuestionPrompt.prompt,
+      history: [{role: 'user', content: [{text: input.question}]}],
+      tools: [routeToSpecialistTool],
+      output: {
+        format: 'json',
+        schema: AnswerQuestionOutputSchema,
+      }
+    });
     
     // Check if the model decided to use a tool.
-    if (response.toolRequest?.name === 'routeToSpecialist') {
+    if (response.toolRequest) {
         const toolResponse = await response.toolRequest.run();
         const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
 

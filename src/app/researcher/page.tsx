@@ -1,9 +1,9 @@
+
 'use client';
 
 import { ChatComponent } from '@/components/chat/chat-component';
 import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
 import { Search } from 'lucide-react';
-import type { Metadata } from 'next';
 
 export default function ResearcherPage() {
     // The AI flow can handle a generic query, which we'll get from the chat component's 'message' property.
@@ -38,7 +38,7 @@ export default function ResearcherPage() {
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-primary">Data Miner</h1>
             <p className="mt-4 text-lg text-muted-foreground">
-                Chat with Rami, your AI-powered research assistant. Ask him to scrape data from any URL or perform a web search to gather and summarize information quickly.
+                Chat with Rami, your AI-powered research assistant. Ask him to scrape data from any URL or perform a general web search to gather and summarize information quickly.
             </p>
             </div>
             <div className="max-w-3xl mx-auto mt-12 space-y-8">

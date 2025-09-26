@@ -9,7 +9,6 @@ import { type DailySales } from '@/lib/pos-data.schema';
 import { useGlobalStore } from '@/hooks/use-data-hooks';
 
 export function SalesAnalyticsChat({ dailySales }: { dailySales: DailySales }) {
-    const settings = useGlobalStore(s => s.settings);
 
     const salesAnalyticsFlow = async (input: { [key: string]: any }) => {
         return await analyzeSalesData({

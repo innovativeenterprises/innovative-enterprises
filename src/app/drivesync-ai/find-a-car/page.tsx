@@ -53,7 +53,7 @@ export default function FindACarPage() {
         // We can't directly render components in the chat, but we can pass structured data
         // and let the UI decide how to render it. For this prototype, we'll just enrich the text.
         return {
-            response: richResponse,
+            answer: richResponse,
             // recommendedCar: result.recommendedCar // This would be for a more advanced UI
         };
     };

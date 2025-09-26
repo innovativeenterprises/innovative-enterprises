@@ -51,8 +51,9 @@ const answerQuestionFlow = ai.defineFlow(
   },
   async (input) => {
     const response = await ai.generate({
-      prompt: answerQuestionPrompt,
-      input: input,
+      prompt: answerQuestionPrompt.prompt,
+      history: [{role: 'user', content: [{text: input.question}]}],
+      tools: [routeToSpecialistTool],
       output: {
         format: 'json',
         schema: AnswerQuestionOutputSchema,

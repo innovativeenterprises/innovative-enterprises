@@ -1,9 +1,9 @@
+
 'use client';
 
 import { ChatComponent } from '@/components/chat/chat-component';
 import { legalAgentRouter } from '@/ai/flows/legal-agent';
 import { Scale } from 'lucide-react';
-import type { Metadata } from 'next';
 
 export default function LegalAgentPage() {
     // This is the new router flow that will decide which sub-task to perform.
