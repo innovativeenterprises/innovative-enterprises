@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useStore, useSetStore as useZustandSetStore } from '@/lib/global-store.tsx';
+import { useGlobalStore, useSetStore as useZustandSetStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
   return (initialData?: AppState[K]) => {
-    const data = useStore(state => state[key]);
-    const isClient = useStore(state => state.isClient);
+    const data = useGlobalStore(state => state[key]);
+    const isClient = useGlobalStore(state => state.isClient);
     const setData = useZustandSetStore();
 
     // The data is either the client-side state or the initial data from the server.
@@ -23,12 +23,12 @@ export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
 
 export const useStaffData = () => {
-    const data = useStore(state => ({
+    const data = useGlobalStore(state => ({
         leadership: state.leadership,
         staff: state.staff,
         agentCategories: state.agentCategories,
     }));
-    const isClient = useStore(state => state.isClient);
+    const isClient = useGlobalStore(state => state.isClient);
     return { ...data, isClient };
 };
 
@@ -73,4 +73,4 @@ export const useIndustriesData = createDataHook('industries');
 export const useDailySalesData = createDataHook('dailySales');
 export const useUserDocumentsData = createDataHook('userDocuments');
 export const useSaaSProductsData = createDataHook('saasProducts');
-export { useStore as useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
+export { useSetStore } from '@/lib/global-store.tsx';
