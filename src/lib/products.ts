@@ -21,7 +21,7 @@ const hrefMap: Record<string, string> = {
     "CertiTrust": "/education-tech/certitrust",
     "CampusOS": "/education-tech/campus-os",
     "BoQ Generator": "/construction-tech/quantity-calculator",
-    "Fire & Safety Estimator": "/construction-tech/fire-safety-estimator",
+    "Building Systems Estimator": "/construction-tech/building-systems-estimator",
     "SiteGuard Compliance": "/construction-tech/site-guard",
     "WorkforceFlow": "/construction-tech/workforce-scheduler",
     "FacilityFlow SaaS": "/real-estate-tech/facility-flow",
@@ -52,7 +52,6 @@ const hrefMap: Record<string, string> = {
     "We Match - MATCH CUP GAME": "/we-match",
     "ConstructFin": "/construction-tech/constructfin",
     "ClientView Portal": "/client-portal",
-    "Building Systems Estimator": "/construction-tech/building-systems-estimator",
 };
 
 const saasProductList: Product[] = allSaaSProducts.map((p, index) => ({
