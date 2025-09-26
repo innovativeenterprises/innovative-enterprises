@@ -101,8 +101,8 @@ const AddEditListingDialog = ({
     );
 };
 
-export default function StairspaceListingsTable({initialListings}: {initialListings: StairspaceListing[]}) {
-    const { data: listings, setData: setListings, isClient } = useStairspaceListingsData(initialListings);
+export default function StairspaceListingsTable() {
+    const { data: listings, setData: setListings, isClient } = useStairspaceListingsData();
     const { toast } = useToast();
 
     const handleSave = (values: ListingValues, id?: string) => {
