@@ -100,7 +100,7 @@ export default function ProForm() {
   const handleLocationSelect = (location: { lat: number, lon: number, name: string }) => {
     form.setValue('startLocationCoords', { lat: location.lat, lon: location.lon });
     form.setValue('startLocationName', location.name);
-    toast({ title: 'Location Selected', description: `${"'" + location.name + "'"} set as the starting point.` });
+    toast({ title: 'Location Selected', description: `'${location.name}' set as the starting point.` });
   };
 
   return (
@@ -120,7 +120,7 @@ export default function ProForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Select Service</FormLabel>
-                                <Select onValueChange={(value) => handleServiceChange(value)} defaultValue={field.value}>
+                                <Select onValueChange={(value) => { handleServiceChange(value); }} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Choose a government service..." />

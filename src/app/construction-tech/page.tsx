@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Building } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
-import { useProductsData } from "@/hooks/use-data-hooks";
+import { useProductsData } from '@/hooks/use-data-hooks';
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -95,4 +95,3 @@ export default function ConstructionTechPage() {
     </div>
   );
 }
-

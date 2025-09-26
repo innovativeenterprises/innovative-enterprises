@@ -1,22 +1,17 @@
 
-'use server';
+'use client';
 
 import type { Metadata } from 'next';
-import { getProducts, getStages } from '@/lib/firestore';
 import { KanbanBoard } from '@/components/kanban-board';
 import { Search } from 'lucide-react';
+import { useProductsData, useStagesData } from '@/hooks/use-data-hooks';
 
 export const metadata: Metadata = {
     title: "ClientView Portal",
     description: "Track the live status of your projects."
 };
 
-export default async function ClientPortalPage() {
-    const [products, stages] = await Promise.all([
-        getProducts(),
-        getStages(),
-    ]);
-
+export default function ClientPortalPage() {
     return (
         <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
@@ -31,8 +26,6 @@ export default async function ClientPortalPage() {
                 </div>
                 <div className="pointer-events-none">
                     <KanbanBoard 
-                        initialProducts={products} 
-                        initialStages={stages}
                         readOnly={true}
                     />
                 </div>
