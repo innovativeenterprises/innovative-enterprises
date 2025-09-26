@@ -95,7 +95,7 @@ export default function TestimonialTable() {
             setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...values } : t));
             toast({ title: 'Testimonial updated.' });
         } else {
-            const newTestimonial = { ...values, id: `test_${Date.now()}` };
+            const newTestimonial: Testimonial = { ...values, id: `test_${Date.now()}` };
             setTestimonials(prev => [newTestimonial, ...prev]);
             toast({ title: 'Testimonial added.' });
         }
