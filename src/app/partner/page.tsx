@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
@@ -15,7 +16,7 @@ import { PartnershipInquiryInputSchema } from '@/ai/flows/partnership-inquiry.sc
 import { analyzeCrDocument, type CrAnalysisOutput } from '@/ai/flows/cr-analysis';
 import { analyzeIdentity, type IdentityAnalysisOutput } from '@/ai/flows/identity-analysis';
 import { generateAgreement, type AgreementGenerationOutput } from '@/ai/flows/generate-agreement';
-import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket, BadgePercent, Phone, ArrowLeft, Star } from 'lucide-react';
+import { Loader2, CheckCircle, Handshake, UploadCloud, Wand2, UserCheck, Building, User, Camera, ScanLine, FileSignature, Download, Briefcase, CreditCard, Ticket, BadgePercent, Phone, ArrowLeft, Star, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -28,6 +29,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { fileToDataURI } from '@/lib/utils';
 import type { Metadata } from 'next';
+import { PartnerCard } from './partner-card';
 
 export const metadata: Metadata = {
   title: "Become a Partner | Innovative Enterprises",
@@ -143,91 +145,8 @@ type ApplicantType = 'individual' | 'company';
 
 const EXTRA_SERVICE_FEE = 1.5;
 
-const PartnershipCard = ({ cardRef, partnerName, crNumber, joiningDate, expiryDate, classification, services, partnerType, logoUrl }: {
-    cardRef: React.RefObject<HTMLDivElement>,
-    partnerName: string,
-    crNumber?: string,
-    joiningDate: string,
-    expiryDate: string,
-    classification: string,
-    services: string,
-    partnerType: string,
-    logoUrl?: string,
-}) => {
-    
-    const getTierColor = () => {
-        switch(classification.toLowerCase()) {
-            case 'diamond': return 'from-blue-400 to-indigo-500';
-            case 'gold': return 'from-yellow-400 to-amber-500';
-            case 'silver': return 'from-gray-400 to-slate-500';
-            case 'bronze': return 'from-orange-400 to-amber-600';
-            default: return 'from-gray-200 to-gray-300';
-        }
-    }
-
-    const getTierTextColor = () => {
-         switch(classification.toLowerCase()) {
-            case 'diamond':
-            case 'gold':
-            case 'silver':
-            case 'bronze': return 'text-white';
-            default: return 'text-gray-800';
-        }
-    }
-
-    return (
-        <div ref={cardRef} className={`w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl`}>
-            <div className="bg-gray-800 rounded-lg p-6 relative h-full text-white">
-                 <div className="absolute top-4 right-4">
-                    <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
-                </div>
-                 <div className="absolute bottom-0 right-0 w-32 h-32">
-                    <img src="https://www.svgrepo.com/show/493547/qr-code.svg" alt="QR Code" className="w-full h-full opacity-10" />
-                </div>
-                
-                <div className="flex items-start gap-4">
-                    {logoUrl && (
-                        <div className="w-20 h-20 bg-white rounded-md flex-shrink-0 flex items-center justify-center p-1">
-                            <Image src={logoUrl} alt="Partner Logo" width={72} height={72} className="object-contain" />
-                        </div>
-                    )}
-                    <div className="flex-grow">
-                        <p className="text-xs font-semibold uppercase tracking-widest opacity-70">{partnerType}</p>
-                        <h3 className="text-2xl font-bold">{partnerName}</h3>
-                        {crNumber && <p className="font-mono text-sm opacity-80">CRN: {crNumber}</p>}
-                    </div>
-                </div>
-
-                <div className="mt-6 space-y-3">
-                    <div className="text-sm">
-                        <p className="font-semibold opacity-70">Services:</p>
-                        <p className="opacity-90 truncate">{services}</p>
-                    </div>
-                    <div className="flex justify-between text-xs font-medium">
-                        <div>
-                            <p className="opacity-70">Joined:</p>
-                            <p className="font-semibold opacity-90">{joiningDate}</p>
-                        </div>
-                        <div className="text-right">
-                            <p className="opacity-70">Expires:</p>
-                            <p className="font-semibold opacity-90">{expiryDate}</p>
-                        </div>
-                    </div>
-                </div>
-
-                 <div className="absolute bottom-4 left-4">
-                    <p className={`font-bold text-lg tracking-wider uppercase ${getTierTextColor()} flex items-center gap-2`}>
-                        <Star className="w-5 h-5 fill-current" /> {classification} Partner
-                    </p>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-
 export default function PartnerPage() {
-  const { settings } = useSettingsData();
+  const { data: settings } = useSettingsData();
   const { sanadOffice: sanadSettings } = settings || {};
   
   const [pageState, setPageState] = useState<PageState>('selection');
@@ -469,6 +388,7 @@ export default function PartnerPage() {
     if (!cardRef.current) return;
     toast({ title: 'Generating Card...', description: 'Please wait.' });
     try {
+      const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(cardRef.current, {
         scale: 3,
         backgroundColor: null,
@@ -575,10 +495,10 @@ export default function PartnerPage() {
      <>
       <CardHeader>
         <CardTitle className="text-center">Partnership Application</CardTitle>
-        <CardDescription className="text-center">Are you applying as an individual or on behalf of a company?</CardDescription>
+        <CardDescription className="text-center">Choose your path to join our network of experts.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center gap-6 pt-6">
-        <div className="grid grid-cols-2 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => { setApplicantType('individual'); setPageState('upload'); }}>
                 <User className="w-8 h-8"/>
                 <span>Individual / Freelancer</span>
@@ -586,6 +506,16 @@ export default function PartnerPage() {
             <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => { setApplicantType('company'); setPageState('upload'); }}>
                 <Building className="w-8 h-8"/>
                 <span>Company / Subcontractor</span>
+            </Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+            <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => router.push('/partner/sales-challenge')}>
+                <Handshake className="w-8 h-8"/>
+                <span>Sales & Marketing Agent</span>
+            </Button>
+             <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => router.push('/partner/rewards')}>
+                <Star className="w-8 h-8"/>
+                <span>View Partner Rewards</span>
             </Button>
         </div>
       </CardContent>
@@ -956,7 +886,7 @@ export default function PartnerPage() {
                                 <FormField control={paymentForm.control} name="expiryDate" render={({ field }) => (
                                     <FormItem><FormLabel>Expiry Date</FormLabel><FormControl><Input placeholder="MM/YY" {...field} /></FormControl><FormMessage /></FormItem>
                                 )}/>
-                                <FormField control={paymentForm.control} name="cvc" render={({ field }) => (
+                                <FormField control={form.control} name="cvc" render={({ field }) => (
                                     <FormItem><FormLabel>CVC</FormLabel><FormControl><Input placeholder="123" {...field} /></FormControl><FormMessage /></FormItem>
                                 )}/>
                             </div>
@@ -1011,7 +941,7 @@ export default function PartnerPage() {
             </Alert>
         )}
 
-        <PartnershipCard 
+        <PartnerCard 
             cardRef={cardRef}
             partnerName={partnerName}
             crNumber={crNumber}
@@ -1072,7 +1002,7 @@ export default function PartnerPage() {
         case 'capture_id_front': return <CameraCapture title="Scan Front of ID Card" onCapture={onIdFrontCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_id_back': return <CameraCapture title="Scan Back of ID Card" onCapture={onIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_rep_id_front': return <CameraCapture title="Scan Representative's ID Front" onCapture={onRepIdFrontCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
-        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onRepIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
+        case 'capture_rep_id_back': return <CameraCapture title="Scan Representative's ID Back" onCapture={onRepIdBackCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         case 'capture_cr': return <CameraCapture title="Scan Commercial Record" onCapture={onCrCaptured} onCancel={() => setPageState('upload')} isFlipping={isFlipping} />;
         default: return <SelectionScreen />;
     }
@@ -1127,3 +1057,109 @@ export default function PartnerPage() {
     </div>
   );
 }
+```,
+  <change>
+    <file>src/lib/rewards.ts</file>
+    <content><![CDATA[
+import type { LucideIcon } from "lucide-react";
+import { Gem, Award, Shield, Star, Crown } from "lucide-react";
+
+export interface WelcomeKit {
+    level: "Bronze" | "Silver" | "Gold" | "Platinum" | "Diamond";
+    icon: LucideIcon;
+    items: string[];
+}
+
+export const partnerKits: WelcomeKit[] = [
+    {
+        level: "Bronze",
+        icon: Shield,
+        items: [
+            "Official Digital Certificate",
+            "Bronze Partner Digital Badge",
+        ]
+    },
+    {
+        level: "Silver",
+        icon: Star,
+        items: [
+            "All Bronze Tier rewards",
+            "Branded Notebook & Pen",
+        ]
+    },
+    {
+        level: "Gold",
+        icon: Trophy,
+        items: [
+            "All Silver Tier rewards",
+            "Custom Partnership Wall Frame",
+            "Branded USB Flash Drive (32GB)",
+        ]
+    },
+    {
+        level: "Platinum",
+        icon: Crown,
+        items: [
+            "All Gold Tier rewards",
+            "Engraved Stand Table Flag",
+            "Custom Partnership Challenge Coin",
+        ]
+    },
+    {
+        level: "Diamond",
+        icon: Gem,
+        items: [
+            "All Platinum Tier rewards",
+            "Premium Car Sun Shield",
+            "Priority support & feature requests",
+            "Invitation to Annual Partner Gala",
+        ]
+    }
+];
+
+export const freelancerKits: WelcomeKit[] = [
+    {
+        level: "Bronze",
+        icon: Shield,
+        items: [
+            "Digital Certificate of Partnership",
+            "Bronze Freelancer Digital Badge",
+        ]
+    },
+    {
+        level: "Silver",
+        icon: Star,
+        items: [
+            "All Bronze Tier rewards",
+            "Premium Branded Notebook & Pen Set",
+        ]
+    },
+    {
+        level: "Gold",
+        icon: Trophy,
+        items: [
+            "All Silver Tier rewards",
+            "High-Speed USB Flash Drive (64GB)",
+            "Listing featured in our monthly newsletter",
+        ]
+    },
+    {
+        level: "Platinum",
+        icon: Crown,
+        items: [
+            "All Gold Tier rewards",
+            "Custom Engraved Desk Nameplate",
+            "Access to exclusive webinars and training",
+        ]
+    },
+    {
+        level: "Diamond",
+        icon: Gem,
+        items: [
+            "All Platinum Tier rewards",
+            "Personalized Partnership Challenge Coin",
+            "A featured interview on our company blog",
+            "Direct access to a Partner Success Manager",
+        ]
+    }
+];

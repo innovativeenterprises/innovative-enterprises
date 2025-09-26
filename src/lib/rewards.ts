@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from "lucide-react";
 import { Gem, Award, Shield, Star, Crown } from "lucide-react";
 
@@ -96,7 +97,4 @@ export const freelancerKits: WelcomeKit[] = [
             "All Platinum Tier rewards",
             "Personalized Partnership Challenge Coin",
             "A featured interview on our company blog",
-            "Direct access to a Partner Success Manager",
-        ]
-    }
-];
+            "Direct access to
