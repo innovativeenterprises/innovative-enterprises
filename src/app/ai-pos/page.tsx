@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import type { AppSettings } from '@/lib/settings';
 
 // --- PosGrid Component Logic ---
 const PosGrid = ({ products, onAddToCart }: { products: PosProduct[], onAddToCart: (product: PosProduct) => void }) => {
@@ -40,15 +41,15 @@ const PosGrid = ({ products, onAddToCart }: { products: PosProduct[], onAddToCar
 };
 
 // --- CheckoutPanel Component Logic ---
-const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCheckout, isCheckingOut }: {
+const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCheckout, isCheckingOut, settings }: {
     cart: CartItem[],
     onUpdateQuantity: (productId: string, quantity: number) => void,
     onRemoveItem: (productId: string) => void,
     onClearCart: () => void,
     onCheckout: () => void,
     isCheckingOut: boolean,
+    settings: AppSettings | null,
 }) => {
-    const settings = useGlobalStore(s => s.settings);
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const vat = settings?.vat.enabled ? subtotal * settings.vat.rate : 0;
     const total = subtotal + vat;
@@ -110,6 +111,7 @@ export default function AiPosPage() {
     const posProducts = useGlobalStore(s => s.posProducts);
     const dailySales = useGlobalStore(s => s.dailySales);
     const isClient = useGlobalStore(s => s.isClient);
+    const settings = useGlobalStore(s => s.settings);
     const setStore = useSetStore();
 
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -184,12 +186,13 @@ export default function AiPosPage() {
             const newTransaction = {
                 id: `trans_${Date.now()}`,
                 items: cart,
-                total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) * 1.05, // with 5% tax
+                total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) * (1 + (settings?.vat.enabled ? settings.vat.rate : 0)),
                 timestamp: new Date().toISOString(),
             };
             
             // Deduct stock
             setStore(state => ({
+                ...state,
                 posProducts: state.posProducts.map(p => {
                     const cartItem = cart.find(ci => ci.id === p.id);
                     if (cartItem) {
@@ -240,6 +243,7 @@ export default function AiPosPage() {
                             onClearCart={handleClearCart}
                             onCheckout={handleCheckout}
                             isCheckingOut={isCheckingOut}
+                            settings={settings}
                         />
                     </div>
                 </div>
