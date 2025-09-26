@@ -1,11 +1,75 @@
+'use client';
 
-'use server';
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import imageData from '@/app/lib/placeholder-images.json';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useClientsData, useTestimonialsData } from '@/hooks/use-data-hooks';
 
-import ClientTestimonialsClient from "@/app/components/client-testimonials-client";
-import type { Client, Testimonial } from '@/lib/clients.schema';
+export default function ClientTestimonials() {
+  const { data: clients, isClient: isClientsClient } = useClientsData();
+  const { data: testimonials, isClient: isTestimonialsClient } = useTestimonialsData();
+  const isClient = isClientsClient && isTestimonialsClient;
+  
+  const { testimonialAvatars } = imageData || {};
 
-export default async function ClientTestimonials({ clients, testimonials }: { clients: Client[], testimonials: Testimonial[] }) {
-    return (
-        <ClientTestimonialsClient clients={clients} testimonials={testimonials} />
+  const renderQuote = (quote: string) => {
+    const parts = quote.split(/\*\*(.*?)\*\*/g);
+    return parts.map((part, index) => 
+      index % 2 === 1 ? <strong key={index} className="font-semibold text-foreground">{part}</strong> : part
     );
+  };
+
+  return (
+    <section id="testimonials" className="py-16 md:py-24 bg-white dark:bg-card">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary">Trusted by Leading Organizations</h2>
+          <p className="mt-4 text-lg text-muted-foreground">
+            We are proud to partner with government entities and key industry players.
+          </p>
+        </div>
+        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16">
+          {!isClient ? Array.from({length: 6}).map((_, i) => <Skeleton key={i} className="h-[60px] w-[150px]" />) : clients.map((client) => (
+              <div key={client.id} className="grayscale hover:grayscale-0 transition-all duration-300 dark:invert dark:hover:invert-0" title={client.name}>
+                <Image
+                  src={client.logo}
+                  alt={client.name}
+                  width={150}
+                  height={60}
+                  className="object-contain"
+                  data-ai-hint={client.aiHint}
+                />
+              </div>
+            ))}
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {!isClient ? Array.from({length: 2}).map((_, i) => <Skeleton key={i} className="h-48 w-full" />) : testimonials.map((testimonial) => {
+                    const avatarData = testimonialAvatars && (testimonialAvatars as Record<string, {src: string, alt: string, aiHint: string}>)[testimonial.avatarId];
+                    return (
+                        <Card key={testimonial.id} className="bg-muted/50 dark:bg-background">
+                            <CardContent className="p-6">
+                                <blockquote className="border-l-4 border-accent pl-4 italic text-foreground/80">
+                                {renderQuote(testimonial.quote)}
+                                </blockquote>
+                                <div className="flex items-center gap-4 mt-6">
+                                <Avatar>
+                                    {avatarData && <AvatarImage src={avatarData.src} alt={avatarData.alt} data-ai-hint={avatarData.aiHint} />}
+                                    <AvatarFallback>{testimonial.author.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                    <div>
+                                        <p className="font-semibold text-primary">{testimonial.author}</p>
+                                        <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )
+                })}
+        </div>
+      </div>
+    </section>
+  );
 }

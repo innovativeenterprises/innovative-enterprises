@@ -1,29 +1,7 @@
-
 'use client';
 
-import CompanyOverview from "@/components/company-overview";
-import ServiceCatalog from "@/components/service-catalog";
-import ProductShowcase from "@/components/product-showcase";
-import ClientTestimonials from "@/components/client-testimonials";
-import AiToolsCta from "@/components/ai-tools-cta";
-import { useClientsData, useServicesData, useProductsData, useTestimonialsData, useAiToolsData } from "@/hooks/use-data-hooks";
+import HomeClient from './home-client';
 
 export default function HomePage() {
-  const { data: clients } = useClientsData();
-  const { data: services } = useServicesData();
-  const { data: products } = useProductsData();
-  const { data: testimonials } = useTestimonialsData();
-  const { data: aiTools } = useAiToolsData();
-  
-  const liveProducts = products.filter(p => p.stage === 'Live & Operating');
-
-  return (
-    <>
-      <CompanyOverview />
-      <ServiceCatalog services={services} />
-      <ProductShowcase products={liveProducts} />
-      <ClientTestimonials />
-      <AiToolsCta aiTools={aiTools} />
-    </>
-  );
+  return <HomeClient />;
 }
