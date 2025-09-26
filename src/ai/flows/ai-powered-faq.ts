@@ -1,5 +1,4 @@
 
-
 'use server';
 
 /**
@@ -50,16 +49,12 @@ const answerQuestionFlow = ai.defineFlow(
     outputSchema: AnswerQuestionOutputSchema,
   },
   async (input) => {
-    const llmResponse = await ai.generate({
-      prompt: answerQuestionPrompt,
-      input: input,
-      tools: [routeToSpecialistTool],
-    });
+    const llmResponse = await answerQuestionPrompt(input);
     
     const toolRequest = llmResponse.toolRequest();
     if (toolRequest) {
         const toolResponse = await toolRequest.run();
-        const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
+        const toolOutput = toolResponse as z.infer<typeof routeToSpecialistTool.outputSchema>;
 
         return {
             answer: toolOutput.response,

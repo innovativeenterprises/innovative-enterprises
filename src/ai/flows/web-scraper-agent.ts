@@ -181,17 +181,10 @@ export const scrapeAndSummarize = ai.defineFlow(
 
     if (input.isUrl) {
       const pageData = await fetchWebPageTool({ url: input.source });
-      const response = await ai.generate({
-          prompt: summarizeWebPagePrompt,
-          input: { content: pageData.content, sourceUrl: input.source, links: pageData.links }
-      });
-      return response.output()!;
+      const response = await summarizeWebPagePrompt({ content: pageData.content, sourceUrl: input.source, links: pageData.links });
+      return response;
     } else {
-      const llmResponse = await ai.generate({
-        prompt: searchSummaryPrompt,
-        input: { query: input.source },
-        tools: [queryProviderDatabaseTool],
-      });
+      const llmResponse = await searchSummaryPrompt({ query: input.source });
       
       const toolRequest = llmResponse.toolRequest();
       if (toolRequest) {
