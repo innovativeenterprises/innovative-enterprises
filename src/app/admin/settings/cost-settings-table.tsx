@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -94,8 +93,8 @@ const AddEditCostRateDialog = ({
     );
 };
 
-export default function CostSettingsTable({ initialRates }: { initialRates: CostRate[] }) {
-    const { data: costSettings, setData: setCostSettings, isClient } = useCostSettingsData(initialRates);
+export default function CostSettingsTable() {
+    const { data: costSettings, setData: setCostSettings, isClient } = useCostSettingsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedRate, setSelectedRate] = useState<CostRate | undefined>(undefined);

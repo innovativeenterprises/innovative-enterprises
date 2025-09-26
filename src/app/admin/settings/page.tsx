@@ -1,4 +1,3 @@
-
 'use server';
 
 import AdminSettingsClientPage from './client-page';
@@ -11,7 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminSettingsPage() {
-    const [settings, pricing, costSettings, posProducts] = await Promise.all([
+    // These fetches are still necessary to populate the initial global store on the server.
+    await Promise.all([
         getSettings(),
         getPricing(),
         getCostSettings(),
@@ -19,11 +19,6 @@ export default async function AdminSettingsPage() {
     ]);
 
     return (
-        <AdminSettingsClientPage 
-            initialSettings={settings} 
-            initialPricing={pricing}
-            initialCostSettings={costSettings}
-            initialPosProducts={posProducts}
-        />
+        <AdminSettingsClientPage />
     );
 }

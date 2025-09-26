@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -108,8 +107,8 @@ const AddEditPosProductDialog = ({
     );
 };
 
-export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
-    const { data: products, setData: setProducts } = usePosProductsData(initialProducts);
+export default function PosProductTable() {
+    const { data: products, setData: setProducts } = usePosProductsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);

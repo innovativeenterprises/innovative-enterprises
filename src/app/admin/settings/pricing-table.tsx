@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -81,8 +80,8 @@ const EditPriceDialog = ({
     )
 }
 
-export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
-    const { data: pricing, setData: setPricing, isClient } = usePricingData(initialPricing);
+export default function PricingTable() { 
+    const { data: pricing, setData: setPricing, isClient } = usePricingData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);

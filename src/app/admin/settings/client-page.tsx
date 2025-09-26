@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -18,23 +17,8 @@ import { Switch } from '@/components/ui/switch';
 import PricingTable from './pricing-table';
 import CostSettingsTable from './cost-settings-table';
 import PosProductTable from './pos-product-table';
-import type { Pricing } from '@/lib/pricing.schema';
-import type { CostRate } from '@/lib/cost-settings.schema';
-import type { PosProduct } from '@/lib/pos-data.schema';
 
-interface AdminSettingsClientPageProps {
-    initialSettings: AppSettings | null;
-    initialPricing: Pricing[];
-    initialCostSettings: CostRate[];
-    initialPosProducts: PosProduct[];
-}
-
-export default function AdminSettingsClientPage({ 
-    initialSettings,
-    initialPricing,
-    initialCostSettings,
-    initialPosProducts,
-}: AdminSettingsClientPageProps) {
+export default function AdminSettingsClientPage() {
     const [isLoading, setIsLoading] = useState(false);
     const setStore = useSetStore();
     const settings = useGlobalStore(s => s.settings);
@@ -42,7 +26,7 @@ export default function AdminSettingsClientPage({
 
     const form = useForm<AppSettings>({
         resolver: zodResolver(AppSettingsSchema),
-        defaultValues: settings || initialSettings || undefined,
+        defaultValues: settings || undefined,
     });
 
     const onSubmit: SubmitHandler<AppSettings> = async (data) => {
@@ -130,9 +114,9 @@ export default function AdminSettingsClientPage({
                 </form>
             </Form>
             
-            <CostSettingsTable initialRates={initialCostSettings} />
-            <PricingTable initialPricing={initialPricing} />
-            <PosProductTable initialProducts={initialPosProducts} />
+            <CostSettingsTable />
+            <PricingTable />
+            <PosProductTable />
             <ThemeGenerator />
         </div>
     );
