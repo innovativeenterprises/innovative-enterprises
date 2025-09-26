@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -34,18 +33,15 @@ type AgencyValues = z.infer<typeof AgencySchema>;
 
 interface AgencySettingsProps<T extends GenericAgency> {
     agency: T;
+    setAgencies: (updater: (prev: T[]) => T[]) => void;
     dashboardType: 'raaha' | 'beauty';
 }
 
-export function AgencySettings<T extends GenericAgency>({ agency, dashboardType }: AgencySettingsProps<T>) {
+export function AgencySettings<T extends GenericAgency>({ agency, setAgencies, dashboardType }: AgencySettingsProps<T>) {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(agency.logo);
-    
-    // Conditional hook usage based on dashboard type
-    const useDataHook = dashboardType === 'raaha' ? useAgenciesData : useBeautyCentersData;
-    const { setData: setAgencies } = useDataHook();
 
     const form = useForm<AgencyValues>({
         resolver: zodResolver(AgencySchema),

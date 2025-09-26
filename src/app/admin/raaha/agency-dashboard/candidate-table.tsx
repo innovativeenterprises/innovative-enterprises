@@ -43,3 +43,4 @@ export function CandidateTable({ agencyId }: { agencyId: string }) {
         />
     );
 }
+

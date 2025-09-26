@@ -5,12 +5,12 @@ import type { BeautyCenter } from "@/lib/beauty-centers.schema";
 import { useBeautyCentersData } from '@/hooks/use-data-hooks';
 
 export function AgencySettings({ agency }: { agency: BeautyCenter }) {
-    const { setData: setBeautyCenters } = useBeautyCentersData();
+    const { setData: setAgencies } = useBeautyCentersData();
 
     return (
         <GenericAgencySettings
             agency={agency}
-            setAgencies={setBeautyCenters as any} // Cast to satisfy the generic type
+            setAgencies={setAgencies as any} // Cast to satisfy the generic type
             dashboardType="beauty"
         />
     )
