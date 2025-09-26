@@ -96,22 +96,26 @@ export const findAndBookCar = ai.defineFlow(
   },
   async ({ query }) => {
     const availableCars = initialCars.filter(c => c.availability === 'Available');
-    const llmResponse = await driveSyncAgentPrompt({
-      query,
-      availableCarsJson: JSON.stringify(availableCars),
+    const llmResponse = await ai.generate({
+        prompt: driveSyncAgentPrompt,
+        input: {
+            query,
+            availableCarsJson: JSON.stringify(availableCars),
+        },
+        tools: [bookCarTool, getVehicleHealthTool, getBookingTrendsTool]
     });
 
     const toolRequest = llmResponse.toolRequest();
     if (toolRequest) {
       const toolResponse = await toolRequest.run();
        if (toolRequest.name === 'bookCar') {
-            const output = toolResponse.output as z.infer<typeof bookCarTool.outputSchema>;
+            const output = toolResponse as z.infer<typeof bookCarTool.outputSchema>;
             return {
                 response: output.message || "An error occurred during booking.",
             };
         }
         if (toolRequest.name === 'getVehicleHealth') {
-            const health = toolResponse.output as {status: string, lastService: string, notes: string};
+            const health = toolResponse as {status: string, lastService: string, notes: string};
             return {
                 response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
             }

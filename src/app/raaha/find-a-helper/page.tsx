@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import RaahaFormClient from './client-page';
 import type { Metadata } from 'next';

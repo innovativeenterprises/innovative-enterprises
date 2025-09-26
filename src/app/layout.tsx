@@ -4,7 +4,6 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import MainLayout from './main-layout';
 
 const inter = Inter({
   subsets: ['latin'],

@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import EventsFinanceClientPage from "./client-page";
 import type { Metadata } from 'next';
@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 
-export default async function EventsFinancePage() {
+export default function EventsFinancePage() {
     return <EventsFinanceClientPage />;
 }
+
