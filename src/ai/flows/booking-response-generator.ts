@@ -45,7 +45,7 @@ Draft a suitable response based on these instructions.
 
 export const generateBookingResponse = ai.defineFlow(
   {
-    name: 'generateListingDescriptionFlow',
+    name: 'generateBookingResponseFlow',
     inputSchema: BookingResponseInputSchema,
     outputSchema: BookingResponseOutputSchema,
   },

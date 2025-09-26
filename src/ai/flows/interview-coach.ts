@@ -28,7 +28,7 @@ const prompt = ai.definePrompt({
 
 **Instructions:**
 1.  Generate 10 distinct questions.
-2.  For each question, classify it into one of the following categories: 'Behavioral', 'Technical', 'Situational', 'Case Study', or 'Cultural Fit'.
+2.  For each question, classify it into one of the following categories: 'Behavioral', 'Technical', 'Situational', 'Case Study', 'Cultural Fit'.
 3.  Ensure the questions cover a range of these categories and are appropriate for the seniority and type of role indicated by the job title.
 4.  Do not ask for basic questions like "Tell me about yourself" or "What are your weaknesses?". Focus on more insightful questions.
 
