@@ -1,4 +1,3 @@
-
 'use client';
 
 import ServiceTable from "@/app/admin/service-table";
@@ -12,8 +11,8 @@ import type { ProjectStage } from "@/lib/stages";
 import type { Client, Testimonial } from "@/lib/clients.schema";
 import type { Pricing } from "@/lib/pricing.schema";
 import type { PosProduct } from "@/lib/pos-data.schema";
-import PricingTable from "@/app/admin/operations/pricing-table";
-import PosProductTable from "@/app/admin/pos-product-table";
+import PricingTable from "@/app/admin/settings/pricing-table";
+import PosProductTable from "@/app/admin/settings/pos-product-table";
 
 
 interface AdminContentClientPageProps {

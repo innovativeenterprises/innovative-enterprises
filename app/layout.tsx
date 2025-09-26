@@ -1,11 +1,11 @@
-
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { getSettings } from '@/lib/firestore';
 import { Providers } from '@/app/providers';
-import { initialSettings } from '@/lib/settings';
+import { SplashScreen } from '@/components/splash-screen';
+import { getFirestoreData } from '@/lib/firestore';
+import MainLayout from './main-layout';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -52,23 +52,21 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  // Using initialSettings directly as a fallback.
-  // The getSettings function now has internal error handling.
-  const settings = await getSettings() || initialSettings;
+}) {
+  const initialState = await getFirestoreData();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        <Providers initialSettings={settings}>
-          {children}
-        </Providers>
+          <Providers initialState={initialState}>
+            <MainLayout>
+              {children}
+            </MainLayout>
+          </Providers>
       </body>
     </html>
   );
 }
-
-  

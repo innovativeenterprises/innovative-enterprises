@@ -1,4 +1,3 @@
-
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -9,23 +8,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { KnowledgeDocument } from "@/lib/knowledge.schema";
-import type { CostRate } from "@/lib/cost-settings.schema";
-import type { Pricing } from "@/lib/pricing.schema";
 import type { PosProduct } from "@/lib/pos-data.schema";
-import PosProductTable from "@/app/admin/pos-product-table";
+import PosProductTable from "@/app/admin/settings/pos-product-table";
 
 interface AdminOperationsClientPageProps {
-    initialKnowledgeBase: KnowledgeDocument[];
-    initialCostSettings: CostRate[];
-    initialPricing: Pricing[];
     initialPosProducts: PosProduct[];
 }
 
 export default function AdminOperationsClientPage({ 
-    initialKnowledgeBase, 
-    initialCostSettings,
-    initialPricing,
     initialPosProducts,
 }: AdminOperationsClientPageProps) {
 
