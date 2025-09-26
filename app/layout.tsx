@@ -65,11 +65,7 @@ export default async function RootLayout({
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
           <Providers initialState={initialState}>
             <MainLayout>
-                <div className="flex flex-col min-h-screen">
-                    <Header />
-                    <main className="flex-grow">{children}</main>
-                    <Footer />
-                </div>
+              {children}
             </MainLayout>
           </Providers>
       </body>

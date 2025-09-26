@@ -4,6 +4,8 @@
 import { useState } from 'react';
 import { SplashScreen } from '@/components/splash-screen';
 import { usePathname } from 'next/navigation';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 export default function MainLayout({
   children,
@@ -25,5 +27,11 @@ export default function MainLayout({
   }
 
   // For all public routes, render the children which now includes Header/Footer from the RootLayout
-  return <>{children}</>;
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-grow">{children}</main>
+      <Footer />
+    </div>
+  );
 }
