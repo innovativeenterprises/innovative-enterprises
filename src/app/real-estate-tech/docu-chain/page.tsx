@@ -1,13 +1,8 @@
 
-import { ClipboardCheck } from "lucide-react";
+'use client';
+
 import DocuChainClientPage from "./client-page";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "DocuChain Compliance | Innovative Enterprises",
-  description: "Automate your real estate paperwork. Generate professional Tenancy or Sale Agreements tailored to your needs in seconds with our AI-powered tool.",
-};
-
+import { ClipboardCheck } from "lucide-react";
 
 export default function DocuChainPage() {
   return (

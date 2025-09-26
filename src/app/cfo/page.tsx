@@ -1,18 +1,13 @@
-'use server';
+
+'use client';
 
 import CfoDashboardPageClient from './client-page';
-import type { Metadata } from 'next';
 import { Card, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Bot } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: "Fintech Super-App | CFO Dashboard",
-  description: "Financial overview and analysis for your business operations.",
-};
-
-export default async function CfoPage() {
+export default function CfoPage() {
     return (
         <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
@@ -44,4 +39,3 @@ export default async function CfoPage() {
         </div>
     );
 }
-

@@ -54,7 +54,7 @@ export default function AdminDashboardPage() {
                 </p>
             </div>
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-               <ChartCard title="Ecosystem Overview" data={kpiData} dataKey="value" color="#8884d8" />
+               <ChartCard title="Ecosystem Overview" data={kpiData} dataKey="value" color="hsl(var(--primary))" />
                <Card className="lg:col-span-2">
                     <CardHeader>
                         <CardTitle>Recently Joined Partners</CardTitle>
@@ -87,3 +87,4 @@ export default function AdminDashboardPage() {
         </div>
     );
 }
+

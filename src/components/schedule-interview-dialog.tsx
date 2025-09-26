@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -15,10 +14,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { format } from 'date-fns';
-import type { HireRequest } from "@/lib/raaha-requests";
+import type { HireRequest } from "@/lib/raaha-requests.schema";
 import type { BookingRequest } from "@/lib/stairspace-requests";
 
-type GenericRequest = HireRequest | BookingRequest;
+export type GenericRequest = (HireRequest | BookingRequest) & { interviewDate?: string; interviewNotes?: string };
 
 const InterviewSchema = z.object({
   interviewDate: z.date({ required_error: "An interview date is required."}),

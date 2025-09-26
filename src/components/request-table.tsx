@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo, useEffect, forwardRef } from "react";
@@ -10,7 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type GenericRequest = Record<string, any> & { id: string };
+export type GenericRequest = Record<string, any> & { id: string };
 
 // Client-side component to prevent hydration errors with time formatting
 export const TimeAgoCell = ({ date, isClient }: { date: string, isClient: boolean }) => {
@@ -154,4 +153,3 @@ export const RequestTable = forwardRef<HTMLTableElement, {
     );
 });
 RequestTable.displayName = "RequestTable";
-
