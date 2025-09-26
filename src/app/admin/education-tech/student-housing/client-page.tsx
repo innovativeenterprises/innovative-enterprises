@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useMemo, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from "@/components/ui/button";
@@ -10,14 +10,14 @@ import { ArrowLeft, PlusCircle, Trash2, Home } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
 import type { SignedLease } from '@/lib/leases';
 import { useLeasesData } from "@/hooks/use-data-hooks";
 import { DueDateDisplay } from "@/components/due-date-display";
 
 
-function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLease[] }) {
-    const { data: leases, setData: setLeases, isClient } = useLeasesData(initialLeases);
+function StudentHousingClientPage() {
+    const { data: leases, setData: setLeases, isClient } = useLeasesData();
     const { toast } = useToast();
     
     const expiringLeasesCount = useMemo(() => {
@@ -44,12 +44,12 @@ function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLeas
     }, 0) : 0, [leases, isClient]);
 
     return (
-        <div className="bg-background min-h-[calc(100vh-8rem)]">
+        <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-5xl mx-auto space-y-8">
-                    <div>
+                     <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/education-tech/eduflow">
+                            <Link href="/admin/education-tech/eduflow">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to EduFlow Suite
                             </Link>
@@ -66,18 +66,9 @@ function StudentHousingClientPage({ initialLeases }: { initialLeases: SignedLeas
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
-                         <Card>
-                             <CardHeader><CardTitle>Active Leases</CardTitle></CardHeader>
-                             <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : leases.filter(l => l.status === 'Active').length}</CardContent>
-                        </Card>
-                         <Card>
-                            <CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-3/4" /> : `OMR ${totalMonthlyRent.toLocaleString()}`}</CardContent>
-                        </Card>
-                         <Card>
-                            <CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader>
-                            <CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent>
-                        </Card>
+                         <Card><CardHeader><CardTitle>Active Leases</CardTitle></CardHeader><CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : leases.filter(l => l.status === 'Active').length}</CardContent></Card>
+                         <Card><CardHeader><CardTitle>Total Monthly Rent</CardTitle></CardHeader><CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-3/4" /> : `OMR ${totalMonthlyRent.toLocaleString()}`}</CardContent></Card>
+                         <Card><CardHeader><CardTitle>Agreements Expiring Soon</CardTitle></CardHeader><CardContent className="text-3xl font-bold text-primary">{!isClient ? <Skeleton className="h-8 w-1/2" /> : expiringLeasesCount}</CardContent></Card>
                     </div>
 
                     <Card>

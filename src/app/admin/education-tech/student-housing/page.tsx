@@ -1,7 +1,6 @@
 
 'use server';
 
-import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
 import StudentHousingClientPage from './client-page';
 
@@ -12,6 +11,5 @@ export const metadata: Metadata = {
 
 
 export default async function AdminStudentHousingPage() {
-    const leases = await getLeases();
-    return <StudentHousingClientPage initialLeases={leases} />;
+    return <StudentHousingClientPage />;
 }

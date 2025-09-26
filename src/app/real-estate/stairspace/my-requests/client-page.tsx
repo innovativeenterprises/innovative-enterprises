@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
@@ -12,6 +12,7 @@ import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useRouter } from 'next/navigation';
 import type { BookingRequest } from '@/lib/stairspace-requests';
+import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -24,19 +25,17 @@ const getStatusBadge = (status: BookingRequest['status']) => {
     }
 };
 
-export default function MyStairspaceRequestsClientPage({ initialRequests }: { initialRequests: BookingRequest[] }) {
-    const [requests, setRequests] = useState<BookingRequest[]>(initialRequests);
-    const [isClient, setIsClient] = useState(false);
+export default function MyStairspaceRequestsClientPage() {
+    const { data: requests, setData: setRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
     const router = useRouter();
-    
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.
-    const myRequests = isClient ? requests.filter(r => r.clientName === 'Anwar Ahmed') : [];
+    const myRequests = useMemo(() => {
+        if (!isClient) return [];
+        return requests.filter(r => r.clientName === 'Anwar Ahmed');
+    }, [isClient, requests]);
     
     const onSchedule = (id: string, values: InterviewValues) => {
         setRequests(prev => prev.map(r => 

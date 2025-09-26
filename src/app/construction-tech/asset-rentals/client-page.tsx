@@ -15,9 +15,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from '@/components/ui/textarea';
+import { useAssetsData } from '@/hooks/use-data-hooks';
 
 // --- RentalRequestForm Logic ---
 const RentalRequestSchema = z.object({
@@ -136,8 +137,8 @@ const AssetCard = ({ asset, onRent }: { asset: Asset; onRent: (asset: Asset) => 
 };
 
 // --- Main Page Component ---
-export default function AssetRentalsClientPage({ initialAssets }: { initialAssets: Asset[] }) {
-    const [assets, setAssets] = useState<Asset[]>(initialAssets);
+export default function AssetRentalsClientPage() {
+    const { data: assets, isClient } = useAssetsData();
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     
@@ -151,7 +152,7 @@ export default function AssetRentalsClientPage({ initialAssets }: { initialAsset
         setSelectedAsset(null);
     };
     
-    const availableAssets = assets.filter(asset => asset.status === 'Available');
+    const availableAssets = isClient ? assets.filter(asset => asset.status === 'Available') : [];
 
     return (
         <div className="space-y-16">
@@ -162,9 +163,28 @@ export default function AssetRentalsClientPage({ initialAssets }: { initialAsset
             <div className="max-w-6xl mx-auto">
                 <h2 className="text-3xl font-bold text-center mb-8">Available Assets</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {availableAssets.map((asset) => (
-                        <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
-                    ))}
+                    {!isClient ? (
+                        Array.from({ length: 8 }).map((_, index) => (
+                           <Card key={index}>
+                                <CardHeader className="p-0">
+                                    <Skeleton className="h-48 w-full rounded-t-lg" />
+                                </CardHeader>
+                                <CardContent className="p-4 space-y-2">
+                                    <Skeleton className="h-4 w-20" />
+                                    <Skeleton className="h-6 w-3/4" />
+                                    <Skeleton className="h-4 w-full" />
+                                </CardContent>
+                                <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                                    <Skeleton className="h-8 w-1/3" />
+                                    <Skeleton className="h-10 w-1/2" />
+                                </CardFooter>
+                           </Card>
+                        ))
+                    ) : (
+                        availableAssets.map((asset) => (
+                            <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
+                        ))
+                    )}
                 </div>
             </div>
 

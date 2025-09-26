@@ -69,8 +69,8 @@ const getStatusBadge = (status: BookingRequest['status']) => {
     }
 };
 
-export default function StairspaceRequestsClientPage({ initialRequests }: { initialRequests: BookingRequest[] }) {
-    const { data: requests, setData: setRequests, isClient } = useStairspaceRequestsData(initialRequests);
+export default function StairspaceRequestsClientPage() {
+    const { data: requests, setData: setRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
     const router = useRouter();
 

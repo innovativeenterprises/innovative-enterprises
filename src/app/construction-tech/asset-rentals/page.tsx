@@ -3,7 +3,6 @@
 
 import { Server } from "lucide-react";
 import AssetRentalsClientPage from "./client-page";
-import { getAssets } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,6 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default async function AssetRentalsPage() {
-    const assets = await getAssets();
-    return <AssetRentalsClientPage initialAssets={assets} />;
+    return <AssetRentalsClientPage />;
 }
