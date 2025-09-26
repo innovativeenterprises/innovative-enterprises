@@ -12,8 +12,6 @@ export default function HomeClient() {
   const { data: services } = useServicesData();
   const { data: products } = useProductsData();
   const { data: aiTools } = useAiToolsData();
-  const { data: clients } = useClientsData();
-  const { data: testimonials } = useTestimonialsData();
   
   const liveProducts = products.filter(p => p.stage === 'Live & Operating');
 
