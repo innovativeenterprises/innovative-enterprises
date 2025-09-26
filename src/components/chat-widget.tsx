@@ -11,8 +11,7 @@ import { useGlobalStore } from "@/lib/global-store.tsx";
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
-    const settings = useGlobalStore(state => state.settings);
-    const isClient = useGlobalStore(state => state.isClient);
+    const { settings, isClient } = useGlobalStore(state => ({ settings: state.settings, isClient: state.isClient }));
     
     if (!isClient || !settings?.chatWidgetEnabled) {
         return null;
