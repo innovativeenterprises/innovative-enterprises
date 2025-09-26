@@ -948,3 +948,4 @@ I0926 02:42:30.493794    2587 dev.go:102] Listening on address (HTTP + gRPC): 12
 [debug] [2025-09-26T02:42:31.394Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
 [debug] [2025-09-26T02:42:31.397Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
 [debug] [2025-09-26T02:42:31.398Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-09-26T16:49:13.352Z] [Firebase Plugin] Activating Firebase extension.
