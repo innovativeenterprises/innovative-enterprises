@@ -7,7 +7,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 
-
 export default function CompanyOverview() {
 
   return (
