@@ -96,29 +96,34 @@ export const findAndBookCar = ai.defineFlow(
   },
   async ({ query }) => {
     const availableCars = initialCars.filter(c => c.availability === 'Available');
-    const response = await driveSyncAgentPrompt({
-      query,
-      availableCarsJson: JSON.stringify(availableCars),
+    const response = await ai.generate({
+      prompt: driveSyncAgentPrompt.prompt,
+      history: [{role: 'user', content: [{text: `User query: ${query}\n\nAvailable cars: ${JSON.stringify(availableCars)}`}]}],
+      tools: [bookCarTool, getVehicleHealthTool, getBookingTrendsTool],
+      output: {
+        format: 'json',
+        schema: DriveSyncAgentOutputSchema,
+      }
     });
 
     // Check for tool calls
-    if (response.toolRequest?.name === 'bookCar') {
+    if (response.toolRequest) {
       const toolResponse = await response.toolRequest.run();
-      return {
-        response: toolResponse.output?.message || "An error occurred during booking.",
-      };
-    }
-    if (response.toolRequest?.name === 'getVehicleHealth') {
-        const toolResponse = await response.toolRequest.run();
-        const health = toolResponse.output as {status: string, lastService: string, notes: string};
-        return {
-            response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
+       if (response.toolRequest.name === 'bookCar') {
+            return {
+                response: toolResponse.output?.message || "An error occurred during booking.",
+            };
         }
-    }
-     if (response.toolRequest?.name === 'getBookingTrends') {
-        const toolResponse = await response.toolRequest.run();
-        return {
-            response: `Booking Trends Report: ${toolResponse.output}`
+        if (response.toolRequest.name === 'getVehicleHealth') {
+            const health = toolResponse.output as {status: string, lastService: string, notes: string};
+            return {
+                response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
+            }
+        }
+        if (response.toolRequest.name === 'getBookingTrends') {
+            return {
+                response: `Booking Trends Report: ${toolResponse.output}`
+            }
         }
     }
 
