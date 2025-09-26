@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { KanbanBoard } from "@/components/kanban-board";
 import { Button } from "@/components/ui/button";
 import { generateProjectPlan } from '@/ai/flows/project-inception';
@@ -11,9 +11,9 @@ import type { ProjectStage } from '@/lib/stages';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { useProductsData, useStagesData } from "@/hooks/use-data-hooks";
 
-export default function ProjectsPageClient({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
-    const { data: products, setData: setProducts } = useProductsData(initialProducts);
-    const { data: stages } = useStagesData(initialStages);
+export default function ProjectsPageClient() {
+    const { data: products, setData: setProducts } = useProductsData();
+    const { data: stages } = useStagesData();
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function ProjectsPageClient({ initialProducts, initialStages }: {
 
     const handleSave = (values: ProductValues, id?: number) => {
         if (id) {
-            setProducts(prev => prev.map(p => (p.id === id ? { ...p, ...values } : p)));
+            setProducts(prev => prev.map(p => (p.id === id ? { ...p, ...values } as Product : p)));
             toast({ title: 'Project updated successfully.' });
         } else {
             const newProduct = { ...values, id: Date.now() };
@@ -93,7 +93,7 @@ export default function ProjectsPageClient({ initialProducts, initialStages }: {
             >
                 <div />
             </AddEditProductDialog>
-            <KanbanBoard initialProducts={products} initialStages={stages} />
+            <KanbanBoard />
         </div>
     )
 }

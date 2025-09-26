@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,9 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from '@/components/ui/skeleton';
 import { BrainCircuit, Loader2, RefreshCw, AlertTriangle, Lightbulb, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import type { Product } from '@/lib/products.schema';
-import type { Provider } from '@/lib/providers.schema';
-import type { CfoData } from '@/lib/cfo-data.schema';
 import { useProductsData, useProvidersData, useCfoData } from '@/hooks/use-data-hooks';
 
 const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) => {
@@ -38,18 +34,12 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
     )
 }
 
-interface CooDashboardClientPageProps {
-    initialProducts: Product[];
-    initialProviders: Provider[];
-    initialCfoData: CfoData;
-}
-
-export default function CooDashboardClientPage({ initialProducts, initialProviders, initialCfoData }: CooDashboardClientPageProps) {
+export default function CooDashboardClientPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
-    const { data: products } = useProductsData(initialProducts);
-    const { data: providers } = useProvidersData(initialProviders);
-    const { data: cfoData } = useCfoData(initialCfoData);
+    const { data: products } = useProductsData();
+    const { data: providers } = useProvidersData();
+    const { data: cfoData } = useCfoData();
 
 
     const runAnalysis = async () => {

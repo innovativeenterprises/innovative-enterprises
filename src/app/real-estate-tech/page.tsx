@@ -51,8 +51,8 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
     );
 };
 
-export default function RealEstateTechClientPage({ initialProducts, isAdmin = false }: { initialProducts: Product[], isAdmin?: boolean }) {
-    const { data: products } = useProductsData(initialProducts);
+export default function RealEstateTechClientPage({ isAdmin = false }: { isAdmin?: boolean }) {
+    const { data: products } = useProductsData();
     const enabledProducts = products.filter(p => p.category === 'Real Estate Tech' && p.enabled);
 
     return (

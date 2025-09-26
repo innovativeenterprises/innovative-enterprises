@@ -1,6 +1,7 @@
+
 'use server';
 
-import StudentFinancialsClientPage from './client-page';
+import StudentFinancialsClientPage from '@/app/admin/education-tech/student-financials/client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

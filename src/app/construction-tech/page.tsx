@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Siren, Building } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
-import { useState, useEffect } from "react";
 import { useProductsData } from "@/hooks/use-data-hooks";
 
 const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean }) => {
@@ -52,8 +51,8 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
     </Card>
 )};
 
-export default function ConstructionTechClientPage({ initialProducts, isAdmin = false }: { initialProducts: Product[], isAdmin?: boolean }) {
-    const { data: products } = useProductsData(initialProducts);
+export default function ConstructionTechClientPage({ isAdmin = false }: { isAdmin?: boolean }) {
+    const { data: products } = useProductsData();
     const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     
   return (
@@ -83,7 +82,7 @@ export default function ConstructionTechClientPage({ initialProducts, isAdmin = 
                     <CardHeader>
                         <CardTitle className="text-2xl text-accent">Get Early Access</CardTitle>
                         <CardDescription className="text-accent-foreground/80">
-                        Interested in being a pilot partner for one of our construction tech solutions? Contact us to learn more.
+                       Interested in being a pilot partner for one of our construction tech solutions? Contact us to learn more.
                         </CardDescription>
                     </CardHeader>
                     <CardFooter className="justify-center">

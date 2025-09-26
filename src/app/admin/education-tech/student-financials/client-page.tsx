@@ -12,17 +12,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Student } from '@/lib/students.schema';
 import { AddEditStudentFinancialsDialog, type StudentFinancialsValues } from "./financials-form";
+import { useStudentsData } from "@/hooks/use-data-hooks";
 
-export default function StudentFinancialsClientPage({ initialStudents }: { initialStudents: Student[] }) {
-    const [students, setStudents] = useState(initialStudents);
-    const [isClient, setIsClient] = useState(false);
+export default function StudentFinancialsClientPage() {
+    const { data: students, setData: setStudents, isClient } = useStudentsData();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<Student | undefined>(undefined);
     const { toast } = useToast();
-    
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const { totalBilled, totalScholarships, totalPaid, totalOutstanding } = useMemo(() => {
         if (!isClient) return { totalBilled: 0, totalScholarships: 0, totalPaid: 0, totalOutstanding: 0 };
