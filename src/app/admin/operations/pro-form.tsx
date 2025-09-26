@@ -120,7 +120,7 @@ export default function ProForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Select Service</FormLabel>
-                                <Select onValueChange={(value) => { handleServiceChange(value); }} defaultValue={field.value}>
+                                <Select onValueChange={handleServiceChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Choose a government service..." />
@@ -208,7 +208,7 @@ export default function ProForm() {
                 {isLoading ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</>
                 ) : (
-                   <><Sparkles className="mr-2 h-4 w-4" />Analyze Task &amp; Estimate Costs</>
+                   <><Sparkles className="mr-2 h-4 w-4" />Analyze Task & Estimate Costs</>
                 )}
               </Button>
             </form>
@@ -228,7 +228,7 @@ export default function ProForm() {
       {response && (
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Task Analysis &amp; Cost Estimate</CardTitle>
+            <CardTitle>Task Analysis & Cost Estimate</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
              <div>
