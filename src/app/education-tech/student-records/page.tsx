@@ -1,8 +1,8 @@
 
 'use client';
 
-import type { Metadata } from 'next';
 import StudentRecordsClientPage from './client-page';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "Admin - Student Records",
