@@ -1,45 +1,18 @@
-I0926 01:07:15.190483    9415 load.go:31] Reloading schema and connectors...
-W0926 01:07:15.346711    9415 control.go:68] [/emulator/studio d599] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
+I0926 02:42:30.326429    2587 load.go:31] Reloading schema and connectors...
+W0926 02:42:30.470432    2587 control.go:68] [/emulator/studio 7fc6] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
 example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
 example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
 
 sources: example/queries.gql [455B] 
-I0926 01:07:15.346798    9415 control.go:94] [/emulator/studio d599] UpdateResources(): done
+I0926 02:42:30.471509    2587 control.go:94] [/emulator/studio 7fc6] UpdateResources(): done
 Schema: sources: schema/schema.gql [1207B] 
 Connector "example": sources: example/queries.gql [455B] 
-E0926 01:07:15.352976    9415 load.go:73] Could not load sources: 
+E0926 02:42:30.479020    2587 load.go:73] Could not load sources: 
 Errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
 example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
 example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
-I0926 01:07:15.360798    9415 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: main/input.gql [68752B] prelude.gql [73251B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] 
-I0926 01:07:15.362534    9415 load.go:74] Finished reloading
-I0926 01:07:15.372704    9415 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:9399
-I0926 01:07:29.653327    9415 migrate.go:24] Running migration SQL:
-Step 1: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
-Step 2: CREATE TABLE "public"."organization" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "contact_email" text NULL, "created_at" timestamptz NOT NULL, "industry" text NULL, "name" text NOT NULL, "website" text NULL, PRIMARY KEY ("id"))
-Step 3: CREATE TABLE "public"."project" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "organization_id" uuid NULL, "budget" double precision NULL, "created_at" timestamptz NOT NULL, "description" text NOT NULL, "end_date" date NULL, "name" text NOT NULL, "start_date" date NOT NULL, "status" text NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "project_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organization" ("id") ON DELETE SET NULL)
-Step 4: CREATE INDEX "project_organizationId_idx" ON "public"."project" ("organization_id")
-Step 5: CREATE TABLE "public"."agent_solution" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "project_id" uuid NULL, "created_at" timestamptz NOT NULL, "deployment_date" date NULL, "description" text NOT NULL, "expected_output" text NULL, "name" text NOT NULL, "status" text NOT NULL, "target_k_p_is" text NULL, "type" text NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "agent_solution_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "publicI0926 01:07:46.077261    6559 engine.go:169] [/emulator/studio d9b2] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
-("project_id")
-Step 7: CREATE TABLE "public"."metric" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "agent_solution_id" uuid NULL, "project_id" uuid NULL, "description" text NULL, "name" text NOT NULL, "timestamp" timestamptz NOT NULL, "type" text NOT NULL, "unit" text NOT NULL, "value" double precision NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "metric_agent_solution_id_fkey" FOREIGN KEY ("agent_solution_id") REFERENCES "public"."agent_solution" ("id") ON DELETE SET NULL, CONSTRAINT "metric_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON DELETE SET NULL)
-Step 8: CREATE INDEX "metric_agentSolutionId_idx" ON "public"."metric" ("agent_solution_id")
-Step 9: CREATE INDEX "metric_projectId_idx" ON "public"."metric" ("project_id")
-Step 10: CREATE TABLE "public"."user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "organization_id" uuid NULL, "created_at" timestamptz NOT NULL, "department" text NULL, "display_name" text NOT NULL, "email" text NOT NULL, "phone_number" text NULL, "role" text NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "user_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organization" ("id") ON DELETE SET NULL)
-Step 11: CREATE INDEX "user_organizationId_idx" ON "public"."user" ("organization_id")
-Step 12: CREATE TABLE "public"."task" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "agent_solution_id" uuid NULL, "assigned_to_user_id" uuid NULL, "project_id" uuid NULL, "assigned_to_team" text NULL, "created_at" timestamptz NOT NULL, "description" text NOT NULL, "due_date" date NOT NULL, "estimated_effort" text NULL, "name" text NOT NULL, "priority" text NULL, "status" text NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "task_agent_solution_id_fkey" FOREIGN KEY ("agent_solution_id") REFERENCES "public"."agent_solution" ("id") ON DELETE SET NULL, CONSTRAINT "task_assigned_to_user_id_fkey" FOREIGN KEY ("assigned_to_user_id") REFERENCES "public"."user" ("id") ON DELETE SET NULL, CONSTRAINT "task_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON DELETE SET NULL)
-Step 13: CREATE INDEX "task_agentSolutionId_idx" ON "public"."task" ("agent_solution_id")
-Step 14: CREATE INDEX "task_assignedToUserId_idx" ON "public"."task" ("assigned_to_user_id")
-Step 15: CREATE INDEX "task_projectId_idx" ON "public"."task" ("project_id")
-W0926 01:07:31.716671    9415 control.go:68] [/emulator/studio 1b28] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
-example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
-example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
-
-sources: example/queries.gql [455B] 
-I0926 01:07:31.716749    9415 control.go:94] [/emulator/studio 1b28] UpdateResources(): done
-Schema: sources: schema/schema.gql [1207B] 
-Connector "example": sources: example/queries.gql [455B] 
-I0926 01:07:31.716788    9415 service.go:147] [/emulator/studio 1b28] while configuring to server.Settings{ConnectionString:"dbname='fdcdb' host='127.0.0.1' port='5432' sslmode='disable' dbname='fdcdb'", MaxOpenConnection:1, UseDummy:false, EnableGoogleMLIntegration:false, SchemaValidationMode:""}, failed to reload last live sources: 
-Errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
-example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
-example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
+I0926 02:42:30.480794    2587 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] 
+I0926 02:42:30.480864    2587 load.go:74] Finished reloading
+I0926 02:42:30.493794    2587 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+I0926 02:42:31.304143    2587 engine.go:169] [/emulator/studio 7fc6] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
