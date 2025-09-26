@@ -8,11 +8,10 @@
 
 import { ai } from '@/ai/genkit';
 import { 
-    ImageAnnotatorInput, 
-    ImageAnnotatorOutput,
     ImageAnnotatorInputSchema,
     ImageAnnotatorOutputSchema
 } from './image-annotation.schema';
+import type { ImageAnnotatorInput, ImageAnnotatorOutput } from './image-annotation.schema';
 import { z } from 'zod';
 
 
@@ -46,7 +45,7 @@ export const annotateImage = ai.defineFlow(
     },
     async (input) => {
         const { output } = await ai.generate({
-            model: 'googleai/gemini-2.5-flash-image-preview',
+            model: 'googleai/gemini-1.5-flash',
             prompt: [
                 { media: { url: input.baseImageUri } },
                 { text: prompt.replace("{{{prompt}}}", input.prompt || 'Analyze the main object in the image.') },

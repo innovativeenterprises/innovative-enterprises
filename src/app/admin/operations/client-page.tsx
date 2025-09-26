@@ -1,4 +1,3 @@
-
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -8,8 +7,6 @@ import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PosProductTable from "@/app/admin/settings/pos-product-table";
 
 export default function AdminOperationsClientPage() {
 
