@@ -7,17 +7,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getStatusBadge } from "@/components/status-badges";
 import { DueDateDisplay } from "@/components/due-date-display";
 import type { CfoData } from '@/lib/cfo-data.schema';
-import { DollarSign, Users, CreditCard, Activity } from 'lucide-react';
+import * as Icons from 'lucide-react';
 import { useCfoData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const kpiIcons: { [key: string]: React.ElementType } = {
-    "Total Revenue": DollarSign,
-    "Subscriptions": Users,
-    "Sales": CreditCard,
-    "Active Now": Activity,
-    "Projects": DollarSign,
-    "Test": DollarSign,
+    "DollarSign": Icons.DollarSign,
+    "Users": Icons.Users,
+    "CreditCard": Icons.CreditCard,
+    "Activity": Icons.Activity,
 };
 
 
@@ -52,7 +50,7 @@ export default function CfoDashboardPageClient({ initialData }: { initialData: C
             </div>
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {kpiData.map(item => {
-                    const Icon = kpiIcons[item.title] || DollarSign;
+                    const Icon = kpiIcons[item.icon] || Icons.DollarSign;
                     return (
                         <Card key={item.title}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

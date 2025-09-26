@@ -5,6 +5,7 @@ export const KpiDataSchema = z.object({
     title: z.string(),
     value: z.string(),
     change: z.string(),
+    icon: z.string(), // Changed from z.any() to z.string()
     href: z.string(),
 });
 
