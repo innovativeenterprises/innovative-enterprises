@@ -4,11 +4,10 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Github } from 'lucide-react';
-import { useGlobalStore } from '@/app/lib/global-store';
+import type { AppSettings } from '@/lib/settings';
 
-export default function FooterClient() {
+export default function FooterClient({ settings }: { settings: AppSettings | null }) {
   const currentYear = new Date().getFullYear().toString();
-  const settings = useGlobalStore(state => state.settings);
 
   return (
     <footer className="border-t bg-card">
