@@ -4,10 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { getFirestoreData } from '@/lib/firestore';
 import MainLayout from './main-layout';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -52,18 +49,16 @@ export const metadata: Metadata = {
 }
 
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const initialState = await getFirestoreData();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <Providers initialState={initialState}>
+          <Providers>
             <MainLayout>
               {children}
             </MainLayout>
