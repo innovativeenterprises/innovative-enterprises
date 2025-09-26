@@ -62,12 +62,17 @@ const ecommerceFlow = ai.defineFlow(
     outputSchema: EcommerceAgentOutputSchema,
   },
   async (input) => {
-    const llmResponse = await prompt(input);
+    const llmResponse = await ai.generate({
+      prompt,
+      input,
+      tools: [addProductToCartTool],
+    });
 
     // Handle tool call for adding to cart
-    if (llmResponse.toolRequest && llmResponse.toolRequest.name === 'addProductToCart') {
-        const toolResponse = await llmResponse.toolRequest.run();
-        const toolOutput = toolResponse.output as z.infer<typeof addProductToCartTool.outputSchema>;
+    const toolRequest = llmResponse.toolRequest();
+    if (toolRequest && toolRequest.name === 'addProductToCart') {
+        const toolResponse = await toolRequest.run();
+        const toolOutput = toolResponse as z.infer<typeof addProductToCartTool.outputSchema>;
         
         if (toolOutput.product) {
              return {
@@ -83,7 +88,7 @@ const ecommerceFlow = ai.defineFlow(
         }
     }
 
-    const output = llmResponse.output;
+    const output = llmResponse.output();
 
     if (output && (!output.suggestedReplies || output.suggestedReplies.length === 0)) {
         output.suggestedReplies = ["Show all categories", "What's on sale?", "Tell me your return policy"];
