@@ -50,6 +50,7 @@
     "embla-carousel-react": "^8.1.6",
     "firebase": "^10.14.1",
     "firebase-admin": "^12.2.0",
+    "framer-motion": "^11.2.12",
     "genkit": "1.0.0-rc.4",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.3",

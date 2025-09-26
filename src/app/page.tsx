@@ -6,17 +6,15 @@ import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import ClientTestimonials from "@/components/client-testimonials";
 import AiToolsCta from "@/components/ai-tools-cta";
-import { getClients, getServices, getProducts, getTestimonials, getAiTools } from "@/lib/firestore";
+import { getFirestoreData } from "@/lib/firestore";
+import type { AppState } from "./lib/initial-state";
 
-export default async function HomePage() {
-  const [clients, services, products, testimonials, aiTools] = await Promise.all([
-    getClients(),
-    getServices(),
-    getProducts(),
-    getTestimonials(),
-    getAiTools(),
-  ]);
+interface HomePageProps {
+  initialState: AppState;
+}
 
+export default async function HomePage({ initialState }: HomePageProps) {
+  const { clients, services, products, testimonials, aiTools } = await getFirestoreData();
   const liveProducts = products.filter(p => p.stage === 'Live & Operating');
 
   return (
@@ -29,4 +27,3 @@ export default async function HomePage() {
     </>
   );
 }
-

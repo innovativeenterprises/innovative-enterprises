@@ -13,7 +13,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
 
     useEffect(() => {
         if (isClient && initialData) {
-            setData({ [key]: initialData } as Partial<AppState>);
+            setData((state) => ({ ...state, [key]: initialData }));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isClient, initialData]);
