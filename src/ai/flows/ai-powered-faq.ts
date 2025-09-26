@@ -50,12 +50,17 @@ const answerQuestionFlow = ai.defineFlow(
     outputSchema: AnswerQuestionOutputSchema,
   },
   async (input) => {
-    const response = await answerQuestionPrompt(input);
+    const response = await ai.generate({
+      prompt: answerQuestionPrompt,
+      input: input,
+      tools: [routeToSpecialistTool],
+    });
     
     // Check if the model decided to use a tool.
-    if (response.toolRequest) {
-        const toolResponse = await response.toolRequest.run();
-        const toolOutput = toolResponse.output as z.infer<typeof routeToSpecialistTool.outputSchema>;
+    const toolRequest = response.toolRequest();
+    if (toolRequest) {
+        const toolResponse = await toolRequest.run();
+        const toolOutput = toolResponse as z.infer<typeof routeToSpecialistTool.outputSchema>;
 
         return {
             answer: toolOutput.response,
@@ -66,7 +71,7 @@ const answerQuestionFlow = ai.defineFlow(
     }
 
     // If no tool was called, return the direct text response.
-    const directAnswer = response.output;
+    const directAnswer = response.output();
     if (directAnswer) {
       // Ensure there are always some suggestions, even if the model forgets.
       if (!directAnswer.suggestedReplies || directAnswer.suggestedReplies.length === 0) {
