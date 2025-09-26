@@ -43,6 +43,7 @@ const prompt = ai.definePrompt({
     *   **institutionName:** The name of the government body, ministry, or institution that issued the document.
     *   **version:** Any version number or amendment number explicitly stated in the document.
     *   **issueDate:** The date the law was issued, published in the official gazette, or became effective. Format this as YYYY-MM-DD.
+3.  **Extract Full Content**: Extract the entire text content of the document and return it in the \`documentContent\` field.
 
 Return the extracted information in the specified structured JSON format.
 `,
