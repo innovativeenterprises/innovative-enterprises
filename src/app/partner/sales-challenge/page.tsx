@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Send, FileText, CheckCircle, Trophy, Download } from 'lucide-react';
@@ -15,6 +15,7 @@ import { generateSalesMarketingAssignment } from '@/ai/flows/sales-marketing-ass
 import type { SalesMarketingAssignmentOutput } from '@/ai/flows/sales-marketing-assignment.schema';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { PartnerCard } from '../partner-card';
+import { Textarea } from '@/components/ui/textarea';
 
 const EmailSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -23,6 +24,7 @@ const EmailSchema = z.object({
 type EmailValues = z.infer<typeof EmailSchema>;
 
 const SubmissionSchema = z.object({
+    comprehensionAnswers: z.string().min(10, 'Please answer the comprehension questions.'),
     reportFile: z.any().refine(files => files?.length > 0, 'A report file is required.'),
     kpiEstimation: z.string().min(3, 'Please provide your KPI estimation.'),
 });
@@ -57,11 +59,11 @@ export default function SalesChallengePage() {
     const handleSubmission: SubmitHandler<SubmissionValues> = async (data) => {
         setPageState('assessing');
         await new Promise(resolve => setTimeout(resolve, 2000));
-        // In a real app, you'd have an AI flow to assess the report.
+        // In a real app, you'd have an AI flow to assess the report and comprehension answers.
         const score = Math.floor(Math.random() * (98 - 85 + 1) + 85); // Simulate a good score
         setAssessmentResult({
             score,
-            feedback: `Excellent report. Your analysis was clear and your proposed strategy is sound. You achieved ${score}% of the target KPIs, which is a great result for this simulation.`
+            feedback: `Excellent submission. Your comprehension of the brief was clear and your proposed strategy is sound. You achieved ${score}% of the target KPIs, which is a great result for this simulation.`
         });
         setPageState('success');
     };
@@ -98,11 +100,12 @@ export default function SalesChallengePage() {
                         </CardContent>
                         <CardFooter>
                             <Card className="w-full bg-muted/50">
-                                <CardHeader><CardTitle>Submit Your Report</CardTitle></CardHeader>
+                                <CardHeader><CardTitle>Submit Your Work</CardTitle></CardHeader>
                                 <CardContent>
                                     <Form {...submissionForm}>
                                         <form onSubmit={submissionForm.handleSubmit(handleSubmission)} className="space-y-4">
-                                            <FormField control={submissionForm.control} name="reportFile" render={({ field }) => (<FormItem><FormLabel>Upload Report</FormLabel><FormControl><Input type="file" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage/></FormItem>)} />
+                                             <FormField control={submissionForm.control} name="comprehensionAnswers" render={({ field }) => (<FormItem><FormLabel>Comprehension Question Answers</FormLabel><FormControl><Textarea rows={4} placeholder="Answer the comprehension questions from the brief here..." {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                            <FormField control={submissionForm.control} name="reportFile" render={({ field }) => (<FormItem><FormLabel>Upload Final Report</FormLabel><FormControl><Input type="file" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage/></FormItem>)} />
                                             <FormField control={submissionForm.control} name="kpiEstimation" render={({ field }) => (<FormItem><FormLabel>Your KPI Estimation</FormLabel><FormControl><Input placeholder="e.g., 'I estimate I can achieve a 20% conversion rate...'" {...field} /></FormControl><FormMessage/></FormItem>)} />
                                             <Button type="submit" className="w-full">Submit for Assessment</Button>
                                         </form>

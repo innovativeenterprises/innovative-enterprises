@@ -21,9 +21,10 @@ const prompt = ai.definePrompt({
 1.  **Select a Product:** Choose ONE of the products above to be the subject of the case study.
 2.  **Create a Title:** Generate a clear title for the assignment, e.g., "Marketing Strategy Case Study: Launching GENIUS in the UAE".
 3.  **Generate Assignment HTML:** Create the assignment content as a well-formatted HTML string. It MUST include the following sections, using <h4> for titles and <p>, <ul>, <li> for content:
-    *   **Scenario:** A brief, one-paragraph scenario. (e.g., "Innovative Enterprises is planning to launch its GENIUS Career Platform in the UAE market...").
+    *   **Project Brief & Overview:** Write a detailed one or two-paragraph overview of the selected product and the fictional business scenario. This should give the candidate all the context they need.
+    *   **Comprehension Questions:** Before the main task, list 2-3 questions to test the candidate's understanding of the Project Brief. (e.g., "Who is the primary target audience for this product launch?", "What is the key value proposition you need to highlight?").
     *   **Your Task:** A clear, one-sentence mission for the candidate. (e.g., "Your task is to develop a go-to-market strategy for the first three months.").
-    *   **Step-by-Step Guide:** Provide 3-4 clear, actionable steps for the candidate to follow.
+    *   **Step-by-Step Guide:** Provide 3-4 clear, actionable steps for the candidate to follow in their report.
         *   Example Step 1: "Identify the Target Audience: Who are the primary user personas for this product in the UAE?"
         *   Example Step 2: "Develop Key Messaging: What are the top 3 value propositions that will resonate with this audience?"
         *   Example Step 3: "Outline a Digital Marketing Plan: Propose a mix of channels (social media, content, paid ads) to reach this audience."
