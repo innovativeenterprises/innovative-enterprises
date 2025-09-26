@@ -12,6 +12,7 @@ import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useRouter } from 'next/navigation';
 import type { BookingRequest } from '@/lib/stairspace-requests';
+import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {
@@ -24,15 +25,10 @@ const getStatusBadge = (status: BookingRequest['status']) => {
     }
 };
 
-export default function MyStairspaceRequestsClientPage({ initialRequests }: { initialRequests: BookingRequest[] }) {
-    const [requests, setRequests] = useState<BookingRequest[]>(initialRequests);
-    const [isClient, setIsClient] = useState(false);
+export default function MyStairspaceRequestsClientPage() {
+    const { data: requests, setData: setRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
     const router = useRouter();
-    
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     // In a real app, you would filter requests by the logged-in user.
     // For this prototype, we'll assume we're viewing requests for one client.

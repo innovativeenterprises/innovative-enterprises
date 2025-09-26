@@ -9,7 +9,7 @@ import Link from 'next/link';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { Skeleton } from '@/components/ui/skeleton';
 import { notFound } from 'next/navigation';
-import { getStairspaceRequests } from '@/lib/firestore'; // Fetch directly
+import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 
 export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref, requestsLabel }: {
     requestId: string | null;
@@ -17,26 +17,22 @@ export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref
     backToRequestsHref: string;
     requestsLabel: string;
 }) {
+    const { data: requests, isClient } = useStairspaceRequestsData();
     const [request, setRequest] = useState<BookingRequest | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
 
      useEffect(() => {
-        setIsClient(true);
-        if (requestId) {
-            async function fetchRequest() {
-                const allRequests = await getStairspaceRequests();
-                const foundRequest = allRequests.find(r => r.id === requestId);
-                if (foundRequest) {
-                    setRequest(foundRequest);
-                } else {
-                    notFound();
-                }
+        if (isClient && requestId) {
+            const foundRequest = requests.find(r => r.id === requestId);
+            if (foundRequest) {
+                setRequest(foundRequest);
+            } else {
+                // Delay notFound call to ensure it's not called during render
+                setTimeout(() => notFound(), 0);
             }
-            fetchRequest();
-        } else {
-            notFound();
+        } else if (isClient && !requestId) {
+            setTimeout(() => notFound(), 0);
         }
-    }, [requestId]);
+    }, [requestId, requests, isClient]);
     
     if (!isClient || (requestId && !request)) {
         return (

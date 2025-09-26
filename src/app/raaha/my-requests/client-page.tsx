@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
+import { ArrowLeft, UserCheck, CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -25,8 +25,8 @@ const getStatusBadge = (status: HireRequest['status']) => {
     }
 };
 
-export default function MyRequestsClientPage({ initialRequests }: { initialRequests: HireRequest[] }) {
-    const { data: requests, setData: setRequests, isClient } = useRequestsData(initialRequests);
+export default function MyRequestsClientPage() {
+    const { data: requests, setData: setRequests, isClient } = useRequestsData();
     const { toast } = useToast();
     const router = useRouter();
     

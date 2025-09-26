@@ -12,6 +12,6 @@ export const metadata: Metadata = {
 
 
 export default async function MyRequestsPage() {
-    const requests = await getRaahaRequests();
-    return <MyRequestsClientPage initialRequests={requests} />;
+    await getRaahaRequests();
+    return <MyRequestsClientPage />;
 }

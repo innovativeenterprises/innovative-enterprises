@@ -1,3 +1,4 @@
+
 'use server';
 
 import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
@@ -10,11 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AgencyDashboardPage() {
-    const { raahaAgencies, raahaWorkers, raahaRequests } = await getRaahaData();
-    return <AgencyDashboardClientPage 
-        initialAgencies={raahaAgencies} 
-        initialRequests={raahaRequests} 
-        initialWorkers={raahaWorkers} 
-        dashboardType="raaha"
-    />;
+    // Pre-load data for the client component to use from the store
+    await getRaahaData();
+    return <AgencyDashboardClientPage dashboardType="raaha" />;
 }

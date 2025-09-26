@@ -1,3 +1,4 @@
+
 'use server';
 
 import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
@@ -11,12 +12,6 @@ export const metadata: Metadata = {
 
 
 export default async function AgencyDashboardPage() {
-    const { beautyCenters, beautyServices, beautyAppointments, beautySpecialists } = await getBeautyData();
-    return <AgencyDashboardClientPage 
-        initialAgencies={beautyCenters} 
-        initialServices={beautyServices} 
-        initialAppointments={beautyAppointments}
-        initialSpecialists={beautySpecialists}
-        dashboardType="beauty"
-    />;
+    await getBeautyData();
+    return <AgencyDashboardClientPage dashboardType="beauty" />;
 }
