@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AppSettingsSchema, type AppSettings } from '@/lib/settings';
-import { useGlobalStore, useSetStore } from '@/hooks/use-data-hooks';
+import { useSetStore, useSettingsData } from '@/hooks/use-data-hooks';
 import ThemeGenerator from '@/app/admin/operations/theme-generator';
 import { Switch } from '@/components/ui/switch';
 import PricingTable from './pricing-table';
@@ -20,8 +20,7 @@ import PosProductTable from './pos-product-table';
 
 export default function AdminSettingsClientPage() {
     const [isLoading, setIsLoading] = useState(false);
-    const setStore = useSetStore();
-    const settings = useGlobalStore(s => s.settings);
+    const { data: settings, setData: setSettings } = useSettingsData();
     const { toast } = useToast();
 
     const form = useForm<AppSettings>({
@@ -31,7 +30,7 @@ export default function AdminSettingsClientPage() {
 
     const onSubmit: SubmitHandler<AppSettings> = async (data) => {
         setIsLoading(true);
-        setStore(state => ({ ...state, settings: data }));
+        setSettings(() => data);
         toast({ title: "Settings Saved", description: "Your application settings have been updated." });
         setIsLoading(false);
     };
