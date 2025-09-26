@@ -1,7 +1,6 @@
-
 'use client';
 
-import StudentRecordsClientPage from '@/app/admin/education-tech/student-records/client-page';
+import StudentRecordsClientPage from './client-page';
 
 export default function StudentRecordsPage() {
     return <StudentRecordsClientPage />;

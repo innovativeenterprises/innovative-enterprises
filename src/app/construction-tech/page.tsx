@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -51,7 +50,7 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
     </Card>
 )};
 
-export default function ConstructionTechClientPage({ isAdmin = false }: { isAdmin?: boolean }) {
+export default function ConstructionTechPage({ isAdmin = false }: { isAdmin?: boolean }) {
     const { data: products } = useProductsData();
     const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     

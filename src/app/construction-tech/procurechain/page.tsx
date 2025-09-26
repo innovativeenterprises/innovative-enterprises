@@ -1,18 +1,10 @@
+'use client';
 
-import { getAssets } from "@/lib/firestore";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Package } from "lucide-react";
 import AssetTable from "@/app/admin/asset-table";
-import type { Metadata } from 'next';
+import { Package } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "ProcureChain SaaS | Innovative Enterprises",
-  description: "An e-procurement platform with automated vendor approvals, asset rentals, and predictive ordering for the construction industry.",
-};
-
-export default async function ProcureChainPage() {
-    const assets = await getAssets();
-
+export default function ProcureChainPage() {
+    
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
@@ -27,7 +19,7 @@ export default async function ProcureChainPage() {
                         </p>
                     </div>
 
-                    <AssetTable initialAssets={assets} />
+                    <AssetTable />
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, PlusCircle, Home } from 'lucide-react';
+import { ArrowLeft, PlusCircle, DollarSign, FileText, Calendar, Trash2, Home, TrendingUp, TrendingDown, Percent } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
@@ -13,7 +13,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { SignedLease } from '@/lib/leases';
 import { useLeasesData } from "@/hooks/use-data-hooks";
 import { DueDateDisplay } from "@/components/due-date-display";
-
 
 function StudentHousingClientPage() {
     const { data: leases, setData: setLeases, isClient } = useLeasesData();
@@ -115,7 +114,23 @@ function StudentHousingClientPage() {
                                                      <Badge className="bg-green-500/20 text-green-700">{lease.status}</Badge>
                                                  </TableCell>
                                                  <TableCell className="text-right">
-                                                    {/* Actions can be added here if needed */}
+                                                     <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4 text-destructive"/></Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This will permanently delete the agreement for {lease.propertyAddress}. This action cannot be undone.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={() => handleDelete(lease.id)}>Delete</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
                                                  </TableCell>
                                             </TableRow>
                                         ))

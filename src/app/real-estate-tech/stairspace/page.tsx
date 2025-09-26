@@ -1,7 +1,5 @@
-
 'use server';
 
-import { getStairspaceListings } from "@/lib/firestore";
 import StairspaceClientPage from './client-page';
 import type { Metadata } from 'next';
 
@@ -11,6 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default async function StairspacePage() {
-    const listings = await getStairspaceListings();
-    return <StairspaceClientPage initialListings={listings} />;
+    return <StairspaceClientPage />;
 }
