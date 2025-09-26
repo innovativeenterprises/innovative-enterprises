@@ -3,7 +3,7 @@
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
-import { initialServices } from '@/lib/services';
+import { initialServices } from '../../lib/services';
 import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';
 import { initialClients, initialTestimonials } from './clients';
