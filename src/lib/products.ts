@@ -45,7 +45,6 @@ const hrefMap: Record<string, string> = {
     "RAAHA": "/raaha",
     "Nova Commerce": "/ecommerce",
     "Logistics Chain AI": "/logistics-ai",
-    "AI Smart Home Estimator": "/construction-tech/smart-home-estimator",
     "AI-POS for Education": "/education-tech/ai-pos",
     "Facebook Cover Generator": "/facebook-cover-generator",
     "StructurAI BIM": "/construction-tech/structurai-bim",
@@ -101,4 +100,4 @@ export const initialStoreProducts: Product[] = [
     }
 ];
 
-export const initialProducts: Product[] = [...saasProductList.filter(p => p.name !== 'AI Smart Home Estimator'), ...initialStoreProducts];
+export const initialProducts: Product[] = [...saasProductList, ...initialStoreProducts];
