@@ -12,13 +12,17 @@ import type { Ministry, Governorate } from '@/lib/oman-locations';
 import { getCostSettings } from '@/lib/firestore';
 import { SanadTaskAnalysisOutputSchema } from './sanad-task-analysis.schema';
 
-export const ProTaskAnalysisInputSchema = z.object({
+
+const ProTaskBaseInputSchema = z.object({
   serviceName: z.string().describe("The specific government service requested by the user."),
   governorate: z.enum(OMAN_GOVERNORATES).describe("The governorate where the service needs to be performed."),
   startLocationName: z.string().optional().describe("The name of the starting location for the trip, e.g., 'Al Amerat Office'."),
   startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).optional().describe("The GPS coordinates of the starting location."),
 });
+
+export const ProTaskAnalysisInputSchema = ProTaskBaseInputSchema.merge(SanadTaskAnalysisOutputSchema);
 export type ProTaskAnalysisInput = z.infer<typeof ProTaskAnalysisInputSchema>;
+
 
 const AllowanceSchema = z.object({
   description: z.string(),
@@ -100,12 +104,9 @@ const getProTaskPlanTool = ai.defineTool(
     }
 );
 
-
-const CombinedProTaskSchema = ProTaskAnalysisInputSchema.merge(SanadTaskAnalysisOutputSchema);
-
 const proTaskAnalysisPrompt = ai.definePrompt({
     name: 'proTaskAnalysisPrompt',
-    input: { schema: CombinedProTaskSchema },
+    input: { schema: ProTaskAnalysisInputSchema },
     output: { schema: ProTaskAnalysisOutputSchema },
     tools: [getProTaskPlanTool],
     prompt: `You are Fahim, an expert PRO agent. A user needs to perform the service: "{{serviceName}}".
@@ -117,12 +118,16 @@ const proTaskAnalysisPrompt = ai.definePrompt({
 export const analyzeProTask = ai.defineFlow(
   {
     name: 'proTaskAnalysisAgentFlow',
-    inputSchema: CombinedProTaskSchema,
+    inputSchema: ProTaskAnalysisInputSchema,
     outputSchema: ProTaskAnalysisOutputSchema,
   },
   async (input) => {
     
-    const llmResponse = await proTaskAnalysisPrompt(input);
+    const llmResponse = await ai.generate({
+        prompt: proTaskAnalysisPrompt,
+        input: input,
+        tools: [getProTaskPlanTool],
+    });
 
     if (!llmResponse.toolRequest || llmResponse.toolRequest.name !== 'getProTaskPlan') {
         throw new Error("The AI agent failed to use the required planning tool.");

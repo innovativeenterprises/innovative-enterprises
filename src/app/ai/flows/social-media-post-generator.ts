@@ -19,7 +19,6 @@ import {
     type GenerateSocialMediaPostInput, 
     GenerateSocialMediaPostOutputSchema,
     type GenerateSocialMediaPostOutput,
-    platformEnum,
 } from './social-media-post-generator.schema';
 
 
@@ -79,7 +78,10 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     outputSchema: GenerateSocialMediaPostOutputSchema,
   },
   async (input) => {
-    const textPromise = textGenerationPrompt(input);
+    const textPromise = ai.generate({
+        prompt: textGenerationPrompt,
+        input: input,
+    });
     let imagePromise: Promise<{ imageUrl: string; } | undefined> | undefined;
 
     if (input.generateImage) {
@@ -88,7 +90,7 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     
     const [textResult, imageResult] = await Promise.all([textPromise, imagePromise]);
     
-    const output = textResult.output;
+    const output = textResult.output();
     if (!output || !output.posts) {
       throw new Error('Failed to generate text content.');
     }
@@ -99,3 +101,5 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     };
   }
 );
+
+    
