@@ -1,0 +1,33 @@
+mutation InsertOrganization {
+  organization_insert(
+    data: { name: "New Organization", createdAt: "now()" }
+  )
+}
+
+query ListUsersByOrganization($organizationId: UUID!) {
+  users(where: { organizationId: { eq: $organizationId } }) {
+    id
+    displayName
+    email
+  }
+}
+
+query ListProjects {
+  projects {
+    id
+    name
+    description
+  }
+}
+
+
+mutation UpdateTask($id: UUID!, $status: String!) {
+  task_update(
+    where: {
+      id: { eq: $id }
+    }
+    data: {
+      status: $status
+    }
+  )
+}
