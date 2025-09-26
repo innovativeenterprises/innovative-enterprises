@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Route, MapPin, ListChecks, FileText, Bot } from 'lucide-react';
-import { analyzeProTask, type ProTaskAnalysisOutput, ProTaskAnalysisInputSchema } from '@/ai/flows/pro-task-analysis';
+import { Loader2, Sparkles, Route, MapPin, ListChecks, FileText, Bot, DollarSign } from 'lucide-react';
+import { ProTaskAnalysisInputSchema, type ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { OMAN_GOVERNORATES } from '@/lib/oman-locations';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -18,6 +18,7 @@ import { analyzeSanadTask } from '@/ai/flows/sanad-task-analysis';
 import type { SanadTaskAnalysisOutput } from '@/ai/flows/sanad-task-analysis.schema';
 import { sanadServiceGroups } from '@/lib/sanad-services';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { analyzeProTask } from '@/ai/flows/pro-task-analysis';
 
 
 // Dummy map component placeholder
@@ -72,10 +73,14 @@ export default function ProForm() {
   }
 
   const onSubmit: SubmitHandler<ProTaskFormValues> = async (data) => {
+    if (!analysisResult) {
+        toast({ title: "Please wait", description: "Service analysis must be complete before estimating costs.", variant: "destructive"});
+        return;
+    }
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await analyzeProTask(data);
+      const result = await analyzeProTask({ ...data, ...analysisResult });
       setResponse(result);
       toast({
         title: 'Analysis Complete!',
@@ -175,6 +180,12 @@ export default function ProForm() {
                             {isAnalyzing && <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="w-4 h-4 animate-spin"/> Analyzing service requirements...</div>}
                             {analysisResult && (
                                 <div className="space-y-4 text-sm">
+                                    {analysisResult.serviceFee && (
+                                         <div>
+                                            <h4 className="font-semibold mb-2 flex items-center gap-2"><DollarSign /> Est. Government Fee:</h4>
+                                            <p className="font-mono text-lg text-primary">OMR {analysisResult.serviceFee.toFixed(3)}</p>
+                                        </div>
+                                    )}
                                     <div>
                                         <h4 className="font-semibold mb-2 flex items-center gap-2"><ListChecks /> Required Documents:</h4>
                                         <ul className="list-disc pl-5 space-y-1">
@@ -194,7 +205,7 @@ export default function ProForm() {
                 )}
 
 
-              <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button type="submit" disabled={isLoading || isAnalyzing || !analysisResult} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                 {isLoading ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</>
                 ) : (
