@@ -53,10 +53,10 @@ export function StoreProvider({ children }: { children: ReactNode; }) {
     );
 };
 
-export function useGlobalStore<T>(selector: (state: AppState) => T): T {
+export function useStore<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext)
   if (!store) {
-    throw new Error('useGlobalStore must be used within a StoreProvider')
+    throw new Error('useStore must be used within a StoreProvider')
   }
   return useZustandStore(store, selector)
 }
@@ -71,3 +71,4 @@ export function useSetStore() {
 
 // Global instance for read-only access if needed outside React components.
 export const store = createAppStore();
+

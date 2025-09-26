@@ -1,14 +1,14 @@
 
 'use client';
 
-import { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
+import { useStore, useSetStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
   return () => { 
-    const data = useGlobalStore(state => state[key]);
+    const data = useStore(state => state[key]);
     const setStore = useSetStore();
-    const isClient = useGlobalStore(state => state.isClient);
+    const isClient = useStore(state => state.isClient);
 
     const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
       setStore(state => ({ ...state, [key]: updater(state[key]) }));
@@ -24,13 +24,13 @@ export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
 export const useStaffData = () => {
-    const data = useGlobalStore(state => ({
+    const data = useStore(state => ({
         leadership: state.leadership,
         staff: state.staff,
         agentCategories: state.agentCategories,
     }));
     const setStore = useSetStore();
-    const isClient = useGlobalStore(state => state.isClient);
+    const isClient = useStore(state => state.isClient);
     
     // This setData is a simplified version for this combined hook
     const setData = (updater: (prev: typeof data) => typeof data) => {
@@ -86,4 +86,4 @@ export const useIndustriesData = createDataHook('industries');
 export const useDailySalesData = createDataHook('dailySales');
 export const useUserDocumentsData = createDataHook('userDocuments');
 export const useSaaSProductsData = createDataHook('saasProducts');
-export { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
+export { useStore, useSetStore } from '@/lib/global-store.tsx';
