@@ -55,3 +55,24 @@ example/queries.gql:26:30: Field "updatedAt" is not defined by type "Task_Data".
 I0926 00:42:57.658794     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
 Generated sources: main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] 
 I0926 00:42:57.658844     523 load.go:74] Finished reloading
+I0926 00:45:37.525960     523 load.go:31] Reloading schema and connectors...
+W0926 00:45:37.611877     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
+example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
+example/queries.gql:10:14: Field "organization_id" is not defined by type "User_Filter". Did you mean "organizationId" or "organization"?
+example/queries.gql:30:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:26:3: Unknown argument "where" on field "Mutation.task_update".
+example/queries.gql:26:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+
+sources: example/queries.gql [533B] 
+I0926 00:45:37.613081     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
+Connector "example": sources: example/queries.gql [533B] 
+E0926 00:45:37.622927     523 load.go:73] Could not load sources: 
+Errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
+example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
+example/queries.gql:10:14: Field "organization_id" is not defined by type "User_Filter". Did you mean "organizationId" or "organization"?
+example/queries.gql:30:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:26:3: Unknown argument "where" on field "Mutation.task_update".
+example/queries.gql:26:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+I0926 00:45:37.630664     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73251B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] 
+I0926 00:45:37.630715     523 load.go:74] Finished reloading
