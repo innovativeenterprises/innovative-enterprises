@@ -1,7 +1,7 @@
-
 'use client';
 
-import StudentHousingClientPage from '@/app/real-estate-tech/student-housing/client-page';
+import StudentHousingClientPage from "@/app/admin/education-tech/student-housing/client-page";
+import { useLeasesData } from "@/hooks/use-data-hooks";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,5 +11,6 @@ export const metadata: Metadata = {
 
 
 export default function StudentHousingPage() {
-    return <StudentHousingClientPage />;
+    const { data: leases } = useLeasesData();
+    return <StudentHousingClientPage initialLeases={leases} />;
 }

@@ -1,20 +1,18 @@
+
 'use client';
 
-import { useStore } from '@/lib/global-store.tsx';
+import { useStore, useSetStore as useZustandSetStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return (initialData?: AppState[K]) => { 
+  return (initialData?: AppState[K]) => {
     const data = useStore(state => state[key]);
     const isClient = useStore(state => state.isClient);
-    
-    // This is a simplified version for read-only data from the client perspective for this hook.
-    // For mutation, components should use `useSetStore` directly.
-    const setData = () => {
-        console.warn("This setData is a no-op. Use useSetStore for mutations.");
-    };
+    const setData = useZustandSetStore();
 
-    return { data: (isClient ? data : initialData) as AppState[K], isClient };
+    // The data is either the client-side state or the initial data from the server.
+    // The setter is always the store's setter.
+    return { data: (isClient ? data : initialData) as AppState[K], setData, isClient };
   };
 };
 
@@ -75,4 +73,4 @@ export const useIndustriesData = createDataHook('industries');
 export const useDailySalesData = createDataHook('dailySales');
 export const useUserDocumentsData = createDataHook('userDocuments');
 export const useSaaSProductsData = createDataHook('saasProducts');
-export { useStore, useSetStore } from '@/lib/global-store.tsx';
+export { useStore as useGlobalStore, useSetStore } from '@/lib/global-store.tsx';

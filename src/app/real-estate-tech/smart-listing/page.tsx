@@ -1,8 +1,8 @@
-
 'use client';
 
-import SmartListingClientPage from "./client-page";
 import type { Metadata } from 'next';
+import { usePropertiesData } from '@/hooks/use-data-hooks';
+import SmartListingClientPage from "./client-page";
 
 export const metadata: Metadata = {
     title: "Smart Listings | Real Estate",
@@ -11,5 +11,6 @@ export const metadata: Metadata = {
 
 
 export default function SmartListingPage() {
-    return <SmartListingClientPage />;
+    const { data: properties } = usePropertiesData();
+    return <SmartListingClientPage initialProperties={properties} />;
 }

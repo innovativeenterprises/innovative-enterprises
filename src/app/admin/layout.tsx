@@ -42,6 +42,7 @@ import {
   UserRound,
   Store,
   Car,
+  Layers,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -69,6 +70,7 @@ export default function AdminLayout({
       { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
       { href: '/admin/opportunities', label: 'Opportunities', icon: Trophy },
       { href: '/admin/content', label: 'Site Content', icon: FileText },
+      { href: '/admin/saas-portfolio', label: 'SaaS Portfolio', icon: Layers },
   ];
   
   const networkAndPeople = [

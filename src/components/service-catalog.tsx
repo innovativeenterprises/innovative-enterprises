@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -62,15 +61,16 @@ export default function ServiceCatalog() {
 
         <div className="space-y-16">
             {categoryOrder.map(category => {
-                const CategoryIcon = servicesByCategory[category]?.[0]?.icon ? (Icons as any)[servicesByCategory[category][0].icon] : Icons.GitBranch;
+                const categoryServices = servicesByCategory[category] || [];
+                if (categoryServices.length === 0) return null;
+                const CategoryIcon = (Icons as any)[categoryServices[0]?.icon] || Icons.GitBranch;
                 return (
-                servicesByCategory[category] && (
                     <div key={category}>
                         <h3 className="text-2xl md:text-3xl font-bold text-center text-primary/80 mb-8 flex items-center justify-center gap-3">
                             <CategoryIcon /> {category}
                         </h3>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {servicesByCategory[category].map((service) => (
+                        {categoryServices.map((service) => (
                             service.href ? (
                                 <Link key={service.title} href={service.href} className="flex">
                                     <ServiceCard service={service} />
@@ -82,7 +82,7 @@ export default function ServiceCatalog() {
                         </div>
                     </div>
                 )
-            )})}
+            })}
         </div>
       </div>
     </section>
