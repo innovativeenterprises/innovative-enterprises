@@ -104,6 +104,8 @@ export * from './raaha-matcher.schema';
 export * from './raaha-matcher';
 export * from './real-estate-contract-generator.schema';
 export * from './real-estate-contract-generator';
+export * from './sales-marketing-assignment.schema';
+export * from './sales-marketing-assignment';
 export * from './sanad-office-registration.schema';
 export * from './sanad-office-registration';
 export * from './sanad-task-analysis.schema';
@@ -137,4 +139,3 @@ export * from './web-scraper-agent';
 export * from './whatsapp-agent';
 export * from './work-order-analysis.schema';
 export * from './work-order-analysis';
-
