@@ -15,6 +15,7 @@ import DigitalBusinessCardPage from "@/app/digital-business-card/page";
 export default function AdminOperationsPage() {
 
   const internalTools = [
+    { id: 'knowledge', title: 'AI Knowledge Base & Training', icon: BrainCircuit, component: <KnowledgeTable /> },
     { id: 'pro', title: 'PRO Task Delegation', icon: UserRoundCheck, component: <ProForm /> },
     { id: 'tender', title: 'Tender Response Assistant', icon: FileText, component: <TenderForm /> },
     { id: 'meeting', title: 'Online Meeting Agent', icon: NotebookText, component: <MeetingForm /> },
@@ -22,7 +23,6 @@ export default function AdminOperationsPage() {
     { id: 'rental', title: 'Asset Rental Proposal Generator', icon: Scale, component: <AssetRentalAgentForm /> },
     { id: 'facebook', title: 'Facebook Cover Generator', icon: Facebook, component: <FacebookCoverGeneratorPage /> },
     { id: 'business_card', title: 'Digital Business Card Generator', icon: Contact, component: <DigitalBusinessCardPage /> },
-    { id: 'knowledge', title: 'AI Knowledge Base & Training', icon: BrainCircuit, component: <KnowledgeTable /> },
   ]
 
   return (
