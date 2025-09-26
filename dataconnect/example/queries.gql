@@ -1,18 +1,12 @@
 mutation InsertOrganization {
-  organization_insert(data: {name: "New Org", createdAt: "now()"})
-}
-
-query ListUsersByOrganization($organizationId: UUID!) {
-  users(where: {organizationId: {eq: $organizationId}}) {
-    id
-    displayName
-    email
-  }
+  organization_insert(
+    data: {name: "NewCo", createdAt: "now()"}
+  )
 }
 
 mutation UpdateTask($id: UUID!, $status: String!) {
   task_update(
-    where: {id: {eq: $id}}
+    id: $id,
     data: {status: $status}
   )
 }
@@ -22,5 +16,13 @@ query ListProjects {
     id
     name
     description
+  }
+}
+
+query ListUsersByOrganization($organizationId: UUID!) {
+  users(where: {organizationId: {eq: $organizationId}}) {
+    id
+    displayName
+    email
   }
 }
