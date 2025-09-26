@@ -115,7 +115,7 @@ export default function HeaderClient({ solutions, industries, aiTools, settings 
                 <NavigationMenuTrigger className="text-base font-medium">Solutions</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
-                    {solutions.map((component) => (
+                    {(solutions || []).map((component) => (
                       <ListItem
                         key={component.title}
                         title={component.title}
@@ -132,7 +132,7 @@ export default function HeaderClient({ solutions, industries, aiTools, settings 
                 <NavigationMenuTrigger className="text-base font-medium">Industries</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {industries.map((component) => (
+                    {(industries || []).map((component) => (
                       <ListItem
                         key={component.title}
                         title={component.title}
@@ -149,7 +149,7 @@ export default function HeaderClient({ solutions, industries, aiTools, settings 
                 <NavigationMenuTrigger className="text-base font-medium">AI Tools</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
-                    {aiTools.map((component) => (
+                    {(aiTools || []).map((component) => (
                       <ListItem
                         key={component.title}
                         title={component.title}
