@@ -41,7 +41,7 @@ const EditPriceDialog = ({
     });
 
     useEffect(() => {
-        if(isOpen && item) {
+        if(isOpen &amp;&amp; item) {
             form.reset({ price: item.price });
         }
     }, [item, form, isOpen]);

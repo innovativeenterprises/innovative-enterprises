@@ -34,9 +34,7 @@ const DummyMap = ({ onLocationSelect }: { onLocationSelect: (loc: { lat: number,
     </div>
 );
 
-const ProTaskFormSchema = ProTaskBaseInputSchema.extend({
-    serviceName: z.string().min(1, "Please select a service."),
-});
+const ProTaskFormSchema = ProTaskBaseInputSchema;
 type ProTaskFormValues = z.infer<typeof ProTaskFormSchema>;
 
 
@@ -210,7 +208,7 @@ export default function ProForm() {
                 {isLoading ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</>
                 ) : (
-                   <><Sparkles className="mr-2 h-4 w-4" />Analyze Task & Estimate Costs</>
+                   <><Sparkles className="mr-2 h-4 w-4" />Analyze Task &amp; Estimate Costs</>
                 )}
               </Button>
             </form>
@@ -230,7 +228,7 @@ export default function ProForm() {
       {response && (
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Task Analysis & Cost Estimate</CardTitle>
+            <CardTitle>Task Analysis &amp; Cost Estimate</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
              <div>

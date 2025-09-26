@@ -6,7 +6,7 @@ import ProductTable from "../product-table";
 import ClientTable from "./client-table";
 import TestimonialTable from "./testimonial-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PricingTable from "../pricing-table";
+import PricingTable from "../settings/pricing-table";
 import PosProductTable from "../settings/pos-product-table";
 import type { Metadata } from 'next';
 

@@ -56,14 +56,14 @@ const getProTaskPlanTool = ai.defineTool(
     },
     async (input) => {
         const costSettings = await getCostSettings();
-        const fuelRatePerKm = costSettings.find(c => c.name === 'Fuel Rate' && c.category === 'Travel')?.rate || 0.04;
+        const fuelRatePerKm = costSettings.find(c => c.name === 'Fuel Rate' &amp;&amp; c.category === 'Travel')?.rate || 0.04;
         
         const locationsToVisit = [];
         const unmappedLocations: string[] = [];
         const governorateLocations = ministryLocations[input.governorate];
 
         for (const ministryName of input.ministriesToVisit) {
-            if (governorateLocations && governorateLocations[ministryName]) {
+            if (governorateLocations &amp;&amp; governorateLocations[ministryName]) {
                 locationsToVisit.push({ name: ministryName, ...governorateLocations[ministryName]! });
             } else {
                 unmappedLocations.push(ministryName);
@@ -82,7 +82,7 @@ const getProTaskPlanTool = ai.defineTool(
         const allowances: Allowance[] = [];
         let grandTotal = 0;
 
-        if (input.serviceFee && input.serviceFee > 0) {
+        if (input.serviceFee &amp;&amp; input.serviceFee > 0) {
             allowances.push({ description: 'Government Service Fee', amount: input.serviceFee });
             grandTotal += input.serviceFee;
         }
@@ -92,7 +92,7 @@ const getProTaskPlanTool = ai.defineTool(
             grandTotal += fuelAllowance;
         }
         
-        allowances.push({ description: 'Snacks & Refreshments Allowance', amount: SNACKS_ALLOWANCE });
+        allowances.push({ description: 'Snacks &amp; Refreshments Allowance', amount: SNACKS_ALLOWANCE });
         grandTotal += SNACKS_ALLOWANCE;
 
         return {

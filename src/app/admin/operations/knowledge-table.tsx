@@ -101,7 +101,7 @@ const UploadDocumentDialog = ({
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                             <Button type="submit" disabled={isLoading}>
                                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                Analyze & {documentToReplace ? "Replace" : "Add"} Source(s)
+                                Analyze &amp; {documentToReplace ? "Replace" : "Add"} Source(s)
                             </Button>
                         </DialogFooter>
                     </form>
@@ -286,7 +286,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                         />
 
                         <div>
-                            <Label className="flex items-center gap-2 mb-4"><ListChecks className="h-5 w-5"/> 4. Add Question & Answer Pairs (Optional)</Label>
+                            <Label className="flex items-center gap-2 mb-4"><ListChecks className="h-5 w-5"/> 4. Add Question &amp; Answer Pairs (Optional)</Label>
                             <div className="space-y-4 max-h-48 overflow-y-auto p-1">
                             {fields.map((field, index) => (
                                 <Card key={field.id} className="p-4 bg-muted/50 relative">
@@ -298,7 +298,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                                 </Card>
                             ))}
                             </div>
-                             <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ question: '', answer: '' })}><PlusCircle className="mr-2 h-4 w-4"/> Add Q&A Pair</Button>
+                             <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ question: '', answer: '' })}><PlusCircle className="mr-2 h-4 w-4"/> Add Q&amp;A Pair</Button>
                         </div>
                          <DialogFooter>
                             <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
@@ -330,7 +330,7 @@ export default function KnowledgeTable() {
             if (source.urls && source.urls.length > 0) {
                 const urlPromises = source.urls.map(async (url) => {
                     const scraped = await scrapeAndSummarize({ source: url, isUrl: true });
-                    if (!scraped.summary) throw new Error(`Could not scrape content from '${'' + url + ''}'.`);
+                    if (!scraped.summary) throw new Error(`Could not scrape content from '${url}'.`);
                     return await analyzeKnowledgeDocument({ documentContent: scraped.summary, sourceUrl: url });
                 });
 
@@ -345,7 +345,7 @@ export default function KnowledgeTable() {
                     uploadDate: new Date().toISOString().split('T')[0],
                     fileName: source.urls![index],
                     fileType: 'url',
-                    dataUri: '', // Content is not stored directly for URL sources
+                    dataUri: '',
                 }));
 
                 setKnowledgeBase(prev => [...newDocs, ...prev]);
@@ -367,7 +367,7 @@ export default function KnowledgeTable() {
                     uploadDate: new Date().toISOString().split('T')[0],
                     fileName: fileName,
                     fileType: fileType,
-                    dataUri, // Store the content for uploaded files
+                    dataUri,
                 };
 
                 if (docIdToReplace) {
@@ -476,7 +476,3 @@ export default function KnowledgeTable() {
         </Card>
     );
 }
-
-    
-
-    
