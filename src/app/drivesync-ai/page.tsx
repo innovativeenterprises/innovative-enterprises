@@ -1,7 +1,6 @@
 
 'use server';
 
-import { getRentalAgencies, getCars } from '@/lib/firestore';
 import type { Metadata } from 'next';
 import DriveSyncClientPage from './client-page';
 
@@ -11,10 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default async function DriveSyncAiPage() {
-    // Data is fetched to ensure it's in the initial global store state.
-    await Promise.all([
-        getRentalAgencies(),
-        getCars(),
-    ]);
     return <DriveSyncClientPage />;
 }

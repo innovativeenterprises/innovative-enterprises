@@ -1,41 +1,40 @@
 
-'use server';
+'use client';
 
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getCars } from '@/lib/firestore';
+import { useCarsData } from '@/hooks/use-data-hooks';
 import CarDetailClientPage from './client-page';
-
-export async function generateStaticParams() {
-  const cars = await getCars();
-  return cars.map((car) => ({
-    id: car.id,
-  }));
-}
+import { useEffect, useState } from 'react';
+import type { Car } from '@/lib/cars.schema';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const cars = await getCars();
-  const car = cars.find(c => c.id === params.id);
-
-  if (!car) {
-    return {
-      title: 'Car Not Found',
-    };
-  }
-
+  // Metadata generation in client components is not standard. 
+  // This is a placeholder for what would be in a server component.
   return {
-    title: `${car.make} ${car.model} | DriveSync AI`,
-    description: `Details for the ${car.year} ${car.make} ${car.model}.`,
+    title: 'Car Details'
   };
 }
 
-export default async function CarDetailPage({ params }: { params: { id: string } }) {
+export default function CarDetailPage() {
+    const params = useParams();
     const { id } = params;
-    const cars = await getCars();
-    const car = cars.find(c => c.id === id);
+    const { data: cars, isClient } = useCarsData();
+    const [car, setCar] = useState<Car | undefined>();
+
+    useEffect(() => {
+        if (isClient) {
+            const foundCar = cars.find(c => c.id === id);
+            if (foundCar) {
+                setCar(foundCar);
+            } else {
+                notFound();
+            }
+        }
+    }, [id, cars, isClient]);
 
     if (!car) {
-        notFound();
+        return <div>Loading car details...</div>; // Or a skeleton loader
     }
     
     return <CarDetailClientPage car={car} />;

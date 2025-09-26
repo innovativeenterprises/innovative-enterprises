@@ -1,13 +1,13 @@
 
-'use server';
+'use client';
 
-import { getProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Car } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
+import { useProductsData } from '@/hooks/use-data-hooks';
 
 export const metadata: Metadata = {
   title: "Automotive Technology Solutions",
@@ -43,8 +43,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     </Card>
 )};
 
-export default async function AutomotiveTechPage() {
-    const products = await getProducts();
+export default function AutomotiveTechPage() {
+    const { data: products } = useProductsData();
     const autotechProducts = products.filter(p => p.category === "Automotive Tech" && p.enabled);
     
      return (

@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Car, Settings, BarChart3, Users } from "lucide-react";
 import Link from 'next/link';
 import type { Car as CarType } from '@/lib/cars.schema';
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useCarsData, useRentalAgenciesData } from '@/hooks/use-data-hooks';
 
 const bookingData = [
     { date: 'Mon', bookings: 12 }, { date: 'Tue', bookings: 15 }, { date: 'Wed', bookings: 8 },
@@ -19,13 +20,18 @@ const bookingData = [
 ];
 const chartConfig = { bookings: { label: "Bookings", color: "hsl(var(--chart-1))" } };
 
-export default function DriveSyncClientPage({ initialAgencies, initialCars }: { initialAgencies: RentalAgency[], initialCars: CarType[] }) {
-    const [selectedAgencyId, setSelectedAgencyId] = useState(initialAgencies[0]?.id || '');
-    const [isClient, setIsClient] = useState(false);
+export default function DriveSyncClientPage() {
+    const { data: initialAgencies, isClient: isAgenciesClient } = useRentalAgenciesData();
+    const { data: initialCars, isClient: isCarsClient } = useCarsData();
+    const isClient = isAgenciesClient && isCarsClient;
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const [selectedAgencyId, setSelectedAgencyId] = useState('');
+
+     useEffect(() => {
+        if (isClient && initialAgencies.length > 0) {
+            setSelectedAgencyId(initialAgencies[0].id);
+        }
+    }, [isClient, initialAgencies]);
 
     const agencyCars = useMemo(() => {
         return initialCars.filter(c => c.rentalAgencyId === selectedAgencyId);

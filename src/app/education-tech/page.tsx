@@ -1,13 +1,13 @@
 
-'use server';
+'use client';
 
-import { getProducts } from '@/lib/firestore';
 import type { Metadata } from 'next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { GraduationCap, BookOpen, ShieldCheck, Cpu, ArrowRight } from "lucide-react";
+import { GraduationCap, BookOpen, ShieldCheck, Cpu, ArrowRight, Users } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
+import { useProductsData } from '@/hooks/use-data-hooks';
 
 export const metadata: Metadata = {
   title: "Education Technology Solutions",
@@ -52,8 +52,8 @@ const ProductCard = ({ product }: { product: Product }) => {
 )};
 
 
-export default async function EducationTechPage() {
-    const products = await getProducts();
+export default function EducationTechPage() {
+    const { data: products } = useProductsData();
     const edutechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
     
     return (
