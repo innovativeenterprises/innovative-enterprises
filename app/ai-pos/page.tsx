@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -223,7 +224,7 @@ export default function AiPosPage() {
                             <BrainCircuit className="mr-2 h-4 w-4"/> Sales Analytics
                         </Button>
                     </DialogTrigger>
-                    <SalesAnalyticsChat />
+                    <SalesAnalyticsChat dailySales={dailySales} />
                 </Dialog>
             </header>
             <main className="flex-1 overflow-hidden p-4">
