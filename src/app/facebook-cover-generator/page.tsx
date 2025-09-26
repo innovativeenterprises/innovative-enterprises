@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Download, ImageIcon, Wand2, Facebook } from 'lucide-react';
@@ -107,7 +107,7 @@ export default function FacebookCoverGeneratorPage() {
                             <FormItem><FormLabel>Desired Style & Imagery</FormLabel><FormControl><VoiceEnabledTextarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                         )}/>
 
-                    <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">
+                    <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                         {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</> : <><Sparkles className="mr-2 h-4 w-4" /> Generate Cover Photo</>}
                     </Button>
                     </form>
