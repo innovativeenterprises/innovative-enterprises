@@ -50,10 +50,7 @@ const answerQuestionFlow = ai.defineFlow(
     outputSchema: AnswerQuestionOutputSchema,
   },
   async (input) => {
-    const llmResponse = await ai.generate({
-      prompt: answerQuestionPrompt,
-      input: input,
-    });
+    const llmResponse = await answerQuestionPrompt(input);
     
     const toolRequest = llmResponse.toolRequest();
     if (toolRequest) {

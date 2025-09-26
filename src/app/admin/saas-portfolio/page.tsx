@@ -1,6 +1,7 @@
+
 'use server';
 
-import SaasPortfolioPage from './client-page';
+import SaasPortfolioPageClient from './client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,6 +11,5 @@ export const metadata: Metadata = {
 
 
 export default async function AdminSassPortfolioPage() {
-    // Data is loaded into the global store in the root layout.
-    return <SaasPortfolioPage />;
+    return <SaasPortfolioPageClient />;
 }

@@ -1,13 +1,23 @@
 
 'use client';
 
-import ServiceTable from "@/app/admin/service-table";
-import ProductTable from "@/app/admin/product-table";
-import ClientTable from "@/app/admin/client-table";
-import TestimonialTable from "@/app/admin/testimonial-table";
+import ServiceTable from "../service-table";
+import ProductTable from "../product-table";
+import ClientTable from "../client-table";
+import TestimonialTable from "../testimonial-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useGlobalStore } from "@/hooks/use-data-hooks";
 
 export default function AdminContentPage() {
+    // Ensure all necessary data is loaded via the global store
+    useGlobalStore(state => state.services);
+    useGlobalStore(state => state.products);
+    useGlobalStore(state => state.stages);
+    useGlobalStore(state => state.clients);
+    useGlobalStore(state => state.testimonials);
+    useGlobalStore(state => state.pricing);
+    useGlobalStore(state => state.posProducts);
+
   return (
     <div className="space-y-8">
       <div>
