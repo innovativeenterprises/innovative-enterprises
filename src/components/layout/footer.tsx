@@ -1,9 +1,8 @@
-'use server';
+'use client';
 
 import FooterClient from "./footer-client";
-import { getSettings } from "@/lib/firestore";
+import type { AppSettings } from "@/lib/settings";
 
-export default async function Footer() {
-  const settings = await getSettings();
+export default function Footer({ settings }: { settings: AppSettings | null }) {
   return <FooterClient settings={settings} />;
 }
