@@ -67,8 +67,8 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 const CartButton = () => {
-    const { cart } = useCartData();
-    const itemCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
+    const { data: cart } = useCartData();
+    const itemCount = useMemo(() => (cart || []).reduce((sum, item) => sum + item.quantity, 0), [cart]);
 
     return (
         <Button variant="outline" size="icon" asChild>
