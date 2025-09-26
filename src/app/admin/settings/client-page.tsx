@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AppSettingsSchema, type AppSettings } from '@/lib/settings';
-import { useGlobalStore } from '@/lib/global-store.tsx';
+import { useGlobalStore, useSetStore } from '@/lib/global-store';
 import ThemeGenerator from '@/app/admin/operations/theme-generator';
 import { Switch } from '@/components/ui/switch';
 import PricingTable from './pricing-table';
@@ -36,7 +36,7 @@ export default function AdminSettingsClientPage({
     initialPosProducts,
 }: AdminSettingsClientPageProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const setStore = useGlobalStore(s => s.set);
+    const setStore = useSetStore();
     const settings = useGlobalStore(s => s.settings);
     const { toast } = useToast();
 

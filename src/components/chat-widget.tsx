@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -6,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { X, MessageSquare, Bot } from "lucide-react";
 import { ChatComponent } from '@/components/chat/chat-component';
 import { answerQuestion } from '@/ai/flows/ai-powered-faq';
-import { useGlobalStore } from "@/lib/global-store.tsx";
+import { useGlobalStore } from "@/lib/global-store";
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);

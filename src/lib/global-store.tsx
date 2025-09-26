@@ -27,13 +27,9 @@ export function StoreProvider({ children, initialState }: { children: ReactNode;
 
     if (!storeRef.current) {
         storeRef.current = createAppStore(initialState);
+         // Set isClient to true once after the initial store creation on the client
+        storeRef.current.getState().set(state => ({...state, isClient: true }));
     }
-    
-     useEffect(() => {
-        if (storeRef.current) {
-            storeRef.current.setState((state) => ({ ...state, isClient: true }));
-        }
-    }, []);
 
     return (
         <StoreContext.Provider value={storeRef.current}>

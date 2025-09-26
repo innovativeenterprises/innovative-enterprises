@@ -1,14 +1,13 @@
 
 'use client';
 
-import { useGlobalStore } from '@/lib/global-store.tsx';
+import { useGlobalStore, useSetStore } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
-import { useState, useEffect } from 'react';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return (initialData?: AppState[K]) => {
+  return () => {
     const data = useGlobalStore(state => state[key]);
-    const setData = useGlobalStore(state => state.set);
+    const setData = useSetStore();
     const isClient = useGlobalStore(state => state.isClient);
 
     const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
@@ -30,7 +29,7 @@ export const useStaffData = () => {
         staff: state.staff,
         agentCategories: state.agentCategories,
     }));
-    const setData = useGlobalStore(state => state.set);
+    const setData = useSetStore();
     const isClient = useGlobalStore(state => state.isClient);
     return { ...data, setData, isClient };
 };
