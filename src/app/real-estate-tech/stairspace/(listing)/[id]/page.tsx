@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useParams, notFound } from 'next/navigation';
@@ -11,7 +12,6 @@ import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
 import type { StairspaceListing } from '@/lib/stairspace.schema';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getStairspaceListings } from '@/lib/firestore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import { useStairspaceListingsData, useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 
 // --- BookingRequestForm Logic ---
 const RequestSchema = z.object({
@@ -40,6 +41,8 @@ const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: {
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { setData: setRequests } = useStairspaceRequestsData();
+
     const form = useForm<RequestValues>({
         resolver: zodResolver(RequestSchema),
     });
@@ -47,6 +50,19 @@ const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: {
     const onSubmit: SubmitHandler<RequestValues> = async (data) => {
         setIsSubmitting(true);
         console.log("Booking Request:", { listingId: listing.id, ...data });
+
+        setRequests(prev => [
+            ...prev,
+            {
+                id: `req_stair_${Date.now()}`,
+                listingId: listing.id,
+                listingTitle: listing.title,
+                requestDate: new Date().toISOString(),
+                status: 'Pending',
+                ...data
+            }
+        ]);
+
         await new Promise(res => setTimeout(res, 1500));
         toast({
             title: "Request Sent!",
@@ -98,14 +114,12 @@ const BookingRequestForm = ({ listing, isOpen, onOpenChange, onClose }: {
 export default function StairspaceDetailPage() {
     const params = useParams();
     const { id } = params;
+    const { data: listings, isClient } = useStairspaceListingsData();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [listing, setListing] = useState<StairspaceListing | undefined>(undefined);
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
-        async function fetchListing() {
-            const listings = await getStairspaceListings();
+        if (isClient && id) {
             const foundListing = listings.find(l => l.id === id);
             if (foundListing) {
                 setListing(foundListing);
@@ -113,16 +127,13 @@ export default function StairspaceDetailPage() {
                 notFound();
             }
         }
-        if (id) {
-            fetchListing();
-        }
-    }, [id]);
+    }, [id, listings, isClient]);
 
     if (!isClient || !listing) {
         return (
              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto space-y-6">
-                    <Skeleton className="h-10 w-40" />
+                    <Skeleton className="h-10 w-40 mb-8" />
                     <Skeleton className="h-[500px] w-full" />
                 </div>
             </div>
@@ -159,7 +170,7 @@ export default function StairspaceDetailPage() {
                                     </CardHeader>
                                     <div className="py-6 space-y-4">
                                         <p className="text-foreground/80">
-                                            This unique space is perfect for entrepreneurs looking to launch a pop-up, test a product, or operate a micro-business with high visibility and low overhead.
+                                            {listing.description}
                                         </p>
                                         <div className="border-t pt-4 space-y-2 text-sm">
                                             <div className="flex justify-between">
