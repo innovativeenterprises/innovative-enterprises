@@ -11,7 +11,7 @@ import { useAiToolsData } from "@/hooks/use-data-hooks";
 export default function AiToolsCta() {
     const { data: aiTools } = useAiToolsData();
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];
-    const featuredAgents = featuredAgentNames.map(name => aiTools.find(agent => agent.title.includes(name))).filter(Boolean) as AiTool[];
+    const featuredAgents = featuredAgentNames.map(name => (aiTools || []).find(agent => agent.title.includes(name))).filter(Boolean) as AiTool[];
 
     return (
         <section className="py-16 md:py-24 bg-background">
