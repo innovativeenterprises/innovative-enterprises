@@ -8,7 +8,7 @@ import { BrainCircuit, ShoppingCart, Trash2, Minus, Plus, CreditCard, Loader2 } 
 import { SalesAnalyticsChat } from './sales-analytics-chat';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useStore, useSetStore } from '@/hooks/use-data-hooks';
+import { useGlobalStore, useSetStore } from '@/hooks/use-data-hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -108,10 +108,10 @@ const CheckoutPanel = ({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCh
 
 // --- Main AI POS Page ---
 export default function AiPosPage() {
-    const posProducts = useStore(s => s.posProducts);
-    const dailySales = useStore(s => s.dailySales);
-    const isClient = useStore(s => s.isClient);
-    const settings = useStore(s => s.settings);
+    const posProducts = useGlobalStore(s => s.posProducts);
+    const dailySales = useGlobalStore(s => s.dailySales);
+    const isClient = useGlobalStore(s => s.isClient);
+    const settings = useGlobalStore(s => s.settings);
     const setStore = useSetStore();
 
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -183,10 +183,14 @@ export default function AiPosPage() {
         setIsCheckingOut(true);
         
         setTimeout(() => {
+            const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const vat = settings?.vat.enabled ? subtotal * settings.vat.rate : 0;
+            const total = subtotal + vat;
+            
             const newTransaction = {
                 id: `trans_${Date.now()}`,
                 items: cart,
-                total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) * (1 + (settings?.vat.enabled ? settings.vat.rate : 0)),
+                total: total,
                 timestamp: new Date().toISOString(),
             };
             

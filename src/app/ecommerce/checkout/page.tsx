@@ -3,19 +3,19 @@
 
 import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
-import { store } from '@/lib/global-store';
-import type { CartItem } from '@/lib/global-store';
+import { useGlobalStore } from '@/lib/global-store.tsx';
+import type { CartItem } from '@/lib/pos-data.schema';
 import { Loader2, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useSettingsData } from '@/hooks/use-global-store-data';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const CheckoutSchema = z.object({
@@ -39,22 +39,22 @@ type CheckoutValues = z.infer<typeof CheckoutSchema>;
 export default function CheckoutPage() {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const { settings } = useSettingsData();
+    const { data: settings, isClient: isSettingsClient } = useSettingsData();
+    const { data: cart, setData: setCart, isClient: isCartClient } = useGlobalStore(s => ({ data: s.cart, setData: s.set, isClient: s.isClient }));
     const { toast } = useToast();
     const router = useRouter();
     const [discount, setDiscount] = useState(0);
-    const [isClient, setIsClient] = useState(false);
+
+    const isClient = isSettingsClient && isCartClient;
 
     useEffect(() => {
-        setIsClient(true);
-        const updateCart = () => setCartItems(store.get().cart);
-        updateCart();
-        const unsubscribe = store.subscribe(updateCart);
-        if (store.get().cart.length === 0) {
-            router.push('/ecommerce');
+        if(isClient) {
+            setCartItems(cart);
+            if (cart.length === 0) {
+                router.push('/ecommerce');
+            }
         }
-        return () => unsubscribe();
-    }, [router]);
+    }, [cart, isClient, router]);
 
     const form = useForm<CheckoutValues>({
         resolver: zodResolver(CheckoutSchema),
@@ -74,7 +74,7 @@ export default function CheckoutPage() {
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shipping = subtotal > 0 ? 5.00 : 0; // Flat shipping rate
-    const vatAmount = settings.vat.enabled ? (subtotal + shipping - discount) * settings.vat.rate : 0;
+    const vatAmount = (settings && settings.vat.enabled) ? (subtotal + shipping - discount) * settings.vat.rate : 0;
     const total = subtotal + shipping - discount + vatAmount;
 
     const handleApplyCoupon = () => {
@@ -113,7 +113,7 @@ export default function CheckoutPage() {
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         toast({ title: "Payment Successful!", description: "Your order has been placed." });
-        store.set(state => ({ ...state, cart: [] }));
+        setCart(state => ({ ...state, cart: [] }));
         router.push('/ecommerce/checkout/success');
         setIsLoading(false);
     };
@@ -233,7 +233,7 @@ export default function CheckoutPage() {
                                                 <span>- OMR {discount.toFixed(2)}</span>
                                             </div>
                                         )}
-                                        {settings.vat.enabled && (
+                                        {settings && settings.vat.enabled && (
                                             <div className="flex justify-between">
                                                 <span>VAT ({settings.vat.rate * 100}%)</span>
                                                 <span>OMR {vatAmount.toFixed(2)}</span>
