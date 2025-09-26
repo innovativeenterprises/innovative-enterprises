@@ -97,7 +97,7 @@ export const legalAgentRouter = ai.defineFlow(
 
         // Step 2: Analyze the scraped content with the legal specialist.
         const analysisResult = await analyzeContractPrompt({ contractText: scrapedData.summary });
-        return analysisResult.output!;
+        return analysisResult;
 
       case 'generate_document':
          const generationResult = await generateAgreement({ 
@@ -121,7 +121,7 @@ export const legalAgentRouter = ai.defineFlow(
          // For general questions or text analysis, we can use the contract prompt.
          // It's robust enough to provide general advice or analyze provided text.
          const directAnalysis = await analyzeContractPrompt({ contractText: query });
-         return directAnalysis.output!;
+         return directAnalysis;
     }
   }
 );

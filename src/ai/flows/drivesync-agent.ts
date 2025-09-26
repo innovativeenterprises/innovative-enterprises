@@ -96,38 +96,34 @@ export const findAndBookCar = ai.defineFlow(
   },
   async ({ query }) => {
     const availableCars = initialCars.filter(c => c.availability === 'Available');
-    const response = await ai.generate({
-      prompt: driveSyncAgentPrompt.prompt,
-      history: [{role: 'user', content: [{text: `User query: ${query}\n\nAvailable cars: ${JSON.stringify(availableCars)}`}]}],
-      tools: [bookCarTool, getVehicleHealthTool, getBookingTrendsTool],
-      output: {
-        format: 'json',
-        schema: DriveSyncAgentOutputSchema,
-      }
+    const response = await driveSyncAgentPrompt({
+      query,
+      availableCarsJson: JSON.stringify(availableCars),
     });
 
     // Check for tool calls
-    if (response.toolRequest) {
-      const toolResponse = await response.toolRequest.run();
-       if (response.toolRequest.name === 'bookCar') {
+    const toolRequest = response.toolRequest();
+    if (toolRequest) {
+      const toolResponse = await toolRequest.run();
+       if (toolRequest.name === 'bookCar') {
+            const output = toolResponse.output as z.infer<typeof bookCarTool.outputSchema>;
             return {
-                response: toolResponse.output?.message || "An error occurred during booking.",
+                response: output.message || "An error occurred during booking.",
             };
         }
-        if (response.toolRequest.name === 'getVehicleHealth') {
+        if (toolRequest.name === 'getVehicleHealth') {
             const health = toolResponse.output as {status: string, lastService: string, notes: string};
             return {
                 response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
             }
         }
-        if (response.toolRequest.name === 'getBookingTrends') {
+        if (toolRequest.name === 'getBookingTrends') {
             return {
                 response: `Booking Trends Report: ${toolResponse.output}`
             }
         }
     }
 
-
-    return response.output!;
+    return response.output()!;
   }
 );

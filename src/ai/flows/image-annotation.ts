@@ -16,14 +16,29 @@ import {
 import { z } from 'zod';
 
 
-const prompt = `You are a sophisticated computer vision AI specializing in photogrammetry and technical illustration. Your task is to analyze an image of an object or floor plan and provide estimated real-world measurements and annotations.
+const prompt = ai.definePrompt({
+  name: 'imageAnnotationPrompt',
+  input: {
+    schema: ImageAnnotatorInputSchema.extend({
+      prompt: z.string(),
+    }),
+  },
+  output: {
+    schema: z.object({
+      imageDataUri: z.string().url().describe("The new, annotated image as a data URI."),
+      identifiedObject: z.string().describe("The name of the main object identified in the image."),
+      estimatedDimensions: z.object({
+          height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
+          width: z.string().describe("Estimated width with units (e.g., '10 cm')."),
+          depth: z.string().describe("Estimated depth with units (e.g., '8 cm')."),
+      }),
+      otherMetrics: z.string().optional().describe("Any other relevant metrics identified, such as volume or weight."),
+    }),
+  },
+  prompt: `You are a sophisticated computer vision AI specializing in photogrammetry and technical illustration. Your task is to analyze an image of an object or floor plan and provide estimated real-world measurements and annotations.
 
 **User Instructions (Optional):**
-{{#if prompt}}
-  {{{prompt}}}
-{{else}}
-  Analyze the main object in the image.
-{{/if}}
+{{{prompt}}}
 
 **Your Tasks:**
 1.  **Identify Object(s):** Identify the primary object or context in the image (e.g., "Laptop", "Coffee Mug", "Floor Plan").
@@ -35,7 +50,8 @@ const prompt = `You are a sophisticated computer vision AI specializing in photo
     *   The annotations should look like they are from engineering or design software.
 
 Return the structured data and the newly generated annotated image.
-`;
+`,
+});
 
 
 export const annotateImage = ai.defineFlow(
@@ -46,10 +62,10 @@ export const annotateImage = ai.defineFlow(
     },
     async (input) => {
         const { output } = await ai.generate({
-            model: 'googleai/gemini-2.5-flash-image-preview',
+            model: 'googleai/gemini-1.5-flash',
             prompt: [
                 { media: { url: input.baseImageUri } },
-                { text: prompt.replace("{{{prompt}}}", input.prompt || 'Analyze the main object in the image.') },
+                { text: prompt.prompt.replace("{{{prompt}}}", input.prompt || 'Analyze the main object in the image.') },
             ],
             output: {
                 format: 'json',
