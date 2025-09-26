@@ -26,7 +26,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "AI-POS for Education": Cpu,
         "AlumniConnect": Users,
     };
-    const Icon = iconMap[product.name] || GraduationCap;
+    const Icon = iconMap[product.name as keyof typeof iconMap] || GraduationCap;
 
     return (
     <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
