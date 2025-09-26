@@ -1,3 +1,4 @@
+
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
@@ -64,7 +65,11 @@ export default async function RootLayout({
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
           <Providers initialState={initialState}>
             <MainLayout>
-                {children}
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </div>
             </MainLayout>
           </Providers>
       </body>
