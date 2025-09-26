@@ -2,11 +2,11 @@
 import type { Client, Testimonial } from './clients.schema';
 
 export const initialClients: Client[] = [
-  { id: '1', name: 'OmanTel', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Omantel_Logo.svg/1024px-Omantel_Logo.svg.png', aiHint: 'telecom logo' },
-  { id: '2', name: 'Petroleum Development Oman', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/55/Petroleum_Development_Oman_logo.svg/320px-Petroleum_Development_Oman_logo.svg.png', aiHint: 'oil company logo' },
-  { id: '3', name: 'Bank Muscat', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Bank_Muscat_Logo.svg/320px-Bank_Muscat_Logo.svg.png', aiHint: 'bank logo' },
-  { id: '4', name: 'Omran', logo: 'https://www.omran.om/images/logo-en.png', aiHint: 'tourism logo' },
-  { id: '5', name: 'Sohar Port and Freezone', logo: 'https://www.soharportandfreezone.com/sites/default/files/2019-10/logo.png', aiHint: 'port logo' },
+  { id: '1', name: 'OmanTel', logo: 'https://placehold.co/150x60/f03a47/ffffff?text=OmanTel&font=raleway', aiHint: 'telecom logo' },
+  { id: '2', name: 'Petroleum Development Oman', logo: 'https://placehold.co/150x60/00a6a6/ffffff?text=PDO&font=raleway', aiHint: 'oil company logo' },
+  { id: '3', name: 'Bank Muscat', logo: 'https://placehold.co/150x60/f8a5c2/ffffff?text=Bank+Muscat&font=raleway', aiHint: 'bank logo' },
+  { id: '4', name: 'Omran', logo: 'https://placehold.co/150x60/28536b/ffffff?text=Omran&font=raleway', aiHint: 'tourism logo' },
+  { id: '5', name: 'Sohar Port and Freezone', logo: 'https://placehold.co/150x60/f29e4c/ffffff?text=Sohar+Port&font=raleway', aiHint: 'port logo' },
 ];
 
 export const initialTestimonials: Testimonial[] = [
