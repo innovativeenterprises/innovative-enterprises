@@ -12,3 +12,22 @@ Generated sources: prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql
 I0926 00:30:57.515999     523 load.go:74] Finished reloading
 I0926 00:30:57.532291     523 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
 I0926 00:30:58.525987     523 engine.go:169] [/emulator/studio 03ad] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+I0926 00:40:17.516944     523 load.go:31] Reloading schema and connectors...
+W0926 00:40:17.566905     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
+example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
+example/queries.gql:12:30: Field "last_updated" is not defined by type "Task_Data".
+example/queries.gql:14:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:10:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+
+sources: example/queries.gql [505B] 
+I0926 00:40:17.566993     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
+Connector "example": sources: example/queries.gql [505B] 
+E0926 00:40:17.572913     523 load.go:73] Could not load sources: 
+Errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
+example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
+example/queries.gql:12:30: Field "last_updated" is not defined by type "Task_Data".
+example/queries.gql:14:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:10:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+I0926 00:40:17.576365     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] 
+I0926 00:40:17.576409     523 load.go:74] Finished reloading

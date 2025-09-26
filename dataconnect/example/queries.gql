@@ -1,18 +1,14 @@
 mutation InsertOrganization {
   organization_insert(
-    data: { name: "New Org", createdAt: "now()" }
-  ) {
-    id
-  }
+    data: { name: "Firebase", createdAt: fdc.now() }
+  )
 }
 
-mutation UpdateTask($id: UUID!, $status: String!) {
+mutation UpdateTask($id: String!, $status: String!) {
   task_update(
-    id: $id
-    data: { status: $status, last_updated: "now()" }
-  ) {
-    id
-  }
+    by: { id: $id }
+    data: { status: $status, updatedAt: fdc.now() }
+  )
 }
 
 query ListProjects {
@@ -23,7 +19,7 @@ query ListProjects {
   }
 }
 
-query ListUsersByOrganization($organizationId: UUID!) {
+query ListUsersByOrganization($organizationId: String!) {
   users(where: { organizationId: { eq: $organizationId } }) {
     id
     displayName
