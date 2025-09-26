@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -10,12 +11,13 @@ import type { Product } from "@/lib/products.schema";
 import { PlusCircle, Edit } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { ProjectStage } from "@/lib/stages";
-import { useProductsData } from "@/hooks/use-data-hooks";
+import { useProductsData, useStagesData } from "@/hooks/use-data-hooks";
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 
 
-export default function ProductTable({ initialProducts, initialStages }: { initialProducts: Product[], initialStages: ProjectStage[] }) {
-    const { data: products, setData: setProducts } = useProductsData(initialProducts);
+export default function ProductTable() {
+    const { data: products, setData: setProducts } = useProductsData();
+    const { data: stages } = useStagesData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
@@ -59,7 +61,7 @@ export default function ProductTable({ initialProducts, initialStages }: { initi
                     onOpenChange={setIsDialogOpen}
                     product={selectedProduct}
                     onSave={handleSave}
-                    stages={initialStages}
+                    stages={stages}
                 >
                     <div />
                 </AddEditProductDialog>

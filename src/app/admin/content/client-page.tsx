@@ -6,26 +6,8 @@ import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import TestimonialTable from "@/app/admin/testimonial-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Service } from "@/lib/services.schema";
-import type { Product } from "@/lib/products.schema";
-import type { ProjectStage } from "@/lib/stages";
-import type { Client, Testimonial } from "@/lib/clients.schema";
 
-interface AdminContentClientPageProps {
-    initialServices: Service[];
-    initialProducts: Product[];
-    initialStages: ProjectStage[];
-    initialClients: Client[];
-    initialTestimonials: Testimonial[];
-}
-
-export default function AdminContentClientPage({
-    initialServices,
-    initialProducts,
-    initialStages,
-    initialClients,
-    initialTestimonials,
-}: AdminContentClientPageProps) {
+export default function AdminContentClientPage() {
   return (
     <div className="space-y-8">
       <div>
@@ -41,18 +23,15 @@ export default function AdminContentClientPage({
           <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
         </TabsList>
         <TabsContent value="services" className="mt-6">
-          <ServiceTable initialServices={initialServices} />
+          <ServiceTable />
         </TabsContent>
         <TabsContent value="products" className="mt-6">
-          <ProductTable
-            initialProducts={initialProducts}
-            initialStages={initialStages}
-          />
+          <ProductTable />
         </TabsContent>
         <TabsContent value="clients" className="mt-6">
           <div className="space-y-8">
-            <ClientTable initialClients={initialClients} />
-            <TestimonialTable initialTestimonials={initialTestimonials} />
+            <ClientTable />
+            <TestimonialTable />
           </div>
         </TabsContent>
       </Tabs>

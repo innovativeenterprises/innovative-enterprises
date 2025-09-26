@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 
 
 export default async function AdminContentPage() {
-    const [services, products, stages, clients, testimonials] = await Promise.all([
+    // These fetches are still necessary to populate the initial global store on the server.
+    await Promise.all([
         getServices(),
         getProducts(),
         getStages(),
@@ -21,12 +22,6 @@ export default async function AdminContentPage() {
     ]);
 
     return (
-        <AdminContentClientPage
-            initialServices={services}
-            initialProducts={products}
-            initialStages={stages}
-            initialClients={clients}
-            initialTestimonials={testimonials}
-        />
+        <AdminContentClientPage />
     );
 }

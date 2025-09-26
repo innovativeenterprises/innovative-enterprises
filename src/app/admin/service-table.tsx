@@ -14,6 +14,7 @@ import { GripVertical } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { CSS } from '@dnd-kit/utilities';
+import { useServicesData } from "@/hooks/use-data-hooks";
 
 const SortableServiceRow = ({ service, handleToggle }: { service: Service, handleToggle: (title: string) => void }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: service.title });
@@ -48,13 +49,9 @@ const SortableServiceRow = ({ service, handleToggle }: { service: Service, handl
     );
 };
 
-export default function ServiceTable({ initialServices }: { initialServices: Service[] }) {
-    const [services, setServices] = useState<Service[]>([]);
+export default function ServiceTable() {
+    const { data: services, setData: setServices, isClient } = useServicesData();
     const { toast } = useToast();
-
-    useEffect(() => {
-        setServices(initialServices);
-    }, [initialServices]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -103,15 +100,19 @@ export default function ServiceTable({ initialServices }: { initialServices: Ser
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
-                                {services.map(service => (
-                                    <SortableServiceRow
-                                        key={service.title}
-                                        service={service}
-                                        handleToggle={handleToggle}
-                                    />
-                                ))}
-                            </SortableContext>
+                            {!isClient ? (
+                                 <TableRow><TableCell colSpan={4}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
+                            ) : (
+                                <SortableContext items={services.map(s => s.title)} strategy={verticalListSortingStrategy}>
+                                    {services.map(service => (
+                                        <SortableServiceRow
+                                            key={service.title}
+                                            service={service}
+                                            handleToggle={handleToggle}
+                                        />
+                                    ))}
+                                </SortableContext>
+                            )}
                         </TableBody>
                     </Table>
                 </DndContext>

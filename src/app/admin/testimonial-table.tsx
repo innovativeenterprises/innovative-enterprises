@@ -79,8 +79,8 @@ const AddEditTestimonialDialog = ({
     );
 };
 
-export default function TestimonialTable({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
-    const { data: testimonials, setData: setTestimonials, isClient } = useTestimonialsData(initialTestimonials);
+export default function TestimonialTable() {
+    const { data: testimonials, setData: setTestimonials, isClient } = useTestimonialsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | undefined>(undefined);

@@ -77,8 +77,8 @@ const AddEditClientDialog = ({
 };
 
 
-export default function ClientTable({ initialClients }: { initialClients: Client[] }) {
-    const { data: clients, setData: setClients, isClient } = useClientsData(initialClients);
+export default function ClientTable() {
+    const { data: clients, setData: setClients, isClient } = useClientsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState<Client | undefined>(undefined);
