@@ -11,6 +11,12 @@ import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form
 import FacebookCoverGeneratorPage from '@/app/facebook-cover-generator/page';
 import KnowledgeTable from "./knowledge-table";
 import DigitalBusinessCardPage from "@/app/digital-business-card/page";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "Operations",
+    description: "A suite of internal AI tools to enhance business operations."
+};
 
 export default function AdminOperationsPage() {
 

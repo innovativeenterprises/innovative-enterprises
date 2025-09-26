@@ -7,6 +7,12 @@ import { Building, BarChart, FileText, Home, Search, Tv, Layers, HandCoins, User
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 import { useProductsData } from "@/hooks/use-data-hooks";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Admin - Real Estate Technology",
+  description: "Manage all Real Estate Tech SaaS platforms and tools."
+};
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -25,6 +31,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     };
     const Icon = iconMap[product.name as keyof typeof iconMap] || Building;
 
+    const href = product.href || '#';
+
     return (
         <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <CardHeader className="flex-row items-center gap-4">
@@ -39,7 +47,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             <CardFooter>
                 {product.href ? (
                     <Button asChild className="w-full">
-                        <Link href={product.href}>Use Tool</Link>
+                        <Link href={href}>Use Tool</Link>
                     </Button>
                 ) : (
                     <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
