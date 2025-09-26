@@ -87,3 +87,14 @@ Errors: example/queries.gql:14:3: Unknown argument "where" on field "Mutation.ta
 I0926 00:48:47.760478     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
 Generated sources: main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] 
 I0926 00:48:47.760818     523 load.go:74] Finished reloading
+I0926 00:49:37.526877     523 load.go:31] Reloading schema and connectors...
+W0926 00:49:37.626996     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data.createdAt: Timestamp): parsing time "now()" as "2006-01-02T15:04:05.999999999Z07:00": cannot parse "now()" as "2006"
+
+sources: example/queries.gql [447B] 
+I0926 00:49:37.627087     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
+Connector "example": sources: example/queries.gql [447B] 
+E0926 00:49:37.636886     523 load.go:73] Could not load sources: 
+Errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data.createdAt: Timestamp): parsing time "now()" as "2006-01-02T15:04:05.999999999Z07:00": cannot parse "now()" as "2006"
+I0926 00:49:37.648422     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73251B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] 
+I0926 00:49:37.651230     523 load.go:74] Finished reloading

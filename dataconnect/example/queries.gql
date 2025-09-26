@@ -1,13 +1,13 @@
 mutation InsertOrganization {
   organization_insert(
-    data: {name: "NewCo", createdAt: "now()"}
+    data: { name: "Firebase", createdAt: now() }
   )
 }
 
 mutation UpdateTask($id: UUID!, $status: String!) {
   task_update(
     id: $id,
-    data: {status: $status}
+    data: { status: $status }
   )
 }
 
@@ -20,7 +20,7 @@ query ListProjects {
 }
 
 query ListUsersByOrganization($organizationId: UUID!) {
-  users(where: {organizationId: {eq: $organizationId}}) {
+  users(where: { organizationId: { eq: $organizationId } }) {
     id
     displayName
     email
