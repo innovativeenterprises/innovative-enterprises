@@ -5,6 +5,7 @@ import React from 'react';
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { cn } from '@/lib/utils';
+import { Gem, Award, Shield, Crown, Trophy } from "lucide-react";
 
 interface PartnerCardProps {
     cardRef: React.RefObject<HTMLDivElement>;
@@ -35,6 +36,7 @@ export const PartnerCard = ({
     const getTierColor = () => {
         switch(classification.toLowerCase()) {
             case 'diamond': return 'from-blue-400 to-indigo-500';
+            case 'platinum': return 'from-slate-400 to-gray-500';
             case 'gold': return 'from-yellow-400 to-amber-500';
             case 'silver': return 'from-gray-400 to-slate-500';
             case 'bronze': return 'from-orange-400 to-amber-600';
@@ -45,26 +47,41 @@ export const PartnerCard = ({
     const getTierTextColor = () => {
          switch(classification.toLowerCase()) {
             case 'diamond':
+            case 'platinum':
             case 'gold':
-            case 'silver':
             case 'bronze': return 'text-white';
+            case 'silver': return 'text-gray-800';
             default: return 'text-gray-800';
         }
     }
     
-    const referralUrl = `https://innovativeenterprises.tech/register?ref=${freelancerId}`;
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(referralUrl)}&bgcolor=1f2937`;
+    const getTierIcon = () => {
+        switch(classification.toLowerCase()) {
+            case 'diamond': return Gem;
+            case 'platinum': return Crown;
+            case 'gold': return Trophy;
+            case 'silver': return Star;
+            case 'bronze': return Shield;
+            default: return Star;
+        }
+    }
 
+    const referralUrl = freelancerId ? `https://innovativeenterprises.tech/register?ref=${freelancerId}` : null;
+    const qrCodeUrl = referralUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(referralUrl)}&bgcolor=1f2937` : null;
+
+    const TierIcon = getTierIcon();
 
     return (
-        <div ref={cardRef} className={`w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl`}>
+        <div ref={cardRef} className={cn('w-full max-w-lg mx-auto rounded-xl p-1 shadow-2xl', getTierColor())}>
             <div className="bg-gray-800 rounded-lg p-6 relative h-full text-white">
                  <div className="absolute top-4 right-4">
-                    <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
+                    <Image src="/logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
                 </div>
-                 <div className="absolute bottom-2 right-2 w-20 h-20 p-1 bg-white rounded-md">
-                     {freelancerId && <img src={qrCodeUrl} alt="Referral QR Code" className="w-full h-full" />}
-                </div>
+                 {qrCodeUrl && (
+                    <div className="absolute bottom-2 right-2 w-20 h-20 p-1 bg-white rounded-md">
+                        <img src={qrCodeUrl} alt="Referral QR Code" className="w-full h-full" />
+                    </div>
+                )}
                 
                 <div className="flex items-start gap-4">
                     {logoUrl && (
@@ -98,8 +115,8 @@ export const PartnerCard = ({
                 </div>
 
                  <div className="absolute bottom-4 left-4">
-                    <p className={`font-bold text-lg tracking-wider uppercase ${getTierTextColor()} flex items-center gap-2`}>
-                        <Star className="w-5 h-5 fill-current" /> {classification} Partner
+                    <p className={cn('font-bold text-lg tracking-wider uppercase flex items-center gap-2', getTierTextColor())}>
+                        <TierIcon className="w-5 h-5 fill-current" /> {classification} Partner
                     </p>
                 </div>
             </div>
