@@ -1,111 +1,13 @@
-I0926 00:30:57.222741     523 load.go:31] Reloading schema and connectors...
-W0926 00:30:57.495645     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
-
-sources: example/queries.gql [530B] 
-I0926 00:30:57.495722     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
+I0926 00:52:25.989612    5993 load.go:31] Reloading schema and connectors...
+I0926 00:52:26.396012    5993 control.go:94] [/emulator/studio e9e9] UpdateResources(): done
 Schema: sources: schema/schema.gql [1207B] 
-Connector "example": sources: example/queries.gql [530B] 
-E0926 00:30:57.511307     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
-I0926 00:30:57.515910     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] 
-I0926 00:30:57.515999     523 load.go:74] Finished reloading
-I0926 00:30:57.532291     523 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
-I0926 00:30:58.525987     523 engine.go:169] [/emulator/studio 03ad] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
-I0926 00:40:17.516944     523 load.go:31] Reloading schema and connectors...
-W0926 00:40:17.566905     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
-example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
-example/queries.gql:12:30: Field "last_updated" is not defined by type "Task_Data".
-example/queries.gql:14:5: Cannot query field "id" on type "Task_KeyOutput".
-example/queries.gql:10:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
-
-sources: example/queries.gql [505B] 
-I0926 00:40:17.566993     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
-Connector "example": sources: example/queries.gql [505B] 
-E0926 00:40:17.572913     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
-example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
-example/queries.gql:12:30: Field "last_updated" is not defined by type "Task_Data".
-example/queries.gql:14:5: Cannot query field "id" on type "Task_KeyOutput".
-example/queries.gql:10:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
-I0926 00:40:17.576365     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] 
-I0926 00:40:17.576409     523 load.go:74] Finished reloading
-I0926 00:41:57.517453     523 load.go:31] Reloading schema and connectors...
-W0926 00:41:57.565506     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:3:45: Expected Name, found <Invalid>
-
-sources: example/queries.gql [493B] 
-I0926 00:41:57.565597     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
-Connector "example": sources: example/queries.gql [493B] 
-E0926 00:41:57.605388     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:3:45: Expected Name, found <Invalid>
-I0926 00:41:57.611138     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] 
-I0926 00:41:57.612001     523 load.go:74] Finished reloading
-I0926 00:42:57.517744     523 load.go:31] Reloading schema and connectors...
-W0926 00:42:57.628237     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:10:36: Field "_eq" is not defined by type "UUID_Filter". Did you mean "eq" or "ne"?
-example/queries.gql:26:30: Field "updatedAt" is not defined by type "Task_Data". Did you mean "createdAt" or "dueDate_date"?
-
-sources: example/queries.gql [477B] 
-I0926 00:42:57.628356     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
-Connector "example": sources: example/queries.gql [477B] 
-E0926 00:42:57.639888     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:10:36: Field "_eq" is not defined by type "UUID_Filter". Did you mean "eq" or "ne"?
-example/queries.gql:26:30: Field "updatedAt" is not defined by type "Task_Data". Did you mean "createdAt" or "dueDate_date"?
-I0926 00:42:57.658794     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] 
-I0926 00:42:57.658844     523 load.go:74] Finished reloading
-I0926 00:45:37.525960     523 load.go:31] Reloading schema and connectors...
-W0926 00:45:37.611877     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
-example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
-example/queries.gql:10:14: Field "organization_id" is not defined by type "User_Filter". Did you mean "organizationId" or "organization"?
-example/queries.gql:30:5: Cannot query field "id" on type "Task_KeyOutput".
-example/queries.gql:26:3: Unknown argument "where" on field "Mutation.task_update".
-example/queries.gql:26:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
-
-sources: example/queries.gql [533B] 
-I0926 00:45:37.613081     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
-Connector "example": sources: example/queries.gql [533B] 
-E0926 00:45:37.622927     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:5:5: Cannot query field "id" on type "Organization_KeyOutput".
-example/queries.gql:2:3: Field "organization_insert" must not have a selection since type "Organization_KeyOutput" has no subfields.
-example/queries.gql:10:14: Field "organization_id" is not defined by type "User_Filter". Did you mean "organizationId" or "organization"?
-example/queries.gql:30:5: Cannot query field "id" on type "Task_KeyOutput".
-example/queries.gql:26:3: Unknown argument "where" on field "Mutation.task_update".
-example/queries.gql:26:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
-I0926 00:45:37.630664     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: prelude.gql [73251B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] 
-I0926 00:45:37.630715     523 load.go:74] Finished reloading
-I0926 00:48:47.547579     523 load.go:31] Reloading schema and connectors...
-W0926 00:48:47.729593     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:14:3: Unknown argument "where" on field "Mutation.task_update".
-
-sources: example/queries.gql [455B] 
-I0926 00:48:47.729711     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
-Connector "example": sources: example/queries.gql [455B] 
-E0926 00:48:47.745006     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:14:3: Unknown argument "where" on field "Mutation.task_update".
-I0926 00:48:47.760478     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] 
-I0926 00:48:47.760818     523 load.go:74] Finished reloading
-I0926 00:49:37.526877     523 load.go:31] Reloading schema and connectors...
-W0926 00:49:37.626996     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data.createdAt: Timestamp): parsing time "now()" as "2006-01-02T15:04:05.999999999Z07:00": cannot parse "now()" as "2006"
-
-sources: example/queries.gql [447B] 
-I0926 00:49:37.627087     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
-Connector "example": sources: example/queries.gql [447B] 
-E0926 00:49:37.636886     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data.createdAt: Timestamp): parsing time "now()" as "2006-01-02T15:04:05.999999999Z07:00": cannot parse "now()" as "2006"
-I0926 00:49:37.648422     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: prelude.gql [73251B] main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] 
-I0926 00:49:37.651230     523 load.go:74] Finished reloading
-I0926 00:50:47.524764     523 load.go:31] Reloading schema and connectors...
-W0926 00:50:47.599444     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:3:45: Expected Name, found (
-
-sources: example/queries.gql [456B] 
-I0926 00:50:47.599513     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
-Connector "example": sources: example/queries.gql [456B] 
-E0926 00:50:47.610454     523 load.go:73] Could not load sources: 
-Errors: example/queries.gql:3:45: Expected Name, found (
-I0926 00:50:47.621539     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: main/query.gql [7604B] main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] prelude.gql [73251B] 
-I0926 00:50:47.621590     523 load.go:74] Finished reloading
+Connector "example": sources: example/queries.gql [340B] 
+I0926 00:52:26.974234    5993 codegen.go:82] [connector "example" javascriptSdk] Generating sources into "/home/user/studio/src/dataconnect-generated"
+I0926 00:52:27.106097    5993 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] prelude.gql [73251B] main/query.gql [7604B] 
+I0926 00:52:27.126727    5993 collector.go:107] connector "example" javascriptSdk wrote into "/home/user/studio/src/dataconnect-generated"
+Generated sources: esm/package.json [17B] index.cjs.js [1629B] react/index.cjs.js [1379B] package.json [863B] README.md [17362B] react/index.d.ts [1699B] react/package.json [460B] react/esm/package.json [17B] react/esm/index.esm.js [1305B] react/README.md [23414B] index.d.ts [3317B] esm/index.esm.js [1403B] 
+I0926 00:52:27.141677    5993 installsdk.go:55] Package @dataconnect/generated is already installed. Skipping installation
+I0926 00:52:27.142338    5993 load.go:109] Finished reloading
+I0926 00:52:27.171698    5993 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+I0926 00:52:28.637807    5993 engine.go:169] [/emulator/studio e9e9] ExecuteGraphqlRead IntrospectionQuery: succeeded. 

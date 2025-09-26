@@ -15,10 +15,6 @@ export interface AgentSolution_Key {
   __typename?: 'AgentSolution_Key';
 }
 
-export interface InsertOrganizationData {
-  organization_insert: Organization_Key;
-}
-
 export interface ListProjectsData {
   projects: ({
     id: UUIDString;
@@ -73,18 +69,6 @@ export interface User_Key {
   __typename?: 'User_Key';
 }
 
-interface InsertOrganizationRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (): MutationRef<InsertOrganizationData, undefined>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): MutationRef<InsertOrganizationData, undefined>;
-  operationName: string;
-}
-export const insertOrganizationRef: InsertOrganizationRef;
-
-export function insertOrganization(): MutationPromise<InsertOrganizationData, undefined>;
-export function insertOrganization(dc: DataConnect): MutationPromise<InsertOrganizationData, undefined>;
-
 interface ListProjectsRef {
   /* Allow users to create refs without passing in DataConnect */
   (): QueryRef<ListProjectsData, undefined>;
@@ -97,18 +81,6 @@ export const listProjectsRef: ListProjectsRef;
 export function listProjects(): QueryPromise<ListProjectsData, undefined>;
 export function listProjects(dc: DataConnect): QueryPromise<ListProjectsData, undefined>;
 
-interface UpdateTaskRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: UpdateTaskVariables): MutationRef<UpdateTaskData, UpdateTaskVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: UpdateTaskVariables): MutationRef<UpdateTaskData, UpdateTaskVariables>;
-  operationName: string;
-}
-export const updateTaskRef: UpdateTaskRef;
-
-export function updateTask(vars: UpdateTaskVariables): MutationPromise<UpdateTaskData, UpdateTaskVariables>;
-export function updateTask(dc: DataConnect, vars: UpdateTaskVariables): MutationPromise<UpdateTaskData, UpdateTaskVariables>;
-
 interface ListUsersByOrganizationRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: ListUsersByOrganizationVariables): QueryRef<ListUsersByOrganizationData, ListUsersByOrganizationVariables>;
@@ -120,4 +92,16 @@ export const listUsersByOrganizationRef: ListUsersByOrganizationRef;
 
 export function listUsersByOrganization(vars: ListUsersByOrganizationVariables): QueryPromise<ListUsersByOrganizationData, ListUsersByOrganizationVariables>;
 export function listUsersByOrganization(dc: DataConnect, vars: ListUsersByOrganizationVariables): QueryPromise<ListUsersByOrganizationData, ListUsersByOrganizationVariables>;
+
+interface UpdateTaskRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateTaskVariables): MutationRef<UpdateTaskData, UpdateTaskVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateTaskVariables): MutationRef<UpdateTaskData, UpdateTaskVariables>;
+  operationName: string;
+}
+export const updateTaskRef: UpdateTaskRef;
+
+export function updateTask(vars: UpdateTaskVariables): MutationPromise<UpdateTaskData, UpdateTaskVariables>;
+export function updateTask(dc: DataConnect, vars: UpdateTaskVariables): MutationPromise<UpdateTaskData, UpdateTaskVariables>;
 

@@ -1,4 +1,4 @@
-query ListProjects {
+query ListProjects @auth(rules: [{ allow: "private" }]) {
   projects {
     id
     name
@@ -6,17 +6,17 @@ query ListProjects {
   }
 }
 
-query ListUsersByOrganization($organizationId: UUID!) {
-  users(where: {organizationId: {eq: $organizationId}}) {
+query ListUsersByOrganization($organizationId: UUID!) @auth(rules: [{ allow: "private" }]) {
+  users(where: { organizationId: { eq: $organizationId } }) {
     id
     displayName
     email
   }
 }
 
-mutation UpdateTask($id: UUID!, $status: String!) {
+mutation UpdateTask($id: UUID!, $status: String!) @auth(rules: [{ allow: "private" }]) {
   task_update(
+    data: { status: $status }
     id: $id
-    data: {status: $status}
   )
 }
