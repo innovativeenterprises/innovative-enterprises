@@ -63,14 +63,14 @@ const salesAnalysisFlow = ai.defineFlow(
     const llmResponse = await ai.generate({
       prompt: prompt,
       input: input,
-      model: 'googleai/gemini-2.0-flash',
+      model: 'googleai/gemini-1.5-flash',
       output: {
         format: 'json',
         schema: SalesAnalysisOutputSchema,
       }
     });
 
-    const output = llmResponse.output();
+    const output = llmResponse.output;
     
     // Add default suggestions if the model forgets
     if (output && (!output.suggestedReplies || output.suggestedReplies.length === 0)) {
