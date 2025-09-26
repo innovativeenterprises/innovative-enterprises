@@ -535,3 +535,44 @@ I0924 01:38:14.242059    5725 dev.go:102] Listening on address (HTTP + gRPC): 12
 [error] [Firebase Plugin] requireAuth error: Could not refresh access token: Unsuccessful response status code. Request failed with status code 500
 [info] [Firebase Plugin] Stopping Data Connect toolkit
 [warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
+[debug] [2025-09-26T00:30:30.746Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-09-26T00:30:54.455Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-09-26T00:30:54.458Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T00:30:54.481Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.13.0) on port 50001
+[debug] [2025-09-26T00:30:57.167Z] W0926 00:30:57.163307     517 control.go:68] [/emulator/studio 7599] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
+
+sources: example/queries.gql [530B] 
+I0926 00:30:57.163445     517 control.go:94] [/emulator/studio 7599] UpdateResources(): done
+Schema: sources: schema/schema.gql [1207B] 
+Connector "example": sources: example/queries.gql [530B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W0926 00:30:57.163307     517 control.go:68] [/emulator/studio 7599] connector \"example\" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data\n\nsources: example/queries.gql [530B] \nI0926 00:30:57.163445     517 control.go:94] [/emulator/studio 7599] UpdateResources(): done\nSchema: sources: schema/schema.gql [1207B] \nConnector \"example\": sources: example/queries.gql [530B] \n"}}
+[debug] [2025-09-26T00:30:57.171Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-09-26T00:30:57.172Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-09-26T00:30:57.173Z] Starting Data Connect Emulator with command {"binary":"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.13.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/user/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.13.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/user/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-09-26T00:30:57.344Z] I0926 00:30:57.222741     523 load.go:31] Reloading schema and connectors...
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0926 00:30:57.222741     523 load.go:31] Reloading schema and connectors...\n"}}
+[debug] [2025-09-26T00:30:57.659Z] W0926 00:30:57.495645     523 control.go:68] [/emulator/studio 03ad] connector "example" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
+
+sources: example/queries.gql [530B] 
+I0926 00:30:57.495722     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done
+Schema: sources: schema/schema.gql [1207B] 
+Connector "example": sources: example/queries.gql [530B] 
+E0926 00:30:57.511307     523 load.go:73] Could not load sources: 
+Errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data
+I0926 00:30:57.515910     523 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] 
+I0926 00:30:57.515999     523 load.go:74] Finished reloading
+I0926 00:30:57.532291     523 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W0926 00:30:57.495645     523 control.go:68] [/emulator/studio 03ad] connector \"example\" has errors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data\n\nsources: example/queries.gql [530B] \nI0926 00:30:57.495722     523 control.go:94] [/emulator/studio 03ad] UpdateResources(): done\nSchema: sources: schema/schema.gql [1207B] \nConnector \"example\": sources: example/queries.gql [530B] \nE0926 00:30:57.511307     523 load.go:73] Could not load sources: \nErrors: example/queries.gql:2:3: mutation.InsertOrganization.organization_insert (data: Organization_Data): column createdAt is required but is missing in data\nI0926 00:30:57.515910     523 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] \nI0926 00:30:57.515999     523 load.go:74] Finished reloading\nI0926 00:30:57.532291     523 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[debug] [2025-09-26T00:30:59.394Z] I0926 00:30:58.525987     523 engine.go:169] [/emulator/studio 03ad] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0926 00:30:58.525987     523 engine.go:169] [/emulator/studio 03ad] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
+[debug] [2025-09-26T00:31:27.079Z] Running auto auth
+[debug] [2025-09-26T00:31:27.273Z] No OAuth tokens found
+[debug] [2025-09-26T00:31:27.280Z] [Firebase Plugin] User found:  innovativeenterprisesoman@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-09-26T00:31:27.290Z] No OAuth tokens found
+[debug] [2025-09-26T00:31:27.312Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-09-26T00:31:28.250Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-09-26T00:31:28.252Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
