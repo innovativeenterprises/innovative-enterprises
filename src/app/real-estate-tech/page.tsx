@@ -23,7 +23,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "PANOSPACE": Tv,
         "StairSpace": HandCoins,
     };
-    const Icon = iconMap[product.name] || Building;
+    const Icon = iconMap[product.name as keyof typeof iconMap] || Building;
 
     const href = product.href || '#';
 

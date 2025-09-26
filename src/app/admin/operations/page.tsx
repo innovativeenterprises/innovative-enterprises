@@ -9,6 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Facebook } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import FacebookCoverGeneratorPage from '@/app/facebook-cover-generator/page';
+import KnowledgeTable from "./knowledge-table";
 
 export default function AdminOperationsPage() {
 
@@ -45,6 +46,8 @@ export default function AdminOperationsPage() {
             </AccordionItem>
         ))}
         </Accordion>
+        
+        <KnowledgeTable />
     </div>
   );
 }

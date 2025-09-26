@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import CooDashboardClientPage from "./client-page";
 import type { Metadata } from 'next';
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 
-export default async function CooDashboardPage() {
+export default function CooDashboardPage() {
     return (
         <CooDashboardClientPage />
     );

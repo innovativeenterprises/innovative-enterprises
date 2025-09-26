@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initialProducts, initialStoreProducts } from './products';
@@ -141,47 +140,3 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
-
-export const getFirestoreData = async () => ({
-    products: await getProducts(),
-    storeProducts: await getStoreProducts(),
-    services: await getServices(),
-    providers: await getProviders(),
-    opportunities: await getOpportunities(),
-    clients: await getClients(),
-    testimonials: await getTestimonials(),
-    pricing: await getPricing(),
-    posProducts: await getPosProducts(),
-    dailySales: await getDailySales(),
-    stages: await getStages(),
-    assets: await getAssets(),
-    investors: await getInvestors(),
-    properties: await getProperties(),
-    stairspaceListings: await getStairspaceListings(),
-    stairspaceRequests: await getStairspaceRequests(),
-    signedLeases: await getLeases(),
-    stockItems: await getStockItems(),
-    giftCards: await getGiftCards(),
-    students: await getStudents(),
-    communities: await getCommunities(),
-    communityEvents: await getCommunityEvents(),
-    communityFinances: await getCommunityFinances(),
-    communityMembers: await getMembers(),
-    alumniJobs: await getAlumniJobs(),
-    rentalAgencies: await getRentalAgencies(),
-    cars: await getCars(),
-    costSettings: await getCostSettings(),
-    ...await getRaahaData(),
-    ...await getBeautyData(),
-    settings: await getSettings(),
-    knowledgeBase: await getKnowledgeBase(),
-    applications: await getApplications(),
-    briefcase: await getBriefcase(),
-    solutions: await getSolutions(),
-    industries: await getIndustries(),
-    aiTools: await getAiTools(),
-    saasProducts: await getSaasProducts(),
-    cfoData: await getCfoData(),
-    ...await getStaffData(),
-    userDocuments: await getUserDocuments(),
-});
