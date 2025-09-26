@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import type { Service } from "@/lib/services.schema";
 import * as Icons from 'lucide-react';
+import { useServicesData } from "@/hooks/use-data-hooks";
 
 const ServiceCard = ({ service }: { service: Service }) => {
     const Icon = (Icons as any)[service.icon] || Icons.Briefcase;
@@ -28,7 +29,8 @@ const ServiceCard = ({ service }: { service: Service }) => {
     );
 };
 
-export default function ServiceCatalogClient({ services }: { services: Service[]}) {
+export default function ServiceCatalogClient() {
+  const { data: services } = useServicesData();
   const enabledServices = (services || []).filter(s => s.enabled);
   
   const servicesByCategory = useMemo(() => enabledServices.reduce((acc, service) => {
