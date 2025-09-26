@@ -12,6 +12,12 @@ import { DueDateDisplay } from "@/components/due-date-display";
 import * as Icons from 'lucide-react';
 import { useCfoData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Fintech Super-App | CFO Dashboard",
+  description: "Financial overview and analysis for your business operations.",
+};
 
 const kpiIcons: { [key: string]: React.ElementType } = {
     "DollarSign": Icons.DollarSign,

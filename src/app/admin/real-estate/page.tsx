@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { ArrowRight, BarChart } from "lucide-react";
 import Link from 'next/link';
 import PropertyTable from "./property-table";
 import StairspaceTable from "./stairspace-table";
+
 
 // --- Main Page Component ---
 export default function AdminRealEstatePage() {

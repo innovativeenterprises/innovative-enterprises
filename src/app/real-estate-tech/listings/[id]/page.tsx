@@ -1,45 +1,41 @@
+'use client';
 
-'use server';
-
-import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
-import { getProperties } from '@/lib/firestore';
-import ProviderProfileClientPage from './client-page';
+import { notFound, useParams } from 'next/navigation';
+import { usePropertiesData } from '@/hooks/use-data-hooks';
+import { useEffect, useState } from 'react';
 import type { Property } from '@/lib/properties.schema';
+import { Skeleton } from '@/components/ui/skeleton';
+import PropertyDetailClientPage from './client-page';
 
-interface PageProps {
-  params: { id: string };
-}
-
-export async function generateStaticParams() {
-  const properties = await getProperties();
-  return properties.map((property) => ({
-    id: property.id,
-  }));
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const properties = await getProperties();
-  const property = properties.find(p => p.id === params.id);
-
-  if (!property) {
-    notFound();
-  }
-
-  return {
-    title: `${property.title} | Real Estate`,
-    description: property.description,
-  };
-}
-
-export default async function PropertyDetailPage({ params }: PageProps) {
+export default function PropertyDetailPage() {
+    const params = useParams();
     const { id } = params;
-    const properties = await getProperties();
-    const property = properties.find(p => p.id === id);
+    const { data: properties, isClient } = usePropertiesData();
+    const [property, setProperty] = useState<Property | undefined>(undefined);
 
-    if (!property) {
-        notFound();
+    useEffect(() => {
+        if (isClient && id) {
+            const foundProperty = properties.find(p => p.id === id);
+            if (foundProperty) {
+                setProperty(foundProperty);
+            } else {
+                notFound();
+            }
+        }
+    }, [id, properties, isClient]);
+
+    if (!isClient || !property) {
+        return (
+             <div className="bg-muted/20 min-h-screen">
+                <div className="container mx-auto px-4 py-16">
+                    <div className="max-w-5xl mx-auto">
+                        <Skeleton className="h-10 w-40 mb-8" />
+                        <Skeleton className="h-[600px] w-full" />
+                    </div>
+                </div>
+            </div>
+        )
     }
-
-    return <ProviderProfileClientPage property={property} />;
+    
+    return <PropertyDetailClientPage property={property} />;
 }
