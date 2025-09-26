@@ -185,7 +185,8 @@ export const scrapeAndSummarize = ai.defineFlow(
       return output!;
     } else {
       const llmResponse = await ai.generate({
-        prompt: searchSummaryPrompt.prompt.replace("{{{query}}}", input.source),
+        prompt: searchSummaryPrompt,
+        input: { query: input.source },
         tools: [queryProviderDatabaseTool],
         output: {
           format: 'json',
@@ -193,10 +194,8 @@ export const scrapeAndSummarize = ai.defineFlow(
         }
       });
       
-      const toolRequest = llmResponse.toolRequest();
-      // Check if the LLM decided to use the database tool
-      if (toolRequest && toolRequest.name === 'queryProviderDatabase') {
-        const toolResult = await toolRequest.run();
+      if (llmResponse.toolRequest) {
+        const toolResult = await llmResponse.toolRequest.run();
         const dbResponse = toolResult.output as z.infer<typeof queryProviderDatabaseTool.outputSchema>;
         
         // Format the database results into the standard WebScraperOutputSchema

@@ -8,7 +8,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { initialCars } from '@/lib/cars';
-import { CarSchema, DriveSyncAgentInputSchema, DriveSyncAgentOutputSchema } from './drivesync-agent.schema';
+import { CarSchema, DriveSyncAgentInputSchema, DriveSyncAgentOutputSchema, type DriveSyncAgentInput } from './drivesync-agent.schema';
 
 
 export const bookCarTool = ai.defineTool(
@@ -102,28 +102,27 @@ export const findAndBookCar = ai.defineFlow(
     });
 
     // Check for tool calls
-    const toolRequest = response.toolRequest();
-    if (toolRequest) {
-      const toolResponse = await toolRequest.run();
-       if (toolRequest.name === 'bookCar') {
+    if (response.toolRequest) {
+      const toolResponse = await response.toolRequest.run();
+       if (response.toolRequest.name === 'bookCar') {
             const output = toolResponse.output as z.infer<typeof bookCarTool.outputSchema>;
             return {
                 response: output.message || "An error occurred during booking.",
             };
         }
-        if (toolRequest.name === 'getVehicleHealth') {
+        if (response.toolRequest.name === 'getVehicleHealth') {
             const health = toolResponse.output as {status: string, lastService: string, notes: string};
             return {
                 response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
             }
         }
-        if (toolRequest.name === 'getBookingTrends') {
+        if (response.toolRequest.name === 'getBookingTrends') {
             return {
-                response: `Booking Trends Report: ${toolResponse.output}`
+                response: `Booking Trends Report: ${String(toolResponse.output)}`
             }
         }
     }
 
-    return response.output()!;
+    return response.output!;
   }
 );
