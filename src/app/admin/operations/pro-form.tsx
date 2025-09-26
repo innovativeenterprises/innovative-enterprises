@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Route, MapPin, ListChecks, FileText, Bot, DollarSign } from 'lucide-react';
-import { ProTaskBaseInput, type ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis';
+import { ProTaskBaseInputSchema, type ProTaskAnalysisOutput } from '@/ai/flows/pro-task-analysis';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { OMAN_GOVERNORATES } from '@/lib/oman-locations';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -34,7 +34,7 @@ const DummyMap = ({ onLocationSelect }: { onLocationSelect: (loc: { lat: number,
     </div>
 );
 
-const ProTaskFormSchema = ProTaskBaseInput;
+const ProTaskFormSchema = ProTaskBaseInputSchema;
 type ProTaskFormValues = z.infer<typeof ProTaskFormSchema>;
 
 
@@ -60,6 +60,7 @@ export default function ProForm() {
     }
     setIsAnalyzing(true);
     setAnalysisResult(null);
+    form.setValue('serviceName', serviceName);
     try {
         const result = await analyzeSanadTask({ serviceName });
         setAnalysisResult(result);
@@ -119,7 +120,7 @@ export default function ProForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Select Service</FormLabel>
-                                <Select onValueChange={(value) => { field.onChange(value); handleServiceChange(value); }} defaultValue={field.value}>
+                                <Select onValueChange={(value) => handleServiceChange(value)} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Choose a government service..." />

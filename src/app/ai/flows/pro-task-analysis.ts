@@ -12,17 +12,17 @@ import type { Ministry, Governorate } from '@/lib/oman-locations';
 import { getCostSettings } from '@/lib/firestore';
 import { SanadTaskAnalysisOutputSchema } from './sanad-task-analysis.schema';
 
-
-const ProTaskBaseInputSchema = z.object({
+export const ProTaskBaseInputSchema = z.object({
   serviceName: z.string().describe("The specific government service requested by the user."),
   governorate: z.enum(OMAN_GOVERNORATES).describe("The governorate where the service needs to be performed."),
   startLocationName: z.string().optional().describe("The name of the starting location for the trip, e.g., 'Al Amerat Office'."),
   startLocationCoords: z.object({ lat: z.number(), lon: z.number() }).optional().describe("The GPS coordinates of the starting location."),
 });
+export type ProTaskBaseInput = z.infer<typeof ProTaskBaseInputSchema>;
+
 
 export const ProTaskAnalysisInputSchema = ProTaskBaseInputSchema.merge(SanadTaskAnalysisOutputSchema);
 export type ProTaskAnalysisInput = z.infer<typeof ProTaskAnalysisInputSchema>;
-
 
 const AllowanceSchema = z.object({
   description: z.string(),
@@ -103,6 +103,7 @@ const getProTaskPlanTool = ai.defineTool(
         };
     }
 );
+
 
 const proTaskAnalysisPrompt = ai.definePrompt({
     name: 'proTaskAnalysisPrompt',
