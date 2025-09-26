@@ -1,21 +1,21 @@
 
-'use server';
+'use client';
 
 import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
-import { getStaffData } from "@/lib/firestore";
 import type { Metadata } from 'next';
+import { useStaffData } from '@/hooks/use-data-hooks';
 
 export const metadata: Metadata = {
   title: "People Management | Innovative Enterprises",
   description: "Manage your internal human and AI workforce.",
 };
 
-export default async function PeoplePage() {
-    const staffData = await getStaffData();
+export default function PeoplePage() {
+    const { leadership, staff, agentCategories } = useStaffData();
 
-    const enabledLeadership = staffData.leadership.filter(member => member.enabled);
-    const enabledStaff = staffData.staff.filter(member => member.enabled);
-    const enabledAgentCategories = staffData.agentCategories.map(category => ({
+    const enabledLeadership = leadership.filter(member => member.enabled);
+    const enabledStaff = staff.filter(member => member.enabled);
+    const enabledAgentCategories = agentCategories.map(category => ({
         ...category,
         agents: category.agents.filter(agent => agent.enabled)
     })).filter(category => category.agents.length > 0);

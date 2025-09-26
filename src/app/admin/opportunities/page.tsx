@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import type { Metadata } from 'next';
 import WorkOrderForm from './work-order-form';
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "Analyze new ideas and manage all open projects, tasks, and competitions available to your partner network."
 };
 
-export default async function OpportunitiesPage() {
+export default function OpportunitiesPage() {
     return (
          <div className="space-y-8">
             <div>

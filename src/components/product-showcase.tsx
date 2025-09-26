@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,9 +11,9 @@ import { ShoppingCart } from 'lucide-react';
 import { useProductsData, useCartData } from '@/hooks/use-data-hooks';
 import type { Product } from '@/lib/products.schema';
 
-export default function ProductShowcase({ products: initialProducts }: { products?: Product[] }) {
-  const { data: products } = useProductsData(initialProducts);
-  const enabledProducts = products.filter(p => p.enabled);
+export default function ProductShowcase() {
+  const { data: products } = useProductsData();
+  const liveProducts = products.filter(p => p.stage === 'Live & Operating' && p.enabled);
   const { toast } = useToast();
   const { setCart } = useCartData();
   
@@ -42,7 +43,7 @@ export default function ProductShowcase({ products: initialProducts }: { product
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {enabledProducts.map((product) => (
+          {liveProducts.map((product) => (
             <Card key={product.id} className="overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                 <Link href={product.href || `/ecommerce/${product.id}`} className="flex flex-col h-full">
                     <CardHeader className="p-0">

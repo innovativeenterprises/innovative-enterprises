@@ -1,21 +1,20 @@
 
-'use server';
+'use client';
 
 import AgentList from "@/components/agent-list";
-import { getStaffData } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from 'next';
+import { useStaffData } from "@/hooks/use-data-hooks";
 
 export const metadata: Metadata = {
   title: "AI Business Process Automation",
   description: "Explore our suite of specialized AI agents, designed to handle key business functions from legal analysis to marketing, so you can focus on growth and innovation.",
 };
 
-
-export default async function AutomationPage() {
-  const { agentCategories } = await getStaffData();
+export default function AutomationPage() {
+  const { agentCategories } = useStaffData();
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
