@@ -15,6 +15,7 @@ import { useSetStore, useSettingsData } from '@/hooks/use-data-hooks';
 import ThemeGenerator from '@/app/admin/operations/theme-generator';
 import { Switch } from '@/components/ui/switch';
 import CostSettingsTable from './cost-settings-table';
+import PosProductTable from './pos-product-table';
 
 export default function AdminSettingsPage() {
     const [isLoading, setIsLoading] = useState(false);

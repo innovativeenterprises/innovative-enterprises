@@ -1,4 +1,3 @@
-
 'use client';
 
 import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';

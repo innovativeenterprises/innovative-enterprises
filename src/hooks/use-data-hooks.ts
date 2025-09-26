@@ -1,20 +1,20 @@
-
 'use client';
 
-import { useStore, useSetStore } from '@/lib/global-store.tsx';
+import { useStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return () => { 
+  return (initialData?: AppState[K]) => { 
     const data = useStore(state => state[key]);
-    const setStore = useSetStore();
     const isClient = useStore(state => state.isClient);
-
-    const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
-      setStore(state => ({ ...state, [key]: updater(state[key]) }));
+    
+    // This is a simplified version for read-only data from the client perspective for this hook.
+    // For mutation, components should use `useSetStore` directly.
+    const setData = () => {
+        console.warn("This setData is a no-op. Use useSetStore for mutations.");
     };
 
-    return { data: data as AppState[K], setData: setKeyData, isClient };
+    return { data: (isClient ? data : initialData) as AppState[K], isClient };
   };
 };
 
@@ -23,28 +23,17 @@ export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
+
 export const useStaffData = () => {
     const data = useStore(state => ({
         leadership: state.leadership,
         staff: state.staff,
         agentCategories: state.agentCategories,
     }));
-    const setStore = useSetStore();
     const isClient = useStore(state => state.isClient);
-    
-    // This setData is a simplified version for this combined hook
-    const setData = (updater: (prev: typeof data) => typeof data) => {
-        const newValues = updater(data);
-        setStore(state => ({ 
-            ...state, 
-            leadership: newValues.leadership,
-            staff: newValues.staff,
-            agentCategories: newValues.agentCategories,
-        }));
-    };
-
-    return { ...data, setData, isClient };
+    return { ...data, isClient };
 };
+
 export const useCfoData = createDataHook('cfoData');
 export const useAssetsData = createDataHook('assets');
 export const usePropertiesData = createDataHook('properties');

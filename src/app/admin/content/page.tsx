@@ -1,4 +1,3 @@
-
 'use client';
 
 import ServiceTable from "./service-table";
@@ -7,7 +6,7 @@ import ClientTable from "./client-table";
 import TestimonialTable from "./testimonial-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PricingTable from "./pricing-table";
-import PosProductTable from "./pos-product-table";
+import PosProductTable from "../settings/pos-product-table";
 
 export default function AdminContentPage() {
   return (
