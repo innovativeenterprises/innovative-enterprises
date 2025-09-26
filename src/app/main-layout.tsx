@@ -14,7 +14,7 @@ export default function MainLayout({
   const isAdminRoute = pathname.startsWith('/admin');
   const isAiPosRoute = pathname.startsWith('/ai-pos');
 
-  // If it's an admin or AI POS route, we render it without the main public layout
+  // If it's an admin or AI POS route, render it without the main public layout
   if (isAdminRoute || isAiPosRoute) {
     return <main>{children}</main>;
   }

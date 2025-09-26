@@ -4,6 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
+import MainLayout from './main-layout';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -58,7 +59,9 @@ export default function RootLayout({
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
           <Providers>
+            <MainLayout>
               {children}
+            </MainLayout>
           </Providers>
       </body>
     </html>

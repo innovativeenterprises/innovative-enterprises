@@ -19,13 +19,12 @@ import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircui
 import { analyzeKnowledgeDocument } from '@/ai/flows/knowledge-document-analysis';
 import { trainAgent } from '@/ai/flows/train-agent';
 import { scrapeAndSummarize } from '@/ai/flows/web-scraper-agent';
-import { initialAgentCategories } from '@/lib/agents';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
-import { useKnowledgeBaseData } from "@/hooks/use-data-hooks";
+import { useKnowledgeBaseData, useStaffData } from "@/hooks/use-data-hooks";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -126,12 +125,12 @@ const TrainingDialogSchema = z.object({
 });
 type TrainingDialogValues = z.infer<typeof TrainingDialogSchema>;
 
-const allAgents = initialAgentCategories.flatMap(category => category.agents);
-
 const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
+    const { agentCategories } = useStaffData();
+    const allAgents = agentCategories.flatMap(category => category.agents);
 
     const form = useForm<TrainingDialogValues>({
         resolver: zodResolver(TrainingDialogSchema),
@@ -346,7 +345,7 @@ export default function KnowledgeTable() {
                     uploadDate: new Date().toISOString().split('T')[0],
                     fileName: source.urls![index],
                     fileType: 'url',
-                    dataUri: '',
+                    dataUri: '', // Content is not stored directly for URL sources
                 }));
 
                 setKnowledgeBase(prev => [...newDocs, ...prev]);
@@ -368,7 +367,7 @@ export default function KnowledgeTable() {
                     uploadDate: new Date().toISOString().split('T')[0],
                     fileName: fileName,
                     fileType: fileType,
-                    dataUri,
+                    dataUri, // Store the content for uploaded files
                 };
 
                 if (docIdToReplace) {
