@@ -1,7 +1,5 @@
-
 'use server';
 
-import { getRaahaData } from '@/lib/firestore';
 import type { Metadata } from 'next';
 import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
 
@@ -11,11 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default async function AgencyDashboardPage() {
-    const { raahaAgencies, raahaWorkers, raahaRequests } = await getRaahaData();
-    return <AgencyDashboardClientPage 
-        initialAgencies={raahaAgencies} 
-        initialRequests={raahaRequests} 
-        initialWorkers={raahaWorkers} 
-        dashboardType="raaha"
-    />;
+    return <AgencyDashboardClientPage dashboardType="raaha" />;
 }

@@ -1,7 +1,7 @@
+'use server';
 
-import AdmissionsDashboardClient from './client-page';
+import AdmissionsDashboardClient from './admissions-dashboard-client';
 import type { Metadata } from 'next';
-import { getApplications } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "Admissions Dashboard",
@@ -10,6 +10,5 @@ export const metadata: Metadata = {
 
 
 export default async function AdmissionsDashboardPage() {
-    const applications = await getApplications();
-    return <AdmissionsDashboardClient initialApplications={applications} />;
+    return <AdmissionsDashboardClient />;
 }

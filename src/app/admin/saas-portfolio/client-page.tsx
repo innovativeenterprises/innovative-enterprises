@@ -1,8 +1,7 @@
-
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +9,7 @@ import type { SaaSProduct, SaasCategory } from '@/lib/saas-products.schema';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSaaSProductsData } from "@/hooks/use-data-hooks";
 
 const getStatusBadge = (status: string) => {
     switch (status) {
@@ -30,18 +30,14 @@ const getStageBadge = (stage: string) => {
     return <Badge variant="outline">{stage}</Badge>;
 }
 
-export default function SaasPortfolioPage({ initialProducts }: { initialProducts: SaasCategory[] }) {
+export default function SaasPortfolioPage() {
+  const { data: saasProducts, isClient } = useSaaSProductsData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const filteredProducts = useMemo(() => {
       if (!isClient) return [];
-      let products: SaaSProduct[] = initialProducts.flatMap(cat => cat.products);
+      let products: SaaSProduct[] = saasProducts.flatMap(cat => cat.products);
 
       if (selectedCategory !== 'All') {
           products = products.filter(p => p.category === selectedCategory);
@@ -55,12 +51,12 @@ export default function SaasPortfolioPage({ initialProducts }: { initialProducts
       }
 
       return products;
-  }, [searchTerm, selectedCategory, initialProducts, isClient]);
+  }, [searchTerm, selectedCategory, saasProducts, isClient]);
   
   const allCategories = useMemo(() => {
     if(!isClient) return [];
-    return ['All', ...Array.from(new Set(initialProducts.map(p => p.name)))]
-  }, [initialProducts, isClient]);
+    return ['All', ...Array.from(new Set(saasProducts.map(p => p.name)))]
+  }, [saasProducts, isClient]);
 
 
   return (
@@ -106,12 +102,13 @@ export default function SaasPortfolioPage({ initialProducts }: { initialProducts
                                 <TableHead>Description</TableHead>
                                 <TableHead>Stage</TableHead>
                                 <TableHead>Status</TableHead>
+                                <TableHead>Ready</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {!isClient ? (
                                 <TableRow>
-                                    <TableCell colSpan={5}>
+                                    <TableCell colSpan={6}>
                                         <Skeleton className="h-10 w-full" />
                                     </TableCell>
                                 </TableRow>
@@ -123,6 +120,7 @@ export default function SaasPortfolioPage({ initialProducts }: { initialProducts
                                     <TableCell className="text-muted-foreground text-sm max-w-sm">{product.description}</TableCell>
                                     <TableCell>{getStageBadge(product.stage)}</TableCell>
                                     <TableCell>{getStatusBadge(product.status)}</TableCell>
+                                    <TableCell>{product.ready ? 'Yes' : 'No'}</TableCell>
                                 </TableRow>
                             )))}
                         </TableBody>

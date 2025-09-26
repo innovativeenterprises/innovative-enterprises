@@ -1,9 +1,7 @@
-
 'use server';
 
-import { getLeases } from '@/lib/firestore';
 import type { Metadata } from 'next';
-import StudentHousingClientPage from '@/app/admin/education-tech/student-housing/client-page';
+import StudentHousingClientPage from './client-page';
 
 export const metadata: Metadata = {
   title: "Student Housing Management | EduFlow Suite",
@@ -12,6 +10,7 @@ export const metadata: Metadata = {
 
 
 export default async function StudentHousingPage() {
-    const leases = await getLeases();
-    return <StudentHousingClientPage initialLeases={leases} />;
+    // Data is loaded into the global store in the root layout.
+    // The client component will access it from there.
+    return <StudentHousingClientPage />;
 }

@@ -1,7 +1,5 @@
-
 'use server';
 
-import { getSaasProducts } from '@/lib/firestore';
 import SaasPortfolioPage from './client-page';
 import type { Metadata } from 'next';
 
@@ -12,6 +10,6 @@ export const metadata: Metadata = {
 
 
 export default async function AdminSassPortfolioPage() {
-    const saasProducts = await getSaasProducts();
-    return <SaasPortfolioPage initialProducts={saasProducts} />;
+    // Data is loaded into the global store in the root layout.
+    return <SaasPortfolioPage />;
 }

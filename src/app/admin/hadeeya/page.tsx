@@ -1,8 +1,6 @@
-
 'use server';
 
 import HadeeyaAdminClientPage from './client-page';
-import { getGiftCards } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,6 +10,7 @@ export const metadata: Metadata = {
 
 
 export default async function HadeeyaAdminPage() {
-    const giftCards = await getGiftCards();
-    return <HadeeyaAdminClientPage initialGiftCards={giftCards} />;
+    // Data is fetched and loaded into the global store in the root layout.
+    // The client component will access it from there.
+    return <HadeeyaAdminClientPage />;
 }

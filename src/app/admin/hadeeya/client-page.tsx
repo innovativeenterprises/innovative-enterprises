@@ -1,20 +1,16 @@
-
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useToast } from '@/hooks/use-toast';
 import { Gift } from 'lucide-react';
 import type { GiftCard } from '@/lib/gift-cards.schema';
 import { useGiftCardsData } from '@/hooks/use-data-hooks';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 
-export default function HadeeyaAdminClientPage({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
-    const { data: giftCards, setData: setGiftCards, isClient } = useGiftCardsData(initialGiftCards);
-    const { toast } = useToast();
+export default function HadeeyaAdminClientPage() {
+    const { data: giftCards } = useGiftCardsData();
 
     const getStatusBadge = (status: GiftCard['status']) => {
         switch (status) {

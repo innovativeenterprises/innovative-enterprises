@@ -1,8 +1,6 @@
-
 'use server';
 
-import StudentFinancialsClientPage from '@/app/admin/education-tech/student-financials/client-page';
-import { getStudents } from '@/lib/firestore';
+import StudentFinancialsClientPage from './client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,7 +8,7 @@ export const metadata: Metadata = {
   description: "A dashboard for managing student tuition, scholarships, and payments.",
 };
 
-export default async function StudentFinancialsPage() {
-    const students = await getStudents();
-    return <StudentFinancialsClientPage initialStudents={students} />;
+
+export default async function AdminStudentFinancialsPage() {
+    return <StudentFinancialsClientPage />;
 }

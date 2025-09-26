@@ -1,9 +1,7 @@
-
 'use server';
 
-import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
-import { getBeautyData } from '@/lib/firestore';
 import type { Metadata } from 'next';
+import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
 
 export const metadata: Metadata = {
   title: "Agency Dashboard | Beauty & Wellness Hub",
@@ -12,12 +10,5 @@ export const metadata: Metadata = {
 
 
 export default async function AgencyDashboardPage() {
-    const { beautyCenters, beautyServices, beautyAppointments, beautySpecialists } = await getBeautyData();
-    return <AgencyDashboardClientPage 
-        initialAgencies={beautyCenters} 
-        initialServices={beautyServices} 
-        initialAppointments={beautyAppointments}
-        initialSpecialists={beautySpecialists}
-        dashboardType="beauty"
-    />;
+    return <AgencyDashboardClientPage dashboardType="beauty" />;
 }

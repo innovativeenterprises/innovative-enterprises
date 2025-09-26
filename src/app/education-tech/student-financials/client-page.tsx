@@ -1,31 +1,23 @@
-
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, PlusCircle, DollarSign, FileText, Calendar, Trash2 } from 'lucide-react';
+import { ArrowLeft, PlusCircle, DollarSign } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Student } from '@/lib/students.schema';
 import { AddEditStudentFinancialsDialog, type StudentFinancialsValues } from "./financials-form";
+import { useStudentsData } from "@/hooks/use-data-hooks";
 
-export default function StudentFinancialsClientPage({ initialStudents }: { initialStudents: Student[] }) {
-    const [students, setStudents] = useState(initialStudents);
-    const [isClient, setIsClient] = useState(false);
+export default function StudentFinancialsClientPage() {
+    const { data: students, setData: setStudents, isClient } = useStudentsData();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<Student | undefined>(undefined);
     const { toast } = useToast();
-    
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const { totalBilled, totalScholarships, totalPaid, totalOutstanding } = useMemo(() => {
         if (!isClient) return { totalBilled: 0, totalScholarships: 0, totalPaid: 0, totalOutstanding: 0 };
@@ -139,4 +131,3 @@ export default function StudentFinancialsClientPage({ initialStudents }: { initi
         </div>
     );
 }
-

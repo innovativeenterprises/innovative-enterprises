@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -19,6 +18,7 @@ import type { StockItem } from "@/lib/stock-items.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { useStockItemsData } from "@/hooks/use-data-hooks";
 
 const StockItemSchema = z.object({
   name: z.string().min(3, "Name is required"),
@@ -35,7 +35,7 @@ const StockItemSchema = z.object({
 });
 type StockItemValues = z.infer<typeof StockItemSchema>;
 
-export const AddEditStockItemDialog = ({ 
+const AddEditStockItemDialog = ({ 
     item, 
     onSave,
     children,
@@ -112,16 +112,12 @@ export const AddEditStockItemDialog = ({
     );
 };
 
-export default function StockItemTable({ items, setItems }: { items: StockItem[], setItems: React.Dispatch<React.SetStateAction<StockItem[]>> }) {
-    const [isClient, setIsClient] = useState(false);
+export default function StockItemTable() {
+    const { data: items, setData: setItems, isClient } = useStockItemsData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<StockItem | undefined>(undefined);
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-    
     const openDialog = (item?: StockItem) => {
         setSelectedItem(item);
         setIsDialogOpen(true);
@@ -160,16 +156,17 @@ export default function StockItemTable({ items, setItems }: { items: StockItem[]
                     <CardTitle>StockClear Marketplace Management</CardTitle>
                     <CardDescription>Manage all overstock and clearance item listings.</CardDescription>
                 </div>
+                <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
+            </CardHeader>
+            <CardContent>
                 <AddEditStockItemDialog
                     isOpen={isDialogOpen}
                     onOpenChange={setIsDialogOpen}
                     item={selectedItem}
                     onSave={handleSave}
                 >
-                    <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Item</Button>
+                    <div />
                 </AddEditStockItemDialog>
-            </CardHeader>
-            <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
