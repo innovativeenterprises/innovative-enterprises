@@ -4,7 +4,6 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from './providers';
-import { StoreProvider } from '@/lib/global-store.tsx';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -58,11 +57,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <StoreProvider>
-            <Providers>
-              {children}
-            </Providers>
-          </StoreProvider>
+          <Providers>
+            {children}
+          </Providers>
       </body>
     </html>
   );
