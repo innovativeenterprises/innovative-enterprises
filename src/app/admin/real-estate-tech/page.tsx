@@ -1,7 +1,6 @@
 
 'use server';
 
-import { getProducts } from "@/lib/firestore";
 import RealEstateTechClientPage from '@/app/real-estate-tech/page';
 import type { Metadata } from 'next';
 
@@ -11,6 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminRealEstateTechPage() {
-    const products = await getProducts();
-    return <RealEstateTechClientPage initialProducts={products} isAdmin={true} />;
+    // The client component will now fetch data from the global store.
+    return <RealEstateTechClientPage isAdmin={true} />;
 }

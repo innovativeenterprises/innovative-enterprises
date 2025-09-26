@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Siren, Building } from "lucide-react";
+import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package, Layers, Camera, Search, Calculator, Building } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 import { useProductsData } from "@/hooks/use-data-hooks";
@@ -21,7 +21,7 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
         "AeroSite AI (DaaS)": Camera,
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
-        "Building Systems Estimator": Cpu,
+        "Building Systems Estimator": Building,
     };
     const Icon = iconMap[product.name] || HardHat;
     

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -33,15 +34,18 @@ type AgencyValues = z.infer<typeof AgencySchema>;
 
 interface AgencySettingsProps<T extends GenericAgency> {
     agency: T;
-    setAgencies: (updater: (prev: T[]) => T[]) => void;
     dashboardType: 'raaha' | 'beauty';
 }
 
-export function AgencySettings<T extends GenericAgency>({ agency, setAgencies, dashboardType }: AgencySettingsProps<T>) {
+export function AgencySettings<T extends GenericAgency>({ agency, dashboardType }: AgencySettingsProps<T>) {
+    const { setData: setRaahaAgencies } = useAgenciesData();
+    const { setData: setBeautyCenters } = useBeautyCentersData();
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(agency.logo);
+
+    const setAgencies = dashboardType === 'raaha' ? setRaahaAgencies : setBeautyCenters;
 
     const form = useForm<AgencyValues>({
         resolver: zodResolver(AgencySchema),
@@ -110,7 +114,7 @@ export function AgencySettings<T extends GenericAgency>({ agency, setAgencies, d
             newLogoUrl = data.logoUrl;
         }
 
-        setAgencies((prev: T[]) => prev.map(a =>
+        setAgencies((prev: any[]) => prev.map(a =>
             a.id === agency.id ? { ...a, ...data, logo: newLogoUrl } : a
         ));
         

@@ -1,7 +1,8 @@
+
 'use client';
 
 import { AgencyStaffTable } from '@/components/agency-dashboard/agency-staff-table';
-import type { Worker } from "@/lib/raaha-workers";
+import type { Worker } from "@/lib/raaha-workers.schema";
 import Image from "next/image";
 import { Badge } from '@/components/ui/badge';
 import { useWorkersData } from '@/hooks/use-data-hooks';
@@ -43,4 +44,3 @@ export function CandidateTable({ agencyId }: { agencyId: string }) {
         />
     );
 }
-

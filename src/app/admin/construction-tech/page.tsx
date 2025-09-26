@@ -1,7 +1,6 @@
 
 'use server';
 
-import { getProducts } from "@/lib/firestore";
 import ConstructionTechClientPage from '@/app/construction-tech/page';
 import type { Metadata } from 'next';
 
@@ -11,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminConstructionTechPage() {
-    const products = await getProducts();
-    return <ConstructionTechClientPage initialProducts={products} isAdmin={true} />;
+    // The client component will now fetch data from the global store.
+    // No need to fetch or pass props here.
+    return <ConstructionTechClientPage isAdmin={true} />;
 }
