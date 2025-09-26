@@ -1,8 +1,6 @@
-
 'use server';
 
 import SwapSellClientPage from './client-page';
-import { getUsedItems } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,6 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default async function SwapAndSellPage() {
-    const items = await getUsedItems();
-    return <SwapSellClientPage initialItems={items} />;
+    return <SwapSellClientPage />;
 }

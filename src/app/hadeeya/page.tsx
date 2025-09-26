@@ -1,8 +1,6 @@
-
 'use server';
 
 import HadeeyaClientPage from './client-page';
-import { getGiftCards } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,6 +10,5 @@ export const metadata: Metadata = {
 
 
 export default async function HadeeyaPage() {
-    const giftCards = await getGiftCards();
-    return <HadeeyaClientPage initialGiftCards={giftCards} />;
+    return <HadeeyaClientPage />;
 }

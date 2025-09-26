@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, Recycle } from "lucide-react";
@@ -63,18 +62,19 @@ const ListingGridSkeleton = () => (
     </div>
 );
 
-export default function SwapSellClientPage({ initialItems }: { initialItems: UsedItem[] }) {
-    const { data: items, isClient } = useUsedItemsData(initialItems);
+export default function SwapSellClientPage() {
+    const { data: items, isClient } = useUsedItemsData();
     const [searchTerm, setSearchTerm] = useState('');
     const [tagFilter, setTagFilter] = useState('All');
 
     const filteredItems = useMemo(() => {
+        if (!isClient) return [];
         return items.filter(item => {
             const matchesTag = tagFilter === 'All' || item.category === tagFilter;
             const matchesSearch = searchTerm === '' || item.name.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesTag && item.status === 'Active';
         });
-    }, [items, tagFilter, searchTerm]);
+    }, [items, tagFilter, searchTerm, isClient]);
 
     return (
         <div className="bg-background min-h-screen">

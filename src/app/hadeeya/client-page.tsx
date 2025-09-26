@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
@@ -36,10 +35,10 @@ const designImages = {
     'Holiday': 'https://images.unsplash.com/photo-1513297884279-d17b29b6e510?q=80&w=600&auto=format&fit=crop',
 };
 
-export default function HadeeyaPage({ initialGiftCards }: { initialGiftCards: GiftCard[] }) {
+export default function HadeeyaPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [submittedCard, setSubmittedCard] = useState<GiftCard | null>(null);
-    const { setData: setGiftCards } = useGiftCardsData(initialGiftCards);
+    const { setData: setGiftCards } = useGiftCardsData();
     const { toast } = useToast();
     
     const form = useForm<GiftCardValues>({

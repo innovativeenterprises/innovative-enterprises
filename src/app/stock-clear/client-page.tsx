@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, Recycle } from "lucide-react";
@@ -58,18 +57,19 @@ const ListingGridSkeleton = () => (
     </div>
 );
 
-export default function StockClearClientPage({ initialItems }: { initialItems: StockItem[] }) {
-    const { data: items, isClient } = useStockItemsData(initialItems);
+export default function StockClearClientPage() {
+    const { data: items, isClient } = useStockItemsData();
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
 
     const filteredItems = useMemo(() => {
+        if (!isClient) return [];
         return items.filter(item => {
             const matchesCategory = categoryFilter === 'All' || item.category === categoryFilter;
             const matchesSearch = searchTerm === '' || item.name.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesCategory && item.status === 'Active';
         });
-    }, [items, categoryFilter, searchTerm]);
+    }, [items, categoryFilter, searchTerm, isClient]);
 
     return (
         <div className="bg-background min-h-screen">

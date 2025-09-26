@@ -1,9 +1,7 @@
-
 'use server';
 
 import CfoDashboardPageClient from './client-page';
 import type { Metadata } from 'next';
-import { getCfoData } from '@/lib/firestore';
 import { Card, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -15,8 +13,6 @@ export const metadata: Metadata = {
 };
 
 export default async function CfoPage() {
-    const cfoData = await getCfoData();
-
     return (
         <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
@@ -43,8 +39,9 @@ export default async function CfoPage() {
                     </Card>
                 </div>
 
-                <CfoDashboardPageClient initialData={cfoData} />
+                <CfoDashboardPageClient />
             </div>
         </div>
     );
 }
+

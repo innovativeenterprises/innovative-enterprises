@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -6,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getStatusBadge } from "@/components/status-badges";
 import { DueDateDisplay } from "@/components/due-date-display";
-import type { CfoData } from '@/lib/cfo-data.schema';
 import * as Icons from 'lucide-react';
 import { useCfoData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,8 +17,8 @@ const kpiIcons: { [key: string]: React.ElementType } = {
 };
 
 
-export default function CfoDashboardPageClient({ initialData }: { initialData: CfoData | null }) {
-    const { data: cfoData, isClient } = useCfoData(initialData);
+export default function CfoDashboardPageClient() {
+    const { data: cfoData, isClient } = useCfoData();
 
     if (!isClient || !cfoData) {
         return (

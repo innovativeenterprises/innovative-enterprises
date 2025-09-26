@@ -1,8 +1,6 @@
-
 'use server';
 
 import StockClearClientPage from './client-page';
-import { getStockItems } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,6 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default async function StockClearPage() {
-    const stockItems = await getStockItems();
-    return <StockClearClientPage initialItems={stockItems} />;
+    return <StockClearClientPage />;
 }
