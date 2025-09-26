@@ -50,7 +50,7 @@ const boqCategoryGeneratorFlow = ai.defineFlow(
     outputSchema: BoQCategoryGeneratorOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const { output } = await categoryPrompt(input);
     return output!;
   }
 );
