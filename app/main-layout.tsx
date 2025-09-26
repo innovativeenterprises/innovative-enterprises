@@ -14,12 +14,13 @@ export default function MainLayout({
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith('/admin');
+  const isAiPosRoute = pathname.startsWith('/ai-pos');
 
   if (isLoading) {
     return <SplashScreen onFinished={() => setIsLoading(false)} />;
   }
 
-  if (isAdminRoute) {
+  if (isAdminRoute || isAiPosRoute) {
     return <main>{children}</main>;
   }
   

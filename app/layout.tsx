@@ -3,7 +3,6 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
-import { SplashScreen } from '@/components/splash-screen';
 import { getFirestoreData } from '@/lib/firestore';
 import MainLayout from './main-layout';
 
