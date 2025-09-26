@@ -5,14 +5,11 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import type { Client } from '@/lib/clients.schema';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useClientsData } from '@/hooks/use-data-hooks';
 
-export default function OverviewAvatars({ clients }: { clients: Client[] }) {
-    const [isClient, setIsClient] = useState(false);
+export default function OverviewAvatars() {
+    const { data: clients, isClient } = useClientsData();
     
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
     if (!isClient) {
         return <div className="flex -space-x-2 w-24 h-10 bg-gray-200 rounded-full animate-pulse" />;
     }
