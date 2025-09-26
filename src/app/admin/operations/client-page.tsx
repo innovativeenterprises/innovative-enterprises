@@ -23,7 +23,7 @@ export default function AdminOperationsClientPage() {
         <div>
             <h1 className="text-3xl font-bold">Operations</h1>
             <p className="text-muted-foreground">
-                A suite of internal AI tools and configurations to enhance business operations.
+                A suite of internal AI tools to enhance business operations.
             </p>
         </div>
 

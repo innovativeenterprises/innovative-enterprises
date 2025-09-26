@@ -80,7 +80,7 @@ export default function ProForm() {
     setIsLoading(true);
     setResponse(null);
     try {
-      const result = await analyzeProTask({ proTaskInput: data, sanadAnalysis: analysisResult });
+      const result = await analyzeProTask({ ...data, ...analysisResult });
       setResponse(result);
       toast({
         title: 'Analysis Complete!',

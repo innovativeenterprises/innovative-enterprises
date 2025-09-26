@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminOperationsPage() {
-    // Data fetching is no longer needed here as the POS products table has been moved to settings.
     return (
         <AdminOperationsClientPage />
     );
