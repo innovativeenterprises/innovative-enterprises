@@ -3,36 +3,25 @@
 
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import { SplashScreen } from '@/components/splash-screen';
 import MainLayout from './main-layout';
-import { useGlobalStore, useSetStore, StoreProvider } from '@/lib/global-store.tsx';
-import { getFirestoreData } from './lib/initial-state';
+import { useGlobalStore } from '@/lib/global-store.tsx';
 
 function AppContent({ children }: { children: ReactNode }) {
     const { isClient } = useGlobalStore(state => ({ isClient: state.isClient }));
-    const set = useSetStore();
-    const [isLoading, setIsLoading] = useState(true);
-
+    
+    // This state now correctly triggers re-render after hydration
+    const [showSplash, setShowSplash] = useState(!isClient);
+    
     useEffect(() => {
-        if (!isClient) {
-             getFirestoreData().then(data => {
-                set(state => ({
-                    ...state,
-                    ...data,
-                }));
-             }).catch(error => {
-                 console.error("Failed to load initial data:", error);
-             }).finally(() => {
-                 set({ isClient: true });
-                 setIsLoading(false);
-             });
-        } else {
-            setIsLoading(false);
+        if (isClient) {
+            const timer = setTimeout(() => setShowSplash(false), 500); // Simulate loading
+            return () => clearTimeout(timer);
         }
-    }, [isClient, set]);
+    }, [isClient]);
 
-    if (isLoading) {
+    if (showSplash) {
         return <SplashScreen />;
     }
 
@@ -46,7 +35,6 @@ export function Providers({
 }) {
 
   return (
-    <StoreProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -56,6 +44,5 @@ export function Providers({
         <AppContent>{children}</AppContent>
         <Toaster />
       </ThemeProvider>
-    </StoreProvider>
   );
 }

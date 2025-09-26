@@ -128,7 +128,6 @@ function CfoDashboardPageClient() {
     );
 }
 
-
 export default function CfoPage() {
     return (
         <div className="bg-background min-h-screen">
