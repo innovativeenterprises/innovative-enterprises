@@ -3,7 +3,8 @@ import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { Providers } from '@/app/providers';
+import { StoreProvider } from '@/lib/global-store.tsx';
+import { Providers } from './providers';
 import MainLayout from './main-layout';
 
 const inter = Inter({
@@ -58,11 +59,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <Providers>
-            <MainLayout>
-              {children}
-            </MainLayout>
-          </Providers>
+          <StoreProvider>
+            <Providers>
+              <MainLayout>
+                {children}
+              </MainLayout>
+            </Providers>
+          </StoreProvider>
       </body>
     </html>
   );

@@ -45,7 +45,7 @@ const AnimatedTitle = ({ title }: { title: string }) => (
             variants={letterVariants}
             className="inline-block"
         >
-            {char === ' ' ? '\u00A0' : char}
+            {char === ' ' ? ' ' : char}
         </motion.span>
         ))}
     </motion.h1>
