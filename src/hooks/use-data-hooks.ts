@@ -67,3 +67,4 @@ export const useSettingsData = createDataHook('settings');
 export const useCostSettingsData = createDataHook('costSettings');
 export const usePricingData = createDataHook('pricing');
 export const useApplicationsData = createDataHook('applications');
+export const useAiToolsData = createDataHook('aiTools');
