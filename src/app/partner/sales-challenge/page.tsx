@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form';
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Send, FileText, CheckCircle, Trophy, Download } from 'lucide-react';
@@ -133,6 +133,13 @@ export default function SalesChallengePage() {
                                 partnerType="Individual Agent"
                                 freelancerId={`AGENT-${String(Date.now()).slice(-6)}`}
                             />
+                            <Alert>
+                                <Sparkles className="h-4 w-4" />
+                                <AlertTitle>New Partner Incentive!</AlertTitle>
+                                <AlertDescription>
+                                    As a valued sales & marketing agent, you will earn a **5% commission** on all sales from any new client you bring to the INNOVATIVE ENTERPRISES platform. This is a lifetime commission for as long as you are an active partner.
+                                </AlertDescription>
+                            </Alert>
                              <div className="flex gap-2">
                                 <Button onClick={() => handleDownload(cardRef.current, 'partner-card.png')}><Download className="mr-2 h-4 w-4"/>Download Virtual ID</Button>
                                 <Button variant="secondary" onClick={() => toast({ title: 'Coming Soon!'})}>Download Certificate</Button>
@@ -179,4 +186,3 @@ export default function SalesChallengePage() {
     </div>
   );
 }
-
