@@ -1,9 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
 import { SplashScreen } from '@/components/splash-screen';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
 import { usePathname } from 'next/navigation';
 
 export default function MainLayout({
@@ -20,15 +19,11 @@ export default function MainLayout({
     return <SplashScreen onFinished={() => setIsLoading(false)} />;
   }
 
+  // If it's an admin or AI POS route, we render it without the main public layout
   if (isAdminRoute || isAiPosRoute) {
     return <main>{children}</main>;
   }
-  
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-grow">{children}</main>
-      <Footer />
-    </div>
-  );
+
+  // For all public routes, render the children which now includes Header/Footer from the RootLayout
+  return <>{children}</>;
 }
