@@ -8,11 +8,10 @@
 
 import { ai } from '@/ai/genkit';
 import {
-    CouponGeneratorInput,
     CouponGeneratorInputSchema,
-    CouponGeneratorOutput,
     CouponGeneratorOutputSchema,
 } from './coupon-generator.schema';
+import type { CouponGeneratorInput, CouponGeneratorOutput } from './coupon-generator.schema';
 
 export async function generateCouponCode(input: CouponGeneratorInput): Promise<CouponGeneratorOutput> {
   return couponGeneratorFlow(input);

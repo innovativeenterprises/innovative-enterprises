@@ -7,6 +7,7 @@
 
 import { ai } from '@/ai/genkit';
 import { ListingDescriptionInputSchema, ListingDescriptionOutputSchema } from './listing-description-generator.schema';
+import type { ListingDescriptionInput, ListingDescriptionOutput } from './listing-description-generator.schema';
 
 const prompt = ai.definePrompt({
   name: 'listingDescriptionPrompt',
@@ -36,7 +37,7 @@ export const generateListingDescription = ai.defineFlow(
     inputSchema: ListingDescriptionInputSchema,
     outputSchema: ListingDescriptionOutputSchema,
   },
-  async (input) => {
+  async (input: ListingDescriptionInput): Promise<ListingDescriptionOutput> => {
     const { output } = await prompt(input);
     return output!;
   }

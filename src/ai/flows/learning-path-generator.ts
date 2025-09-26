@@ -7,10 +7,10 @@
 
 import { ai } from '@/ai/genkit';
 import {
-    LearningPathInputSchema,
     LearningPathInput,
-    LearningPathOutputSchema,
+    LearningPathInputSchema,
     LearningPathOutput,
+    LearningPathOutputSchema,
 } from './learning-path-generator.schema';
 
 
