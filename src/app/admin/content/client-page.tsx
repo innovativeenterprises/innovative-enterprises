@@ -6,6 +6,8 @@ import ProductTable from "@/app/admin/product-table";
 import ClientTable from "@/app/admin/client-table";
 import TestimonialTable from "@/app/admin/testimonial-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PricingTable from "@/app/admin/settings/pricing-table";
+import PosProductTable from "@/app/admin/settings/pos-product-table";
 
 export default function AdminContentClientPage() {
   return (
@@ -13,14 +15,16 @@ export default function AdminContentClientPage() {
       <div>
         <h1 className="text-3xl font-bold">Site Content</h1>
         <p className="text-muted-foreground">
-          Manage your public-facing services, products, and client testimonials.
+          Manage your public-facing services, products, and clients.
         </p>
       </div>
       <Tabs defaultValue="services" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
+          <TabsTrigger value="pricing">Translation Pricing</TabsTrigger>
+          <TabsTrigger value="pos-products">POS Products</TabsTrigger>
         </TabsList>
         <TabsContent value="services" className="mt-6">
           <ServiceTable />
@@ -33,6 +37,12 @@ export default function AdminContentClientPage() {
             <ClientTable />
             <TestimonialTable />
           </div>
+        </TabsContent>
+        <TabsContent value="pricing" className="mt-6">
+          <PricingTable />
+        </TabsContent>
+        <TabsContent value="pos-products" className="mt-6">
+            <PosProductTable />
         </TabsContent>
       </Tabs>
     </div>

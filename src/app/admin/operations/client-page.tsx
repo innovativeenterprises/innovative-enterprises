@@ -8,6 +8,8 @@ import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PosProductTable from "@/app/admin/settings/pos-product-table";
 
 export default function AdminOperationsClientPage() {
 
@@ -24,7 +26,7 @@ export default function AdminOperationsClientPage() {
         <div>
             <h1 className="text-3xl font-bold">Operations</h1>
             <p className="text-muted-foreground">
-                A suite of internal AI tools and generators to enhance business operations.
+                A suite of internal AI tools and configurations to enhance business operations.
             </p>
         </div>
 
