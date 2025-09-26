@@ -15,13 +15,25 @@ import { AppSettingsSchema, type AppSettings } from '@/lib/settings';
 import { useGlobalStore } from '@/lib/global-store.tsx';
 import ThemeGenerator from '@/app/admin/operations/theme-generator';
 import { Switch } from '@/components/ui/switch';
+import PricingTable from './pricing-table';
+import CostSettingsTable from './cost-settings-table';
+import PosProductTable from './pos-product-table';
+import type { Pricing } from '@/lib/pricing.schema';
+import type { CostRate } from '@/lib/cost-settings.schema';
+import type { PosProduct } from '@/lib/pos-data.schema';
 
 interface AdminSettingsClientPageProps {
     initialSettings: AppSettings | null;
+    initialPricing: Pricing[];
+    initialCostSettings: CostRate[];
+    initialPosProducts: PosProduct[];
 }
 
 export default function AdminSettingsClientPage({ 
     initialSettings,
+    initialPricing,
+    initialCostSettings,
+    initialPosProducts,
 }: AdminSettingsClientPageProps) {
     const [isLoading, setIsLoading] = useState(false);
     const setStore = useGlobalStore(s => s.set);
@@ -49,7 +61,7 @@ export default function AdminSettingsClientPage({
              <div>
                 <h1 className="text-3xl font-bold flex items-center gap-3"><SettingsIcon className="h-8 w-8"/> Settings</h1>
                 <p className="text-muted-foreground">
-                   Manage core application settings and theme configurations.
+                   Manage core application settings, pricing, market rates, and theme configurations.
                 </p>
             </div>
             <Form {...form}>
@@ -118,8 +130,10 @@ export default function AdminSettingsClientPage({
                 </form>
             </Form>
             
+            <CostSettingsTable initialRates={initialCostSettings} />
+            <PricingTable initialPricing={initialPricing} />
+            <PosProductTable initialProducts={initialPosProducts} />
             <ThemeGenerator />
-
         </div>
     );
 }

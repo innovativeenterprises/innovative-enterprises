@@ -109,14 +109,10 @@ const AddEditPosProductDialog = ({
 };
 
 export default function PosProductTable({ initialProducts }: { initialProducts: PosProduct[] }) {
-    const { data: products, setData: setProducts } = usePosProductsData();
+    const { data: products, setData: setProducts } = usePosProductsData(initialProducts);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<PosProduct | undefined>(undefined);
-
-    useEffect(() => {
-        setProducts({ posProducts: initialProducts });
-    }, [initialProducts, setProducts]);
 
     const handleOpenDialog = (product?: PosProduct) => {
         setSelectedProduct(product);
@@ -125,17 +121,17 @@ export default function PosProductTable({ initialProducts }: { initialProducts: 
 
     const handleSave = (values: PosProductValues, id?: string) => {
         if (id) {
-            setProducts((state) => ({ posProducts: state.posProducts.map(item => item.id === id ? { ...item, ...values } : item) }));
+            setProducts(prev => prev.map(item => item.id === id ? { ...item, ...values } : item));
             toast({ title: "Product updated." });
         } else {
             const newItem: PosProduct = { ...values, id: `pos_${values.name.toLowerCase().replace(/\s+/g, '_')}` };
-            setProducts((state) => ({ posProducts: [newItem, ...state.posProducts]}));
+            setProducts(prev => [newItem, ...prev]);
             toast({ title: "Product added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setProducts((state) => ({ posProducts: state.posProducts.filter(item => item.id !== id) }));
+        setProducts(prev => prev.filter(item => item.id !== id));
         toast({ title: "Product removed.", variant: "destructive" });
     };
 

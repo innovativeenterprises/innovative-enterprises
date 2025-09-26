@@ -82,19 +82,13 @@ const EditPriceDialog = ({
 }
 
 export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
-    const { data: pricing, setData: setPricing, isClient } = usePricingData();
+    const { data: pricing, setData: setPricing, isClient } = usePricingData(initialPricing);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
-    
-     useEffect(() => {
-        if(isClient) {
-            setPricing({ pricing: initialPricing });
-        }
-    }, [isClient, initialPricing, setPricing]);
 
     const handleSave = (values: PricingValues, id: string) => {
-        setPricing(state => ({ pricing: state.pricing.map(p => p.id === id ? { ...p, ...values } : p)}));
+        setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
         toast({ title: "Price updated successfully." });
     };
     
@@ -123,7 +117,7 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                         <TableRow>
                             <TableHead>Document Type</TableHead>
                             <TableHead>Category</TableHead>
-                            <TableHead>Price (OMR)</TableHead>
+                            <TableHead className="text-right">Price (OMR)</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -139,7 +133,7 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.type}</TableCell>
                                     <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right font-mono">{item.price.toFixed(2)}</TableCell>
                                     <TableCell className="text-right">
                                         <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
                                     </TableCell>

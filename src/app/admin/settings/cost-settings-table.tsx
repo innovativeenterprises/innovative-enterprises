@@ -95,17 +95,10 @@ const AddEditCostRateDialog = ({
 };
 
 export default function CostSettingsTable({ initialRates }: { initialRates: CostRate[] }) {
-    const { data: costSettings, setData: setCostSettings, isClient } = useCostSettingsData();
+    const { data: costSettings, setData: setCostSettings, isClient } = useCostSettingsData(initialRates);
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedRate, setSelectedRate] = useState<CostRate | undefined>(undefined);
-
-    useEffect(() => {
-        if(isClient) {
-            setCostSettings({ costSettings: initialRates });
-        }
-    }, [isClient, initialRates, setCostSettings]);
-
 
     const handleOpenDialog = (rate?: CostRate) => {
         setSelectedRate(rate);
@@ -114,17 +107,17 @@ export default function CostSettingsTable({ initialRates }: { initialRates: Cost
 
     const handleSave = (values: CostRateValues, id?: string) => {
         if (id) {
-            setCostSettings(state => ({ costSettings: state.costSettings.map(r => (r.id === id ? { ...r, ...values } as CostRate : r))}));
+            setCostSettings(prev => prev.map(r => (r.id === id ? { ...r, ...values } as CostRate : r)));
             toast({ title: "Rate updated." });
         } else {
             const newRate: CostRate = { ...values, id: `cost_${Date.now()}` };
-            setCostSettings(state => ({ costSettings: [newRate, ...state.costSettings]}));
+            setCostSettings(prev => [newRate, ...prev]);
             toast({ title: "Rate added." });
         }
     };
 
     const handleDelete = (id: string) => {
-        setCostSettings(state => ({ costSettings: state.costSettings.filter(r => r.id !== id) }));
+        setCostSettings(prev => prev.filter(r => r.id !== id));
         toast({ title: "Rate removed.", variant: "destructive" });
     };
 
