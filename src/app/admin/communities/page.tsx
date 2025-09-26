@@ -2,7 +2,6 @@
 'use server';
 
 import CommunitiesAdminClientPage from './client-page';
-import { getMembers, getCommunities } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,9 +11,8 @@ export const metadata: Metadata = {
 
 
 export default async function CommunitiesAdminPage() {
-    const [members, communities] = await Promise.all([
-        getMembers(),
-        getCommunities(),
-    ]);
-    return <CommunitiesAdminClientPage initialMembers={members} initialCommunities={communities} />;
+    // The client component will now fetch data from the global store,
+    // which is populated on initial load in the root layout.
+    // No need to fetch or pass props here.
+    return <CommunitiesAdminClientPage />;
 }

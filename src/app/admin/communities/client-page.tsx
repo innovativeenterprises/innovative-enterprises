@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -107,9 +106,9 @@ const AddEditMemberDialog = ({
 };
 
 
-export default function CommunitiesAdminClientPage({ initialMembers, initialCommunities }: { initialMembers: CommunityMember[], initialCommunities: Community[]}) {
-    const { data: members, setData: setMembers, isClient } = useMembersData(initialMembers);
-    const { data: communities } = useCommunitiesData(initialCommunities);
+export default function CommunitiesAdminClientPage() {
+    const { data: members, setData: setMembers, isClient } = useMembersData();
+    const { data: communities } = useCommunitiesData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedMember, setSelectedMember] = useState<CommunityMember | undefined>(undefined);
