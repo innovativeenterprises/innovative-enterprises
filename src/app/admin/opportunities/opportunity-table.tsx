@@ -66,8 +66,8 @@ const AddEditOpportunityDialog = ({
     );
 }
 
-export default function OpportunityTable({ initialOpportunities }: { initialOpportunities: Opportunity[] }) {
-    const { data: opportunities, setData: setOpportunities, isClient } = useOpportunitiesData(initialOpportunities);
+export default function OpportunityTable() {
+    const { data: opportunities, setData: setOpportunities, isClient } = useOpportunitiesData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | undefined>(undefined);

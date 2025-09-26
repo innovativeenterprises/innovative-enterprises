@@ -95,8 +95,8 @@ const AddEditStudentDialog = ({ student, onSave, children }: { student?: Student
 };
 
 
-export default function StudentRecordsClientPage({ initialStudents }: { initialStudents: Student[] }) {
-    const { data: students, setData: setStudents, isClient } = useStudentsData(initialStudents);
+export default function StudentRecordsClientPage() {
+    const { data: students, setData: setStudents, isClient } = useStudentsData();
     const { toast } = useToast();
     
     const handleSave = (values: StudentValues, id?: string) => {
@@ -125,7 +125,7 @@ export default function StudentRecordsClientPage({ initialStudents }: { initialS
     };
 
     return (
-        <div className="bg-background min-h-[calc(100vh-8rem)]">
+        <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-5xl mx-auto space-y-8">
                      <div>

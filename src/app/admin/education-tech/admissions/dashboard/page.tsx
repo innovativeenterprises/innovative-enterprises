@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 
 
 export default async function AdmissionsDashboardPage() {
-    const applications = await getApplications();
-    return <AdmissionsDashboardClient initialApplications={applications} />;
+    await getApplications(); // Pre-populate global store
+    return <AdmissionsDashboardClient />;
 }
-

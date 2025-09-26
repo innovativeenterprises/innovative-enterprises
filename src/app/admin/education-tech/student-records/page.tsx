@@ -12,6 +12,6 @@ export const metadata: Metadata = {
 
 
 export default async function StudentRecordsPage() {
-    const students = await getStudents();
-    return <StudentRecordsClientPage initialStudents={students} />;
+    await getStudents(); // Pre-populate global store
+    return <StudentRecordsClientPage />;
 }

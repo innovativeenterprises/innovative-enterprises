@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Application } from '@/lib/admissions-applications';
+import { useApplicationsData } from '@/hooks/use-data-hooks';
 
 type SortKey = keyof Application | '';
 
@@ -34,15 +35,10 @@ const SortableHeader = ({
   </TableHead>
 );
 
-export default function AdmissionsDashboardClient({ initialApplications }: { initialApplications: Application[] }) {
-    const [applications, setApplications] = useState(initialApplications);
-    const [isClient, setIsClient] = useState(false);
+export default function AdmissionsDashboardClient() {
+    const { data: applications, isClient } = useApplicationsData();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' }>({ key: 'readinessScore', direction: 'descending' });
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const filteredAndSortedApplications = useMemo(() => {
         let sortableItems = [...applications];

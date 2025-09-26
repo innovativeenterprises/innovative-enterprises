@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
+import { useGlobalStore, useSetStore } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
@@ -11,7 +11,7 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
     const isClient = useGlobalStore(state => state.isClient);
 
     const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
-      setData((state: AppState) => ({ ...state, [key]: updater(state[key]) }));
+      setData(state => ({ ...state, [key]: updater(state[key]) }));
     };
 
     return { data: data as AppState[K], setData: setKeyData, isClient };
@@ -66,3 +66,4 @@ export const useCartData = createDataHook('cart');
 export const useSettingsData = createDataHook('settings');
 export const useCostSettingsData = createDataHook('costSettings');
 export const usePricingData = createDataHook('pricing');
+export const useApplicationsData = createDataHook('applications');
