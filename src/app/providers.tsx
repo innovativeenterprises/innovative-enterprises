@@ -12,7 +12,6 @@ export function Providers({
 }: {
   children: ReactNode;
 }) {
-  // StoreProvider now initializes its own store without initial props.
   return (
     <StoreProvider>
       <ThemeProvider

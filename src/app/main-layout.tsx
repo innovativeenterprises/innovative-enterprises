@@ -26,7 +26,6 @@ export default function MainLayout({
     return <main>{children}</main>;
   }
 
-  // For all public routes, render the children which now includes Header/Footer from the RootLayout
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
