@@ -8,7 +8,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { initialCars } from '@/lib/cars';
-import { CarSchema, DriveSyncAgentInputSchema, DriveSyncAgentOutputSchema } from './drivesync-agent.schema';
+import { DriveSyncAgentInputSchema, DriveSyncAgentOutputSchema, type DriveSyncAgentInput } from './drivesync-agent.schema';
 
 
 export const bookCarTool = ai.defineTool(
@@ -96,33 +96,37 @@ export const findAndBookCar = ai.defineFlow(
   },
   async ({ query }) => {
     const availableCars = initialCars.filter(c => c.availability === 'Available');
-    const response = await driveSyncAgentPrompt({
-      query,
-      availableCarsJson: JSON.stringify(availableCars),
+    const llmResponse = await ai.generate({
+        prompt: driveSyncAgentPrompt,
+        input: {
+            query,
+            availableCarsJson: JSON.stringify(availableCars),
+        },
+        tools: [bookCarTool, getVehicleHealthTool, getBookingTrendsTool]
     });
 
-    // Check for tool calls
-    if (response.toolRequest?.name === 'bookCar') {
-      const toolResponse = await response.toolRequest.run();
-      return {
-        response: toolResponse.output?.message || "An error occurred during booking.",
-      };
-    }
-    if (response.toolRequest?.name === 'getVehicleHealth') {
-        const toolResponse = await response.toolRequest.run();
-        const health = toolResponse.output as {status: string, lastService: string, notes: string};
-        return {
-            response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
+    const toolRequest = llmResponse.toolRequest();
+    if (toolRequest) {
+      const toolResponse = await toolRequest.run();
+       if (toolRequest.name === 'bookCar') {
+            const output = toolResponse as z.infer<typeof bookCarTool.outputSchema>;
+            return {
+                response: output.message || "An error occurred during booking.",
+            };
         }
-    }
-     if (response.toolRequest?.name === 'getBookingTrends') {
-        const toolResponse = await response.toolRequest.run();
-        return {
-            response: `Booking Trends Report: ${toolResponse.output}`
+        if (toolRequest.name === 'getVehicleHealth') {
+            const health = toolResponse as {status: string, lastService: string, notes: string};
+            return {
+                response: `Vehicle Health Report:\n- Status: ${health.status}\n- Last Service: ${health.lastService}\n- Notes: ${health.notes}`
+            }
+        }
+        if (toolRequest.name === 'getBookingTrends') {
+            return {
+                response: `Booking Trends Report: ${String(toolResponse)}`
+            }
         }
     }
 
-
-    return response.output!;
+    return llmResponse.output()!;
   }
 );

@@ -14,15 +14,10 @@ import {
 import type { ImageAnnotatorInput, ImageAnnotatorOutput } from './image-annotation.schema';
 import { z } from 'zod';
 
-
-const prompt = `You are a sophisticated computer vision AI specializing in photogrammetry and technical illustration. Your task is to analyze an image of an object or floor plan and provide estimated real-world measurements and annotations.
+const promptText = `You are a sophisticated computer vision AI specializing in photogrammetry and technical illustration. Your task is to analyze an image of an object or floor plan and provide estimated real-world measurements and annotations.
 
 **User Instructions (Optional):**
-{{#if prompt}}
-  {{{prompt}}}
-{{else}}
-  Analyze the main object in the image.
-{{/if}}
+{{{prompt}}}
 
 **Your Tasks:**
 1.  **Identify Object(s):** Identify the primary object or context in the image (e.g., "Laptop", "Coffee Mug", "Floor Plan").
@@ -36,6 +31,20 @@ const prompt = `You are a sophisticated computer vision AI specializing in photo
 Return the structured data and the newly generated annotated image.
 `;
 
+const prompt = ai.definePrompt({
+  name: 'imageAnnotationPrompt',
+  input: {
+    schema: z.object({
+      baseImageUri: z.string().url(),
+      prompt: z.string(),
+    }),
+  },
+  output: {
+    schema: ImageAnnotatorOutputSchema,
+  },
+  prompt: promptText,
+});
+
 
 export const annotateImage = ai.defineFlow(
     {
@@ -48,12 +57,12 @@ export const annotateImage = ai.defineFlow(
             model: 'googleai/gemini-1.5-flash',
             prompt: [
                 { media: { url: input.baseImageUri } },
-                { text: prompt.replace("{{{prompt}}}", input.prompt || 'Analyze the main object in the image.') },
+                { text: prompt.prompt.replace("{{{prompt}}}", input.prompt || 'Analyze the main object in the image.') },
             ],
             output: {
                 format: 'json',
                 schema: z.object({
-                    imageDataUri: z.string().url().describe("The new, annotated image as a data URI."),
+                    annotatedImageUri: z.string().url().describe("The data URI of the new, annotated image."),
                     identifiedObject: z.string().describe("The name of the main object identified in the image."),
                     estimatedDimensions: z.object({
                         height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
@@ -73,7 +82,7 @@ export const annotateImage = ai.defineFlow(
         }
         
         return {
-            annotatedImageUri: output.imageDataUri,
+            annotatedImageUri: output.annotatedImageUri,
             identifiedObject: output.identifiedObject,
             estimatedDimensions: output.estimatedDimensions,
             otherMetrics: output.otherMetrics,
