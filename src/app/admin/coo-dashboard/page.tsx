@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -37,9 +38,9 @@ const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) =
 export default function CooDashboardPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [analysis, setAnalysis] = useState<CooAnalysisOutput | null>(null);
-    const { data: products } = useProductsData();
-    const { data: providers } = useProvidersData();
-    const { data: cfoData } = useCfoData();
+    const { products } = useProductsData();
+    const { providers } = useProvidersData();
+    const { cfoData } = useCfoData();
 
 
     const runAnalysis = async () => {
@@ -138,3 +139,4 @@ export default function CooDashboardPage() {
         </div>
     );
 }
+

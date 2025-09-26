@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -26,10 +27,10 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
 );
 
 export default function AdminDashboardPage() {
-    const { data: products, isClient: isProductsClient } = useProductsData();
-    const { data: providers, isClient: isProvidersClient } = useProvidersData();
-    const { data: opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
-    const { data: services, isClient: isServicesClient } = useServicesData();
+    const { products, isClient: isProductsClient } = useProductsData();
+    const { providers, isClient: isProvidersClient } = useProvidersData();
+    const { opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+    const { services, isClient: isServicesClient } = useServicesData();
     const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
     
     const isClient = isProductsClient && isProvidersClient && isOpportunitiesClient && isServicesClient && isStaffClient;
@@ -43,7 +44,7 @@ export default function AdminDashboardPage() {
         { name: 'Staff', value: leadership.length + staff.length },
     ];
     
-    const recentProviders = providers.slice(0, 5);
+    const recentProviders = (providers || []).slice(0, 5);
 
     return (
         <div className="space-y-8">
