@@ -8,13 +8,14 @@ import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Edit } from "lucide-react";
+import { usePricingData } from "@/hooks/use-data-hooks";
 
 
 const PricingFormSchema = z.object({
@@ -29,7 +30,7 @@ const EditPriceDialog = ({
     isOpen,
     onOpenChange,
 }: { 
-    item: Pricing, 
+    item: Pricing | undefined, 
     onSave: (values: PricingValues, id: string) => void,
     children: React.ReactNode,
     isOpen: boolean,
@@ -40,12 +41,13 @@ const EditPriceDialog = ({
     });
 
     useEffect(() => {
-        if(isOpen) {
+        if(isOpen && item) {
             form.reset({ price: item.price });
         }
     }, [item, form, isOpen]);
 
     const onSubmit: SubmitHandler<PricingValues> = (data) => {
+        if (!item) return;
         onSave(data, item.id);
         onOpenChange(false);
     };
@@ -57,36 +59,33 @@ const EditPriceDialog = ({
                 <DialogHeader>
                     <DialogTitle>Edit Price</DialogTitle>
                 </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <div>
-                            <p className="font-medium text-sm">{item.type}</p>
-                            <p className="text-sm text-muted-foreground">{item.group}</p>
-                        </div>
-                        <FormField control={form.control} name="price" render={({ field }) => (
-                            <FormItem><FormLabel>Price per page (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit">Save Price</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                {item && (
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <div>
+                                <p className="font-medium text-sm">{item.type}</p>
+                                <p className="text-sm text-muted-foreground">{item.group}</p>
+                            </div>
+                            <FormField control={form.control} name="price" render={({ field }) => (
+                                <FormItem><FormLabel>Price per page (OMR)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <DialogFooter>
+                                <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                                <Button type="submit">Save Price</Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                )}
             </DialogContent>
         </Dialog>
     )
 }
 
-export default function PricingTable({ initialPricing }: { initialPricing: Pricing[] }) { 
-    const [pricing, setPricing] = useState<Pricing[]>(initialPricing);
-    const [isClient, setIsClient] = useState(false);
+export default function PricingTable() { 
+    const { data: pricing, setData: setPricing, isClient } = usePricingData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Pricing | undefined>(undefined);
-    
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     const handleSave = (values: PricingValues, id: string) => {
         setPricing(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
@@ -105,22 +104,20 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                 <CardDescription>Manage the per-page price for document translation.</CardDescription>
             </CardHeader>
             <CardContent>
-                {selectedItem && (
-                    <EditPriceDialog
-                      isOpen={isDialogOpen}
-                      onOpenChange={setIsDialogOpen}
-                      item={selectedItem}
-                      onSave={handleSave}
-                    >
-                      <div />
-                    </EditPriceDialog>
-                )}
+                <EditPriceDialog
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    item={selectedItem}
+                    onSave={handleSave}
+                >
+                    <div />
+                </EditPriceDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead>Document Type</TableHead>
                             <TableHead>Category</TableHead>
-                            <TableHead>Price (OMR)</TableHead>
+                            <TableHead className="text-right">Price (OMR)</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -136,7 +133,7 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.type}</TableCell>
                                     <TableCell className="text-muted-foreground">{item.group}</TableCell>
-                                    <TableCell>OMR {item.price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right font-mono">{item.price.toFixed(2)}</TableCell>
                                     <TableCell className="text-right">
                                         <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(item)}><Edit /></Button>
                                     </TableCell>
@@ -149,4 +146,3 @@ export default function PricingTable({ initialPricing }: { initialPricing: Prici
         </Card>
     );
 }
-

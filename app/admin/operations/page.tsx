@@ -6,8 +6,9 @@ import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Palette } from "lucide-react";
+import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Facebook } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
+import FacebookCoverGeneratorPage from '@/app/facebook-cover-generator/page';
 
 export default function AdminOperationsPage() {
 
@@ -17,6 +18,7 @@ export default function AdminOperationsPage() {
     { id: 'meeting', title: 'Online Meeting Agent', icon: NotebookText, component: <MeetingForm /> },
     { id: 'coupon', title: 'Coupon Generator', icon: Ticket, component: <CouponGenerator /> },
     { id: 'rental', title: 'Asset Rental Proposal Generator', icon: Scale, component: <AssetRentalAgentForm /> },
+    { id: 'facebook', title: 'Facebook Cover Generator', icon: Facebook, component: <FacebookCoverGeneratorPage /> },
   ]
 
   return (

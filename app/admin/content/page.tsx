@@ -1,29 +1,20 @@
 
-'use server';
+'use client';
 
 import AdminContentClientPage from './client-page';
-import { getProducts, getServices, getClients, getTestimonials, getStages, getPricing, getPosProducts } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
+// Although this is a client component now, we can still provide metadata.
+// Next.js will handle this correctly.
 export const metadata: Metadata = {
     title: "Site Content Management",
     description: "Manage your public-facing services, products, clients, and pricing."
 };
 
 
-export default async function AdminContentPage() {
-    // Data is fetched here to ensure it's available for the initial state of the global store,
-    // but we no longer need to pass it down as props.
-    await Promise.all([
-        getServices(),
-        getProducts(),
-        getStages(),
-        getClients(),
-        getTestimonials(),
-        getPricing(),
-        getPosProducts(),
-    ]);
-
+export default function AdminContentPage() {
+    // The client page now uses hooks to get data from the global store,
+    // so we no longer need to fetch it here.
     return (
         <AdminContentClientPage />
     );
