@@ -77,7 +77,10 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     outputSchema: GenerateSocialMediaPostOutputSchema,
   },
   async (input) => {
-    const textPromise = textGenerationPrompt(input);
+    const textPromise = ai.generate({
+        prompt: textGenerationPrompt,
+        input: input,
+    });
     let imagePromise: Promise<{ imageUrl: string; } | undefined> | undefined;
 
     if (input.generateImage) {

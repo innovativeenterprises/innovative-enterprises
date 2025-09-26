@@ -74,7 +74,7 @@ const identityAnalysisFlow = ai.defineFlow(
     outputSchema: IdentityAnalysisOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    const { output } = await ai.generate({ prompt, input });
 
     if (!output) {
         throw new Error("Failed to get a response from the identity analysis model.");
