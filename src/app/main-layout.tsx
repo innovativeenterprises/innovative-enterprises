@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -17,19 +16,17 @@ export default function MainLayout({
   const isAdminRoute = pathname.startsWith('/admin');
   const isAiPosRoute = pathname.startsWith('/ai-pos');
 
+  const showHeaderFooter = !isAdminRoute && !isAiPosRoute;
+
   if (isLoading) {
     return <SplashScreen onFinished={() => setIsLoading(false)} />;
-  }
-
-  if (isAdminRoute || isAiPosRoute) {
-    return <main>{children}</main>;
   }
   
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {showHeaderFooter && <Header />}
       <main className="flex-grow">{children}</main>
-      <Footer />
+      {showHeaderFooter && <Footer />}
     </div>
   );
 }
