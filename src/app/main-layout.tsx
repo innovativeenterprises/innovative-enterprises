@@ -1,31 +1,46 @@
-'use server';
 
+'use client';
+
+import { useState, useEffect } from 'react';
+import { SplashScreen } from '@/components/splash-screen';
+import { usePathname } from 'next/navigation';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { getSolutions, getIndustries, getAiTools, getSettings } from '@/lib/firestore';
 
-export default async function MainLayout({
+export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-    const [solutions, industries, aiTools, settings] = await Promise.all([
-        getSolutions(),
-        getIndustries(),
-        getAiTools(),
-        getSettings(),
-    ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
+  const isAdminRoute = pathname.startsWith('/admin');
+  const isAiPosRoute = pathname.startsWith('/ai-pos');
+  
+  useEffect(() => {
+    // Simulate initial load, then hide splash screen.
+    const timer = setTimeout(() => {
+        setIsLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
+
+  if (isLoading) {
+    return <SplashScreen onFinished={() => setIsLoading(false)} />;
+  }
+
+  // If it's an admin or AI POS route, we render it without the main public layout
+  if (isAdminRoute || isAiPosRoute) {
+    return <main>{children}</main>;
+  }
+
+  // For all public routes, render the children which now includes Header/Footer from the RootLayout
   return (
     <div className="flex flex-col min-h-screen">
-      <Header 
-        solutions={solutions}
-        industries={industries}
-        aiTools={aiTools}
-        settings={settings}
-      />
+      <Header />
       <main className="flex-grow">{children}</main>
-      <Footer settings={settings} />
+      <Footer />
     </div>
   );
 }

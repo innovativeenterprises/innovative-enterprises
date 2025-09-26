@@ -1,8 +1,10 @@
+
 'use client';
 
 import FooterClient from "./footer-client";
-import type { AppSettings } from "@/lib/settings";
+import { useSettingsData } from "@/hooks/use-data-hooks";
 
-export default function Footer({ settings }: { settings: AppSettings | null }) {
+export default function Footer() {
+  const { data: settings } = useSettingsData();
   return <FooterClient settings={settings} />;
 }

@@ -1,15 +1,15 @@
+
 'use client';
 
 import HeaderClient from "./header-client";
-import type { Solution, Industry, AiTool } from '@/lib/nav-links';
-import type { AppSettings } from "@/lib/settings";
+import { useSolutionsData, useIndustriesData, useAiToolsData, useSettingsData } from '@/hooks/use-data-hooks';
 
-export default function Header({ solutions, industries, aiTools, settings }: {
-    solutions: Solution[];
-    industries: Industry[];
-    aiTools: AiTool[];
-    settings: AppSettings | null;
-}) {
+export default function Header() {
+    const { data: solutions } = useSolutionsData();
+    const { data: industries } = useIndustriesData();
+    const { data: aiTools } = useAiToolsData();
+    const { data: settings } = useSettingsData();
+
     return (
       <HeaderClient 
         solutions={solutions}

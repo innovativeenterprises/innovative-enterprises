@@ -1,17 +1,17 @@
 
 'use client';
 
-import { useGlobalStore, useSetStore } from '@/lib/global-store';
+import { useGlobalStore, useSetStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
   return () => { 
     const data = useGlobalStore(state => state[key]);
-    const setData = useSetStore();
+    const setStore = useSetStore();
     const isClient = useGlobalStore(state => state.isClient);
 
     const setKeyData = (updater: (prev: AppState[K]) => AppState[K]) => {
-      setData(state => ({ ...state, [key]: updater(state[key]) }));
+      setStore(state => ({ ...state, [key]: updater(state[key]) }));
     };
 
     return { data: data as AppState[K], setData: setKeyData, isClient };
@@ -29,8 +29,20 @@ export const useStaffData = () => {
         staff: state.staff,
         agentCategories: state.agentCategories,
     }));
-    const setData = useSetStore();
+    const setStore = useSetStore();
     const isClient = useGlobalStore(state => state.isClient);
+    
+    // This setData is a simplified version for this combined hook
+    const setData = (updater: (prev: typeof data) => typeof data) => {
+        const newValues = updater(data);
+        setStore(state => ({ 
+            ...state, 
+            leadership: newValues.leadership,
+            staff: newValues.staff,
+            agentCategories: newValues.agentCategories,
+        }));
+    };
+
     return { ...data, setData, isClient };
 };
 export const useCfoData = createDataHook('cfoData');
@@ -44,6 +56,7 @@ export const useGiftCardsData = createDataHook('giftCards');
 export const useStudentsData = createDataHook('students');
 export const useCommunitiesData = createDataHook('communities');
 export const useCommunityEventsData = createDataHook('communityEvents');
+export const useCommunityFinancesData = createDataHook('communityFinances');
 export const useCommunityMembersData = createDataHook('communityMembers');
 export const useAlumniJobsData = createDataHook('alumniJobs');
 export const useCarsData = createDataHook('cars');
@@ -68,3 +81,7 @@ export const useCostSettingsData = createDataHook('costSettings');
 export const usePricingData = createDataHook('pricing');
 export const useApplicationsData = createDataHook('applications');
 export const useAiToolsData = createDataHook('aiTools');
+export const useSolutionsData = createDataHook('solutions');
+export const useIndustriesData = createDataHook('industries');
+export const useDailySalesData = createDataHook('dailySales');
+export const useUserDocumentsData = createDataHook('userDocuments');

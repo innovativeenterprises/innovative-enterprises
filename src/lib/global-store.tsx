@@ -4,7 +4,7 @@
 import React, { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
 import { createStore, useStore as useZustandStore } from 'zustand';
 import type { AppState } from './initial-state';
-import { getFirestoreData, getInitialState } from './initial-state';
+import { getInitialState, getFirestoreData } from './initial-state';
 
 export type AppStore = AppState & {
   set: (updater: (state: AppState) => Partial<AppState>) => void;
@@ -28,19 +28,22 @@ export function StoreProvider({ children }: { children: ReactNode; }) {
     if (!storeRef.current) {
         storeRef.current = createAppStore();
     }
-    
-     useEffect(() => {
+
+    useEffect(() => {
         const store = storeRef.current!;
-        const fetchAndSetData = async () => {
-            try {
-                const data = await getFirestoreData();
-                store.getState().set(state => ({ ...state, ...data, isClient: true }));
-            } catch (error) {
-                console.error("Failed to fetch initial data for the store:", error);
-                store.getState().set(state => ({ ...state, isClient: true })); // Still mark as client
-            }
-        };
-        fetchAndSetData();
+        if (!store.getState().isClient) {
+            getFirestoreData().then(data => {
+                store.getState().set(state => ({
+                    ...state,
+                    ...data,
+                    isClient: true,
+                }));
+            }).catch(error => {
+                console.error("Failed to load initial data:", error);
+                // Still set isClient to true to unblock UI, even if data is partial
+                 store.getState().set(state => ({ ...state, isClient: true }));
+            });
+        }
     }, []);
 
     return (
