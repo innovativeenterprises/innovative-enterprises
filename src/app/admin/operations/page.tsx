@@ -1,3 +1,4 @@
+
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -5,7 +6,7 @@ import TenderForm from "@/app/admin/operations/tender-form";
 import MeetingForm from "@/app/admin/operations/meeting-form";
 import CouponGenerator from "@/app/admin/operations/coupon-generator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Facebook, Contact } from "lucide-react";
+import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Facebook, Contact, BrainCircuit } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import FacebookCoverGeneratorPage from '@/app/facebook-cover-generator/page';
 import KnowledgeTable from "./knowledge-table";
@@ -21,6 +22,7 @@ export default function AdminOperationsPage() {
     { id: 'rental', title: 'Asset Rental Proposal Generator', icon: Scale, component: <AssetRentalAgentForm /> },
     { id: 'facebook', title: 'Facebook Cover Generator', icon: Facebook, component: <FacebookCoverGeneratorPage /> },
     { id: 'business_card', title: 'Digital Business Card Generator', icon: Contact, component: <DigitalBusinessCardPage /> },
+    { id: 'knowledge', title: 'AI Knowledge Base & Training', icon: BrainCircuit, component: <KnowledgeTable /> },
   ]
 
   return (
@@ -32,7 +34,7 @@ export default function AdminOperationsPage() {
             </p>
         </div>
 
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="single" collapsible className="w-full" defaultValue="knowledge">
         {internalTools.map(tool => (
             <AccordionItem value={tool.id} key={tool.id}>
                 <AccordionTrigger>
@@ -41,14 +43,12 @@ export default function AdminOperationsPage() {
                         <span className="text-lg font-semibold">{tool.title}</span>
                     </div>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4">
+                <AccordionContent className="pt-4 px-2">
                     {tool.component}
                 </AccordionContent>
             </AccordionItem>
         ))}
         </Accordion>
-        
-        <KnowledgeTable />
     </div>
   );
 }
