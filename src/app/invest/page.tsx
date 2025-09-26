@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
@@ -14,10 +15,6 @@ import { generateLetterOfInterest } from '@/ai/flows/letter-of-interest';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, Send } from 'lucide-react';
 import CompanyProfileDownloader from './company-profile-downloader';
-import type { Agent, AgentCategory } from '@/lib/agents.schema';
-import type { Service } from '@/lib/services.schema';
-import type { Product } from '@/lib/products.schema';
-import type { AppSettings } from '@/lib/settings';
 import { useProductsData, useStaffData, useServicesData, useSettingsData } from '@/hooks/use-data-hooks';
 
 const FormSchema = z.object({
