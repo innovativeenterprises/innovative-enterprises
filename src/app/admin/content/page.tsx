@@ -8,15 +8,6 @@ import TestimonialTable from "./testimonial-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PricingTable from "../settings/pricing-table";
 import PosProductTable from "../settings/pos-product-table";
-import type { Metadata } from 'next';
-
-// Although this is a client component, we can still provide metadata.
-// Next.js will handle this correctly.
-export const metadata: Metadata = {
-    title: "Site Content Management",
-    description: "Manage your public-facing services, products, clients, and pricing."
-};
-
 
 export default function AdminContentPage() {
   return (

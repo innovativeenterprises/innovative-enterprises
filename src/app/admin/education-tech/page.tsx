@@ -1,18 +1,12 @@
 
-'use server';
+'use client';
 
-import { getProducts } from '@/lib/firestore';
-import type { Metadata } from 'next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { GraduationCap, BookOpen, ShieldCheck, Cpu, ArrowRight } from "lucide-react";
+import { GraduationCap, BookOpen, ShieldCheck, Cpu, ArrowRight, Users } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
-
-export const metadata: Metadata = {
-  title: "Education Technology",
-  description: "Manage and monitor all education-focused platforms and tools."
-};
+import { useProductsData } from '@/hooks/use-data-hooks';
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
@@ -24,8 +18,9 @@ const ProductCard = ({ product }: { product: Product }) => {
         "AI Scholarship Finder": Cpu,
         "Teacher Toolkit": BookOpen,
         "AI-POS for Education": Cpu,
+        "AlumniConnect": Users,
     };
-    const Icon = iconMap[product.name] || GraduationCap;
+    const Icon = iconMap[product.name as keyof typeof iconMap] || GraduationCap;
 
     return (
     <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -51,8 +46,8 @@ const ProductCard = ({ product }: { product: Product }) => {
 )};
 
 
-export default async function EducationTechPage() {
-    const products = await getProducts();
+export default function EducationTechPage() {
+    const { data: products } = useProductsData();
     const edutechProducts = products.filter(p => p.category === "Education Tech" && p.enabled);
     
     return (

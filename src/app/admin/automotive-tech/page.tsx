@@ -1,20 +1,12 @@
 
 'use client';
 
-import { getProducts } from "@/lib/firestore";
-import type { Metadata } from 'next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Car } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 import { useProductsData } from '@/hooks/use-data-hooks';
-
-export const metadata: Metadata = {
-  title: "Automotive Technology Solutions",
-  description: "Driving the future of mobility with AI-powered platforms for rental agencies, fleet management, and beyond.",
-};
-
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {

@@ -7,12 +7,6 @@ import { HardHat, GanttChartSquare, DollarSign, Cpu, ShieldCheck, Users, Package
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 import { useProductsData } from '@/hooks/use-data-hooks';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Admin - Construction Technology",
-  description: "Manage all Construction Tech SaaS platforms and tools.",
-};
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
