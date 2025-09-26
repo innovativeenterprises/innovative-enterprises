@@ -11,15 +11,15 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminRealEstatePage() {
-    const [initialProperties, initialStairspaceListings] = await Promise.all([
+    // Data is fetched here to ensure it's available for the initial state of the global store,
+    // but we no longer need to pass it down as props.
+    await Promise.all([
         getProperties(),
         getStairspaceListings(),
     ]);
 
     return (
-        <AdminRealEstateClientPage
-            initialProperties={initialProperties}
-            initialStairspaceListings={initialStairspaceListings}
-        />
+        <AdminRealEstateClientPage />
     )
 }
+

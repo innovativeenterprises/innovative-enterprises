@@ -7,18 +7,10 @@ import { ArrowRight, BarChart } from "lucide-react";
 import Link from 'next/link';
 import PropertyTable from "./property-table";
 import StairspaceTable from "./stairspace-table";
-import type { Property } from '@/lib/properties.schema';
-import type { StairspaceListing } from '@/lib/stairspace.schema';
 
 
 // --- Main Page Component ---
-export default function AdminRealEstateClientPage({ 
-    initialProperties, 
-    initialStairspaceListings
-}: {
-    initialProperties: Property[],
-    initialStairspaceListings: StairspaceListing[],
-}) {
+export default function AdminRealEstateClientPage() {
 
   return (
     <div className="space-y-8">
@@ -59,8 +51,9 @@ export default function AdminRealEstateClientPage({
         </div>
 
 
-        <PropertyTable initialProperties={initialProperties} />
-        <StairspaceTable initialListings={initialStairspaceListings} />
+        <PropertyTable />
+        <StairspaceTable />
     </div>
   );
 }
+

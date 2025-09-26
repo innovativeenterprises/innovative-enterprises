@@ -43,16 +43,13 @@ type PropertyFormValues = z.infer<typeof PropertySchema>;
 const AddEditPropertyDialog = ({ 
     property, 
     onSave,
-    children,
-    isOpen,
-    onOpenChange,
+    children 
 }: { 
     property?: Property, 
     onSave: (values: PropertyFormValues, id?: string) => void,
-    children: React.ReactNode,
-    isOpen: boolean,
-    onOpenChange: (open: boolean) => void,
+    children: React.ReactNode 
 }) => {
+    const [isOpen, setIsOpen] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const { toast } = useToast();
     const [urlToScrape, setUrlToScrape] = useState('');
@@ -64,7 +61,6 @@ const AddEditPropertyDialog = ({
     useEffect(() => {
         if(isOpen) {
            form.reset(property || { title: "", listingType: "For Sale", propertyType: "Villa", location: "", price: 0, bedrooms: 3, bathrooms: 4, areaSqM: 300, description: "", status: "Available", buildingAge: "New", imageUrl: "https://picsum.photos/seed/newprop/600/400" });
-           setUrlToScrape('');
         }
     }, [property, form, isOpen]);
 
@@ -100,11 +96,11 @@ const AddEditPropertyDialog = ({
     const onSubmit: SubmitHandler<PropertyFormValues> = async (data) => {
         onSave(data, property?.id);
         form.reset();
-        onOpenChange(false);
+        setIsOpen(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[725px]">
                 <DialogHeader><DialogTitle>{property ? "Edit" : "Add"} Property Listing</DialogTitle></DialogHeader>
@@ -179,16 +175,9 @@ const AddEditPropertyDialog = ({
     )
 }
 
-export default function PropertyTable({ initialProperties }: { initialProperties: Property[] }) {
-    const { data: properties, setData: setProperties, isClient } = usePropertiesData(initialProperties);
+export default function PropertyTable() {
+    const { data: properties, setData: setProperties, isClient } = usePropertiesData();
     const { toast } = useToast();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedProperty, setSelectedProperty] = useState<Property | undefined>(undefined);
-    
-    const openDialog = (property?: Property) => {
-        setSelectedProperty(property);
-        setIsDialogOpen(true);
-    };
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
         if (id) {
@@ -222,15 +211,9 @@ export default function PropertyTable({ initialProperties }: { initialProperties
                     <CardTitle>Property Listings Management</CardTitle>
                     <CardDescription>Manage all property listings for the Smart Listing platform.</CardDescription>
                 </div>
-                 <Button onClick={() => openDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Property</Button>
+                <AddEditPropertyDialog onSave={handleSave}><Button><PlusCircle className="mr-2 h-4 w-4"/> Add Property</Button></AddEditPropertyDialog>
             </CardHeader>
             <CardContent>
-                 <AddEditPropertyDialog 
-                    isOpen={isDialogOpen} 
-                    onOpenChange={setIsDialogOpen}
-                    property={selectedProperty} 
-                    onSave={handleSave}
-                 ><div/></AddEditPropertyDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -257,7 +240,7 @@ export default function PropertyTable({ initialProperties }: { initialProperties
                                     <TableCell>{getStatusBadge(prop.status)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" onClick={() => openDialog(prop)}><Edit /></Button>
+                                            <AddEditPropertyDialog property={prop} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditPropertyDialog>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                 <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id!)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
