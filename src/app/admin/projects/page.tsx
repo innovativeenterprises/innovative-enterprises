@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -7,7 +8,6 @@ import { generateProjectPlan } from '@/ai/flows/project-inception';
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Loader2, Sparkles } from "lucide-react";
 import type { Product } from '@/lib/products.schema';
-import type { ProjectStage } from '@/lib/stages';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
 import { useProductsData, useStagesData } from "@/hooks/use-data-hooks";
 
@@ -53,7 +53,7 @@ export default function ProjectsPage() {
                 price: 0,
                 rating: 0,
                 enabled: false,
-                image: `https://picsum.photos/seed/${plan.imagePrompt.replace(' ', '')}/600/400`,
+                image: `https://picsum.photos/seed/${plan.imagePrompt.replace(/\s/g, '')}/600/400`,
                 aiHint: plan.imagePrompt,
             };
 
