@@ -5,12 +5,9 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recha
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getStatusBadge } from "@/components/status-badges";
-import type { Product } from "@/lib/products.schema";
-import type { Provider } from "@/lib/providers.schema";
-import type { Opportunity } from "@/lib/opportunities.schema";
-import type { Service } from "@/lib/services.schema";
-import type { Agent, AgentCategory } from "@/lib/agents.schema";
 import { useProductsData, useProvidersData, useOpportunitiesData, useServicesData, useStaffData } from '@/hooks/use-data-hooks';
+import { Skeleton } from '@/components/ui/skeleton';
+
 
 const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[], dataKey: string, color: string }) => (
     <Card>
@@ -28,31 +25,14 @@ const ChartCard = ({ title, data, dataKey, color }: { title: string, data: any[]
     </Card>
 );
 
-interface AdminDashboardPageClientProps {
-  initialProducts: Product[];
-  initialProviders: Provider[];
-  initialOpportunities: Opportunity[];
-  initialServices: Service[];
-  initialStaffData: {
-    leadership: Agent[];
-    staff: Agent[];
-    agentCategories: AgentCategory[];
-  };
-}
-
-export default function AdminDashboardPageClient({
-  initialProducts,
-  initialProviders,
-  initialOpportunities,
-  initialServices,
-  initialStaffData,
-}: AdminDashboardPageClientProps) {
-
-    const { data: products } = useProductsData(initialProducts);
-    const { data: providers } = useProvidersData(initialProviders);
-    const { data: opportunities } = useOpportunitiesData(initialOpportunities);
-    const { data: services } = useServicesData(initialServices);
-    const { leadership, staff, agentCategories } = useStaffData(initialStaffData);
+export default function AdminDashboardPageClient() {
+    const { data: products, isClient: isProductsClient } = useProductsData();
+    const { data: providers, isClient: isProvidersClient } = useProvidersData();
+    const { data: opportunities, isClient: isOpportunitiesClient } = useOpportunitiesData();
+    const { data: services, isClient: isServicesClient } = useServicesData();
+    const { leadership, staff, agentCategories, isClient: isStaffClient } = useStaffData();
+    
+    const isClient = isProductsClient && isProvidersClient && isOpportunitiesClient && isServicesClient && isStaffClient;
 
     const kpiData = [
         { name: 'Products', value: products.length },
@@ -84,13 +64,21 @@ export default function AdminDashboardPageClient({
                         <Table>
                             <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Services</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
                             <TableBody>
-                                {recentProviders.map(provider => (
-                                    <TableRow key={provider.id}>
-                                        <TableCell className="font-medium">{provider.name}</TableCell>
-                                        <TableCell>{provider.services}</TableCell>
-                                        <TableCell>{getStatusBadge(provider.status)}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {!isClient ? (
+                                    Array.from({ length: 5 }).map((_, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell colSpan={3}><Skeleton className="h-8 w-full" /></TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    recentProviders.map(provider => (
+                                        <TableRow key={provider.id}>
+                                            <TableCell className="font-medium">{provider.name}</TableCell>
+                                            <TableCell>{provider.services}</TableCell>
+                                            <TableCell>{getStatusBadge(provider.status)}</TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>

@@ -3,7 +3,7 @@
 
 import AdminDashboardPageClient from './client-page';
 import type { Metadata } from 'next';
-import { getProducts, getProviders, getOpportunities, getServices, getStaffData } from '@/lib/firestore';
+import { getFirestoreData } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Innovative Enterprises",
@@ -11,21 +11,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminDashboardPage() {
-    const [products, providers, opportunities, services, staffData] = await Promise.all([
-        getProducts(),
-        getProviders(),
-        getOpportunities(),
-        getServices(),
-        getStaffData(),
-    ]);
+    // Data fetching on the server is still needed to populate the initial global store.
+    // However, we no longer need to pass the data down as props.
+    await getFirestoreData();
 
     return (
-      <AdminDashboardPageClient
-        initialProducts={products}
-        initialProviders={providers}
-        initialOpportunities={opportunities}
-        initialServices={services}
-        initialStaffData={staffData}
-      />
+      <AdminDashboardPageClient />
     );
 }
