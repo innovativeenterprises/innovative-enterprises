@@ -50,7 +50,7 @@ export default function MemberDirectoryPage() {
                 member.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 member.employer?.toLowerCase().includes(searchTerm.toLowerCase());
             
-            return matchesCommunity && matchesSearch && member.status === 'Active';
+            return matchesCommunity && member.status === 'Active';
         });
     }, [members, searchTerm, selectedCommunity]);
 
@@ -60,9 +60,9 @@ export default function MemberDirectoryPage() {
                  <div className="max-w-5xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/community-hub">
+                            <Link href="/admin/communities">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to Community Hub
+                                Back to Communities
                             </Link>
                         </Button>
                         <div className="text-center">
