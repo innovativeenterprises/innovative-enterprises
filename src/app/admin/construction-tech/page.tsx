@@ -11,6 +11,6 @@ export const metadata: Metadata = {
 
 export default async function AdminConstructionTechPage() {
     // The client component will now fetch data from the global store.
-    // No need to fetch or pass props here.
-    return <ConstructionTechClientPage isAdmin={true} />;
+    return <ConstructionTechClientPage />;
 }
+

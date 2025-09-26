@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 import { useProductsData } from "@/hooks/use-data-hooks";
 
-const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean }) => {
+const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
         "Smart PM SaaS": GanttChartSquare,
         "BidWise Estimator": DollarSign,
@@ -25,7 +26,6 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
     const Icon = iconMap[product.name] || HardHat;
     
     const href = product.href || '#';
-    const link = isAdmin && product.name === 'ProcureChain SaaS' ? '/admin/construction-tech/procurechain' : href;
 
     return (
     <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -41,7 +41,7 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
         <CardFooter>
             {product.href ? (
                  <Button asChild className="w-full">
-                    <Link href={link}>Use Tool</Link>
+                    <Link href={href}>Use Tool</Link>
                 </Button>
             ) : (
                 <Button variant="secondary" className="w-full" disabled>Coming Soon</Button>
@@ -50,7 +50,7 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
     </Card>
 )};
 
-export default function ConstructionTechPage({ isAdmin = false }: { isAdmin?: boolean }) {
+export default function ConstructionTechPage() {
     const { data: products } = useProductsData();
     const contechProducts = products.filter(p => p.category === "Construction Tech" && p.enabled);
     
@@ -70,30 +70,29 @@ export default function ConstructionTechPage({ isAdmin = false }: { isAdmin?: bo
         <div className="max-w-6xl mx-auto mt-20">
              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {contechProducts.map(product => (
-                    <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
+                    <ProductCard key={product.id} product={product} />
                 ))}
             </div>
         </div>
 
-        {!isAdmin && (
-            <div className="max-w-3xl mx-auto mt-20 text-center">
-                <Card className="bg-accent/10 border-accent">
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-accent">Get Early Access</CardTitle>
-                        <CardDescription className="text-accent-foreground/80">
+        <div className="max-w-3xl mx-auto mt-20 text-center">
+            <Card className="bg-accent/10 border-accent">
+                <CardHeader>
+                    <CardTitle className="text-2xl text-accent">Get Early Access</CardTitle>
+                    <CardDescription className="text-accent-foreground/80">
                        Interested in being a pilot partner for one of our construction tech solutions? Contact us to learn more.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardFooter className="justify-center">
-                        <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                            <Link href="/partner">Request a Demo</Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </div>
-        )}
+                    </CardDescription>
+                </CardHeader>
+                <CardFooter className="justify-center">
+                    <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                        <Link href="/partner">Request a Demo</Link>
+                    </Button>
+                </CardFooter>
+            </Card>
+        </div>
 
       </div>
     </div>
   );
 }
+

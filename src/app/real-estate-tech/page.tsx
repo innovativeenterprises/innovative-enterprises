@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 import { useProductsData } from "@/hooks/use-data-hooks";
 
-const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean }) => {
+const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {
         "AI Property Valuator": BarChart,
         "Smart Listing & Matching": Search,
@@ -24,7 +25,7 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
     };
     const Icon = iconMap[product.name] || Building;
 
-    const href = isAdmin && product.name === 'Smart Listing & Matching' ? '/admin/real-estate' : product.href || '#';
+    const href = product.href || '#';
 
     return (
         <Card className="flex flex-col h-full group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -50,7 +51,7 @@ const ProductCard = ({ product, isAdmin }: { product: Product, isAdmin: boolean 
     );
 };
 
-export default function RealEstateTechPage({ isAdmin = false }: { isAdmin?: boolean }) {
+export default function RealEstateTechPage() {
     const { data: products } = useProductsData();
     const enabledProducts = products.filter(p => p.category === 'Real Estate Tech' && p.enabled);
 
@@ -70,28 +71,26 @@ export default function RealEstateTechPage({ isAdmin = false }: { isAdmin?: bool
                 <div className="max-w-6xl mx-auto mt-20">
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {enabledProducts.map(product => (
-                            <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
+                            <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
                 </div>
 
-                {!isAdmin && (
-                    <div className="max-w-3xl mx-auto mt-20 text-center">
-                        <Card className="bg-accent/10 border-accent">
-                            <CardHeader>
-                                <CardTitle className="text-2xl text-accent">Partner with Us</CardTitle>
-                                <CardDescription className="text-accent-foreground/80">
-                                   Are you a real estate agency, developer, or investor? Contact us to learn how our technology can benefit your business.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardFooter className="justify-center">
-                                <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                    <Link href="/partner">Request a Demo</Link>
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    </div>
-                )}
+                <div className="max-w-3xl mx-auto mt-20 text-center">
+                    <Card className="bg-accent/10 border-accent">
+                        <CardHeader>
+                            <CardTitle className="text-2xl text-accent">Partner with Us</CardTitle>
+                            <CardDescription className="text-accent-foreground/80">
+                               Are you a real estate agency, developer, or investor? Contact us to learn how our technology can benefit your business.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardFooter className="justify-center">
+                            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                <Link href="/partner">Request a Demo</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
             </div>
         </div>
     );

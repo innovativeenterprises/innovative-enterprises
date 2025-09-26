@@ -1,3 +1,4 @@
+
 'use client';
 
 import { AgencyStaffTable } from '@/components/agency-dashboard/agency-staff-table';
@@ -29,3 +30,4 @@ export function SpecialistTable({ agencyId }: { agencyId: string }) {
         />
     );
 }
+
