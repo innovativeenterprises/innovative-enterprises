@@ -22,7 +22,7 @@ import { initialGiftCards } from './gift-cards';
 import { initialStudents } from './students';
 import { initialCommunities } from './communities';
 import { initialEvents } from './community-events';
-import { initialFinances } from './community-finances';
+import { initialCommunityFinances } from './community-finances';
 import { initialMembers } from './community-members';
 import { initialAlumniJobs } from './alumni-jobs';
 import { initialRentalAgencies } from './rental-agencies';
@@ -69,7 +69,7 @@ export const getGiftCards = async () => initialGiftCards;
 export const getStudents = async () => initialStudents;
 export const getCommunities = async () => initialCommunities;
 export const getCommunityEvents = async () => initialEvents;
-export const getCommunityFinances = async () => initialFinances;
+export const getCommunityFinances = async () => initialCommunityFinances;
 export const getMembers = async () => initialMembers;
 export const getAlumniJobs = async () => initialAlumniJobs;
 export const getRentalAgencies = async () => initialRentalAgencies;
@@ -96,7 +96,21 @@ export const getSettings = async () => {
 
 export const getKnowledgeBase = async () => initialKnowledgeBase;
 export const getApplications = async () => initialApplications;
-export const getBriefcase = async () => initialBriefcase;
+export const getBriefcase = async () => {
+    try {
+        // In a real app, this would fetch from a user-specific document in Firestore.
+        // For this prototype, we'll try to get it from localStorage.
+        if (typeof window !== 'undefined') {
+            const savedBriefcase = localStorage.getItem('user_briefcase');
+            if (savedBriefcase) {
+                return JSON.parse(savedBriefcase);
+            }
+        }
+    } catch (e) {
+        console.error("Could not parse briefcase from local storage:", e);
+    }
+    return initialBriefcase;
+};
 export const getSolutions = async () => initialSolutions;
 export const getIndustries = async () => initialIndustries;
 export const getAiTools = async () => initialAiTools;
@@ -129,6 +143,7 @@ export const getBeautyData = async () => {
 
 export const getFirestoreData = async () => ({
     products: await getProducts(),
+    storeProducts: await getStoreProducts(),
     services: await getServices(),
     providers: await getProviders(),
     opportunities: await getOpportunities(),
@@ -169,3 +184,4 @@ export const getFirestoreData = async () => ({
     ...await getStaffData(),
     userDocuments: await getUserDocuments(),
 });
+

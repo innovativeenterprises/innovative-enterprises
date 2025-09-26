@@ -1,4 +1,5 @@
 
+
 import type { CrAnalysisOutput } from "@/ai/flows/cr-analysis.schema";
 import type { IdentityAnalysisOutput } from "@/ai/flows/identity-analysis.schema";
 import type { BoQItem } from "@/ai/flows/boq-generator.schema";
@@ -53,3 +54,4 @@ export const initialBriefcase: BriefcaseData = {
     userDocuments: [],
     savedBoqs: [],
 };
+

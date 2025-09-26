@@ -23,6 +23,7 @@ import type { BoQItem } from '@/ai/flows/boq-generator.schema';
 import { fileToDataURI } from '@/lib/utils';
 import type { BriefcaseData, UserDocument, ServiceRegistration, SavedBoQ } from '@/lib/briefcase';
 import { useBriefcaseData } from '@/hooks/use-data-hooks';
+import { PartnerCard } from '../partner/partner-card';
 
 
 const businessCategories = [
@@ -293,11 +294,12 @@ export default function BriefcasePage() {
     const { data: briefcase, setData: setBriefcaseData, isClient } = useBriefcaseData();
     const [analyzingDocId, setAnalyzingDocId] = useState<string | null>(null);
     const { toast } = useToast();
+    const cardRef = useRef<HTMLDivElement>(null);
 
     const handleAddService = (category: string, priceListUrl: string, priceListFilename: string) => {
         if (!briefcase) return;
         const newRegistration: ServiceRegistration = { category, priceListUrl, priceListFilename };
-        setBriefcaseData({ briefcase: { ...briefcase, registrations: [...briefcase.registrations, newRegistration]}});
+        setBriefcaseData(prev => prev ? { ...prev, registrations: [...prev.registrations, newRegistration]} : prev);
     }
     
     const handleUpdatePriceList = (category: string, priceListUrl: string, priceListFilename: string) => {
@@ -305,7 +307,7 @@ export default function BriefcasePage() {
          const updatedRegistrations = briefcase.registrations.map(reg => 
             reg.category === category ? { ...reg, priceListUrl, priceListFilename } : reg
          );
-         setBriefcaseData({ briefcase: { ...briefcase, registrations: updatedRegistrations }});
+         setBriefcaseData(prev => prev ? { ...prev, registrations: updatedRegistrations } : prev);
     }
 
     const handleUploadDocument = async (file: File) => {
@@ -318,13 +320,13 @@ export default function BriefcasePage() {
             dataUri: dataUri,
             uploadedAt: new Date().toISOString(),
         };
-        setBriefcaseData({ briefcase: { ...briefcase, userDocuments: [...briefcase.userDocuments, newDocument]}});
+        setBriefcaseData(prev => prev ? { ...prev, userDocuments: [...prev.userDocuments, newDocument]} : prev);
     }
 
     const handleDeleteDocument = (docId: string) => {
         if (!briefcase) return;
         const updatedDocs = briefcase.userDocuments.filter(doc => doc.id !== docId);
-        setBriefcaseData({ briefcase: { ...briefcase, userDocuments: updatedDocs }});
+        setBriefcaseData(prev => prev ? { ...prev, userDocuments: updatedDocs } : prev);
         toast({ title: 'Document Deleted', description: 'The document has been removed from your briefcase.', variant: 'destructive'});
     }
 
@@ -343,7 +345,7 @@ export default function BriefcasePage() {
             const updatedDocuments = briefcase.userDocuments.map(d => 
                 d.id === doc.id ? { ...d, analysis: result, name: result.suggestedFilename || d.name } : d
             );
-            setBriefcaseData({ briefcase: { ...briefcase, userDocuments: updatedDocuments }});
+            setBriefcaseData(prev => prev ? { ...prev, userDocuments: updatedDocuments } : prev);
 
             toast({ title: "Analysis Complete", description: `Successfully analyzed ${doc.name}.` });
         } catch (error) {
@@ -379,6 +381,9 @@ export default function BriefcasePage() {
             </div>
          )
     }
+    
+    const allServices = (briefcase.registrations || []).map(r => r.category).join(', ');
+    const classification = allServices.split(',').length > 5 ? 'Diamond' : allServices.split(',').length > 3 ? 'Gold' : allServices.split(',').length > 1 ? 'Silver' : 'Bronze';
 
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -394,6 +399,15 @@ export default function BriefcasePage() {
                                 Welcome, <span className="font-semibold text-primary">{briefcase.applicantName}</span>. Manage your documents, agreements, and services here.
                             </p>
                         </div>
+                         <PartnerCard 
+                            cardRef={cardRef}
+                            partnerName={briefcase.applicantName}
+                            joiningDate={new Date(briefcase.date).toLocaleDateString()}
+                            expiryDate={new Date(new Date(briefcase.date).setFullYear(new Date(briefcase.date).getFullYear() + 1)).toLocaleDateString()}
+                            classification={classification}
+                            services={allServices}
+                            partnerType="Partner"
+                        />
                          <Card>
                             <CardHeader className="flex-row justify-between items-center">
                                 <div>
@@ -544,3 +558,4 @@ export default function BriefcasePage() {
         </div>
     );
 }
+
