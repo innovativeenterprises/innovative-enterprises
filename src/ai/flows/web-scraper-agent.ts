@@ -121,7 +121,6 @@ const summarizeWebPagePrompt = ai.definePrompt({
         links: z.array(z.object({ text: z.string(), href: z.string() })).optional(),
     }) },
     output: { schema: WebScraperOutputSchema },
-    tools: [queryProviderDatabaseTool],
     prompt: `You are an expert research analyst. You have been given the parsed text content from a webpage, along with all the hyperlinks found on that page.
 
 Webpage Content:
@@ -181,13 +180,20 @@ export const scrapeAndSummarize = ai.defineFlow(
 
     if (input.isUrl) {
       const pageData = await fetchWebPageTool({ url: input.source });
-      const response = await summarizeWebPagePrompt({ content: pageData.content, sourceUrl: input.source, links: pageData.links });
-      return response;
+      const { output } = await ai.generate({
+          prompt: summarizeWebPagePrompt,
+          input: { content: pageData.content, sourceUrl: input.source, links: pageData.links }
+      });
+      return output!;
     } else {
-      const llmResponse = await searchSummaryPrompt({ query: input.source });
+      const llmResponse = await ai.generate({
+        prompt: searchSummaryPrompt,
+        input: { query: input.source },
+        tools: [queryProviderDatabaseTool],
+      });
       
       const toolRequest = llmResponse.toolRequest();
-      if (toolRequest) {
+      if (toolRequest && toolRequest.name === 'queryProviderDatabase') {
         const toolResult = await toolRequest.run();
         const dbResponse = toolResult as z.infer<typeof queryProviderDatabaseTool.outputSchema>;
         

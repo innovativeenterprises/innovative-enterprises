@@ -108,7 +108,6 @@ const getProTaskPlanTool = ai.defineTool(
 const proTaskAnalysisPrompt = ai.definePrompt({
     name: 'proTaskAnalysisPrompt',
     input: { schema: ProTaskAnalysisInputSchema },
-    output: { schema: ProTaskAnalysisOutputSchema },
     tools: [getProTaskPlanTool],
     prompt: `You are Fahim, an expert PRO agent. A user needs to perform the service: "{{serviceName}}".
     The initial analysis suggests a service fee of OMR {{serviceFee}}.
@@ -124,7 +123,11 @@ export const analyzeProTask = ai.defineFlow(
   },
   async (input) => {
     
-    const llmResponse = await proTaskAnalysisPrompt(input);
+    const llmResponse = await ai.generate({
+        prompt: proTaskAnalysisPrompt,
+        input,
+        tools: [getProTaskPlanTool],
+    });
 
     const toolRequest = llmResponse.toolRequest();
     if (!toolRequest || toolRequest.name !== 'getProTaskPlan') {
@@ -138,6 +141,6 @@ export const analyzeProTask = ai.defineFlow(
 
     const toolResponse = await toolRequest.run();
 
-    return toolResponse.output as ProTaskAnalysisOutput;
+    return toolResponse as ProTaskAnalysisOutput;
   }
 );
