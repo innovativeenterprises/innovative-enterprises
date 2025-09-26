@@ -181,15 +181,22 @@ export const scrapeAndSummarize = ai.defineFlow(
 
     if (input.isUrl) {
       const pageData = await fetchWebPageTool({ url: input.source });
-      const { output } = await summarizeWebPagePrompt({ content: pageData.content, sourceUrl: input.source, links: pageData.links });
+      const { output } = await ai.generate({
+          prompt: summarizeWebPagePrompt,
+          input: { content: pageData.content, sourceUrl: input.source, links: pageData.links }
+      });
       return output!;
     } else {
-      const llmResponse = await searchSummaryPrompt({ query: input.source });
+      const llmResponse = await ai.generate({
+        prompt: searchSummaryPrompt,
+        input: { query: input.source },
+        tools: [queryProviderDatabaseTool],
+      });
       
-      // Check if the LLM decided to use the database tool
-      if (llmResponse.toolRequest && llmResponse.toolRequest.name === 'queryProviderDatabase') {
-        const toolResult = await llmResponse.toolRequest.run();
-        const dbResponse = toolResult.output as z.infer<typeof queryProviderDatabaseTool.outputSchema>;
+      const toolRequest = llmResponse.toolRequest();
+      if (toolRequest && toolRequest.name === 'queryProviderDatabase') {
+        const toolResult = await toolRequest.run();
+        const dbResponse = toolResult as z.infer<typeof queryProviderDatabaseTool.outputSchema>;
         
         // Format the database results into the standard WebScraperOutputSchema
         return {
@@ -201,7 +208,7 @@ export const scrapeAndSummarize = ai.defineFlow(
       }
 
       // If no tool was used, return the LLM's synthesized web search summary
-      return llmResponse.output!;
+      return llmResponse.output()!;
     }
   }
 );
