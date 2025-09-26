@@ -1,6 +1,5 @@
 
 import { z } from 'zod';
-import type { LucideIcon } from 'lucide-react';
 
 /**
  * @fileOverview A Zod schema for the Service data structure.
@@ -10,7 +9,7 @@ import type { LucideIcon } from 'lucide-react';
 export const ServiceSchema = z.object({
   title: z.string(),
   description: z.string(),
-  icon: z.any().describe("A lucide-react icon component."),
+  icon: z.string().describe("The name of a lucide-react icon."),
   category: z.string(),
   enabled: z.boolean(),
   href: z.string().optional(),

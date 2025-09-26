@@ -1,6 +1,5 @@
 
 import { z } from 'zod';
-import { User, Bot, Briefcase, BrainCircuit, Handshake, Scale, GanttChartSquare } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 /**
@@ -21,7 +20,7 @@ export const AgentSchema = z.object({
   name: z.string(),
   role: z.string(),
   description: z.string(),
-  icon: z.any().describe('A Lucide icon component.'),
+  icon: z.string().describe('The name of a Lucide icon.'),
   type: z.enum(["Leadership", "AI Agent", "Staff"]),
   socials: SocialsSchema.optional(),
   href: z.string().optional(),

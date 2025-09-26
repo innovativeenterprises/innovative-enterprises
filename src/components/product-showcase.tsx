@@ -1,7 +1,7 @@
 
 'use server';
 
-import ProductShowcaseClient from './product-showcase-client';
+import ProductShowcaseClient from '@/app/components/product-showcase-client';
 import type { Product } from '@/lib/products.schema';
 
 export default async function ProductShowcase({ products }: { products: Product[] }) {

@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search, GitBranch } from 'lucide-react';
+import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import {
@@ -33,11 +33,13 @@ import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
 import { useGlobalStore } from '@/lib/global-store.tsx';
+import * as Icons from 'lucide-react';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { icon: React.ElementType }
->(({ className, title, children, icon: Icon, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string }
+>(({ className, title, children, iconName, ...props }, ref) => {
+    const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -98,7 +100,7 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
                         key={component.title}
                         title={component.title}
                         href={component.href}
-                        icon={component.icon}
+                        iconName={component.icon}
                       >
                         {component.description}
                       </ListItem>
@@ -115,7 +117,7 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
                         key={component.title}
                         title={component.title}
                         href={component.href}
-                        icon={component.icon}
+                        iconName={component.icon}
                       >
                         {component.description}
                       </ListItem>
@@ -132,7 +134,7 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
                         key={component.title}
                         title={component.title}
                         href={component.href}
-                        icon={component.icon}
+                        iconName={component.icon}
                       >
                         {component.description}
                       </ListItem>

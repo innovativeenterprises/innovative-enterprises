@@ -165,7 +165,7 @@ export const getFirestoreData = async () => ({
     communities: await getCommunities(),
     communityEvents: await getCommunityEvents(),
     communityFinances: await getCommunityFinances(),
-    communityMembers: await getCommunityMembers(),
+    communityMembers: await getMembers(),
     alumniJobs: await getAlumniJobs(),
     rentalAgencies: await getRentalAgencies(),
     cars: await getCars(),

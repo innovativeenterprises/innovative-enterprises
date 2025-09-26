@@ -5,30 +5,35 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
 import Link from 'next/link';
 import type { Agent, AgentCategory } from '@/lib/agents.schema';
+import * as Icons from 'lucide-react';
 
-const AgentCard = ({ agent }: { agent: Agent }) => (
-    <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
-        <CardHeader className="flex flex-row items-center gap-4">
-            <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
-                <agent.icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
-            </div>
-            <div>
-                <CardTitle className="text-lg">{agent.name}</CardTitle>
-                <p className="text-sm text-muted-foreground">{agent.role}</p>
-            </div>
-        </CardHeader>
-        <CardContent className="px-6 pb-6 text-sm flex-grow">
-            <CardDescription>{agent.description}</CardDescription>
-        </CardContent>
-    </Card>
-);
+const AgentCard = ({ agent }: { agent: Agent }) => {
+    const Icon = (Icons as any)[agent.icon] || Icons.Bot;
+    return (
+        <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full flex flex-col">
+            <CardHeader className="flex flex-row items-center gap-4">
+                <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
+                    <Icon className="w-6 h-6 text-primary group-hover:text-accent-foreground transition-colors" />
+                </div>
+                <div>
+                    <CardTitle className="text-lg">{agent.name}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{agent.role}</p>
+                </div>
+            </CardHeader>
+            <CardContent className="px-6 pb-6 text-sm flex-grow">
+                <CardDescription>{agent.description}</CardDescription>
+            </CardContent>
+        </Card>
+    );
+};
 
 const HumanCard = ({ member }: { member: Agent }) => {
+    const Icon = (Icons as any)[member.icon] || Icons.User;
     const cardContent = (
         <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col h-full">
             <CardHeader className="flex flex-col items-center gap-4 pt-8">
                     <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
-                    <member.icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
+                    <Icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
                 </div>
                 <div>
                     <CardTitle className="text-xl">{member.name}</CardTitle>

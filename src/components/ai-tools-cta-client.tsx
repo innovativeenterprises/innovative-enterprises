@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
 import type { AiTool } from "@/lib/nav-links";
+import * as Icons from 'lucide-react';
 
 export default function AiToolsCtaClient({ aiTools }: { aiTools: AiTool[] }) {
     const featuredAgentNames = ["Aida", "Lexi", "Rami", "Sage"];
@@ -20,11 +21,13 @@ export default function AiToolsCtaClient({ aiTools }: { aiTools: AiTool[] }) {
                     </p>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-                    {featuredAgents.map((agent) => (
+                    {featuredAgents.map((agent) => {
+                        const Icon = (Icons as any)[agent.icon] || Icons.Bot;
+                        return (
                          <Card key={agent.title} className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                             <CardHeader>
                                 <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
-                                    <agent.icon className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
+                                    <Icon className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
                                 </div>
                             </CardHeader>
                             <CardContent>
@@ -39,7 +42,7 @@ export default function AiToolsCtaClient({ aiTools }: { aiTools: AiTool[] }) {
                                 </Button>
                             </CardFooter>
                         </Card>
-                    ))}
+                    )})}
                 </div>
             </div>
         </section>
