@@ -1,10 +1,11 @@
+
 'use client';
 
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -31,8 +32,9 @@ import { cn } from '@/lib/utils';
 import type { Solution, Industry, AiTool } from '@/lib/nav-links';
 import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
-import { useGlobalStore } from '@/app/lib/global-store';
+import type { AppSettings } from '@/lib/settings';
 import * as Icons from 'lucide-react';
+import { useCartData } from '@/hooks/use-data-hooks';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -64,14 +66,29 @@ const ListItem = React.forwardRef<
 })
 ListItem.displayName = "ListItem"
 
+const CartButton = () => {
+    const { cart } = useCartData();
+    const itemCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
 
-export default function HeaderClient({ solutions, industries, aiTools }: {
+    return (
+        <Button variant="outline" size="icon" asChild>
+            <Link href="/ecommerce/cart" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                {itemCount > 0 && (
+                    <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">{itemCount}</span>
+                )}
+                <span className="sr-only">Shopping Cart</span>
+            </Link>
+        </Button>
+    )
+}
+
+export default function HeaderClient({ solutions, industries, aiTools, settings }: {
     solutions: Solution[];
     industries: Industry[];
     aiTools: AiTool[];
+    settings: AppSettings | null;
 }) { 
-  const settings = useGlobalStore(state => state.settings);
-  const isClient = useGlobalStore(state => state.isClient);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -150,12 +167,7 @@ export default function HeaderClient({ solutions, industries, aiTools }: {
           </NavigationMenu>
         </nav>
         <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" asChild>
-                <Link href="/ecommerce/cart" className="relative">
-                    <ShoppingCart className="h-5 w-5" />
-                    <span className="sr-only">Shopping Cart</span>
-                </Link>
-            </Button>
+            <CartButton />
             <Button variant="outline" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
                 <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
