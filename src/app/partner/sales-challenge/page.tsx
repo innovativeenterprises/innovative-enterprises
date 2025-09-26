@@ -116,6 +116,7 @@ export default function SalesChallengePage() {
                     </Card>
                 );
             case 'success':
+                 const freelancerId = `AGENT-${String(Date.now()).slice(-6)}`;
                  return (
                     <Card>
                         <CardHeader className="text-center">
@@ -134,7 +135,7 @@ export default function SalesChallengePage() {
                                 classification="Bronze"
                                 services="Sales, Marketing"
                                 partnerType="Individual Agent"
-                                freelancerId={`AGENT-${String(Date.now()).slice(-6)}`}
+                                freelancerId={freelancerId}
                             />
                             <Alert>
                                 <Sparkles className="h-4 w-4" />

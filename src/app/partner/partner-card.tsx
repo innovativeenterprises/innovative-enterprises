@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Image from "next/image";
-import { Star } from 'lucide-react';
+import { Star } from "lucide-react";
 import { cn } from '@/lib/utils';
 
 interface PartnerCardProps {
@@ -51,6 +51,10 @@ export const PartnerCard = ({
             default: return 'text-gray-800';
         }
     }
+    
+    const referralUrl = `https://innovativeenterprises.tech/register?ref=${freelancerId}`;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(referralUrl)}&bgcolor=1f2937`;
+
 
     return (
         <div ref={cardRef} className={`w-full max-w-lg mx-auto rounded-xl bg-gradient-to-br ${getTierColor()} p-1 shadow-2xl`}>
@@ -58,8 +62,8 @@ export const PartnerCard = ({
                  <div className="absolute top-4 right-4">
                     <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="IE Logo" width={40} height={40} className="opacity-80" />
                 </div>
-                 <div className="absolute bottom-0 right-0 w-32 h-32">
-                    <img src="https://www.svgrepo.com/show/493547/qr-code.svg" alt="QR Code" className="w-full h-full opacity-10" />
+                 <div className="absolute bottom-2 right-2 w-20 h-20 p-1 bg-white rounded-md">
+                     {freelancerId && <img src={qrCodeUrl} alt="Referral QR Code" className="w-full h-full" />}
                 </div>
                 
                 <div className="flex items-start gap-4">
