@@ -42,7 +42,7 @@ export function StoreProvider({ children }: { children: ReactNode; }) {
                 }));
             }).catch(error => {
                 console.error("Failed to load initial data:", error);
-                store.setState({ isClient: true }); // Still unblock UI
+                store.setState(state => ({ ...state, isClient: true })); // Still unblock UI
             });
         }
     }, []);

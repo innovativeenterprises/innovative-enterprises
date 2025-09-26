@@ -14,11 +14,13 @@ export default function MainLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith('/admin');
   const isAiPosRoute = pathname.startsWith('/ai-pos');
-  
+
+  // If it's an admin or AI POS route, render it without the main public layout
   if (isAdminRoute || isAiPosRoute) {
     return <main>{children}</main>;
   }
 
+  // For all public routes, render with Header and Footer
   return (
     <div className="flex flex-col min-h-screen">
       <Header />

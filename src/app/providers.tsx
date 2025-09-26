@@ -1,28 +1,27 @@
-
 'use client';
 
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { type ReactNode, useState, useEffect } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { SplashScreen } from '@/components/splash-screen';
 import MainLayout from './main-layout';
-import { useGlobalStore } from '@/lib/global-store.tsx';
+import { StoreProvider, useGlobalStore } from '@/lib/global-store.tsx';
+
 
 function AppContent({ children }: { children: ReactNode }) {
     const { isClient } = useGlobalStore(state => ({ isClient: state.isClient }));
-    
-    // This state now correctly triggers re-render after hydration
-    const [showSplash, setShowSplash] = useState(!isClient);
+    const [showSplash, setShowSplash] = useState(true);
     
     useEffect(() => {
         if (isClient) {
-            const timer = setTimeout(() => setShowSplash(false), 500); // Simulate loading
+            // Use a timeout to ensure the splash screen is visible for a moment
+            const timer = setTimeout(() => setShowSplash(false), 500);
             return () => clearTimeout(timer);
         }
     }, [isClient]);
 
     if (showSplash) {
-        return <SplashScreen />;
+        return <SplashScreen onFinished={() => {}} />;
     }
 
     return <MainLayout>{children}</MainLayout>;
@@ -35,6 +34,7 @@ export function Providers({
 }) {
 
   return (
+    <StoreProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -44,5 +44,6 @@ export function Providers({
         <AppContent>{children}</AppContent>
         <Toaster />
       </ThemeProvider>
+    </StoreProvider>
   );
 }
