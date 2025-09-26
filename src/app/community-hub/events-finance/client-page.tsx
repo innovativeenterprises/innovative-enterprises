@@ -15,18 +15,22 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
+import { useCommunitiesData, useCommunityEventsData, useCommunityFinancesData } from "@/hooks/use-data-hooks";
 
-export default function EventsFinanceClientPage({ initialCommunities, initialEvents, initialFinances }: { initialCommunities: Community[], initialEvents: CommunityEvent[], initialFinances: CommunityFinance[] }) {
-    const [communities, setCommunities] = useState(initialCommunities);
-    const [events, setEvents] = useState(initialEvents);
-    const [finances, setFinances] = useState(initialFinances);
-    const [selectedCommunityId, setSelectedCommunityId] = useState(initialCommunities[0]?.id || '');
-    const [isClient, setIsClient] = useState(false);
+export default function EventsFinanceClientPage() {
+    const { data: communities, isClient: isCommunitiesClient } = useCommunitiesData();
+    const { data: events, setData: setEvents, isClient: isEventsClient } = useCommunityEventsData();
+    const { data: finances, setData: setFinances, isClient: isFinancesClient } = useCommunityFinancesData();
+    const isClient = isCommunitiesClient && isEventsClient && isFinancesClient;
+    
+    const [selectedCommunityId, setSelectedCommunityId] = useState('');
     const { toast } = useToast();
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        if (communities.length > 0 && !selectedCommunityId) {
+            setSelectedCommunityId(communities[0].id);
+        }
+    }, [communities, selectedCommunityId]);
 
     const selectedCommunity = useMemo(() => communities.find(c => c.id === selectedCommunityId), [communities, selectedCommunityId]);
     const filteredEvents = useMemo(() => events.filter(e => e.communityId === selectedCommunityId), [events, selectedCommunityId]);
@@ -49,7 +53,6 @@ export default function EventsFinanceClientPage({ initialCommunities, initialEve
             toast({ title: 'Transaction added.' });
         }
     };
-
 
     if (!isClient) {
         return <div className="container mx-auto px-4 py-16"><Skeleton className="h-screen w-full" /></div>;
@@ -137,7 +140,6 @@ export default function EventsFinanceClientPage({ initialCommunities, initialEve
                             </CardContent>
                         </Card>
                     </div>
-
                 </div>
             </div>
         </div>

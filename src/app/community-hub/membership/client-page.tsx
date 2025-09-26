@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Community } from "@/lib/communities";
+import { useMembersData, useCommunitiesData } from "@/hooks/use-data-hooks";
 
 const MemberSchema = z.object({
   id: z.string().optional(),
@@ -85,7 +86,8 @@ const AddEditMemberDialog = ({
                         </div>
                         <FormField control={form.control} name="status" render={({ field }) => (
                             <FormItem><FormLabel>Status</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>
-                                <SelectItem value="Active">Active</SelectItem><SelectItem value="Inactive">Inactive</SelectItem>
+                                <SelectItem value="Active">Active</SelectItem>
+                                <SelectItem value="Inactive">Inactive</SelectItem>
                             </SelectContent></Select><FormMessage /></FormItem>
                         )} />
                          <FormField control={form.control} name="photo" render={({ field }) => (
@@ -103,15 +105,11 @@ const AddEditMemberDialog = ({
 };
 
 
-export default function MembershipClientPage({ initialMembers, initialCommunities }: { initialMembers: CommunityMember[], initialCommunities: Community[]}) {
-    const [members, setMembers] = useState<CommunityMember[]>(initialMembers);
-    const [isClient, setIsClient] = useState(false);
+export default function MembershipClientPage() {
+    const { data: members, setData: setMembers, isClient } = useMembersData();
+    const { data: communities } = useCommunitiesData();
     const { toast } = useToast();
     
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
     const handleSave = (values: MemberValues, id?: string) => {
         if (id) {
             setMembers(prev => prev.map(s => s.id === id ? { ...s, ...values } as CommunityMember : s));
@@ -163,7 +161,7 @@ export default function MembershipClientPage({ initialMembers, initialCommunitie
                                 <CardTitle>Community Members</CardTitle>
                                 <CardDescription>A list of all members across all communities.</CardDescription>
                             </div>
-                            <AddEditMemberDialog onSave={handleSave} communities={initialCommunities}>
+                            <AddEditMemberDialog onSave={handleSave} communities={communities}>
                                 <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Member</Button>
                             </AddEditMemberDialog>
                         </CardHeader>
@@ -185,11 +183,11 @@ export default function MembershipClientPage({ initialMembers, initialCommunitie
                                                         </div>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>{initialCommunities.find(c => c.id === member.communityId)?.name}</TableCell>
+                                                <TableCell>{communities.find(c => c.id === member.communityId)?.name}</TableCell>
                                                 <TableCell>{getStatusBadge(member.status)}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
-                                                        <AddEditMemberDialog member={member} onSave={handleSave} communities={initialCommunities}><Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button></AddEditMemberDialog>
+                                                        <AddEditMemberDialog member={member} onSave={handleSave} communities={communities}><Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button></AddEditMemberDialog>
                                                         <AlertDialog>
                                                             <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive h-4 w-4" /></Button></AlertDialogTrigger>
                                                             <AlertDialogContent>

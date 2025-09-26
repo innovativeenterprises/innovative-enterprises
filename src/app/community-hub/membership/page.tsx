@@ -1,9 +1,7 @@
 
-
 'use server';
 
 import MembershipClientPage from './client-page';
-import { getMembers, getCommunities } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,6 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default async function MembershipPage() {
-    const [members, communities] = await Promise.all([getMembers(), getCommunities()]);
-    return <MembershipClientPage initialMembers={members} initialCommunities={communities} />;
+    return <MembershipClientPage />;
 }

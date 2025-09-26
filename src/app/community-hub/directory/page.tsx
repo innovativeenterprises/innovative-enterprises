@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Users, Search, SlidersHorizontal, Mail, Linkedin, Phone } from 'lucide-react';
+import { ArrowLeft, Users, Search, Mail, Linkedin, Phone } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import type { CommunityMember } from '@/lib/community-members';
 import type { Community } from '@/lib/communities';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCommunitiesData, useMembersData } from "@/hooks/use-data-hooks";
 
 const MemberCard = ({ member }: { member: CommunityMember }) => (
     <Card>
@@ -34,14 +35,9 @@ const MemberCard = ({ member }: { member: CommunityMember }) => (
     </Card>
 );
 
-export default function MemberDirectoryPage({ initialMembers, initialCommunities }: { initialMembers: CommunityMember[], initialCommunities: Community[]}) {
-    const [members, setMembers] = useState<CommunityMember[]>(initialMembers);
-    const [communities, setCommunities] = useState<Community[]>(initialCommunities);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+export default function MemberDirectoryPage() {
+    const { data: members, isClient } = useMembersData();
+    const { data: communities } = useCommunitiesData();
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCommunity, setSelectedCommunity] = useState('All');

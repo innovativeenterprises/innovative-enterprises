@@ -2,7 +2,6 @@
 'use server';
 
 import EventsFinanceClientPage from "./client-page";
-import { getCommunities, getCommunityEvents, getCommunityFinances } from "@/lib/firestore";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,17 +11,5 @@ export const metadata: Metadata = {
 
 
 export default async function EventsFinancePage() {
-    const [communities, events, finances] = await Promise.all([
-        getCommunities(),
-        getCommunityEvents(),
-        getCommunityFinances(),
-    ]);
-
-    return (
-        <EventsFinanceClientPage 
-            initialCommunities={communities}
-            initialEvents={events}
-            initialFinances={finances}
-        />
-    )
+    return <EventsFinanceClientPage />;
 }
