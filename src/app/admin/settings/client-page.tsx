@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -14,9 +15,9 @@ import { AppSettingsSchema, type AppSettings } from '@/lib/settings';
 import { useSetStore, useSettingsData } from '@/hooks/use-data-hooks';
 import ThemeGenerator from '@/app/admin/operations/theme-generator';
 import { Switch } from '@/components/ui/switch';
-import PricingTable from './pricing-table';
 import CostSettingsTable from './cost-settings-table';
-import PosProductTable from './pos-product-table';
+import PricingTable from '../content/pricing-table';
+import PosProductTable from '../content/pos-product-table';
 
 export default function AdminSettingsClientPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -114,8 +115,6 @@ export default function AdminSettingsClientPage() {
             </Form>
             
             <CostSettingsTable />
-            <PricingTable />
-            <PosProductTable />
             <ThemeGenerator />
         </div>
     );
