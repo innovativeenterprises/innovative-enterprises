@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -13,6 +14,7 @@ import {
     StairspaceMatcherOutputSchema,
     StairspaceMatcherOutput,
 } from './stairspace-matcher.schema';
+import { z } from 'zod';
 
 
 export async function findBestStairspaceMatch(input: StairspaceMatcherInput): Promise<StairspaceMatcherOutput> {
@@ -21,7 +23,7 @@ export async function findBestStairspaceMatch(input: StairspaceMatcherInput): Pr
 
 const prompt = ai.definePrompt({
   name: 'stairspaceMatcherPrompt',
-  input: { schema: StairspaceMatcherInputSchema.extend({ availableSpacesJson: z.string() }) },
+  input: { schema: z.object({ userRequirements: z.string(), availableSpacesJson: z.string() }) },
   output: { schema: StairspaceMatcherOutputSchema },
   prompt: `You are an expert real estate agent AI specializing in micro-retail and pop-up spaces. Your task is to analyze a user's requirements and find the best matching property from the provided list of available listings.
 
@@ -66,3 +68,4 @@ const stairspaceMatcherFlow = ai.defineFlow(
     return output!;
   }
 );
+

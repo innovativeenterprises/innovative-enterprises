@@ -8,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { getStaffData } from '@/lib/firestore';
+import { initialStaffData } from '@/lib/agents';
 import {
     ProjectInceptionInput,
     ProjectInceptionInputSchema,
@@ -21,6 +21,8 @@ export async function generateProjectPlan(input: ProjectInceptionInput): Promise
   return projectInceptionFlow(input);
 }
 
+const allWorkforce = [...initialStaffData.leadership, ...initialStaffData.staff, ...initialStaffData.agentCategories.flatMap(c => c.agents)];
+const allAgentNames = allWorkforce.map(agent => `'${agent.name}' ('${agent.role}')`);
 
 const prompt = ai.definePrompt({
   name: 'projectInceptionPrompt',
@@ -63,11 +65,6 @@ const projectInceptionFlow = ai.defineFlow(
     outputSchema: ProjectInceptionOutputSchema,
   },
   async (input) => {
-    // Fetch all staff and agent data dynamically
-    const { leadership, staff, agentCategories } = await getStaffData();
-    const allWorkforce = [...leadership, ...staff, ...agentCategories.flatMap(c => c.agents)];
-    const allAgentNames = allWorkforce.map(agent => `'${agent.name}' ('${agent.role}')`);
-
     const { output } = await prompt({
         ...input,
         allAgents: allAgentNames,
@@ -75,3 +72,4 @@ const projectInceptionFlow = ai.defineFlow(
     return output!;
   }
 );
+

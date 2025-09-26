@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -75,3 +76,4 @@ const timetableGeneratorFlow = ai.defineFlow(
     return output!;
   }
 );
+
