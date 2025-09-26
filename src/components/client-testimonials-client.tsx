@@ -8,7 +8,7 @@ import imageData from '@/app/lib/placeholder-images.json';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useClientsData, useTestimonialsData } from '@/hooks/use-data-hooks';
 
-export default function ClientTestimonials() {
+export default function ClientTestimonialsClient() {
   const { data: clients, isClient: isClientsClient } = useClientsData();
   const { data: testimonials, isClient: isTestimonialsClient } = useTestimonialsData();
   const isClient = isClientsClient && isTestimonialsClient;

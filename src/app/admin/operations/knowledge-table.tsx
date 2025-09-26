@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from "@/hooks/use-toast";
 import type { KnowledgeDocument } from "@/lib/knowledge.schema";
 import { PlusCircle, Edit, Trash2, Upload, Loader2, Sparkles, Wand2, BrainCircuit, Link as LinkIcon, ListChecks, FileUp, CheckCircle } from "lucide-react";
 import { analyzeKnowledgeDocument } from '@/ai/flows/knowledge-document-analysis';
@@ -314,8 +314,8 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     )
 }
 
-export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowledgeBase: KnowledgeDocument[] }) {
-    const { data: knowledgeBase, setData: setKnowledgeBase, isClient } = useKnowledgeBaseData(initialKnowledgeBase);
+export default function KnowledgeTable() {
+    const { data: knowledgeBase, setData: setKnowledgeBase, isClient } = useKnowledgeBaseData();
     const { toast } = useToast();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | undefined>(undefined);
@@ -477,5 +477,7 @@ export default function KnowledgeTable({ initialKnowledgeBase }: { initialKnowle
         </Card>
     );
 }
+
+    
 
     

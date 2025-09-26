@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import StairspaceRequestsClientPage from "./client-page";
 import type { Metadata } from 'next';
@@ -9,6 +9,6 @@ export const metadata: Metadata = {
   description: "View and manage all incoming booking requests for micro-retail spaces.",
 };
 
-export default async function StairspaceRequestsPage() {
-    return <StairspaceRequestsClientPage />
+export default function StairspaceRequestsPage() {
+    return <StairspaceRequestsClientPage />;
 }
