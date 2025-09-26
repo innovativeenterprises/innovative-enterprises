@@ -1,17 +1,16 @@
+
 'use client';
 
 import { useState } from 'react';
 import { SplashScreen } from '@/components/splash-screen';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 import { usePathname } from 'next/navigation';
 
 export default function MainLayout({
   children,
-  header,
-  footer,
 }: {
   children: React.ReactNode;
-  header: React.ReactNode;
-  footer: React.ReactNode;
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
@@ -28,9 +27,9 @@ export default function MainLayout({
   
   return (
     <div className="flex flex-col min-h-screen">
-      {header}
+      <Header />
       <main className="flex-grow">{children}</main>
-      {footer}
+      <Footer />
     </div>
   );
 }
