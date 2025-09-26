@@ -6,6 +6,7 @@ import { Linkedin, Twitter, Github, Globe, Mail } from "lucide-react";
 import Link from 'next/link';
 import type { Agent, AgentCategory } from '@/lib/agents.schema';
 import * as Icons from 'lucide-react';
+import Image from 'next/image';
 
 const AgentCard = ({ agent }: { agent: Agent }) => {
     const Icon = (Icons as any)[agent.icon] || Icons.Bot;
@@ -32,9 +33,13 @@ const HumanCard = ({ member }: { member: Agent }) => {
     const cardContent = (
         <Card className="bg-card border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group text-center flex flex-col h-full">
             <CardHeader className="flex flex-col items-center gap-4 pt-8">
+                 {member.photo ? (
+                    <Image src={member.photo} alt={member.name} width={96} height={96} className="w-24 h-24 rounded-full object-cover border-4 border-primary/20" />
+                ) : (
                     <div className="bg-primary/10 p-4 rounded-full group-hover:bg-accent transition-colors">
-                    <Icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
-                </div>
+                        <Icon className="w-8 h-8 text-primary group-hover:text-accent-foreground transition-colors" />
+                    </div>
+                )}
                 <div>
                     <CardTitle className="text-xl">{member.name}</CardTitle>
                     <p className="text-base text-muted-foreground">{member.role}</p>
