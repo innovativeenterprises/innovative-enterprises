@@ -1,11 +1,10 @@
 
 'use client';
 
-import ListSpaceForm from "../list-space-form";
-import { HandCoins } from "lucide-react";
+import { HandCoins, ArrowLeft } from "lucide-react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import ListSpaceForm from "./list-space-form";
 
 export default function ListSpacePage() {
   return (

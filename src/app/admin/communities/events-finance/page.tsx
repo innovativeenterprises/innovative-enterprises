@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -15,13 +16,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { useCommunitiesData, useCommunityEventsData, useCommunityFinancesData } from "@/hooks/use-data-hooks";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Community Events & Financials",
-  description: "Manage your community's events and track its financial health.",
-};
-
 
 export default function EventsFinancePage() {
     const { data: communities, isClient: isCommunitiesClient } = useCommunitiesData();
@@ -125,7 +119,7 @@ export default function EventsFinancePage() {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <CardTitle>Financial Transactions</CardTitle>
-                                <AddEditTransactionDialog isOpen={isAddTransactionOpen} onOpenChange={setIsAddTransactionOpen} onSave={handleSaveTransaction}><Button onClick={() => setIsAddTransactionOpen(true)}><PlusCircle className="mr-2 h-4 w-4"/> Add Transaction</Button></AddEditTransactionDialog>
+                                <AddEditTransactionDialog onSave={handleSaveTransaction}><Button><PlusCircle className="mr-2 h-4 w-4"/> Add Transaction</Button></AddEditTransactionDialog>
                             </CardHeader>
                             <CardContent>
                                 <Table>
