@@ -65,7 +65,11 @@ const proctoringAgentFlow = ai.defineFlow(
     // Generate a unique, deterministic ID within the flow itself.
     const generatedId = `PR-EXAM-${input.examId}-${String(new Date().getTime()).slice(-4)}`;
     
-    const { output } = await prompt({ ...input, generatedId });
+    const llmResponse = await ai.generate({ 
+        prompt, 
+        input: { ...input, generatedId } 
+    });
+    const output = llmResponse.output();
     
     if(!output) {
         // If the model returns nothing (e.g., no violations found), create a default "clean" report.
@@ -80,4 +84,3 @@ const proctoringAgentFlow = ai.defineFlow(
     return output;
   }
 );
-

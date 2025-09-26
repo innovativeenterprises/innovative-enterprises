@@ -8,34 +8,13 @@
 
 import { ai } from '@/ai/genkit';
 import { 
-    ImageAnnotatorInput, 
-    ImageAnnotatorOutput,
     ImageAnnotatorInputSchema,
     ImageAnnotatorOutputSchema
 } from './image-annotation.schema';
+import type { ImageAnnotatorInput, ImageAnnotatorOutput } from './image-annotation.schema';
 import { z } from 'zod';
 
-
-const prompt = ai.definePrompt({
-  name: 'imageAnnotationPrompt',
-  input: {
-    schema: ImageAnnotatorInputSchema.extend({
-      prompt: z.string(),
-    }),
-  },
-  output: {
-    schema: z.object({
-      imageDataUri: z.string().url().describe("The new, annotated image as a data URI."),
-      identifiedObject: z.string().describe("The name of the main object identified in the image."),
-      estimatedDimensions: z.object({
-          height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
-          width: z.string().describe("Estimated width with units (e.g., '10 cm')."),
-          depth: z.string().describe("Estimated depth with units (e.g., '8 cm')."),
-      }),
-      otherMetrics: z.string().optional().describe("Any other relevant metrics identified, such as volume or weight."),
-    }),
-  },
-  prompt: `You are a sophisticated computer vision AI specializing in photogrammetry and technical illustration. Your task is to analyze an image of an object or floor plan and provide estimated real-world measurements and annotations.
+const promptText = `You are a sophisticated computer vision AI specializing in photogrammetry and technical illustration. Your task is to analyze an image of an object or floor plan and provide estimated real-world measurements and annotations.
 
 **User Instructions (Optional):**
 {{{prompt}}}
@@ -50,7 +29,20 @@ const prompt = ai.definePrompt({
     *   The annotations should look like they are from engineering or design software.
 
 Return the structured data and the newly generated annotated image.
-`,
+`;
+
+const prompt = ai.definePrompt({
+  name: 'imageAnnotationPrompt',
+  input: {
+    schema: z.object({
+      baseImageUri: z.string().url(),
+      prompt: z.string(),
+    }),
+  },
+  output: {
+    schema: ImageAnnotatorOutputSchema,
+  },
+  prompt: promptText,
 });
 
 
@@ -61,7 +53,7 @@ export const annotateImage = ai.defineFlow(
         outputSchema: ImageAnnotatorOutputSchema,
     },
     async (input) => {
-        const { output } = await ai.generate({
+        const response = await ai.generate({
             model: 'googleai/gemini-1.5-flash',
             prompt: [
                 { media: { url: input.baseImageUri } },
@@ -70,7 +62,7 @@ export const annotateImage = ai.defineFlow(
             output: {
                 format: 'json',
                 schema: z.object({
-                    imageDataUri: z.string().url().describe("The new, annotated image as a data URI."),
+                    annotatedImageUri: z.string().url().describe("The data URI of the new, annotated image."),
                     identifiedObject: z.string().describe("The name of the main object identified in the image."),
                     estimatedDimensions: z.object({
                         height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
@@ -85,12 +77,13 @@ export const annotateImage = ai.defineFlow(
             },
         });
 
+        const output = response.output();
         if (!output) {
             throw new Error('Image analysis failed to return a valid response.');
         }
         
         return {
-            annotatedImageUri: output.imageDataUri,
+            annotatedImageUri: output.annotatedImageUri,
             identifiedObject: output.identifiedObject,
             estimatedDimensions: output.estimatedDimensions,
             otherMetrics: output.otherMetrics,
