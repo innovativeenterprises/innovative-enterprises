@@ -1,14 +1,16 @@
-'use server';
 
-import StockClearClientPage from './client-page';
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-    title: "StockClear Marketplace Admin",
-    description: "Monitor and manage all overstock and clearance item listings."
-};
+import StockItemTable from './stock-item-table';
 
-export default async function AdminStockClearPage() {
-    // Data is fetched and loaded into the global store in the root layout.
-    return <StockClearClientPage />;
+export default function AdminStockClearPage() {
+    return (
+        <div className="space-y-8">
+            <div>
+                <h1 className="text-3xl font-bold">StockClear Marketplace</h1>
+                <p className="text-muted-foreground">Monitor and manage all overstock and clearance item listings.</p>
+            </div>
+            <StockItemTable />
+        </div>
+    );
 }

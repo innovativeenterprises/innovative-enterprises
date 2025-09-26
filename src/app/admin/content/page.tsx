@@ -1,30 +1,40 @@
 
-'use server';
+'use client';
 
-import AdminContentClientPage from './client-page';
-import { getProducts, getServices, getClients, getTestimonials, getStages, getPricing, getPosProducts } from "@/lib/firestore";
-import type { Metadata } from 'next';
+import ServiceTable from "@/app/admin/service-table";
+import ProductTable from "@/app/admin/product-table";
+import ClientTable from "@/app/admin/client-table";
+import TestimonialTable from "@/app/admin/testimonial-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const metadata: Metadata = {
-    title: "Site Content Management",
-    description: "Manage your public-facing services, products, clients, and pricing."
-};
-
-
-export default async function AdminContentPage() {
-    // Data is fetched here to ensure it's available for the initial state of the global store,
-    // but we no longer need to pass it down as props.
-    await Promise.all([
-        getServices(),
-        getProducts(),
-        getStages(),
-        getClients(),
-        getTestimonials(),
-        getPricing(),
-        getPosProducts(),
-    ]);
-
-    return (
-        <AdminContentClientPage />
-    );
+export default function AdminContentPage() {
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Site Content</h1>
+        <p className="text-muted-foreground">
+          Manage your public-facing services, products, and client testimonials.
+        </p>
+      </div>
+      <Tabs defaultValue="services" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="services">Services</TabsTrigger>
+          <TabsTrigger value="products">Products</TabsTrigger>
+          <TabsTrigger value="clients">Clients & Testimonials</TabsTrigger>
+        </TabsList>
+        <TabsContent value="services" className="mt-6">
+          <ServiceTable />
+        </TabsContent>
+        <TabsContent value="products" className="mt-6">
+          <ProductTable />
+        </TabsContent>
+        <TabsContent value="clients" className="mt-6">
+          <div className="space-y-8">
+            <ClientTable />
+            <TestimonialTable />
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 }
