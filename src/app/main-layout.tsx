@@ -19,11 +19,11 @@ export default function MainLayout({
     return <SplashScreen onFinished={() => setIsLoading(false)} />;
   }
 
-  // If it's an admin or AI POS route, don't wrap with Header/Footer
+  // If it's an admin or AI POS route, we render it without the main public layout
   if (isAdminRoute || isAiPosRoute) {
     return <main>{children}</main>;
   }
-  
-  // For all other public routes, render the children which now includes Header/Footer from the RootLayout
+
+  // For all public routes, render the children which now includes Header/Footer from the RootLayout
   return <>{children}</>;
 }
