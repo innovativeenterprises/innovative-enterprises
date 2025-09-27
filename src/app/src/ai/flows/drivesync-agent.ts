@@ -96,9 +96,13 @@ export const findAndBookCar = ai.defineFlow(
   },
   async ({ query }) => {
     const availableCars = initialCars.filter(c => c.availability === 'Available');
-    const llmResponse = await driveSyncAgentPrompt({
-      query,
-      availableCarsJson: JSON.stringify(availableCars),
+    const llmResponse = await ai.generate({
+        prompt: driveSyncAgentPrompt,
+        input: {
+            query,
+            availableCarsJson: JSON.stringify(availableCars),
+        },
+        tools: [bookCarTool, getVehicleHealthTool, getBookingTrendsTool]
     });
 
     const toolRequest = llmResponse.toolRequest();
