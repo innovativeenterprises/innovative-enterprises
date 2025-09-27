@@ -1,18 +1,18 @@
-I0927 08:33:24.765278     567 load.go:31] Reloading schema and connectors...
-W0927 08:33:25.341365     567 control.go:68] [/emulator/studio 92c2] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
+I0927 23:36:46.378711   15556 load.go:31] Reloading schema and connectors...
+W0927 23:36:46.858231   15556 control.go:68] [/emulator/studio e40e] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
 example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
 example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
 
 sources: example/queries.gql [455B] 
-I0927 08:33:25.341458     567 control.go:94] [/emulator/studio 92c2] UpdateResources(): done
+I0927 23:36:46.858318   15556 control.go:94] [/emulator/studio e40e] UpdateResources(): done
 Schema: sources: schema/schema.gql [1207B] 
 Connector "example": sources: example/queries.gql [455B] 
-E0927 08:33:25.357705     567 load.go:73] Could not load sources: 
+E0927 23:36:46.872115   15556 load.go:73] Could not load sources: 
 Errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
 example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
 example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
-I0927 08:33:25.369363     567 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
-Generated sources: prelude.gql [73251B] main/mutation.gql [20515B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] 
-I0927 08:33:25.369517     567 load.go:74] Finished reloading
-I0927 08:33:25.381665     567 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
-I0927 08:33:26.317090     567 engine.go:169] [/emulator/studio 92c2] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+I0927 23:36:46.880135   15556 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] 
+I0927 23:36:46.888921   15556 load.go:74] Finished reloading
+I0927 23:36:46.941675   15556 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+I0927 23:36:47.651193   15556 engine.go:169] [/emulator/studio e40e] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
