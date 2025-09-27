@@ -38,7 +38,7 @@ import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { iconName: string; }
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string; }
 >(({ className, title, children, iconName, ...props }, ref) => {
   const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
