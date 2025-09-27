@@ -102,7 +102,11 @@ export default function HeaderClient() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <span>INNOVATIVE ENTERPRISES</span>
+          {settings?.headerImageUrl ? (
+            <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+          ) : (
+            <span>INNOVATIVE ENTERPRISES</span>
+          )}
         </Link>
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
@@ -201,7 +205,11 @@ export default function HeaderClient() {
                  <SheetHeader className="p-4 border-b">
                     <SheetTitle>
                         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" onClick={handleLinkClick}>
-                           <span>INNOVATIVE ENTERPRISES</span>
+                             {settings?.headerImageUrl ? (
+                                <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+                            ) : (
+                                <span>INNOVATIVE ENTERPRISES</span>
+                            )}
                         </Link>
                     </SheetTitle>
                     <SheetDescription className="sr-only">
