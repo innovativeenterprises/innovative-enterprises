@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function WorkerProfilePage({ params }: { params: { id: string } }) {
     const { raahaWorkers, raahaAgencies } = await getRaahaData();
     const worker = raahaWorkers.find(p => p.id === params.id);
-    const agency = raahaAgencies.find(a => a.name === worker?.agencyId);
+    const agency = raahaAgencies.find(a => a.id === worker?.agencyId);
     
     return <WorkerProfileClientPage worker={worker} agency={agency} />;
 }
