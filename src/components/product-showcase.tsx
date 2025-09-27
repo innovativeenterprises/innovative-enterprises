@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StageBadge } from '@/components/stage-badge';
@@ -8,12 +9,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { ShoppingCart } from 'lucide-react';
-import { useCartData, useProductsData } from '@/hooks/use-data-hooks';
 import type { Product } from '@/lib/products.schema';
+import { useCartData } from '@/hooks/use-data-hooks';
+import { getProducts } from '@/lib/firestore';
 
 export default function ProductShowcase() {
-  const { data: products } = useProductsData();
-  const liveProducts = (products || []).filter(p => p.stage === 'Live & Operating' && p.enabled);
+  const [products, setProducts] = useState<Product[]>([]);
+  
+  useEffect(() => {
+    getProducts().then(setProducts);
+  }, []);
+
+  const liveProducts = products.filter(p => p.stage === 'Live & Operating' && p.enabled);
   
   const { toast } = useToast();
   const { setData: setCart } = useCartData();

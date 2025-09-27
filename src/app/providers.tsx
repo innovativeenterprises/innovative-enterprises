@@ -3,24 +3,19 @@
 
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { type ReactNode, useRef, useEffect, useState } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import ChatWidget from '@/components/chat-widget';
-import { StoreProvider, createAppStore, useGlobalStore } from '@/lib/global-store.tsx';
 import { SplashScreen } from '@/components/splash-screen';
 import MainLayout from './main-layout';
-import type { AppState } from '@/lib/initial-state';
-import { getFirestoreData } from '@/lib/initial-state';
+import { StoreProvider } from '@/hooks/use-data-hooks';
 
 function AppContent({ children }: { children: ReactNode }) {
-    const isClient = useGlobalStore(state => state.isClient);
-    const [showSplash, setShowSplash] = useState(!isClient);
+    const [showSplash, setShowSplash] = useState(true);
 
     useEffect(() => {
-        if (isClient) {
-            const timer = setTimeout(() => setShowSplash(false), 2000); 
-            return () => clearTimeout(timer);
-        }
-    }, [isClient]);
+        const timer = setTimeout(() => setShowSplash(false), 1500); 
+        return () => clearTimeout(timer);
+    }, []);
 
     if (showSplash) {
         return <SplashScreen />;
@@ -31,34 +26,12 @@ function AppContent({ children }: { children: ReactNode }) {
 
 export function Providers({
   children,
-  initialState,
 }: {
   children: ReactNode;
-  initialState?: Partial<AppState>;
 }) {
-  const storeRef = useRef<ReturnType<typeof createAppStore>>();
-  if (!storeRef.current) {
-    storeRef.current = createAppStore(initialState);
-  }
-
-  useEffect(() => {
-    const store = storeRef.current!;
-    if (!store.getState().isClient) {
-      getFirestoreData().then(data => {
-        store.setState(state => ({
-          ...state,
-          ...data,
-          isClient: true,
-        }));
-      }).catch(error => {
-        console.error("Failed to load initial data:", error);
-        store.setState(state => ({ ...state, isClient: true }));
-      });
-    }
-  }, []);
 
   return (
-    <StoreProvider store={storeRef.current}>
+    <StoreProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"

@@ -1,86 +1,113 @@
-import { useGlobalStore } from '@/lib/global-store.tsx';
-import type { AppState } from '@/lib/initial-state';
 
-// By not marking this file with 'use client', these hooks can be used in both
-// Server and Client Components, which is crucial for the hybrid approach.
+'use client';
+import { createContext, useContext, ReactNode, useRef } from 'react';
+import { createStore, useStore } from 'zustand';
+import type { CartItem } from '@/lib/pos-data.schema';
+import type { BookingRequest } from '@/lib/stairspace-requests';
+import type { HireRequest } from '@/lib/raaha-requests.schema';
+
+interface AppState {
+  cart: CartItem[];
+  stairspaceRequests: BookingRequest[];
+  raahaRequests: HireRequest[];
+}
+
+interface AppStore extends AppState {
+  set: (fn: (state: AppState) => AppState) => void;
+}
+
+const defaultState: AppState = {
+  cart: [],
+  stairspaceRequests: [],
+  raahaRequests: [],
+};
+
+const StoreContext = createContext<ReturnType<typeof createStore<AppStore>> | null>(null);
+
+export function StoreProvider({ children }: { children: ReactNode }) {
+  const storeRef = useRef<ReturnType<typeof createStore<AppStore>>>();
+  if (!storeRef.current) {
+    storeRef.current = createStore<AppStore>((set) => ({
+      ...defaultState,
+      set,
+    }));
+  }
+  return (
+    <StoreContext.Provider value={storeRef.current}>
+      {children}
+    </StoreContext.Provider>
+  );
+}
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return (initialData?: AppState[K]) => {
-    // This hook now uses the Zustand useStore hook directly.
-    // It can optionally accept initialData for server-side pre-population.
-    const data = useGlobalStore((state) => state[key]);
-    const setData = useGlobalStore((state) => state.set);
-    const isClient = useGlobalStore((state) => state.isClient);
-
-    // If initialData is provided (from a server component), and we're on the client
-    // for the first time, we can hydrate the store.
-    // In a more robust app, you might check if the store already has data.
-    if (isClient && initialData && (data as any[]).length === 0) {
-      setData(state => ({ ...state, [key]: initialData }));
+  return () => {
+    const store = useContext(StoreContext);
+    if (!store) {
+      throw new Error('useStore must be used within a StoreProvider');
     }
-    
-    return { data: data as AppState[K], setData, isClient };
+    const data = useStore(store, (state) => state[key]);
+    const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
+      store.getState().set((state) => ({ ...state, [key]: updater(state[key]) }));
+    };
+    return { data: data as AppState[K], setData };
   };
 };
 
-export const useProductsData = createDataHook('products');
-export const useStoreProductsData = createDataHook('storeProducts');
-export const useProvidersData = createDataHook('providers');
-export const useOpportunitiesData = createDataHook('opportunities');
-export const useServicesData = createDataHook('services');
-export const useCfoData = createDataHook('cfoData');
-export const useAssetsData = createDataHook('assets');
-export const usePropertiesData = createDataHook('properties');
-export const useStairspaceListingsData = createDataHook('stairspaceListings');
-export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
-export const useLeasesData = createDataHook('signedLeases');
-export const useStockItemsData = createDataHook('stockItems');
-export const useGiftCardsData = createDataHook('giftCards');
-export const useStudentsData = createDataHook('students');
-export const useCommunitiesData = createDataHook('communities');
-export const useCommunityEventsData = createDataHook('communityEvents');
-export const useCommunityFinancesData = createDataHook('communityFinances');
-export const useMembersData = createDataHook('communityMembers');
-export const useAlumniJobsData = createDataHook('alumniJobs');
-export const useCarsData = createDataHook('cars');
-export const useRentalAgenciesData = createDataHook('rentalAgencies');
-export const usePosProductsData = createDataHook('posProducts');
-export const useBriefcaseData = createDataHook('briefcase');
-export const useKnowledgeBaseData = createDataHook('knowledgeBase');
-export const useClientsData = createDataHook('clients');
-export const useTestimonialsData = createDataHook('testimonials');
-export const useStagesData = createDataHook('stages');
-export const useRequestsData = createDataHook('raahaRequests');
-export const useAgenciesData = createDataHook('raahaAgencies');
-export const useWorkersData = createDataHook('raahaWorkers');
-export const useBeautyCentersData = createDataHook('beautyCenters');
-export const useBeautySpecialistsData = createDataHook('beautySpecialists');
-export const useBeautyServicesData = createDataHook('beautyServices');
-export const useBeautyAppointmentsData = createDataHook('beautyAppointments');
-export const useUsedItemsData = createDataHook('usedItems');
 export const useCartData = createDataHook('cart');
-export const useSettingsData = createDataHook('settings');
-export const useCostSettingsData = createDataHook('costSettings');
-export const usePricingData = createDataHook('pricing');
-export const useApplicationsData = createDataHook('applications');
-export const useAiToolsData = createDataHook('aiTools');
-export const useSolutionsData = createDataHook('solutions');
-export const useIndustriesData = createDataHook('industries');
-export const useDailySalesData = createDataHook('dailySales');
-export const useUserDocumentsData = createDataHook('userDocuments');
-export const useSaaSProductsData = createDataHook('saasProducts');
+export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
+export const useRequestsData = createDataHook('raahaRequests');
 
+export const useSetStore = () => {
+    const store = useContext(StoreContext);
+     if (!store) {
+        throw new Error('useSetStore must be used within a StoreProvider');
+    }
+    return store.getState().set;
+}
 
-// This special hook remains a client hook because it uses other hooks that need the client context.
-export function useStaffData() {
-    'use client';
-    const data = useGlobalStore(state => ({
-        leadership: state.leadership,
-        staff: state.staff,
-        agentCategories: state.agentCategories,
-    }));
-    const isClient = useGlobalStore(state => state.isClient);
-    return { ...data, isClient };
-};
-
-export { useSetStore } from '@/lib/global-store.tsx';
+// These hooks are now simple placeholders and can be removed or adapted
+// if client-side fetching for this data is needed elsewhere.
+export const useProductsData = () => ({ data: [], isClient: false });
+export const useStoreProductsData = () => ({ data: [], isClient: false });
+export const useProvidersData = () => ({ data: [], isClient: false });
+export const useOpportunitiesData = () => ({ data: [], isClient: false });
+export const useServicesData = () => ({ data: [], isClient: false });
+export const useCfoData = () => ({ data: null, isClient: false });
+export const useAssetsData = () => ({ data: [], isClient: false });
+export const usePropertiesData = () => ({ data: [], isClient: false });
+export const useStairspaceListingsData = () => ({ data: [], isClient: false });
+export const useLeasesData = () => ({ data: [], isClient: false });
+export const useStockItemsData = () => ({ data: [], isClient: false });
+export const useGiftCardsData = () => ({ data: [], isClient: false });
+export const useStudentsData = () => ({ data: [], isClient: false });
+export const useCommunitiesData = () => ({ data: [], isClient: false });
+export const useCommunityEventsData = () => ({ data: [], isClient: false });
+export const useCommunityFinancesData = () => ({ data: [], isClient: false });
+export const useMembersData = () => ({ data: [], isClient: false });
+export const useAlumniJobsData = () => ({ data: [], isClient: false });
+export const useCarsData = () => ({ data: [], isClient: false });
+export const useRentalAgenciesData = () => ({ data: [], isClient: false });
+export const usePosProductsData = () => ({ data: [], isClient: false });
+export const useBriefcaseData = () => ({ data: null, isClient: false, setData: () => {} });
+export const useKnowledgeBaseData = () => ({ data: [], isClient: false, setData: () => {} });
+export const useClientsData = () => ({ data: [], isClient: false });
+export const useTestimonialsData = () => ({ data: [], isClient: false });
+export const useStagesData = () => ({ data: [], isClient: false });
+export const useAgenciesData = () => ({ data: [], isClient: false });
+export const useWorkersData = () => ({ data: [], isClient: false });
+export const useBeautyCentersData = () => ({ data: [], isClient: false });
+export const useBeautySpecialistsData = () => ({ data: [], isClient: false, setData: () => {} });
+export const useBeautyServicesData = () => ({ data: [], isClient: false });
+export const useBeautyAppointmentsData = () => ({ data: [], isClient: false });
+export const useUsedItemsData = () => ({ data: [], isClient: false });
+export const useSettingsData = () => ({ data: null, isClient: false, setData: () => {} });
+export const useCostSettingsData = () => ({ data: [], isClient: false });
+export const usePricingData = () => ({ data: [], isClient: false });
+export const useApplicationsData = () => ({ data: [], isClient: false });
+export const useAiToolsData = () => ({ data: [], isClient: false });
+export const useSolutionsData = () => ({ data: [], isClient: false });
+export const useIndustriesData = () => ({ data: [], isClient: false });
+export const useDailySalesData = () => ({ data: [], isClient: false });
+export const useUserDocumentsData = () => ({ data: [], isClient: false });
+export const useSaaSProductsData = () => ({ data: [], isClient: false });
+export const useStaffData = () => ({ leadership: [], staff: [], agentCategories: [], isClient: false });
