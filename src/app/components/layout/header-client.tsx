@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -133,7 +133,7 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {(industries || []).map((component) => (
-                       <Link href={component.href} key={component.title} passHref asChild>
+                      <Link href={component.href} key={component.title} passHref asChild>
                           <ListItem
                             title={component.title}
                             iconName={component.icon}

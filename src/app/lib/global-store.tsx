@@ -1,8 +1,7 @@
-
 'use client';
 
-import React, { createContext, useContext, ReactNode, useRef, useEffect, useState } from 'react';
 import { createStore, useStore as useZustandStore } from 'zustand';
+import React, { createContext, useContext, ReactNode, useRef } from 'react';
 import type { AppState } from './initial-state';
 import { getInitialState } from './initial-state';
 
@@ -12,7 +11,7 @@ export type AppStore = AppState & {
 
 export const createAppStore = (initState: Partial<AppState> = {}) => {
   const initialState = { ...getInitialState(), ...initState };
-  return createStore<AppStore>((set) => ({
+  return createStore<AppStore>()((set) => ({
     ...initialState,
     set: (updater) => set(updater),
   }));
@@ -23,11 +22,11 @@ export type StoreType = ReturnType<typeof createAppStore>;
 export const StoreContext = createContext<StoreType | null>(null);
 
 export function useGlobalStore<T>(selector: (state: AppState) => T): T {
-  const store = useContext(StoreContext)
+  const store = useContext(StoreContext);
   if (!store) {
-    throw new Error('useGlobalStore must be used within a StoreProvider')
+    throw new Error('useGlobalStore must be used within a StoreProvider');
   }
-  return useZustandStore(store, selector)
+  return useZustandStore(store, selector);
 }
 
 export function useSetStore() {
