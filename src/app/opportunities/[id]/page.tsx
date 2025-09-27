@@ -6,13 +6,6 @@ import OpportunityDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-export async function generateStaticParams() {
-    const opportunities = await getOpportunities();
-    return opportunities.map((opp) => ({
-        id: opp.id,
-    }));
-}
-
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const opportunities = await getOpportunities();
   const opportunity = opportunities.find(p => p.id === params.id);
@@ -32,10 +25,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function OpportunityDetailPage({ params }: { params: { id: string } }) {
     const opportunities = await getOpportunities();
     const opportunity = opportunities.find(p => p.id === params.id);
-    
-    if (!opportunity) {
-        notFound();
-    }
     
     return <OpportunityDetailClientPage opportunity={opportunity} />;
 }

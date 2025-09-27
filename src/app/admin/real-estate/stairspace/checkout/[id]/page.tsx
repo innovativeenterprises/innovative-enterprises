@@ -7,13 +7,6 @@ import { SuccessContent } from '@/app/real-estate-tech/stairspace/success-conten
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-export async function generateStaticParams() {
-  const requests = await getStairspaceRequests();
-  return requests.map((req) => ({
-    id: req.id,
-  }));
-}
-
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const requests = await getStairspaceRequests();
   const request = requests.find(r => r.id === params.id);
@@ -28,7 +21,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     description: "Your StairSpace booking payment was successful.",
   };
 }
-
 
 function AdminSuccessPage({ requestId }: { requestId: string | null}) {
     return (

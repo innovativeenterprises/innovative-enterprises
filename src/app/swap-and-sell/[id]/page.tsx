@@ -4,13 +4,7 @@
 import { getUsedItems } from "@/lib/firestore";
 import ItemDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
-
-export async function generateStaticParams() {
-    const items = await getUsedItems();
-    return items.map((item) => ({
-        id: item.id,
-    }));
-}
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const items = await getUsedItems();

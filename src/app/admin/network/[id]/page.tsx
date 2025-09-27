@@ -6,13 +6,6 @@ import ProviderProfileClientPage from './client-page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-export async function generateStaticParams() {
-  const providers = await getProviders();
-  return providers.map((provider) => ({
-    id: provider.id!,
-  }));
-}
-
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const providers = await getProviders();
   const provider = providers.find(p => p.id === params.id);
