@@ -1,9 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import type { Client } from '@/lib/clients.schema';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useClientsData } from '@/hooks/use-data-hooks';
 
@@ -14,7 +12,7 @@ export default function OverviewAvatars() {
         return <div className="flex -space-x-2 w-24 h-10 bg-gray-200 rounded-full animate-pulse" />;
     }
   
-  const overviewClients = clients.slice(0, 3);
+  const overviewClients = (clients || []).slice(0, 3);
 
   return (
     <div className="flex -space-x-2">

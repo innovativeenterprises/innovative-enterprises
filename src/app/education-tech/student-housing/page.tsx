@@ -1,4 +1,7 @@
 
+
+'use server';
+
 import StudentHousingClientPage from './client-page';
 import type { Metadata } from 'next';
 

@@ -43,8 +43,8 @@ const ListingGridSkeleton = () => (
     </div>
 );
 
-export default function StairspaceClientPage({ initialListings }: { initialListings: StairspaceListing[] }) {
-    const { data: listings, isClient } = useStairspaceListingsData(initialListings);
+export default function StairspaceClientPage() {
+    const { data: listings, isClient } = useStairspaceListingsData();
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredItems = useMemo(() => {

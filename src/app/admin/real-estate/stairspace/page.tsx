@@ -1,4 +1,7 @@
 
+
+'use client';
+
 import StairspaceRequestsClientPage from "./client-page";
 import type { Metadata } from 'next';
 

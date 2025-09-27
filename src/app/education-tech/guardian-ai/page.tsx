@@ -1,8 +1,8 @@
 
-'use server';
+
+'use client';
 
 import GuardianAiClientPage from './client-page';
-import { getStudents } from '@/lib/firestore';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 };
 
 
-export default async function GuardianAiPage() {
-    const students = await getStudents();
-    return <GuardianAiClientPage initialStudents={students} />;
+export default function GuardianAiPage() {
+    return <GuardianAiClientPage />;
 }

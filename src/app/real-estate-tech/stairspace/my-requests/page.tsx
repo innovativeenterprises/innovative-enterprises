@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import MyRequestsClientPage from './client-page';
@@ -12,6 +13,5 @@ export const metadata: Metadata = {
 
 
 export default async function MyRequestsPage() {
-    const requests = await getStairspaceRequests();
-    return <MyRequestsClientPage initialRequests={requests} />;
+    return <MyRequestsClientPage />;
 }
