@@ -1,14 +1,30 @@
 
-'use client';
+'use server';
 
 import { Suspense } from 'react';
-import { useParams } from 'next/navigation';
-import { SuccessContent } from '@/app/real-estate-tech/stairspace/success-content';
+import { getStairspaceRequests } from '@/lib/firestore';
+import { SuccessContent } from '@/app/real-estate/stairspace/success-content';
+import type { Metadata } from 'next';
 
-function AdminSuccessPage() {
-    const params = useParams();
-    const requestId = params.id as string;
-    
+export async function generateStaticParams() {
+  const requests = await getStairspaceRequests();
+  return requests.map((req) => ({
+    id: req.id,
+  }));
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const requests = await getStairspaceRequests();
+  const request = requests.find(r => r.id === params.id);
+  const title = request ? `Booking Confirmed: ${request.listingTitle}` : "Booking Confirmed";
+  return {
+    title,
+    description: "Your StairSpace booking payment was successful.",
+  };
+}
+
+
+function AdminSuccessPage({ requestId }: { requestId: string | null}) {
     return (
         <SuccessContent 
             requestId={requestId}
@@ -19,10 +35,12 @@ function AdminSuccessPage() {
     )
 }
 
-export default function AdminStairspaceCheckoutSuccessPage() {
+export default function AdminStairspaceCheckoutSuccessPage({ params }: { params: { id: string } }) {
+    const requestId = params.id as string;
+    
     return (
         <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
-            <AdminSuccessPage />
+            <AdminSuccessPage requestId={requestId} />
         </Suspense>
     );
 }
