@@ -23,10 +23,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import ScholarshipFinderForm from './scholarship-form';
 import InterviewCoachForm from '@/app/interview-coach/coach-form';
 import { useSearchParams } from 'next/navigation';
-import { useSettings } from '@/components/layout/settings-provider';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 
 const WellbeingChat = ({ studentName }: { studentName: string }) => {
-    const { settings } = useSettings();
+    const { data: settings } = useSettingsData();
 
     const checkinFlow = async (input: { [key: string]: any }) => {
         return await wellbeingCheckin({ studentQuery: input.message });
@@ -41,7 +41,6 @@ const WellbeingChat = ({ studentName }: { studentName: string }) => {
                 welcomeMessage={`Hi ${studentName}, this is a safe space to talk. How are you feeling today?`}
                 placeholder="You can talk about anything..."
                 aiFlow={checkinFlow}
-                settings={settings!}
             />
         </DialogContent>
     )

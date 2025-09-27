@@ -68,7 +68,7 @@ export const DueDateDisplay = ({
         (displayState.daysRemaining >= 0 ? (
           <span className={cn('font-medium', displayState.daysRemaining < 7 && 'text-destructive')}>
             {' '}
-            ({displayState.daysRemaining} days left)
+            ({displayState.daysRemaining} {displayState.daysRemaining === 1 ? 'day' : 'days'} left)
           </span>
         ) : (
           <span className="text-destructive font-medium"> (Overdue)</span>

@@ -1,14 +1,13 @@
 
-
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useStore as useZustandStore } from 'zustand';
 import type { AppState } from '@/lib/initial-state';
 import { StoreContext } from '@/app/lib/global-store';
 
 // This custom hook simplifies accessing the store and its setter.
-function useGlobalStore<T>(selector: (state: AppState) => T): T {
+export function useGlobalStore<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext);
   if (!store) {
     throw new Error('useGlobalStore must be used within a StoreProvider');
@@ -17,7 +16,7 @@ function useGlobalStore<T>(selector: (state: AppState) => T): T {
 }
 
 // This custom hook simplifies accessing the `set` function of the store.
-function useSetStore() {
+export function useSetStore() {
     const store = useContext(StoreContext);
     if (!store) {
         throw new Error('useSetStore must be used within a StoreProvider');
@@ -26,22 +25,19 @@ function useSetStore() {
 }
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return (initialData?: AppState[K]) => {
+  const useDataHook = () => {
     const data = useGlobalStore((state) => state[key]);
     const set = useSetStore();
-    const isClient = useGlobalStore((state) => state.isClient);
-
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
+    const isClient = useGlobalStore((state) => state.isClient);
 
-    if (initialData && !isClient) {
-        console.warn("useDataHook: initialData is provided on the server. This has no effect. Data is hydrated on the client from the root provider.");
-    }
-    
     return { data: data as AppState[K], setData, isClient };
   };
+  return useDataHook;
 };
+
 
 export const useCartData = createDataHook('cart');
 export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
@@ -98,6 +94,3 @@ export const useStaffData = () => {
     return { leadership, staff, agentCategories, isClient };
 };
 
-export { useGlobalStore, useSetStore };
-
-    

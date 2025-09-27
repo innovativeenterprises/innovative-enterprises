@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -25,7 +24,6 @@ export default function CfoPageClient() {
     if (!isClient || !cfoData) {
         return (
              <div className="space-y-8">
-                <Skeleton className="h-12 w-1/2" />
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28" />)}
                 </div>
@@ -42,12 +40,6 @@ export default function CfoPageClient() {
     
     return (
         <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold">CFO Dashboard</h1>
-                <p className="text-muted-foreground">
-                    A real-time overview of the company's financial health.
-                </p>
-            </div>
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {kpiData.map(item => {
                     const Icon = kpiIcons[item.icon] || Icons.DollarSign;

@@ -1,4 +1,5 @@
 
+'use server';
 
 import CfoPageClient from '@/app/cfo/client-page';
 import type { Metadata } from 'next';
@@ -44,5 +45,3 @@ export default async function CfoPage() {
         </div>
     );
 }
-
-    

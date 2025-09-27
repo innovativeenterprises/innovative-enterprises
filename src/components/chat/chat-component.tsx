@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import type { Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
-import { useSettingsData } from '@/hooks/use-data-hooks.tsx';
+import { useSettingsData } from '@/hooks/use-data-hooks';
 
 
 interface Message {
@@ -130,7 +130,7 @@ export const ChatComponent = ({
     form.reset();
 
     try {
-      const result = await aiFlow({ question: message, message: message, query: message });
+      const result = await aiFlow({ message: message });
       const botMessage: Message = { 
           role: 'bot', 
           content: result.answer || result.response,

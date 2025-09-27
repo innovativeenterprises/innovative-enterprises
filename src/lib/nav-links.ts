@@ -275,7 +275,7 @@ export const initialAiTools = [
     title: "Building Systems Estimator",
     href: "/construction-tech/building-systems-estimator",
     description: "Get AI-powered cost estimates for Fire Safety & Smart Home systems.",
-    icon: 'Building2',
+    icon: 'Siren',
   },
    {
     title: "AI-POS",
