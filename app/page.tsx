@@ -1,28 +1,16 @@
 
-
-'use client';
+'use server';
 
 import HomeClient from './home-client';
-import { useEffect, useState } from 'react';
-import { SplashScreen } from '@/components/splash-screen';
-import { useGlobalStore } from './lib/global-store';
+import type { Metadata } from 'next';
 
-export default function HomePage() {
-  const [loading, setLoading] = useState(true);
-  const isClient = useGlobalStore(state => state.isClient);
+export const metadata: Metadata = {
+  title: "INNOVATIVE ENTERPRISES - AI-Powered Business Platform",
+  description: "An AI-powered business services platform for the Omani market that automates key operations, connects a network of service providers, and provides a suite of intelligent tools to enhance business productivity and digital transformation.",
+};
 
-  useEffect(() => {
-    if (isClient) {
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 2000); // Simulate loading time
-      return () => clearTimeout(timer);
-    }
-  }, [isClient]);
 
-  if (loading) {
-    return <SplashScreen />;
-  }
-
+export default async function HomePage() {
+  // This is a Server Component, it renders the Client Component which will handle the splash screen logic.
   return <HomeClient />;
 }

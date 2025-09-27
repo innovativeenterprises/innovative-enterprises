@@ -42,7 +42,7 @@ import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { UserDocument } from './user-documents';
-import * as firestore from './firestore';
+import * as firestore from '@/lib/firestore';
 
 // Define the shape of the global state
 export interface AppState {

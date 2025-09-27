@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useServicesData, useProductsData, useClientsData, useTestimonialsData, useAiToolsData } from '@/hooks/use-data-hooks';
+import { useState, useEffect } from 'react';
+import { useServicesData, useProductsData, useClientsData, useTestimonialsData, useAiToolsData, useGlobalStore } from '@/hooks/use-data-hooks';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -11,6 +12,7 @@ import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import ClientTestimonials from "@/components/client-testimonials-client";
 import AiToolsCta from "@/components/ai-tools-cta";
+import { SplashScreen } from '@/components/splash-screen';
 
 
 function CompanyOverview() {
@@ -77,12 +79,28 @@ function CompanyOverview() {
 
 
 export default function HomeClient() {
+  const [loading, setLoading] = useState(true);
+  const isClient = useGlobalStore(state => state.isClient);
+
   // These hooks now safely access the pre-loaded data from the global store
   useServicesData();
   useProductsData();
   useClientsData();
   useTestimonialsData();
   useAiToolsData();
+  
+  useEffect(() => {
+    if (isClient) {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 2000); // Simulate loading time
+      return () => clearTimeout(timer);
+    }
+  }, [isClient]);
+
+  if (loading) {
+    return <SplashScreen />;
+  }
   
   return (
     <>
