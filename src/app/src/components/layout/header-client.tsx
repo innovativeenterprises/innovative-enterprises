@@ -37,15 +37,16 @@ import * as Icons from 'lucide-react';
 import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSettingsData } from '@/hooks/use-data-hooks';
 
 const ListItem = React.forwardRef<
-  React.ElementRef<typeof Link>,
-  React.ComponentPropsWithoutRef<typeof Link> & { iconName: string; title: string }
->(({ className, title, children, iconName, ...props }, ref) => {
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string; href: string; }
+>(({ className, title, children, iconName, href, ...props }, ref) => {
   const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
     <li>
       <NavigationMenuLink asChild>
-        <Link
+        <a
           ref={ref}
+          href={href}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
             className
@@ -59,7 +60,7 @@ const ListItem = React.forwardRef<
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
-        </Link>
+        </a>
       </NavigationMenuLink>
     </li>
   )

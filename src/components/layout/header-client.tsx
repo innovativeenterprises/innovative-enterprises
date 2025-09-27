@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -15,15 +15,6 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
@@ -35,16 +26,25 @@ import DesktopNavLinks from './desktop-nav-links';
 import type { AppSettings } from '@/lib/settings';
 import * as Icons from 'lucide-react';
 import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSettingsData } from '@/hooks/use-data-hooks';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 
 const ListItem = React.forwardRef<
-  React.ElementRef<typeof Link>,
-  React.ComponentPropsWithoutRef<typeof Link> & { iconName: string; title: string }
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string }
 >(({ className, title, children, iconName, ...props }, ref) => {
   const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
     <li>
       <NavigationMenuLink asChild>
-        <Link
+        <a
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
@@ -59,7 +59,7 @@ const ListItem = React.forwardRef<
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
-        </Link>
+        </a>
       </NavigationMenuLink>
     </li>
   )
@@ -102,7 +102,11 @@ export default function HeaderClient() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <span>INNOVATIVE ENTERPRISES</span>
+          {settings?.headerImageUrl ? (
+            <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+          ) : (
+            <span>INNOVATIVE ENTERPRISES</span>
+          )}
         </Link>
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
@@ -112,14 +116,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
                     {(solutions || []).map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        iconName={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
+                       <Link href={component.href} key={component.title} passHref legacyBehavior>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -129,14 +133,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {(industries || []).map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        iconName={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
+                      <Link href={component.href} key={component.title} passHref legacyBehavior>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -146,14 +150,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
                     {(aiTools || []).map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        iconName={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
+                       <Link href={component.href} key={component.title} passHref legacyBehavior>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -201,7 +205,11 @@ export default function HeaderClient() {
                  <SheetHeader className="p-4 border-b">
                     <SheetTitle>
                         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" onClick={handleLinkClick}>
-                           <span>INNOVATIVE ENTERPRISES</span>
+                             {settings?.headerImageUrl ? (
+                                <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
+                            ) : (
+                                <span>INNOVATIVE ENTERPRISES</span>
+                            )}
                         </Link>
                     </SheetTitle>
                     <SheetDescription className="sr-only">
