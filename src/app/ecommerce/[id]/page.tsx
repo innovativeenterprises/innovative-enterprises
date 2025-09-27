@@ -1,4 +1,3 @@
-
 'use server';
 
 import { getStoreProducts } from "@/lib/firestore";

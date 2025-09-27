@@ -1,4 +1,3 @@
-
 'use server';
 
 import { getRaahaData } from '@/lib/firestore';
