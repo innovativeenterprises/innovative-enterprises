@@ -13,9 +13,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { generateLetterOfInterest } from '@/ai/flows/letter-of-interest';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Send } from 'lucide-react';
+import { Loader2, Send, Download, FileText, Presentation } from 'lucide-react';
 import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
 import { useProductsData, useStaffData, useServicesData, useSettingsData } from '@/hooks/use-data-hooks';
+import type { Product } from '@/lib/products.schema';
+import { generateFeasibilityStudy } from '@/ai/flows/feasibility-study';
+import Image from 'next/image';
+import { StageBadge } from '@/components/stage-badge';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import Link from "next/link";
+import { useRouter } from 'next/navigation';
+
 
 const FormSchema = z.object({
   fullName: z.string().min(3, "Full name is required."),
@@ -29,6 +38,62 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
+const ProjectCard = ({ project }: { project: Product }) => {
+    const { toast } = useToast();
+
+    const handleGenerateFeasibilityStudy = async () => {
+        toast({ title: 'Generating Feasibility Study...', description: 'Please wait while Sage analyzes the project.' });
+        try {
+            const study = await generateFeasibilityStudy({ businessIdea: project.description });
+            // For this prototype, we'll generate a simple PDF on the fly.
+            const doc = new jsPDF();
+            doc.setFontSize(18);
+            doc.text(study.title, 14, 22);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            const summaryText = doc.splitTextToSize(`Executive Summary: ${study.executiveSummary}`, 180);
+            doc.text(summaryText, 14, 32);
+            // In a real app, you would format the full study.
+            doc.save(`${project.name}_Feasibility_Study.pdf`);
+            toast({ title: 'Feasibility Study Generated!', description: 'Your PDF download should begin shortly.' });
+        } catch (e) {
+            toast({ title: 'Error', description: 'Could not generate feasibility study.', variant: 'destructive'});
+        }
+    }
+    
+    // Placeholder functions for other documents
+    const handleGeneratePitchDeck = (format: 'PDF' | 'PPT') => {
+        toast({ title: `Generating ${format} Pitch Deck...`, description: `This feature is coming soon for ${project.name}.` });
+    }
+
+    return (
+        <Card className="flex flex-col">
+            <CardHeader>
+                <div className="relative aspect-video w-full rounded-md overflow-hidden">
+                    <Image src={project.image || 'https://placehold.co/600x400'} alt={project.name} fill className="object-cover" />
+                     {project.stage && <StageBadge stage={project.stage} />}
+                </div>
+                <CardTitle className="pt-4">{project.name}</CardTitle>
+                <CardDescription>{project.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow">
+                 <p className="text-xs text-muted-foreground">Category: <span className="font-semibold">{project.category}</span></p>
+            </CardContent>
+            <CardFooter className="flex-col items-start gap-4">
+                 <div>
+                    <h4 className="text-sm font-semibold mb-2">Investor Documents</h4>
+                    <div className="flex flex-wrap gap-2">
+                         <Button onClick={() => handleGeneratePitchDeck('PDF')} variant="outline" size="sm"><Download className="mr-2 h-4 w-4" /> Pitch Deck (PDF)</Button>
+                         <Button onClick={() => handleGeneratePitchDeck('PPT')} variant="outline" size="sm"><Presentation className="mr-2 h-4 w-4"/> Pitch Deck (PPT)</Button>
+                         <Button onClick={handleGenerateFeasibilityStudy} variant="outline" size="sm"><FileText className="mr-2 h-4 w-4"/> Feasibility Study</Button>
+                    </div>
+                </div>
+            </CardFooter>
+        </Card>
+    );
+};
+
+
 export default function InvestPage() {
     const { data: staffData } = useStaffData();
     const { data: services } = useServicesData();
@@ -41,6 +106,15 @@ export default function InvestPage() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      fullName: '',
+      organizationName: '',
+      investorType: '',
+      country: '',
+      website: '',
+      investmentRange: '',
+      areaOfInterest: '',
+    },
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -64,6 +138,8 @@ export default function InvestPage() {
       setIsLoading(false);
     }
   };
+  
+  const investableProducts = (products || []).filter(p => p.stage !== 'Live & Operating');
 
   return (
     <div className="bg-background min-h-[calc(100vh-8rem)]">
@@ -74,79 +150,84 @@ export default function InvestPage() {
             Join us on our journey to revolutionize the business landscape in Oman and beyond. We are seeking strategic partners and investors to fuel our growth and expand our portfolio of innovative AI-driven products.
           </p>
         </div>
-        <div className="max-w-3xl mx-auto mt-12 grid gap-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Register Your Interest</CardTitle>
-                    <CardDescription>
-                        Complete the form below to receive a formal Letter of Interest and begin the conversation. For a comprehensive overview of our company, you can also download our dynamic company profile.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <CompanyProfileDownloader 
-                        staffData={staffData} 
-                        services={services} 
-                        settings={settings!}
-                        products={products}
-                    />
-                </CardContent>
-            </Card>
+        <div className="max-w-6xl mx-auto mt-12 grid gap-8">
+            
+            <div className="space-y-8">
+                <h2 className="text-3xl font-bold text-center">Investment Opportunities</h2>
+                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {investableProducts.map(product => (
+                        <ProjectCard key={product.id} project={product} />
+                    ))}
+                </div>
+            </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Investor Inquiry Form</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <div className="grid md:grid-cols-2 gap-6">
-                            <FormField control={form.control} name="fullName" render={({ field }) => (<FormItem><FormLabel>Full Name / Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                            <FormField control={form.control} name="organizationName" render={({ field }) => (<FormItem><FormLabel>Organization (Optional)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                        </div>
-                        <div className="grid md:grid-cols-2 gap-6">
-                             <FormField
-                                control={form.control}
-                                name="investorType"
-                                render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Investor Type</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                        <SelectValue placeholder="Select your investor type..." />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="Angel Investor">Angel Investor</SelectItem>
-                                        <SelectItem value="Venture Capital">Venture Capital</SelectItem>
-                                        <SelectItem value="Corporate Venture">Corporate Venture</SelectItem>
-                                        <SelectItem value="Government Fund">Government Fund</SelectItem>
-                                        <SelectItem value="Private Equity">Private Equity</SelectItem>
-                                    </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                                )}
+            <div className="space-y-8">
+                 <h2 className="text-3xl font-bold text-center pt-8 border-t">General Inquiry</h2>
+                <div className="grid md:grid-cols-2 gap-8 items-start">
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Register Your Interest</CardTitle>
+                            <CardDescription>
+                                Complete the form to receive a formal Letter of Interest. For a comprehensive overview, download our dynamic company profile.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <CompanyProfileDownloader 
+                                staffData={staffData} 
+                                services={services} 
+                                settings={settings!}
+                                products={products}
                             />
-                            <FormField control={form.control} name="country" render={({ field }) => (<FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="e.g., Oman" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                        </div>
-                        <FormField control={form.control} name="website" render={({ field }) => (<FormItem><FormLabel>Website (Optional)</FormLabel><FormControl><Input placeholder="https://example.com" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                         <FormField control={form.control} name="investmentRange" render={({ field }) => (<FormItem><FormLabel>Anticipated Investment Range (Optional)</FormLabel><FormControl><Input placeholder="e.g., OMR 50k - 200k" {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                        <FormField control={form.control} name="areaOfInterest" render={({ field }) => (
-                            <FormItem><FormLabel>Primary Area of Interest</FormLabel><FormControl><Textarea placeholder="Tell us which of our products, services, or industries you are most interested in." rows={4} {...field} /></FormControl><FormMessage/></FormItem>
-                        )}/>
-                        <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-                            {isLoading ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Letter...</>
-                            ) : (
-                            <><Send className="mr-2 h-4 w-4" /> Submit Inquiry & Generate Letter</>
-                            )}
-                        </Button>
-                    </form>
-                    </Form>
-                </CardContent>
-            </Card>
-
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Investor Inquiry Form</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <FormField control={form.control} name="fullName" render={({ field }) => (<FormItem><FormLabel>Full Name / Contact Person</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                                <FormField
+                                        control={form.control}
+                                        name="investorType"
+                                        render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Investor Type</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                <SelectValue placeholder="Select your investor type..." />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="Angel Investor">Angel Investor</SelectItem>
+                                                <SelectItem value="Venture Capital">Venture Capital</SelectItem>
+                                                <SelectItem value="Corporate Venture">Corporate Venture</SelectItem>
+                                                <SelectItem value="Government Fund">Government Fund</SelectItem>
+                                                <SelectItem value="Private Equity">Private Equity</SelectItem>
+                                            </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                        )}
+                                    />
+                                <FormField control={form.control} name="areaOfInterest" render={({ field }) => (
+                                    <FormItem><FormLabel>Primary Area of Interest</FormLabel><FormControl><Textarea placeholder="Tell us which industries or technologies you are most interested in." rows={4} {...field} /></FormControl><FormMessage/></FormItem>
+                                )}/>
+                                <Button type="submit" disabled={isLoading} className="w-full">
+                                    {isLoading ? (
+                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</>
+                                    ) : (
+                                    <><Send className="mr-2 h-4 w-4" /> Submit Inquiry & Generate Letter</>
+                                    )}
+                                </Button>
+                            </form>
+                            </Form>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
             {letterContent && (
                 <Card className="mt-8">
                     <CardHeader>
