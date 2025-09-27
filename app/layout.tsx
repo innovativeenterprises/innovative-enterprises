@@ -4,6 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from '@/app/providers';
+import { getFirestoreData, type AppState } from '@/lib/initial-state';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -48,16 +49,17 @@ export const metadata: Metadata = {
 }
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialState = await getFirestoreData();
   return (
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <Providers>
+          <Providers initialState={{...initialState, isClient: true}}>
             {children}
           </Providers>
       </body>

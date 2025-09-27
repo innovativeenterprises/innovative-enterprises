@@ -3,25 +3,28 @@
 
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useRef } from 'react';
 import ChatWidget from '@/components/chat-widget';
-import { SplashScreen } from '@/components/splash-screen';
 import MainLayout from './main-layout';
 import { StoreProvider } from '@/lib/global-store';
+import { createAppStore, type StoreType } from '@/lib/global-store';
+import type { AppState } from '@/lib/initial-state';
 
 
 export function Providers({
   children,
+  initialState,
 }: {
   children: ReactNode;
+  initialState: AppState;
 }) {
-  const [isLoading, setIsLoading] = useState(true);
+  const storeRef = useRef<StoreType>();
+  if (!storeRef.current) {
+    storeRef.current = createAppStore(initialState);
+  }
 
   return (
-    <StoreProvider onHydrated={() => setIsLoading(false)}>
-      {isLoading ? (
-        <SplashScreen />
-      ) : (
+    <StoreProvider store={storeRef.current}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -32,7 +35,6 @@ export function Providers({
           <Toaster />
           <ChatWidget />
         </ThemeProvider>
-      )}
     </StoreProvider>
   );
 }
