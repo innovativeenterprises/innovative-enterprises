@@ -38,7 +38,7 @@ import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSe
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { iconName: string, title: string, href: string }
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string; href: string }
 >(({ className, title, children, iconName, href, ...props }, ref) => {
     const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
@@ -117,7 +117,7 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
                     {(solutions || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior passHref>
+                       <Link href={component.href} key={component.title} legacyBehavior={false} passHref>
                           <ListItem
                             title={component.title}
                             iconName={component.icon}
@@ -134,7 +134,7 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {(industries || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior passHref>
+                       <Link href={component.href} key={component.title} legacyBehavior={false} passHref>
                           <ListItem
                             title={component.title}
                             iconName={component.icon}
@@ -151,7 +151,7 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
                     {(aiTools || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior passHref>
+                       <Link href={component.href} key={component.title} legacyBehavior={false} passHref>
                           <ListItem
                             title={component.title}
                             iconName={component.icon}
