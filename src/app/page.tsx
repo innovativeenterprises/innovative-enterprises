@@ -1,6 +1,4 @@
 
-'use server';
-
 import HomeClient from './home-client';
 import type { Metadata } from 'next';
 
@@ -11,5 +9,6 @@ export const metadata: Metadata = {
 
 
 export default async function HomePage() {
+  // This is a Server Component, it renders the Client Component which will handle the splash screen logic.
   return <HomeClient />;
 }
