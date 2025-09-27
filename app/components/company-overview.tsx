@@ -1,4 +1,3 @@
-
 'use client';
 
 import CompanyOverviewClient from './company-overview-client';
