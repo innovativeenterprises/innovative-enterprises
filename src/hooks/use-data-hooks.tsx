@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useStore as useZustandStore } from 'zustand';
 import type { AppState } from '@/lib/initial-state';
 import { StoreContext } from '@/lib/global-store';
@@ -24,17 +24,13 @@ function useSetStore() {
     return store.getState().set;
 }
 
-const useCreateDataHook = <K extends keyof AppState>(key: K) => {
+const createDataHook = <K extends keyof AppState>(key: K) => {
   return (initialData?: AppState[K]) => {
     const data = useStore((state) => state[key]);
     const set = useSetStore();
-
-    useEffect(() => {
-        if (initialData) {
-            set((state) => ({ ...state, [key]: initialData }));
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    
+    // The useEffect was removed as it's not the correct pattern for initializing store data.
+    // The store is now initialized in the Providers component.
 
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
@@ -44,52 +40,52 @@ const useCreateDataHook = <K extends keyof AppState>(key: K) => {
   };
 };
 
-export const useCartData = useCreateDataHook('cart');
-export const useStairspaceRequestsData = useCreateDataHook('stairspaceRequests');
-export const useRequestsData = useCreateDataHook('raahaRequests');
-export const useProductsData = useCreateDataHook('products');
-export const useStoreProductsData = useCreateDataHook('storeProducts');
-export const useProvidersData = useCreateDataHook('providers');
-export const useOpportunitiesData = useCreateDataHook('opportunities');
-export const useServicesData = useCreateDataHook('services');
-export const useCfoData = useCreateDataHook('cfoData');
-export const useAssetsData = useCreateDataHook('assets');
-export const usePropertiesData = useCreateDataHook('properties');
-export const useStairspaceListingsData = useCreateDataHook('stairspaceListings');
-export const useLeasesData = useCreateDataHook('signedLeases');
-export const useStockItemsData = useCreateDataHook('stockItems');
-export const useGiftCardsData = useCreateDataHook('giftCards');
-export const useStudentsData = useCreateDataHook('students');
-export const useCommunitiesData = useCreateDataHook('communities');
-export const useCommunityEventsData = useCreateDataHook('communityEvents');
-export const useCommunityFinancesData = useCreateDataHook('communityFinances');
-export const useMembersData = useCreateDataHook('communityMembers');
-export const useAlumniJobsData = useCreateDataHook('alumniJobs');
-export const useCarsData = useCreateDataHook('cars');
-export const useRentalAgenciesData = useCreateDataHook('rentalAgencies');
-export const usePosProductsData = useCreateDataHook('posProducts');
-export const useBriefcaseData = useCreateDataHook('briefcase');
-export const useKnowledgeBaseData = useCreateDataHook('knowledgeBase');
-export const useClientsData = useCreateDataHook('clients');
-export const useTestimonialsData = useCreateDataHook('testimonials');
-export const useStagesData = useCreateDataHook('stages');
-export const useAgenciesData = useCreateDataHook('raahaAgencies');
-export const useWorkersData = useCreateDataHook('raahaWorkers');
-export const useBeautyCentersData = useCreateDataHook('beautyCenters');
-export const useBeautySpecialistsData = useCreateDataHook('beautySpecialists');
-export const useBeautyServicesData = useCreateDataHook('beautyServices');
-export const useBeautyAppointmentsData = useCreateDataHook('beautyAppointments');
-export const useUsedItemsData = useCreateDataHook('usedItems');
-export const useSettingsData = useCreateDataHook('settings');
-export const useCostSettingsData = useCreateDataHook('costSettings');
-export const usePricingData = useCreateDataHook('pricing');
-export const useApplicationsData = useCreateDataHook('applications');
-export const useAiToolsData = useCreateDataHook('aiTools');
-export const useSolutionsData = useCreateDataHook('solutions');
-export const useIndustriesData = useCreateDataHook('industries');
-export const useDailySalesData = useCreateDataHook('dailySales');
-export const useUserDocumentsData = useCreateDataHook('userDocuments');
-export const useSaaSProductsData = useCreateDataHook('saasProducts');
+export const useCartData = createDataHook('cart');
+export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
+export const useRequestsData = createDataHook('raahaRequests');
+export const useProductsData = createDataHook('products');
+export const useStoreProductsData = createDataHook('storeProducts');
+export const useProvidersData = createDataHook('providers');
+export const useOpportunitiesData = createDataHook('opportunities');
+export const useServicesData = createDataHook('services');
+export const useCfoData = createDataHook('cfoData');
+export const useAssetsData = createDataHook('assets');
+export const usePropertiesData = createDataHook('properties');
+export const useStairspaceListingsData = createDataHook('stairspaceListings');
+export const useLeasesData = createDataHook('signedLeases');
+export const useStockItemsData = createDataHook('stockItems');
+export const useGiftCardsData = createDataHook('giftCards');
+export const useStudentsData = createDataHook('students');
+export const useCommunitiesData = createDataHook('communities');
+export const useCommunityEventsData = createDataHook('communityEvents');
+export const useCommunityFinancesData = createDataHook('communityFinances');
+export const useMembersData = createDataHook('communityMembers');
+export const useAlumniJobsData = createDataHook('alumniJobs');
+export const useCarsData = createDataHook('cars');
+export const useRentalAgenciesData = createDataHook('rentalAgencies');
+export const usePosProductsData = createDataHook('posProducts');
+export const useBriefcaseData = createDataHook('briefcase');
+export const useKnowledgeBaseData = createDataHook('knowledgeBase');
+export const useClientsData = createDataHook('clients');
+export const useTestimonialsData = createDataHook('testimonials');
+export const useStagesData = createDataHook('stages');
+export const useAgenciesData = createDataHook('raahaAgencies');
+export const useWorkersData = createDataHook('raahaWorkers');
+export const useBeautyCentersData = createDataHook('beautyCenters');
+export const useBeautySpecialistsData = createDataHook('beautySpecialists');
+export const useBeautyServicesData = createDataHook('beautyServices');
+export const useBeautyAppointmentsData = createDataHook('beautyAppointments');
+export const useUsedItemsData = createDataHook('usedItems');
+export const useSettingsData = createDataHook('settings');
+export const useCostSettingsData = createDataHook('costSettings');
+export const usePricingData = createDataHook('pricing');
+export const useApplicationsData = createDataHook('applications');
+export const useAiToolsData = createDataHook('aiTools');
+export const useSolutionsData = createDataHook('solutions');
+export const useIndustriesData = createDataHook('industries');
+export const useDailySalesData = createDataHook('dailySales');
+export const useUserDocumentsData = createDataHook('userDocuments');
+export const useSaaSProductsData = createDataHook('saasProducts');
 
 export const useStaffData = () => {
     const leadership = useStore((state) => state.leadership);
