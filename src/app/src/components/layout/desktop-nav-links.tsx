@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -22,7 +23,7 @@ export default function DesktopNavLinks() {
     <>
       {navLinks.map((link) => (
         <NavigationMenuItem key={link.href}>
-          <Link href={link.href} legacyBehavior passHref>
+          <Link href={link.href} passHref>
             <NavigationMenuLink active={pathname === link.href} className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}>
                 {link.label}
             </NavigationMenuLink>
@@ -33,4 +34,3 @@ export default function DesktopNavLinks() {
   );
 };
 
-  

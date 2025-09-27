@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -116,7 +117,7 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
                     {(solutions || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior passHref>
+                      <Link href={component.href} key={component.title} legacyBehavior passHref>
                           <ListItem
                             title={component.title}
                             iconName={component.icon}
@@ -252,4 +253,3 @@ export default function HeaderClient() {
   );
 }
 
-  
