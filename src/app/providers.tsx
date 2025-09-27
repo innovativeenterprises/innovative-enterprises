@@ -24,7 +24,7 @@ export function Providers({
 
   // Set the isClient flag to true once the component mounts on the client
   useEffect(() => {
-    storeRef.current?.setState({ isClient: true });
+    storeRef.current?.getState().set(state => ({ ...state, isClient: true }));
   }, []);
 
   return (

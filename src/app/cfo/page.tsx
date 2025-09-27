@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import CfoPageClient from '@/app/cfo/client-page';
@@ -45,4 +46,3 @@ export default async function CfoPage() {
         </div>
     );
 }
-

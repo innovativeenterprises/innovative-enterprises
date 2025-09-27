@@ -5,19 +5,16 @@ import { useGlobalStore, useSetStore } from '@/app/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  const useDataHook = () => {
+  return () => {
     const data = useGlobalStore((state) => state[key]);
     const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
     const isClient = useGlobalStore((state) => state.isClient);
-
     return { data: data as AppState[K], setData, isClient };
   };
-  return useDataHook;
 };
-
 
 export const useCartData = createDataHook('cart');
 export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
