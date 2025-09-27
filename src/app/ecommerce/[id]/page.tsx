@@ -1,8 +1,10 @@
+
 'use server';
 
 import { getStoreProducts } from "@/lib/firestore";
 import ProductDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
     const products = await getStoreProducts();
@@ -31,6 +33,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
     const products = await getStoreProducts();
     const product = products.find(p => String(p.id) === params.id);
+
+    if (!product) {
+        notFound();
+    }
 
     return <ProductDetailClientPage product={product} />;
 }

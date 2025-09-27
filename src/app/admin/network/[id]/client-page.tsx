@@ -1,7 +1,6 @@
 
 'use client';
 
-import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
@@ -40,11 +39,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | st
     )
 }
 
-export default function ProviderProfileClientPage({ provider }: { provider?: Provider }) {
-    
-    if (!provider) {
-        notFound();
-    }
+export default function ProviderProfileClientPage({ provider }: { provider: Provider }) {
     
     const getStatusBadge = (status: string) => {
         switch (status) {
