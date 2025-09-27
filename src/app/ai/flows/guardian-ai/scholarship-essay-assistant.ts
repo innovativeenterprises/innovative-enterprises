@@ -1,5 +1,4 @@
 
-
 'use server';
 
 /**
@@ -52,7 +51,16 @@ const generateScholarshipEssayFlow = ai.defineFlow(
         outputSchema: ScholarshipEssayOutputSchema,
     },
     async (input) => {
-        const { output } = await prompt(input);
+        const { output } = await ai.generate({
+          prompt: prompt,
+          input: input,
+          model: 'googleai/gemini-1.5-flash',
+          output: {
+            format: 'json',
+            schema: ScholarshipEssayOutputSchema,
+          }
+        });
+
         return output!;
     }
 );

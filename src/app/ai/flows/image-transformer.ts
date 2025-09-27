@@ -17,7 +17,7 @@ export const transformImage = ai.defineFlow(
     },
     async (input) => {
         const { media } = await ai.generate({
-            model: 'googleai/gemini-2.5-flash-image-preview',
+            model: 'googleai/gemini-1.5-flash-image-preview',
             prompt: [
                 { media: { url: input.baseImageUri } },
                 { text: input.prompt },
