@@ -5,7 +5,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recha
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getStatusBadge } from "@/components/status-badges";
-import { useProductsData, useProvidersData, useOpportunitiesData, useServicesData, useStaffData } from '@/hooks/use-data-hooks.tsx';
+import { useProductsData, useProvidersData, useOpportunitiesData, useServicesData, useStaffData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
 
 
@@ -87,4 +87,3 @@ export default function AdminDashboardPage() {
         </div>
     );
 }
-
