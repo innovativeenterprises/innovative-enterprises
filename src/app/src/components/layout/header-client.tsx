@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -15,15 +15,6 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
@@ -35,18 +26,26 @@ import DesktopNavLinks from './desktop-nav-links';
 import type { AppSettings } from '@/lib/settings';
 import * as Icons from 'lucide-react';
 import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSettingsData } from '@/hooks/use-data-hooks';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string; href: string; }
->(({ className, title, children, iconName, href, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string; }
+>(({ className, title, children, iconName, ...props }, ref) => {
   const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
     <li>
       <NavigationMenuLink asChild>
         <a
           ref={ref}
-          href={href}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
             className
