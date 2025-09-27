@@ -1,5 +1,6 @@
 
-import CfoPageClient from './client-page';
+
+import CfoPageClient from '@/app/cfo/client-page';
 import type { Metadata } from 'next';
 import { Card, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

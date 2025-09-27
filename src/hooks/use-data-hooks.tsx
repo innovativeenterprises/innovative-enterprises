@@ -1,7 +1,8 @@
 
+
 'use client';
 
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useStore as useZustandStore } from 'zustand';
 import type { AppState } from '@/lib/initial-state';
 import { StoreContext } from '@/app/lib/global-store';
@@ -25,13 +26,19 @@ function useSetStore() {
 }
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return () => {
+  return (initialData?: AppState[K]) => {
     const data = useGlobalStore((state) => state[key]);
     const set = useSetStore();
+    const isClient = useGlobalStore((state) => state.isClient);
+
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
-    const isClient = useGlobalStore((state) => state.isClient);
+
+    if (initialData && !isClient) {
+        console.warn("useDataHook: initialData is provided on the server. This has no effect. Data is hydrated on the client from the root provider.");
+    }
+    
     return { data: data as AppState[K], setData, isClient };
   };
 };
