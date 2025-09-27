@@ -42,7 +42,7 @@ import type { CfoData } from './cfo-data.schema';
 import type { Property } from './properties.schema';
 import type { Solution, Industry, AiTool } from './nav-links';
 import type { UserDocument } from './user-documents';
-import * as firestore from '@/lib/firestore';
+import * as firestore from './firestore';
 
 // Define the shape of the global state
 export interface AppState {
@@ -101,7 +101,7 @@ export interface AppState {
 
 
 // This provides the default, empty state for the application.
-// Actual data will be fetched client-side.
+// Actual data will be fetched server-side in the root layout.
 export const getInitialState = (): AppState => ({
   isClient: false,
   settings: initialSettings,
@@ -156,8 +156,8 @@ export const getInitialState = (): AppState => ({
   userDocuments: [],
 });
 
-// New function to fetch all data, intended to be used on the client.
-export const getFirestoreData = async () => {
+// New function to fetch all data on the server.
+export const getFirestoreData = async (): Promise<Partial<AppState>> => {
   const [
     products, storeProducts, services, providers, opportunities, clients, testimonials, pricing,
     posProducts, dailySales, stages, assets, investors, properties, stairspaceListings,
@@ -188,4 +188,3 @@ export const getFirestoreData = async () => {
     saasProducts, cfoData, ...staffData, userDocuments,
   };
 };
-

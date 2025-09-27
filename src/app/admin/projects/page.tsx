@@ -1,6 +1,4 @@
 
-'use client';
-
 import ProjectsPageClient from "./client-page";
 import type { Metadata } from 'next';
 

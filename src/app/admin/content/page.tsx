@@ -1,3 +1,4 @@
+
 import AdminContentClientPage from './client-page';
 import type { Metadata } from 'next';
 
