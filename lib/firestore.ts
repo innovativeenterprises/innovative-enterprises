@@ -33,7 +33,7 @@ import { initialUsedItems } from './used-items';
 import { initialSettings } from './settings';
 import { initialKnowledgeBase } from './knowledge';
 import { initialApplications } from './admissions-applications';
-import { initialBriefcase } from './briefcase';
+import { initialBriefcase } from '@/lib/briefcase';
 import { initialSolutions, initialIndustries, initialAiTools } from './nav-links';
 import { saasProducts } from './saas-products';
 import { initialBeautySpecialists } from './beauty-specialists';

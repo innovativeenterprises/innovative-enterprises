@@ -33,7 +33,7 @@ import type { DailySales, PosProduct, CartItem } from '../lib/pos-data.schema';
 import type { SaasCategory } from '../lib/saas-products.schema';
 import type { StockItem } from '../lib/stock-items.schema';
 import type { Pricing } from '../lib/pricing.schema';
-import { initialBriefcase, type BriefcaseData } from '../lib/briefcase';
+import { initialBriefcase, type BriefcaseData } from '@/lib/briefcase';
 import type { Application } from '../lib/admissions-applications';
 import type { ProjectStage } from '../lib/stages';
 import type { Investor } from '../lib/investors.schema';
