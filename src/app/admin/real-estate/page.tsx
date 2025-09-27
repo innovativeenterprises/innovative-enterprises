@@ -1,5 +1,6 @@
 
-'use server';
+
+'use client';
 
 import type { Metadata } from 'next';
 import AdminRealEstateClientPage from './client-page';
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
     description: "Manage property listings and utilize real estate AI tools."
 };
 
-export default async function AdminRealEstatePage() {
+export default function AdminRealEstatePage() {
     return (
         <AdminRealEstateClientPage />
     );

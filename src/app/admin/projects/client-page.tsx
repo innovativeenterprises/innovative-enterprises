@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Loader2, Sparkles } from "lucide-react";
 import type { Product } from '@/lib/products.schema';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
-import { useProductsData, useStagesData } from "@/hooks/use-data-hooks.tsx";
+import { useProductsData, useStagesData } from "@/hooks/use-data-hooks";
 
 export default function ProjectsPageClient() {
     const { data: products, setData: setProducts } = useProductsData();

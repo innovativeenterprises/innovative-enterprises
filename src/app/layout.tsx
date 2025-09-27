@@ -64,7 +64,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', cairo.variable, exo2.variable)}>
-          <Providers initialState={initialState as AppState}>
+          <Providers initialState={{...initialState, isClient: true}}>
             {children}
           </Providers>
       </body>
