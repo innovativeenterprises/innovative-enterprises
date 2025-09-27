@@ -206,6 +206,7 @@ export default function InvestPage() {
                                                 <SelectItem value="Corporate Venture">Corporate Venture</SelectItem>
                                                 <SelectItem value="Government Fund">Government Fund</SelectItem>
                                                 <SelectItem value="Private Equity">Private Equity</SelectItem>
+                                                <SelectItem value="Donation">Donation</SelectItem>
                                             </SelectContent>
                                             </Select>
                                             <FormMessage />
