@@ -22,40 +22,16 @@ export type StoreType = ReturnType<typeof createAppStore>;
 
 export const StoreContext = createContext<StoreType | null>(null);
 
-export function StoreProvider({ children }: { children: ReactNode; }) {
+export function StoreProvider({ children, initialState }: { children: ReactNode; initialState?: Partial<AppState> }) {
     const storeRef = useRef<StoreType>();
-    const [isInitialized, setIsInitialized] = useState(false);
 
     if (!storeRef.current) {
-        storeRef.current = createAppStore();
+        storeRef.current = createAppStore(initialState);
     }
 
-    useEffect(() => {
-        const store = storeRef.current!;
-        const currentState = store.getState();
-        
-        if (!currentState.isClient) {
-            getFirestoreData().then(data => {
-                store.setState(state => ({
-                    ...state,
-                    ...data,
-                    isClient: true,
-                }));
-                 setIsInitialized(true);
-            }).catch(error => {
-                console.error("Failed to load initial data:", error);
-                store.setState(state => ({ ...state, isClient: true })); // Still unblock UI
-                 setIsInitialized(true);
-            });
-        } else {
-            setIsInitialized(true);
-        }
-    }, []);
-
-    // We render children only when the store has been initialized
     return (
         <StoreContext.Provider value={storeRef.current}>
-            {isInitialized ? children : null}
+            {children}
         </StoreContext.Provider>
     );
 };

@@ -9,6 +9,7 @@ import MainLayout from './main-layout';
 import { createAppStore, StoreContext, type StoreType } from '@/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 
+
 export function Providers({
   children,
   initialState,
