@@ -3,10 +3,10 @@
 
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { type ReactNode, useRef } from 'react';
+import { type ReactNode, useRef, useEffect } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import MainLayout from './main-layout';
-import { createAppStore, StoreProvider, type StoreType } from '@/lib/global-store.tsx';
+import { createAppStore, StoreContext, type StoreType } from '@/app/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 
 
@@ -15,15 +15,20 @@ export function Providers({
   initialState,
 }: {
   children: ReactNode;
-  initialState: AppState;
+  initialState: Partial<AppState>;
 }) {
   const storeRef = useRef<StoreType>();
   if (!storeRef.current) {
     storeRef.current = createAppStore(initialState);
   }
 
+  // Set the isClient flag to true once the component mounts on the client
+  useEffect(() => {
+    storeRef.current?.getState().set(state => ({ ...state, isClient: true }));
+  }, []);
+
   return (
-    <StoreProvider store={storeRef.current}>
+    <StoreContext.Provider value={storeRef.current}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -34,6 +39,6 @@ export function Providers({
           <Toaster />
           <ChatWidget />
         </ThemeProvider>
-    </StoreProvider>
+    </StoreContext.Provider>
   );
 }

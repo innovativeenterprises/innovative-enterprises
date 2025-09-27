@@ -1,10 +1,7 @@
 
-
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import type { Client } from '@/lib/clients.schema';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useClientsData } from '@/hooks/use-data-hooks';
 
