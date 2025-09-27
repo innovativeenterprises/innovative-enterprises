@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, User, Briefcase, ShoppingCart, Moon, Sun, Search } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import {
   NavigationMenu,
@@ -15,6 +15,15 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
@@ -26,19 +35,10 @@ import DesktopNavLinks from './desktop-nav-links';
 import type { AppSettings } from '@/lib/settings';
 import * as Icons from 'lucide-react';
 import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSettingsData } from '@/hooks/use-data-hooks';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string; }
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string }
 >(({ className, title, children, iconName, ...props }, ref) => {
   const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
