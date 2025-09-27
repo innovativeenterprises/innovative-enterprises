@@ -1,7 +1,8 @@
 
-'use server';
 
-import StudentFinancialsClientPage from '@/app/admin/education-tech/student-financials/client-page';
+'use client';
+
+import StudentFinancialsClientPage from "./client-page";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,6 +11,6 @@ export const metadata: Metadata = {
 };
 
 
-export default async function AdminStudentFinancialsPage() {
+export default function AdminStudentFinancialsPage() {
     return <StudentFinancialsClientPage />;
 }

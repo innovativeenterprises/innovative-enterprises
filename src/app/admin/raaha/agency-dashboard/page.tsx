@@ -1,9 +1,8 @@
 
 'use client';
 
-import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
-import type { Metadata } from 'next';
+import AgencyDashboardClientPage from '@/app/raaha/agency-dashboard/page';
 
-export default function AgencyDashboardPage() {
-    return <AgencyDashboardClientPage dashboardType="raaha" />;
+export default function AdminRaahaAgencyDashboardPage() {
+    return <AgencyDashboardClientPage />;
 }

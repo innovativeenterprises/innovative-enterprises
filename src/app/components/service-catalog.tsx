@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import ServiceCatalogClient from './service-catalog-client';
@@ -8,7 +9,7 @@ export default function ServiceCatalog() {
   const { data: services } = useServicesData();
   
   return (
-    <ServiceCatalogClient services={services} />
+    <ServiceCatalogClient services={services || []} />
   );
 }
 

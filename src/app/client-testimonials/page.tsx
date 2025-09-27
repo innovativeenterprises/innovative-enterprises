@@ -1,5 +1,6 @@
 
-'use server';
+
+'use client';
 
 import ClientTestimonialsClient from "@/components/client-testimonials-client";
 import type { Metadata } from 'next';
@@ -9,7 +10,6 @@ export const metadata: Metadata = {
     description: 'See what our clients are saying about our innovative solutions and partnership.',
 };
 
-export default async function ClientTestimonialsPage() {
-    // The client component now fetches its own data from the global store.
+export default function ClientTestimonialsPage() {
     return <ClientTestimonialsClient />;
 }
