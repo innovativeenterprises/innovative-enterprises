@@ -1,12 +1,13 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useMemo, useEffect } from "react";
+import type { Metadata } from 'next';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, PlusCircle, Edit, Trash2, GraduationCap, Briefcase, DollarSign, Home, User } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, PlusCircle, Edit, Trash2, GraduationCap } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from 'next/link';
@@ -15,7 +16,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Student } from '@/lib/students.schema';
 import { AddEditStudentDialog, type StudentValues } from './student-form';
 import { useStudentsData } from "@/hooks/use-data-hooks";
-import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "Admin - Student Records",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function StudentRecordsClientPage() {
+export default function StudentRecordsPage() {
     const { data: students, setData: setStudents, isClient } = useStudentsData();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<Student | undefined>(undefined);
@@ -62,7 +62,7 @@ export default function StudentRecordsClientPage() {
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
-                <div className="max-w-6xl mx-auto space-y-8">
+                <div className="max-w-4xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
                             <Link href="/education-tech/eduflow">
@@ -72,7 +72,7 @@ export default function StudentRecordsClientPage() {
                         </Button>
                         <div className="text-center">
                             <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                                <User className="w-10 h-10 text-primary" />
+                                <GraduationCap className="w-10 h-10 text-primary" />
                             </div>
                             <h1 className="text-4xl md:text-5xl font-bold text-primary">Student Records</h1>
                             <p className="mt-4 text-lg text-muted-foreground">
@@ -86,19 +86,17 @@ export default function StudentRecordsClientPage() {
                                 <CardTitle>All Students</CardTitle>
                                 <CardDescription>A comprehensive list of all students enrolled.</CardDescription>
                             </div>
-                            <Button onClick={() => handleOpenDialog()}>
+                             <Button onClick={() => handleOpenDialog()}>
                                 <PlusCircle className="mr-2 h-4 w-4"/> Add Student
                             </Button>
                         </CardHeader>
                         <CardContent>
-                             <AddEditStudentDialog 
-                                isOpen={isDialogOpen}
+                            <AddEditStudentDialog 
+                                isOpen={isDialogOpen} 
                                 onOpenChange={setIsDialogOpen}
+                                student={selectedStudent} 
                                 onSave={handleSave}
-                                student={selectedStudent}
-                             >
-                                <div />
-                            </AddEditStudentDialog>
+                            />
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -151,4 +149,3 @@ export default function StudentRecordsClientPage() {
         </div>
     );
 }
-

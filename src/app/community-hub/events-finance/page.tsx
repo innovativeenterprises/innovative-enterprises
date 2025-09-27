@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect } from "react";
 import { AddEditTransactionDialog, type TransactionValues } from './transaction-form';
 import { type Community } from '@/lib/communities';
 import { type CommunityEvent } from '@/lib/community-events';
-import type { CommunityFinance } from '@/lib/community-finances';
+import { type CommunityFinance } from '@/lib/community-finances';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from "@/components/ui/button";
@@ -151,4 +151,3 @@ export default function EventsFinancePage() {
         </div>
     );
 }
-

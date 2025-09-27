@@ -44,7 +44,7 @@ const AddEditMemberDialog = ({
     member, 
     communities,
     onSave, 
-    children 
+    children
 }: { 
     member?: CommunityMember, 
     communities: Community[],
@@ -215,4 +215,3 @@ export default function MembershipPage() {
         </div>
     );
 }
-
