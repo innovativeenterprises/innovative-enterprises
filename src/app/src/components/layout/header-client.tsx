@@ -38,7 +38,7 @@ import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSe
 
 const ListItem = React.forwardRef<
   React.ElementRef<typeof Link>,
-  React.ComponentPropsWithoutRef<typeof Link> & { iconName: string }
+  React.ComponentPropsWithoutRef<typeof Link> & { iconName: string, title: string }
 >(({ className, title, children, iconName, ...props }, ref) => {
     const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
