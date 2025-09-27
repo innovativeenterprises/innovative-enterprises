@@ -2,7 +2,7 @@
 'use client';
 
 import ServiceCatalogClient from './service-catalog-client';
-import { useServicesData } from '@/hooks/use-data-hooks.tsx';
+import { useServicesData } from '@/hooks/use-data-hooks';
 
 export default function ServiceCatalog() {
   const { data: services } = useServicesData();

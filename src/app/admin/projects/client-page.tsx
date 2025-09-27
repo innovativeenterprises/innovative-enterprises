@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,11 +6,10 @@ import { KanbanBoard } from "@/components/kanban-board";
 import { Button } from "@/components/ui/button";
 import { generateProjectPlan } from '@/ai/flows/project-inception';
 import { useToast } from "@/hooks/use-toast";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { PlusCircle, Loader2, Sparkles } from "lucide-react";
 import type { Product } from '@/lib/products.schema';
-import type { ProjectStage } from '@/lib/stages';
 import { AddEditProductDialog, type ProductValues } from '@/app/admin/product-form-dialog';
-import { useProductsData, useStagesData } from "@/hooks/use-data-hooks";
+import { useProductsData, useStagesData } from "@/hooks/use-data-hooks.tsx";
 
 export default function ProjectsPageClient() {
     const { data: products, setData: setProducts } = useProductsData();
@@ -25,12 +25,12 @@ export default function ProjectsPageClient() {
     };
 
     const handleSave = (values: ProductValues, id?: number) => {
-        if (id) {
+        if (id !== undefined) {
             setProducts(prev => prev.map(p => (p.id === id ? { ...p, ...values } as Product : p)));
             toast({ title: 'Project updated successfully.' });
         } else {
             const newProduct = { ...values, id: Date.now() };
-            setProducts(prev => [newProduct, ...prev]);
+            setProducts(prev => [newProduct as Product, ...prev]);
             toast({ title: 'Project added successfully.' });
         }
     };

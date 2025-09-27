@@ -22,21 +22,6 @@ export type StoreType = ReturnType<typeof createAppStore>;
 
 export const StoreContext = createContext<StoreType | null>(null);
 
-export function StoreProvider({ children, initialState }: { children: ReactNode; initialState: any }) {
-    const storeRef = useRef<StoreType>();
-    
-    if (!storeRef.current) {
-        storeRef.current = createAppStore(initialState);
-        storeRef.current.setState(state => ({...state, isClient: true}));
-    }
-
-    return (
-        <StoreContext.Provider value={storeRef.current}>
-            {children}
-        </StoreContext.Provider>
-    );
-};
-
 export function useGlobalStore<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext)
   if (!store) {
@@ -54,21 +39,13 @@ export function useSetStore() {
 }
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return (initialData?: AppState[K]) => {
-    const store = useContext(StoreContext);
-    if (!store) {
-      throw new Error(`useDataHook for ${String(key)} must be used within a StoreProvider`);
-    }
-
-    if (initialData && !store.getState()[key]?.length && !store.getState().isClient) {
-        store.setState({ [key]: initialData } as any);
-    }
-    
-    const data = useZustandStore(store, (state) => state[key]);
+  return () => {
+    const data = useGlobalStore((state) => state[key]);
+    const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
-      store.getState().set((state) => ({ ...state, [key]: updater(state[key]) }));
+      set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
-    const isClient = useZustandStore(store, (state) => state.isClient);
+    const isClient = useGlobalStore((state) => state.isClient);
     return { data: data as AppState[K], setData, isClient };
   };
 };
@@ -121,13 +98,9 @@ export const useUserDocumentsData = createDataHook('userDocuments');
 export const useSaaSProductsData = createDataHook('saasProducts');
 
 export const useStaffData = () => {
-    const store = useContext(StoreContext);
-    if (!store) {
-      throw new Error('useStaffData must be used within a StoreProvider');
-    }
-    const leadership = useZustandStore(store, (state) => state.leadership);
-    const staff = useZustandStore(store, (state) => state.staff);
-    const agentCategories = useZustandStore(store, (state) => state.agentCategories);
-    const isClient = useZustandStore(store, (state) => state.isClient);
+    const leadership = useGlobalStore((state) => state.leadership);
+    const staff = useGlobalStore((state) => state.staff);
+    const agentCategories = useGlobalStore((state) => state.agentCategories);
+    const isClient = useGlobalStore((state) => state.isClient);
     return { leadership, staff, agentCategories, isClient };
 };

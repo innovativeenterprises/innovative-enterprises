@@ -1,7 +1,7 @@
 
-'use client';
+'use server';
 
-import StudentHousingClientPage from "@/app/real-estate-tech/student-housing/client-page";
+import StudentHousingClientPage from './client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,6 +10,6 @@ export const metadata: Metadata = {
 };
 
 
-export default function StudentHousingPage() {
+export default async function StudentHousingPage() {
     return <StudentHousingClientPage />;
 }

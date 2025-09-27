@@ -34,7 +34,7 @@ import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
 import type { AppSettings } from '@/lib/settings';
 import * as Icons from 'lucide-react';
-import { useCartData } from '@/hooks/use-data-hooks.tsx';
+import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSettingsData } from '@/hooks/use-data-hooks';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -83,12 +83,12 @@ const CartButton = () => {
     )
 }
 
-export default function HeaderClient({ solutions, industries, aiTools, settings }: {
-    solutions: Solution[];
-    industries: Industry[];
-    aiTools: AiTool[];
-    settings: AppSettings | null;
-}) { 
+export default function HeaderClient() { 
+  const { data: solutions } = useSolutionsData();
+  const { data: industries } = useIndustriesData();
+  const { data: aiTools } = useAiToolsData();
+  const { data: settings } = useSettingsData();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 

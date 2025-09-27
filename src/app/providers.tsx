@@ -7,7 +7,7 @@ import { type ReactNode, useRef } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import { SplashScreen } from '@/components/splash-screen';
 import MainLayout from './main-layout';
-import { createAppStore, StoreContext } from '@/hooks/use-data-hooks.tsx';
+import { createAppStore, StoreContext } from '@/hooks/use-data-hooks';
 import { type AppState } from './lib/initial-state';
 
 export function Providers({

@@ -1,12 +1,10 @@
 
-'use server';
+'use client';
 
 import FooterClient from "./footer-client";
-import { getSettings } from "@/lib/firestore";
+import { useSettingsData } from "@/hooks/use-data-hooks";
 
-export default async function Footer() {
-  // This component is now server-side and fetches data directly.
-  // The client component will receive this data as props.
-  const settings = await getSettings();
+export default function Footer() {
+  const { data: settings } = useSettingsData();
   return <FooterClient settings={settings} />;
 }

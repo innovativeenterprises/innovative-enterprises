@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -7,7 +8,7 @@ import { Github } from 'lucide-react';
 import type { AppSettings } from '@/lib/settings';
 
 export default function FooterClient({ settings }: { settings: AppSettings | null }) {
-  const currentYear = new Date().getFullYear().toString();
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-t bg-card">

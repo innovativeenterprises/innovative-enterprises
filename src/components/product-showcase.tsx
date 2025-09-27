@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { ShoppingCart } from 'lucide-react';
-import { useCartData, useProductsData } from '@/hooks/use-data-hooks.tsx';
+import { useCartData, useProductsData } from '@/hooks/use-data-hooks';
 import type { Product } from '@/lib/products.schema';
 
 export default function ProductShowcase() {

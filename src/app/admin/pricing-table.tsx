@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Pricing } from "@/lib/pricing.schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Edit } from "lucide-react";
-import { usePricingData } from "@/hooks/use-data-hooks";
+import { usePricingData } from "@/hooks/use-data-hooks.tsx";
 
 
 const PricingFormSchema = z.object({

@@ -14,8 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 import { generateLetterOfInterest } from '@/ai/flows/letter-of-interest';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, Send } from 'lucide-react';
-import CompanyProfileDownloader from './company-profile-downloader';
-import { useProductsData, useStaffData, useServicesData, useSettingsData } from '@/hooks/use-data-hooks';
+import CompanyProfileDownloader from '@/app/invest/company-profile-downloader';
+import { useProductsData, useStaffData, useServicesData, useSettingsData } from '@/hooks/use-data-hooks.tsx';
 
 const FormSchema = z.object({
   fullName: z.string().min(3, "Full name is required."),
@@ -164,4 +164,3 @@ export default function InvestPage() {
     </div>
   );
 }
-
