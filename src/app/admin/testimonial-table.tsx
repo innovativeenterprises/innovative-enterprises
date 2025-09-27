@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Testimonial } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTestimonialsData } from "@/hooks/use-data-hooks.tsx";
+import { useTestimonialsData } from "@/hooks/use-data-hooks";
 
 const TestimonialSchema = z.object({
   quote: z.string().min(10, "Quote is required"),

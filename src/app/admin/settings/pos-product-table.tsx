@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { PosProduct } from "@/lib/pos-data.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
-import { usePosProductsData } from '@/hooks/use-data-hooks.tsx';
+import { usePosProductsData } from '@/hooks/use-data-hooks';
 
 const PosProductSchema = z.object({
   name: z.string().min(2, "Name is required"),
