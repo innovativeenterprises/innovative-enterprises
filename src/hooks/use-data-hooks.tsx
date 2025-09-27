@@ -1,28 +1,8 @@
 
 'use client';
 
-import { useContext, useEffect } from 'react';
-import { useStore as useZustandStore } from 'zustand';
+import { useGlobalStore, useSetStore } from '@/app/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
-import { StoreContext } from '@/app/lib/global-store';
-
-// This custom hook simplifies accessing the store and its setter.
-export function useGlobalStore<T>(selector: (state: AppState) => T): T {
-  const store = useContext(StoreContext);
-  if (!store) {
-    throw new Error('useGlobalStore must be used within a StoreProvider');
-  }
-  return useZustandStore(store, selector);
-}
-
-// This custom hook simplifies accessing the `set` function of the store.
-export function useSetStore() {
-    const store = useContext(StoreContext);
-    if (!store) {
-        throw new Error('useSetStore must be used within a StoreProvider');
-    }
-    return store.getState().set;
-}
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
   const useDataHook = () => {
@@ -94,3 +74,4 @@ export const useStaffData = () => {
     return { leadership, staff, agentCategories, isClient };
 };
 
+export { useGlobalStore, useSetStore };
