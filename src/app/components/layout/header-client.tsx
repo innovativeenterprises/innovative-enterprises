@@ -15,14 +15,6 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
@@ -149,14 +141,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
                     {(aiTools || []).map((component) => (
-                      <Link href={component.href} key={component.title} passHref asChild>
-                        <ListItem
-                          title={component.title}
-                          iconName={component.icon}
-                        >
-                          {component.description}
-                        </ListItem>
-                      </Link>
+                       <Link href={component.href} key={component.title} passHref asChild>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
