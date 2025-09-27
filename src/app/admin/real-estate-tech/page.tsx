@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -7,12 +8,6 @@ import { Building, BarChart, FileText, Home, Search, Tv, Layers, HandCoins, User
 import Link from "next/link";
 import type { Product } from "@/lib/products.schema";
 import { useProductsData } from "@/hooks/use-data-hooks";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "Admin - Real Estate Technology",
-  description: "Manage all Real Estate Tech SaaS platforms and tools."
-};
 
 const ProductCard = ({ product }: { product: Product }) => {
     const iconMap: { [key: string]: React.ElementType } = {

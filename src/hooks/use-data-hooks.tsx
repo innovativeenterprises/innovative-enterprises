@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useContext, useEffect } from 'react';
@@ -25,15 +26,23 @@ function useSetStore() {
 }
 
 const useCreateDataHook = <K extends keyof AppState>(key: K) => {
-  return () => {
+  const useDataHook = (initialData?: AppState[K]) => {
     const data = useStore((state) => state[key]);
     const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
     const isClient = useStore((state) => state.isClient);
+
+    useEffect(() => {
+        if (initialData) {
+            set((state) => ({ ...state, [key]: initialData }));
+        }
+    }, []); // Removed `initialData` and `set` from dependency array to run only once on mount
+
     return { data: data as AppState[K], setData, isClient };
   };
+  return useDataHook;
 };
 
 export const useCartData = useCreateDataHook('cart');

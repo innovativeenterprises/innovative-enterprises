@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -15,15 +16,6 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import React from 'react';
 import Image from 'next/image';
 import { ScrollArea } from '../ui/scroll-area';
@@ -35,6 +27,15 @@ import DesktopNavLinks from './desktop-nav-links';
 import type { AppSettings } from '@/lib/settings';
 import * as Icons from 'lucide-react';
 import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSettingsData } from '@/hooks/use-data-hooks';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -116,14 +117,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
                     {(solutions || []).map((component) => (
-                      <Link href={component.href} key={component.title} legacyBehavior passHref>
-                        <ListItem
-                          title={component.title}
-                          iconName={component.icon}
-                        >
-                          {component.description}
-                        </ListItem>
-                      </Link>
+                      <Link href={component.href} key={component.title} passHref asChild>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -133,14 +134,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {(industries || []).map((component) => (
-                      <Link href={component.href} key={component.title} legacyBehavior passHref>
-                        <ListItem
-                          title={component.title}
-                          iconName={component.icon}
-                        >
-                          {component.description}
-                        </ListItem>
-                      </Link>
+                      <Link href={component.href} key={component.title} passHref asChild>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -150,7 +151,7 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
                     {(aiTools || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior passHref>
+                       <Link href={component.href} key={component.title} passHref asChild>
                           <ListItem
                             title={component.title}
                             iconName={component.icon}

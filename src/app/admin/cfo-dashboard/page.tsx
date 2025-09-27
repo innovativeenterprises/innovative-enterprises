@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -7,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getStatusBadge } from "@/components/status-badges";
 import { DueDateDisplay } from "@/components/due-date-display";
 import * as Icons from 'lucide-react';
-import { useCfoData } from '@/hooks/use-data-hooks.tsx';
+import { useCfoData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const kpiIcons: { [key: string]: React.ElementType } = {
@@ -73,8 +74,8 @@ export default function CfoDashboardPage() {
                                 <XAxis dataKey="month" stroke="#888888" fontSize={12} tickLine={false} axisLine={false}/>
                                 <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `OMR ${value/1000}k`}/>
                                 <Tooltip />
-                                <Bar dataKey="income" fill="#82ca9d" radius={[4, 4, 0, 0]} name="Income" />
-                                <Bar dataKey="expenses" fill="#8884d8" radius={[4, 4, 0, 0]} name="Expenses" />
+                                <Bar dataKey="income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Income" />
+                                <Bar dataKey="expenses" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} name="Expenses" />
                             </BarChart>
                         </ResponsiveContainer>
                     </CardContent>
