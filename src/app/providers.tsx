@@ -1,3 +1,4 @@
+
 'use client';
 
 import { ThemeProvider } from 'next-themes';
@@ -6,7 +7,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { SplashScreen } from '@/components/splash-screen';
 import MainLayout from './main-layout';
 import { StoreProvider, useGlobalStore } from '@/lib/global-store.tsx';
-
+import ChatWidget from '@/components/chat-widget';
 
 function AppContent({ children }: { children: ReactNode }) {
     const { isClient } = useGlobalStore(state => ({ isClient: state.isClient }));
@@ -43,6 +44,7 @@ export function Providers({
       >
         <AppContent>{children}</AppContent>
         <Toaster />
+        <ChatWidget />
       </ThemeProvider>
     </StoreProvider>
   );

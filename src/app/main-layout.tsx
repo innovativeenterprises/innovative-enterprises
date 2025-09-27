@@ -4,7 +4,6 @@
 import { usePathname } from 'next/navigation';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import ChatWidget from '@/components/chat-widget';
 
 export default function MainLayout({
   children,
@@ -26,7 +25,6 @@ export default function MainLayout({
       <Header />
       <main className="flex-grow">{children}</main>
       <Footer />
-      <ChatWidget />
     </div>
   );
 }

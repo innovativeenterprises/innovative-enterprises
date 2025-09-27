@@ -40,7 +40,6 @@ export default function ProjectsPage() {
         toast({ title: 'Generating New Project...', description: 'Navi is analyzing the idea and creating a project plan.' });
 
         try {
-            // In a real scenario, you might get the idea from a form or another source
             const idea = "A B2B marketplace for overstock inventory called StockClear";
             const plan = await generateProjectPlan({ idea });
             
