@@ -1,6 +1,9 @@
-import ProviderProfilePage from '@/app/provider/[id]/page';
-import type { Metadata } from 'next';
+
+'use server';
+
 import { getProviders } from '@/lib/firestore';
+import ProviderProfileClientPage from '@/app/provider/[id]/client-page';
+import type { Metadata } from 'next';
 
 export async function generateStaticParams() {
   const providers = await getProviders();
@@ -27,6 +30,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 // This page now directly renders the client component from the public-facing route.
 // This avoids code duplication while maintaining separate authenticated and public URLs.
-export default function AdminProviderDetailPage() {
-    return <ProviderProfilePage />;
+export default async function AdminProviderDetailPage({ params }: { params: { id: string } }) {
+    const providers = await getProviders();
+    const provider = providers.find(p => p.id === params.id);
+
+    return <ProviderProfileClientPage provider={provider} />;
 }

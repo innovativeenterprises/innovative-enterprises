@@ -8,10 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
-import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers.schema';
-import { DueDateDisplay } from '@/components/due-date-display';
+import { DueDateDisplay } from "@/components/due-date-display";
 
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | string }) => {
@@ -32,7 +31,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | st
             <div className="flex justify-between items-center">
                 <Badge variant="outline">{tier}</Badge>
                 {expiry ? (
-                    <DueDateDisplay date={expiry} prefix="Expires:" />
+                    <DueDateDisplay date={expiry.toString()} prefix="Expires:" />
                 ) : (
                     <Skeleton className="h-4 w-24" />
                 )}
@@ -78,7 +77,7 @@ export default function ProviderProfileClientPage({ provider }: { provider?: Pro
                                     </div>
                                     <CardDescription className="text-base">{provider.services}</CardDescription>
                                     <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-                                        <a href={`mailto:${"'" + provider.email + "'"}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                                        <a href={`mailto:${provider.email}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
                                             <Mail className="h-4 w-4" /> {provider.email}
                                         </a>
                                         {provider.portfolio && 
@@ -90,7 +89,7 @@ export default function ProviderProfileClientPage({ provider }: { provider?: Pro
                                 </div>
                                 <div className="w-full md:w-auto">
                                     <h3 className="text-sm font-medium text-muted-foreground mb-2">Subscription Status</h3>
-                                    <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry as string} />
+                                    <SubscriptionStatus tier={provider.subscriptionTier} expiry={provider.subscriptionExpiry} />
                                 </div>
                             </CardHeader>
                             <CardContent>
