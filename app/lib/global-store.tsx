@@ -22,19 +22,19 @@ export type StoreType = ReturnType<typeof createAppStore>;
 
 export const StoreContext = createContext<StoreType | null>(null);
 
-export function StoreProvider({
-  children,
-  store,
-}: {
-  children: ReactNode;
-  store: StoreType;
-}) {
-  return (
-    <StoreContext.Provider value={store}>
-      {children}
-    </StoreContext.Provider>
-  );
-}
+export function StoreProvider({ children, initialState }: { children: ReactNode; initialState?: Partial<AppState> }) {
+    const storeRef = useRef<StoreType>();
+
+    if (!storeRef.current) {
+        storeRef.current = createAppStore(initialState);
+    }
+
+    return (
+        <StoreContext.Provider value={storeRef.current}>
+            {children}
+        </StoreContext.Provider>
+    );
+};
 
 export function useGlobalStore<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext)

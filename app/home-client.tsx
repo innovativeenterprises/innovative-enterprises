@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useServicesData, useProductsData, useClientsData, useTestimonialsData, useAiToolsData } from '@/hooks/use-data-hooks';
@@ -8,7 +9,7 @@ import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
-import ClientTestimonials from "@/components/client-testimonials";
+import ClientTestimonials from "@/components/client-testimonials-client";
 import AiToolsCta from "@/components/ai-tools-cta";
 
 

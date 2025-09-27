@@ -6,8 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode, useRef } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import MainLayout from './main-layout';
-import { StoreProvider } from '@/lib/global-store';
-import { createAppStore, type StoreType } from '@/lib/global-store';
+import { createAppStore, StoreProvider, type StoreType } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
 

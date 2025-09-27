@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -14,7 +15,7 @@ export default function OverviewAvatars() {
         return <div className="flex -space-x-2 w-24 h-10 bg-gray-200 rounded-full animate-pulse" />;
     }
   
-  const overviewClients = clients.slice(0, 3);
+  const overviewClients = (clients || []).slice(0, 3);
 
   return (
     <div className="flex -space-x-2">
