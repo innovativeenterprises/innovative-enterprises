@@ -4,6 +4,7 @@
 import { getStockItems } from "@/lib/firestore";
 import StockItemDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
     const items = await getStockItems();
@@ -32,6 +33,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function StockItemDetailPage({ params }: { params: { id: string } }) {
     const items = await getStockItems();
     const item = items.find(p => p.id === params.id);
+
+    if (!item) {
+        notFound();
+    }
     
     return <StockItemDetailClientPage item={item} />;
 }

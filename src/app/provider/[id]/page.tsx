@@ -7,10 +7,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
-    const providers = await getProviders();
-    return providers.map((provider) => ({
-        id: provider.id!,
-    }));
+  const providers = await getProviders();
+  return providers.map((provider) => ({
+    id: provider.id!,
+  }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {

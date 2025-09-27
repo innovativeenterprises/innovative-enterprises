@@ -3,8 +3,9 @@
 
 import { Suspense } from 'react';
 import { getStairspaceRequests } from '@/lib/firestore';
-import { SuccessContent } from '@/app/real-estate/stairspace/success-content';
+import { SuccessContent } from '@/app/real-estate-tech/stairspace/success-content';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
   const requests = await getStairspaceRequests();
@@ -16,7 +17,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const requests = await getStairspaceRequests();
   const request = requests.find(r => r.id === params.id);
-  const title = request ? `Booking Confirmed: ${request.listingTitle}` : "Booking Confirmed";
+  
+  if (!request) {
+    notFound();
+  }
+
+  const title = `Booking Confirmed: ${request.listingTitle}`;
   return {
     title,
     description: "Your StairSpace booking payment was successful.",
