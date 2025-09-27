@@ -38,15 +38,14 @@ import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSe
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string; href: string }
->(({ className, title, children, iconName, href, ...props }, ref) => {
-    const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
+  React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string }
+>(({ className, title, children, iconName, ...props }, ref) => {
+  const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
     <li>
       <NavigationMenuLink asChild>
         <a
           ref={ref}
-          href={href}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
             className
@@ -103,11 +102,7 @@ export default function HeaderClient() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          {settings?.headerImageUrl ? (
-            <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
-          ) : (
-            <span>INNOVATIVE ENTERPRISES</span>
-          )}
+          <span>INNOVATIVE ENTERPRISES</span>
         </Link>
         <nav className="hidden md:flex items-center gap-1">
            <NavigationMenu>
@@ -117,14 +112,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
                     {(solutions || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior={false} passHref>
-                          <ListItem
-                            title={component.title}
-                            iconName={component.icon}
-                          >
-                            {component.description}
-                          </ListItem>
-                        </Link>
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        iconName={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -134,14 +129,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {(industries || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior={false} passHref>
-                          <ListItem
-                            title={component.title}
-                            iconName={component.icon}
-                          >
-                            {component.description}
-                          </ListItem>
-                        </Link>
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        iconName={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -151,14 +146,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
                     {(aiTools || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior={false} passHref>
-                          <ListItem
-                            title={component.title}
-                            iconName={component.icon}
-                          >
-                            {component.description}
-                          </ListItem>
-                        </Link>
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                        iconName={component.icon}
+                      >
+                        {component.description}
+                      </ListItem>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -206,11 +201,7 @@ export default function HeaderClient() {
                  <SheetHeader className="p-4 border-b">
                     <SheetTitle>
                         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" onClick={handleLinkClick}>
-                             {settings?.headerImageUrl ? (
-                                <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
-                            ) : (
-                                <span>INNOVATIVE ENTERPRISES</span>
-                            )}
+                           <span>INNOVATIVE ENTERPRISES</span>
                         </Link>
                     </SheetTitle>
                     <SheetDescription className="sr-only">
