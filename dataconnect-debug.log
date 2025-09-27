@@ -1,29 +1,18 @@
-I0926 16:52:53.933681   16052 load.go:31] Reloading schema and connectors...
-W0926 16:52:54.406970   16052 control.go:68] [/emulator/studio 2d02] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
+I0927 05:52:33.105959   14058 load.go:31] Reloading schema and connectors...
+W0927 05:52:33.387546   14058 control.go:68] [/emulator/studio 9af8] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
 example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
 example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
 
 sources: example/queries.gql [455B] 
-I0926 16:52:54.407100   16052 control.go:94] [/emulator/studio 2d02] UpdateResources(): done
+I0927 05:52:33.387652   14058 control.go:94] [/emulator/studio 9af8] UpdateResources(): done
 Schema: sources: schema/schema.gql [1207B] 
 Connector "example": sources: example/queries.gql [455B] 
-E0926 16:52:54.433228   16052 load.go:73] Could not load sources: 
+E0927 05:52:33.391964   14058 load.go:73] Could not load sources: 
 Errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
 example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
 example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
-I0926 16:52:54.471397   16052 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+I0927 05:52:33.393481   14058 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
 Generated sources: prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] 
-I0926 16:52:54.471498   16052 load.go:74] Finished reloading
-I0926 16:52:54.577590   16052 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:9399
-W0926 16:53:07.556204   16052 control.go:68] [/emulator/studio aff1] connector "example" has errors: example/queries.gql:I0926 16:53:40.618273   14941 engine.go:169] [/emulator/studio bbd6] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
-uth".
-example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
-
-sources: example/queries.gql [455B] 
-I0926 16:53:07.565803   16052 control.go:94] [/emulator/studio aff1] UpdateResources(): done
-Schema: sources: schema/schema.gql [1207B] 
-Connector "example": sources: example/queries.gql [455B] 
-I0926 16:53:07.566088   16052 service.go:147] [/emulator/studio aff1] while configuring to server.Settings{ConnectionString:"dbname='fdcdb' host='127.0.0.1' port='5432' sslmode='disable' dbname='fdcdb'", MaxOpenConnection:1, UseDummy:false, EnableGoogleMLIntegration:false, SchemaValidationMode:""}, failed to reload last live sources: 
-Errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
-example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
-example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
+I0927 05:52:33.398067   14058 load.go:74] Finished reloading
+I0927 05:52:33.412606   14058 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+I0927 05:52:33.576196   14058 engine.go:169] [/emulator/studio 9af8] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
