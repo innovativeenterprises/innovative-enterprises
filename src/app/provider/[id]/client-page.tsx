@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Globe, Check, Star } from 'lucide-react';
 import Link from 'next/link';
-import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers.schema';
 import { DueDateDisplay } from "@/components/due-date-display";
@@ -42,7 +41,7 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | st
 
 export default function ProviderProfileClientPage({ provider }: { provider?: Provider }) {
     
-    if (!provider) {
+     if (!provider) {
         notFound();
     }
     

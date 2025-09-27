@@ -1,6 +1,6 @@
+
 'use client';
 
-import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useCartData, useStoreProductsData } from '@/hooks/use-data-hooks';
 import type { Product } from '@/lib/products.schema';
 import { Skeleton } from '@/components/ui/skeleton';
+import { notFound } from 'next/navigation';
 
 const RelatedProductCard = ({ product }: { product: Product }) => (
     <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">

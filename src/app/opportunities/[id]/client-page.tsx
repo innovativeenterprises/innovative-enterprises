@@ -6,7 +6,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { opportunityIconMap, type Opportunity } from "@/lib/opportunities";
+import { opportunityIconMap, type Opportunity } from "@/lib/opportunities.schema";
 import { notFound } from 'next/navigation';
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Calendar, DollarSign, ArrowRight, HelpCircle, Handshake } from "lucide-react";
