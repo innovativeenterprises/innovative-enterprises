@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Provider } from '@/lib/providers.schema';
 import { DueDateDisplay } from "@/components/due-date-display";
+import { notFound } from 'next/navigation';
 
 
 const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | string }) => {
@@ -40,6 +42,10 @@ const SubscriptionStatus = ({ tier, expiry }: { tier: string, expiry?: Date | st
 }
 
 export default function ProviderProfileClientPage({ provider }: { provider: Provider }) {
+    
+     if (!provider) {
+        notFound();
+    }
     
     const getStatusBadge = (status: string) => {
         switch (status) {

@@ -1,9 +1,11 @@
 
+
 'use server';
 
 import { getOpportunities } from "@/lib/firestore";
 import OpportunityDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
     const opportunities = await getOpportunities();
@@ -31,6 +33,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function OpportunityDetailPage({ params }: { params: { id: string } }) {
     const opportunities = await getOpportunities();
     const opportunity = opportunities.find(p => p.id === params.id);
+    
+    if (!opportunity) {
+        notFound();
+    }
     
     return <OpportunityDetailClientPage opportunity={opportunity} />;
 }
