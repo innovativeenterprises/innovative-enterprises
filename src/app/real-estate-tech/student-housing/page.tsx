@@ -2,7 +2,7 @@
 
 'use server';
 
-import StudentHousingClientPage from '@/app/education-tech/student-housing/client-page';
+import StudentHousingClientPage from '@/app/admin/education-tech/student-housing/client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

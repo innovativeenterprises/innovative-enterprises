@@ -1,9 +1,9 @@
 
-'use client';
+
+'use server';
 
 import StairspaceClientPage from './client-page';
 import type { Metadata } from 'next';
-import { useStairspaceListingsData } from '@/hooks/use-data-hooks';
 
 export const metadata: Metadata = {
     title: "StairSpace | Micro-Retail Revolution",
@@ -11,6 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function StairspacePage() {
-    const { data: listings } = useStairspaceListingsData();
-    return <StairspaceClientPage initialListings={listings} />;
+    return <StairspaceClientPage />;
 }

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -21,7 +22,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { extractPropertyDetailsFromUrl } from '@/ai/flows/property-extraction';
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePropertiesData } from "@/hooks/use-data-hooks.tsx";
+import { usePropertiesData } from "@/hooks/use-data-hooks";
 
 const PropertySchema = z.object({
   title: z.string().min(5, "Title is required."),
@@ -43,13 +44,16 @@ type PropertyFormValues = z.infer<typeof PropertySchema>;
 const AddEditPropertyDialog = ({ 
     property, 
     onSave,
-    children 
+    children,
+    isOpen,
+    onOpenChange,
 }: { 
     property?: Property, 
     onSave: (values: PropertyFormValues, id?: string) => void,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    isOpen: boolean,
+    onOpenChange: (open: boolean) => void,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const { toast } = useToast();
     const [urlToScrape, setUrlToScrape] = useState('');
@@ -61,6 +65,7 @@ const AddEditPropertyDialog = ({
     useEffect(() => {
         if(isOpen) {
            form.reset(property || { title: "", listingType: "For Sale", propertyType: "Villa", location: "", price: 0, bedrooms: 3, bathrooms: 4, areaSqM: 300, description: "", status: "Available", buildingAge: "New", imageUrl: "https://picsum.photos/seed/newprop/600/400" });
+           setUrlToScrape('');
         }
     }, [property, form, isOpen]);
 
@@ -96,16 +101,16 @@ const AddEditPropertyDialog = ({
     const onSubmit: SubmitHandler<PropertyFormValues> = async (data) => {
         onSave(data, property?.id);
         form.reset();
-        setIsOpen(false);
+        onOpenChange(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[725px]">
                 <DialogHeader><DialogTitle>{property ? "Edit" : "Add"} Property Listing</DialogTitle></DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[80vh] overflow-y-auto pr-6">
                         <Card className="bg-muted/50">
                              <CardContent className="p-4 pt-6 space-y-4">
                                  <div className="space-y-2">
@@ -184,6 +189,13 @@ const AddEditPropertyDialog = ({
 export default function PropertyTable() {
     const { data: properties, setData: setProperties, isClient } = usePropertiesData();
     const { toast } = useToast();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedProp, setSelectedProp] = useState<Property | undefined>(undefined);
+
+    const handleOpenDialog = (prop?: Property) => {
+        setSelectedProp(prop);
+        setIsDialogOpen(true);
+    };
 
     const handleSave = (values: PropertyFormValues, id?: string) => {
         if (id) {
@@ -217,9 +229,17 @@ export default function PropertyTable() {
                     <CardTitle>Property Listings Management</CardTitle>
                     <CardDescription>Manage all property listings for the Smart Listing platform.</CardDescription>
                 </div>
-                <AddEditPropertyDialog onSave={handleSave}><Button><PlusCircle className="mr-2 h-4 w-4"/> Add Property</Button></AddEditPropertyDialog>
+                 <Button onClick={() => handleOpenDialog()}><PlusCircle className="mr-2 h-4 w-4"/> Add Property</Button>
             </CardHeader>
             <CardContent>
+                 <AddEditPropertyDialog 
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    property={selectedProp} 
+                    onSave={handleSave}
+                >
+                   <div />
+                </AddEditPropertyDialog>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -246,7 +266,7 @@ export default function PropertyTable() {
                                     <TableCell>{getStatusBadge(prop.status)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <AddEditPropertyDialog property={prop} onSave={handleSave}><Button variant="ghost" size="icon"><Edit /></Button></AddEditPropertyDialog>
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(prop)}><Edit /></Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
                                                 <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This will permanently delete "{prop.title}".</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDelete(prop.id!)}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
