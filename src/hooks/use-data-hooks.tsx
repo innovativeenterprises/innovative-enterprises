@@ -1,36 +1,22 @@
 
 'use client';
 
-import { createContext, useContext, ReactNode, useRef } from 'react';
-import { createStore, useStore as useZustandStore } from 'zustand';
+import { useContext } from 'react';
+import { useStore as useZustandStore } from 'zustand';
 import type { AppState } from '@/lib/initial-state';
-import { getInitialState } from '@/lib/initial-state';
+import { StoreContext } from '@/lib/global-store';
 
-export type AppStore = AppState & {
-  set: (updater: (state: AppState) => Partial<AppState>) => void;
-};
-
-export const createAppStore = (initState: Partial<AppState> = {}) => {
-  const initialState = { ...getInitialState(), ...initState };
-  return createStore<AppStore>((set) => ({
-    ...initialState,
-    set: (updater) => set(updater),
-  }));
-};
-
-export type StoreType = ReturnType<typeof createAppStore>;
-
-export const StoreContext = createContext<StoreType | null>(null);
-
-export function useGlobalStore<T>(selector: (state: AppState) => T): T {
-  const store = useContext(StoreContext)
+// This custom hook simplifies accessing the store and its setter.
+function useStore<T>(selector: (state: AppState) => T): T {
+  const store = useContext(StoreContext);
   if (!store) {
-    throw new Error('useGlobalStore must be used within a StoreProvider')
+    throw new Error('useStore must be used within a StoreProvider');
   }
-  return useZustandStore(store, selector)
+  return useZustandStore(store, selector);
 }
 
-export function useSetStore() {
+// This custom hook simplifies accessing the `set` function of the store.
+function useSetStore() {
     const store = useContext(StoreContext);
     if (!store) {
         throw new Error('useSetStore must be used within a StoreProvider');
@@ -40,12 +26,12 @@ export function useSetStore() {
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
   return () => {
-    const data = useGlobalStore((state) => state[key]);
+    const data = useStore((state) => state[key]);
     const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
-    const isClient = useGlobalStore((state) => state.isClient);
+    const isClient = useStore((state) => state.isClient);
     return { data: data as AppState[K], setData, isClient };
   };
 };
@@ -98,9 +84,9 @@ export const useUserDocumentsData = createDataHook('userDocuments');
 export const useSaaSProductsData = createDataHook('saasProducts');
 
 export const useStaffData = () => {
-    const leadership = useGlobalStore((state) => state.leadership);
-    const staff = useGlobalStore((state) => state.staff);
-    const agentCategories = useGlobalStore((state) => state.agentCategories);
-    const isClient = useGlobalStore((state) => state.isClient);
-    return { leadership, staff, agentCategories, isClient };
+    const leadership = useStore((state) => state.leadership);
+    const staff = useStore((state) => state.staff);
+    const agentCategories = useStore((state) => state.agentCategories);
+    const isClient = useStore((state) => state.isClient);
+    return { data: { leadership, staff, agentCategories }, isClient };
 };

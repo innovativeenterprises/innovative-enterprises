@@ -4,6 +4,7 @@
 import { getProperties } from "@/lib/firestore";
 import PropertyDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
     const properties = await getProperties();
@@ -32,6 +33,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function PropertyDetailPage({ params }: { params: { id: string } }) {
     const properties = await getProperties();
     const property = properties.find(p => p.id === params.id);
+
+    if (!property) {
+        notFound();
+    }
     
     return <PropertyDetailClientPage property={property} />;
 }

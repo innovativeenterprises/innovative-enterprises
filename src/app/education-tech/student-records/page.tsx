@@ -2,8 +2,8 @@
 'use server';
 
 import type { Metadata } from 'next';
-import { getStudents } from '@/lib/firestore';
 import StudentRecordsClientPage from './client-page';
+import { getStudents } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "Admin - Student Records",
@@ -12,6 +12,6 @@ export const metadata: Metadata = {
 
 
 export default async function StudentRecordsPage() {
-    const students = await getStudents();
-    return <StudentRecordsClientPage initialStudents={students} />;
+    const initialStudents = await getStudents();
+    return <StudentRecordsClientPage initialStudents={initialStudents} />;
 }

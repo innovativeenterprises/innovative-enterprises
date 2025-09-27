@@ -1,8 +1,9 @@
 
-'use client';
+'use server';
 
 import type { Metadata } from 'next';
-import StudentRecordsClientPage from './client-page';
+import StudentRecordsClientPage from '@/app/education-tech/student-records/client-page';
+import { getStudents } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "Admin - Student Records",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function StudentRecordsPage() {
-    // The client component now fetches its own data from the global store.
-    return <StudentRecordsClientPage />;
+export default async function StudentRecordsPage() {
+    const initialStudents = await getStudents();
+    return <StudentRecordsClientPage initialStudents={initialStudents} />;
 }

@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
-import { useBeautyData } from '@/hooks/use-data-hooks';
+import { useBeautyCentersData, useBeautyServicesData } from '@/hooks/use-data-hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,11 +18,13 @@ import type { BeautyService } from '@/lib/beauty-services.schema';
 export default function AgencyDetailPage() {
     const params = useParams();
     const { id } = params;
-    const { agencies, services, isClient } = useBeautyData();
+    const { data: agencies, isClient: isAgenciesClient } = useBeautyCentersData();
+    const { data: services, isClient: isServicesClient } = useBeautyServicesData();
+    const isClient = isAgenciesClient && isServicesClient;
     
     const [selectedService, setSelectedService] = useState<BeautyService | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
-
+    
     const agency = useMemo(() => {
         if (!isClient) return null;
         return agencies.find(a => a.id === id);
@@ -35,7 +37,7 @@ export default function AgencyDetailPage() {
 
     useEffect(() => {
         if (isClient && !agency) {
-            // notFound(); // notFound can only be used in Server Components
+            notFound();
         }
     }, [isClient, agency]);
     
@@ -105,6 +107,7 @@ export default function AgencyDetailPage() {
                     service={selectedService}
                     isOpen={isFormOpen}
                     onOpenChange={setIsFormOpen}
+                    onClose={() => setIsFormOpen(false)}
                 />
             )}
         </div>

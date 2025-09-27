@@ -1,7 +1,9 @@
-'use client';
+
+'use server';
 
 import StudentHousingClientPage from './client-page';
 import type { Metadata } from 'next';
+import { getLeases } from '@/lib/firestore';
 
 export const metadata: Metadata = {
   title: "Student Housing Management | EduFlow Suite",
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function StudentHousingPage() {
-    return <StudentHousingClientPage />;
+export default async function StudentHousingPage() {
+    const initialLeases = await getLeases();
+    return <StudentHousingClientPage initialLeases={initialLeases} />;
 }

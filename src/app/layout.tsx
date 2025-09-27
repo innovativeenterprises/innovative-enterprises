@@ -4,7 +4,7 @@ import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from './providers';
-import { getFirestoreData } from './lib/initial-state';
+import { getFirestoreData } from '@/lib/initial-state';
 
 const inter = Inter({
   subsets: ['latin'],

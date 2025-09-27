@@ -29,12 +29,11 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-
 export default async function ProviderProfilePage({ params }: { params: { id: string } }) {
     const providers = await getProviders();
     const provider = providers.find(p => p.id === params.id);
-    
-     if (!provider) {
+
+    if (!provider) {
         notFound();
     }
 

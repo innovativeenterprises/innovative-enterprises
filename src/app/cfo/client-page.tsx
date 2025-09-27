@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getStatusBadge } from "@/components/status-badges";
 import { DueDateDisplay } from "@/components/due-date-display";
 import * as Icons from 'lucide-react';
-import { useCfoData } from '@/hooks/use-data-hooks.tsx';
+import { useCfoData } from '@/hooks/use-data-hooks';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const kpiIcons: { [key: string]: React.ElementType } = {
