@@ -6,18 +6,14 @@ import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import ClientTestimonials from "@/components/client-testimonials";
 import AiToolsCta from "@/components/ai-tools-cta";
-import { useProductsData } from "@/hooks/use-data-hooks";
 
 export default function HomeClient() {
-  const { data: products } = useProductsData();
   
-  const liveProducts = (products || []).filter(p => p.stage === 'Live & Operating' && p.enabled);
-
   return (
     <>
       <CompanyOverview />
       <ServiceCatalog />
-      <ProductShowcase products={liveProducts} />
+      <ProductShowcase />
       <ClientTestimonials />
       <AiToolsCta />
     </>

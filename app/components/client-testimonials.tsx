@@ -1,9 +1,9 @@
 
-'use server';
+'use client';
 
 import ClientTestimonialsClient from "@/components/client-testimonials-client";
 
-export default async function ClientTestimonials() {
+export default function ClientTestimonials() {
     return (
         <ClientTestimonialsClient />
     );
