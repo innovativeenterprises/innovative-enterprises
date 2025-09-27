@@ -150,14 +150,14 @@ export default function HeaderClient() {
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
                     {(aiTools || []).map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        iconName={component.icon}
-                      >
-                        {component.description}
-                      </ListItem>
+                       <Link href={component.href} key={component.title} legacyBehavior passHref>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -251,3 +251,5 @@ export default function HeaderClient() {
     </header>
   );
 }
+
+    

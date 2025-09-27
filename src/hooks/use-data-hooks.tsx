@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useStore as useZustandStore } from 'zustand';
 import type { AppState } from '@/lib/initial-state';
 import { StoreContext } from '@/app/lib/global-store';
@@ -25,19 +25,16 @@ function useSetStore() {
 }
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  const useDataHook = () => {
+  return () => {
     const data = useGlobalStore((state) => state[key]);
     const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
     const isClient = useGlobalStore((state) => state.isClient);
-
     return { data: data as AppState[K], setData, isClient };
   };
-  return useDataHook;
 };
-
 
 export const useCartData = createDataHook('cart');
 export const useStairspaceRequestsData = createDataHook('stairspaceRequests');
@@ -95,3 +92,5 @@ export const useStaffData = () => {
 };
 
 export { useGlobalStore, useSetStore };
+
+    
