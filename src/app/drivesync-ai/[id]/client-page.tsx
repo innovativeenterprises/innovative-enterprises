@@ -8,8 +8,13 @@ import { ArrowLeft, MapPin, Calendar, Fuel, Cog, Car } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import type { Car as CarType } from '@/lib/cars.schema';
+import { notFound } from 'next/navigation';
 
-export default function CarDetailClientPage({ car }: { car: CarType }) {
+export default function CarDetailClientPage({ car }: { car?: CarType }) {
+    
+    if (!car) {
+        notFound();
+    }
     
     const details = [
         { icon: Car, label: 'Type', value: car.type },

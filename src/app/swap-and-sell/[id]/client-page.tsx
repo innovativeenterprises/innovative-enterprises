@@ -4,24 +4,22 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
-import { ArrowLeft, MapPin, BedDouble, Bath, Home, Square, Building2, Banknote, Mail } from 'lucide-react';
+import { ArrowLeft, Tag, Info, User, DollarSign, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
-import type { Property } from '@/lib/properties.schema';
+import { Badge } from '@/components/ui/badge';
+import type { UsedItem } from '@/lib/used-items.schema';
 import { notFound } from 'next/navigation';
 
-export default function PropertyDetailClientPage({ property }: { property?: Property }) {
-    
-    if (!property) {
+export default function ItemDetailClientPage({ item }: { item?: UsedItem }) {
+
+    if (!item) {
         notFound();
     }
     
     const details = [
-        { icon: Home, label: 'Type', value: property.propertyType },
-        { icon: Square, label: 'Area', value: `${property.areaSqM} sq.m.` },
-        { icon: BedDouble, label: 'Bedrooms', value: property.bedrooms },
-        { icon: Bath, label: 'Bathrooms', value: property.bathrooms },
-        { icon: Building2, label: 'Building Age', value: property.buildingAge },
-        { icon: Banknote, label: 'Status', value: property.status },
+        { icon: Tag, label: 'Category', value: item.category },
+        { icon: Info, label: 'Condition', value: item.condition },
+        { icon: User, label: 'Seller', value: item.seller },
     ];
 
     return (
@@ -30,9 +28,9 @@ export default function PropertyDetailClientPage({ property }: { property?: Prop
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-8">
                         <Button asChild variant="outline">
-                            <Link href="/real-estate-tech/smart-listing">
+                            <Link href="/swap-and-sell">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to Listings
+                                Back to Marketplace
                             </Link>
                         </Button>
                     </div>
@@ -40,17 +38,15 @@ export default function PropertyDetailClientPage({ property }: { property?: Prop
                         <CardContent className="p-0">
                             <div className="grid lg:grid-cols-2">
                                 <div className="relative h-80 lg:h-full min-h-[400px]">
-                                    <Image src={property.imageUrl} alt={property.title} fill className="object-cover rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none" />
+                                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none" data-ai-hint={item.aiHint} />
                                 </div>
                                 <div className="p-8 flex flex-col">
                                     <CardHeader className="p-0 space-y-2">
-                                        <CardTitle className="text-3xl font-bold">{property.title}</CardTitle>
-                                        <CardDescription className="text-lg flex items-center gap-2 pt-1 text-muted-foreground">
-                                            <MapPin className="h-5 w-5" /> {property.location}
-                                        </CardDescription>
+                                        <Badge variant="outline" className="w-fit">{item.listingType}</Badge>
+                                        <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
                                     </CardHeader>
                                     <div className="py-6 flex-grow">
-                                        <p className="text-foreground/80">{property.description}</p>
+                                        <p className="text-foreground/80">{item.description}</p>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 my-4">
                                         {details.map(detail => (
@@ -65,11 +61,11 @@ export default function PropertyDetailClientPage({ property }: { property?: Prop
                                     </div>
                                     <div className="pt-6 border-t">
                                         <p className="text-sm text-muted-foreground">Price</p>
-                                        <p className="text-4xl font-extrabold text-primary">OMR {property.price.toLocaleString()}</p>
+                                        <p className="text-4xl font-extrabold text-primary">OMR {item.price.toFixed(2)}</p>
                                     </div>
                                     <CardFooter className="p-0 pt-6">
                                         <Button size="lg" className="w-full">
-                                            <Mail className="mr-2 h-5 w-5" /> Contact Agent
+                                            <MessageCircle className="mr-2 h-5 w-5" /> Contact Seller
                                         </Button>
                                     </CardFooter>
                                 </div>

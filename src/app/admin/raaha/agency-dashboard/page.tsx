@@ -7,4 +7,3 @@ import type { Metadata } from 'next';
 export default function AgencyDashboardPage() {
     return <AgencyDashboardClientPage dashboardType="raaha" />;
 }
-

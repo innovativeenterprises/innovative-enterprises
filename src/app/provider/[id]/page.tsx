@@ -1,41 +1,37 @@
 
-'use client';
+'use server';
 
-import { notFound, useParams } from 'next/navigation';
-import { useProvidersData } from '@/hooks/use-data-hooks';
-import { useEffect, useState } from 'react';
-import type { Provider } from '@/lib/providers.schema';
-import { Skeleton } from '@/components/ui/skeleton';
+import { getProviders } from '@/lib/firestore';
 import ProviderProfileClientPage from './client-page';
+import type { Metadata } from 'next';
 
-export default function ProviderProfilePage() {
-    const params = useParams();
-    const { id } = params;
-    const { data: providers, isClient } = useProvidersData();
-    const [provider, setProvider] = useState<Provider | undefined>(undefined);
+export async function generateStaticParams() {
+    const providers = await getProviders();
+    return providers.map((provider) => ({
+        id: provider.id,
+    }));
+}
 
-    useEffect(() => {
-        if (isClient && id) {
-            const foundProvider = providers.find(p => p.id === id);
-            if (foundProvider) {
-                setProvider(foundProvider);
-            } else {
-                notFound();
-            }
-        }
-    }, [id, providers, isClient]);
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const providers = await getProviders();
+  const provider = providers.find(p => p.id === params.id);
 
-    if (!isClient || !provider) {
-        return (
-            <div className="bg-background min-h-screen">
-                <div className="container mx-auto py-16 px-4">
-                    <div className="max-w-4xl mx-auto">
-                        <Skeleton className="h-[400px] w-full" />
-                    </div>
-                </div>
-            </div>
-        );
-    }
+  if (!provider) {
+    return {
+      title: 'Provider Not Found',
+    };
+  }
+
+  return {
+    title: `${provider.name} | Partner Profile`,
+    description: `Service provider profile for ${provider.name}, specializing in ${provider.services}.`,
+  };
+}
+
+
+export default async function ProviderProfilePage({ params }: { params: { id: string } }) {
+    const providers = await getProviders();
+    const provider = providers.find(p => p.id === params.id);
     
     return <ProviderProfileClientPage provider={provider} />;
 }

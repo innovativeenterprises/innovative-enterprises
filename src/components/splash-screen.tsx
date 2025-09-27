@@ -3,7 +3,6 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect } from 'react';
 
 const title1 = "INNOVATIVE";
 const title2 = "ENTERPRISES";
@@ -52,15 +51,7 @@ const AnimatedTitle = ({ title }: { title: string }) => (
     </motion.h1>
 )
 
-export function SplashScreen({ onFinished }: { onFinished: () => void }) {
-    
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            onFinished();
-        }, 3000); // Wait for animations to roughly finish
-        return () => clearTimeout(timer);
-    }, [onFinished]);
-
+export function SplashScreen() {
     return (
         <div 
             className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background"
