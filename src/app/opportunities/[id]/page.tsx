@@ -4,7 +4,13 @@
 import { getOpportunities } from "@/lib/firestore";
 import OpportunityDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+
+export async function generateStaticParams() {
+    const opportunities = await getOpportunities();
+    return opportunities.map((opportunity) => ({
+        id: opportunity.id,
+    }));
+}
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const opportunities = await getOpportunities();

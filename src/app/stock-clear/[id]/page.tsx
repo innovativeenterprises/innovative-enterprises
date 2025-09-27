@@ -4,7 +4,13 @@
 import { getStockItems } from "@/lib/firestore";
 import StockItemDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
-import { notFound } from "next/navigation";
+
+export async function generateStaticParams() {
+    const items = await getStockItems();
+    return items.map((item) => ({
+        id: item.id,
+    }));
+}
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const items = await getStockItems();

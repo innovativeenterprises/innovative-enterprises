@@ -6,6 +6,13 @@ import WorkerProfileClientPage from './client-page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+export async function generateStaticParams() {
+    const { raahaWorkers } = await getRaahaData();
+    return raahaWorkers.map((worker) => ({
+        id: worker.id,
+    }));
+}
+
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const { raahaWorkers } = await getRaahaData();
   const worker = raahaWorkers.find(p => p.id === params.id);

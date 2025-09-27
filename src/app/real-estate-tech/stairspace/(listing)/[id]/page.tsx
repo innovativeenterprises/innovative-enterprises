@@ -6,6 +6,13 @@ import StairspaceDetailClientPage from "./client-page";
 import type { Metadata } from 'next';
 import { notFound } from "next/navigation";
 
+export async function generateStaticParams() {
+    const listings = await getStairspaceListings();
+    return listings.map((listing) => ({
+        id: listing.id,
+    }));
+}
+
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const listings = await getStairspaceListings();
   const listing = listings.find(l => l.id === params.id);

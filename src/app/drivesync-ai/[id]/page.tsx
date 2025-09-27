@@ -6,6 +6,13 @@ import CarDetailClientPage from './client-page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+export async function generateStaticParams() {
+    const cars = await getCars();
+    return cars.map((car) => ({
+        id: car.id,
+    }));
+}
+
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const cars = await getCars();
   const car = cars.find(p => p.id === params.id);

@@ -5,14 +5,20 @@ import { Suspense } from 'react';
 import { getStairspaceRequests } from '@/lib/firestore';
 import { SuccessContent } from '@/app/real-estate-tech/stairspace/success-content';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+
+export async function generateStaticParams() {
+    const requests = await getStairspaceRequests();
+    return requests.map((request) => ({
+        id: request.id,
+    }));
+}
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const requests = await getStairspaceRequests();
   const request = requests.find(r => r.id === params.id);
   
   if (!request) {
-    notFound();
+     return { title: "Booking not found" };
   }
 
   const title = `Booking Confirmed: ${request.listingTitle}`;
