@@ -3,7 +3,7 @@
 
 import { LeadershipTeam, StaffTeam, DigitalWorkforce } from "@/components/agent-list";
 import type { Metadata } from 'next';
-import { useStaffData } from '@/hooks/use-data-hooks';
+import { useStaffData } from '@/hooks/use-data-hooks.tsx';
 
 export const metadata: Metadata = {
   title: "People Management | Innovative Enterprises",
@@ -29,4 +29,3 @@ export default function PeoplePage() {
         </div>
     );
 }
-

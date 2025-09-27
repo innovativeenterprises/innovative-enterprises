@@ -61,7 +61,7 @@ export const VoiceEnabledTextarea = React.forwardRef<HTMLTextAreaElement, VoiceE
                 setIsListening(false);
                 toast({
                 title: "Voice Error",
-                description: `An error occurred: ${"'" + event.error + "'"}. Please try again.`,
+                description: `An error occurred: '${event.error}'. Please try again.`,
                 variant: "destructive",
                 })
             };

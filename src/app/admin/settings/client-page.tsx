@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AppSettingsSchema, type AppSettings } from '@/lib/settings';
-import { useSetStore, useSettingsData } from '@/hooks/use-data-hooks';
+import { useSetStore, useSettingsData } from '@/hooks/use-data-hooks.tsx';
 import ThemeGenerator from '@/app/admin/operations/theme-generator';
 import { Switch } from '@/components/ui/switch';
 import CostSettingsTable from './cost-settings-table';

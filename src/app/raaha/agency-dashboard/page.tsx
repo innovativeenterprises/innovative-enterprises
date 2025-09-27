@@ -1,7 +1,7 @@
 
 'use client';
 
-import AgencyDashboardClientPage from './client-page';
+import AgencyDashboardClientPage from '@/app/beauty-hub/agency-dashboard/client-page';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: "Manage your domestic workforce agency. View client requests, manage your candidates, and update your agency settings.",
 };
 
+
 export default function AgencyDashboardPage() {
-    return <AgencyDashboardClientPage />;
+    return <AgencyDashboardClientPage dashboardType="raaha" />;
 }

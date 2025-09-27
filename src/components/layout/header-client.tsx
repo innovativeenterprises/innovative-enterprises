@@ -34,7 +34,7 @@ import MobileNavLinks from './mobile-nav-links';
 import DesktopNavLinks from './desktop-nav-links';
 import type { AppSettings } from '@/lib/settings';
 import * as Icons from 'lucide-react';
-import { useCartData } from '@/hooks/use-data-hooks';
+import { useCartData } from '@/hooks/use-data-hooks.tsx';
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,

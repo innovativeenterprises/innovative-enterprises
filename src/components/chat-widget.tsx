@@ -11,12 +11,7 @@ import { useSettingsData } from "@/hooks/use-data-hooks";
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
-    const { data: settings } = useSettingsData();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const { data: settings, isClient } = useSettingsData();
     
     if (!isClient || !settings?.chatWidgetEnabled) {
         return null;

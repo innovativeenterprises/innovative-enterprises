@@ -1,11 +1,11 @@
 
-'use server';
+'use client';
 
 import ServiceCatalogClient from './service-catalog-client';
-import { getServices } from '@/lib/firestore';
+import { useServicesData } from '@/hooks/use-data-hooks.tsx';
 
-export default async function ServiceCatalog() {
-  const services = await getServices();
+export default function ServiceCatalog() {
+  const { data: services } = useServicesData();
   
   return (
     <ServiceCatalogClient services={services || []} />

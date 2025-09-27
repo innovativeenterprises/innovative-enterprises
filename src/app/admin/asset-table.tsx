@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -18,7 +19,7 @@ import { AssetSchema } from "@/lib/assets.schema";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
-import { useAssetsData } from "@/hooks/use-data-hooks";
+import { useAssetsData } from "@/hooks/use-data-hooks.tsx";
 
 const AddEditAssetDialog = ({ 
     asset, 

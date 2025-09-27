@@ -17,7 +17,7 @@ import type { Client } from "@/lib/clients.schema";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useClientsData } from "@/hooks/use-data-hooks";
+import { useClientsData } from "@/hooks/use-data-hooks.tsx";
 
 const ClientSchema = z.object({
   name: z.string().min(2, "Name is required"),

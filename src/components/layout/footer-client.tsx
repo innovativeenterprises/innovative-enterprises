@@ -14,8 +14,8 @@ export default function FooterClient({ settings }: { settings: AppSettings | nul
       <div className="container mx-auto py-8 px-4">
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="flex items-center gap-2 justify-center md:justify-start">
-             {settings?.footerImageUrl ? (
-                <Image src={settings.footerImageUrl} alt="Company Footer Logo" width={160} height={40} className="w-40 h-auto object-contain" />
+             {settings?.headerImageUrl ? (
+                <Image src={settings.headerImageUrl} alt="Company Header Logo" width={160} height={40} className="w-40 h-auto object-contain" />
              ) : (
                 <>
                     <Image src="https://storage.googleapis.com/stella-images/studio-app-live/20240801-140026-646-logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={40} height={40} className="w-10 h-10" />

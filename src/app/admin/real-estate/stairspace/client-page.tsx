@@ -1,20 +1,19 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket, Wand2, Loader2 } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, CreditCard, Ticket, Wand2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
-import { RequestTable, TimeAgoCell } from '@/components/request-table';
-import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
+import { RequestTable } from '@/components/request-table';
 import type { BookingRequest } from '@/lib/stairspace-requests';
 import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 import { generateBookingResponse } from '@/ai/flows/booking-response-generator';
 import { Textarea } from '@/components/ui/textarea';
+import { getStatusBadge } from '@/components/status-badges';
 
 const ResponseGenerator = ({ request }: { request: BookingRequest }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -58,28 +57,10 @@ const ResponseGenerator = ({ request }: { request: BookingRequest }) => {
     );
 };
 
-const getStatusBadge = (status: BookingRequest['status']) => {
-    switch (status) {
-        case 'Pending': return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30">Pending</Badge>;
-        case 'Contacted': return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 hover:bg-blue-500/30">Contacted</Badge>;
-        case 'Booked': return <Badge variant="default" className="bg-green-500/20 text-green-700 hover:bg-green-500/30">Booked & Awaiting Payment</Badge>;
-        case 'Closed': return <Badge variant="destructive">Closed</Badge>;
-        case 'Confirmed': return <Badge variant="default" className="bg-green-700 text-white">Confirmed</Badge>;
-        default: return <Badge variant="outline">{status}</Badge>;
-    }
-};
-
 export default function StairspaceRequestsClientPage() {
     const { data: requests, setData: setRequests, isClient } = useStairspaceRequestsData();
     const { toast } = useToast();
     const router = useRouter();
-
-    const onSchedule = (id: string, values: InterviewValues) => {
-        setRequests(prev => prev.map(r => 
-            r.id === id ? { ...r, status: 'Contacted', interviewDate: values.interviewDate.toISOString(), interviewNotes: values.interviewNotes } : r
-        ));
-        toast({ title: "Contact Scheduled!", description: `A meeting with ${values.interviewNotes} has been scheduled.` });
-    };
 
     const handleConfirmBooking = (requestId: string) => {
         setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: 'Booked' } : r));
@@ -97,7 +78,6 @@ export default function StairspaceRequestsClientPage() {
     const columns = [
         { Header: 'Listing', accessor: 'listingTitle' },
         { Header: 'Client', accessor: 'clientName' },
-        { Header: 'Request Date', accessor: 'requestDate', Cell: ({ row }: { row: { original: BookingRequest }}) => <TimeAgoCell date={row.original.requestDate} isClient={isClient} /> },
         { Header: 'Status', accessor: 'status', Cell: ({ row }: { row: { original: BookingRequest }}) => getStatusBadge(row.original.status) },
     ];
     

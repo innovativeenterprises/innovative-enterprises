@@ -20,7 +20,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { useStairspaceListingsData, useStairspaceRequestsData } from '@/hooks/use-data-hooks';
+import { useStairspaceListingsData, useStairspaceRequestsData } from '@/hooks/use-data-hooks.tsx';
 
 // --- BookingRequestForm Logic ---
 const RequestSchema = z.object({
@@ -190,4 +190,3 @@ export default function StairspaceDetailClientPage({ listing }: { listing?: Stai
         </div>
     );
 }
-

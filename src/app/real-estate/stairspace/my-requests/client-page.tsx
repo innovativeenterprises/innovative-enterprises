@@ -1,18 +1,18 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, UserCheck, CalendarIcon, MessageSquare, Clock, CreditCard, Ticket } from 'lucide-react';
 import Link from 'next/link';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from "@/hooks/use-toast";
 import { Badge } from '@/components/ui/badge';
 import { RequestTable, TimeAgoCell } from '@/components/request-table';
 import { ScheduleInterviewDialog, type InterviewValues, type GenericRequest } from '@/components/schedule-interview-dialog';
 import { useRouter } from 'next/navigation';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
+import { useStairspaceRequestsData } from '@/hooks/use-data-hooks.tsx';
 
 const getStatusBadge = (status: BookingRequest['status']) => {
     switch (status) {

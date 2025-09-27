@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import React, { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
+import React, { createContext, useContext, ReactNode, useRef, useEffect, useState } from 'react';
 import { createStore, useStore as useZustandStore } from 'zustand';
 import type { AppState } from './initial-state';
 import { getInitialState, getFirestoreData } from './initial-state';
@@ -25,6 +24,7 @@ export const StoreContext = createContext<StoreType | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode; }) {
     const storeRef = useRef<StoreType>();
+    const [isInitialized, setIsInitialized] = useState(false);
 
     if (!storeRef.current) {
         storeRef.current = createAppStore();
@@ -32,24 +32,30 @@ export function StoreProvider({ children }: { children: ReactNode; }) {
 
     useEffect(() => {
         const store = storeRef.current!;
-        if (!store.getState().isClient) {
+        const currentState = store.getState();
+        
+        if (!currentState.isClient) {
             getFirestoreData().then(data => {
-                store.getState().set(state => ({
+                store.setState(state => ({
                     ...state,
                     ...data,
                     isClient: true,
                 }));
+                 setIsInitialized(true);
             }).catch(error => {
                 console.error("Failed to load initial data:", error);
-                // Still set isClient to true to unblock UI, even if data is partial
-                 store.getState().set(state => ({ ...state, isClient: true }));
+                store.setState(state => ({ ...state, isClient: true })); // Still unblock UI
+                 setIsInitialized(true);
             });
+        } else {
+            setIsInitialized(true);
         }
     }, []);
 
+    // We render children only when the store has been initialized
     return (
         <StoreContext.Provider value={storeRef.current}>
-            {children}
+            {isInitialized ? children : null}
         </StoreContext.Provider>
     );
 };
