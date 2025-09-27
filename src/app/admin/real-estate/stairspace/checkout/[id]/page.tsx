@@ -35,7 +35,7 @@ function AdminSuccessPage({ requestId }: { requestId: string | null}) {
     )
 }
 
-export default function AdminStairspaceCheckoutSuccessPage({ params }: { params: { id: string } }) {
+export default async function AdminStairspaceCheckoutSuccessPage({ params }: { params: { id: string } }) {
     const requestId = params.id as string;
     
     return (
