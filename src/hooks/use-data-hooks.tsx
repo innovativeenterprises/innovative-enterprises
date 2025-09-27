@@ -1,16 +1,16 @@
 
 'use client';
 
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useStore as useZustandStore } from 'zustand';
 import type { AppState } from '@/lib/initial-state';
-import { StoreContext } from '@/app/lib/global-store.tsx';
+import { StoreContext } from '@/app/lib/global-store';
 
 // This custom hook simplifies accessing the store and its setter.
-function useStore<T>(selector: (state: AppState) => T): T {
+function useGlobalStore<T>(selector: (state: AppState) => T): T {
   const store = useContext(StoreContext);
   if (!store) {
-    throw new Error('useStore must be used within a StoreProvider');
+    throw new Error('useGlobalStore must be used within a StoreProvider');
   }
   return useZustandStore(store, selector);
 }
@@ -25,20 +25,13 @@ function useSetStore() {
 }
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  const useDataHook = (initialData?: AppState[K]) => {
-    const data = useStore((state) => state[key]);
+  const useDataHook = () => {
+    const data = useGlobalStore((state) => state[key]);
     const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
-    const isClient = useStore((state) => state.isClient);
-
-    useEffect(() => {
-        if (initialData && isClient) {
-            set((state) => ({ ...state, [key]: initialData }));
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialData, isClient, set]); 
+    const isClient = useGlobalStore((state) => state.isClient);
 
     return { data: data as AppState[K], setData, isClient };
   };
@@ -94,10 +87,10 @@ export const useUserDocumentsData = createDataHook('userDocuments');
 export const useSaaSProductsData = createDataHook('saasProducts');
 
 export const useStaffData = () => {
-    const leadership = useStore((state) => state.leadership);
-    const staff = useStore((state) => state.staff);
-    const agentCategories = useStore((state) => state.agentCategories);
-    const isClient = useStore((state) => state.isClient);
+    const leadership = useGlobalStore((state) => state.leadership);
+    const staff = useGlobalStore((state) => state.staff);
+    const agentCategories = useGlobalStore((state) => state.agentCategories);
+    const isClient = useGlobalStore((state) => state.isClient);
     return { leadership, staff, agentCategories, isClient };
 };
 
