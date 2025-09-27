@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import type { Product } from '@/lib/products.schema';
 import { VoiceEnabledTextarea } from '@/components/voice-enabled-textarea';
-import { useSettingsData } from '@/hooks/use-data-hooks';
+import { useSettingsData } from '@/hooks/use-data-hooks.tsx';
 
 
 interface Message {
@@ -60,7 +60,7 @@ export const ChatComponent = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
-  const { settings } = useSettingsData();
+  const { data: settings } = useSettingsData();
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);

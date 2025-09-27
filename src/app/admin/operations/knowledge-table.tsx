@@ -24,7 +24,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
-import { useKnowledgeBaseData, useStaffData } from "@/hooks/use-data-hooks";
+import { useKnowledgeBaseData, useStaffData } from "@/hooks/use-data-hooks.tsx";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -129,7 +129,7 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
-    const { leadership, staff, agentCategories } = useStaffData();
+    const { agentCategories } = useStaffData();
     const allAgents = agentCategories.flatMap(category => category.agents);
 
     const form = useForm<TrainingDialogValues>({

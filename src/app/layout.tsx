@@ -59,7 +59,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <Providers initialState={initialState}>
+          <Providers initialState={{...initialState, isClient: true}}>
             {children}
           </Providers>
       </body>
