@@ -1,7 +1,7 @@
 
-
 'use server';
 
+import type { Product } from './products.schema';
 import { initialProducts, initialStoreProducts } from './products';
 import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';
@@ -45,10 +45,10 @@ import { initialRaahaRequests } from './raaha-requests';
 import { initialUserDocuments } from './user-documents';
 import type { Service } from "./services.schema";
 
-// This file simulates fetching data from a database.
-// In a real application, you would replace these with actual Firestore queries.
+// This file simulates a database by providing initial data arrays.
+// In a real application, these would be replaced by actual database queries.
 
-const initialServices: Service[] = [
+export const initialServices: Service[] = [
   {
     title: "Synergy AI",
     description: "Leverage AI to automate processes, gain insights, and create intelligent products and agents.",
@@ -116,9 +116,9 @@ const initialServices: Service[] = [
 ];
 
 
-export const getProducts = async () => initialProducts;
-export const getStoreProducts = async () => initialStoreProducts;
-export const getServices = async () => initialServices;
+// These functions simulate fetching data from a database.
+// In the refactored app, data is loaded into a global store on the client,
+// so these server-side functions are only used for providing the initial data.
 export const getProviders = async () => initialProviders;
 export const getOpportunities = async () => initialOpportunities;
 export const getClients = async () => initialClients;
@@ -153,9 +153,6 @@ export const getUserDocuments = async () => initialUserDocuments;
 
 export const getSettings = async () => {
     try {
-        // In a real app, this would be a Firestore call.
-        // For now, we return the initial settings.
-        // We add a try-catch to simulate resilient fetching.
         return initialSettings;
     } catch (error) {
         console.error("Failed to fetch settings:", error);
@@ -167,8 +164,6 @@ export const getKnowledgeBase = async () => initialKnowledgeBase;
 export const getApplications = async () => initialApplications;
 export const getBriefcase = async () => {
     try {
-        // In a real app, this would fetch from a user-specific document in Firestore.
-        // For this prototype, we'll try to get it from localStorage.
         if (typeof window !== 'undefined') {
             const savedBriefcase = localStorage.getItem('user_briefcase');
             if (savedBriefcase) {
@@ -209,3 +204,7 @@ export const getBeautyData = async () => {
         beautySpecialists: initialBeautySpecialists,
     }
 };
+
+export const getProducts = async () => initialProducts;
+export const getStoreProducts = async () => initialStoreProducts;
+export const getServices = async () => initialServices;
