@@ -3,26 +3,25 @@
 
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import { StoreProvider, useGlobalStore } from '@/lib/global-store.tsx';
 import { SplashScreen } from '@/components/splash-screen';
 import MainLayout from './main-layout';
-import { usePathname } from 'next/navigation';
 
 function AppContent({ children }: { children: ReactNode }) {
     const { isClient } = useGlobalStore(state => ({ isClient: state.isClient }));
-    const pathname = usePathname();
+    const [showSplash, setShowSplash] = useState(true);
 
-    const isAdminRoute = pathname.startsWith('/admin');
-    const isAiPosRoute = pathname.startsWith('/ai-pos');
-    
-    if (!isClient) {
+    useEffect(() => {
+        if (isClient) {
+            const timer = setTimeout(() => setShowSplash(false), 2000); // Show splash for 2 seconds
+            return () => clearTimeout(timer);
+        }
+    }, [isClient]);
+
+    if (showSplash || !isClient) {
         return <SplashScreen />;
-    }
-
-    if (isAdminRoute || isAiPosRoute) {
-        return <main>{children}</main>;
     }
 
     return <MainLayout>{children}</MainLayout>;

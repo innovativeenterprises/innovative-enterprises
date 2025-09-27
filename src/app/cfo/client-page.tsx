@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -17,7 +18,7 @@ const kpiIcons: { [key: string]: React.ElementType } = {
 };
 
 
-export default function CfoDashboardPageClient() {
+export default function CfoPageClient() {
     const { data: cfoData, isClient } = useCfoData();
 
     if (!isClient || !cfoData) {
@@ -118,3 +119,4 @@ export default function CfoDashboardPageClient() {
         </div>
     );
 }
+

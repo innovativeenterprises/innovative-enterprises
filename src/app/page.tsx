@@ -1,20 +1,10 @@
 
-'use client';
+'use server';
 
-import CompanyOverview from "@/components/company-overview";
-import ServiceCatalog from "@/components/service-catalog";
-import ProductShowcase from "@/components/product-showcase";
-import ClientTestimonials from "@/components/client-testimonials";
-import AiToolsCta from "@/components/ai-tools-cta";
+import HomeClient from './home-client';
 
-export default function HomePage() {
-  return (
-    <>
-      <CompanyOverview />
-      <ServiceCatalog />
-      <ProductShowcase />
-      <ClientTestimonials />
-      <AiToolsCta />
-    </>
-  );
+export default async function HomePage() {
+  // Data is preloaded here and passed to client components,
+  // which will then be hydrated into the global store.
+  return <HomeClient />;
 }

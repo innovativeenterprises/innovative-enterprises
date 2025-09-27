@@ -5,14 +5,12 @@ import { useGlobalStore, useSetStore as useZustandSetStore } from '@/lib/global-
 import type { AppState } from '@/lib/initial-state';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  return (initialData?: AppState[K]) => {
+  return () => {
     const data = useGlobalStore(state => state[key]);
     const isClient = useGlobalStore(state => state.isClient);
     const setData = useZustandSetStore();
 
-    // The data is either the client-side state or the initial data from the server.
-    // The setter is always the store's setter.
-    return { data: (isClient ? data : initialData) as AppState[K], setData, isClient };
+    return { data: data as AppState[K], setData, isClient };
   };
 };
 
