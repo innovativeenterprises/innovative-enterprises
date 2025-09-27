@@ -1,12 +1,18 @@
-import { Inter } from 'next/font/google';
+
+import { Exo_2, Cairo } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Providers } from './providers';
 import { getFirestoreData, type AppState } from '@/lib/initial-state';
 
-const inter = Inter({
+const exo2 = Exo_2({
   subsets: ['latin'],
+  variable: '--font-heading',
+});
+
+const cairo = Cairo({
+  subsets: ['arabic', 'latin'],
   variable: '--font-sans',
 });
 
@@ -55,9 +61,9 @@ export default async function RootLayout({
 }) {
   const initialState = await getFirestoreData();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" dir="rtl" suppressHydrationWarning>
       <head/>
-      <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
+      <body className={cn('min-h-screen bg-background font-sans antialiased', cairo.variable, exo2.variable)}>
           <Providers initialState={initialState as AppState}>
             {children}
           </Providers>
