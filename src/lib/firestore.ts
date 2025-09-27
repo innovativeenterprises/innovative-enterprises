@@ -1,13 +1,11 @@
 
-'use server';
-
 import type { Product } from './products.schema';
 import { initialProducts, initialStoreProducts } from './products';
 import { initialProviders } from './providers';
 import { initialOpportunities } from './opportunities';
 import { initialClients, initialTestimonials } from './clients';
 import { initialPricing } from './pricing';
-import { initialPosProducts, initialDailySales } from './pos-data';
+import { initialCanteenProducts, initialDailySales } from './pos-data';
 import { initialStages } from './stages';
 import { initialAssets } from './assets';
 import { initialInvestors } from './investors';
@@ -124,7 +122,7 @@ export const getOpportunities = async () => initialOpportunities;
 export const getClients = async () => initialClients;
 export const getTestimonials = async () => initialTestimonials;
 export const getPricing = async () => initialPricing;
-export const getPosProducts = async () => initialPosProducts;
+export const getPosProducts = async () => initialCanteenProducts;
 export const getDailySales = async () => initialDailySales;
 export const getStages = async () => initialStages;
 export const getAssets = async () => initialAssets;
@@ -153,6 +151,9 @@ export const getUserDocuments = async () => initialUserDocuments;
 
 export const getSettings = async () => {
     try {
+        // In a real app, this would be a Firestore call.
+        // For now, we return the initial settings.
+        // We add a try-catch to simulate resilient fetching.
         return initialSettings;
     } catch (error) {
         console.error("Failed to fetch settings:", error);
@@ -164,6 +165,8 @@ export const getKnowledgeBase = async () => initialKnowledgeBase;
 export const getApplications = async () => initialApplications;
 export const getBriefcase = async () => {
     try {
+        // In a real app, this would fetch from a user-specific document in Firestore.
+        // For this prototype, we'll try to get it from localStorage.
         if (typeof window !== 'undefined') {
             const savedBriefcase = localStorage.getItem('user_briefcase');
             if (savedBriefcase) {
