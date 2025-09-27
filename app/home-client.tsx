@@ -1,7 +1,7 @@
 
 'use client';
 
-import CompanyOverview from "@/components/company-overview";
+import CompanyOverview from "@/app/components/company-overview";
 import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
 import ClientTestimonials from "@/components/client-testimonials";
