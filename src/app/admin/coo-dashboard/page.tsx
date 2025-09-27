@@ -44,7 +44,7 @@ export default function CooDashboardPage() {
 
 
     const runAnalysis = async () => {
-        if (!cfoData || !cfoData.kpiData) return;
+        if (!cfoData) return;
         setIsLoading(true);
         setAnalysis(null);
         try {

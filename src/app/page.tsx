@@ -1,7 +1,7 @@
 
-import HomeClient from './home-client';
-import { getFirestoreData } from './lib/initial-state';
 
-export default async function HomePage() {
+import HomeClient from './home-client';
+
+export default function HomePage() {
   return <HomeClient />;
 }

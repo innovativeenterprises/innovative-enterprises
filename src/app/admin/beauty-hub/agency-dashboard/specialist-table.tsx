@@ -3,7 +3,7 @@
 
 import { AgencyStaffTable } from '@/components/agency-dashboard/agency-staff-table';
 import type { BeautySpecialist } from "@/lib/beauty-specialists.schema";
-import { useBeautySpecialistsData } from '@/hooks/use-data-hooks';
+import { useBeautySpecialistsData } from '@/hooks/use-data-hooks.tsx';
 import Image from "next/image";
 
 
@@ -30,4 +30,3 @@ export function SpecialistTable({ agencyId }: { agencyId: string }) {
         />
     );
 }
-

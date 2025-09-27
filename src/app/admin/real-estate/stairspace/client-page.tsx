@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { RequestTable } from '@/components/request-table';
 import type { BookingRequest } from '@/lib/stairspace-requests';
-import { useStairspaceRequestsData } from '@/hooks/use-data-hooks';
+import { useStairspaceRequestsData } from '@/hooks/use-data-hooks.tsx';
 import { generateBookingResponse } from '@/ai/flows/booking-response-generator';
 import { Textarea } from '@/components/ui/textarea';
 import { getStatusBadge } from '@/components/status-badges';

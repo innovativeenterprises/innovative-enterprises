@@ -19,7 +19,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateListingDescription } from '@/ai/flows/listing-description-generator';
-import { useStairspaceListingsData } from '@/hooks/use-data-hooks';
+import { useStairspaceListingsData } from '@/hooks/use-data-hooks.tsx';
 
 const ListingSchema = z.object({
   title: z.string().min(3, "Title is required"),
