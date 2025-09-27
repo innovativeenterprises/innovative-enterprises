@@ -50,10 +50,7 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
+          {children}
         </a>
       </NavigationMenuLink>
     </li>
@@ -258,5 +255,3 @@ export default function HeaderClient() {
     </header>
   );
 }
-
-  
