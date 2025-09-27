@@ -26,7 +26,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useSettingsData } from '@/hooks/use-data-hooks';
 import Image from 'next/image';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { fileToDataURI } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { PartnerCard } from './partner-card';
@@ -133,7 +132,7 @@ type IndividualUploadValues = z.infer<typeof IndividualUploadSchema>;
 const PaymentSchema = z.object({
     cardholderName: z.string().min(3, 'Cardholder name is required.'),
     cardNumber: z.string().length(19, 'Card number must be 16 digits.'), // 16 digits + 3 spaces
-    expiryDate: z.string().length(5, 'Expiry date must be in MM/YY.'),
+    expiryDate: z.string().length(5, 'Expiry date must be MM/YY.'),
     cvc: z.string().length(3, 'CVC must be 3 digits.'),
     coupon: z.string().optional(),
     subscriptionTier: z.enum(['monthly', 'yearly', 'lifetime']),
