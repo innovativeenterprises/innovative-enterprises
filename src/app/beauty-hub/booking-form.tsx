@@ -17,8 +17,10 @@ import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useBeautyData, useBeautySpecialistsData } from '@/hooks/use-global-store-data';
-import type { BeautyCenter, BeautyService, BeautyAppointment } from '@/lib/beauty-centers.schema';
+import { useBeautySpecialistsData, useBeautyAppointmentsData } from '@/hooks/use-data-hooks.tsx';
+import type { BeautyCenter } from '@/lib/beauty-centers.schema';
+import type { BeautyService } from '@/lib/beauty-services.schema';
+import type { BeautyAppointment } from '@/lib/beauty-appointments';
 import { useRouter } from 'next/navigation';
 
 const BookingSchema = z.object({
@@ -33,16 +35,18 @@ export const BookingForm = ({
     agency,
     service,
     isOpen,
-    onOpenChange 
+    onOpenChange,
+    onClose,
 }: { 
     agency: BeautyCenter;
     service: BeautyService;
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
+    onClose: () => void;
 }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const { specialists } = useBeautySpecialistsData();
-    const { setAppointments } = useBeautyData();
+    const { data: specialists } = useBeautySpecialistsData();
+    const { setData: setAppointments } = useBeautyAppointmentsData();
     const { toast } = useToast();
     const router = useRouter();
 

@@ -43,7 +43,7 @@ export default function AdminDashboardPage() {
         { name: 'Staff', value: leadership.length + staff.length },
     ];
     
-    const recentProviders = (providers || []).slice(0, 5);
+    const recentProviders = providers.slice(0, 5);
 
     return (
         <div className="space-y-8">
@@ -87,3 +87,4 @@ export default function AdminDashboardPage() {
         </div>
     );
 }
+
