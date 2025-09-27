@@ -1,6 +1,4 @@
 
-'use server';
-
 import HomeClient from './home-client';
 import type { Metadata } from 'next';
 
