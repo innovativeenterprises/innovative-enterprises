@@ -64,6 +64,7 @@ function CompanyOverview() {
               fill
               className="object-cover transform group-hover:scale-105 transition-transform duration-500"
               data-ai-hint="technology future"
+              priority
              />
              <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
              <div className="absolute bottom-6 left-6 bg-background/80 backdrop-blur-md p-4 rounded-lg shadow-lg">
@@ -101,7 +102,7 @@ export default function HomeClient() {
   if (loading) {
     return <SplashScreen />;
   }
-
+  
   return (
     <>
       <CompanyOverview />
@@ -112,3 +113,5 @@ export default function HomeClient() {
     </>
   );
 }
+
+  
