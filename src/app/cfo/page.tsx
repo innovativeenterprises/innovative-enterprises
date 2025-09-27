@@ -1,6 +1,4 @@
 
-'use server';
-
 import CfoPageClient from './client-page';
 import type { Metadata } from 'next';
 import { Card, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
