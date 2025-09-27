@@ -1,7 +1,4 @@
 
-'use server';
-
-import { getProperties } from "@/lib/firestore";
 import SmartListingClientPage from "./client-page";
 import type { Metadata } from 'next';
 
@@ -11,6 +8,6 @@ export const metadata: Metadata = {
 };
 
 
-export default async function SmartListingPage() {
+export default function SmartListingPage() {
     return <SmartListingClientPage />;
 }

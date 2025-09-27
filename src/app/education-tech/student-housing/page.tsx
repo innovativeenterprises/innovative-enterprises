@@ -1,6 +1,4 @@
 
-'use server';
-
 import StudentHousingClientPage from './client-page';
 import type { Metadata } from 'next';
 
@@ -10,6 +8,6 @@ export const metadata: Metadata = {
 };
 
 
-export default async function StudentHousingPage() {
+export default function StudentHousingPage() {
     return <StudentHousingClientPage />;
 }

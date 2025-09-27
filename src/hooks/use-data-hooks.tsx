@@ -4,7 +4,7 @@
 import { useContext, useEffect } from 'react';
 import { useStore as useZustandStore } from 'zustand';
 import type { AppState } from '@/lib/initial-state';
-import { StoreContext } from '@/app/lib/global-store';
+import { StoreContext } from '@/app/lib/global-store.tsx';
 
 // This custom hook simplifies accessing the store and its setter.
 function useStore<T>(selector: (state: AppState) => T): T {
@@ -25,13 +25,21 @@ function useSetStore() {
 }
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  const useDataHook = () => {
+  const useDataHook = (initialData?: AppState[K]) => {
     const data = useStore((state) => state[key]);
     const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
     const isClient = useStore((state) => state.isClient);
+
+    useEffect(() => {
+        if (initialData && isClient) {
+            set((state) => ({ ...state, [key]: initialData }));
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialData, isClient, set]); 
+
     return { data: data as AppState[K], setData, isClient };
   };
   return useDataHook;
@@ -93,4 +101,4 @@ export const useStaffData = () => {
     return { leadership, staff, agentCategories, isClient };
 };
 
-export { useStore as useGlobalStore, useSetStore };
+export { useGlobalStore, useSetStore };

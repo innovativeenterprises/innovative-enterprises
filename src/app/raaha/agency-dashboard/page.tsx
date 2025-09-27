@@ -1,6 +1,4 @@
 
-'use server';
-
 import AgencyDashboardClientPage from '@/components/agency-dashboard/client-page';
 import type { Metadata } from 'next';
 
