@@ -22,15 +22,11 @@ export default function DesktopNavLinks() {
     <>
       {navLinks.map((link) => (
         <NavigationMenuItem key={link.href}>
-          <NavigationMenuLink
-            asChild
-            active={pathname === link.href}
-            className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}
-          >
-            <Link href={link.href}>
-              {link.label}
+            <Link href={link.href} legacyBehavior passHref>
+                <NavigationMenuLink active={pathname === link.href} className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}>
+                    {link.label}
+                </NavigationMenuLink>
             </Link>
-          </NavigationMenuLink>
         </NavigationMenuItem>
       ))}
     </>
