@@ -1,6 +1,4 @@
 
-'use server';
-
 import type { Metadata } from 'next';
 import StudentRecordsClientPage from './client-page';
 
@@ -14,5 +12,3 @@ export default async function StudentRecordsPage() {
     // The client component now fetches its own data from the global store.
     return <StudentRecordsClientPage />;
 }
-
-    

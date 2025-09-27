@@ -1,6 +1,4 @@
 
-'use server';
-
 import type { Metadata } from 'next';
 import { getProperties, getStairspaceListings } from '@/lib/firestore';
 import AdminRealEstateClientPage from './client-page';
@@ -22,4 +20,3 @@ export default async function AdminRealEstatePage() {
         <AdminRealEstateClientPage />
     )
 }
-

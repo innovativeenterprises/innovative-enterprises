@@ -1,6 +1,4 @@
 
-'use server';
-
 import AdminContentClientPage from './client-page';
 import type { Metadata } from 'next';
 
