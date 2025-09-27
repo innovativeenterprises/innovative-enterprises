@@ -61,7 +61,7 @@ export default async function RootLayout({
 }) {
   const initialState = await getFirestoreData();
   return (
-    <html lang="en" dir="rtl" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', cairo.variable, exo2.variable)}>
           <Providers initialState={initialState as AppState}>

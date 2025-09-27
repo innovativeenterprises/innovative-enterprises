@@ -1,7 +1,9 @@
+
 'use server';
 
 import StockClearClientPage from './client-page';
 import type { Metadata } from 'next';
+import { getStockItems } from '@/lib/firestore';
 
 export const metadata: Metadata = {
     title: "StockClear Marketplace",

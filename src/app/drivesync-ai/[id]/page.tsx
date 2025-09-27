@@ -4,7 +4,6 @@
 import { getCars } from '@/lib/firestore';
 import CarDetailClientPage from './client-page';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
     const cars = await getCars();

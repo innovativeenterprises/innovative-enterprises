@@ -8,7 +8,7 @@ import type { Metadata } from 'next';
 export async function generateStaticParams() {
     const providers = await getProviders();
     return providers.map((provider) => ({
-        id: provider.id,
+        id: provider.id!,
     }));
 }
 

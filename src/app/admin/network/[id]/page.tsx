@@ -32,5 +32,5 @@ export default async function AdminProviderDetailPage({ params }: { params: { id
     const providers = await getProviders();
     const provider = providers.find(p => p.id === params.id);
 
-    return <ProviderProfileClientPage provider={provider} />;
+    return <ProviderProfileClientPage provider={provider!} />;
 }

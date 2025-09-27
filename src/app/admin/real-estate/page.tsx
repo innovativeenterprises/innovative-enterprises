@@ -10,9 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminRealEstatePage() {
-    // Client-side fetching is now used in the child components,
-    // so no need to pre-fetch data here.
     return (
         <AdminRealEstateClientPage />
-    )
+    );
 }
