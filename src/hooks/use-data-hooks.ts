@@ -1,15 +1,24 @@
-
-'use client';
-
-import { useGlobalStore, useSetStore as useZustandSetStore } from '@/lib/global-store.tsx';
+import { useGlobalStore } from '@/lib/global-store.tsx';
 import type { AppState } from '@/lib/initial-state';
 
-const createDataHook = <K extends keyof AppState>(key: K) => {
-  return () => {
-    const data = useGlobalStore(state => state[key]);
-    const isClient = useGlobalStore(state => state.isClient);
-    const setData = useZustandSetStore();
+// By not marking this file with 'use client', these hooks can be used in both
+// Server and Client Components, which is crucial for the hybrid approach.
 
+const createDataHook = <K extends keyof AppState>(key: K) => {
+  return (initialData?: AppState[K]) => {
+    // This hook now uses the Zustand useStore hook directly.
+    // It can optionally accept initialData for server-side pre-population.
+    const data = useGlobalStore((state) => state[key]);
+    const setData = useGlobalStore((state) => state.set);
+    const isClient = useGlobalStore((state) => state.isClient);
+
+    // If initialData is provided (from a server component), and we're on the client
+    // for the first time, we can hydrate the store.
+    // In a more robust app, you might check if the store already has data.
+    if (isClient && initialData && (data as any[]).length === 0) {
+      setData(state => ({ ...state, [key]: initialData }));
+    }
+    
     return { data: data as AppState[K], setData, isClient };
   };
 };
@@ -19,17 +28,6 @@ export const useStoreProductsData = createDataHook('storeProducts');
 export const useProvidersData = createDataHook('providers');
 export const useOpportunitiesData = createDataHook('opportunities');
 export const useServicesData = createDataHook('services');
-
-export const useStaffData = () => {
-    const data = useGlobalStore(state => ({
-        leadership: state.leadership,
-        staff: state.staff,
-        agentCategories: state.agentCategories,
-    }));
-    const isClient = useGlobalStore(state => state.isClient);
-    return { ...data, isClient };
-};
-
 export const useCfoData = createDataHook('cfoData');
 export const useAssetsData = createDataHook('assets');
 export const usePropertiesData = createDataHook('properties');
@@ -71,4 +69,18 @@ export const useIndustriesData = createDataHook('industries');
 export const useDailySalesData = createDataHook('dailySales');
 export const useUserDocumentsData = createDataHook('userDocuments');
 export const useSaaSProductsData = createDataHook('saasProducts');
+
+
+// This special hook remains a client hook because it uses other hooks that need the client context.
+export function useStaffData() {
+    'use client';
+    const data = useGlobalStore(state => ({
+        leadership: state.leadership,
+        staff: state.staff,
+        agentCategories: state.agentCategories,
+    }));
+    const isClient = useGlobalStore(state => state.isClient);
+    return { ...data, isClient };
+};
+
 export { useSetStore } from '@/lib/global-store.tsx';

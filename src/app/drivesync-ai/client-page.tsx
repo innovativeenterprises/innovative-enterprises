@@ -20,18 +20,18 @@ const bookingData = [
 ];
 const chartConfig = { bookings: { label: "Bookings", color: "hsl(var(--chart-1))" } };
 
-export default function DriveSyncClientPage() {
-    const { data: agencies, isClient: isAgenciesClient } = useRentalAgenciesData();
-    const { data: cars, isClient: isCarsClient } = useCarsData();
+export default function DriveSyncClientPage({ initialCars, initialAgencies}: { initialCars: CarType[], initialAgencies: RentalAgency[]}) {
+    const { data: agencies, isClient: isAgenciesClient } = useRentalAgenciesData(initialAgencies);
+    const { data: cars, isClient: isCarsClient } = useCarsData(initialCars);
     const isClient = isAgenciesClient && isCarsClient;
     
     const [selectedAgencyId, setSelectedAgencyId] = useState('');
 
-    useEffect(() => {
-        if (isClient && agencies.length > 0 && !selectedAgencyId) {
+     useEffect(() => {
+        if (isClient && agencies.length > 0) {
             setSelectedAgencyId(agencies[0].id);
         }
-    }, [isClient, agencies, selectedAgencyId]);
+    }, [isClient, agencies]);
 
     const agencyCars = useMemo(() => {
         return cars.filter(c => c.rentalAgencyId === selectedAgencyId);

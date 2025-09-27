@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, Search, HandCoins } from "lucide-react";
@@ -42,8 +43,8 @@ const ListingGridSkeleton = () => (
     </div>
 );
 
-export default function StairspaceClientPage() {
-    const { data: listings, isClient } = useStairspaceListingsData();
+export default function StairspaceClientPage({ initialListings }: { initialListings: StairspaceListing[] }) {
+    const { data: listings, isClient } = useStairspaceListingsData(initialListings);
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredItems = useMemo(() => {
