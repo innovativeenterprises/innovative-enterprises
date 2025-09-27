@@ -15,7 +15,6 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -38,9 +37,8 @@ import { useCartData, useAiToolsData, useSolutionsData, useIndustriesData, useSe
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { iconName: string; }
->(({ className, title, children, iconName, ...props }, ref) => {
-  const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -52,10 +50,7 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="flex items-center gap-2">
-            <Icon className="h-5 w-5 text-primary" />
-            <div className="text-sm font-medium leading-none">{title}</div>
-          </div>
+          <div className="text-sm font-medium leading-none">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
@@ -115,16 +110,20 @@ export default function HeaderClient() {
                 <NavigationMenuTrigger className="text-base font-medium">Solutions</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
-                    {(solutions || []).map((component) => (
-                      <Link href={component.href} key={component.title} legacyBehavior passHref>
-                        <ListItem
-                          title={component.title}
-                          iconName={component.icon}
-                        >
-                          {component.description}
+                    {(solutions || []).map((component) => {
+                      const Icon = (Icons as any)[component.icon] || Icons.HelpCircle;
+                      return (
+                        <ListItem key={component.title} title={component.title} href={component.href}>
+                            <div className="flex items-center gap-2">
+                                <Icon className="h-5 w-5 text-primary" />
+                                <div className="text-sm font-medium leading-none">{component.title}</div>
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                {component.description}
+                            </p>
                         </ListItem>
-                      </Link>
-                    ))}
+                      )
+                    })}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -132,16 +131,20 @@ export default function HeaderClient() {
                 <NavigationMenuTrigger className="text-base font-medium">Industries</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {(industries || []).map((component) => (
-                      <Link href={component.href} key={component.title} legacyBehavior passHref>
-                        <ListItem
-                          title={component.title}
-                          iconName={component.icon}
-                        >
-                          {component.description}
-                        </ListItem>
-                      </Link>
-                    ))}
+                    {(industries || []).map((component) => {
+                        const Icon = (Icons as any)[component.icon] || Icons.HelpCircle;
+                        return (
+                            <ListItem key={component.title} title={component.title} href={component.href}>
+                                <div className="flex items-center gap-2">
+                                    <Icon className="h-5 w-5 text-primary" />
+                                    <div className="text-sm font-medium leading-none">{component.title}</div>
+                                </div>
+                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                    {component.description}
+                                </p>
+                            </ListItem>
+                        )
+                    })}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -149,16 +152,20 @@ export default function HeaderClient() {
                 <NavigationMenuTrigger className="text-base font-medium">AI Tools</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.aiToolsMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.aiToolsMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3", settings && settings.aiToolsMenuColumns >= 4 && "lg:w-[800px] lg:grid-cols-4")}>
-                    {(aiTools || []).map((component) => (
-                       <Link href={component.href} key={component.title} legacyBehavior passHref>
-                          <ListItem
-                            title={component.title}
-                            iconName={component.icon}
-                          >
-                            {component.description}
-                          </ListItem>
-                        </Link>
-                    ))}
+                    {(aiTools || []).map((component) => {
+                        const Icon = (Icons as any)[component.icon] || Icons.HelpCircle;
+                        return (
+                             <ListItem key={component.title} title={component.title} href={component.href}>
+                                <div className="flex items-center gap-2">
+                                    <Icon className="h-5 w-5 text-primary" />
+                                    <div className="text-sm font-medium leading-none">{component.title}</div>
+                                </div>
+                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                    {component.description}
+                                </p>
+                            </ListItem>
+                        )
+                    })}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -251,3 +258,5 @@ export default function HeaderClient() {
     </header>
   );
 }
+
+  
