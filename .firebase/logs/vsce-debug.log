@@ -1414,3 +1414,71 @@ example/queries.gql:23:3: Field "task_update" must not have a selection since ty
 Generated sources: main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] 
 I0928 02:00:09.773872   29428 load.go:74] Finished reloading
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0928 02:00:09.773792   29428 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] \nI0928 02:00:09.773872   29428 load.go:74] Finished reloading\n"}}
+[debug] [2025-09-28T03:06:23.410Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-09-28T03:06:54.747Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-09-28T03:06:54.750Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-28T03:06:54.751Z] > authorizing via signed-in user (innovativeenterprisesoman@gmail.com)
+[debug] [2025-09-28T03:06:54.758Z] Checked if tokens are valid: false, expires at: 1759028216739
+[debug] [2025-09-28T03:06:54.759Z] Checked if tokens are valid: false, expires at: 1759028216739
+[debug] [2025-09-28T03:06:54.760Z] > refreshing access token with scopes: []
+[debug] [2025-09-28T03:06:54.764Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-28T03:06:54.765Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-28T03:06:54.865Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[debug] [2025-09-28T03:06:55.365Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-28T03:06:55.365Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-28T03:06:55.397Z] [Firebase Plugin] User found:  innovativeenterprisesoman@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-09-28T03:06:55.403Z] Checked if tokens are valid: true, expires at: 1759032414367
+[debug] [2025-09-28T03:06:55.407Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.13.0) on port 50001
+[debug] [2025-09-28T03:06:59.454Z] W0928 03:06:59.451127    1900 control.go:68] [/emulator/studio f7ff] connector "example" has errors: example/queries.gql:1:21: Unknown argument "rules" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "rules" on directive "@auth".
+example/queries.gql:10:3: Unknown argument "organization_id" on field "Query.users".
+example/queries.gql:22:52: Unknown argument "rules" on directive "@auth".
+example/queries.gql:27:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:23:3: Unknown argument "status" on field "Mutation.task_update".
+example/queries.gql:23:3: Field "task_update" argument "data" of type "Task_Data!" is required, but it was not provided.
+example/queries.gql:23:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+
+sources: example/queries.gql [731B] 
+I0928 03:06:59.451387    1900 control.go:94] [/emulator/studio f7ff] UpdateResources(): done
+Schema: sources: schema/schema.gql [1207B] 
+Connector "example": sources: example/queries.gql [731B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W0928 03:06:59.451127    1900 control.go:68] [/emulator/studio f7ff] connector \"example\" has errors: example/queries.gql:1:21: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:9:56: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:10:3: Unknown argument \"organization_id\" on field \"Query.users\".\nexample/queries.gql:22:52: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:27:5: Cannot query field \"id\" on type \"Task_KeyOutput\".\nexample/queries.gql:23:3: Unknown argument \"status\" on field \"Mutation.task_update\".\nexample/queries.gql:23:3: Field \"task_update\" argument \"data\" of type \"Task_Data!\" is required, but it was not provided.\nexample/queries.gql:23:3: Field \"task_update\" must not have a selection since type \"Task_KeyOutput\" has no subfields.\n\nsources: example/queries.gql [731B] \nI0928 03:06:59.451387    1900 control.go:94] [/emulator/studio f7ff] UpdateResources(): done\nSchema: sources: schema/schema.gql [1207B] \nConnector \"example\": sources: example/queries.gql [731B] \n"}}
+[debug] [2025-09-28T03:06:59.456Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-09-28T03:06:59.458Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-09-28T03:06:59.460Z] Starting Data Connect Emulator with command {"binary":"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.13.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/user/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.13.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/user/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-09-28T03:06:59.657Z] I0928 03:06:59.536849    1906 load.go:31] Reloading schema and connectors...
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0928 03:06:59.536849    1906 load.go:31] Reloading schema and connectors...\n"}}
+[debug] [2025-09-28T03:07:00.368Z] W0928 03:06:59.929188    1906 control.go:68] [/emulator/studio 5888] connector "example" has errors: example/queries.gql:1:21: Unknown argument "rules" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "rules" on directive "@auth".
+example/queries.gql:10:3: Unknown argument "organization_id" on field "Query.users".
+example/queries.gql:22:52: Unknown argument "rules" on directive "@auth".
+example/queries.gql:27:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:23:3: Unknown argument "status" on field "Mutation.task_update".
+example/queries.gql:23:3: Field "task_update" argument "data" of type "Task_Data!" is required, but it was not provided.
+example/queries.gql:23:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+
+sources: example/queries.gql [731B] 
+I0928 03:06:59.929282    1906 control.go:94] [/emulator/studio 5888] UpdateResources(): done
+Schema: sources: schema/schema.gql [1207B] 
+Connector "example": sources: example/queries.gql [731B] 
+E0928 03:06:59.948183    1906 load.go:73] Could not load sources: 
+Errors: example/queries.gql:1:21: Unknown argument "rules" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "rules" on directive "@auth".
+example/queries.gql:10:3: Unknown argument "organization_id" on field "Query.users".
+example/queries.gql:22:52: Unknown argument "rules" on directive "@auth".
+example/queries.gql:27:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:23:3: Unknown argument "status" on field "Mutation.task_update".
+example/queries.gql:23:3: Field "task_update" argument "data" of type "Task_Data!" is required, but it was not provided.
+example/queries.gql:23:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+I0928 03:06:59.953531    1906 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/implicit.gql [3592B] main/input.gql [68752B] prelude.gql [73251B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] 
+I0928 03:06:59.954661    1906 load.go:74] Finished reloading
+I0928 03:06:59.964946    1906 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W0928 03:06:59.929188    1906 control.go:68] [/emulator/studio 5888] connector \"example\" has errors: example/queries.gql:1:21: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:9:56: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:10:3: Unknown argument \"organization_id\" on field \"Query.users\".\nexample/queries.gql:22:52: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:27:5: Cannot query field \"id\" on type \"Task_KeyOutput\".\nexample/queries.gql:23:3: Unknown argument \"status\" on field \"Mutation.task_update\".\nexample/queries.gql:23:3: Field \"task_update\" argument \"data\" of type \"Task_Data!\" is required, but it was not provided.\nexample/queries.gql:23:3: Field \"task_update\" must not have a selection since type \"Task_KeyOutput\" has no subfields.\n\nsources: example/queries.gql [731B] \nI0928 03:06:59.929282    1906 control.go:94] [/emulator/studio 5888] UpdateResources(): done\nSchema: sources: schema/schema.gql [1207B] \nConnector \"example\": sources: example/queries.gql [731B] \nE0928 03:06:59.948183    1906 load.go:73] Could not load sources: \nErrors: example/queries.gql:1:21: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:9:56: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:10:3: Unknown argument \"organization_id\" on field \"Query.users\".\nexample/queries.gql:22:52: Unknown argument \"rules\" on directive \"@auth\".\nexample/queries.gql:27:5: Cannot query field \"id\" on type \"Task_KeyOutput\".\nexample/queries.gql:23:3: Unknown argument \"status\" on field \"Mutation.task_update\".\nexample/queries.gql:23:3: Field \"task_update\" argument \"data\" of type \"Task_Data!\" is required, but it was not provided.\nexample/queries.gql:23:3: Field \"task_update\" must not have a selection since type \"Task_KeyOutput\" has no subfields.\nI0928 03:06:59.953531    1906 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: main/implicit.gql [3592B] main/input.gql [68752B] prelude.gql [73251B] main/relation.gql [33941B] main/query.gql [7604B] main/mutation.gql [20515B] \nI0928 03:06:59.954661    1906 load.go:74] Finished reloading\nI0928 03:06:59.964946    1906 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[debug] [2025-09-28T03:07:00.518Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-09-28T03:07:00.519Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-09-28T03:07:00.685Z] I0928 03:07:00.659642    1906 engine.go:169] [/emulator/studio 5888] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0928 03:07:00.659642    1906 engine.go:169] [/emulator/studio 5888] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
