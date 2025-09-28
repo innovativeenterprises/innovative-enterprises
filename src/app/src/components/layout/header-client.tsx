@@ -117,13 +117,13 @@ export default function HeaderClient() {
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
                     {(solutions || []).map((component) => (
                       <Link href={component.href} key={component.title} legacyBehavior passHref>
-                          <ListItem
-                            title={component.title}
-                            iconName={component.icon}
-                          >
-                            {component.description}
-                          </ListItem>
-                        </Link>
+                        <ListItem
+                          title={component.title}
+                          iconName={component.icon}
+                        >
+                          {component.description}
+                        </ListItem>
+                      </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -134,13 +134,13 @@ export default function HeaderClient() {
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {(industries || []).map((component) => (
                       <Link href={component.href} key={component.title} legacyBehavior passHref>
-                          <ListItem
-                            title={component.title}
-                            iconName={component.icon}
-                          >
-                            {component.description}
-                          </ListItem>
-                        </Link>
+                        <ListItem
+                          title={component.title}
+                          iconName={component.icon}
+                        >
+                          {component.description}
+                        </ListItem>
+                      </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -167,7 +167,7 @@ export default function HeaderClient() {
           </NavigationMenu>
         </nav>
         <div className="flex items-center gap-2">
-            <CartButton />
+          <CartButton />
             <Button variant="outline" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
                 <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
