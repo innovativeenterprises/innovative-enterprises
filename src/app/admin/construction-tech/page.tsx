@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -21,9 +20,9 @@ const ProductCard = ({ product }: { product: Product }) => {
         "AeroSite AI (DaaS)": Camera,
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
-        "AI Smart Home Estimator": Cpu,
+        "Building Systems Estimator": Building,
     };
-    const Icon = iconMap[product.name] || HardHat;
+    const Icon = iconMap[product.name as keyof typeof iconMap] || HardHat;
     
     const href = product.href || '#';
 

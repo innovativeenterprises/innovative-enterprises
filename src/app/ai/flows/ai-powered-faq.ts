@@ -1,5 +1,3 @@
-
-
 'use server';
 
 /**
@@ -50,7 +48,11 @@ const answerQuestionFlow = ai.defineFlow(
     outputSchema: AnswerQuestionOutputSchema,
   },
   async (input) => {
-    const llmResponse = await answerQuestionPrompt(input);
+    const llmResponse = await ai.generate({
+      prompt: answerQuestionPrompt,
+      input: input,
+      tools: [routeToSpecialistTool],
+    });
     
     const toolRequest = llmResponse.toolRequest();
     if (toolRequest) {

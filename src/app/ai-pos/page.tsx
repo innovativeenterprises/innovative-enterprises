@@ -112,7 +112,6 @@ export default function AiPosPage() {
     const { data: dailySales, setData: setDailySales } = useDailySalesData();
     const { data: isClient } = useGlobalStore(s => ({ data: s.isClient }));
     const { data: settings } = useSettingsData();
-    const setStore = useSetStore();
 
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCheckingOut, setIsCheckingOut] = useState(false);

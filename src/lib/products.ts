@@ -1,5 +1,4 @@
 
-
 import type { Product } from './products.schema';
 import { saasProducts } from '@/lib/saas-products';
 
@@ -39,10 +38,10 @@ const hrefMap: Record<string, string> = {
     "ProcureChain SaaS": "/construction-tech/procurechain",
     "DriveSync AI": "/drivesync-ai",
     "Fintech Super-App": "/cfo",
-    "Beauty & Wellness Hub": "/beauty-hub",
+    "Beauty & Wellness Hub": "/admin/beauty-hub",
     "Professional Hub": "/professional-hub",
     "StockClear": "/stock-clear",
-    "Hadeeya": "/hadeeya",
+    "Hadeeya": "/admin/hadeeya",
     "RAAHA": "/raaha",
     "Nova Commerce": "/ecommerce",
     "Logistics Chain AI": "/logistics-ai",

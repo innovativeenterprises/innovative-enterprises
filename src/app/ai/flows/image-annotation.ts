@@ -40,15 +40,7 @@ const prompt = ai.definePrompt({
     }),
   },
   output: {
-    schema: z.object({
-      identifiedObject: z.string().describe("The name of the main object identified in the image."),
-      estimatedDimensions: z.object({
-        height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
-        width: z.string().describe("Estimated width with units (e.g., '10 cm')."),
-        depth: z.string().describe("Estimated depth with units (e.g., '8 cm')."),
-      }),
-      otherMetrics: z.string().optional().describe("Any other relevant metrics identified, such as volume or weight."),
-    })
+    schema: ImageAnnotatorOutputSchema.omit({ annotatedImageUri: true }),
   },
   prompt: promptText,
 });
@@ -69,15 +61,7 @@ export const annotateImage = ai.defineFlow(
             ],
             output: {
                 format: 'json',
-                schema: z.object({
-                    identifiedObject: z.string(),
-                    estimatedDimensions: z.object({
-                        height: z.string(),
-                        width: z.string(),
-                        depth: z.string(),
-                    }),
-                    otherMetrics: z.string().optional(),
-                }),
+                schema: prompt.output.schema,
             },
             config: {
                 responseModalities: ['IMAGE', 'TEXT'],

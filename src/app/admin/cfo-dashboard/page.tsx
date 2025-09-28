@@ -1,14 +1,7 @@
-
 'use client';
 
-import CfoPageClient from '@/app/cfo/client-page';
 import { DollarSign } from 'lucide-react';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "CFO Dashboard",
-  description: "Financial overview and analysis for your business operations.",
-};
+import CfoPageClient from '@/app/cfo/client-page';
 
 export default function CfoDashboardPage() {
     return (

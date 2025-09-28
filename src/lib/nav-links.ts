@@ -1,12 +1,4 @@
-
 import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook, FileSignature, Brush } from "lucide-react";
-import SanadHubIcon from "@/components/icons/sanad-hub-icon";
-import BusinessHubIcon from "@/components/icons/business-hub-icon";
-import AmeenSmartLockIcon from "@/components/icons/ameen-smart-lock-icon";
-import KhidmaIcon from "@/components/icons/khidma-icon";
-import VmallIcon from "@/components/icons/vmall-icon";
-import AppiIcon from "@/components/icons/appi-icon";
-import { Gift, Warehouse } from "lucide-react";
 
 export const initialSolutions = [
     {
@@ -38,7 +30,7 @@ export const initialSolutions = [
     },
       {
       title: "RAAHA",
-      href: "/raaha",
+      href: "/admin/raaha",
       description:
         "An AI-powered platform for domestic workforce agencies to streamline recruitment and management.",
       icon: 'Home',
@@ -73,7 +65,7 @@ export const initialSolutions = [
     },
      {
       title: "Hadeeya",
-      href: "/hadeeya",
+      href: "/admin/hadeeya",
       description:
         "A sophisticated prepaid digital gift card platform for individuals and corporate clients.",
       icon: 'Gift',
@@ -93,7 +85,7 @@ export const initialSolutions = [
     },
     {
         title: "Beauty & Wellness Hub",
-        href: "/beauty-hub",
+        href: "/admin/beauty-hub",
         description: "A complete SaaS solution for salons, spas, and barbershops to manage appointments, staff, services, and client relationships.",
         icon: 'Heart',
     },
@@ -108,25 +100,25 @@ export const initialSolutions = [
 export const initialIndustries: { title: string; href: string; description: string, icon: string }[] = [
   {
     title: "Construction Tech",
-    href: "/construction-tech",
+    href: "/admin/construction-tech",
     description: "AI-powered SaaS platforms to automate, optimize, and revolutionize the construction industry.",
     icon: 'HardHat',
   },
   {
     title: "Real Estate Tech",
-    href: "/real-estate-tech",
+    href: "/admin/real-estate",
     description: "A suite of automated SaaS platforms for property valuation, management, and investment.",
     icon: 'Building2',
   },
   {
     title: "Education Tech",
-    href: "/education-tech",
+    href: "/admin/education-tech",
     description: "AI-driven platforms to enhance learning, streamline administration, and improve student outcomes.",
     icon: 'GraduationCap',
   },
    {
     title: "Automotive Tech",
-    href: "/automotive-tech",
+    href: "/admin/automotive-tech",
     description: "AI-powered SaaS platforms for car rental agencies, fleet management, and vehicle tracking.",
     icon: 'Car',
   },
