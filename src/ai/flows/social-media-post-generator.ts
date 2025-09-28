@@ -77,19 +77,16 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     outputSchema: GenerateSocialMediaPostOutputSchema,
   },
   async (input) => {
-    const textPromise = ai.generate({
-        prompt: textGenerationPrompt,
-        input: input,
-    });
+    const textPromise = textGenerationPrompt(input);
+    
     let imagePromise: Promise<{ imageUrl: string; } | undefined> | undefined;
-
     if (input.generateImage) {
         imagePromise = generateImage({ prompt: `A visually appealing image for a social media campaign about: ${input.topic}` });
     }
     
     const [textResult, imageResult] = await Promise.all([textPromise, imagePromise]);
     
-    const output = textResult.output();
+    const output = textResult;
     if (!output || !output.posts) {
       throw new Error('Failed to generate text content.');
     }

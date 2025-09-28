@@ -1,4 +1,6 @@
 
+'use server';
+
 import ValuationForm from "./valuation-form";
 import { BarChart } from "lucide-react";
 import type { Metadata } from 'next';
