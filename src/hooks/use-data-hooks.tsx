@@ -12,11 +12,12 @@ const createDataHook = <K extends keyof AppState>(key: K) => {
     const isClient = useGlobalStore((state) => state.isClient);
 
     useEffect(() => {
+      // Only set initial data if it's provided and different from the current store state
       if (initialData !== undefined && JSON.stringify(data) !== JSON.stringify(initialData)) {
          set((state) => ({ ...state, [key]: initialData }));
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialData]);
+    }, [initialData, set, key]); // Key is static, so this runs once on mount with initialData
 
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
