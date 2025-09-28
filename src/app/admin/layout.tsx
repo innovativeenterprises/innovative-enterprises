@@ -62,7 +62,7 @@ export default function AdminLayout({
   const dashboards = [
       { href: '/admin', label: 'Main Dashboard', icon: LayoutDashboard },
       { href: '/admin/coo-dashboard', label: 'AI COO', icon: BrainCircuit },
-      { href: '/cfo', label: 'CFO Dashboard', icon: WalletCards },
+      { href: '/admin/cfo-dashboard', label: 'CFO Dashboard', icon: WalletCards },
   ];
 
 

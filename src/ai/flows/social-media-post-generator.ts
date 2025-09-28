@@ -89,7 +89,7 @@ const socialMediaPostGeneratorFlow = ai.defineFlow(
     
     const [textResult, imageResult] = await Promise.all([textPromise, imagePromise]);
     
-    const output = textResult.output;
+    const output = textResult.output();
     if (!output || !output.posts) {
       throw new Error('Failed to generate text content.');
     }
