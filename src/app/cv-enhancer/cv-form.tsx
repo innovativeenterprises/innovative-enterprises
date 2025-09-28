@@ -582,281 +582,277 @@ export default function CvForm() {
   }
 
   return (
-    <div className="space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Step 1: Upload Your CV</CardTitle>
-          <CardDescription>Our AI will analyze your CV for ATS compatibility.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...uploadForm}>
-            <form onSubmit={uploadForm.handleSubmit(handleAnalysis)} className="space-y-6">
-              <FormField
-                control={uploadForm.control}
-                name="cvDocument"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CV Document (Word, PDF, or Image)</FormLabel>
-                    <FormControl>
-                        <Input type="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" disabled={isLoading} className="w-full">
-                {isLoading ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</>
-                ) : (
-                   <><Sparkles className="mr-2 h-4 w-4" />Analyze My CV</>
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-
-      {isLoading && (
-         <Card>
-            <CardContent className="p-6 text-center">
-                <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-                <p className="mt-4 text-muted-foreground">Our AI is analyzing your CV... This may take a moment.</p>
-            </CardContent>
-         </Card>
-      )}
-
-      {analysis && !generatedCv && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Step 2: Review Analysis & Enhance</CardTitle>
-            <CardDescription>{analysis.summary}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-semibold">Overall ATS Score</h3>
-                <span className="font-bold text-lg text-primary">{analysis.overallScore}/100</span>
-              </div>
-              <Progress value={analysis.overallScore} className="w-full" />
-            </div>
-
-            <div className="space-y-4 pt-4">
-                <SuggestionSection title="Contact Information" data={analysis.contactInfo} />
-                <SuggestionSection title="Work Experience" data={analysis.workExperience} />
-                <SuggestionSection title="Skills Section" data={analysis.skills} />
-                <SuggestionSection title="Education" data={analysis.education} />
-                <SuggestionSection title="Formatting & Parsing" data={analysis.formatting} />
-            </div>
-            
-            <div className="pt-6 border-t">
-                <h3 className="text-lg font-semibold mb-4 text-primary">Let's Rebuild Your CV!</h3>
-                 <Form {...generationForm}>
-                    <form onSubmit={generationForm.handleSubmit(handleGeneration)} className="space-y-6">
-                        <FormField
-                            control={generationForm.control}
-                            name="targetPosition"
-                            render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>What position are you applying for?</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="e.g., Senior Software Engineer" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-                         <FormField
-                            control={generationForm.control}
-                            name="jobAdvertisement"
-                            render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Job Advertisement (Optional)</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="Paste the job description here for a more tailored result." rows={6} {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-                         <FormField
-                            control={generationForm.control}
-                            name="languages"
-                            render={() => (
-                            <FormItem>
-                                <div className="mb-4">
-                                     <FormLabel>Languages for CV & Cover Letter</FormLabel>
-                                     <FormDescription>Select all languages you require.</FormDescription>
-                                </div>
-                                {availableLanguages.map((item) => (
-                                    <FormField
-                                    key={item.id}
-                                    control={generationForm.control}
-                                    name="languages"
-                                    render={({ field }) => {
-                                        return (
-                                        <FormItem
-                                            key={item.id}
-                                            className="flex flex-row items-start space-x-3 space-y-0"
-                                        >
-                                            <FormControl>
-                                            <Checkbox
-                                                checked={field.value?.includes(item.id)}
-                                                onCheckedChange={(checked) => {
-                                                return checked
-                                                    ? field.onChange([...(field.value || []), item.id])
-                                                    : field.onChange(
-                                                        field.value?.filter(
-                                                        (value) => value !== item.id
-                                                        )
-                                                    )
-                                                }}
-                                            />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                {item.label}
-                                            </FormLabel>
-                                        </FormItem>
-                                        )
-                                    }}
-                                    />
-                                ))}
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-                        <Button type="submit" disabled={isGenerating} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                            {isGenerating ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Generating...
-                            </>
-                            ) : (
-                            <>
-                                <Bot className="mr-2 h-4 w-4" />
-                                Create Enhanced Documents
-                            </>
-                            )}
-                        </Button>
-                    </form>
-                 </Form>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {isGenerating && (
-         <Card>
-            <CardContent className="p-6 text-center">
-                <Loader2 className="mx-auto h-8 w-8 animate-spin text-accent" />
-                <p className="mt-4 text-muted-foreground">Our AI is crafting your new documents... This is the exciting part!</p>
-            </CardContent>
-         </Card>
-      )}
-
-      {generatedCv && analysis && (
-         <Card>
+      <div className="space-y-8">
+          <Card>
             <CardHeader>
-                <div className="flex flex-col items-center text-center space-y-4">
-                    <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
-                        <Smile className="h-12 w-12 text-green-500" />
-                    </div>
-                    <CardTitle className="text-2xl">Congratulations! Your ATS Score has Improved!</CardTitle>
-                    <div className="flex items-center gap-4 text-2xl font-bold">
-                        <div className="flex flex-col items-center p-4 rounded-lg bg-muted">
-                            <span className="text-sm font-medium text-muted-foreground">Original Score</span>
-                            <span>{analysis.overallScore}</span>
-                        </div>
-                        <ArrowRight className="h-8 w-8 text-primary" />
-                        <div className="flex flex-col items-center p-4 rounded-lg bg-primary text-primary-foreground">
-                            <span className="text-sm font-medium">New Score</span>
-                            <span>{generatedCv.newOverallScore}</span>
-                        </div>
-                    </div>
-                     <CardDescription>Your CV and Cover Letter are now highly optimized. The next step is to prepare for the interview.</CardDescription>
-                       <Button asChild variant="secondary" className="mt-2">
-                        <Link href="/cv-enhancer?tab=interview" scroll={false}>Practice for Interview <ArrowRight className="ml-2 h-4 w-4"/></Link>
-                      </Button>
-                </div>
+              <CardTitle>Step 1: Upload Your CV</CardTitle>
+              <CardDescription>Our AI will analyze your CV for ATS compatibility.</CardDescription>
             </CardHeader>
             <CardContent>
-                 {analysis.overallScore < 100 && generatedCv.newOverallScore < 100 && !isUnlocked && (
-                    <Alert variant="default" className="mb-6">
-                        <Sparkles className="h-4 w-4" />
-                        <AlertTitle>Want an even higher score?</AlertTitle>
-                        <AlertDescription>
-                            Your score improved, but we can do even better! The AI couldn't find some key details in your original CV. Consider adding more quantifiable achievements, specific skills mentioned in the job ad, or more detailed project descriptions to your CV and try again. Or, proceed with the currently enhanced version.
-                        </AlertDescription>
-                    </Alert>
-                 )}
-
-                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="cv" disabled={!isUnlocked && !selections.cv}>Enhanced CV</TabsTrigger>
-                        <TabsTrigger value="letter" disabled={!isUnlocked && !selections.coverLetter}>Cover Letter</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="cv">
-                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                            {isUnlocked && selections.cv ? generatedCv.newCvContent : "Unlock to view your enhanced CV."}
-                        </div>
-                    </TabsContent>
-                    <TabsContent value="letter">
-                         <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
-                             {isUnlocked && selections.coverLetter ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
-                        </div>
-                    </TabsContent>
-                </Tabs>
-
-                {socialPost && (
-                    <div className="mt-6">
-                        <h4 className="font-semibold text-lg">Your Generated Social Media Post:</h4>
-                         {socialPost.imageUrl && (
-                            <div className="relative aspect-video w-full my-4 rounded-md overflow-hidden border">
-                                <img src={socialPost.imageUrl} alt="Social media post" className="object-cover w-full h-full"/>
-                            </div>
-                        )}
-                        <div className="mt-2 prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
-                            <p>{socialPost.posts[0].postContent}</p>
-                            <p className="font-semibold">{socialPost.posts[0].suggestedHashtags.join(' ')}</p>
-                        </div>
-                        <div className="flex justify-end mt-2">
-                            <Button variant="ghost" onClick={() => { 
-                                navigator.clipboard.writeText(socialPost.posts[0].postContent + '\n\n' + socialPost.posts[0].suggestedHashtags.join(' '));
-                                toast({ title: 'Copied!', description: 'Social post content copied to clipboard.'});
-                            }}>
-                                <Copy className="mr-2 h-4 w-4" /> Copy Post
-                            </Button>
-                        </div>
-                    </div>
-                )}
+              <Form {...uploadForm}>
+                <form onSubmit={uploadForm.handleSubmit(handleAnalysis)} className="space-y-6">
+                  <FormField
+                    control={uploadForm.control}
+                    name="cvDocument"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>CV Document (Word, PDF, or Image)</FormLabel>
+                        <FormControl>
+                            <Input type="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" onChange={(e) => field.onChange(e.target.files)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" disabled={isLoading} className="w-full">
+                    {isLoading ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyzing...</>
+                    ) : (
+                       <><Sparkles className="mr-2 h-4 w-4" />Analyze My CV</>
+                    )}
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
-            <CardFooter className="flex-col gap-4 p-0">
-                 {!isUnlocked ? (
-                    <SelectionMatrix 
-                        requestedLanguages={requestedLanguages}
-                        selections={selections}
-                        onSelectionChange={setSelections}
-                        price={price}
-                        onUnlock={handleUnlock}
-                    />
-                 ) : (
-                    <div className="p-6 w-full space-y-4">
-                        <SocialPostDialog 
-                            targetPosition={targetPosition}
-                            onGenerate={handleGeneratedSocialPost}
-                            beforeScore={analysis.overallScore}
-                            afterScore={generatedCv.newOverallScore}
-                        />
-                        <FinalActions 
-                            onDownload={handleDownload}
-                            onCopy={handleCopy}
-                            onEmail={handleEmail}
-                            onSave={() => {}}
-                        />
+          </Card>
+          {isLoading && (
+             <Card>
+                <CardContent className="p-6 text-center">
+                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+                    <p className="mt-4 text-muted-foreground">Our AI is analyzing your CV... This may take a moment.</p>
+                </CardContent>
+             </Card>
+          )}
+          {analysis && !generatedCv && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Step 2: Review Analysis & Enhance</CardTitle>
+                <CardDescription>{analysis.summary}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-semibold">Overall ATS Score</h3>
+                    <span className="font-bold text-lg text-primary">{analysis.overallScore}/100</span>
+                  </div>
+                  <Progress value={analysis.overallScore} className="w-full" />
+                </div>
+
+                <div className="space-y-4 pt-4">
+                    <SuggestionSection title="Contact Information" data={analysis.contactInfo} />
+                    <SuggestionSection title="Work Experience" data={analysis.workExperience} />
+                    <SuggestionSection title="Skills Section" data={analysis.skills} />
+                    <SuggestionSection title="Education" data={analysis.education} />
+                    <SuggestionSection title="Formatting & Parsing" data={analysis.formatting} />
+                </div>
+                
+                <div className="pt-6 border-t">
+                    <h3 className="text-lg font-semibold mb-4 text-primary">Let's Rebuild Your CV!</h3>
+                     <Form {...generationForm}>
+                        <form onSubmit={generationForm.handleSubmit(handleGeneration)} className="space-y-6">
+                            <FormField
+                                control={generationForm.control}
+                                name="targetPosition"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>What position are you applying for?</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="e.g., Senior Software Engineer" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={generationForm.control}
+                                name="jobAdvertisement"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Job Advertisement (Optional)</FormLabel>
+                                    <FormControl>
+                                        <Textarea placeholder="Paste the job description here for a more tailored result." rows={6} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={generationForm.control}
+                                name="languages"
+                                render={() => (
+                                <FormItem>
+                                    <div className="mb-4">
+                                         <FormLabel>Languages for CV & Cover Letter</FormLabel>
+                                         <FormDescription>Select all languages you require.</FormDescription>
+                                    </div>
+                                    {availableLanguages.map((item) => (
+                                        <FormField
+                                        key={item.id}
+                                        control={generationForm.control}
+                                        name="languages"
+                                        render={({ field }) => {
+                                            return (
+                                            <FormItem
+                                                key={item.id}
+                                                className="flex flex-row items-start space-x-3 space-y-0"
+                                            >
+                                                <FormControl>
+                                                <Checkbox
+                                                    checked={field.value?.includes(item.id)}
+                                                    onCheckedChange={(checked) => {
+                                                    return checked
+                                                        ? field.onChange([...(field.value || []), item.id])
+                                                        : field.onChange(
+                                                            field.value?.filter(
+                                                            (value) => value !== item.id
+                                                            )
+                                                        )
+                                                    }}
+                                                />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    {item.label}
+                                                </FormLabel>
+                                            </FormItem>
+                                            )
+                                        }}
+                                        />
+                                    ))}
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <Button type="submit" disabled={isGenerating} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                                {isGenerating ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Generating...
+                                </>
+                                ) : (
+                                <>
+                                    <Bot className="mr-2 h-4 w-4" />
+                                    Create Enhanced Documents
+                                </>
+                                )}
+                            </Button>
+                        </form>
+                     </Form>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          {isGenerating && (
+             <Card>
+                <CardContent className="p-6 text-center">
+                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-accent" />
+                    <p className="mt-4 text-muted-foreground">Our AI is crafting your new documents... This is the exciting part!</p>
+                </CardContent>
+             </Card>
+          )}
+          {generatedCv && analysis && (
+             <Card>
+                <CardHeader>
+                    <div className="flex flex-col items-center text-center space-y-4">
+                        <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full">
+                            <Smile className="h-12 w-12 text-green-500" />
+                        </div>
+                        <CardTitle className="text-2xl">Congratulations! Your ATS Score has Improved!</CardTitle>
+                        <div className="flex items-center gap-4 text-2xl font-bold">
+                            <div className="flex flex-col items-center p-4 rounded-lg bg-muted">
+                                <span className="text-sm font-medium text-muted-foreground">Original Score</span>
+                                <span>{analysis.overallScore}</span>
+                            </div>
+                            <ArrowRight className="h-8 w-8 text-primary" />
+                            <div className="flex flex-col items-center p-4 rounded-lg bg-primary text-primary-foreground">
+                                <span className="text-sm font-medium">New Score</span>
+                                <span>{generatedCv.newOverallScore}</span>
+                            </div>
+                        </div>
+                         <CardDescription>Your CV and Cover Letter are now highly optimized. The next step is to prepare for the interview.</CardDescription>
+                           <Button asChild variant="secondary" className="mt-2">
+                            <Link href="/cv-enhancer?tab=interview" scroll={false} legacyBehavior>Practice for Interview <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                          </Button>
                     </div>
-                 )}
-            </CardFooter>
-         </Card>
-      )}
-    </div>
+                </CardHeader>
+                <CardContent>
+                     {analysis.overallScore < 100 && generatedCv.newOverallScore < 100 && !isUnlocked && (
+                        <Alert variant="default" className="mb-6">
+                            <Sparkles className="h-4 w-4" />
+                            <AlertTitle>Want an even higher score?</AlertTitle>
+                            <AlertDescription>
+                                Your score improved, but we can do even better! The AI couldn't find some key details in your original CV. Consider adding more quantifiable achievements, specific skills mentioned in the job ad, or more detailed project descriptions to your CV and try again. Or, proceed with the currently enhanced version.
+                            </AlertDescription>
+                        </Alert>
+                     )}
+
+                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="cv" disabled={!isUnlocked && !selections.cv}>Enhanced CV</TabsTrigger>
+                            <TabsTrigger value="letter" disabled={!isUnlocked && !selections.coverLetter}>Cover Letter</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="cv">
+                            <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+                                {isUnlocked && selections.cv ? generatedCv.newCvContent : "Unlock to view your enhanced CV."}
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="letter">
+                             <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-96 overflow-y-auto">
+                                 {isUnlocked && selections.coverLetter ? generatedCv.newCoverLetterContent : "Unlock to view your cover letter."}
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+
+                    {socialPost && (
+                        <div className="mt-6">
+                            <h4 className="font-semibold text-lg">Your Generated Social Media Post:</h4>
+                             {socialPost.imageUrl && (
+                                <div className="relative aspect-video w-full my-4 rounded-md overflow-hidden border">
+                                    <img src={socialPost.imageUrl} alt="Social media post" className="object-cover w-full h-full"/>
+                                </div>
+                            )}
+                            <div className="mt-2 prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap">
+                                <p>{socialPost.posts[0].postContent}</p>
+                                <p className="font-semibold">{socialPost.posts[0].suggestedHashtags.join(' ')}</p>
+                            </div>
+                            <div className="flex justify-end mt-2">
+                                <Button variant="ghost" onClick={() => { 
+                                    navigator.clipboard.writeText(socialPost.posts[0].postContent + '\n\n' + socialPost.posts[0].suggestedHashtags.join(' '));
+                                    toast({ title: 'Copied!', description: 'Social post content copied to clipboard.'});
+                                }}>
+                                    <Copy className="mr-2 h-4 w-4" /> Copy Post
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </CardContent>
+                <CardFooter className="flex-col gap-4 p-0">
+                     {!isUnlocked ? (
+                        <SelectionMatrix 
+                            requestedLanguages={requestedLanguages}
+                            selections={selections}
+                            onSelectionChange={setSelections}
+                            price={price}
+                            onUnlock={handleUnlock}
+                        />
+                     ) : (
+                        <div className="p-6 w-full space-y-4">
+                            <SocialPostDialog 
+                                targetPosition={targetPosition}
+                                onGenerate={handleGeneratedSocialPost}
+                                beforeScore={analysis.overallScore}
+                                afterScore={generatedCv.newOverallScore}
+                            />
+                            <FinalActions 
+                                onDownload={handleDownload}
+                                onCopy={handleCopy}
+                                onEmail={handleEmail}
+                                onSave={() => {}}
+                            />
+                        </div>
+                     )}
+                </CardFooter>
+             </Card>
+          )}
+      </div>
   );
 }

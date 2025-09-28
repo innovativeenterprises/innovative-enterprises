@@ -174,118 +174,116 @@ export const ChatComponent = ({
   const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
 
   return (
-    <Card className="w-full h-full flex flex-col border-0 shadow-none rounded-none">
-        <CardHeader className="flex flex-row items-center gap-4">
-            <Avatar>
-                <AvatarFallback><Bot /></AvatarFallback>
-            </Avatar>
-            <div>
-                <CardTitle>{agentName}</CardTitle>
-                <CardDescription>{agentDescription}</CardDescription>
-            </div>
-        </CardHeader>
-
-        <CardContent className="flex-1 overflow-hidden p-0">
-            <ScrollArea className="h-full p-4" viewportRef={scrollAreaRef}>
-                <div className="space-y-6">
-                    {messages.map((msg, index) => (
-                        <div key={index}>
-                            <div className={cn("flex items-start gap-3", msg.role === 'user' ? 'justify-end' : '')}>
-                                 {msg.role === 'bot' && <Avatar className="h-8 w-8"><AvatarFallback><AgentIcon className="h-5 w-5"/></AvatarFallback></Avatar>}
-                                <div className={cn("max-w-xs md:max-w-md rounded-xl px-4 py-3", 
-                                    msg.role === 'user' 
-                                        ? 'bg-primary text-primary-foreground' 
-                                        : 'bg-muted'
-                                )}>
-                                    <div className="text-sm whitespace-pre-wrap prose prose-sm max-w-full" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\\n/g, '<br />') }} />
-                                     {msg.itemAddedToCart && (
-                                        <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex items-center gap-3">
-                                            <div className="relative w-12 h-12 rounded-md overflow-hidden">
-                                                <Image src={msg.itemAddedToCart.image!} alt={msg.itemAddedToCart.name} fill className="object-cover"/>
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold text-sm">{msg.itemAddedToCart.name}</p>
-                                                <p className="text-xs text-muted-foreground">1 x OMR {msg.itemAddedToCart.price.toFixed(2)}</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {msg.meetingUrl && (
-                                        <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
-                                            <Link href={msg.meetingUrl} target="_blank">Book a Meeting</Link>
-                                        </Button>
-                                    )}
-                                     {msg.contactOptions && (
-                                        <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex gap-2">
-                                            {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${msg.contactOptions.email}`}>Email</a></Button>}
-                                            {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${msg.contactOptions.whatsapp}`} target="_blank">WhatsApp</a></Button>}
-                                        </div>
-                                    )}
-                                    {msg.imageUrl && (
-                                         <div className="mt-3 relative aspect-video w-full overflow-hidden rounded-md border">
-                                            <Image src={msg.imageUrl} alt="Generated for social media post" fill className="object-cover"/>
-                                        </div>
-                                    )}
-                                </div>
-                                {msg.role === 'user' && <Avatar className="h-8 w-8"><AvatarFallback><User className="h-5 w-5"/></AvatarFallback></Avatar>}
-                            </div>
-                            {msg.role === 'bot' && msg.suggestedReplies && msg.suggestedReplies.length > 0 && showSuggestions && index === messages.length - 1 && (
-                                <div className="flex flex-wrap gap-2 mt-3 pl-12">
-                                    {msg.suggestedReplies.map((reply, i) => (
-                                        <Button key={i} variant="outline" size="sm" onClick={() => handleSuggestionClick(reply)}>
-                                            {reply}
-                                        </Button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                    {isLoading && (
-                        <div className="flex items-start gap-3">
-                            <Avatar className="h-8 w-8"><AvatarFallback><AgentIcon className="h-5 w-5"/></AvatarFallback></Avatar>
-                             <div className="bg-muted rounded-xl px-4 py-3 flex items-center gap-2">
-                                <Loader2 className="h-5 w-5 animate-spin" />
-                                <span className="text-sm text-muted-foreground">Thinking...</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </ScrollArea>
-        </CardContent>
-
-        <div className="p-4 border-t">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-2">
-                    {settings?.voiceInteractionEnabled && (
-                    <>
-                    {isPlaying ? (
-                        <Button type="button" size="icon" variant="destructive" onClick={stopAudio}><Square className="h-5 w-5"/></Button>
-                    ): (
-                        <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(lastMessage!.content)} disabled={isLoading || !lastMessage || lastMessage.role !== 'bot' || !lastMessage.content}>
-                            <Volume2 className="h-5 w-5"/>
-                        </Button>
-                    )}
-                    </>
-                    )}
-                     <div className="relative w-full">
-                        <VoiceEnabledTextarea
-                            placeholder={placeholder}
-                            className="pr-12"
-                            rows={1}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    form.handleSubmit(onSubmit)();
-                                }
-                            }}
-                            {...form.register("message")}
-                        />
-                         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                            <Button type="submit" size="icon" disabled={isLoading} variant="ghost"><Send className="h-5 w-5" /></Button>
-                         </div>
-                    </div>
-                </form>
-            </Form>
-        </div>
-    </Card>
+      <Card className="w-full h-full flex flex-col border-0 shadow-none rounded-none">
+          <CardHeader className="flex flex-row items-center gap-4">
+              <Avatar>
+                  <AvatarFallback><Bot /></AvatarFallback>
+              </Avatar>
+              <div>
+                  <CardTitle>{agentName}</CardTitle>
+                  <CardDescription>{agentDescription}</CardDescription>
+              </div>
+          </CardHeader>
+          <CardContent className="flex-1 overflow-hidden p-0">
+              <ScrollArea className="h-full p-4" viewportRef={scrollAreaRef}>
+                  <div className="space-y-6">
+                      {messages.map((msg, index) => (
+                          <div key={index}>
+                              <div className={cn("flex items-start gap-3", msg.role === 'user' ? 'justify-end' : '')}>
+                                   {msg.role === 'bot' && <Avatar className="h-8 w-8"><AvatarFallback><AgentIcon className="h-5 w-5"/></AvatarFallback></Avatar>}
+                                  <div className={cn("max-w-xs md:max-w-md rounded-xl px-4 py-3", 
+                                      msg.role === 'user' 
+                                          ? 'bg-primary text-primary-foreground' 
+                                          : 'bg-muted'
+                                  )}>
+                                      <div className="text-sm whitespace-pre-wrap prose prose-sm max-w-full" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\\n/g, '<br />') }} />
+                                       {msg.itemAddedToCart && (
+                                          <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex items-center gap-3">
+                                              <div className="relative w-12 h-12 rounded-md overflow-hidden">
+                                                  <Image src={msg.itemAddedToCart.image!} alt={msg.itemAddedToCart.name} fill className="object-cover"/>
+                                              </div>
+                                              <div>
+                                                  <p className="font-semibold text-sm">{msg.itemAddedToCart.name}</p>
+                                                  <p className="text-xs text-muted-foreground">1 x OMR {msg.itemAddedToCart.price.toFixed(2)}</p>
+                                              </div>
+                                          </div>
+                                      )}
+                                      {msg.meetingUrl && (
+                                          <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
+                                              <Link href={msg.meetingUrl} target="_blank">Book a Meeting</Link>
+                                          </Button>
+                                      )}
+                                       {msg.contactOptions && (
+                                          <div className="mt-3 pt-3 border-t border-muted-foreground/20 flex gap-2">
+                                              {msg.contactOptions.email && <Button asChild variant="outline" size="sm"><a href={`mailto:${msg.contactOptions.email}`}>Email</a></Button>}
+                                              {msg.contactOptions.whatsapp && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${msg.contactOptions.whatsapp}`} target="_blank">WhatsApp</a></Button>}
+                                          </div>
+                                      )}
+                                      {msg.imageUrl && (
+                                           <div className="mt-3 relative aspect-video w-full overflow-hidden rounded-md border">
+                                              <Image src={msg.imageUrl} alt="Generated for social media post" fill className="object-cover"/>
+                                          </div>
+                                      )}
+                                  </div>
+                                  {msg.role === 'user' && <Avatar className="h-8 w-8"><AvatarFallback><User className="h-5 w-5"/></AvatarFallback></Avatar>}
+                              </div>
+                              {msg.role === 'bot' && msg.suggestedReplies && msg.suggestedReplies.length > 0 && showSuggestions && index === messages.length - 1 && (
+                                  <div className="flex flex-wrap gap-2 mt-3 pl-12">
+                                      {msg.suggestedReplies.map((reply, i) => (
+                                          <Button key={i} variant="outline" size="sm" onClick={() => handleSuggestionClick(reply)}>
+                                              {reply}
+                                          </Button>
+                                      ))}
+                                  </div>
+                              )}
+                          </div>
+                      ))}
+                      {isLoading && (
+                          <div className="flex items-start gap-3">
+                              <Avatar className="h-8 w-8"><AvatarFallback><AgentIcon className="h-5 w-5"/></AvatarFallback></Avatar>
+                               <div className="bg-muted rounded-xl px-4 py-3 flex items-center gap-2">
+                                  <Loader2 className="h-5 w-5 animate-spin" />
+                                  <span className="text-sm text-muted-foreground">Thinking...</span>
+                              </div>
+                          </div>
+                      )}
+                  </div>
+              </ScrollArea>
+          </CardContent>
+          <div className="p-4 border-t">
+              <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-2">
+                      {settings?.voiceInteractionEnabled && (
+                      <>
+                      {isPlaying ? (
+                          <Button type="button" size="icon" variant="destructive" onClick={stopAudio}><Square className="h-5 w-5"/></Button>
+                      ): (
+                          <Button type="button" size="icon" variant="outline" onClick={() => handleTextToSpeech(lastMessage!.content)} disabled={isLoading || !lastMessage || lastMessage.role !== 'bot' || !lastMessage.content}>
+                              <Volume2 className="h-5 w-5"/>
+                          </Button>
+                      )}
+                      </>
+                      )}
+                       <div className="relative w-full">
+                          <VoiceEnabledTextarea
+                              placeholder={placeholder}
+                              className="pr-12"
+                              rows={1}
+                              onKeyDown={(e) => {
+                                  if (e.key === 'Enter' && !e.shiftKey) {
+                                      e.preventDefault();
+                                      form.handleSubmit(onSubmit)();
+                                  }
+                              }}
+                              {...form.register("message")}
+                          />
+                           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                              <Button type="submit" size="icon" disabled={isLoading} variant="ghost"><Send className="h-5 w-5" /></Button>
+                           </div>
+                      </div>
+                  </form>
+              </Form>
+          </div>
+      </Card>
   );
 };

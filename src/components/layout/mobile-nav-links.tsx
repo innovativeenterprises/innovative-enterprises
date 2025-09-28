@@ -20,7 +20,7 @@ export default function MobileNavLinks({ handleLinkClick }: { handleLinkClick: (
                 className="justify-start text-base"
                 onClick={handleLinkClick}
                 >
-                <Link href={link.href}>{link.label}</Link>
+                <Link href={link.href} legacyBehavior>{link.label}</Link>
                 </Button>
             ))}
         </div>

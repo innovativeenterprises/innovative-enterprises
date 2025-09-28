@@ -101,7 +101,7 @@ export default function RentalsPage() {
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {!isClient ? (
                         // Render skeletons on the server and initial client render
-                        Array.from({ length: 8 }).map((_, index) => (
+                        (Array.from({ length: 8 }).map((_, index) => (
                            <Card key={index}>
                                 <CardHeader className="p-0">
                                     <Skeleton className="h-48 w-full rounded-t-lg" />
@@ -116,12 +116,12 @@ export default function RentalsPage() {
                                     <Skeleton className="h-10 w-1/2" />
                                 </CardFooter>
                            </Card>
-                        ))
+                        )))
                     ) : (
                         // Render the actual content only on the client
-                        availableAssets.map((asset) => (
+                        (availableAssets.map((asset) => (
                             <AssetCard key={asset.id} asset={asset} onRent={handleRentClick} />
-                        ))
+                        )))
                     )}
                     </div>
                 </div>

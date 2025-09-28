@@ -132,7 +132,7 @@ function GuardianAiClientPageContent({ initialStudents }: { initialStudents: Stu
                 <div className="max-w-5xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/education-tech">
+                            <Link href="/education-tech" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Education Tech
                             </Link>
@@ -167,7 +167,7 @@ function GuardianAiClientPageContent({ initialStudents }: { initialStudents: Stu
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default function GuardianAiClientPage({ initialStudents }: { initialStudents: Student[] }) {

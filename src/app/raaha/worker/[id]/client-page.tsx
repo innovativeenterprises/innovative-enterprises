@@ -122,7 +122,7 @@ export default function WorkerProfileClientPage({ worker, agency }: { worker?: W
                 <div className="max-w-4xl mx-auto space-y-8">
                     <div>
                         <Button asChild variant="outline">
-                            <Link href="/raaha/find-a-helper">
+                            <Link href="/raaha/find-a-helper" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Search Results
                             </Link>

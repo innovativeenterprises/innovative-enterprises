@@ -17,7 +17,7 @@ import { notFound } from 'next/navigation';
 
 const RelatedProductCard = ({ product }: { product: Product }) => (
     <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        <Link href={`/ecommerce/${product.id}`}>
+        <Link href={`/ecommerce/${product.id}`} legacyBehavior>
             <div className="relative h-40 w-full">
                 <Image 
                     src={product.image!} 
@@ -71,7 +71,7 @@ export default function ProductDetailClientPage({ product }: { product?: Product
         <div className="bg-muted/20 min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
                 <Button variant="ghost" asChild className="mb-8">
-                    <Link href="/ecommerce">
+                    <Link href="/ecommerce" legacyBehavior>
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to Shop
                     </Link>

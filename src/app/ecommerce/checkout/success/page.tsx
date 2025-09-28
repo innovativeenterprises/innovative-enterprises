@@ -28,7 +28,7 @@ export default function CheckoutSuccessPage() {
                         </CardContent>
                         <CardContent>
                             <Button asChild size="lg">
-                                <Link href="/ecommerce">
+                                <Link href="/ecommerce" legacyBehavior>
                                     <ArrowLeft className="mr-2 h-5 w-5" /> Continue Shopping
                                 </Link>
                             </Button>

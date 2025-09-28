@@ -29,7 +29,7 @@ export default function CarDetailClientPage({ car }: { car?: CarType }) {
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-8">
                         <Button asChild variant="outline">
-                            <Link href="/drivesync-ai/find-a-car">
+                            <Link href="/drivesync-ai/find-a-car" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Listings
                             </Link>

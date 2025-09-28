@@ -52,7 +52,7 @@ function CvEnhancerContent() {
                     </CardHeader>
                     <CardContent>
                          <Button asChild>
-                            <Link href="/education-tech/guardian-ai?tab=interview">Go to AI Interview Coach <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                            <Link href="/education-tech/guardian-ai?tab=interview" legacyBehavior>Go to AI Interview Coach <ArrowRight className="ml-2 h-4 w-4"/></Link>
                         </Button>
                     </CardContent>
                  </Card>

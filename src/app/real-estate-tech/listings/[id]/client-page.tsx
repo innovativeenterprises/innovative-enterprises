@@ -30,7 +30,7 @@ export default function PropertyDetailClientPage({ property }: { property?: Prop
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-8">
                         <Button asChild variant="outline">
-                            <Link href="/real-estate-tech/smart-listing">
+                            <Link href="/real-estate-tech/smart-listing" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Listings
                             </Link>

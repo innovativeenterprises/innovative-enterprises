@@ -64,7 +64,7 @@ export default function CertiTrustPage() {
                                 {feature.title === "AI-Powered Proctoring" && (
                                      <CardFooter className="mt-auto">
                                          <Button asChild className="w-full">
-                                            <Link href="/education-tech/certitrust/proctoring-session">Launch Proctoring Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                                            <Link href="/education-tech/certitrust/proctoring-session" legacyBehavior>Launch Proctoring Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
                                         </Button>
                                      </CardFooter>
                                 )}

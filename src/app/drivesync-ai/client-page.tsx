@@ -132,7 +132,7 @@ export default function DriveSyncClientPage() {
                         </CardContent>
                         <CardFooter className="justify-center">
                             <Button asChild>
-                                <Link href="/drivesync-ai/find-a-car">
+                                <Link href="/drivesync-ai/find-a-car" legacyBehavior>
                                     Launch AI Booking Assistant <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </Button>

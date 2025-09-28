@@ -29,7 +29,7 @@ const features = [
 
 export default function KhidmaPage() {
     return (
-         <div className="bg-background min-h-[calc(100vh-8rem)]">
+        <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
@@ -50,7 +50,7 @@ export default function KhidmaPage() {
                             </CardHeader>
                             <CardFooter className="justify-center">
                                 <Button asChild>
-                                    <Link href={feature.href}>{feature.cta} <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                                    <Link href={feature.href} legacyBehavior>{feature.cta} <ArrowRight className="ml-2 h-4 w-4"/></Link>
                                 </Button>
                             </CardFooter>
                         </Card>
@@ -58,5 +58,5 @@ export default function KhidmaPage() {
                 </div>
             </div>
         </div>
-    )
+    );
 }

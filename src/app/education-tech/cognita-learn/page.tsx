@@ -63,7 +63,7 @@ export default function CognitaLearnPage() {
                                 </CardContent>
                                 <CardFooter>
                                      <Button asChild className="w-full">
-                                        <Link href={pillar.href}>{pillar.cta} <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                                        <Link href={pillar.href} legacyBehavior>{pillar.cta} <ArrowRight className="ml-2 h-4 w-4"/></Link>
                                     </Button>
                                 </CardFooter>
                             </Card>

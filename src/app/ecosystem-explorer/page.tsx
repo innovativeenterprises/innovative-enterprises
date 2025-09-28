@@ -42,7 +42,6 @@ export default function EcosystemExplorerPage() {
                 <Image src="https://images.unsplash.com/photo-1534723328310-e82dad3ee43f?q=80&w=2070&auto=format&fit=crop" alt="Network background" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900/80 to-primary/50"></div>
             </div>
-
             <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center p-4">
                 <div className="max-w-4xl">
                      <Image src="/logo.png" alt="INNOVATIVE ENTERPRISES Logo" width={320} height={80} className="w-80 h-auto object-contain mx-auto mb-8" priority />
@@ -62,7 +61,6 @@ export default function EcosystemExplorerPage() {
                     </div>
                 </div>
             </div>
-
             <section id="explore" className="relative w-full min-h-screen py-32 flex items-center justify-center">
                  {/* Decorative Lines */}
                 <div className="absolute inset-0 z-0">
@@ -82,31 +80,34 @@ export default function EcosystemExplorerPage() {
 
                 <div className="relative w-full max-w-6xl h-[600px]">
                     {/* Central Node */}
-                     <Link href="/about" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                     <Link
+                         href="/about"
+                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                         legacyBehavior>
                         <Node icon={Cpu} label="AI Core" size="lg" />
                     </Link>
 
                     {/* Surrounding Nodes */}
-                    <Link href="/construction-tech">
+                    <Link href="/construction-tech" legacyBehavior>
                         <Node icon={HardHat} label="Construction Tech" className="top-[10%] left-[45%]" />
                     </Link>
-                    <Link href="/real-estate-tech">
+                    <Link href="/real-estate-tech" legacyBehavior>
                         <Node icon={Building2} label="Real Estate Tech" className="top-[30%] left-[80%]" />
                     </Link>
-                     <Link href="/education-tech">
+                     <Link href="/education-tech" legacyBehavior>
                         <Node icon={GraduationCap} label="Education Tech" className="top-[70%] left-[75%]" />
                     </Link>
-                    <Link href="/partner">
+                    <Link href="/partner" legacyBehavior>
                          <Node icon={Handshake} label="Partner Network" className="top-[80%] left-[20%]" />
                     </Link>
-                    <Link href="/automation">
+                    <Link href="/automation" legacyBehavior>
                         <Node icon={Bot} label="AI Agents" className="top-[40%] left-[10%]" />
                     </Link>
-                    <Link href="/saas-portfolio">
+                    <Link href="/saas-portfolio" legacyBehavior>
                         <Node icon={Package} label="SaaS Portfolio" className="top-[5%] left-[15%]" />
                     </Link>
                 </div>
             </section>
         </div>
-    )
+    );
 }

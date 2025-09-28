@@ -46,7 +46,10 @@ export default function ProductShowcase() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {(liveProducts || []).map((product) => (
             <Card key={product.id} className="overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-                <Link href={product.href || `/ecommerce/${product.id}`} className="flex flex-col h-full">
+                <Link
+                  href={product.href || `/ecommerce/${product.id}`}
+                  className="flex flex-col h-full"
+                  legacyBehavior>
                     <CardHeader className="p-0">
                     <div className="relative h-48 w-full">
                         <Image

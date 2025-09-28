@@ -173,7 +173,7 @@ export default function ProviderTable() {
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <Button variant="ghost" size="icon" asChild>
-                                            <Link href={`/admin/network/${provider.id}`}><ArrowRight /></Link>
+                                            <Link href={`/admin/network/${provider.id}`} legacyBehavior><ArrowRight /></Link>
                                         </Button>
                                         <Button variant="ghost" size="icon" onClick={() => openDialog(provider)}><Edit /></Button>
                                         <AlertDialog>

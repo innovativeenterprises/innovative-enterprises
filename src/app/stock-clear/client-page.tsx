@@ -23,7 +23,7 @@ const ItemCard = ({ item }: { item: StockItem }) => {
     }
 
     return (
-        <Link href={`/stock-clear/${item.id}`} className="flex">
+        <Link href={`/stock-clear/${item.id}`} className="flex" legacyBehavior>
             <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col w-full">
                 <CardHeader className="p-0">
                     <div className="relative h-48 w-full">
@@ -125,7 +125,7 @@ export default function StockClearClientPage() {
                         </CardHeader>
                         <CardFooter className="justify-center">
                             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                <Link href="/admin/stock-clear">List Your Items <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                                <Link href="/admin/stock-clear" legacyBehavior>List Your Items <ArrowRight className="ml-2 h-4 w-4"/></Link>
                             </Button>
                         </CardFooter>
                     </Card>

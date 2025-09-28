@@ -57,7 +57,7 @@ export default function FindAServicePage() {
                                     </CardHeader>
                                     <CardFooter className="mt-auto justify-end">
                                         <Button asChild>
-                                            <Link href={`/beauty-hub/agency/${agency.id}`}>
+                                            <Link href={`/beauty-hub/agency/${agency.id}`} legacyBehavior>
                                                 View Services <ArrowRight className="ml-2 h-4 w-4" />
                                             </Link>
                                         </Button>

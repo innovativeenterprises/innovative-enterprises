@@ -47,7 +47,7 @@ function StudentHousingClientPage() {
                 <div className="max-w-5xl mx-auto space-y-8">
                     <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/education-tech/eduflow">
+                            <Link href="/education-tech/eduflow" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to EduFlow Suite
                             </Link>
@@ -73,7 +73,7 @@ function StudentHousingClientPage() {
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle>Housing Agreements</CardTitle>
                             <Button asChild>
-                                <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Agreement</Link>
+                                <Link href="/real-estate-tech/docu-chain" legacyBehavior><PlusCircle className="mr-2 h-4 w-4"/> Generate New Agreement</Link>
                             </Button>
                         </CardHeader>
                         <CardContent>

@@ -47,7 +47,7 @@ export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref
     }
     
     return (
-         <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
+        <div className="bg-muted/20 min-h-[calc(100vh-8rem)] flex items-center justify-center">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-lg mx-auto">
                     <Card className="text-center">
@@ -67,12 +67,12 @@ export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref
                         </CardContent>
                         <CardFooter className="flex-col gap-4">
                             <Button asChild size="lg" className="w-full">
-                                <Link href={backToBrowseHref}>
+                                <Link href={backToBrowseHref} legacyBehavior>
                                     <Home className="mr-2 h-5 w-5" /> Browse More Spaces
                                 </Link>
                             </Button>
                              <Button asChild size="lg" variant="outline" className="w-full">
-                                <Link href={backToRequestsHref}>
+                                <Link href={backToRequestsHref} legacyBehavior>
                                     <Ticket className="mr-2 h-5 w-5" /> {requestsLabel}
                                 </Link>
                             </Button>
@@ -81,5 +81,5 @@ export function SuccessContent({ requestId, backToBrowseHref, backToRequestsHref
                 </div>
             </div>
         </div>
-    )
+    );
 }

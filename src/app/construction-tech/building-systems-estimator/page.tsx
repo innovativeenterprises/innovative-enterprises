@@ -353,27 +353,27 @@ export default function BuildingSystemsEstimatorPage() {
   };
 
   return (
-    <div className="bg-background min-h-screen">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto text-center">
-             <Button asChild variant="outline" className="mb-4">
-                <Link href="/construction-tech">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Construction Tech
-                </Link>
-            </Button>
-          <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-              <Cpu className="w-10 h-10 text-primary" />
+      <div className="bg-background min-h-screen">
+          <div className="container mx-auto px-4 py-16">
+            <div className="max-w-3xl mx-auto text-center">
+                 <Button asChild variant="outline" className="mb-4">
+                    <Link href="/construction-tech" legacyBehavior>
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back to Construction Tech
+                    </Link>
+                </Button>
+              <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                  <Cpu className="w-10 h-10 text-primary" />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Building Systems Estimator</h1>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Upload your building's floor plan and get a preliminary estimate and equipment layout for Fire Safety and Smart Home systems.
+              </p>
+            </div>
+            <div className="max-w-4xl mx-auto mt-12">
+                {renderContent()}
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Building Systems Estimator</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Upload your building's floor plan and get a preliminary estimate and equipment layout for Fire Safety and Smart Home systems.
-          </p>
-        </div>
-        <div className="max-w-4xl mx-auto mt-12">
-            {renderContent()}
-        </div>
       </div>
-    </div>
   );
 }

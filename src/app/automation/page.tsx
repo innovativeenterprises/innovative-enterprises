@@ -25,7 +25,7 @@ export default function AutomationPage() {
             Explore our suite of specialized AI agents, designed to handle key business functions, so you can focus on growth and innovation.
           </p>
            <Button asChild className="mt-6">
-                <Link href="/team">
+                <Link href="/team" legacyBehavior>
                     Meet The Full Team (Human & AI) <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
             </Button>

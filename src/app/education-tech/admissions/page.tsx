@@ -122,7 +122,7 @@ export default function AdmissionsPage() {
                     
                     <div className="flex justify-end">
                         <Button asChild variant="outline">
-                            <Link href="/admin/education-tech/admissions/dashboard">
+                            <Link href="/admin/education-tech/admissions/dashboard" legacyBehavior>
                                 <LayoutDashboard className="mr-2 h-4 w-4" /> View Admissions Dashboard
                             </Link>
                         </Button>

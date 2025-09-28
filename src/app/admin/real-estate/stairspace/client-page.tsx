@@ -109,7 +109,7 @@ export default function StairspaceRequestsClientPage() {
                 <div className="max-w-4xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/admin/real-estate">
+                            <Link href="/admin/real-estate" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Real Estate
                             </Link>
@@ -144,5 +144,5 @@ export default function StairspaceRequestsClientPage() {
                 </div>
             </div>
         </div>
-    )
+    );
 }

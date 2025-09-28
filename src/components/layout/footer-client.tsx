@@ -30,9 +30,16 @@ export default function FooterClient({ settings }: { settings: AppSettings | nul
               </p>
           </div>
           <div className="flex gap-4 items-center justify-center md:justify-end">
-            <Link href="https://github.com/innovative-enterprises" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-              <Github className="h-5 w-5" />
-              <span className="sr-only">GitHub</span>
+            <Link
+              href="https://github.com/innovative-enterprises"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              passHref>
+                <>
+                    <Github className="h-5 w-5" />
+                    <span className="sr-only">GitHub</span>
+                </>
             </Link>
             <Link href="/platform-statistics" className="text-sm text-muted-foreground hover:text-primary transition-colors">Statistics</Link>
             <Link href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy</Link>

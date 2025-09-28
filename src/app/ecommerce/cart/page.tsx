@@ -107,7 +107,7 @@ export default function CartPage() {
                                             </CardContent>
                                             <CardFooter>
                                                 <Button asChild className="w-full" size="lg">
-                                                    <Link href="/ecommerce/checkout">
+                                                    <Link href="/ecommerce/checkout" legacyBehavior>
                                                         <CreditCard className="mr-2 h-5 w-5" /> Proceed to Checkout
                                                     </Link>
                                                 </Button>
@@ -119,7 +119,7 @@ export default function CartPage() {
                                 <div className="text-center py-12">
                                     <p className="text-muted-foreground mb-4">Your cart is empty.</p>
                                     <Button asChild variant="outline">
-                                        <Link href="/ecommerce">
+                                        <Link href="/ecommerce" legacyBehavior>
                                             <ArrowLeft className="mr-2 h-4 w-4" /> Continue Shopping
                                         </Link>
                                     </Button>

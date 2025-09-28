@@ -72,16 +72,16 @@ const CartButton = () => {
     const itemCount = useMemo(() => (cart || []).reduce((sum, item) => sum + item.quantity, 0), [cart]);
 
     return (
-        <Button variant="outline" size="icon" asChild>
-            <Link href="/ecommerce/cart" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                {itemCount > 0 && (
-                    <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">{itemCount}</span>
-                )}
-                <span className="sr-only">Shopping Cart</span>
-            </Link>
-        </Button>
-    )
+      <Button variant="outline" size="icon" asChild>
+        <Link href="/ecommerce/cart" className="relative" legacyBehavior>
+            <ShoppingCart className="h-5 w-5" />
+            {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">{itemCount}</span>
+            )}
+            <span className="sr-only">Shopping Cart</span>
+        </Link>
+      </Button>
+    );
 }
 
 export default function HeaderClient() { 
@@ -102,7 +102,10 @@ export default function HeaderClient() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-bold text-xl text-primary"
+          legacyBehavior>
           {settings?.headerImageUrl ? (
             <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
           ) : (
@@ -185,7 +188,7 @@ export default function HeaderClient() {
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                        <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4" /> E-Briefcase</Link>
+                        <Link href="/briefcase" legacyBehavior><Briefcase className="mr-2 h-4 w-4" /> E-Briefcase</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <Link href="/admin">Admin Dashboard</Link>
@@ -205,7 +208,11 @@ export default function HeaderClient() {
                 <SheetContent side="right" className="w-[300px] sm:w-[340px]">
                  <SheetHeader className="p-4 border-b">
                     <SheetTitle>
-                        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" onClick={handleLinkClick}>
+                        <Link
+                          href="/"
+                          className="flex items-center gap-2 font-bold text-lg text-primary"
+                          onClick={handleLinkClick}
+                          legacyBehavior>
                              {settings?.headerImageUrl ? (
                                 <Image src={settings.headerImageUrl} alt="INNOVATIVE ENTERPRISES Logo" width={160} height={40} className="w-40 h-auto object-contain" priority />
                             ) : (
@@ -230,7 +237,7 @@ export default function HeaderClient() {
                         className="justify-start text-base"
                         onClick={handleLinkClick}
                         >
-                        <Link href="/briefcase"><Briefcase className="mr-2 h-4 w-4"/> E-Briefcase</Link>
+                        <Link href="/briefcase" legacyBehavior><Briefcase className="mr-2 h-4 w-4"/> E-Briefcase</Link>
                         </Button>
                         <Button
                         asChild

@@ -118,161 +118,161 @@ export default function LessonGamifierPage() {
 
 
   return (
-    <div className="bg-background min-h-screen">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto space-y-8">
-            <div className="text-center">
-                <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                    <BookOpen className="w-10 h-10 text-primary" />
+      <div className="bg-background min-h-screen">
+          <div className="container mx-auto px-4 py-16">
+            <div className="max-w-4xl mx-auto space-y-8">
+                <div className="text-center">
+                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                        <BookOpen className="w-10 h-10 text-primary" />
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Lesson Gamifier</h1>
+                    <p className="mt-4 text-lg text-muted-foreground">
+                        Upload a school book chapter or lesson plan, and watch our AI transform it into a suite of engaging learning materials.
+                    </p>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold text-primary">AI Lesson Gamifier</h1>
-                <p className="mt-4 text-lg text-muted-foreground">
-                    Upload a school book chapter or lesson plan, and watch our AI transform it into a suite of engaging learning materials.
-                </p>
-            </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Create New Learning Materials</CardTitle>
-                    <CardDescription>Provide the lesson document and some context for the AI.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <FormField
-                                control={form.control}
-                                name="documentFile"
-                                render={({ field }) => (
-                                    <FormItem><FormLabel>Lesson Document (PDF, TXT, DOCX)</FormLabel><FormControl><Input type="file" accept=".pdf,.txt,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
-                                )}
-                            />
-                            <div className="grid md:grid-cols-2 gap-6">
-                                 <FormField control={form.control} name="topic" render={({ field }) => (<FormItem><FormLabel>Lesson Topic</FormLabel><FormControl><Input placeholder="e.g., The Water Cycle" {...field} /></FormControl><FormMessage/></FormItem>)} />
-                                 <FormField control={form.control} name="targetAudience" render={({ field }) => (<FormItem><FormLabel>Target Audience</FormLabel><FormControl><Input placeholder="e.g., Grade 5 Science Students" {...field} /></FormControl><FormMessage/></FormItem>)} />
-                            </div>
-
-                             <FormField
-                                control={form.control}
-                                name="outputs"
-                                render={() => (
-                                <FormItem>
-                                    <div className="mb-4">
-                                        <FormLabel>Select Desired Outputs</FormLabel>
-                                        <FormDescription>Choose which materials you want the AI to generate.</FormDescription>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                    {gamificationOptions.map((item) => (
-                                        <FormField
-                                            key={item.id}
-                                            control={form.control}
-                                            name="outputs"
-                                            render={({ field }) => {
-                                                return (
-                                                <FormItem
-                                                    key={item.id}
-                                                    className="flex flex-row items-start space-x-3 space-y-0"
-                                                >
-                                                    <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(item.id)}
-                                                        onCheckedChange={(checked) => {
-                                                        return checked
-                                                            ? field.onChange([...(field.value || []), item.id])
-                                                            : field.onChange(
-                                                                field.value?.filter(
-                                                                (value) => value !== item.id
-                                                                )
-                                                            )
-                                                        }}
-                                                    />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">
-                                                    {item.label}
-                                                    </FormLabel>
-                                                </FormItem>
-                                                )
-                                            }}
-                                        />
-                                    ))}
-                                    </div>
-                                    <FormMessage />
-                                </FormItem>
-                                )}
-                            />
-                            <div className="flex items-center space-x-2">
-                                <Checkbox id="ai-decide" checked={watchOutputs.length === 0} onCheckedChange={(checked) => form.setValue('outputs', checked ? [] : ['interactiveBookHtml'])} />
-                                <Label htmlFor="ai-decide" className="text-sm font-medium">Let AI Decide</Label>
-                            </div>
-
-                            <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
-                                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : <><Wand2 className="mr-2 h-4 w-4"/> Gamify Lesson</>}
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-
-            {isLoading && (
-                <Card><CardContent className="p-10 text-center"><Loader2 className="h-10 w-10 animate-spin text-primary mx-auto"/><p className="mt-4 text-muted-foreground">The AI is transforming your lesson...</p></CardContent></Card>
-            )}
-
-            {response && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Generated Learning Materials for "{form.getValues('topic')}"</CardTitle>
+                        <CardTitle>Create New Learning Materials</CardTitle>
+                        <CardDescription>Provide the lesson document and some context for the AI.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Tabs defaultValue={generatedTabs[0]?.id}>
-                            <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${generatedTabs.length}, minmax(0, 1fr))` }}>
-                                {generatedTabs.map(opt => <TabsTrigger key={opt.id} value={opt.id}>{opt.label}</TabsTrigger>)}
-                            </TabsList>
-                            
-                            {response.interactiveBookHtml && (
-                                <TabsContent value="interactiveBookHtml" className="mt-4">
-                                    <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-[60vh] overflow-y-auto" dangerouslySetInnerHTML={{ __html: response.interactiveBookHtml }} />
-                                    <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button><Button variant="outline" size="sm" onClick={() => handleDownload(response.interactiveBookHtml!, 'interactive-book.html')}><Download className="mr-2 h-4 w-4"/>Download HTML</Button></div>
-                                </TabsContent>
-                            )}
-                            
-                            {response.flashcards && (
-                                <TabsContent value="flashcards" className="mt-4">
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 h-[60vh] overflow-y-auto p-2">
-                                        {response.flashcards.map((card, i) => <Flashcard key={i} term={card.term} definition={card.definition} />)}
-                                    </div>
-                                    <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button></div>
-                                </TabsContent>
-                            )}
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <FormField
+                                    control={form.control}
+                                    name="documentFile"
+                                    render={({ field }) => (
+                                        <FormItem><FormLabel>Lesson Document (PDF, TXT, DOCX)</FormLabel><FormControl><Input type="file" accept=".pdf,.txt,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+                                    )}
+                                />
+                                <div className="grid md:grid-cols-2 gap-6">
+                                     <FormField control={form.control} name="topic" render={({ field }) => (<FormItem><FormLabel>Lesson Topic</FormLabel><FormControl><Input placeholder="e.g., The Water Cycle" {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                     <FormField control={form.control} name="targetAudience" render={({ field }) => (<FormItem><FormLabel>Target Audience</FormLabel><FormControl><Input placeholder="e.g., Grade 5 Science Students" {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                </div>
 
-                            {response.powerpointOutline && (
-                                <TabsContent value="powerpointOutline" className="mt-4">
-                                    <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-[60vh] overflow-y-auto">
-                                        {response.powerpointOutline.slides.map((slide, i) => (
-                                            `<h3 key=${i}>Slide ${i+1}: ${slide.title}</h3><ul>${slide.bulletPoints.map(p => `<li key=${p}>${p}</li>`).join('')}</ul>`
-                                        )).join('').replace(/<h3/g, '\n<h3')}
-                                    </div>
-                                    <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button><Button variant="outline" size="sm" onClick={() => handleCopy(response.powerpointOutline!.slides.map((s,i) => `Slide ${i+1}: ${s.title}\n` + s.bulletPoints.map(p => `- ${p}`).join('\n')).join('\n\n'))}><Copy className="mr-2 h-4 w-4"/>Copy Outline</Button></div>
-                                </TabsContent>
-                            )}
+                                 <FormField
+                                    control={form.control}
+                                    name="outputs"
+                                    render={() => (
+                                    <FormItem>
+                                        <div className="mb-4">
+                                            <FormLabel>Select Desired Outputs</FormLabel>
+                                            <FormDescription>Choose which materials you want the AI to generate.</FormDescription>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                        {gamificationOptions.map((item) => (
+                                            <FormField
+                                                key={item.id}
+                                                control={form.control}
+                                                name="outputs"
+                                                render={({ field }) => {
+                                                    return (
+                                                    <FormItem
+                                                        key={item.id}
+                                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                                    >
+                                                        <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value?.includes(item.id)}
+                                                            onCheckedChange={(checked) => {
+                                                            return checked
+                                                                ? field.onChange([...(field.value || []), item.id])
+                                                                : field.onChange(
+                                                                    field.value?.filter(
+                                                                    (value) => value !== item.id
+                                                                    )
+                                                                )
+                                                            }}
+                                                        />
+                                                        </FormControl>
+                                                        <FormLabel className="font-normal">
+                                                        {item.label}
+                                                        </FormLabel>
+                                                    </FormItem>
+                                                    )
+                                                }}
+                                            />
+                                        ))}
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                    )}
+                                />
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox id="ai-decide" checked={watchOutputs.length === 0} onCheckedChange={(checked) => form.setValue('outputs', checked ? [] : ['interactiveBookHtml'])} />
+                                    <Label htmlFor="ai-decide" className="text-sm font-medium">Let AI Decide</Label>
+                                </div>
 
-                            {response.summaryPdfContent && (
-                                <TabsContent value="summaryPdfContent" className="mt-4">
-                                    <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-[60vh] overflow-y-auto">{response.summaryPdfContent}</div>
-                                    <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button><Button variant="outline" size="sm" onClick={() => handleDownload(response.summaryPdfContent!, 'study-guide.md')}><Download className="mr-2 h-4 w-4"/>Download MD</Button></div>
-                                </TabsContent>
-                            )}
-                        </Tabs>
+                                <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base" size="lg">
+                                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : <><Wand2 className="mr-2 h-4 w-4"/> Gamify Lesson</>}
+                                </Button>
+                            </form>
+                        </Form>
                     </CardContent>
-                     <CardFooter className="flex-col md:flex-row gap-4 justify-between items-center border-t pt-6">
-                        <p className="text-sm font-semibold">Integrate with your drives:</p>
-                        <div className="flex gap-2">
-                             <Button variant="outline" onClick={() => handleDriveConnect('Google')}><LinkIcon className="mr-2 h-4 w-4"/> Connect Google Drive</Button>
-                            <Button variant="outline" onClick={() => handleDriveConnect('Microsoft')}><LinkIcon className="mr-2 h-4 w-4"/> Connect Microsoft Drive</Button>
-                        </div>
-                    </CardFooter>
                 </Card>
-            )}
-        </div>
+
+                {isLoading && (
+                    <Card><CardContent className="p-10 text-center"><Loader2 className="h-10 w-10 animate-spin text-primary mx-auto"/><p className="mt-4 text-muted-foreground">The AI is transforming your lesson...</p></CardContent></Card>
+                )}
+
+                {response && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Generated Learning Materials for "{form.getValues('topic')}"</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Tabs defaultValue={generatedTabs[0]?.id}>
+                                <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${generatedTabs.length}, minmax(0, 1fr))` }}>
+                                    {generatedTabs.map(opt => <TabsTrigger key={opt.id} value={opt.id}>{opt.label}</TabsTrigger>)}
+                                </TabsList>
+                                
+                                {response.interactiveBookHtml && (
+                                    <TabsContent value="interactiveBookHtml" className="mt-4">
+                                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-[60vh] overflow-y-auto" dangerouslySetInnerHTML={{ __html: response.interactiveBookHtml }} />
+                                        <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button><Button variant="outline" size="sm" onClick={() => handleDownload(response.interactiveBookHtml!, 'interactive-book.html')}><Download className="mr-2 h-4 w-4"/>Download HTML</Button></div>
+                                    </TabsContent>
+                                )}
+                                
+                                {response.flashcards && (
+                                    <TabsContent value="flashcards" className="mt-4">
+                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 h-[60vh] overflow-y-auto p-2">
+                                            {response.flashcards.map((card, i) => <Flashcard key={i} term={card.term} definition={card.definition} />)}
+                                        </div>
+                                        <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button></div>
+                                    </TabsContent>
+                                )}
+
+                                {response.powerpointOutline && (
+                                    <TabsContent value="powerpointOutline" className="mt-4">
+                                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-[60vh] overflow-y-auto">
+                                            {response.powerpointOutline.slides.map((slide, i) => (
+                                                `<h3 key=${i}>Slide ${i+1}: ${slide.title}</h3><ul>${slide.bulletPoints.map(p => `<li key=${p}>${p}</li>`).join('')}</ul>`
+                                            )).join('').replace(/<h3/g, '\n<h3')}
+                                        </div>
+                                        <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button><Button variant="outline" size="sm" onClick={() => handleCopy(response.powerpointOutline!.slides.map((s,i) => `Slide ${i+1}: ${s.title}\n` + s.bulletPoints.map(p => `- ${p}`).join('\n')).join('\n\n'))}><Copy className="mr-2 h-4 w-4"/>Copy Outline</Button></div>
+                                    </TabsContent>
+                                )}
+
+                                {response.summaryPdfContent && (
+                                    <TabsContent value="summaryPdfContent" className="mt-4">
+                                        <div className="prose prose-sm max-w-full rounded-md border bg-muted p-4 whitespace-pre-wrap h-[60vh] overflow-y-auto">{response.summaryPdfContent}</div>
+                                        <div className="flex justify-end mt-2 gap-2"><Button variant="outline" size="sm" onClick={handleShare}><Share2 className="mr-2 h-4 w-4"/>Share</Button><Button variant="outline" size="sm" onClick={() => handleDownload(response.summaryPdfContent!, 'study-guide.md')}><Download className="mr-2 h-4 w-4"/>Download MD</Button></div>
+                                    </TabsContent>
+                                )}
+                            </Tabs>
+                        </CardContent>
+                         <CardFooter className="flex-col md:flex-row gap-4 justify-between items-center border-t pt-6">
+                            <p className="text-sm font-semibold">Integrate with your drives:</p>
+                            <div className="flex gap-2">
+                                 <Button variant="outline" onClick={() => handleDriveConnect('Google')}><LinkIcon className="mr-2 h-4 w-4"/> Connect Google Drive</Button>
+                                <Button variant="outline" onClick={() => handleDriveConnect('Microsoft')}><LinkIcon className="mr-2 h-4 w-4"/> Connect Microsoft Drive</Button>
+                            </div>
+                        </CardFooter>
+                    </Card>
+                )}
+            </div>
+          </div>
       </div>
-    </div>
   );
 }

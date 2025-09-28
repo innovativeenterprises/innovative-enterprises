@@ -60,7 +60,7 @@ export default function AgencyDetailPage() {
                 <div className="max-w-5xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/beauty-hub/find-a-service">
+                            <Link href="/beauty-hub/find-a-service" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to All Salons
                             </Link>
@@ -101,15 +101,15 @@ export default function AgencyDetailPage() {
                     </div>
                 </div>
             </div>
-             {isFormOpen && selectedService && (
-                <BookingForm
-                    agency={agency}
-                    service={selectedService}
-                    isOpen={isFormOpen}
-                    onOpenChange={setIsFormOpen}
-                    onClose={() => setIsFormOpen(false)}
-                />
-            )}
+            {isFormOpen && selectedService && (
+               <BookingForm
+                   agency={agency}
+                   service={selectedService}
+                   isOpen={isFormOpen}
+                   onOpenChange={setIsFormOpen}
+                   onClose={() => setIsFormOpen(false)}
+               />
+           )}
         </div>
     );
 }

@@ -42,12 +42,12 @@ export default function StudentFinancialsClientPage() {
     };
 
     return (
-         <div className="bg-background min-h-screen">
+        <div className="bg-background min-h-screen">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-6xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/education-tech/eduflow">
+                            <Link href="/education-tech/eduflow" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to EduFlow Suite
                             </Link>

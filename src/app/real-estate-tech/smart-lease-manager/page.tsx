@@ -75,7 +75,7 @@ export default function SmartLeaseManagerPage() {
                 <div className="max-w-6xl mx-auto">
                     <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/real-estate-tech">
+                            <Link href="/real-estate-tech" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Real Estate Tech
                             </Link>
@@ -101,7 +101,7 @@ export default function SmartLeaseManagerPage() {
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle>Lease &amp; Payment Overview</CardTitle>
                              <Button asChild>
-                                <Link href="/real-estate-tech/docu-chain"><PlusCircle className="mr-2 h-4 w-4"/> Generate New Lease</Link>
+                                <Link href="/real-estate-tech/docu-chain" legacyBehavior><PlusCircle className="mr-2 h-4 w-4"/> Generate New Lease</Link>
                             </Button>
                         </CardHeader>
                         <CardContent>

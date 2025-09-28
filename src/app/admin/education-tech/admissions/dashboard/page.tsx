@@ -93,7 +93,7 @@ export default function AdmissionsDashboardPage() {
                 <div className="max-w-6xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/education-tech/admissions">
+                            <Link href="/education-tech/admissions" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Application Form
                             </Link>

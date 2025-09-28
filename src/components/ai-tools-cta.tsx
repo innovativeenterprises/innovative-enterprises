@@ -26,27 +26,27 @@ export default function AiToolsCta() {
                     {featuredAgents.map((agent) => {
                         const Icon = (Icons as any)[agent.icon as keyof typeof Icons] || Icons.Bot;
                         return (
-                         <Card key={agent.title} className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-                            <CardHeader>
-                                <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
-                                    <Icon className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <CardTitle>{agent.title}</CardTitle>
-                                <CardDescription className="mt-2">
-                                    {agent.description}
-                                </CardDescription>
-                            </CardContent>
-                            <CardFooter className="justify-center">
-                                <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                    <Link href={agent.href || '#'}>Use {agent.title.split('(')[0].trim()}</Link>
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    )})}
+                            <Card key={agent.title} className="text-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                                <CardHeader>
+                                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit transition-colors group-hover:bg-accent">
+                                        <Icon className="w-8 h-8 text-primary transition-colors group-hover:text-accent-foreground" />
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <CardTitle>{agent.title}</CardTitle>
+                                    <CardDescription className="mt-2">
+                                        {agent.description}
+                                    </CardDescription>
+                                </CardContent>
+                                <CardFooter className="justify-center">
+                                    <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                        <Link href={agent.href || '#'} legacyBehavior>Use {agent.title.split('(')[0].trim()}</Link>
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        );})}
                 </div>
             </div>
         </section>
-    )
+    );
 }

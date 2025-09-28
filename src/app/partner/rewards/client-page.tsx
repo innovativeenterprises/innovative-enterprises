@@ -54,42 +54,42 @@ export default function PartnerRewardsClientPage({ partnerKits, freelancerKits, 
 }) {
     return (
         <div className="bg-background min-h-[calc(100vh-8rem)]">
-        <div className="container mx-auto px-4 py-16">
-            <div className="max-w-5xl mx-auto">
-                <div>
-                    <Button asChild variant="outline" className="mb-4">
-                        <Link href="/partner">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to Partner Hub
-                        </Link>
-                    </Button>
-                    <div className="text-center">
-                        <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                            <Award className="w-10 h-10 text-primary" />
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-bold text-primary">Partner Rewards Program</h1>
-                        <p className="mt-4 text-lg text-muted-foreground">
-                            We value our partners. Explore the benefits and rewards available as you collaborate with us.
-                        </p>
-                    </div>
-                </div>
-
-                 <div className="mt-16 space-y-12">
+            <div className="container mx-auto px-4 py-16">
+                <div className="max-w-5xl mx-auto">
                     <div>
-                        <h2 className="text-3xl font-bold text-center text-primary mb-8">For Companies & Agencies</h2>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {partnerKits.map(kit => <KitCard key={kit.level} kit={kit} currentTier={currentPartnerTier} />)}
+                        <Button asChild variant="outline" className="mb-4">
+                            <Link href="/partner" legacyBehavior>
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to Partner Hub
+                            </Link>
+                        </Button>
+                        <div className="text-center">
+                            <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
+                                <Award className="w-10 h-10 text-primary" />
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-bold text-primary">Partner Rewards Program</h1>
+                            <p className="mt-4 text-lg text-muted-foreground">
+                                We value our partners. Explore the benefits and rewards available as you collaborate with us.
+                            </p>
                         </div>
                     </div>
-                     <div>
-                        <h2 className="text-3xl font-bold text-center text-primary mb-8">For Individual Freelancers</h2>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {freelancerKits.map(kit => <KitCard key={kit.level} kit={kit} currentTier={currentPartnerTier} />)}
+
+                     <div className="mt-16 space-y-12">
+                        <div>
+                            <h2 className="text-3xl font-bold text-center text-primary mb-8">For Companies & Agencies</h2>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {partnerKits.map(kit => <KitCard key={kit.level} kit={kit} currentTier={currentPartnerTier} />)}
+                            </div>
+                        </div>
+                         <div>
+                            <h2 className="text-3xl font-bold text-center text-primary mb-8">For Individual Freelancers</h2>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {freelancerKits.map(kit => <KitCard key={kit.level} kit={kit} currentTier={currentPartnerTier} />)}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 }

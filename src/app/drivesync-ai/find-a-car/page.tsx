@@ -62,7 +62,7 @@ export default function FindACarPage() {
         <div className="bg-background min-h-[calc(100vh-8rem)] py-16">
             <div className="container mx-auto px-4">
                  <Button asChild variant="outline" className="mb-8">
-                    <Link href="/drivesync-ai">
+                    <Link href="/drivesync-ai" legacyBehavior>
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to Agency Dashboard
                     </Link>

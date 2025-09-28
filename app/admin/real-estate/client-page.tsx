@@ -13,47 +13,44 @@ import StairspaceTable from "./stairspace-table";
 export default function AdminRealEstateClientPage() {
 
   return (
-    <div className="space-y-8">
-        <div>
-            <h1 className="text-3xl font-bold">Real Estate Management</h1>
-            <p className="text-muted-foreground">
-                Manage property listings and utilize real estate AI tools.
-            </p>
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>StairSpace Management</CardTitle>
-                    <CardDescription>
-                        Review new booking requests for your StairSpace listings.
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                    <Button asChild>
-                        <Link href="/admin/real-estate/stairspace">Manage Booking Requests <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                    </Button>
-                </CardFooter>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>AI Property Valuator</CardTitle>
-                    <CardDescription>
-                       Use the AI-powered tool to get instant market valuations for properties.
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                    <Button asChild>
-                        <Link href="/real-estate-tech/property-valuator">Launch Valuator <BarChart className="ml-2 h-4 w-4" /></Link>
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
-
-
-        <PropertyTable />
-        <StairspaceTable />
-    </div>
+      <div className="space-y-8">
+          <div>
+              <h1 className="text-3xl font-bold">Real Estate Management</h1>
+              <p className="text-muted-foreground">
+                  Manage property listings and utilize real estate AI tools.
+              </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                  <CardHeader>
+                      <CardTitle>StairSpace Management</CardTitle>
+                      <CardDescription>
+                          Review new booking requests for your StairSpace listings.
+                      </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                      <Button asChild>
+                          <Link href="/admin/real-estate/stairspace" legacyBehavior>Manage Booking Requests <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                      </Button>
+                  </CardFooter>
+              </Card>
+              <Card>
+                  <CardHeader>
+                      <CardTitle>AI Property Valuator</CardTitle>
+                      <CardDescription>
+                         Use the AI-powered tool to get instant market valuations for properties.
+                      </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                      <Button asChild>
+                          <Link href="/real-estate-tech/property-valuator" legacyBehavior>Launch Valuator <BarChart className="ml-2 h-4 w-4" /></Link>
+                      </Button>
+                  </CardFooter>
+              </Card>
+          </div>
+          <PropertyTable />
+          <StairspaceTable />
+      </div>
   );
 }
 

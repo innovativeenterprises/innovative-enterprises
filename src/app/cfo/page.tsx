@@ -34,7 +34,7 @@ export default async function CfoPage() {
                         </CardHeader>
                         <CardFooter className="justify-center">
                             <Button asChild size="lg">
-                                <Link href="/cfo/audit">Launch Audit Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                                <Link href="/cfo/audit" legacyBehavior>Launch Audit Tool <ArrowRight className="ml-2 h-4 w-4"/></Link>
                             </Button>
                         </CardFooter>
                     </Card>

@@ -61,7 +61,7 @@ export default function ProviderProfileClientPage({ provider }: { provider?: Pro
                      <div className="space-y-8">
                         <div>
                             <Button asChild variant="outline">
-                                <Link href="/business-hub">
+                                <Link href="/business-hub" legacyBehavior>
                                     <ArrowLeft className="mr-2 h-4 w-4" />
                                     Back to Business Hub
                                 </Link>

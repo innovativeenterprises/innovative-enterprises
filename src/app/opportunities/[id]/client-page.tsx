@@ -83,7 +83,7 @@ export default function OpportunityDetailClientPage({ opportunity }: { opportuni
     const Icon = opportunityIconMap[opportunity.iconName] || Trophy;
 
     return (
-         <div className="bg-background min-h-[calc(100vh-8rem)]">
+        <div className="bg-background min-h-[calc(100vh-8rem)]">
             <div className="container mx-auto px-4 py-16">
                 <div className="max-w-3xl mx-auto">
                     <Card>
@@ -136,7 +136,7 @@ export default function OpportunityDetailClientPage({ opportunity }: { opportuni
                         </CardContent>
                         <CardFooter className="flex-col sm:flex-row justify-center gap-4">
                             <Button asChild size="lg" className="w-full sm:w-auto">
-                                <Link href="/submit-work">
+                                <Link href="/submit-work" legacyBehavior>
                                     Submit Proposal <ArrowRight className="ml-2 w-5 h-5" />
                                 </Link>
                             </Button>
@@ -145,6 +145,6 @@ export default function OpportunityDetailClientPage({ opportunity }: { opportuni
                     </Card>
                 </div>
             </div>
-         </div>
+        </div>
     );
 }

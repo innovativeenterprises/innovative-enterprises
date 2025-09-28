@@ -28,7 +28,7 @@ export default function ItemDetailClientPage({ item }: { item?: UsedItem }) {
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-8">
                         <Button asChild variant="outline">
-                            <Link href="/swap-and-sell">
+                            <Link href="/swap-and-sell" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Marketplace
                             </Link>

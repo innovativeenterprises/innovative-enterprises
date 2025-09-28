@@ -108,7 +108,6 @@ export default function AssetRentalAgentForm() {
           </Form>
         </CardContent>
       </Card>
-
       {isLoading && (
          <Card>
             <CardContent className="p-6 text-center">
@@ -117,7 +116,6 @@ export default function AssetRentalAgentForm() {
             </CardContent>
          </Card>
       )}
-      
       {response && (
         <Card className="mt-8">
           <CardHeader>

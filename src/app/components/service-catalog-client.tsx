@@ -51,41 +51,41 @@ export default function ServiceCatalogClient() {
   ];
   
   return (
-    <section id="services" className="py-16 md:py-24 bg-white dark:bg-card">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Core Services</h2>
-          <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-            We provide a wide range of services designed to help you innovate, transform, and achieve your most ambitious business goals.
-          </p>
-        </div>
+      <section id="services" className="py-16 md:py-24 bg-white dark:bg-card">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Core Services</h2>
+              <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+                We provide a wide range of services designed to help you innovate, transform, and achieve your most ambitious business goals.
+              </p>
+            </div>
 
-        <div className="space-y-16">
-            {categoryOrder.map(category => {
-                const categoryServices = servicesByCategory[category] || [];
-                if (categoryServices.length === 0) return null;
-                const CategoryIcon = (Icons as any)[categoryServices[0]?.icon] || Icons.GitBranch;
-                return (
-                    <div key={category}>
-                        <h3 className="text-2xl md:text-3xl font-bold text-center text-primary/80 mb-8 flex items-center justify-center gap-3">
-                            <CategoryIcon /> {category}
-                        </h3>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {categoryServices.map((service) => (
-                            service.href ? (
-                                <Link key={service.title} href={service.href} className="flex">
-                                    <ServiceCard service={service} />
-                                </Link>
-                            ) : (
-                                <ServiceCard key={service.title} service={service} />
-                            )
-                        ))}
+            <div className="space-y-16">
+                {categoryOrder.map(category => {
+                    const categoryServices = servicesByCategory[category] || [];
+                    if (categoryServices.length === 0) return null;
+                    const CategoryIcon = (Icons as any)[categoryServices[0]?.icon] || Icons.GitBranch;
+                    return (
+                        <div key={category}>
+                            <h3 className="text-2xl md:text-3xl font-bold text-center text-primary/80 mb-8 flex items-center justify-center gap-3">
+                                <CategoryIcon /> {category}
+                            </h3>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {categoryServices.map((service) => (
+                                service.href ? (
+                                    <Link key={service.title} href={service.href} className="flex" legacyBehavior>
+                                        <ServiceCard service={service} />
+                                    </Link>
+                                ) : (
+                                    <ServiceCard key={service.title} service={service} />
+                                )
+                            ))}
+                            </div>
                         </div>
-                    </div>
-                )
-            })}
-        </div>
-      </div>
-    </section>
+                    );
+                })}
+            </div>
+          </div>
+      </section>
   );
 }

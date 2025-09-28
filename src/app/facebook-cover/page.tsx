@@ -10,14 +10,14 @@ import { ArrowLeft } from "lucide-react";
 export default function FacebookCoverPage() {
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col items-center justify-center p-4 text-white">
-       <div className="absolute top-4 left-4">
-            <Button asChild variant="outline" className="bg-gray-800/50 border-gray-700 hover:bg-gray-700/50">
-                <Link href="/">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Home
-                </Link>
-            </Button>
-        </div>
+      <div className="absolute top-4 left-4">
+           <Button asChild variant="outline" className="bg-gray-800/50 border-gray-700 hover:bg-gray-700/50">
+               <Link href="/" legacyBehavior>
+                   <ArrowLeft className="mr-2 h-4 w-4" />
+                   Back to Home
+               </Link>
+           </Button>
+       </div>
       <Card className="w-full max-w-4xl bg-gray-800/50 border-gray-700 shadow-2xl overflow-hidden">
         <CardContent className="p-0">
           <div className="relative w-full aspect-[2.39/1]">
@@ -39,9 +39,9 @@ export default function FacebookCoverPage() {
           </div>
         </CardContent>
       </Card>
-       <p className="text-xs text-gray-500 mt-4">
-        This is a responsive preview. The image is designed for a standard Facebook cover photo ratio.
-      </p>
+      <p className="text-xs text-gray-500 mt-4">
+       This is a responsive preview. The image is designed for a standard Facebook cover photo ratio.
+     </p>
     </div>
   );
 }

@@ -51,25 +51,49 @@ const HumanCard = ({ member }: { member: Agent }) => {
             <CardFooter className="justify-center pt-0 pb-6">
                 <div className="flex gap-4">
                     {member.socials?.linkedin && (
-                        <Link href={member.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <Link
+                            href={member.socials.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                            legacyBehavior>
                             <Linkedin className="w-5 h-5" />
                             <span className="sr-only">LinkedIn</span>
                         </Link>
                     )}
                     {member.socials?.twitter && (
-                        <Link href={member.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <Link
+                            href={member.socials.twitter}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                            legacyBehavior>
                             <Twitter className="w-5 h-5" />
                             <span className="sr-only">Twitter</span>
                         </Link>
                     )}
                     {member.socials?.github && (
-                        <Link href={member.socials.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <Link
+                            href={member.socials.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                            legacyBehavior>
                             <Github className="w-5 h-5" />
                             <span className="sr-only">GitHub</span>
                         </Link>
                     )}
                     {member.socials?.website && (
-                        <Link href={member.socials.website} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <Link
+                            href={member.socials.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                            legacyBehavior>
                             <Globe className="w-5 h-5" />
                             <span className="sr-only">Website</span>
                         </Link>
@@ -86,7 +110,7 @@ const HumanCard = ({ member }: { member: Agent }) => {
     );
 
     if (member.href) {
-        return <Link href={member.href} className="flex h-full">{cardContent}</Link>;
+        return <Link href={member.href} className="flex h-full" legacyBehavior>{cardContent}</Link>;
     }
     return cardContent;
 };
@@ -118,7 +142,7 @@ export function StaffTeam({ team }: { team: Agent[] }) {
 
 export function DigitalWorkforce({ categories }: { categories: AgentCategory[] }) {
     return (
-         <div>
+        <div>
             <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Digital Workforce</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -132,7 +156,7 @@ export function DigitalWorkforce({ categories }: { categories: AgentCategory[] }
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {category.agents.map((agent) => (
                                 agent.href ? (
-                                    <Link href={agent.href} key={agent.name} className="flex">
+                                    <Link href={agent.href} key={agent.name} className="flex" legacyBehavior>
                                         <AgentCard agent={agent} />
                                     </Link>
                                 ) : (
@@ -144,7 +168,7 @@ export function DigitalWorkforce({ categories }: { categories: AgentCategory[] }
                 ))}
             </div>
         </div>
-    )
+    );
 }
 
 export default function AgentList({ categories }: { categories: AgentCategory[] }) {

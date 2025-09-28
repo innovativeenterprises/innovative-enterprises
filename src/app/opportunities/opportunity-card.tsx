@@ -20,7 +20,7 @@ export const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
     }
     const Icon = opportunityIconMap[opp.iconName] || Trophy; // Fallback to Trophy icon
     return (
-         <Card key={opp.title} className={`flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-l-4 ${getStatusColor()}`}>
+        <Card key={opp.title} className={`flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-l-4 ${getStatusColor()}`}>
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <div className="bg-primary/10 p-3 rounded-full group-hover:bg-accent transition-colors">
@@ -48,12 +48,12 @@ export const OpportunityCard = ({ opp }: { opp: Opportunity }) => {
                    {opp.status === 'Closed' ? (
                        <span>Closed for Applications</span>
                    ) : (
-                       <Link href={`/opportunities/${opp.id}`}>
+                       <Link href={`/opportunities/${opp.id}`} legacyBehavior>
                            View Details & Apply <ArrowRight className="ml-2 w-4 h-4"/>
                        </Link>
                    )}
                 </Button>
             </CardFooter>
         </Card>
-    )
+    );
 }

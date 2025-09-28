@@ -70,7 +70,7 @@ export default function EventsFinancePage() {
                 <div className="max-w-6xl mx-auto space-y-8">
                      <div>
                         <Button asChild variant="outline" className="mb-4">
-                            <Link href="/community-hub">
+                            <Link href="/community-hub" legacyBehavior>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Community Hub
                             </Link>
