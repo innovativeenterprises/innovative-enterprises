@@ -1,9 +1,10 @@
 
+
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { Providers } from './providers';
+import { Providers } from '@/app/providers';
 import { getFirestoreData, type AppState } from '@/lib/initial-state';
 
 const inter = Inter({
@@ -59,7 +60,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <Providers initialState={initialState}>
+          <Providers initialState={{...initialState}}>
             {children}
           </Providers>
       </body>

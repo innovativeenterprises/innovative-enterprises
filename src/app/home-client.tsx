@@ -11,7 +11,7 @@ import Image from 'next/image';
 import OverviewAvatars from '@/components/overview-avatars';
 import ServiceCatalog from "@/components/service-catalog";
 import ProductShowcase from "@/components/product-showcase";
-import ClientTestimonials from "@/components/client-testimonials-client";
+import ClientTestimonials from "@/components/client-testimonials";
 import AiToolsCta from "@/components/ai-tools-cta";
 import { SplashScreen } from '@/components/splash-screen';
 
@@ -113,4 +113,3 @@ export default function HomeClient() {
     </>
   );
 }
-
