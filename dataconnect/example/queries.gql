@@ -1,4 +1,4 @@
-query ListProjects @auth(allow: private) {
+query ListProjects @auth(rules: [ { allow: public } ]) {
   projects {
     id
     name
@@ -6,25 +6,24 @@ query ListProjects @auth(allow: private) {
   }
 }
 
-query ListUsersByOrganization($organizationId: UUID!) @auth(allow: private) {
-  users(
-    where: {
-      organizationId: {
-        eq: $organizationId
-      }
-    }
-  ) {
+query ListUsersByOrganization($organizationId: UUID!) @auth(rules: [ { allow: user, where: "{ organization_id: $organizationId }" } ]) {
+  users(organization_id: $organizationId) {
     id
     displayName
     email
   }
 }
 
-mutation UpdateTask($id: UUID!, $status: String!) @auth(allow: private) {
+# Mutations
+# To learn more about mutations, see: https://firebase.google.com/docs/data-connect/mutations
+
+# To learn more about securing your mutations, see: https://firebase.google.com/docs/data-connect/security-rules
+
+mutation UpdateTask($id: UUID!, $status: String!) @auth(rules: [ { allow: user, where: "{ user_id: $uid }" } ]) {
   task_update(
-    data: {
-      status: $status
-    },
     id: $id
-  )
+    status: $status
+  ) {
+    id
+  }
 }

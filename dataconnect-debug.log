@@ -16,3 +16,28 @@ Generated sources: main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql
 I0928 01:57:03.480176   29428 load.go:74] Finished reloading
 I0928 01:57:03.636448   29428 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
 I0928 01:57:03.856040   29428 engine.go:169] [/emulator/studio 5a14] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+I0928 02:00:03.482660   29428 load.go:31] Reloading schema and connectors...
+W0928 02:00:09.344128   29428 control.go:68] [/emulator/studio 5a14] connector "example" has errors: example/queries.gql:1:21: Unknown argument "rules" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "rules" on directive "@auth".
+example/queries.gql:10:3: Unknown argument "organization_id" on field "Query.users".
+example/queries.gql:22:52: Unknown argument "rules" on directive "@auth".
+example/queries.gql:27:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:23:3: Unknown argument "status" on field "Mutation.task_update".
+example/queries.gql:23:3: Field "task_update" argument "data" of type "Task_Data!" is required, but it was not provided.
+example/queries.gql:23:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+
+sources: example/queries.gql [731B] 
+I0928 02:00:09.499508   29428 control.go:94] [/emulator/studio 5a14] UpdateResources(): done
+Connector "example": sources: example/queries.gql [731B] 
+E0928 02:00:09.602245   29428 load.go:73] Could not load sources: 
+Errors: example/queries.gql:1:21: Unknown argument "rules" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "rules" on directive "@auth".
+example/queries.gql:10:3: Unknown argument "organization_id" on field "Query.users".
+example/queries.gql:22:52: Unknown argument "rules" on directive "@auth".
+example/queries.gql:27:5: Cannot query field "id" on type "Task_KeyOutput".
+example/queries.gql:23:3: Unknown argument "status" on field "Mutation.task_update".
+example/queries.gql:23:3: Field "task_update" argument "data" of type "Task_Data!" is required, but it was not provided.
+example/queries.gql:23:3: Field "task_update" must not have a selection since type "Task_KeyOutput" has no subfields.
+I0928 02:00:09.773792   29428 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] main/query.gql [7604B] 
+I0928 02:00:09.773872   29428 load.go:74] Finished reloading
