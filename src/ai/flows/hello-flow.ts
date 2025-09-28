@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -26,9 +27,9 @@ export type HelloFlowOutput = z.infer<typeof HelloFlowOutputSchema>;
  * @returns An object containing the generated greeting.
  */
 export async function helloFlow(input: HelloFlowInput): Promise<HelloFlowOutput> {
-  const { text } = await ai.generate({
+  const llmResponse = await ai.generate({
     prompt: `Hello Gemini, my name is ${input.name}. Respond with a short, friendly greeting.`,
   });
   
-  return { greeting: text() };
+  return { greeting: llmResponse.text };
 }
