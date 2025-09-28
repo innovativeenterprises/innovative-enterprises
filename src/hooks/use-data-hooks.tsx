@@ -73,7 +73,7 @@ export const useSolutionsData = createDataHook('solutions');
 export const useIndustriesData = createDataHook('industries');
 export const useDailySalesData = createDataHook('dailySales');
 export const useUserDocumentsData = createDataHook('userDocuments');
-export const useSaaSProductsData = createDataHook('saasProducts');
+export const useSaasProductsData = createDataHook('saasProducts');
 
 export const useStaffData = () => {
     const leadership = useGlobalStore((state) => state.leadership);
