@@ -1,7 +1,8 @@
+
 'use client';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProviderTable from '@/components/provider-table';
+import ProviderTable from '@/app/admin/provider-table';
 import AssetTable from '../asset-table';
 
 export default function NetworkPage() {

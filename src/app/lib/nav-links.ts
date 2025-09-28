@@ -1,12 +1,5 @@
 
 import { Handshake, Store, Recycle, Building2, GraduationCap, Car, Truck, Users, Bot, Scale, UserRoundCheck, Mic, Languages, FileText, GitBranch, Search, BrainCircuit, MessageSquare, ImageIcon, Video, Home, Heart, BookUser, HardHat, DollarSign, Gamepad2, Layers, ShoppingCart, Siren, Cpu, BarChart, Calculator, Facebook, FileSignature, Brush } from "lucide-react";
-import SanadHubIcon from "@/components/icons/sanad-hub-icon";
-import BusinessHubIcon from "@/components/icons/business-hub-icon";
-import AmeenSmartLockIcon from "@/components/icons/ameen-smart-lock-icon";
-import KhidmaIcon from "@/components/icons/khidma-icon";
-import VmallIcon from "@/components/icons/vmall-icon";
-import AppiIcon from "@/components/icons/appi-icon";
-import { Gift, Warehouse } from "lucide-react";
 
 export const initialSolutions = [
     {
@@ -171,7 +164,7 @@ export const initialAiTools = [
   },
   {
     title: "Interview Coach (Coach)",
-    href: "/cv-enhancer?tab=interview",
+    href: "/education-tech/guardian-ai?tab=interview",
     description: "Practice for your next job interview with AI-generated, role-specific questions.",
     icon: 'Mic',
   },

@@ -79,7 +79,7 @@ export const initialStaffData = {
                     type: "AI Agent",
                     description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.",
                     enabled: true,
-                    href: "/cfo",
+                    href: "/admin/cfo-dashboard",
                 },
                  { name: 'Talia', role: 'Talent & Competition Agent', icon: 'Trophy', type: 'AI Agent', socials: {}, enabled: true, description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", href: '/opportunities' },
 

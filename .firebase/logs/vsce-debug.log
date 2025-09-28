@@ -1330,3 +1330,58 @@ I0927 23:36:46.888921   15556 load.go:74] Finished reloading
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0927 23:36:47.651193   15556 engine.go:169] [/emulator/studio e40e] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
 [info] [Firebase Plugin] Stopping Data Connect toolkit
 [warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
+[debug] [2025-09-28T01:56:28.647Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-09-28T01:56:57.447Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-09-28T01:56:57.449Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-28T01:56:57.450Z] > authorizing via signed-in user (innovativeenterprisesoman@gmail.com)
+[debug] [2025-09-28T01:56:57.456Z] Checked if tokens are valid: false, expires at: 1759019800061
+[debug] [2025-09-28T01:56:57.456Z] Checked if tokens are valid: false, expires at: 1759019800061
+[debug] [2025-09-28T01:56:57.457Z] > refreshing access token with scopes: []
+[debug] [2025-09-28T01:56:57.460Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-28T01:56:57.461Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-28T01:56:57.548Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[debug] [2025-09-28T01:56:57.735Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-28T01:56:57.736Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-28T01:56:57.761Z] [Firebase Plugin] User found:  innovativeenterprisesoman@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-09-28T01:56:57.764Z] Checked if tokens are valid: true, expires at: 1759028216739
+[debug] [2025-09-28T01:56:57.766Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-09-28T01:56:58.240Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-09-28T01:56:58.241Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.13.0) on port 50001
+[debug] [2025-09-28T01:57:03.061Z] W0928 01:57:03.056558   29418 control.go:68] [/emulator/studio e0fc] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
+example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
+
+sources: example/queries.gql [455B] 
+I0928 01:57:03.056782   29418 control.go:94] [/emulator/studio e0fc] UpdateResources(): done
+Schema: sources: schema/schema.gql [1207B] 
+Connector "example": sources: example/queries.gql [455B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W0928 01:57:03.056558   29418 control.go:68] [/emulator/studio e0fc] connector \"example\" has errors: example/queries.gql:1:21: Unknown argument \"allow\" on directive \"@auth\".\nexample/queries.gql:9:56: Unknown argument \"allow\" on directive \"@auth\".\nexample/queries.gql:23:52: Unknown argument \"allow\" on directive \"@auth\".\n\nsources: example/queries.gql [455B] \nI0928 01:57:03.056782   29418 control.go:94] [/emulator/studio e0fc] UpdateResources(): done\nSchema: sources: schema/schema.gql [1207B] \nConnector \"example\": sources: example/queries.gql [455B] \n"}}
+[debug] [2025-09-28T01:57:03.064Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-09-28T01:57:03.065Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-09-28T01:57:03.066Z] Starting Data Connect Emulator with command {"binary":"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.13.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/user/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.13.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/user/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-09-28T01:57:03.368Z] I0928 01:57:03.169074   29428 load.go:31] Reloading schema and connectors...
+W0928 01:57:03.354074   29428 control.go:68] [/emulator/studio 5a14] connector "example" has errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
+example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
+
+sources: example/queries.gql [455B] 
+I0928 01:57:03.354180   29428 control.go:94] [/emulator/studio 5a14] UpdateResources(): done
+Schema: sources: schema/schema.gql [1207B] 
+Connector "example": sources: example/queries.gql [455B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0928 01:57:03.169074   29428 load.go:31] Reloading schema and connectors...\nW0928 01:57:03.354074   29428 control.go:68] [/emulator/studio 5a14] connector \"example\" has errors: example/queries.gql:1:21: Unknown argument \"allow\" on directive \"@auth\".\nexample/queries.gql:9:56: Unknown argument \"allow\" on directive \"@auth\".\nexample/queries.gql:23:52: Unknown argument \"allow\" on directive \"@auth\".\n\nsources: example/queries.gql [455B] \nI0928 01:57:03.354180   29428 control.go:94] [/emulator/studio 5a14] UpdateResources(): done\nSchema: sources: schema/schema.gql [1207B] \nConnector \"example\": sources: example/queries.gql [455B] \n"}}
+[debug] [2025-09-28T01:57:03.415Z] E0928 01:57:03.397252   29428 load.go:73] Could not load sources: 
+Errors: example/queries.gql:1:21: Unknown argument "allow" on directive "@auth".
+example/queries.gql:9:56: Unknown argument "allow" on directive "@auth".
+example/queries.gql:23:52: Unknown argument "allow" on directive "@auth".
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0928 01:57:03.397252   29428 load.go:73] Could not load sources: \nErrors: example/queries.gql:1:21: Unknown argument \"allow\" on directive \"@auth\".\nexample/queries.gql:9:56: Unknown argument \"allow\" on directive \"@auth\".\nexample/queries.gql:23:52: Unknown argument \"allow\" on directive \"@auth\".\n"}}
+[debug] [2025-09-28T01:57:03.485Z] I0928 01:57:03.480026   29428 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] 
+I0928 01:57:03.480176   29428 load.go:74] Finished reloading
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0928 01:57:03.480026   29428 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: main/query.gql [7604B] main/mutation.gql [20515B] prelude.gql [73251B] main/implicit.gql [3592B] main/input.gql [68752B] main/relation.gql [33941B] \nI0928 01:57:03.480176   29428 load.go:74] Finished reloading\n"}}
+[debug] [2025-09-28T01:57:03.643Z] I0928 01:57:03.636448   29428 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0928 01:57:03.636448   29428 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[debug] [2025-09-28T01:57:03.865Z] I0928 01:57:03.856040   29428 engine.go:169] [/emulator/studio 5a14] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0928 01:57:03.856040   29428 engine.go:169] [/emulator/studio 5a14] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}

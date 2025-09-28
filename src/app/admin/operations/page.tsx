@@ -1,4 +1,3 @@
-
 'use client';
 
 import ProForm from "@/app/admin/operations/pro-form";
@@ -9,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { UserRoundCheck, FileText, NotebookText, Ticket, Scale, Facebook, Contact, BrainCircuit } from "lucide-react";
 import AssetRentalAgentForm from '@/app/admin/operations/asset-rental-agent-form';
 import FacebookCoverGeneratorPage from '@/app/facebook-cover-generator/page';
-import KnowledgeTable from "./knowledge-table";
+import KnowledgeTable from "@/app/admin/operations/knowledge-table";
 import DigitalBusinessCardPage from "@/app/digital-business-card/page";
 
 

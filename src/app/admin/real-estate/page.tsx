@@ -1,5 +1,5 @@
 
-'use client';
+'use server';
 
 import type { Metadata } from 'next';
 import AdminRealEstateClientPage from './client-page';
@@ -12,5 +12,5 @@ export const metadata: Metadata = {
 export default function AdminRealEstatePage() {
     return (
         <AdminRealEstateClientPage />
-    )
+    );
 }

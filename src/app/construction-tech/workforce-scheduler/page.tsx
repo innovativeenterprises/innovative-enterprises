@@ -1,6 +1,5 @@
-
 'use client';
-
+    
 import { GanttChartSquare } from "lucide-react";
 import TimetableForm from "@/components/timetable-form";
 import type { TimetableGeneratorInput } from "@/ai/flows/timetable-generator.schema";
@@ -8,8 +7,8 @@ import { generateLogisticsSchedule } from "@/ai/flows/logistics-scheduler";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "WorkforceFlow | Innovative Enterprises",
-  description: "AI-driven workforce scheduling, digital timecards, and IoT equipment tracking to optimize your construction site operations.",
+    title: "WorkforceFlow | Innovative Enterprises",
+    description: "AI-driven workforce scheduling, digital timecards, and IoT equipment tracking to optimize your construction site operations.",
 };
 
 const workforceDefaultValues: TimetableGeneratorInput = {
@@ -43,7 +42,6 @@ const workforceLabels = {
     classroomNamePlaceholder: "e.g., Project Site A",
     addClassroomLabel: "Add Job Site",
     generateButtonText: "Generate Work Schedule",
-    aiFlow: generateLogisticsSchedule,
 };
 
 export default function WorkforceFlowPage() {
@@ -60,7 +58,11 @@ export default function WorkforceFlowPage() {
           </p>
         </div>
         <div className="max-w-6xl mx-auto mt-12 space-y-12">
-            <TimetableForm defaultValues={workforceDefaultValues} labels={workforceLabels} />
+            <TimetableForm 
+              defaultValues={workforceDefaultValues} 
+              labels={workforceLabels} 
+              generationFlow={generateLogisticsSchedule}
+            />
         </div>
       </div>
     </div>
