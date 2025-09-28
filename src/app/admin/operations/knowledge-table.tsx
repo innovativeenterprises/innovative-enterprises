@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fileToDataURI } from '@/lib/utils';
 import { useKnowledgeBaseData, useStaffData } from "@/hooks/use-data-hooks.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const UploadDocumentSchema = z.object({
   documentFile: z.any().optional(),
@@ -201,113 +202,115 @@ const TrainAgentDialog = ({ knowledgeBase }: { knowledgeBase: KnowledgeDocument[
                        Select an agent and provide knowledge sources to fine-tune its performance.
                     </DialogDescription>
                 </DialogHeader>
-                <Form {...form}>
-                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                         <FormField
-                            control={form.control}
-                            name="agentId"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel>1. Select Agent to Train</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select an AI agent..." />
-                                    </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                    {allAgents.map(agent => (
-                                        <SelectItem key={agent.name} value={agent.name}>{agent.name} ({agent.role})</SelectItem>
-                                    ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                <ScrollArea className="max-h-[70vh] pr-6">
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pt-2">
+                            <FormField
+                                control={form.control}
+                                name="agentId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>1. Select Agent to Train</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select an AI agent..." />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                        {allAgents.map(agent => (
+                                            <SelectItem key={agent.name} value={agent.name}>{agent.name} ({agent.role})</SelectItem>
+                                        ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            control={form.control}
-                            name="knowledgeDocuments"
-                            render={() => (
-                            <FormItem>
-                                <div className="mb-4">
-                                     <FormLabel>2. Select Knowledge Documents</FormLabel>
-                                     <FormDescription>Choose documents from your knowledge base to include in this training session.</FormDescription>
-                                </div>
-                                <div className="flex items-center space-x-2 mb-2 pl-2">
-                                     <Checkbox id="select-all" onCheckedChange={handleSelectAll} />
-                                     <Label htmlFor="select-all">Select All</Label>
-                                </div>
-                                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 rounded-md border">
-                                {knowledgeBase.map((item) => (
-                                    <FormField
-                                    key={item.id}
-                                    control={form.control}
-                                    name="knowledgeDocuments"
-                                    render={({ field }) => {
-                                        return (
-                                        <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value?.includes(item.id)}
-                                                    onCheckedChange={(checked) => {
-                                                    return checked
-                                                        ? field.onChange([...(field.value || []), item.id])
-                                                        : field.onChange(field.value?.filter((value) => value !== item.id))
-                                                    }}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal text-sm">{item.documentName}</FormLabel>
-                                        </FormItem>
-                                        )
-                                    }}
-                                    />
+                            <FormField
+                                control={form.control}
+                                name="knowledgeDocuments"
+                                render={() => (
+                                <FormItem>
+                                    <div className="mb-4">
+                                        <FormLabel>2. Select Knowledge Documents</FormLabel>
+                                        <FormDescription>Choose documents from your knowledge base to include in this training session.</FormDescription>
+                                    </div>
+                                    <div className="flex items-center space-x-2 mb-2 pl-2">
+                                        <Checkbox id="select-all" onCheckedChange={handleSelectAll} />
+                                        <Label htmlFor="select-all">Select All</Label>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 rounded-md border">
+                                    {knowledgeBase.map((item) => (
+                                        <FormField
+                                        key={item.id}
+                                        control={form.control}
+                                        name="knowledgeDocuments"
+                                        render={({ field }) => {
+                                            return (
+                                            <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0">
+                                                <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value?.includes(item.id)}
+                                                        onCheckedChange={(checked) => {
+                                                        return checked
+                                                            ? field.onChange([...(field.value || []), item.id])
+                                                            : field.onChange(field.value?.filter((value) => value !== item.id))
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormLabel className="font-normal text-sm">{item.documentName}</FormLabel>
+                                            </FormItem>
+                                            )
+                                        }}
+                                        />
+                                    ))}
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="knowledgeUrls"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel className="flex items-center gap-2"><LinkIcon className="h-5 w-5"/> 3. Provide Knowledge URLs</FormLabel>
+                                    <FormControl>
+                                    <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={3} {...field} />
+                                    </FormControl>
+                                    <FormDescription>Enter one URL per line. The AI will scrape the content from these pages.</FormDescription>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <div>
+                                <Label className="flex items-center gap-2 mb-4"><ListChecks className="h-5 w-5"/> 4. Add Question & Answer Pairs (Optional)</Label>
+                                <div className="space-y-4 max-h-48 overflow-y-auto p-1">
+                                {fields.map((field, index) => (
+                                    <Card key={field.id} className="p-4 bg-muted/50 relative">
+                                        <div className="space-y-2">
+                                            <FormField control={form.control} name={`qaPairs.${index}.question`} render={({ field }) => (<FormItem><FormLabel>Question</FormLabel><FormControl><Input placeholder="What is the capital of Oman?" {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                            <FormField control={form.control} name={`qaPairs.${index}.answer`} render={({ field }) => (<FormItem><FormLabel>Answer</FormLabel><FormControl><Textarea placeholder="The capital of Oman is Muscat." rows={2} {...field} /></FormControl><FormMessage/></FormItem>)} />
+                                            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => remove(index)}><Trash2 className="h-4 w-4" /></Button>
+                                        </div>
+                                    </Card>
                                 ))}
                                 </div>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="knowledgeUrls"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel className="flex items-center gap-2"><LinkIcon className="h-5 w-5"/> 3. Provide Knowledge URLs</FormLabel>
-                                <FormControl>
-                                <Textarea placeholder="https://example.com/law1.html\nhttps://example.com/regulation2.pdf" rows={3} {...field} />
-                                </FormControl>
-                                <FormDescription>Enter one URL per line. The AI will scrape the content from these pages.</FormDescription>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <div>
-                            <Label className="flex items-center gap-2 mb-4"><ListChecks className="h-5 w-5"/> 4. Add Question & Answer Pairs (Optional)</Label>
-                            <div className="space-y-4 max-h-48 overflow-y-auto p-1">
-                            {fields.map((field, index) => (
-                                <Card key={field.id} className="p-4 bg-muted/50 relative">
-                                    <div className="space-y-2">
-                                        <FormField control={form.control} name={`qaPairs.${index}.question`} render={({ field }) => (<FormItem><FormLabel>Question</FormLabel><FormControl><Input placeholder="What is the capital of Oman?" {...field} /></FormControl><FormMessage/></FormItem>)} />
-                                        <FormField control={form.control} name={`qaPairs.${index}.answer`} render={({ field }) => (<FormItem><FormLabel>Answer</FormLabel><FormControl><Textarea placeholder="The capital of Oman is Muscat." rows={2} {...field} /></FormControl><FormMessage/></FormItem>)} />
-                                        <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => remove(index)}><Trash2 className="h-4 w-4" /></Button>
-                                    </div>
-                                </Card>
-                            ))}
+                                <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ question: '', answer: '' })}><PlusCircle className="mr-2 h-4 w-4"/> Add Q&A Pair</Button>
                             </div>
-                             <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ question: '', answer: '' })}><PlusCircle className="mr-2 h-4 w-4"/> Add Q&A Pair</Button>
-                        </div>
-                         <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                            <Button type="submit" disabled={isLoading}>
-                                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting...</> : <><Sparkles className="mr-2 h-4 w-4" />Start Training</>}
-                            </Button>
-                        </DialogFooter>
-                     </form>
-                </Form>
+                            <DialogFooter>
+                                <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                                <Button type="submit" disabled={isLoading}>
+                                    {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting...</> : <><Sparkles className="mr-2 h-4 w-4" />Start Training</>}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                </ScrollArea>
             </DialogContent>
         </Dialog>
     )
@@ -480,3 +483,4 @@ export default function KnowledgeTable() {
     
 
     
+
