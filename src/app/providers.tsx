@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { ThemeProvider } from 'next-themes';
@@ -7,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { type ReactNode, useRef, useEffect } from 'react';
 import ChatWidget from '@/components/chat-widget';
 import MainLayout from './main-layout';
-import { createAppStore, StoreContext, type StoreType } from '@/lib/global-store';
+import { createAppStore, StoreContext, type StoreType } from '@/app/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 
 

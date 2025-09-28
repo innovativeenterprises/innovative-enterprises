@@ -97,7 +97,7 @@ export const initialStaffData = {
                     type: "AI Agent",
                     description: "Generates tailored interview questions based on job titles to help candidates practice and prepare.",
                     enabled: true,
-                    href: "/cv-enhancer?tab=interview",
+                    href: "/education-tech/guardian-ai?tab=interview",
                 },
                 {
                     name: "Voxi",

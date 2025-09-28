@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useGlobalStore, useSetStore } from '@/app/lib/global-store.tsx';
+import { useGlobalStore, useSetStore } from '@/app/lib/global-store';
 import type { AppState } from '@/lib/initial-state';
 import { useEffect } from 'react';
 

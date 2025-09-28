@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from '@/components/ui/skeleton';
 import { BrainCircuit, Loader2, RefreshCw, AlertTriangle, Lightbulb, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { useProductsData, useProvidersData, useCfoData } from '@/hooks/use-data-hooks.tsx';
+import { useProductsData, useProvidersData, useCfoData } from '@/hooks/use-data-hooks';
 
 const RiskCard = ({ risk }: { risk: CooAnalysisOutput['identifiedRisks'][0] }) => {
     const severityMap = {
@@ -139,4 +139,3 @@ export default function CooDashboardPage() {
         </div>
     );
 }
-

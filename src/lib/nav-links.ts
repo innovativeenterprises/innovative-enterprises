@@ -171,7 +171,7 @@ export const initialAiTools = [
   },
   {
     title: "Interview Coach (Coach)",
-    href: "/cv-enhancer?tab=interview",
+    href: "/education-tech/guardian-ai?tab=interview",
     description: "Practice for your next job interview with AI-generated, role-specific questions.",
     icon: 'Mic',
   },
