@@ -1,4 +1,5 @@
 
+
 'use server';
 
 /**
@@ -108,7 +109,6 @@ const getProTaskPlanTool = ai.defineTool(
 const proTaskAnalysisPrompt = ai.definePrompt({
     name: 'proTaskAnalysisPrompt',
     input: { schema: ProTaskAnalysisInputSchema },
-    output: { schema: ProTaskAnalysisOutputSchema },
     tools: [getProTaskPlanTool],
     prompt: `You are Fahim, an expert PRO agent. A user needs to perform the service: "{{serviceName}}".
     The initial analysis suggests a service fee of OMR {{serviceFee}}.
@@ -124,13 +124,13 @@ export const analyzeProTask = ai.defineFlow(
   },
   async (input) => {
     
-    const { output } = await ai.generate({
+    const llmResponse = await ai.generate({
         prompt: proTaskAnalysisPrompt,
         input: input,
         tools: [getProTaskPlanTool],
     });
 
-    const toolRequest = (output as any).toolRequest;
+    const toolRequest = llmResponse.toolRequest();
     if (!toolRequest || toolRequest.name !== 'getProTaskPlan') {
         throw new Error("The AI agent failed to use the required planning tool.");
     }
@@ -142,6 +142,6 @@ export const analyzeProTask = ai.defineFlow(
 
     const toolResponse = await toolRequest.run();
 
-    return toolResponse as ProTaskAnalysisOutput;
+    return toolResponse.output as ProTaskAnalysisOutput;
   }
 );

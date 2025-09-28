@@ -46,12 +46,13 @@ const hrefMap: Record<string, string> = {
     "RAAHA": "/raaha",
     "Nova Commerce": "/ecommerce",
     "Logistics Chain AI": "/logistics-ai",
-    "AI-POS for Education": "/ai-pos",
+    "AI-POS for Education": "/education-tech/ai-pos",
     "Facebook Cover Generator": "/facebook-cover-generator",
     "StructurAI BIM": "/construction-tech/structurai-bim",
     "We Match - MATCH CUP GAME": "/we-match",
     "ConstructFin": "/construction-tech/constructfin",
     "ClientView Portal": "/client-portal",
+    "StairSpace": "/real-estate-tech/stairspace",
 };
 
 const productHints: Record<string, string> = {

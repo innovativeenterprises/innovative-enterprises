@@ -10,6 +10,7 @@ import type { StairspaceListing } from '@/lib/stairspace.schema';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import { useStairspaceListingsData } from '@/hooks/use-data-hooks';
 
 const ItemCard = ({ item }: { item: StairspaceListing }) => (

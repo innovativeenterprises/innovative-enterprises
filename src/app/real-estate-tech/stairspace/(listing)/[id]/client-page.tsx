@@ -15,12 +15,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { useStairspaceListingsData, useStairspaceRequestsData } from '@/hooks/use-data-hooks.tsx';
+import { useStairspaceListingsData, useStairspaceRequestsData } from '@/hooks/use-data-hooks';
 
 // --- BookingRequestForm Logic ---
 const RequestSchema = z.object({
