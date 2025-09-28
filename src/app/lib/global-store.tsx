@@ -1,8 +1,8 @@
 
 'use client';
 
-import React, { createContext, useContext, ReactNode, useRef, useEffect, useState } from 'react';
 import { createStore, useStore as useZustandStore } from 'zustand';
+import React, { createContext, useContext, ReactNode, useRef } from 'react';
 import type { AppState } from './initial-state';
 import { getInitialState } from './initial-state';
 
@@ -40,5 +40,3 @@ export function useSetStore() {
 
 // Global instance for read-only access if needed outside React components.
 export const store = createAppStore();
-
-  

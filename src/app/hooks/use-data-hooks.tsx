@@ -6,19 +6,13 @@ import type { AppState } from '@/lib/initial-state';
 import { useEffect } from 'react';
 
 const createDataHook = <K extends keyof AppState>(key: K) => {
-  const useDataHook = (initialData?: AppState[K]) => {
+  const useDataHook = () => {
     const data = useGlobalStore((state) => state[key]);
     const set = useSetStore();
     const setData = (updater: (prev: AppState[K]) => AppState[K]) => {
       set((state) => ({ ...state, [key]: updater(state[key]) }));
     };
     const isClient = useGlobalStore((state) => state.isClient);
-
-    useEffect(() => {
-        if (initialData && isClient) {
-            set((state) => ({ ...state, [key]: initialData }));
-        }
-    }, [initialData, isClient, set, key]); 
 
     return { data: data as AppState[K], setData, isClient };
   };

@@ -23,8 +23,8 @@ export default function DesktopNavLinks() {
       {navLinks.map((link) => (
         <NavigationMenuItem key={link.href}>
           <Link href={link.href} passHref>
-            <NavigationMenuLink asChild active={pathname === link.href} className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}>
-              <a>{link.label}</a>
+            <NavigationMenuLink active={pathname === link.href} className={cn(navigationMenuTriggerStyle(), 'text-base font-medium')}>
+                {link.label}
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
@@ -32,5 +32,3 @@ export default function DesktopNavLinks() {
     </>
   );
 };
-
-    
