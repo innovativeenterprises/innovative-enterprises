@@ -40,7 +40,15 @@ const prompt = ai.definePrompt({
     }),
   },
   output: {
-    schema: ImageAnnotatorOutputSchema,
+    schema: z.object({
+      identifiedObject: z.string().describe("The name of the main object identified in the image."),
+      estimatedDimensions: z.object({
+        height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
+        width: z.string().describe("Estimated width with units (e.g., '10 cm')."),
+        depth: z.string().describe("Estimated depth with units (e.g., '8 cm')."),
+      }),
+      otherMetrics: z.string().optional().describe("Any other relevant metrics identified, such as volume or weight."),
+    })
   },
   prompt: promptText,
 });
@@ -53,8 +61,8 @@ export const annotateImage = ai.defineFlow(
         outputSchema: ImageAnnotatorOutputSchema,
     },
     async (input) => {
-        const { output } = await ai.generate({
-            model: 'googleai/gemini-1.5-flash',
+        const { media, output } = await ai.generate({
+            model: 'googleai/gemini-2.5-flash-image-preview',
             prompt: [
                 { media: { url: input.baseImageUri } },
                 { text: prompt.prompt.replace("{{{prompt}}}", input.prompt || 'Analyze the main object in the image.') },
@@ -62,14 +70,13 @@ export const annotateImage = ai.defineFlow(
             output: {
                 format: 'json',
                 schema: z.object({
-                    annotatedImageUri: z.string().url().describe("The data URI of the new, annotated image."),
-                    identifiedObject: z.string().describe("The name of the main object identified in the image."),
+                    identifiedObject: z.string(),
                     estimatedDimensions: z.object({
-                        height: z.string().describe("Estimated height with units (e.g., '15 cm')."),
-                        width: z.string().describe("Estimated width with units (e.g., '10 cm')."),
-                        depth: z.string().describe("Estimated depth with units (e.g., '8 cm')."),
+                        height: z.string(),
+                        width: z.string(),
+                        depth: z.string(),
                     }),
-                    otherMetrics: z.string().optional().describe("Any other relevant metrics identified, such as volume or weight."),
+                    otherMetrics: z.string().optional(),
                 }),
             },
             config: {
@@ -77,15 +84,13 @@ export const annotateImage = ai.defineFlow(
             },
         });
 
-        if (!output) {
+        if (!output || !media?.url) {
             throw new Error('Image analysis failed to return a valid response.');
         }
         
         return {
-            annotatedImageUri: output.annotatedImageUri,
-            identifiedObject: output.identifiedObject,
-            estimatedDimensions: output.estimatedDimensions,
-            otherMetrics: output.otherMetrics,
+            ...output,
+            annotatedImageUri: media.url,
         };
     }
 );

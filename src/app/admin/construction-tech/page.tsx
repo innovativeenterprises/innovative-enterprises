@@ -21,7 +21,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         "AeroSite AI (DaaS)": Camera,
         "ClientView Portal": Search,
         "BoQ Generator": Calculator,
-        "Building Systems Estimator": Building,
+        "AI Smart Home Estimator": Cpu,
     };
     const Icon = iconMap[product.name] || HardHat;
     

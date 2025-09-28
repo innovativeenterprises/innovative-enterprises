@@ -1,5 +1,4 @@
 
-
 'use server';
 
 export * from './adaptive-learning-tutor';
@@ -34,6 +33,7 @@ export * from './cctv-quotation.schema';
 export * from './cctv-quotation';
 export * from './cv-enhancement.schema';
 export * from './cv-enhancement';
+export * from './digital-business-card-generator';
 export * from './document-translation.schema';
 export * from './document-translation';
 export * from './drivesync-agent.schema';

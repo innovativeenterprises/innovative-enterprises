@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -38,13 +39,14 @@ import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a"> & { iconName: string; title: string }
->(({ className, title, children, iconName, ...props }, ref) => {
+>(({ className, title, children, iconName, href, ...props }, ref) => {
   const Icon = (Icons as any)[iconName] || Icons.HelpCircle;
   return (
     <li>
       <NavigationMenuLink asChild>
         <a
           ref={ref}
+          href={href}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
             className
@@ -116,13 +118,13 @@ export default function HeaderClient() {
                   <ul className={cn("grid w-[400px] gap-3 p-4", settings && settings.servicesMenuColumns === 2 && "md:w-[500px] md:grid-cols-2", settings && settings.servicesMenuColumns >= 3 && "md:w-[600px] md:grid-cols-3")}>
                     {(solutions || []).map((component) => (
                       <Link href={component.href} key={component.title} passHref legacyBehavior>
-                        <ListItem
-                          title={component.title}
-                          iconName={component.icon}
-                        >
-                          {component.description}
-                        </ListItem>
-                      </Link>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -133,13 +135,13 @@ export default function HeaderClient() {
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {(industries || []).map((component) => (
                       <Link href={component.href} key={component.title} passHref legacyBehavior>
-                        <ListItem
-                          title={component.title}
-                          iconName={component.icon}
-                        >
-                          {component.description}
-                        </ListItem>
-                      </Link>
+                          <ListItem
+                            title={component.title}
+                            iconName={component.icon}
+                          >
+                            {component.description}
+                          </ListItem>
+                        </Link>
                     ))}
                   </ul>
                 </NavigationMenuContent>

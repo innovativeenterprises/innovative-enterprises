@@ -79,7 +79,7 @@ export const initialStaffData = {
                     type: "AI Agent",
                     description: "Analyzes business data to generate dashboards, identify trends, and monitor KPIs for strategic insights.",
                     enabled: true,
-                    href: "/admin/cfo-dashboard",
+                    href: "/cfo",
                 },
                  { name: 'Talia', role: 'Talent & Competition Agent', icon: 'Trophy', type: 'AI Agent', socials: {}, enabled: true, description: "Analyzes and posts new work orders, competitions, and tasks for our talent network.", href: '/opportunities' },
 
@@ -89,7 +89,7 @@ export const initialStaffData = {
             category: "Industry & Solution-Specific Agents",
             agents: [
                 { name: 'Finley', role: 'Product Manager (Finley CFO)', icon: 'Bot', type: 'AI Agent', socials: {}, enabled: true, description: "Monitors cash flow, tracks transactions, and manages financial data for the Finley CFO platform.", href: '/cfo' },
-                { name: 'A.S.A', role: 'Product Manager (InfraRent)', icon: 'ServerCog', type: 'AI Agent', socials: {}, enabled: true, description: "Analyzes client needs to design and propose custom IT infrastructure rental packages.", href: '/rentals' },
+                { name: 'A.S.A', role: 'Product Manager (InfraRent)', icon: 'ServerCog', type: 'AI Agent', socials: {}, enabled: true, description: "Analyzes client needs to design and propose custom IT infrastructure rental packages.", href: '/construction-tech/asset-rentals' },
                 {
                     name: "Coach",
                     role: "AI Interview Coach",
@@ -97,7 +97,7 @@ export const initialStaffData = {
                     type: "AI Agent",
                     description: "Generates tailored interview questions based on job titles to help candidates practice and prepare.",
                     enabled: true,
-                    href: "/interview-coach",
+                    href: "/cv-enhancer?tab=interview",
                 },
                 {
                     name: "Voxi",
